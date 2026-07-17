@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+*.tgz
+*.log
+.DS_Store
+
+# local tooling (portable pnpm bootstrap, not part of the repo)
+.tools/
+.pnpm-store/
