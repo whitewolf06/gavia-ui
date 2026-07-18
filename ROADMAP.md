@@ -1,0 +1,106 @@
+# План разработки WhiteLife UI
+
+Дорожная карта `@whitelife/ui-kit` от HTML-прототипа до полной дизайн-системы.
+Статусы: ✅ реализовано · 🚧 в работе · ⬜ запланировано · ⛔ не входит в kit
+(прикладной уровень WhiteLife, собирается в приложении поверх kit).
+
+Каждый этап завершается контрольными проверками: `pnpm build`,
+`pnpm test`, `pnpm build:playground`, `pnpm run pack` (см. agents.md §6).
+
+---
+
+## Этап 0. Прототип дизайн-системы — ✅
+
+- ✅ Однофайловый каталог `whitelife-uikit-prototipe.html` (токены, 12 секций,
+  ванильный JS).
+- ✅ Расширение вариациями: soft/link/lg/xs-кнопки, button group, пароль,
+  степпер, счётчик, съёмные теги, presence-аватары, алерты с действием,
+  типы тостов, поповер, аккордеон, слайдер, шаги, 46 иконок.
+
+## Этап 1. Техническая основа — ✅
+
+- ✅ pnpm workspace: `packages/ui-kit` + `apps/playground`.
+- ✅ Vite library mode: ESM + TypeScript declarations, strict TS.
+- ✅ PrimeVue 4 unstyled; `vue`/`primevue` — peers, `primeicons` — optional peer.
+- ✅ Токены `--wl-*`: foundation → semantic → component; CSS Layers
+  (`wl.reset`, `wl.tokens`, `wl.components`).
+- ✅ Темы `white` + `graphite` через `data-wl-theme` / явный импорт.
+- ✅ Subpath exports: `.`, `styles/base.css`, `styles/reset.css`, `themes/*.css`.
+- ✅ `createWlPt()` — расширяемая pt-карта; без `app.use(PrimeVue)` внутри kit.
+- ✅ README (интеграция, темизация, контракт) и agents.md (правила репозитория).
+
+## Этап 2. Базовые компоненты — ✅ (21 + директива)
+
+| Компонент | Статус | Прототип |
+| --- | --- | --- |
+| `WlButton` (8 вариантов, xs–lg, loading, block) | ✅ | `.btn` |
+| `WlIcon` (встроенный SVG-набор) | ✅ | `.ic` |
+| `WlInput` (размеры, invalid, prefix/suffix) | ✅ | `.input` |
+| `WlTextarea` | ✅ | `.textarea` |
+| `WlSelect` | ✅ | `.select` |
+| `WlCheckbox` (+ indeterminate) | ✅ | `.checkline` |
+| `WlRadio` | ✅ | `.box.rnd` |
+| `WlSwitch` (sm/md) | ✅ | `.switch` |
+| `WlTag` (5 цветов, removable) | ✅ | `.tag` |
+| `WlChip` (фильтр, счётчик) | ✅ | `.chip` |
+| `WlBadge` (+ dot) | ✅ | `.nav-badge`, `.bell-dot` |
+| `WlAvatar` (24–48, presence) | ✅ | `.avatar` |
+| `WlCard` (title/content/footer, hoverable) | ✅ | `.card` |
+| `WlTabs` (items, счётчики, панели) | ✅ | `.tabs` |
+| `WlAlert` (4 типа, action, closable) | ✅ | `.alert` |
+| `WlProgress` (+ thin, ok) | ✅ | `.progress` |
+| `WlSkeleton` | ✅ | `.skel` |
+| `WlSpinner` (+ light) | ✅ | `.spinner` |
+| `WlDialog` | ✅ | `.modal` |
+| `WlDrawer` | ✅ | `.drawer` |
+| `WlDivider` | ✅ | `.divider` |
+| `WlTooltip` (директива) | ✅ | `[data-tip]` |
+
+Проверки этапа: build ✓ · typecheck ✓ · 30/30 тестов ✓ · playground ✓ ·
+pack ✓ (Vue/PrimeVue вне бандла).
+
+## Этап 3. Навигация и оверлеи — ⬜ следующий
+
+| Компонент | Статус | Прототип |
+| --- | --- | --- |
+| `WlIconButton` (квадратная, со счётчиком/точкой) | ⬜ | `.icb` |
+| `WlButtonGroup` | ⬜ | `.btn-group` |
+| `WlSegmented` | ⬜ | `.seg` |
+| `WlNavItem` (пункт рейки с бейджем) | ⬜ | `.nav-item` |
+| `WlBreadcrumbs` | ⬜ | `.crumbs` |
+| `WlPagination` (+ compact-вариант) | ⬜ | `.pager` |
+| `WlMenu` / контекстное меню | ⬜ | `.menu` |
+| `WlPopover` | ⬜ | `.popover` |
+| `WlToast` (обёртка ToastService, 4 типа) | ⬜ | `.toast` |
+| `WlEmpty` (пустое состояние) | ⬜ | `.empty` |
+| `WlPill` (статус с точкой) | ⬜ | `.pill` |
+
+## Этап 4. Формы и данные — ⬜
+
+| Компонент | Статус | Прототип |
+| --- | --- | --- |
+| `WlNumberInput` (степпер) | ⬜ | `.stepper` |
+| `WlPasswordInput` (глазок) | ⬜ | `.input-wrap` + `#pw-toggle` |
+| `WlSlider` | ⬜ | `.slider` |
+| `WlAccordion` | ⬜ | `.acc` |
+| `WlSteps` (мастер) | ⬜ | `.steps` |
+| `WlTable` (обёртка DataTable: тонкие разделители, hover, num) | ⬜ | `.table` |
+| `WlStatCard` (label + value + focus-bar) | ⬜ | `.stat-card` |
+| `WlField` (label + hint + error, композиция) | ⬜ | `.field` |
+
+## Этап 5. Прикладной слой WhiteLife — ⛔ не в kit
+
+Собирается в приложении из примитивов kit, в библиотеку не попадает
+(agents.md §2: без бизнес-логики):
+
+- ⛔ строка задачи (`.task`), строка заметки (`.note-row`)
+- ⛔ таймлайн (`.tl-items`), agenda (`.ag-row`), строки настроек (`.set-row`)
+- ⛔ командная палитра (`.palette`)
+- ⛔ календарные ячейки (`.cal-day`), мини-график недели (`.week-bars`)
+- ⛔ мини-карточки контента (`.note-mini`, `.tile`)
+
+## Non-goals (зафиксировано)
+
+- Pinia, Vue Router, API-клиенты, Markdown/Mermaid — никогда в runtime deps.
+- Публикация пакета — только по отдельной явной команде.
+- Tailwind / CSS-in-JS — не используются.
