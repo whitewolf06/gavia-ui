@@ -13,6 +13,6 @@
     "build:playground": "pnpm --filter @whitelife/playground build",
     "test": "pnpm --filter @whitelife/ui-kit test",
     "typecheck": "pnpm --filter @whitelife/ui-kit typecheck",
-    "pack": "pnpm --filter @whitelife/ui-kit pack"
+    "pack": "pnpm --filter @whitelife/ui-kit run pack"
   }
 }

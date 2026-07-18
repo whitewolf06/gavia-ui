@@ -1,0 +1,49 @@
+/* WhiteLife UI — graphite theme (dark).
+   Applied via <html data-wl-theme="graphite"> after importing this file. */
+[data-wl-theme="graphite"] {
+  --wl-bg: #17181c;
+  --wl-bg-soft: #1e2025;
+  --wl-bg-hover: #26292f;
+  --wl-border: #2e3138;
+  --wl-border-2: #3a3e46;
+
+  --wl-text: #e8eaee;
+  --wl-text-2: #a8adb8;
+  --wl-text-3: #6f7580;
+
+  --wl-accent: var(--wl-blue-400);
+  --wl-accent-hover: #729df2;
+  --wl-accent-soft: #202c46;
+  --wl-accent-border: #2c3d63;
+  --wl-accent-soft-hover: #263757;
+  --wl-accent-border-hover: #3a4f7d;
+  --wl-on-accent: #ffffff;
+
+  --wl-success: var(--wl-green-400);
+  --wl-success-soft: #17291f;
+  --wl-success-border: #234634;
+
+  --wl-warn: var(--wl-amber-400);
+  --wl-warn-soft: #2b2413;
+  --wl-warn-border: #4a3d1c;
+
+  --wl-danger: var(--wl-red-400);
+  --wl-danger-hover: #ef7c81;
+  --wl-danger-soft: #311d1f;
+  --wl-danger-soft-hover: #3a2225;
+  --wl-danger-border: #4e2a2d;
+
+  --wl-info-text: #a9c6f8;
+  --wl-ok-text: #7fd6a4;
+  --wl-warn-text: #f2c14e;
+  --wl-err-text: #f08a8f;
+
+  --wl-mask-bg: rgba(8, 9, 12, 0.5);
+  --wl-avatar-bg: #3a3e46;
+  --wl-tooltip-bg: #e8eaee;
+  --wl-tooltip-text: #17181c;
+
+  --wl-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --wl-shadow-pop: 0 4px 14px rgba(0, 0, 0, 0.35), 0 16px 44px rgba(0, 0, 0, 0.45);
+  --wl-shadow-knob: 0 1px 3px rgba(0, 0, 0, 0.5);
+}

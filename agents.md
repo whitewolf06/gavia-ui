@@ -62,11 +62,13 @@
 pnpm build
 pnpm test
 pnpm build:playground
-pnpm pack
+pnpm run pack
 ```
 
-Архив `pnpm pack` не должен содержать Vue/PrimeVue внутри bundle
-(проверять содержимое tar).
+Архив `pnpm run pack` не должен содержать Vue/PrimeVue внутри bundle
+(проверять содержимое tar). Внимание: голый `pnpm pack` — это builtin-команда
+pnpm, она упакует корневой проект; для архива библиотеки нужен именно
+`pnpm run pack`.
 
 ## 7. Запреты
 

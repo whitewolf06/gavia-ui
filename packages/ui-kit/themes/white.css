@@ -1,0 +1,51 @@
+/* WhiteLife UI — canonical white theme (default).
+   Full semantic token map; applied by default (:root) or explicitly
+   via <html data-wl-theme="white">. */
+:root,
+[data-wl-theme="white"] {
+  --wl-bg: var(--wl-gray-0);
+  --wl-bg-soft: var(--wl-gray-50);
+  --wl-bg-hover: var(--wl-gray-100);
+  --wl-border: var(--wl-gray-200);
+  --wl-border-2: var(--wl-gray-300);
+
+  --wl-text: var(--wl-gray-900);
+  --wl-text-2: var(--wl-gray-600);
+  --wl-text-3: var(--wl-gray-500);
+
+  --wl-accent: var(--wl-blue-500);
+  --wl-accent-hover: var(--wl-blue-600);
+  --wl-accent-soft: var(--wl-blue-50);
+  --wl-accent-border: var(--wl-blue-100);
+  --wl-accent-soft-hover: var(--wl-blue-75);
+  --wl-accent-border-hover: var(--wl-blue-200);
+  --wl-on-accent: #ffffff;
+
+  --wl-success: var(--wl-green-500);
+  --wl-success-soft: var(--wl-green-50);
+  --wl-success-border: var(--wl-green-100);
+
+  --wl-warn: var(--wl-amber-500);
+  --wl-warn-soft: var(--wl-amber-50);
+  --wl-warn-border: var(--wl-amber-100);
+
+  --wl-danger: var(--wl-red-500);
+  --wl-danger-hover: var(--wl-red-600);
+  --wl-danger-soft: var(--wl-red-50);
+  --wl-danger-soft-hover: var(--wl-red-75);
+  --wl-danger-border: var(--wl-red-100);
+
+  --wl-info-text: var(--wl-blue-700);
+  --wl-ok-text: var(--wl-green-700);
+  --wl-warn-text: var(--wl-amber-700);
+  --wl-err-text: var(--wl-red-700);
+
+  --wl-mask-bg: rgba(24, 26, 32, 0.24);
+  --wl-avatar-bg: var(--wl-gray-800);
+  --wl-tooltip-bg: #26292f;
+  --wl-tooltip-text: #ffffff;
+
+  --wl-shadow-card: 0 1px 2px rgba(20, 22, 28, 0.04);
+  --wl-shadow-pop: 0 4px 14px rgba(20, 22, 28, 0.07), 0 16px 44px rgba(20, 22, 28, 0.11);
+  --wl-shadow-knob: 0 1px 3px rgba(0, 0, 0, 0.2);
+}

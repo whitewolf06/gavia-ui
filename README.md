@@ -19,8 +19,12 @@ pnpm build              # сборка библиотеки (ESM + TypeScript de
 pnpm test               # тесты библиотеки (Vitest + Vue Test Utils)
 pnpm dev                # playground в dev-режиме
 pnpm build:playground   # сборка playground
-pnpm pack               # tar-архив пакета (без публикации)
+pnpm run pack          # tar-архив пакета (без публикации); важно: именно `run pack`, см. ниже
 ```
+
+> **Примечание.** pnpm выполняет одноимённую builtin-команду вместо script'а:
+> голый `pnpm pack` в корне упакует корневой проект, а не библиотеку.
+> Для архива `@whitelife/ui-kit` используйте `pnpm run pack`.
 
 ---
 

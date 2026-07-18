@@ -1,0 +1,55 @@
+{
+  "name": "@whitelife/ui-kit",
+  "version": "0.1.0",
+  "description": "WhiteLife UI kit — Vue 3 + TypeScript component library on PrimeVue 4 (unstyled)",
+  "type": "module",
+  "license": "MIT",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles/reset.css": "./styles/reset.css",
+    "./styles/base.css": "./styles/base.css",
+    "./themes/*.css": "./themes/*.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "styles",
+    "themes",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "pack": "pnpm pack"
+  },
+  "peerDependencies": {
+    "primeicons": "^7.0.0",
+    "primevue": "^4.0.0",
+    "vue": "^3.4.0"
+  },
+  "peerDependenciesMeta": {
+    "primeicons": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.4",
+    "@vue/test-utils": "^2.4.6",
+    "jsdom": "^26.1.0",
+    "primeicons": "^7.0.0",
+    "primevue": "^4.3.1",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.2.4",
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.2.10"
+  }
+}
