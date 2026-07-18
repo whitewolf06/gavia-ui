@@ -99,7 +99,18 @@ DataTable, stat-card свой, плюс проброс `id`/aria во внутр
 `WlInput`/`WlPasswordInput`/`WlNumberInput`. Проверки: build ✓ · typecheck ✓ ·
 93/93 тестов ✓ · playground ✓ · pack ✓ (в kit 40 компонентов).
 
-## Этап 5. Прикладной слой WhiteLife — ⛔ не в kit
+## Этап 5. Foundation-витрина и дополнительные компоненты — 🚧 в работе
+
+| Задача | Статус | Примечание |
+| --- | --- | --- |
+| Playground: секция «Цвета» (свотчи токенов, копирование hex) | ⬜ | как в прототипе `.swatches` |
+| Playground: секция «Типографика» (шкала, mono, ссылки) | ⬜ | как в прототипе `.type-row` |
+| `WlColorPicker` (свотчи + hex-инпут) | ⬜ | свой, из `.swatches` |
+| `WlCalendar` (месячная сетка: today/selected/события) | ⬜ | свой, из `.cal-day` |
+| `WlDatePicker` | ⬜ | обёртка PrimeVue DatePicker (сложное поведение) |
+| `WlFileUpload` (dropzone + список файлов) | ⬜ | свой |
+
+## Этап 6. Прикладной слой WhiteLife — ⛔ не в kit
 
 Собирается в приложении из примитивов kit, в библиотеку не попадает
 (agents.md §2: без бизнес-логики):
