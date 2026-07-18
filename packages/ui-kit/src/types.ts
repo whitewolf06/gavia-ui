@@ -79,4 +79,15 @@ export interface WlMenuItem {
   command?: (item: WlMenuItem) => void;
 }
 
+export interface WlAccordionItem {
+  key: string;
+  title: string;
+  content?: string;
+  disabled?: boolean;
+}
+
+export interface WlStepItem {
+  label: string;
+}
+
 export type WlThemeName = "white" | "graphite";

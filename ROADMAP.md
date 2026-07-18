@@ -78,18 +78,24 @@ pack ✓ (Vue/PrimeVue вне бандла).
 Проверки этапа: build ✓ · typecheck ✓ · 59/59 тестов ✓ · playground ✓ ·
 pack ✓ (в архиве только dist/styles/themes/README/package.json).
 
-## Этап 4. Формы и данные — ⬜ следующий
+## Этап 4. Формы и данные — 🚧 в работе
+
+Политика реализации (уточнена): формы — собственные компоненты напрямую из
+прототипа; таблица — обёртка PrimeVue DataTable.
 
 | Компонент | Статус | Прототип |
 | --- | --- | --- |
-| `WlNumberInput` (степпер) | ⬜ | `.stepper` |
-| `WlPasswordInput` (глазок) | ⬜ | `.input-wrap` + `#pw-toggle` |
-| `WlSlider` | ⬜ | `.slider` |
-| `WlAccordion` | ⬜ | `.acc` |
-| `WlSteps` (мастер) | ⬜ | `.steps` |
+| `WlNumberInput` (степпер, клавиатура, clamp) | ✅ | `.stepper` |
+| `WlPasswordInput` (глазок, aria-pressed) | ✅ | `.input-wrap` + `#pw-toggle` |
+| `WlSlider` (заливка через `--wl-slider-pct`) | ✅ | `.slider` |
+| `WlAccordion` (details/summary, single, controlled) | ✅ | `.acc` |
+| `WlSteps` (done/current/pending) | ✅ | `.steps` |
+| `WlField` (label + hint + error, useId-связка) | ✅ | `.field` |
 | `WlTable` (обёртка DataTable: тонкие разделители, hover, num) | ⬜ | `.table` |
 | `WlStatCard` (label + value + focus-bar) | ⬜ | `.stat-card` |
-| `WlField` (label + hint + error, композиция) | ⬜ | `.field` |
+
+Заход 4a (формы) — собственные компоненты без PrimeVue. Проверки: build ✓ ·
+typecheck ✓ · 80/80 тестов ✓ · playground ✓ · pack ✓.
 
 ## Этап 5. Прикладной слой WhiteLife — ⛔ не в kit
 

@@ -6,6 +6,7 @@ describe("node import", () => {
     const mod = await import("../src/index");
 
     const components = [
+      "WlAccordion",
       "WlAlert",
       "WlAvatar",
       "WlBadge",
@@ -19,12 +20,15 @@ describe("node import", () => {
       "WlDivider",
       "WlDrawer",
       "WlEmpty",
+      "WlField",
       "WlIcon",
       "WlIconButton",
       "WlInput",
       "WlMenu",
       "WlNavItem",
+      "WlNumberInput",
       "WlPagination",
+      "WlPasswordInput",
       "WlPill",
       "WlPopover",
       "WlProgress",
@@ -32,7 +36,9 @@ describe("node import", () => {
       "WlSegmented",
       "WlSelect",
       "WlSkeleton",
+      "WlSlider",
       "WlSpinner",
+      "WlSteps",
       "WlSwitch",
       "WlTabs",
       "WlTag",

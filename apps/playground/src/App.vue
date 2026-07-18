@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import {
+  WlAccordion,
   WlAlert,
   WlAvatar,
   WlBadge,
@@ -14,12 +15,15 @@ import {
   WlDivider,
   WlDrawer,
   WlEmpty,
+  WlField,
   WlIcon,
   WlIconButton,
   WlInput,
   WlMenu,
   WlNavItem,
+  WlNumberInput,
   WlPagination,
+  WlPasswordInput,
   WlPill,
   WlPopover,
   WlProgress,
@@ -27,7 +31,9 @@ import {
   WlSegmented,
   WlSelect,
   WlSkeleton,
+  WlSlider,
   WlSpinner,
+  WlSteps,
   WlSwitch,
   WlTabs,
   WlTag,
@@ -37,9 +43,11 @@ import {
   useWlToast
 } from "@whitelife/ui-kit";
 import type {
+  WlAccordionItem,
   WlBreadcrumbItem,
   WlMenuItem,
   WlSegmentedOption,
+  WlStepItem,
   WlTabItem,
   WlThemeName
 } from "@whitelife/ui-kit";
@@ -71,6 +79,48 @@ const locked = ref(false);
 const plan = ref("basic");
 const notify = ref(true);
 const notifySm = ref(false);
+
+/* Формы (этап 4a) */
+const qty = ref(3);
+const qtySm = ref(5);
+const password = ref("s3cret-pass");
+const volume = ref(40);
+
+const fieldTitle = ref("");
+const fieldLogin = ref("ad");
+const fieldLoginError = computed(() =>
+  fieldLogin.value.length < 3 ? "Слишком короткий логин — минимум 3 символа" : undefined
+);
+
+const accItems: WlAccordionItem[] = [
+  {
+    key: "focus",
+    title: "Что такое фокус-режим?",
+    content:
+      "Режим, в котором WhiteLife скрывает всё, кроме текущей задачи: без уведомлений, бейджей и лишних панелей."
+  },
+  {
+    key: "time",
+    title: "Как работает учёт времени?",
+    content:
+      "Таймер запускается из задачи или записывается вручную. Все записи попадают в недельный отчёт."
+  },
+  {
+    key: "share",
+    title: "Можно ли делиться заметками?",
+    content: "Да, заметкой можно поделиться ссылкой с правами «чтение» или «редактирование»."
+  },
+  { key: "api", title: "Есть ли публичный API?", content: "Скоро.", disabled: true }
+];
+const accOpen = ref<string[]>(["focus"]);
+
+const stepItems: WlStepItem[] = [
+  { label: "Проект" },
+  { label: "Участники" },
+  { label: "Настройки" },
+  { label: "Готово" }
+];
+const stepCurrent = ref(1);
 
 /* Чипы и теги */
 const chipActive = ref(false);
@@ -287,6 +337,107 @@ const drawerVisible = ref(false);
           <div class="col">
             <WlSwitch v-model="notify">Уведомления о задачах</WlSwitch>
             <WlSwitch v-model="notifySm" size="sm">Компактный переключатель (sm)</WlSwitch>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h">
+          <span class="spec-name">WlNumberInput / WlPasswordInput / WlSlider</span>
+          <span class="spec-note">step, min/max, arrow keys, eye-toggle, --wl-slider-pct</span>
+        </div>
+        <div class="spec-b">
+          <div class="row">
+            <WlNumberInput v-model="qty" :min="1" :max="10" aria-label="Количество" />
+            <WlNumberInput v-model="qtySm" :min="0" :max="50" :step="5" size="sm" aria-label="Количество (sm)" />
+            <WlNumberInput :model-value="3" disabled aria-label="Отключено" />
+            <span class="muted">qty: {{ qty }} · qtySm: {{ qtySm }}</span>
+          </div>
+          <div class="row">
+            <WlPasswordInput v-model="password" />
+            <WlPasswordInput model-value="wrong-pass" invalid aria-label="Пароль с ошибкой" />
+            <span class="muted">pw: {{ password }}</span>
+          </div>
+          <div class="row">
+            <WlSlider v-model="volume" aria-label="Громкость уведомлений" />
+            <span class="muted">Громкость уведомлений · {{ volume }}%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h">
+          <span class="spec-name">WlField</span>
+          <span class="spec-note">scoped slot: { id, ariaDescribedby, invalid }</span>
+        </div>
+        <div class="spec-b">
+          <div class="row" style="align-items: flex-start">
+            <WlField
+              v-slot="{ id, ariaDescribedby, invalid }"
+              label="Название задачи"
+              required
+              hint="Коротко и по делу — до 80 символов"
+            >
+              <WlInput
+                v-model="fieldTitle"
+                placeholder="Например: Подготовить демо"
+                :invalid="invalid"
+                :id="id"
+                :aria-describedby="ariaDescribedby"
+              />
+            </WlField>
+            <WlField
+              v-slot="{ id, ariaDescribedby, invalid }"
+              label="Логин"
+              hint="Минимум 3 символа"
+              :error="fieldLoginError"
+            >
+              <WlInput
+                v-model="fieldLogin"
+                placeholder="Логин"
+                :invalid="invalid"
+                :id="id"
+                :aria-describedby="ariaDescribedby"
+              />
+            </WlField>
+          </div>
+          <p class="muted">Поле «Логин» показывает ошибку вместо подсказки, пока меньше 3 символов.</p>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h">
+          <span class="spec-name">WlAccordion</span>
+          <span class="spec-note">multiple + v-model:openKeys · single</span>
+        </div>
+        <div class="spec-b">
+          <div class="row" style="align-items: flex-start">
+            <div class="col" style="flex: 1; gap: 8px">
+              <WlAccordion v-model:open-keys="accOpen" :items="accItems" />
+              <span class="muted">открыто: {{ accOpen.join(", ") || "—" }}</span>
+            </div>
+            <WlAccordion single :items="accItems" style="flex: 1" />
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h"><span class="spec-name">WlSteps</span><span class="spec-note">done / current / pending</span></div>
+        <div class="spec-b">
+          <WlSteps :items="stepItems" :current="stepCurrent" style="max-width: 100%" />
+          <div class="row" style="margin-top: 14px">
+            <WlButton size="sm" variant="secondary" :disabled="stepCurrent === 0" @click="stepCurrent--">
+              Назад
+            </WlButton>
+            <WlButton
+              size="sm"
+              variant="primary"
+              :disabled="stepCurrent === stepItems.length - 1"
+              @click="stepCurrent++"
+            >
+              Далее
+            </WlButton>
+            <span class="muted">шаг {{ stepCurrent + 1 }} из {{ stepItems.length }}</span>
           </div>
         </div>
       </div>
