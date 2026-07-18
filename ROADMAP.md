@@ -103,10 +103,10 @@ DataTable, stat-card свой, плюс проброс `id`/aria во внутр
 
 | Задача | Статус | Примечание |
 | --- | --- | --- |
-| Playground: секция «Цвета» (свотчи токенов, копирование hex) | ⬜ | как в прототипе `.swatches` |
-| Playground: секция «Типографика» (шкала, mono, ссылки) | ⬜ | как в прототипе `.type-row` |
-| `WlColorPicker` (свотчи + hex-инпут) | ⬜ | свой, из `.swatches` |
-| `WlCalendar` (месячная сетка: today/selected/события) | ⬜ | свой, из `.cal-day` |
+| Playground: секция «Цвета» (свотчи токенов, копирование hex) | ✅ | getComputedStyle — корректно в обеих темах |
+| Playground: секция «Типографика» (шкала, mono, ссылки) | ✅ | playground-стили с `pg-` префиксом, не в библиотеке |
+| `WlColorPicker` (свотчи + hex-инпут) | ✅ | свой, нормализация в `#rrggbb` |
+| `WlCalendar` (месячная сетка: today/selected/события) | ✅ | свой, `v-model` = ISO `YYYY-MM-DD` |
 | `WlDatePicker` | ⬜ | обёртка PrimeVue DatePicker (сложное поведение) |
 | `WlFileUpload` (dropzone + список файлов) | ⬜ | свой |
 

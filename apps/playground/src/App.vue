@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
 import {
   WlAccordion,
   WlAlert,
@@ -8,9 +8,11 @@ import {
   WlBreadcrumbs,
   WlButton,
   WlButtonGroup,
+  WlCalendar,
   WlCard,
   WlCheckbox,
   WlChip,
+  WlColorPicker,
   WlDialog,
   WlDivider,
   WlDrawer,
@@ -47,6 +49,7 @@ import {
 import type {
   WlAccordionItem,
   WlBreadcrumbItem,
+  WlCalendarEvent,
   WlMenuItem,
   WlPillVariant,
   WlSegmentedOption,
@@ -62,9 +65,61 @@ const vWlTooltip = WlTooltip;
 
 /* Тема */
 const theme = ref<WlThemeName>("white");
-watch(theme, (value) => {
+watch(theme, async (value) => {
   document.documentElement.dataset.wlTheme = value;
+  await nextTick();
+  resolveColors();
 });
+
+/* Основа (этап 5a): свотчи цветов с runtime-разрешением hex */
+const swatchGroups = [
+  {
+    title: "Нейтральные",
+    note: "фоны, бордеры, текст",
+    tokens: ["bg", "bg-soft", "bg-hover", "border", "border-2", "text", "text-2", "text-3"]
+  },
+  {
+    title: "Акцент и семантика",
+    note: "синий — единственный primary",
+    tokens: ["accent", "accent-hover", "accent-soft", "accent-border", "success", "warn", "danger"]
+  }
+] as const;
+
+const resolvedHex = ref<Record<string, string>>({});
+
+function toHexColor(raw: string): string {
+  const v = raw.trim();
+  if (v.startsWith("#")) return v.toLowerCase();
+  const m = /^rgba?\((\d+),\s*(\d+),\s*(\d+)/.exec(v);
+  if (!m) return v;
+  const h = (n: string): string => Number(n).toString(16).padStart(2, "0");
+  return `#${h(m[1]!)}${h(m[2]!)}${h(m[3]!)}`;
+}
+
+function resolveColors(): void {
+  const cs = getComputedStyle(document.documentElement);
+  const out: Record<string, string> = {};
+  for (const group of swatchGroups) {
+    for (const token of group.tokens) {
+      out[token] = toHexColor(cs.getPropertyValue(`--wl-${token}`));
+    }
+  }
+  resolvedHex.value = out;
+}
+
+onMounted(resolveColors);
+
+async function copySwatch(token: string): Promise<void> {
+  const name = `--wl-${token}`;
+  const hex = resolvedHex.value[token] ?? "";
+  const text = hex || name;
+  try {
+    await navigator.clipboard.writeText(text);
+    toast.info("Скопировано", `${name} · ${text}`);
+  } catch {
+    toast.warn("Не удалось скопировать", text);
+  }
+}
 
 /* Формы */
 const text = ref("");
@@ -249,6 +304,26 @@ function projectVariant(value: unknown): WlTagVariant {
   return projectVariants[String(value)] ?? "gray";
 }
 
+/* Цвет и дата (этап 5a) */
+const pickedColor = ref("#2563eb");
+
+const DAY_MS = 86_400_000;
+function relDate(offsetDays: number): string {
+  const d = new Date(Date.now() + offsetDays * DAY_MS);
+  const p = (n: number): string => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+const todayIso = relDate(0);
+const calDate = ref(todayIso);
+const calEvents: WlCalendarEvent[] = [
+  { date: relDate(-2), label: "Ревью" },
+  { date: relDate(-1), label: "19:30 созвон", tone: "blue" },
+  { date: todayIso, label: "Демо", tone: "blue" },
+  { date: relDate(2), label: "Релиз 2.0" },
+  { date: relDate(2), label: "Перенос задач" },
+  { date: relDate(5), label: "Ретро" }
+];
+
 const popupMenu = ref<{ toggle: (e: Event) => void } | null>(null);
 const cardPop = ref<{ toggle: (e: Event) => void } | null>(null);
 function togglePopupMenu(event: Event): void {
@@ -281,6 +356,111 @@ const drawerVisible = ref(false);
       Витрина @whitelife/ui-kit: Vue 3 + TypeScript, PrimeVue 4 в unstyled-режиме,
       токены --wl-* и темы white / graphite.
     </p>
+
+    <!-- ==================== Цвета ==================== -->
+    <section class="pg-sec">
+      <h2 class="pg-sec-title">Цвета</h2>
+      <p class="pg-sec-desc">
+        Нейтральная база + один акцент. Hex разрешается через getComputedStyle — значения
+        корректны в обеих темах. Клик по свотчу копирует hex в буфер.
+      </p>
+
+      <div v-for="group in swatchGroups" :key="group.title" class="spec">
+        <div class="spec-h">
+          <span class="spec-name">{{ group.title }}</span>
+          <span class="spec-note">{{ group.note }}</span>
+        </div>
+        <div class="spec-b">
+          <div class="pg-swatches">
+            <button
+              v-for="t in group.tokens"
+              :key="t"
+              type="button"
+              class="pg-sw"
+              :title="`Скопировать ${resolvedHex[t] || t}`"
+              @click="copySwatch(t)"
+            >
+              <span class="pg-sw-c" :style="{ background: `var(--wl-${t})` }"></span>
+              <span class="pg-sw-b">
+                <span class="pg-sw-n">--wl-{{ t }}</span>
+                <span class="pg-sw-h">{{ resolvedHex[t] || "…" }}</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== Типографика ==================== -->
+    <section class="pg-sec">
+      <h2 class="pg-sec-title">Типографика</h2>
+      <p class="pg-sec-desc">Системный шрифтовой стек, тёмный графит. Числа в данных — с tabular-nums.</p>
+
+      <div class="spec">
+        <div class="spec-h"><span class="spec-name">Шкала</span><span class="spec-note">размер/строка · насыщенность</span></div>
+        <div class="spec-b" style="padding-top: 8px; padding-bottom: 8px">
+          <div class="pg-type-row">
+            <div style="font-size: 26px; font-weight: 700; letter-spacing: -0.02em">Заголовок страницы</div>
+            <div class="pg-type-meta">display · 26/34 · 700</div>
+          </div>
+          <div class="pg-type-row">
+            <div style="font-size: 20px; font-weight: 650; letter-spacing: -0.015em">Заголовок раздела</div>
+            <div class="pg-type-meta">title-1 · 20/28 · 650</div>
+          </div>
+          <div class="pg-type-row">
+            <div style="font-size: 16px; font-weight: 600">Заголовок блока</div>
+            <div class="pg-type-meta">title-2 · 16/24 · 600</div>
+          </div>
+          <div class="pg-type-row">
+            <div style="font-size: 14px; font-weight: 600">Заголовок карточки</div>
+            <div class="pg-type-meta">title-3 · 14/20 · 600</div>
+          </div>
+          <div class="pg-type-row">
+            <div style="font-size: 14px">Основной текст интерфейса и длинные абзацы с описаниями.</div>
+            <div class="pg-type-meta">body · 14/20 · 400</div>
+          </div>
+          <div class="pg-type-row">
+            <div style="font-size: 13px; color: var(--wl-text-2)">
+              Вторичный текст, подписи и мета-информация рядом с основным контентом.
+            </div>
+            <div class="pg-type-meta">body-small · 13/18 · 400 · text-2</div>
+          </div>
+          <div class="pg-type-row">
+            <div style="font-size: 12px; color: var(--wl-text-3)">Подпись, время, служебная информация</div>
+            <div class="pg-type-meta">caption · 12/16 · 400 · text-3</div>
+          </div>
+          <div class="pg-type-row">
+            <div
+              style="
+                font-size: 11.5px;
+                font-weight: 600;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                color: var(--wl-text-3);
+              "
+            >
+              Метка группы
+            </div>
+            <div class="pg-type-meta">overline · 11.5/16 · 600 · uppercase</div>
+          </div>
+          <div class="pg-type-row">
+            <div style="font-family: var(--wl-mono); font-size: 14px; font-variant-numeric: tabular-nums">
+              04:12:37 · 26 ч 40 мин
+            </div>
+            <div class="pg-type-meta">mono · таймеры и числа</div>
+          </div>
+          <div class="pg-type-row">
+            <a
+              href="#"
+              style="color: var(--wl-accent); font-weight: 500; text-decoration: none"
+              @click.prevent
+              >Текстовая ссылка</a
+            >
+            <div class="pg-type-meta">link · accent · hover: underline</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- ==================== Кнопки ==================== -->
     <section class="pg-sec">
@@ -791,6 +971,48 @@ const drawerVisible = ref(false);
       </div>
     </section>
 
+    <!-- ==================== Цвет и дата ==================== -->
+    <section class="pg-sec">
+      <h2 class="pg-sec-title">Цвет и дата</h2>
+      <p class="pg-sec-desc">Собственные компоненты без PrimeVue: палитра и месячный календарь.</p>
+
+      <div class="spec">
+        <div class="spec-h">
+          <span class="spec-name">WlColorPicker</span>
+          <span class="spec-note">v-model hex · swatches · size · валидация #rgb/#rrggbb</span>
+        </div>
+        <div class="spec-b">
+          <div class="row" style="align-items: flex-start">
+            <WlColorPicker v-model="pickedColor" />
+            <div class="col" style="gap: 8px">
+              <span class="pg-color-demo" :style="{ background: pickedColor || 'transparent' }">Aa</span>
+              <span class="muted">выбрано: {{ pickedColor || "—" }}</span>
+            </div>
+            <div class="col" style="gap: 8px">
+              <WlColorPicker v-model="pickedColor" size="sm" />
+              <span class="muted">size="sm" — тот же v-model</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h">
+          <span class="spec-name">WlCalendar</span>
+          <span class="spec-note">v-model ISO-дата · v-model:month · events · Mon-first</span>
+        </div>
+        <div class="spec-b">
+          <div class="row" style="align-items: flex-start">
+            <WlCalendar v-model="calDate" :events="calEvents" />
+            <div class="col" style="gap: 8px">
+              <span class="muted">выбрано: {{ calDate || "—" }}</span>
+              <WlButton size="sm" variant="soft" @click="calDate = todayIso">Сегодня</WlButton>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ==================== Обратная связь ==================== -->
     <section class="pg-sec">
       <h2 class="pg-sec-title">Обратная связь</h2>
@@ -1120,5 +1342,69 @@ code {
   border: 1px solid var(--wl-border);
   border-radius: 5px;
   padding: 1px 6px;
+}
+/* Этап 5a — свотчи и типографика (только playground) */
+.pg-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+.pg-sw {
+  border: 1px solid var(--wl-border);
+  border-radius: var(--wl-radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.12s;
+  text-align: left;
+  background: var(--wl-bg);
+}
+.pg-sw:hover {
+  border-color: var(--wl-border-2);
+}
+.pg-sw-c {
+  display: block;
+  height: 56px;
+  border-bottom: 1px solid var(--wl-border);
+}
+.pg-sw-b {
+  display: block;
+  padding: 8px 10px;
+}
+.pg-sw-n {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+}
+.pg-sw-h {
+  display: block;
+  font-size: 11px;
+  color: var(--wl-text-3);
+  font-family: var(--wl-mono);
+}
+.pg-type-row {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--wl-bg-soft);
+}
+.pg-type-row:last-child {
+  border-bottom: none;
+}
+.pg-type-meta {
+  font-size: 11.5px;
+  color: var(--wl-text-3);
+  font-family: var(--wl-mono);
+  margin-top: 4px;
+}
+.pg-color-demo {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--wl-radius-lg);
+  border: 1px solid var(--wl-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  transition: background 0.15s;
 }
 </style>

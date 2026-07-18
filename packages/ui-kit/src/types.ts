@@ -101,4 +101,15 @@ export type WlTableRow = Record<string, unknown>;
 
 export type WlStatCardTone = "accent" | "success";
 
+export type WlColorPickerSize = "sm" | "md";
+
+export type WlCalendarEventTone = "blue" | "gray";
+
+export interface WlCalendarEvent {
+  /** ISO date "YYYY-MM-DD". */
+  date: string;
+  label: string;
+  tone?: WlCalendarEventTone;
+}
+
 export type WlThemeName = "white" | "graphite";
