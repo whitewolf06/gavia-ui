@@ -199,6 +199,11 @@
     --wl-slider-height: 6px;
     --wl-slider-thumb: 18px;
     --wl-step-num: 24px;
+
+    --wl-table-cell-pad-y: 11px;
+    --wl-table-cell-pad-x: 12px;
+    --wl-table-head-pad-y: 8px;
+    --wl-stat-bar-height: 3px;
   }
 }
 
@@ -2361,5 +2366,112 @@
     display: flex;
     align-items: center;
     gap: 5px;
+  }
+}
+
+/* ============================================================
+   STAGE 4b — data display: table (PrimeVue DataTable) + stat card.
+   ============================================================ */
+@layer wl.components {
+  /* ---------- Table ---------- */
+  .wl-table {
+    position: relative;
+    width: 100%;
+  }
+  .wl-table__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    color: var(--wl-text);
+  }
+  .wl-table__th {
+    text-align: left;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--wl-text-3);
+    padding: var(--wl-table-head-pad-y) var(--wl-table-cell-pad-x);
+    border-bottom: 1px solid var(--wl-border);
+  }
+  .wl-table__td {
+    padding: var(--wl-table-cell-pad-y) var(--wl-table-cell-pad-x);
+    border-bottom: 1px solid var(--wl-bg-soft);
+  }
+  .wl-table__row {
+    transition: background var(--wl-dur-1) var(--wl-ease);
+  }
+  .wl-table__row:hover {
+    background: var(--wl-bg-soft);
+  }
+  .wl-table__cell--num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .wl-table__empty-cell {
+    padding: 24px var(--wl-table-cell-pad-x);
+    text-align: center;
+    color: var(--wl-text-3);
+    font-size: 13px;
+  }
+  .wl-table__mask {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--wl-ink-a06);
+    z-index: 2;
+  }
+  .wl-table__loading {
+    width: 22px;
+    height: 22px;
+    color: var(--wl-accent);
+  }
+
+  /* ---------- StatCard ---------- */
+  .wl-stat-card .wl-card__content {
+    padding: 15px 16px;
+  }
+  .wl-stat-card__label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--wl-text-3);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .wl-stat-card__value {
+    font-size: 20px;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    margin-top: 9px;
+    color: var(--wl-text);
+  }
+  .wl-stat-card__desc {
+    font-size: 12.5px;
+    color: var(--wl-text-2);
+    margin-top: 3px;
+  }
+  .wl-stat-card__bar {
+    height: var(--wl-stat-bar-height);
+    border-radius: 2px;
+    background: var(--wl-bg-hover);
+    margin-top: 11px;
+    overflow: hidden;
+  }
+  .wl-stat-card__bar-fill {
+    display: block;
+    height: 100%;
+    background: var(--wl-accent);
+    border-radius: 2px;
+  }
+  .wl-stat-card[data-tone="success"] .wl-stat-card__bar-fill {
+    background: var(--wl-success);
+  }
+  .wl-stat-card__footer {
+    margin-top: 12px;
   }
 }

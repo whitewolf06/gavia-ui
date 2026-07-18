@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { computed, useSlots } from "vue";
+import { computed, useAttrs, useSlots } from "vue";
 import InputText from "primevue/inputtext";
 import type { WlDensity, WlSizeSm } from "../types";
+
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(
   defineProps<{
@@ -24,6 +26,25 @@ const props = withDefaults(
 
 const model = defineModel<string>({ default: "" });
 const slots = useSlots();
+const attrs = useAttrs();
+
+/* id / aria-* belong on the inner input (label association, describedby);
+   class / style / everything else stays on the wrapper as before. */
+const innerAttrs = computed(() => {
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(attrs)) {
+    if (key === "id" || key.startsWith("aria-")) out[key] = value;
+  }
+  return out;
+});
+
+const rootAttrs = computed(() => {
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(attrs)) {
+    if (key !== "id" && !key.startsWith("aria-")) out[key] = value;
+  }
+  return out;
+});
 
 const wrapClass = computed(() => [
   "wl-input-wrap",
@@ -41,11 +62,12 @@ const inputClass = computed(() => [
 </script>
 
 <template>
-  <div :class="wrapClass" data-wl="input" :data-size="size">
+  <div :class="wrapClass" v-bind="rootAttrs" data-wl="input" :data-size="size">
     <span v-if="slots.prefix" class="wl-input-wrap__prefix"><slot name="prefix" /></span>
     <InputText
       v-model="model"
       :class="inputClass"
+      v-bind="innerAttrs"
       :type="type"
       :placeholder="placeholder"
       :disabled="disabled"

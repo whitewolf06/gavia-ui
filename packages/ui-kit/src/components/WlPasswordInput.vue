@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref, useAttrs } from "vue";
 import WlIcon from "./WlIcon.vue";
 import type { WlDensity, WlSizeSm } from "../types";
+
+defineOptions({ inheritAttrs: false });
 
 withDefaults(
   defineProps<{
@@ -23,12 +25,30 @@ withDefaults(
 
 const model = defineModel<string>({ default: "" });
 const visible = ref(false);
+const attrs = useAttrs();
+
+const innerAttrs = computed(() => {
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(attrs)) {
+    if (key === "id" || key.startsWith("aria-")) out[key] = value;
+  }
+  return out;
+});
+
+const rootAttrs = computed(() => {
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(attrs)) {
+    if (key !== "id" && !key.startsWith("aria-")) out[key] = value;
+  }
+  return out;
+});
 </script>
 
 <template>
   <div
     class="wl-input-wrap wl-input-wrap--has-btn"
     :class="{ 'is-disabled': disabled }"
+    v-bind="rootAttrs"
     data-wl="password-input"
     :data-size="size"
   >
@@ -41,6 +61,7 @@ const visible = ref(false);
         disabled && 'is-disabled',
         density === 'compact' && 'is-compact'
       ]"
+      v-bind="innerAttrs"
       :type="visible ? 'text' : 'password'"
       :placeholder="placeholder"
       :disabled="disabled"

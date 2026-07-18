@@ -90,4 +90,15 @@ export interface WlStepItem {
   label: string;
 }
 
+export interface WlTableColumn {
+  key: string;
+  label: string;
+  numeric?: boolean;
+  width?: string | number;
+}
+
+export type WlTableRow = Record<string, unknown>;
+
+export type WlStatCardTone = "accent" | "success";
+
 export type WlThemeName = "white" | "graphite";

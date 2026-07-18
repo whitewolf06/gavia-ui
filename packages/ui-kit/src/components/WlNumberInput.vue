@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { computed, ref, useAttrs, watch } from "vue";
 import WlIcon from "./WlIcon.vue";
 import type { WlDensity, WlSizeSm } from "../types";
+
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(
   defineProps<{
@@ -26,6 +28,23 @@ const props = withDefaults(
 );
 
 const model = defineModel<number>({ default: 0 });
+const attrs = useAttrs();
+
+const innerAttrs = computed(() => {
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(attrs)) {
+    if (key === "id" || key.startsWith("aria-")) out[key] = value;
+  }
+  return out;
+});
+
+const rootAttrs = computed(() => {
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(attrs)) {
+    if (key !== "id" && !key.startsWith("aria-")) out[key] = value;
+  }
+  return out;
+});
 
 const draft = ref(String(model.value));
 watch(model, (value) => {
@@ -64,7 +83,13 @@ function onKeydown(event: KeyboardEvent): void {
 </script>
 
 <template>
-  <div class="wl-stepper" :class="{ 'is-disabled': disabled }" data-wl="number-input" :data-size="size">
+  <div
+    class="wl-stepper"
+    :class="{ 'is-disabled': disabled }"
+    v-bind="rootAttrs"
+    data-wl="number-input"
+    :data-size="size"
+  >
     <button
       type="button"
       class="wl-stepper__btn"
@@ -83,6 +108,7 @@ function onKeydown(event: KeyboardEvent): void {
         disabled && 'is-disabled',
         density === 'compact' && 'is-compact'
       ]"
+      v-bind="innerAttrs"
       type="text"
       inputmode="numeric"
       :disabled="disabled"

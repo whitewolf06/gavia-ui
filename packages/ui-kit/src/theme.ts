@@ -161,6 +161,16 @@ export function createWlPt(overrides: Record<string, unknown> = {}): WlPtConfig 
       detail: { class: "wl-toast__detail" },
       closeButton: { class: "wl-toast__close" },
       closeIcon: { class: "wl-toast__close-icon" }
+    },
+    datatable: {
+      table: { class: "wl-table__table" },
+      thead: { class: "wl-table__head" },
+      tbody: { class: "wl-table__body" },
+      bodyRow: { class: "wl-table__row" },
+      emptyMessage: { class: "wl-table__empty" },
+      emptyMessageCell: { class: "wl-table__empty-cell" },
+      mask: { class: "wl-table__mask" },
+      loadingIcon: { class: "wl-table__loading" }
     }
   };
 

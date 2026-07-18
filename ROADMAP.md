@@ -78,7 +78,7 @@ pack ✓ (Vue/PrimeVue вне бандла).
 Проверки этапа: build ✓ · typecheck ✓ · 59/59 тестов ✓ · playground ✓ ·
 pack ✓ (в архиве только dist/styles/themes/README/package.json).
 
-## Этап 4. Формы и данные — 🚧 в работе
+## Этап 4. Формы и данные — ✅ (8 компонентов)
 
 Политика реализации (уточнена): формы — собственные компоненты напрямую из
 прототипа; таблица — обёртка PrimeVue DataTable.
@@ -91,11 +91,13 @@ pack ✓ (в архиве только dist/styles/themes/README/package.json).
 | `WlAccordion` (details/summary, single, controlled) | ✅ | `.acc` |
 | `WlSteps` (done/current/pending) | ✅ | `.steps` |
 | `WlField` (label + hint + error, useId-связка) | ✅ | `.field` |
-| `WlTable` (обёртка DataTable: тонкие разделители, hover, num) | ⬜ | `.table` |
-| `WlStatCard` (label + value + focus-bar) | ⬜ | `.stat-card` |
+| `WlTable` (DataTable: columns, cell-слоты, numeric, empty) | ✅ | `.table` |
+| `WlStatCard` (label + value + focus-bar) | ✅ | `.stat-card` |
 
-Заход 4a (формы) — собственные компоненты без PrimeVue. Проверки: build ✓ ·
-typecheck ✓ · 80/80 тестов ✓ · playground ✓ · pack ✓.
+Заход 4a (формы) — собственные компоненты без PrimeVue; заход 4b — таблица на
+DataTable, stat-card свой, плюс проброс `id`/aria во внутренние поля у
+`WlInput`/`WlPasswordInput`/`WlNumberInput`. Проверки: build ✓ · typecheck ✓ ·
+93/93 тестов ✓ · playground ✓ · pack ✓ (в kit 40 компонентов).
 
 ## Этап 5. Прикладной слой WhiteLife — ⛔ не в kit
 

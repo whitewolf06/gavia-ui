@@ -33,8 +33,10 @@ import {
   WlSkeleton,
   WlSlider,
   WlSpinner,
+  WlStatCard,
   WlSteps,
   WlSwitch,
+  WlTable,
   WlTabs,
   WlTag,
   WlTextarea,
@@ -46,9 +48,13 @@ import type {
   WlAccordionItem,
   WlBreadcrumbItem,
   WlMenuItem,
+  WlPillVariant,
   WlSegmentedOption,
   WlStepItem,
   WlTabItem,
+  WlTableColumn,
+  WlTableRow,
+  WlTagVariant,
   WlThemeName
 } from "@whitelife/ui-kit";
 
@@ -184,6 +190,64 @@ const popupMenuItems: WlMenuItem[] = [
 ];
 
 const toast = useWlToast();
+
+/* Данные (этап 4b): таблица и стат-карточки */
+interface TaskStatus {
+  label: string;
+  variant: WlPillVariant;
+}
+
+const taskColumns: WlTableColumn[] = [
+  { key: "task", label: "Задача" },
+  { key: "project", label: "Проект", width: 110 },
+  { key: "due", label: "Срок", width: 100 },
+  { key: "status", label: "Статус", width: 130 },
+  { key: "estimate", label: "Оценка", numeric: true, width: 90 }
+];
+
+const taskRows: WlTableRow[] = [
+  {
+    task: "Черновик презентации «Атлас»",
+    project: "Атлас",
+    due: "17 июля",
+    status: { label: "В работе", variant: "info" },
+    estimate: "3 ч"
+  },
+  {
+    task: "Ревью макетов онбординга",
+    project: "Атлас",
+    due: "18 июля",
+    status: { label: "Черновик", variant: "neutral" },
+    estimate: "1 ч"
+  },
+  {
+    task: "Оплатить интернет и квартплату",
+    project: "Дом",
+    due: "25 июля",
+    status: { label: "Ждёт", variant: "warn" },
+    estimate: "15 мин"
+  },
+  {
+    task: "Отправить отчёт за июнь",
+    project: "Работа",
+    due: "14 июля",
+    status: { label: "Готово", variant: "ok" },
+    estimate: "2 ч"
+  }
+];
+
+function asStatus(value: unknown): TaskStatus {
+  return value as TaskStatus;
+}
+
+const projectVariants: Record<string, WlTagVariant> = {
+  Атлас: "blue",
+  Дом: "amber",
+  Работа: "green"
+};
+function projectVariant(value: unknown): WlTagVariant {
+  return projectVariants[String(value)] ?? "gray";
+}
 
 const popupMenu = ref<{ toggle: (e: Event) => void } | null>(null);
 const cardPop = ref<{ toggle: (e: Event) => void } | null>(null);
@@ -619,7 +683,65 @@ const drawerVisible = ref(false);
     <!-- ==================== Данные и индикаторы ==================== -->
     <section class="pg-sec">
       <h2 class="pg-sec-title">Данные и индикаторы</h2>
-      <p class="pg-sec-desc">Аватары, прогресс, скелетоны и спиннеры.</p>
+      <p class="pg-sec-desc">Стат-карточки, таблица, аватары, прогресс, скелетоны и спиннеры.</p>
+
+      <div class="spec">
+        <div class="spec-h">
+          <span class="spec-name">WlStatCard</span>
+          <span class="spec-note">icon / label / value / description / progress / tone, #footer</span>
+        </div>
+        <div class="spec-b">
+          <div class="row" style="align-items: stretch">
+            <WlStatCard
+              icon="bell"
+              label="Время сегодня"
+              value="4 ч 12 мин"
+              description="из дневной цели 6 часов"
+              :progress="70"
+              tone="success"
+              style="flex: 1; min-width: 220px"
+            />
+            <WlStatCard
+              icon="eye"
+              label="Фокус дня"
+              value="Черновик презентации «Атлас»"
+              description="2 из 5 разделов готовы"
+              :progress="40"
+              style="flex: 1; min-width: 220px"
+            />
+            <WlStatCard
+              icon="check"
+              label="Задач закрыто"
+              value="17"
+              description="за эту неделю"
+              style="flex: 1; min-width: 220px"
+            >
+              <template #footer><span class="muted">+4 к прошлой неделе</span></template>
+            </WlStatCard>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h">
+          <span class="spec-name">WlTable</span>
+          <span class="spec-note">columns + #cell-&lt;key&gt; scoped slots, numeric, emptyMessage</span>
+        </div>
+        <div class="spec-b">
+          <WlTable :value="taskRows" :columns="taskColumns">
+            <template #cell-project="{ value }">
+              <WlTag :variant="projectVariant(value)">{{ value }}</WlTag>
+            </template>
+            <template #cell-status="{ value }">
+              <WlPill :variant="asStatus(value).variant">{{ asStatus(value).label }}</WlPill>
+            </template>
+          </WlTable>
+          <p class="muted" style="margin: 14px 0 10px">
+            Колонка «Оценка» — numeric (вправо, табличные цифры). Пустое состояние таблицы:
+          </p>
+          <WlTable :value="[]" :columns="taskColumns" empty-message="Задач пока нет" />
+        </div>
+      </div>
 
       <div class="spec">
         <div class="spec-h"><span class="spec-name">WlAvatar</span><span class="spec-note">sizes 24–48, presence</span></div>
