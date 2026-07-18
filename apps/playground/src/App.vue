@@ -4,17 +4,27 @@ import {
   WlAlert,
   WlAvatar,
   WlBadge,
+  WlBreadcrumbs,
   WlButton,
+  WlButtonGroup,
   WlCard,
   WlCheckbox,
   WlChip,
   WlDialog,
   WlDivider,
   WlDrawer,
+  WlEmpty,
   WlIcon,
+  WlIconButton,
   WlInput,
+  WlMenu,
+  WlNavItem,
+  WlPagination,
+  WlPill,
+  WlPopover,
   WlProgress,
   WlRadio,
+  WlSegmented,
   WlSelect,
   WlSkeleton,
   WlSpinner,
@@ -22,9 +32,17 @@ import {
   WlTabs,
   WlTag,
   WlTextarea,
-  WlTooltip
+  WlToast,
+  WlTooltip,
+  useWlToast
 } from "@whitelife/ui-kit";
-import type { WlTabItem, WlThemeName } from "@whitelife/ui-kit";
+import type {
+  WlBreadcrumbItem,
+  WlMenuItem,
+  WlSegmentedOption,
+  WlTabItem,
+  WlThemeName
+} from "@whitelife/ui-kit";
 
 const vWlTooltip = WlTooltip;
 
@@ -70,6 +88,61 @@ const tabItems: WlTabItem[] = [
   { key: "profile", label: "Профиль", icon: "user" }
 ];
 const activeTab = ref("tasks");
+
+/* Навигация (этап 3) */
+const periodOptions: WlSegmentedOption[] = [
+  { label: "День", value: "day" },
+  { label: "Неделя", value: "week" },
+  { label: "Месяц", value: "month" },
+  { label: "Год", value: "year", disabled: true }
+];
+const period = ref<string | null>("week");
+
+const viewOptions: WlSegmentedOption[] = [
+  { label: "Список", value: "list", icon: "minus" },
+  { label: "Доска", value: "board", icon: "plus" },
+  { label: "Календарь", value: "calendar", icon: "bell" }
+];
+const view = ref<string | null>("list");
+
+const navActive = ref("tasks");
+
+const crumbItems: WlBreadcrumbItem[] = [
+  { label: "Проекты", href: "#/projects" },
+  { label: "WhiteLife", href: "#/projects/whitelife" },
+  { label: "Спринт 24" }
+];
+
+const pagerPage = ref(6);
+const compactPage = ref(4);
+
+/* Меню, поповер и тосты */
+const menuAction = ref("—");
+const staticMenuItems: WlMenuItem[] = [
+  { label: "Открыть", icon: "eye", shortcut: "⌘O", command: () => (menuAction.value = "Открыть") },
+  { label: "Переименовать", icon: "edit", shortcut: "F2", command: () => (menuAction.value = "Переименовать") },
+  { separator: true },
+  { header: "Опасная зона" },
+  { label: "Удалить", icon: "trash", danger: true, command: () => (menuAction.value = "Удалить") },
+  { label: "Заблокировать", disabled: true }
+];
+const popupMenuItems: WlMenuItem[] = [
+  { label: "Дублировать", icon: "plus", command: () => (menuAction.value = "Дублировать") },
+  { label: "Поделиться", icon: "user", command: () => (menuAction.value = "Поделиться") },
+  { separator: true },
+  { label: "Архивировать", icon: "trash", danger: true, command: () => (menuAction.value = "Архивировать") }
+];
+
+const toast = useWlToast();
+
+const popupMenu = ref<{ toggle: (e: Event) => void } | null>(null);
+const cardPop = ref<{ toggle: (e: Event) => void } | null>(null);
+function togglePopupMenu(event: Event): void {
+  popupMenu.value?.toggle(event);
+}
+function toggleCardPop(event: Event): void {
+  cardPop.value?.toggle(event);
+}
 
 /* Обратная связь и оверлеи */
 const showClosable = ref(true);
@@ -267,7 +340,9 @@ const drawerVisible = ref(false);
     <!-- ==================== Навигация ==================== -->
     <section class="pg-sec">
       <h2 class="pg-sec-title">Навигация</h2>
-      <p class="pg-sec-desc">Табы с иконками, счётчиками и scoped-слотом панели.</p>
+      <p class="pg-sec-desc">
+        Табы, сегменты, пункты меню, хлебные крошки, пагинация и сгруппированные кнопки.
+      </p>
 
       <div class="spec">
         <div class="spec-h"><span class="spec-name">WlTabs</span><span class="spec-note">items + v-model + #panel</span></div>
@@ -280,6 +355,81 @@ const drawerVisible = ref(false);
               </p>
             </template>
           </WlTabs>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h"><span class="spec-name">WlSegmented</span><span class="spec-note">options + v-model, disabled option</span></div>
+        <div class="spec-b">
+          <div class="row">
+            <WlSegmented v-model="period" :options="periodOptions" />
+            <span class="muted">выбрано: {{ period }}</span>
+          </div>
+          <div class="row">
+            <WlSegmented v-model="view" :options="viewOptions" />
+            <span class="muted">с иконками</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h"><span class="spec-name">WlNavItem</span><span class="spec-note">icon, badge, active — ширину задаёт контейнер</span></div>
+        <div class="spec-b">
+          <div class="row" style="align-items: flex-start">
+            <div class="col" style="width: 230px; gap: 4px">
+              <WlNavItem label="Задачи" icon="check" :badge="12" :active="navActive === 'tasks'" @click="navActive = 'tasks'" />
+              <WlNavItem label="Заметки" icon="edit" :badge="4" :active="navActive === 'notes'" @click="navActive = 'notes'" />
+              <WlNavItem label="Уведомления" icon="bell" :active="navActive === 'alerts'" @click="navActive = 'alerts'" />
+              <WlNavItem label="Профиль" icon="user" :active="navActive === 'profile'" @click="navActive = 'profile'" />
+              <WlNavItem label="Архив" icon="trash" disabled />
+            </div>
+            <span class="muted">активный: {{ navActive }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h"><span class="spec-name">WlBreadcrumbs</span><span class="spec-note">последний пункт — текущий, не ссылка</span></div>
+        <div class="spec-b">
+          <WlBreadcrumbs :items="crumbItems" />
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h"><span class="spec-name">WlPagination</span><span class="spec-note">siblings-окно с многоточиями и compact-вариант</span></div>
+        <div class="spec-b">
+          <div class="row">
+            <WlPagination v-model:page="pagerPage" :page-count="12" />
+          </div>
+          <div class="row">
+            <WlPagination v-model:page="compactPage" :page-count="9" compact />
+            <span class="muted">страница {{ compactPage }} из 9 — ввод с клавиатуры</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h"><span class="spec-name">WlButtonGroup / WlIconButton</span><span class="spec-note">склейка рамок, счётчики и dot</span></div>
+        <div class="spec-b">
+          <div class="row">
+            <WlButtonGroup>
+              <WlButton size="sm" variant="secondary">День</WlButton>
+              <WlButton size="sm" variant="secondary">Неделя</WlButton>
+              <WlButton size="sm" variant="secondary">Месяц</WlButton>
+            </WlButtonGroup>
+            <WlButtonGroup>
+              <WlIconButton icon="chevron-left" variant="secondary" aria-label="Назад" />
+              <WlIconButton icon="chevron-right" variant="secondary" aria-label="Вперёд" />
+            </WlButtonGroup>
+          </div>
+          <div class="row">
+            <WlIconButton icon="bell" :count="4" aria-label="Уведомления" />
+            <WlIconButton icon="search" aria-label="Поиск" />
+            <WlIconButton icon="plus" active aria-label="Добавить" />
+            <WlIconButton icon="bell" dot variant="soft" aria-label="Есть новые" />
+            <WlIconButton icon="user" variant="secondary" size="sm" :count="2" aria-label="Профиль" />
+            <WlIconButton icon="trash" disabled aria-label="Удалить" />
+          </div>
         </div>
       </div>
     </section>
@@ -403,7 +553,7 @@ const drawerVisible = ref(false);
     <!-- ==================== Оверлеи ==================== -->
     <section class="pg-sec">
       <h2 class="pg-sec-title">Оверлеи</h2>
-      <p class="pg-sec-desc">Диалог, drawer, тултип и разделитель.</p>
+      <p class="pg-sec-desc">Диалог, drawer, меню, поповер, тосты и разделитель.</p>
 
       <div class="spec">
         <div class="spec-h"><span class="spec-name">WlDialog / WlDrawer / WlTooltip</span></div>
@@ -418,6 +568,80 @@ const drawerVisible = ref(false);
           <WlDivider>Разделитель с подписью</WlDivider>
           <p class="muted">Текст между разделителями.</p>
           <WlDivider />
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h"><span class="spec-name">WlMenu</span><span class="spec-note">статическое и popup, header / separator / danger</span></div>
+        <div class="spec-b">
+          <div class="row" style="align-items: flex-start">
+            <WlMenu :items="staticMenuItems" />
+            <div class="col" style="gap: 8px">
+              <WlButton variant="secondary" @click="togglePopupMenu">
+                Открыть popup-меню
+              </WlButton>
+              <WlMenu ref="popupMenu" popup :items="popupMenuItems" />
+              <span class="muted">последняя команда: {{ menuAction }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h"><span class="spec-name">WlPopover</span><span class="spec-note">toggle по клику, портал в body</span></div>
+        <div class="spec-b">
+          <div class="row">
+            <WlButton variant="secondary" @click="toggleCardPop">
+              Детали карточки
+            </WlButton>
+            <WlPopover ref="cardPop">
+              <b style="display: block; margin-bottom: 6px; color: var(--wl-text)">Карточка 128</b>
+              Поповер — лёгкая панель рядом с якорем. Клик вне панели закрывает её.
+              <div style="margin-top: 10px">
+                <WlButton size="xs" variant="soft">Открыть полностью</WlButton>
+              </div>
+            </WlPopover>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h"><span class="spec-name">WlToast + useWlToast</span><span class="spec-note">bottom-center, life 2200 мс</span></div>
+        <div class="spec-b">
+          <div class="row">
+            <WlButton size="sm" variant="soft" @click="toast.ok('Изменения сохранены')">ok</WlButton>
+            <WlButton size="sm" variant="soft" @click="toast.info('Новая версия доступна')">info</WlButton>
+            <WlButton size="sm" variant="soft" @click="toast.warn('Лимит хранилища почти исчерпан')">warn</WlButton>
+            <WlButton size="sm" variant="soft" @click="toast.err('Не удалось сохранить изменения')">err</WlButton>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h"><span class="spec-name">WlEmpty / WlPill</span></div>
+        <div class="spec-b">
+          <div class="row" style="align-items: stretch">
+            <WlEmpty
+              icon="search"
+              title="Ничего не найдено"
+              description="Попробуйте изменить запрос или сбросить фильтры."
+              style="flex: 1"
+            >
+              <template #action>
+                <WlButton size="sm" variant="secondary">Сбросить фильтры</WlButton>
+              </template>
+            </WlEmpty>
+            <WlEmpty icon="bell" title="Уведомлений нет" style="flex: 1">
+              Новые события появятся здесь автоматически.
+            </WlEmpty>
+          </div>
+          <div class="row">
+            <WlPill>Черновик</WlPill>
+            <WlPill variant="info">В работе</WlPill>
+            <WlPill variant="ok">Готово</WlPill>
+            <WlPill variant="warn">Ждёт ревью</WlPill>
+            <WlPill variant="err">Просрочено</WlPill>
+          </div>
         </div>
       </div>
     </section>
@@ -476,6 +700,7 @@ const drawerVisible = ref(false);
   </main>
 
   <!-- Оверлеи -->
+  <WlToast />
   <WlDialog v-model:visible="dialogVisible" header="Новая задача">
     <div class="col">
       <WlInput v-model="text" placeholder="Название задачи" />

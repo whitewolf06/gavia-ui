@@ -59,23 +59,26 @@
 Проверки этапа: build ✓ · typecheck ✓ · 30/30 тестов ✓ · playground ✓ ·
 pack ✓ (Vue/PrimeVue вне бандла).
 
-## Этап 3. Навигация и оверлеи — ⬜ следующий
+## Этап 3. Навигация и оверлеи — ✅ (11 компонентов + composable)
 
 | Компонент | Статус | Прототип |
 | --- | --- | --- |
-| `WlIconButton` (квадратная, со счётчиком/точкой) | ⬜ | `.icb` |
-| `WlButtonGroup` | ⬜ | `.btn-group` |
-| `WlSegmented` | ⬜ | `.seg` |
-| `WlNavItem` (пункт рейки с бейджем) | ⬜ | `.nav-item` |
-| `WlBreadcrumbs` | ⬜ | `.crumbs` |
-| `WlPagination` (+ compact-вариант) | ⬜ | `.pager` |
-| `WlMenu` / контекстное меню | ⬜ | `.menu` |
-| `WlPopover` | ⬜ | `.popover` |
-| `WlToast` (обёртка ToastService, 4 типа) | ⬜ | `.toast` |
-| `WlEmpty` (пустое состояние) | ⬜ | `.empty` |
-| `WlPill` (статус с точкой) | ⬜ | `.pill` |
+| `WlIconButton` (sm/md, счётчик/точка) | ✅ | `.icb` |
+| `WlButtonGroup` | ✅ | `.btn-group` |
+| `WlSegmented` (поверх SelectButton) | ✅ | `.seg` |
+| `WlNavItem` (рейк с бейджем, width: 100%) | ✅ | `.nav-item` |
+| `WlBreadcrumbs` (последний — `aria-current`) | ✅ | `.crumbs` |
+| `WlPagination` (1-based `v-model:page` + compact) | ✅ | `.pager` |
+| `WlMenu` (static + popup, заголовки, danger) | ✅ | `.menu` |
+| `WlPopover` | ✅ | `.popover` |
+| `WlToast` + `useWlToast()` + `WlToastService` (4 типа) | ✅ | `.toast` |
+| `WlEmpty` | ✅ | `.empty` |
+| `WlPill` (статус с точкой, 5 вариантов) | ✅ | `.pill` |
 
-## Этап 4. Формы и данные — ⬜
+Проверки этапа: build ✓ · typecheck ✓ · 59/59 тестов ✓ · playground ✓ ·
+pack ✓ (в архиве только dist/styles/themes/README/package.json).
+
+## Этап 4. Формы и данные — ⬜ следующий
 
 | Компонент | Статус | Прототип |
 | --- | --- | --- |

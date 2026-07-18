@@ -50,4 +50,33 @@ export interface WlTabItem {
   count?: number;
 }
 
+export type WlIconButtonVariant = "ghost" | "secondary" | "soft";
+export type WlPillVariant = "neutral" | "info" | "ok" | "warn" | "err";
+
+export interface WlSegmentedOption {
+  label: string;
+  value: string;
+  icon?: WlIconName;
+  disabled?: boolean;
+}
+
+export interface WlBreadcrumbItem {
+  label: string;
+  to?: string;
+  href?: string;
+  icon?: WlIconName;
+}
+
+export interface WlMenuItem {
+  key?: string;
+  label?: string;
+  icon?: WlIconName;
+  shortcut?: string;
+  danger?: boolean;
+  disabled?: boolean;
+  separator?: boolean;
+  header?: string;
+  command?: (item: WlMenuItem) => void;
+}
+
 export type WlThemeName = "white" | "graphite";

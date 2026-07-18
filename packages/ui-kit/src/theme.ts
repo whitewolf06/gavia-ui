@@ -127,6 +127,40 @@ export function createWlPt(overrides: Record<string, unknown> = {}): WlPtConfig 
       root: { class: "wl-tooltip" },
       text: { class: "wl-tooltip__text" },
       arrow: { class: "wl-tooltip__arrow" }
+    },
+    selectbutton: {
+      pcToggleButton: {
+        root: (o: WlPtCallbackOptions) => ({
+          class: cx("wl-segmented__item", o.context.active && "is-active")
+        }),
+        content: { class: "wl-segmented__item-content" }
+      }
+    },
+    breadcrumb: {
+      list: { class: "wl-breadcrumbs__list" },
+      item: { class: "wl-breadcrumbs__item" },
+      separator: { class: "wl-breadcrumbs__separator" }
+    },
+    menu: {
+      list: { class: "wl-menu__list" },
+      submenuLabel: { class: "wl-menu__head" },
+      item: { class: "wl-menu__item" },
+      itemContent: { class: "wl-menu__item-content" },
+      itemLink: { class: "wl-menu__link" },
+      separator: { class: "wl-menu__sep" }
+    },
+    popover: {
+      content: { class: "wl-popover__content" }
+    },
+    toast: {
+      message: { class: "wl-toast__message" },
+      messageContent: { class: "wl-toast__content" },
+      messageIcon: { class: "wl-toast__icon" },
+      messageText: { class: "wl-toast__text" },
+      summary: { class: "wl-toast__summary" },
+      detail: { class: "wl-toast__detail" },
+      closeButton: { class: "wl-toast__close" },
+      closeIcon: { class: "wl-toast__close-icon" }
     }
   };
 

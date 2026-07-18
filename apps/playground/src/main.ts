@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import PrimeVue from "primevue/config";
-import { createWlPt } from "@whitelife/ui-kit";
+import { createWlPt, WlToastService } from "@whitelife/ui-kit";
 
 // Стили подключаются явно: reset → base → темы
 import "@whitelife/ui-kit/styles/reset.css";
@@ -12,4 +12,5 @@ import App from "./App.vue";
 
 const app = createApp(App);
 app.use(PrimeVue, { unstyled: true, pt: createWlPt() });
+app.use(WlToastService);
 app.mount("#app");

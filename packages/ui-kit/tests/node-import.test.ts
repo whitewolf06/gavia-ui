@@ -9,24 +9,35 @@ describe("node import", () => {
       "WlAlert",
       "WlAvatar",
       "WlBadge",
+      "WlBreadcrumbs",
       "WlButton",
+      "WlButtonGroup",
       "WlCard",
       "WlCheckbox",
       "WlChip",
       "WlDialog",
       "WlDivider",
       "WlDrawer",
+      "WlEmpty",
       "WlIcon",
+      "WlIconButton",
       "WlInput",
+      "WlMenu",
+      "WlNavItem",
+      "WlPagination",
+      "WlPill",
+      "WlPopover",
       "WlProgress",
       "WlRadio",
+      "WlSegmented",
       "WlSelect",
       "WlSkeleton",
       "WlSpinner",
       "WlSwitch",
       "WlTabs",
       "WlTag",
-      "WlTextarea"
+      "WlTextarea",
+      "WlToast"
     ] as const;
 
     for (const name of components) {
@@ -35,6 +46,8 @@ describe("node import", () => {
 
     expect(typeof mod.createWlPt).toBe("function");
     expect(mod.WlTooltip).toBeTruthy();
+    expect(typeof mod.useWlToast).toBe("function");
+    expect(mod.WlToastService).toBeTruthy();
 
     const pt = mod.createWlPt({ button: { root: { "data-test": "app-button" } } });
     expect(pt.button?.root).toEqual({ "data-test": "app-button" });
