@@ -41,7 +41,12 @@ export type WlIconName =
   | "bell"
   | "user"
   | "eye"
-  | "eye-off";
+  | "eye-off"
+  | "calendar"
+  | "upload"
+  | "file"
+  | "image"
+  | "music";
 
 export interface WlTabItem {
   key: string;
@@ -110,6 +115,24 @@ export interface WlCalendarEvent {
   date: string;
   label: string;
   tone?: WlCalendarEventTone;
+}
+
+/** Subset of the PrimeVue locale object used by overlay calendars. */
+export interface WlDatePickerLocale {
+  firstDayOfWeek?: number;
+  dayNames?: string[];
+  dayNamesShort?: string[];
+  dayNamesMin?: string[];
+  monthNames?: string[];
+  monthNamesShort?: string[];
+  [key: string]: unknown;
+}
+
+export type WlFileRejectReason = "type" | "size" | "count";
+
+export interface WlFileReject {
+  file: File;
+  reason: WlFileRejectReason;
 }
 
 export type WlThemeName = "white" | "graphite";

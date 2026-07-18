@@ -99,7 +99,7 @@ DataTable, stat-card свой, плюс проброс `id`/aria во внутр
 `WlInput`/`WlPasswordInput`/`WlNumberInput`. Проверки: build ✓ · typecheck ✓ ·
 93/93 тестов ✓ · playground ✓ · pack ✓ (в kit 40 компонентов).
 
-## Этап 5. Foundation-витрина и дополнительные компоненты — 🚧 в работе
+## Этап 5. Foundation-витрина и дополнительные компоненты — ✅
 
 | Задача | Статус | Примечание |
 | --- | --- | --- |
@@ -107,8 +107,11 @@ DataTable, stat-card свой, плюс проброс `id`/aria во внутр
 | Playground: секция «Типографика» (шкала, mono, ссылки) | ✅ | playground-стили с `pg-` префиксом, не в библиотеке |
 | `WlColorPicker` (свотчи + hex-инпут) | ✅ | свой, нормализация в `#rrggbb` |
 | `WlCalendar` (месячная сетка: today/selected/события) | ✅ | свой, `v-model` = ISO `YYYY-MM-DD` |
-| `WlDatePicker` | ⬜ | обёртка PrimeVue DatePicker (сложное поведение) |
-| `WlFileUpload` (dropzone + список файлов) | ⬜ | свой |
+| `WlDatePicker` (ISO v-model, ru-locale, panel в стиле kit) | ✅ | обёртка PrimeVue DatePicker |
+| `WlFileUpload` (dropzone + список файлов + reject-события) | ✅ | свой, файлы не загружаются — отдаёт потребителю |
+
+Проверки этапа: build ✓ · typecheck ✓ · 115/115 тестов ✓ · playground ✓ ·
+pack ✓ (в kit 44 компонента).
 
 ## Этап 6. Прикладной слой WhiteLife — ⛔ не в kit
 

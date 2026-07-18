@@ -8,6 +8,8 @@ export interface WlPtCallbackOptions {
     focused?: boolean;
     disabled?: boolean;
     active?: boolean;
+    today?: boolean;
+    otherMonth?: boolean;
     [key: string]: unknown;
   };
   [key: string]: unknown;
@@ -171,6 +173,38 @@ export function createWlPt(overrides: Record<string, unknown> = {}): WlPtConfig 
       emptyMessageCell: { class: "wl-table__empty-cell" },
       mask: { class: "wl-table__mask" },
       loadingIcon: { class: "wl-table__loading" }
+    },
+    datepicker: {
+      dropdown: { class: "wl-dp__trigger" },
+      dropdownIcon: { class: "wl-dp__trigger-icon" },
+      panel: { class: "wl-overlay wl-dp__panel" },
+      calendarContainer: { class: "wl-dp__container" },
+      calendar: { class: "wl-dp__calendar" },
+      header: { class: "wl-dp__header" },
+      title: { class: "wl-dp__title" },
+      selectMonth: { class: "wl-dp__view-btn" },
+      selectYear: { class: "wl-dp__view-btn" },
+      pcPrevButton: {
+        root: { class: "wl-dp__nav" },
+        icon: { class: "wl-dp__nav-icon" }
+      },
+      pcNextButton: {
+        root: { class: "wl-dp__nav" },
+        icon: { class: "wl-dp__nav-icon" }
+      },
+      dayView: { class: "wl-dp__table" },
+      tableHeaderCell: { class: "wl-dp__wd-cell" },
+      weekDay: { class: "wl-dp__weekday" },
+      dayCell: { class: "wl-dp__day-cell" },
+      day: (o) => ({
+        class: cx(
+          "wl-dp__day",
+          o.context.selected && "is-selected",
+          o.context.today && "is-today",
+          o.context.otherMonth && "is-muted",
+          o.context.disabled && "is-disabled"
+        )
+      })
     }
   };
 

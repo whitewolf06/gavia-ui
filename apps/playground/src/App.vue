@@ -13,11 +13,13 @@ import {
   WlCheckbox,
   WlChip,
   WlColorPicker,
+  WlDatePicker,
   WlDialog,
   WlDivider,
   WlDrawer,
   WlEmpty,
   WlField,
+  WlFileUpload,
   WlIcon,
   WlIconButton,
   WlInput,
@@ -50,6 +52,7 @@ import type {
   WlAccordionItem,
   WlBreadcrumbItem,
   WlCalendarEvent,
+  WlFileReject,
   WlMenuItem,
   WlPillVariant,
   WlSegmentedOption,
@@ -323,6 +326,13 @@ const calEvents: WlCalendarEvent[] = [
   { date: relDate(2), label: "Перенос задач" },
   { date: relDate(5), label: "Ретро" }
 ];
+
+/* Файлы и дата (этап 5b) */
+const pickedDate = ref<string | null>(null);
+const uploaded = ref<File[]>([]);
+function onUploadReject(payload: WlFileReject): void {
+  toast.warn("Файл отклонён", payload.file.name);
+}
 
 const popupMenu = ref<{ toggle: (e: Event) => void } | null>(null);
 const cardPop = ref<{ toggle: (e: Event) => void } | null>(null);
@@ -1009,6 +1019,45 @@ const drawerVisible = ref(false);
               <WlButton size="sm" variant="soft" @click="calDate = todayIso">Сегодня</WlButton>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h">
+          <span class="spec-name">WlDatePicker</span>
+          <span class="spec-note">v-model ISO · showIcon · invalid · size · русская локаль</span>
+        </div>
+        <div class="spec-b">
+          <div class="row" style="align-items: flex-start">
+            <div class="col" style="gap: 8px; width: 280px">
+              <WlDatePicker v-model="pickedDate" showIcon placeholder="Выберите дату" />
+              <span class="muted">выбрано: {{ pickedDate || "—" }}</span>
+            </div>
+            <div class="col" style="gap: 8px; width: 280px">
+              <WlDatePicker v-model="pickedDate" size="sm" placeholder="Компактный (sm)" />
+              <WlDatePicker model-value="2026-07-14" invalid showIcon placeholder="С ошибкой" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h">
+          <span class="spec-name">WlFileUpload</span>
+          <span class="spec-note">v-model File[] · accept · maxSize · maxFiles · reject</span>
+        </div>
+        <div class="spec-b">
+          <WlFileUpload
+            v-model="uploaded"
+            :max-size="5 * 1024 * 1024"
+            :max-files="5"
+            style="max-width: 560px"
+            @reject="onUploadReject"
+          />
+          <p class="muted" style="margin-top: 10px">
+            выбрано файлов: {{ uploaded.length }} из 5 · файлы никуда не загружаются — список
+            хранится локально, выгрузку выполняет приложение
+          </p>
         </div>
       </div>
     </section>

@@ -212,6 +212,12 @@
     --wl-cal-gap: 5px;
     --wl-cal-day-min-h: 60px;
     --wl-cal-ev-size: 10.5px;
+
+    --wl-dp-day-size: 30px;
+    --wl-dp-panel-pad: 12px;
+
+    --wl-upload-drop-pad-y: 26px;
+    --wl-upload-drop-pad-x: 20px;
   }
 }
 
@@ -2680,5 +2686,285 @@
     border-left-color: var(--wl-accent);
     color: var(--wl-accent);
     font-weight: 500;
+  }
+}
+
+/* ============================================================
+   STAGE 5b — date picker (PrimeVue) + file upload (own).
+   ============================================================ */
+@layer wl.components {
+  /* ---------- DatePicker ---------- */
+  .wl-dp {
+    display: inline-flex;
+    align-items: stretch;
+    width: 100%;
+  }
+  .wl-dp .wl-input {
+    flex: 1;
+    min-width: 0;
+  }
+  .wl-dp__input--btn {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .wl-dp__trigger {
+    flex: none;
+    width: var(--wl-input-height);
+    align-self: stretch;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--wl-text-2);
+    background: var(--wl-bg);
+    border: 1px solid var(--wl-border);
+    border-left: none;
+    border-radius: 0 var(--wl-input-radius) var(--wl-input-radius) 0;
+    cursor: pointer;
+    transition:
+      background var(--wl-dur-1) var(--wl-ease),
+      border-color var(--wl-dur-1) var(--wl-ease),
+      color var(--wl-dur-1) var(--wl-ease);
+  }
+  .wl-dp__trigger:hover {
+    background: var(--wl-bg-soft);
+    border-color: var(--wl-border-2);
+    color: var(--wl-text);
+  }
+  .wl-dp__trigger:disabled {
+    background: var(--wl-bg-soft);
+    color: var(--wl-text-3);
+    cursor: default;
+  }
+  .wl-dp[data-size="sm"] .wl-dp__trigger {
+    width: var(--wl-input-height-sm);
+  }
+  .wl-dp[data-size="lg"] .wl-dp__trigger {
+    width: var(--wl-input-height-lg);
+  }
+  .wl-dp__trigger-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .wl-dp__panel {
+    margin-top: 4px;
+    padding: var(--wl-dp-panel-pad);
+  }
+  .wl-dp__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  .wl-dp__title {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .wl-dp__view-btn {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--wl-text);
+    padding: 3px 6px;
+    border-radius: var(--wl-radius-sm);
+    cursor: pointer;
+    transition: background var(--wl-dur-1) var(--wl-ease);
+  }
+  .wl-dp__view-btn:hover {
+    background: var(--wl-bg-soft);
+  }
+  .wl-dp__nav {
+    width: 26px;
+    height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--wl-text-2);
+    border-radius: var(--wl-radius-sm);
+    cursor: pointer;
+    transition:
+      background var(--wl-dur-1) var(--wl-ease),
+      color var(--wl-dur-1) var(--wl-ease);
+  }
+  .wl-dp__nav:hover {
+    background: var(--wl-bg-soft);
+    color: var(--wl-text);
+  }
+  .wl-dp__nav-icon {
+    width: 15px;
+    height: 15px;
+  }
+  .wl-dp__table {
+    border-collapse: collapse;
+  }
+  .wl-dp__wd-cell {
+    text-align: center;
+    padding: 2px 1px 4px;
+  }
+  .wl-dp__weekday {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--wl-text-3);
+  }
+  .wl-dp__day-cell {
+    text-align: center;
+    padding: 1px;
+  }
+  .wl-dp__day {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--wl-dp-day-size);
+    height: var(--wl-dp-day-size);
+    border-radius: 50%;
+    font-size: 12.5px;
+    color: var(--wl-text);
+    cursor: pointer;
+    transition:
+      background var(--wl-dur-1) var(--wl-ease),
+      color var(--wl-dur-1) var(--wl-ease);
+  }
+  .wl-dp__day:hover {
+    background: var(--wl-bg-soft);
+  }
+  .wl-dp__day.is-muted {
+    color: var(--wl-text-3);
+  }
+  .wl-dp__day.is-selected {
+    background: var(--wl-accent-soft);
+    color: var(--wl-accent);
+    font-weight: 600;
+  }
+  .wl-dp__day.is-today {
+    background: var(--wl-accent);
+    color: var(--wl-on-accent);
+    font-weight: 600;
+  }
+  .wl-dp__day.is-disabled,
+  .wl-dp__day.is-disabled:hover {
+    background: none;
+    color: var(--wl-text-3);
+    opacity: 0.45;
+    cursor: default;
+  }
+
+  /* ---------- FileUpload ---------- */
+  .wl-upload {
+    width: 100%;
+  }
+  .wl-upload__drop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: var(--wl-upload-drop-pad-y) var(--wl-upload-drop-pad-x);
+    border: 1.5px dashed var(--wl-border-2);
+    border-radius: var(--wl-radius-lg);
+    background: var(--wl-bg);
+    text-align: center;
+    cursor: pointer;
+    transition:
+      border-color var(--wl-dur-2) var(--wl-ease),
+      background var(--wl-dur-2) var(--wl-ease);
+  }
+  .wl-upload__drop:hover {
+    border-color: var(--wl-accent-border-hover);
+    background: var(--wl-bg-soft);
+  }
+  .wl-upload__drop.is-dragover {
+    border-color: var(--wl-accent);
+    background: var(--wl-accent-soft);
+  }
+  .wl-upload__drop.is-disabled,
+  .wl-upload__drop.is-disabled:hover {
+    border-color: var(--wl-border-2);
+    background: var(--wl-bg);
+    opacity: 0.55;
+    cursor: default;
+  }
+  .wl-upload__icon {
+    color: var(--wl-text-3);
+  }
+  .wl-upload__drop.is-dragover .wl-upload__icon {
+    color: var(--wl-accent);
+  }
+  .wl-upload__text {
+    font-size: 13px;
+    color: var(--wl-text-2);
+  }
+  .wl-upload__input {
+    display: none;
+  }
+  .wl-upload__errors {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .wl-upload__error {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: var(--wl-danger);
+  }
+  .wl-upload__error-name {
+    font-weight: 500;
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .wl-upload__list {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .wl-upload__row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 10px;
+    border: 1px solid var(--wl-border);
+    border-radius: var(--wl-radius-sm);
+    background: var(--wl-bg);
+  }
+  .wl-upload__file-icon {
+    flex: none;
+    color: var(--wl-text-3);
+  }
+  .wl-upload__name {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+    color: var(--wl-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .wl-upload__size {
+    flex: none;
+    font-size: 12px;
+    color: var(--wl-text-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .wl-upload__remove {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    color: var(--wl-text-3);
+    cursor: pointer;
+    transition:
+      background var(--wl-dur-1) var(--wl-ease),
+      color var(--wl-dur-1) var(--wl-ease);
+  }
+  .wl-upload__remove:hover {
+    background: var(--wl-danger-soft);
+    color: var(--wl-danger);
   }
 }
