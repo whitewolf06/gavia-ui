@@ -32,9 +32,28 @@ pnpm run pack          # tar-архив пакета (без публикаци�
 
 ## Установка
 
+Пакет публикуется приватно в **GitHub Packages** (видимость — как у репозитория).
+Перед первой установкой создайте в проекте `.npmrc`:
+
+```
+@whitelife:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+```
+
+и задайте в окружении `NODE_AUTH_TOKEN` — GitHub PAT со скоупом `read:packages`.
+Файл можно коммитить: токена в нём нет. Дальше обычная установка:
+
 ```bash
 pnpm add @whitelife/ui-kit
 ```
+
+### Релиз новой версии (для мейнтейнера)
+
+1. Поднять `version` в `packages/ui-kit/package.json`, прогнать проверки
+   (`pnpm build && pnpm test && pnpm run pack`), закоммитить.
+2. `git tag v<version> && git push origin main --tags`.
+3. GitHub Action `.github/workflows/publish.yml` соберёт, протестирует
+   и опубликует пакет в GitHub Packages автоматически.
 
 ### Peer dependencies
 

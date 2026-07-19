@@ -4,6 +4,14 @@
   "description": "WhiteLife UI kit — Vue 3 + TypeScript component library on PrimeVue 4 (unstyled)",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whitewolf06/whiteui.git",
+    "directory": "packages/ui-kit"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "sideEffects": [
     "**/*.css"
   ],

@@ -1,0 +1,48 @@
+name: publish
+
+# Публикация @whitelife/ui-kit в GitHub Packages по тегу v*.
+# Релизный цикл:
+#   1. поднять version в packages/ui-kit/package.json и закоммитить
+#   2. git tag v<version> && git push origin main --tags
+#   3. Action соберёт, протестирует и опубликует пакет (приватно,
+#      видимость наследуется от репозитория)
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@whitelife"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build library
+        run: pnpm build
+
+      - name: Test
+        run: pnpm test
+
+      - name: Publish to GitHub Packages
+        run: pnpm --filter @whitelife/ui-kit publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
