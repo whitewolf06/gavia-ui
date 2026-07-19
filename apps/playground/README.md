@@ -1,9 +1,9 @@
-# @whitelife/playground
+# @whitelife-core/playground
 
-Изолированное приложение для разработки и проверки `@whitelife/ui-kit`.
+Изолированное приложение для разработки и проверки `@whitelife-core/ui-kit`.
 
 Playground потребляет библиотеку **только через package exports**
-(`@whitelife/ui-kit`, `.../styles/*.css`, `.../themes/*.css`) — без алиасов на
+(`@whitelife-core/ui-kit`, `.../styles/*.css`, `.../themes/*.css`) — без алиасов на
 исходники. Поэтому он проверяет реальную публикуемую поверхность пакета.
 
 ## Важно: сначала соберите библиотеку
@@ -13,7 +13,7 @@ Subpath export `.` указывает на `dist/`, поэтому перед з
 
 ```bash
 # из корня репозитория
-pnpm build              # сборка @whitelife/ui-kit (dist + .d.ts)
+pnpm build              # сборка @whitelife-core/ui-kit (dist + .d.ts)
 pnpm dev                # dev-сервер playground
 pnpm build:playground   # production-сборка playground
 ```

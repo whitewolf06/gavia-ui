@@ -47,7 +47,7 @@ import {
   WlToast,
   WlTooltip,
   useWlToast
-} from "@whitelife/ui-kit";
+} from "@whitelife-core/ui-kit";
 import type {
   WlAccordionItem,
   WlBreadcrumbItem,
@@ -62,7 +62,7 @@ import type {
   WlTableRow,
   WlTagVariant,
   WlThemeName
-} from "@whitelife/ui-kit";
+} from "@whitelife-core/ui-kit";
 
 const vWlTooltip = WlTooltip;
 
@@ -363,7 +363,7 @@ const drawerVisible = ref(false);
   <main class="pg-main">
     <h1 class="pg-h1">Компоненты</h1>
     <p class="pg-lead">
-      Витрина @whitelife/ui-kit: Vue 3 + TypeScript, PrimeVue 4 в unstyled-режиме,
+      Витрина @whitelife-core/ui-kit: Vue 3 + TypeScript, PrimeVue 4 в unstyled-режиме,
       токены --wl-* и темы white / graphite.
     </p>
 

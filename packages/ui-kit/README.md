@@ -1,4 +1,4 @@
-# @whitelife/ui-kit
+# @whitelife-core/ui-kit
 
 Библиотека компонентов WhiteLife: Vue 3 + TypeScript (strict), PrimeVue 4 в
 unstyled-режиме как headless-база, стили — обычный CSS с custom properties
@@ -18,12 +18,12 @@ unstyled-режиме как headless-база, стили — обычный CS
 // main.ts
 import { createApp } from "vue";
 import PrimeVue from "primevue/config";
-import { createWlPt } from "@whitelife/ui-kit";
+import { createWlPt } from "@whitelife-core/ui-kit";
 
 // Стили подключаются явно: reset → base → тема
-import "@whitelife/ui-kit/styles/reset.css";
-import "@whitelife/ui-kit/styles/base.css";
-import "@whitelife/ui-kit/themes/white.css";
+import "@whitelife-core/ui-kit/styles/reset.css";
+import "@whitelife-core/ui-kit/styles/base.css";
+import "@whitelife-core/ui-kit/themes/white.css";
 
 import App from "./App.vue";
 
@@ -34,7 +34,7 @@ app.mount("#app");
 
 ```vue
 <script setup lang="ts">
-import { WlButton, WlInput, WlTag } from "@whitelife/ui-kit";
+import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 </script>
 
 <template>
@@ -50,10 +50,10 @@ import { WlButton, WlInput, WlTag } from "@whitelife/ui-kit";
 
 | Subpath                               | Содержимое                                   |
 | ------------------------------------- | -------------------------------------------- |
-| `@whitelife/ui-kit`                   | ESM + `.d.ts`: компоненты, типы, `createWlPt`, `WlTooltip` |
-| `@whitelife/ui-kit/styles/reset.css`  | минимальный reset (слой `wl.reset`)          |
-| `@whitelife/ui-kit/styles/base.css`   | токены + стили компонентов (`wl.tokens`, `wl.components`) |
-| `@whitelife/ui-kit/themes/<theme>.css`| тема: `white` или `graphite`                 |
+| `@whitelife-core/ui-kit`                   | ESM + `.d.ts`: компоненты, типы, `createWlPt`, `WlTooltip` |
+| `@whitelife-core/ui-kit/styles/reset.css`  | минимальный reset (слой `wl.reset`)          |
+| `@whitelife-core/ui-kit/styles/base.css`   | токены + стили компонентов (`wl.tokens`, `wl.components`) |
+| `@whitelife-core/ui-kit/themes/<theme>.css`| тема: `white` или `graphite`                 |
 
 ## Токены и темы
 

@@ -1,6 +1,6 @@
 name: publish
 
-# Публикация @whitelife/ui-kit в GitHub Packages по тегу v*.
+# Публикация @whitelife-core/ui-kit в GitHub Packages по тегу v*.
 # Релизный цикл:
 #   1. поднять version в packages/ui-kit/package.json и закоммитить
 #   2. git tag v<version> && git push origin main --tags
@@ -41,6 +41,6 @@ jobs:
         run: pnpm test
 
       - name: Publish to GitHub Packages
-        run: pnpm --filter @whitelife/ui-kit publish --no-git-checks
+        run: pnpm --filter @whitelife-core/ui-kit publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -2,17 +2,17 @@
   "name": "whitelife-ui",
   "version": "0.1.0",
   "private": true,
-  "description": "WhiteLife UI workspace: @whitelife/ui-kit library package and playground app",
+  "description": "WhiteLife UI workspace: @whitelife-core/ui-kit library package and playground app",
   "packageManager": "pnpm@10.34.5",
   "engines": {
     "node": ">=18"
   },
   "scripts": {
-    "dev": "pnpm --filter @whitelife/playground dev",
-    "build": "pnpm --filter @whitelife/ui-kit build",
-    "build:playground": "pnpm --filter @whitelife/playground build",
-    "test": "pnpm --filter @whitelife/ui-kit test",
-    "typecheck": "pnpm --filter @whitelife/ui-kit typecheck",
-    "pack": "pnpm --filter @whitelife/ui-kit run pack"
+    "dev": "pnpm --filter @whitelife-core/playground dev",
+    "build": "pnpm --filter @whitelife-core/ui-kit build",
+    "build:playground": "pnpm --filter @whitelife-core/playground build",
+    "test": "pnpm --filter @whitelife-core/ui-kit test",
+    "typecheck": "pnpm --filter @whitelife-core/ui-kit typecheck",
+    "pack": "pnpm --filter @whitelife-core/ui-kit run pack"
   }
 }

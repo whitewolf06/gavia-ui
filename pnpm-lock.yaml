@@ -10,7 +10,7 @@ importers:
 
   apps/playground:
     dependencies:
-      '@whitelife/ui-kit':
+      '@whitelife-core/ui-kit':
         specifier: workspace:*
         version: link:../../packages/ui-kit
       primeicons:

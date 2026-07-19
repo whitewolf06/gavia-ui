@@ -1,13 +1,13 @@
 # WhiteLife UI
 
 Современная техническая основа для UI WhiteLife и других проектов: библиотека компонентов
-`@whitelife/ui-kit` (Vue 3 + TypeScript, PrimeVue 4 в unstyled-режиме) и изолированный
+`@whitelife-core/ui-kit` (Vue 3 + TypeScript, PrimeVue 4 в unstyled-режиме) и изолированный
 playground для разработки и проверки.
 
 ## Структура
 
 ```
-packages/ui-kit   — публикуемый пакет @whitelife/ui-kit
+packages/ui-kit   — публикуемый пакет @whitelife-core/ui-kit
 apps/playground   — изолированное приложение для разработки и проверки
 ```
 
@@ -24,11 +24,11 @@ pnpm run pack          # tar-архив пакета (без публикаци�
 
 > **Примечание.** pnpm выполняет одноимённую builtin-команду вместо script'а:
 > голый `pnpm pack` в корне упакует корневой проект, а не библиотеку.
-> Для архива `@whitelife/ui-kit` используйте `pnpm run pack`.
+> Для архива `@whitelife-core/ui-kit` используйте `pnpm run pack`.
 
 ---
 
-# @whitelife/ui-kit
+# @whitelife-core/ui-kit
 
 ## Установка
 
@@ -36,7 +36,7 @@ pnpm run pack          # tar-архив пакета (без публикаци�
 Перед первой установкой создайте в проекте `.npmrc`:
 
 ```
-@whitelife:registry=https://npm.pkg.github.com
+@whitelife-core:registry=https://npm.pkg.github.com
 //npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
 ```
 
@@ -44,7 +44,7 @@ pnpm run pack          # tar-архив пакета (без публикаци�
 Файл можно коммитить: токена в нём нет. Дальше обычная установка:
 
 ```bash
-pnpm add @whitelife/ui-kit
+pnpm add @whitelife-core/ui-kit
 ```
 
 ### Релиз новой версии (для мейнтейнера)
@@ -77,9 +77,9 @@ import PrimeVue from "primevue/config";
 
 // 2. PrimeVue в unstyled-режиме (настраивает потребитель, не библиотека)
 // 3. Стили подключаются явно: reset → base → тема
-import "@whitelife/ui-kit/styles/reset.css";
-import "@whitelife/ui-kit/styles/base.css";
-import "@whitelife/ui-kit/themes/white.css";
+import "@whitelife-core/ui-kit/styles/reset.css";
+import "@whitelife-core/ui-kit/styles/base.css";
+import "@whitelife-core/ui-kit/themes/white.css";
 
 import App from "./App.vue";
 
@@ -91,7 +91,7 @@ app.mount("#app");
 ```vue
 <!-- 4. Именованный импорт компонентов -->
 <script setup lang="ts">
-import { WlButton, WlInput, WlTag } from "@whitelife/ui-kit";
+import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 </script>
 
 <template>
@@ -107,10 +107,10 @@ UI-kit **не** вызывает `app.use(PrimeVue)` сам и не управл
 
 ```jsonc
 {
-  "@whitelife/ui-kit":                 "ESM + .d.ts (компоненты, типы, createWlPt)",
-  "@whitelife/ui-kit/styles/base.css": "токены + стили компонентов (CSS Layers)",
-  "@whitelife/ui-kit/styles/reset.css":"минимальный reset (отдельный слой)",
-  "@whitelife/ui-kit/themes/<theme>.css": "тема: white | graphite"
+  "@whitelife-core/ui-kit":                 "ESM + .d.ts (компоненты, типы, createWlPt)",
+  "@whitelife-core/ui-kit/styles/base.css": "токены + стили компонентов (CSS Layers)",
+  "@whitelife-core/ui-kit/styles/reset.css":"минимальный reset (отдельный слой)",
+  "@whitelife-core/ui-kit/themes/<theme>.css": "тема: white | graphite"
 }
 ```
 
@@ -139,7 +139,7 @@ UI-kit **не** вызывает `app.use(PrimeVue)` сам и не управл
 
 ```ts
 // 2. Явный импорт только одной темы
-import "@whitelife/ui-kit/themes/graphite.css";
+import "@whitelife-core/ui-kit/themes/graphite.css";
 ```
 
 ### Своя тема без форка
@@ -201,7 +201,7 @@ CSS-классы стабильны, namespaced и с низкой специф�
 `pt` — открытая, расширяемая настройка, а не закрытая внутри библиотеки:
 
 ```ts
-import { createWlPt } from "@whitelife/ui-kit";
+import { createWlPt } from "@whitelife-core/ui-kit";
 
 // глобально, при подключении PrimeVue
 app.use(PrimeVue, {
