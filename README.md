@@ -74,6 +74,7 @@ pnpm add @whitelife-core/ui-kit
 // main.ts
 import { createApp } from "vue";
 import PrimeVue from "primevue/config";
+import { createWlPt, wlLocaleRu } from "@whitelife-core/ui-kit";
 
 // 2. PrimeVue в unstyled-режиме (настраивает потребитель, не библиотека)
 // 3. Стили подключаются явно: reset → base → тема
@@ -84,7 +85,7 @@ import "@whitelife-core/ui-kit/themes/white.css";
 import App from "./App.vue";
 
 const app = createApp(App);
-app.use(PrimeVue, { unstyled: true });
+app.use(PrimeVue, { unstyled: true, pt: createWlPt(), locale: wlLocaleRu });
 app.mount("#app");
 ```
 
@@ -102,6 +103,8 @@ import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 ```
 
 UI-kit **не** вызывает `app.use(PrimeVue)` сам и не управляет конфигурацией приложения.
+Локаль календаря задаёт потребитель через `locale: wlLocaleRu`; `WlDatePicker` не
+изменяет глобальную конфигурацию PrimeVue.
 
 ## Subpath exports
 

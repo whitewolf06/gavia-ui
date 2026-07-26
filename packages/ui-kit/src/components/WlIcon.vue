@@ -58,9 +58,16 @@ const inner = computed(() => (props.name ? ICONS[props.name] : undefined));
     stroke-linejoin="round"
     aria-hidden="true"
     data-wl="icon"
+    :data-size="size"
     v-html="inner"
   />
-  <span v-else class="wl-icon wl-icon--slot" :style="{ width: px, height: px }" data-wl="icon">
+  <span
+    v-else
+    class="wl-icon wl-icon--slot"
+    :style="{ width: px, height: px }"
+    data-wl="icon"
+    :data-size="size"
+  >
     <slot />
   </span>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useSlots } from "vue";
+import { computed, useSlots, type Slots } from "vue";
 import Card from "primevue/card";
 
 const props = withDefaults(
@@ -12,7 +12,7 @@ const props = withDefaults(
   }
 );
 
-const slots = useSlots();
+const slots: Slots = useSlots();
 
 const rootClass = computed(() => ["wl-card", props.hoverable && "wl-card--hoverable"]);
 </script>

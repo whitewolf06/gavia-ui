@@ -18,7 +18,7 @@ unstyled-режиме как headless-база, стили — обычный CS
 // main.ts
 import { createApp } from "vue";
 import PrimeVue from "primevue/config";
-import { createWlPt } from "@whitelife-core/ui-kit";
+import { createWlPt, wlLocaleRu } from "@whitelife-core/ui-kit";
 
 // Стили подключаются явно: reset → base → тема
 import "@whitelife-core/ui-kit/styles/reset.css";
@@ -28,7 +28,7 @@ import "@whitelife-core/ui-kit/themes/white.css";
 import App from "./App.vue";
 
 const app = createApp(App);
-app.use(PrimeVue, { unstyled: true, pt: createWlPt() });
+app.use(PrimeVue, { unstyled: true, pt: createWlPt(), locale: wlLocaleRu });
 app.mount("#app");
 ```
 
@@ -45,6 +45,8 @@ import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 ```
 
 Библиотека **не** вызывает `app.use(PrimeVue)` сама и не импортирует CSS из JS.
+Локаль календаря также задаётся один раз при инициализации приложения через
+`locale: wlLocaleRu`; `WlDatePicker` не изменяет глобальную конфигурацию PrimeVue.
 
 ## Exports
 

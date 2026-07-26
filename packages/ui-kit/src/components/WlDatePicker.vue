@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { computed, watchEffect } from "vue";
+import { computed } from "vue";
 import DatePicker from "primevue/datepicker";
-import { usePrimeVue } from "primevue/config";
-import { wlLocaleRu } from "../locale";
-import type { WlDatePickerLocale, WlSizeSm } from "../types";
+import type { WlSizeSm } from "../types";
 
 const props = withDefaults(
   defineProps<{
@@ -16,12 +14,6 @@ const props = withDefaults(
     minDate?: string;
     /** ISO "YYYY-MM-DD". */
     maxDate?: string;
-    /**
-     * PrimeVue 4 reads the calendar locale from the global config
-     * ($primevue.config.locale), so this prop is merged into it —
-     * assumes a single-locale app. Defaults to the kit Russian locale.
-     */
-    locale?: WlDatePickerLocale;
     pt?: Record<string, unknown>;
   }>(),
   {
@@ -32,7 +24,6 @@ const props = withDefaults(
     showIcon: false,
     minDate: undefined,
     maxDate: undefined,
-    locale: () => wlLocaleRu,
     pt: undefined
   }
 );
@@ -64,16 +55,6 @@ const dateValue = computed<Date | null>({
 
 const minDateObj = computed(() => parseIso(props.minDate) ?? undefined);
 const maxDateObj = computed(() => parseIso(props.maxDate) ?? undefined);
-
-const primevue = usePrimeVue();
-watchEffect(() => {
-  if (props.locale) {
-    primevue.config.locale = {
-      ...primevue.config.locale,
-      ...props.locale
-    } as typeof primevue.config.locale;
-  }
-});
 
 const inputClass = computed(() => [
   "wl-input",

@@ -9,15 +9,20 @@ name: publish
 
 on:
   push:
+    branches:
+      - main
     tags:
       - "v*"
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
   packages: write
 
 jobs:
-  publish:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,7 +34,7 @@ jobs:
           node-version: 24
           cache: pnpm
           registry-url: "https://npm.pkg.github.com"
-          scope: "@whitelife"
+          scope: "@whitelife-core"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -39,6 +44,41 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+      - name: Build playground
+        run: pnpm build:playground
+
+      - name: Pack library
+        run: pnpm run pack
+
+      - name: Verify package contents
+        run: |
+          if tar -tf packages/ui-kit/whitelife-core-ui-kit-*.tgz | grep -E '(^|/)(node_modules|vue|primevue)(/|$)'; then
+            echo "Package must not contain bundled Vue or PrimeVue dependencies."
+            exit 1
+          fi
+
+  publish:
+    needs: verify
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@whitelife-core"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build library
+        run: pnpm build
 
       - name: Publish to GitHub Packages
         run: pnpm --filter @whitelife-core/ui-kit publish --no-git-checks

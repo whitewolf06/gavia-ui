@@ -1,10 +1,10 @@
 import { describe, it, expect, afterEach } from "vitest";
 import { mount, flushPromises, type GlobalMountOptions } from "@vue/test-utils";
 import PrimeVue from "primevue/config";
-import { WlDatePicker, WlFileUpload, createWlPt } from "../src";
+import { WlDatePicker, WlFileUpload, createWlPt, wlLocaleRu } from "../src";
 
 const global: GlobalMountOptions = {
-  plugins: [[PrimeVue, { unstyled: true, pt: createWlPt() }]]
+  plugins: [[PrimeVue, { unstyled: true, pt: createWlPt(), locale: wlLocaleRu }]]
 };
 
 const pad2 = (n: number): string => String(n).padStart(2, "0");

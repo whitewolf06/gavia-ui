@@ -254,7 +254,7 @@ export const inputsManifest: WlComponentManifest[] = [
     name: "WlDatePicker",
     category: "inputs",
     description:
-      "Выбор даты на PrimeVue DatePicker; v-model — ISO-строка \"YYYY-MM-DD\" или null. Локаль по умолчанию русская (wlLocaleRu).",
+      "Выбор даты на PrimeVue DatePicker; v-model — ISO-строка \"YYYY-MM-DD\" или null. Локаль задаёт конфигурация PrimeVue приложения.",
     props: [
       { name: "placeholder", type: "string", default: "дд.мм.гггг", description: "Плейсхолдер." },
       { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер поля." },
@@ -263,11 +263,6 @@ export const inputsManifest: WlComponentManifest[] = [
       { name: "showIcon", type: "boolean", default: false, description: "Кнопка-иконка календаря." },
       { name: "minDate", type: "string", description: "Минимальная дата, ISO \"YYYY-MM-DD\"." },
       { name: "maxDate", type: "string", description: "Максимальная дата, ISO \"YYYY-MM-DD\"." },
-      {
-        name: "locale",
-        type: "object",
-        description: "Локаль календаря WlDatePickerLocale; мёржится в глобальный конфиг PrimeVue (default wlLocaleRu)."
-      },
       { name: "pt", type: "object", description: "PrimeVue pass-through." }
     ],
     slots: [],
