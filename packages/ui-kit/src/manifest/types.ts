@@ -41,6 +41,7 @@ export type WlManifestCategory =
   | "inputs"
   | "data"
   | "containers"
+  | "composites"
   | "navigation"
   | "feedback"
   | "misc";

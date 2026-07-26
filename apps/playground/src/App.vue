@@ -80,6 +80,7 @@ const manifestCategories = [
   { id: "inputs", label: "Ввод" },
   { id: "data", label: "Данные" },
   { id: "containers", label: "Контейнеры" },
+  { id: "composites", label: "Композитные" },
   { id: "navigation", label: "Навигация" },
   { id: "feedback", label: "Обратная связь" },
   { id: "misc", label: "Прочее" }
@@ -1332,6 +1333,33 @@ const drawerVisible = ref(false);
       </div>
     </section>
 
+    <!-- ==================== Композитные ==================== -->
+    <section class="pg-sec">
+      <h2 class="pg-sec-title">Композитные компоненты</h2>
+      <p class="pg-sec-desc">
+        Переиспользуемые сценарии, собранные из базовых элементов UI-kit и не связанные
+        с роутером, API или предметной моделью приложения.
+      </p>
+
+      <div class="spec">
+        <div class="spec-h">
+          <span class="spec-name">WlCommandPalette</span>
+          <span class="spec-note">быстрые ссылки + единая строка поиска · Ctrl/Cmd+K</span>
+        </div>
+        <div class="spec-b">
+          <div class="row">
+            <WlButton variant="secondary" @click="commandPaletteVisible = true">
+              <template #icon><WlIcon name="search" :size="16" /></template>
+              Открыть палитру
+            </WlButton>
+            <span class="muted">
+              Группы «страницы», «компоненты» и пример внешних задач используют один контракт.
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ==================== Оверлеи ==================== -->
     <section class="pg-sec">
       <h2 class="pg-sec-title">Оверлеи</h2>
@@ -1350,24 +1378,6 @@ const drawerVisible = ref(false);
           <WlDivider>Разделитель с подписью</WlDivider>
           <p class="muted">Текст между разделителями.</p>
           <WlDivider />
-        </div>
-      </div>
-
-      <div class="spec">
-        <div class="spec-h">
-          <span class="spec-name">WlCommandPalette</span>
-          <span class="spec-note">быстрые ссылки + единая строка поиска · Ctrl/Cmd+K</span>
-        </div>
-        <div class="spec-b">
-          <div class="row">
-            <WlButton variant="secondary" @click="commandPaletteVisible = true">
-              <template #icon><WlIcon name="search" :size="16" /></template>
-              Открыть палитру
-            </WlButton>
-            <span class="muted">
-              Группы «страницы», «компоненты» и пример внешних задач используют один контракт.
-            </span>
-          </div>
         </div>
       </div>
 

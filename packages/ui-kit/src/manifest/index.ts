@@ -3,6 +3,7 @@ import { actionsManifest } from "./actions";
 import { inputsManifest } from "./inputs";
 import { dataManifest } from "./data";
 import { containersManifest } from "./containers";
+import { compositesManifest } from "./composites";
 import { navigationManifest } from "./navigation";
 import { feedbackManifest } from "./feedback";
 import { miscManifest } from "./misc";
@@ -13,13 +14,14 @@ export {
   inputsManifest,
   dataManifest,
   containersManifest,
+  compositesManifest,
   navigationManifest,
   feedbackManifest,
   miscManifest
 };
 
 /**
- * Машиночитаемый манифест всех 47 компонентов библиотеки:
+ * Машиночитаемый манифест всех компонентов библиотеки:
  * пропсы (типы, дефолты, enum-значения), слоты, события, v-model и версию
  * первой публичной поставки компонента.
  * Потребители — визуальные редакторы и AI-агенты. Tree-shakeable const export.
@@ -29,6 +31,7 @@ export const wlManifest: WlComponentManifest[] = [
   ...inputsManifest,
   ...dataManifest,
   ...containersManifest,
+  ...compositesManifest,
   ...navigationManifest,
   ...feedbackManifest,
   ...miscManifest
