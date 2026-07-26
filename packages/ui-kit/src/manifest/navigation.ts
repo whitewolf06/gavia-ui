@@ -1,6 +1,6 @@
-import type { WlComponentManifest } from "./types";
+import { defineComponentManifest } from "./types";
 
-export const navigationManifest: WlComponentManifest[] = [
+export const navigationManifest = defineComponentManifest([
   {
     name: "WlBreadcrumbs",
     category: "navigation",
@@ -28,4 +28,4 @@ export const navigationManifest: WlComponentManifest[] = [
     slots: [],
     emits: []
   }
-];
+]);

@@ -1,7 +1,7 @@
-import type { WlComponentManifest } from "./types";
+import { defineComponentManifest } from "./types";
 import { WL_DRAWER_POSITIONS } from "./values";
 
-export const containersManifest: WlComponentManifest[] = [
+export const containersManifest = defineComponentManifest([
   {
     name: "WlCard",
     category: "containers",
@@ -124,4 +124,4 @@ export const containersManifest: WlComponentManifest[] = [
     slots: [{ name: "default", description: "Текст/содержимое по центру линии." }],
     emits: []
   }
-];
+]);

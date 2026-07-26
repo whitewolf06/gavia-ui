@@ -1,7 +1,7 @@
-import type { WlComponentManifest } from "./types";
+import { defineComponentManifest } from "./types";
 import { WL_ICON_NAMES } from "./values";
 
-export const miscManifest: WlComponentManifest[] = [
+export const miscManifest = defineComponentManifest([
   {
     name: "WlField",
     category: "misc",
@@ -38,4 +38,4 @@ export const miscManifest: WlComponentManifest[] = [
     slots: [{ name: "default", description: "Кастомная иконка (рендерится, если name не задан)." }],
     emits: []
   }
-];
+]);

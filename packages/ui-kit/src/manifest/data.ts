@@ -1,4 +1,4 @@
-import type { WlComponentManifest } from "./types";
+import { defineComponentManifest } from "./types";
 import {
   WL_AVATAR_PRESENCES,
   WL_AVATAR_SIZES,
@@ -10,7 +10,7 @@ import {
   WL_TAG_VARIANTS
 } from "./values";
 
-export const dataManifest: WlComponentManifest[] = [
+export const dataManifest = defineComponentManifest([
   {
     name: "WlTable",
     category: "data",
@@ -187,4 +187,4 @@ export const dataManifest: WlComponentManifest[] = [
     ],
     emits: []
   }
-];
+]);

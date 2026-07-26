@@ -1,4 +1,4 @@
-import type { WlComponentManifest } from "./types";
+import { defineComponentManifest } from "./types";
 import {
   WL_BUTTON_VARIANTS,
   WL_DENSITIES,
@@ -7,7 +7,7 @@ import {
   WL_SIZES
 } from "./values";
 
-export const actionsManifest: WlComponentManifest[] = [
+export const actionsManifest = defineComponentManifest([
   {
     name: "WlButton",
     category: "actions",
@@ -135,4 +135,4 @@ export const actionsManifest: WlComponentManifest[] = [
     slots: [{ name: "default", description: "Кастомный текст вместо label." }],
     emits: [{ name: "click", payload: "MouseEvent", description: "Клик (не срабатывает при disabled)." }]
   }
-];
+]);

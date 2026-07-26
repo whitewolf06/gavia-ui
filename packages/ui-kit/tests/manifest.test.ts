@@ -38,6 +38,9 @@ describe("wlManifest", () => {
   it("every entry has name, valid category and array fields", () => {
     for (const entry of wlManifest) {
       expect(entry.name.length).toBeGreaterThan(0);
+      expect(entry.introducedIn, `${entry.name}: missing introducedIn`).toMatch(
+        /^\d+\.\d+\.\d+$/
+      );
       expect(CATEGORIES, `${entry.name}: bad category`).toContain(entry.category);
       expect(Array.isArray(entry.props)).toBe(true);
       expect(Array.isArray(entry.slots)).toBe(true);

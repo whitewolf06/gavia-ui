@@ -50,7 +50,8 @@ import {
   WlToast,
   WlTooltip,
   useWlConfirm,
-  useWlToast
+  useWlToast,
+  wlManifest
 } from "@whitelife-core/ui-kit";
 import type {
   WlAccordionItem,
@@ -65,10 +66,44 @@ import type {
   WlTableColumn,
   WlTableRow,
   WlTagVariant,
-  WlThemeName
+  WlThemeName,
+  WlManifestCategory
 } from "@whitelife-core/ui-kit";
 
 const vWlTooltip = WlTooltip;
+
+const manifestCategories = [
+  { id: "actions", label: "Действия" },
+  { id: "inputs", label: "Ввод" },
+  { id: "data", label: "Данные" },
+  { id: "containers", label: "Контейнеры" },
+  { id: "navigation", label: "Навигация" },
+  { id: "feedback", label: "Обратная связь" },
+  { id: "misc", label: "Прочее" }
+] as const satisfies ReadonlyArray<{ id: WlManifestCategory; label: string }>;
+
+const manifestGroups = manifestCategories.map((category) => ({
+  ...category,
+  entries: wlManifest.filter((entry) => entry.category === category.id)
+}));
+
+function componentDataWl(name: string): string {
+  return name
+    .slice(2)
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .toLowerCase();
+}
+
+function scrollToComponent(name: string): void {
+  const dataWl = componentDataWl(name);
+  const directTarget = document.querySelector<HTMLElement>(`[data-wl="${dataWl}"]`);
+  const showcaseTarget = Array.from(document.querySelectorAll<HTMLElement>(".spec")).find((element) =>
+    element.querySelector(".spec-h")?.textContent?.includes(name)
+  );
+  const target = directTarget ?? showcaseTarget;
+
+  target?.scrollIntoView({ behavior: "smooth", block: "center" });
+}
 
 /* Тема */
 const theme = ref<WlThemeName>("white");
@@ -397,6 +432,29 @@ const drawerVisible = ref(false);
   </header>
 
   <main class="pg-main">
+    <div class="pg-shell">
+      <aside class="pg-component-nav" aria-label="Навигация по компонентам">
+        <div class="pg-component-nav__head">
+          <span>Компоненты</span>
+          <span>{{ wlManifest.length }}</span>
+        </div>
+        <section v-for="group in manifestGroups" :key="group.id" class="pg-component-nav__group">
+          <h2 class="pg-component-nav__title">{{ group.label }}</h2>
+          <button
+            v-for="entry in group.entries"
+            :key="entry.name"
+            type="button"
+            class="pg-component-nav__item"
+            :aria-label="`Показать ${entry.name}, добавлен в ${entry.introducedIn}`"
+            @click="scrollToComponent(entry.name)"
+          >
+            <code>{{ entry.name }}</code>
+            <span class="pg-component-nav__version">v{{ entry.introducedIn }}</span>
+          </button>
+        </section>
+      </aside>
+
+      <div class="pg-content">
     <h1 class="pg-h1">Компоненты</h1>
     <p class="pg-lead">
       Витрина @whitelife-core/ui-kit: Vue 3 + TypeScript, PrimeVue 4 в unstyled-режиме,
@@ -1336,6 +1394,8 @@ const drawerVisible = ref(false);
         </div>
       </div>
     </section>
+      </div>
+    </div>
   </main>
 
   <!-- Оверлеи -->
@@ -1402,9 +1462,78 @@ const drawerVisible = ref(false);
   gap: 8px;
 }
 .pg-main {
-  max-width: 980px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 36px 24px 120px;
+}
+.pg-shell {
+  display: grid;
+  grid-template-columns: 236px minmax(0, 1fr);
+  gap: 32px;
+}
+.pg-content {
+  min-width: 0;
+}
+.pg-component-nav {
+  position: sticky;
+  top: 76px;
+  align-self: start;
+  max-height: calc(100vh - 92px);
+  overflow: auto;
+  border: 1px solid var(--wl-border);
+  border-radius: var(--wl-radius);
+  background: var(--wl-bg);
+}
+.pg-component-nav__head {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--wl-border);
+  background: var(--wl-bg-soft);
+  font-size: 12px;
+  font-weight: 600;
+}
+.pg-component-nav__group {
+  padding: 8px 6px;
+}
+.pg-component-nav__group + .pg-component-nav__group {
+  border-top: 1px solid var(--wl-bg-soft);
+}
+.pg-component-nav__title {
+  margin: 0 6px 4px;
+  color: var(--wl-text-3);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.pg-component-nav__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 6px;
+  padding: 5px 6px;
+  border: 0;
+  border-radius: 5px;
+  color: var(--wl-text);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+.pg-component-nav__item:hover,
+.pg-component-nav__item:focus-visible {
+  background: var(--wl-accent-soft);
+  outline: none;
+}
+.pg-component-nav__version {
+  flex: none;
+  padding: 2px 4px;
+  border: 1px solid var(--wl-border);
+  border-radius: 4px;
+  color: var(--wl-text-3);
+  font-family: var(--wl-mono);
+  font-size: 10px;
 }
 .pg-h1 {
   font-size: 26px;
@@ -1551,5 +1680,26 @@ code {
   font-weight: 700;
   font-size: 18px;
   transition: background 0.15s;
+}
+@media (max-width: 900px) {
+  .pg-main {
+    max-width: 980px;
+  }
+  .pg-shell {
+    display: block;
+  }
+  .pg-component-nav {
+    position: static;
+    max-height: 260px;
+    margin-bottom: 32px;
+  }
+  .pg-component-nav__group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2px;
+  }
+  .pg-component-nav__title {
+    grid-column: 1 / -1;
+  }
 }
 </style>

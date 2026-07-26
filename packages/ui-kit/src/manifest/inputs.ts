@@ -1,4 +1,4 @@
-import type { WlComponentManifest } from "./types";
+import { defineComponentManifest } from "./types";
 import {
   WL_COLOR_PICKER_SIZES,
   WL_DENSITIES,
@@ -7,7 +7,7 @@ import {
   WL_SWITCH_SIZES
 } from "./values";
 
-export const inputsManifest: WlComponentManifest[] = [
+export const inputsManifest = defineComponentManifest([
   {
     name: "WlInput",
     category: "inputs",
@@ -346,4 +346,4 @@ export const inputsManifest: WlComponentManifest[] = [
     ],
     model: { name: "modelValue", type: "File[]", description: "Список выбранных файлов (default [])." }
   }
-];
+]);

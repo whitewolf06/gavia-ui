@@ -1,7 +1,7 @@
-import type { WlComponentManifest } from "./types";
+import { defineComponentManifest } from "./types";
 import { WL_ALERT_VARIANTS, WL_SPINNER_SIZES } from "./values";
 
-export const feedbackManifest: WlComponentManifest[] = [
+export const feedbackManifest = defineComponentManifest([
   {
     name: "WlAlert",
     category: "feedback",
@@ -54,4 +54,4 @@ export const feedbackManifest: WlComponentManifest[] = [
     slots: [],
     emits: []
   }
-];
+]);
