@@ -626,6 +626,223 @@
     color: var(--wl-text-3);
     text-align: center;
   }
+
+  /* ---------- MultiSelect ---------- */
+  .wl-multiselect {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    max-width: 340px;
+    min-height: var(--wl-input-height);
+    padding: 3px 32px 3px 10px;
+    border: 1px solid var(--wl-border);
+    border-radius: var(--wl-input-radius);
+    font-size: var(--wl-input-font-size);
+    color: var(--wl-text);
+    background: var(--wl-bg);
+    cursor: pointer;
+    user-select: none;
+    transition: border-color var(--wl-dur-2), box-shadow var(--wl-dur-2);
+  }
+  .wl-multiselect:hover {
+    border-color: var(--wl-border-2);
+  }
+  .wl-multiselect:focus-within {
+    border-color: var(--wl-accent);
+    box-shadow: var(--wl-focus-ring);
+  }
+  .wl-multiselect.is-invalid {
+    border-color: var(--wl-danger);
+  }
+  .wl-multiselect.is-invalid:focus-within {
+    box-shadow: var(--wl-focus-ring-danger);
+  }
+  .wl-multiselect.is-disabled {
+    background: var(--wl-bg-soft);
+    color: var(--wl-text-3);
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  .wl-multiselect--sm {
+    min-height: var(--wl-input-height-sm);
+    font-size: 12.5px;
+    border-radius: var(--wl-radius-sm);
+  }
+  .wl-multiselect--lg {
+    min-height: var(--wl-input-height-lg);
+    font-size: 14.5px;
+  }
+  .wl-multiselect.is-compact {
+    --wl-input-height: 34px;
+    --wl-input-height-sm: 28px;
+    --wl-input-height-lg: 42px;
+  }
+  .wl-multiselect__label-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .wl-multiselect__label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    outline: none;
+  }
+  .wl-multiselect__label[data-p~="placeholder"] {
+    color: var(--wl-text-3);
+  }
+  .wl-multiselect__chip-item {
+    display: inline-flex;
+  }
+  .wl-multiselect__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 24px;
+    padding: 0 5px 0 8px;
+    border: 1px solid var(--wl-border);
+    border-radius: var(--wl-radius-sm);
+    background: var(--wl-bg-soft);
+    font-size: 12px;
+    color: var(--wl-text);
+  }
+  .wl-multiselect__chip-label {
+    white-space: nowrap;
+  }
+  .wl-multiselect__chip-remove {
+    width: 12px;
+    height: 12px;
+    color: var(--wl-text-3);
+    cursor: pointer;
+    border-radius: 50%;
+  }
+  .wl-multiselect__chip-remove:hover {
+    color: var(--wl-danger);
+  }
+  .wl-multiselect__dropdown {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--wl-text-3);
+    display: inline-flex;
+    pointer-events: none;
+  }
+  .wl-multiselect__dropdown-icon {
+    width: 14px;
+    height: 14px;
+  }
+  .wl-multiselect__clear {
+    color: var(--wl-text-3);
+    margin-right: 4px;
+  }
+  .wl-multiselect-overlay {
+    margin-top: 4px;
+    min-width: 200px;
+  }
+  .wl-multiselect__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 4px 8px;
+  }
+  .wl-multiselect__filter {
+    flex: 1;
+    min-width: 0;
+  }
+  .wl-multiselect__filter-icon {
+    width: 13px;
+    height: 13px;
+    color: var(--wl-text-3);
+  }
+
+  /* ---------- Autocomplete ---------- */
+  .wl-autocomplete {
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+    width: 100%;
+    max-width: 340px;
+  }
+  .wl-autocomplete.is-disabled {
+    opacity: 0.7;
+  }
+  .wl-autocomplete__dropdown {
+    margin-left: -1px;
+    padding: 0 12px;
+    border-radius: 0 var(--wl-input-radius) var(--wl-input-radius) 0;
+    color: var(--wl-text-3);
+  }
+  .wl-autocomplete__dropdown-icon {
+    width: 14px;
+    height: 14px;
+  }
+  .wl-autocomplete:has(.wl-autocomplete__dropdown) > .wl-input {
+    border-radius: var(--wl-input-radius) 0 0 var(--wl-input-radius);
+  }
+  .wl-autocomplete__multiple {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+    min-height: var(--wl-input-height);
+    margin: 0;
+    padding: 3px 10px;
+    border: 1px solid var(--wl-border);
+    border-radius: var(--wl-input-radius);
+    background: var(--wl-bg);
+    font-size: var(--wl-input-font-size);
+    color: var(--wl-text);
+    cursor: text;
+    list-style: none;
+    transition: border-color var(--wl-dur-2), box-shadow var(--wl-dur-2);
+  }
+  .wl-autocomplete__multiple:hover {
+    border-color: var(--wl-border-2);
+  }
+  .wl-autocomplete__multiple:focus-within {
+    border-color: var(--wl-accent);
+    box-shadow: var(--wl-focus-ring);
+  }
+  .wl-autocomplete.is-invalid .wl-autocomplete__multiple {
+    border-color: var(--wl-danger);
+  }
+  .wl-autocomplete.is-invalid .wl-autocomplete__multiple:focus-within {
+    box-shadow: var(--wl-focus-ring-danger);
+  }
+  .wl-autocomplete.is-disabled .wl-autocomplete__multiple {
+    background: var(--wl-bg-soft);
+    color: var(--wl-text-3);
+    cursor: not-allowed;
+  }
+  .wl-autocomplete__inner-input {
+    flex: 1;
+    min-width: 80px;
+    padding: 2px 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font: inherit;
+    color: inherit;
+  }
+  .wl-autocomplete__inner-input::placeholder {
+    color: var(--wl-text-3);
+  }
+  .wl-autocomplete-overlay {
+    margin-top: 4px;
+    min-width: 200px;
+  }
 }
 
 @layer wl.components {
@@ -1320,6 +1537,27 @@
     padding: 14px 20px;
     border-top: 1px solid var(--wl-border);
     flex: none;
+  }
+
+  /* ---------- ConfirmDialog ---------- */
+  .wl-confirm__content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .wl-confirm__icon {
+    flex: none;
+    margin-top: 1px;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--wl-text-3);
+  }
+  .wl-confirm__icon--danger {
+    color: var(--wl-danger);
+  }
+  .wl-confirm__message {
+    flex: 1;
+    min-width: 0;
   }
   .wl-overlay-close {
     width: 26px;

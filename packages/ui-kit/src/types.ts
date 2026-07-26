@@ -20,6 +20,8 @@ export type WlProgressVariant = "default" | "ok";
 export type WlAvatarSize = 24 | 28 | 32 | 36 | 48;
 export type WlAvatarPresence = "online" | "busy" | "offline";
 
+export type WlMultiSelectDisplay = "comma" | "chip";
+
 export type WlSwitchSize = "sm" | "md";
 export type WlSpinnerSize = "sm" | "md" | "lg";
 export type WlDrawerPosition = "left" | "right" | "top" | "bottom" | "full";

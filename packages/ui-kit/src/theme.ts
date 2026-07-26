@@ -68,6 +68,46 @@ export function createWlPt(overrides: Record<string, unknown> = {}): WlPtConfig 
       optionLabel: { class: "wl-select__option-label" },
       emptyMessage: { class: "wl-select__empty" }
     },
+    multiselect: {
+      labelContainer: { class: "wl-multiselect__label-container" },
+      label: { class: "wl-multiselect__label" },
+      clearIcon: { class: "wl-multiselect__clear" },
+      chipItem: { class: "wl-multiselect__chip-item" },
+      pcChip: {
+        root: { class: "wl-multiselect__chip" },
+        label: { class: "wl-multiselect__chip-label" },
+        removeIcon: { class: "wl-multiselect__chip-remove" }
+      },
+      dropdown: { class: "wl-multiselect__dropdown" },
+      dropdownIcon: { class: "wl-multiselect__dropdown-icon" },
+      overlay: { class: "wl-overlay wl-multiselect-overlay" },
+      header: { class: "wl-multiselect__header" },
+      pcFilter: { root: { class: "wl-input wl-input--sm wl-multiselect__filter" } },
+      filterIcon: { class: "wl-multiselect__filter-icon" },
+      listContainer: { class: "wl-select__list-container" },
+      list: { class: "wl-select__list" },
+      option: { class: "wl-select__option" },
+      optionLabel: { class: "wl-select__option-label" },
+      emptyMessage: { class: "wl-select__empty" }
+    },
+    autocomplete: {
+      inputMultiple: { class: "wl-autocomplete__multiple" },
+      chipItem: { class: "wl-multiselect__chip-item" },
+      pcChip: {
+        root: { class: "wl-multiselect__chip" },
+        label: { class: "wl-multiselect__chip-label" },
+        removeIcon: { class: "wl-multiselect__chip-remove" }
+      },
+      input: { class: "wl-autocomplete__inner-input" },
+      inputChip: { class: "wl-autocomplete__inner-input" },
+      dropdown: { class: "wl-btn wl-autocomplete__dropdown" },
+      dropdownIcon: { class: "wl-autocomplete__dropdown-icon" },
+      overlay: { class: "wl-overlay wl-autocomplete-overlay" },
+      listContainer: { class: "wl-select__list-container" },
+      list: { class: "wl-select__list" },
+      option: { class: "wl-select__option" },
+      emptyMessage: { class: "wl-select__empty" }
+    },
     card: {
       header: { class: "wl-card__header" },
       body: { class: "wl-card__body" },
@@ -88,6 +128,15 @@ export function createWlPt(overrides: Record<string, unknown> = {}): WlPtConfig 
         root: { class: "wl-overlay-close" },
         icon: { class: "wl-overlay-close__icon" }
       }
+    },
+    confirmdialog: {
+      mask: { class: "wl-mask wl-dialog-mask" },
+      header: { class: "wl-dialog__header" },
+      title: { class: "wl-dialog__title" },
+      content: { class: "wl-dialog__content wl-confirm__content" },
+      icon: { class: "wl-confirm__icon" },
+      message: { class: "wl-confirm__message" },
+      footer: { class: "wl-dialog__footer" }
     },
     drawer: {
       mask: { class: "wl-mask wl-drawer-mask" },

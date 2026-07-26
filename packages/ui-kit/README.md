@@ -124,11 +124,74 @@ app.use(PrimeVue, {
 
 ## Компоненты
 
-`WlButton`, `WlIcon`, `WlInput`, `WlTextarea`, `WlSelect`, `WlCheckbox`,
-`WlRadio`, `WlSwitch`, `WlTag`, `WlChip`, `WlBadge`, `WlAvatar`, `WlCard`,
-`WlTabs`, `WlAlert`, `WlSpinner`, `WlSkeleton`, `WlProgress`, `WlDialog`,
-`WlDrawer`, `WlDivider` — плюс директива `WlTooltip`, `createWlPt` и типы
+`WlButton`, `WlIcon`, `WlInput`, `WlTextarea`, `WlSelect`, `WlMultiSelect`,
+`WlAutocomplete`, `WlCheckbox`, `WlRadio`, `WlSwitch`, `WlTag`, `WlChip`,
+`WlBadge`, `WlAvatar`, `WlCard`, `WlTabs`, `WlAlert`, `WlSpinner`,
+`WlSkeleton`, `WlProgress`, `WlDialog`, `WlConfirmDialog`, `WlDrawer`,
+`WlDivider` — плюс директива `WlTooltip`, `createWlPt` и типы
 (`WlSize`, `WlDensity`, `WlButtonVariant`, `WlTabItem`, …).
+
+### Подтверждения: WlConfirmDialog + useWlConfirm
+
+По аналогии с тостами нужны сервис и один экземпляр диалога в корне приложения:
+
+```ts
+// main.ts
+import { WlConfirmationService } from "@whitelife-core/ui-kit";
+
+app.use(WlConfirmationService);
+```
+
+```vue
+<script setup lang="ts">
+import { WlButton, WlConfirmDialog, useWlConfirm } from "@whitelife-core/ui-kit";
+
+const { confirm, confirmDanger } = useWlConfirm();
+
+function remove(): void {
+  confirmDanger({
+    header: "Удалить задачу?",
+    message: "Действие необратимо.",
+    acceptLabel: "Удалить",
+    accept: () => { /* ... */ }
+  });
+}
+</script>
+
+<template>
+  <WlConfirmDialog />
+  <WlButton variant="danger" @click="remove">Удалить…</WlButton>
+</template>
+```
+
+`confirm` рисует primary-кнопку подтверждения, `confirmDanger` — danger с
+иконкой предупреждения; подписи по умолчанию берутся из локали кита
+(`wlLocaleRu.accept` / `wlLocaleRu.reject`).
+
+## Component manifest
+
+Машиночитаемое описание всех 47 компонентов: пропсы (типы, дефолты, enum-значения),
+слоты, события и `v-model`. Предназначен для визуальных редакторов (палитра +
+инспектор пропсов) и AI-агентов, генерирующих разметку.
+
+```ts
+import { wlManifest } from "@whitelife-core/ui-kit";
+import type { WlComponentManifest } from "@whitelife-core/ui-kit";
+
+const button = wlManifest.find((entry) => entry.name === "WlButton");
+```
+
+Либо как статический JSON (генерируется при сборке в `dist/manifest.json`):
+
+```ts
+import manifest from "@whitelife-core/ui-kit/manifest.json";
+```
+
+Типы: `WlComponentManifest`, `WlPropManifest`, `WlSlotManifest`, `WlEmitManifest`,
+`WlModelManifest`, `WlManifestCategory`, `WlManifestPropType`. Категории:
+`actions`, `inputs`, `data`, `containers`, `navigation`, `feedback`, `misc`.
+Пропсы типа `icon` принимают значения из `WlIconName`, тип `object` — это
+PrimeVue pass-through (`pt`) или сложные объекты вроде `locale`.
 
 ## Разработка
 

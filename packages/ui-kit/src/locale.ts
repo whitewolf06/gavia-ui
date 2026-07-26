@@ -48,6 +48,8 @@ export const wlLocaleRu: WlDatePickerLocale = {
   ],
   today: "Сегодня",
   clear: "Очистить",
+  accept: "Подтвердить",
+  reject: "Отмена",
   chooseDate: "Выбрать дату",
   chooseMonth: "Выбрать месяц",
   chooseYear: "Выбрать год",

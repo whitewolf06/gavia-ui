@@ -23,6 +23,7 @@
     "./styles/reset.css": "./styles/reset.css",
     "./styles/base.css": "./styles/base.css",
     "./themes/*.css": "./themes/*.css",
+    "./manifest.json": "./dist/manifest.json",
     "./package.json": "./package.json"
   },
   "files": [

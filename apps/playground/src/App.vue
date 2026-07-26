@@ -3,6 +3,7 @@ import { computed, nextTick, onMounted, ref, watch } from "vue";
 import {
   WlAccordion,
   WlAlert,
+  WlAutocomplete,
   WlAvatar,
   WlBadge,
   WlBreadcrumbs,
@@ -13,6 +14,7 @@ import {
   WlCheckbox,
   WlChip,
   WlColorPicker,
+  WlConfirmDialog,
   WlDatePicker,
   WlDialog,
   WlDivider,
@@ -24,6 +26,7 @@ import {
   WlIconButton,
   WlInput,
   WlMenu,
+  WlMultiSelect,
   WlNavItem,
   WlNumberInput,
   WlPagination,
@@ -46,6 +49,7 @@ import {
   WlTextarea,
   WlToast,
   WlTooltip,
+  useWlConfirm,
   useWlToast
 } from "@whitelife-core/ui-kit";
 import type {
@@ -136,6 +140,20 @@ const cities = [
   { label: "Новосибирск", value: "nsk" }
 ];
 const city = ref<string | null>(null);
+
+/* Мультиселект и автокомплит */
+const selectedCities = ref<string[]>(["msk"]);
+const cityPick = ref<unknown>(null);
+const citySuggestions = ref([...cities]);
+function searchCities(event: { query: string }): void {
+  const q = event.query.trim().toLowerCase();
+  citySuggestions.value = q ? cities.filter((c) => c.label.toLowerCase().includes(q)) : [...cities];
+}
+const cityPickLabel = computed(() => {
+  const v = cityPick.value;
+  if (v && typeof v === "object" && "label" in v) return String((v as { label: unknown }).label);
+  return v == null ? "" : String(v);
+});
 
 const agree = ref(true);
 const partial = ref(false);
@@ -248,6 +266,24 @@ const popupMenuItems: WlMenuItem[] = [
 ];
 
 const toast = useWlToast();
+
+const { confirm, confirmDanger } = useWlConfirm();
+function askDeleteTask(): void {
+  confirmDanger({
+    header: "Удалить задачу?",
+    message: "Задача «Черновик презентации» будет удалена без возможности восстановления.",
+    acceptLabel: "Удалить",
+    accept: () => toast.ok("Задача удалена"),
+    reject: () => toast.info("Удаление отменено")
+  });
+}
+function askPublish(): void {
+  confirm({
+    header: "Опубликовать релиз?",
+    message: "Версия 2.0 станет доступна всем пользователям.",
+    accept: () => toast.ok("Релиз опубликован")
+  });
+}
 
 /* Данные (этап 4b): таблица и стат-карточки */
 interface TaskStatus {
@@ -569,6 +605,52 @@ const drawerVisible = ref(false);
             <WlSelect v-model="city" :options="cities" option-label="label" option-value="value" placeholder="Город" />
             <WlSelect v-model="city" :options="cities" option-label="label" option-value="value" placeholder="Маленький (sm)" size="sm" />
             <WlSelect :options="cities" option-label="label" option-value="value" placeholder="Invalid" invalid />
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h">
+          <span class="spec-name">WlMultiSelect / WlAutocomplete</span>
+          <span class="spec-note">чипы + фильтр · complete → suggestions</span>
+        </div>
+        <div class="spec-b">
+          <div class="row" style="align-items: flex-start">
+            <WlMultiSelect
+              v-model="selectedCities"
+              :options="cities"
+              option-label="label"
+              option-value="value"
+              placeholder="Города (чипы + фильтр)"
+              display="chip"
+              filter
+              :max-selected-labels="3"
+            />
+            <WlMultiSelect
+              :options="cities"
+              option-label="label"
+              option-value="value"
+              placeholder="Invalid"
+              invalid
+            />
+            <span class="muted">выбрано: {{ selectedCities.join(", ") || "—" }}</span>
+          </div>
+          <div class="row" style="align-items: flex-start">
+            <WlAutocomplete
+              v-model="cityPick"
+              :suggestions="citySuggestions"
+              option-label="label"
+              placeholder="Начните вводить город…"
+              @complete="searchCities"
+            />
+            <WlAutocomplete
+              :suggestions="citySuggestions"
+              option-label="label"
+              placeholder="С кнопкой раскрытия"
+              dropdown
+              @complete="searchCities"
+            />
+            <span class="muted">автокомплит: {{ cityPickLabel || "—" }}</span>
           </div>
         </div>
       </div>
@@ -1162,6 +1244,19 @@ const drawerVisible = ref(false);
       </div>
 
       <div class="spec">
+        <div class="spec-h">
+          <span class="spec-name">WlConfirmDialog + useWlConfirm</span>
+          <span class="spec-note">confirm / confirmDanger, accept/reject → toast</span>
+        </div>
+        <div class="spec-b">
+          <div class="row">
+            <WlButton size="sm" variant="danger" @click="askDeleteTask">Удалить…</WlButton>
+            <WlButton size="sm" variant="secondary" @click="askPublish">Опубликовать…</WlButton>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
         <div class="spec-h"><span class="spec-name">WlEmpty / WlPill</span></div>
         <div class="spec-b">
           <div class="row" style="align-items: stretch">
@@ -1245,6 +1340,7 @@ const drawerVisible = ref(false);
 
   <!-- Оверлеи -->
   <WlToast />
+  <WlConfirmDialog />
   <WlDialog v-model:visible="dialogVisible" header="Новая задача">
     <div class="col">
       <WlInput v-model="text" placeholder="Название задачи" />
