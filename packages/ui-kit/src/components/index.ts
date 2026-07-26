@@ -11,6 +11,7 @@ export { default as WlCard } from "./WlCard.vue";
 export { default as WlCheckbox } from "./WlCheckbox.vue";
 export { default as WlChip } from "./WlChip.vue";
 export { default as WlColorPicker } from "./WlColorPicker.vue";
+export { default as WlCommandPalette } from "./WlCommandPalette.vue";
 export { default as WlConfirmDialog } from "./WlConfirmDialog.vue";
 export { default as WlDatePicker } from "./WlDatePicker.vue";
 export { default as WlDialog } from "./WlDialog.vue";

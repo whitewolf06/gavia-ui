@@ -14,6 +14,7 @@ import {
   WlCheckbox,
   WlChip,
   WlColorPicker,
+  WlCommandPalette,
   WlConfirmDialog,
   WlDatePicker,
   WlDialog,
@@ -57,6 +58,8 @@ import type {
   WlAccordionItem,
   WlBreadcrumbItem,
   WlCalendarEvent,
+  WlCommandPaletteGroup,
+  WlCommandPaletteItem,
   WlFileReject,
   WlMenuItem,
   WlPillVariant,
@@ -86,6 +89,82 @@ const manifestGroups = manifestCategories.map((category) => ({
   ...category,
   entries: wlManifest.filter((entry) => entry.category === category.id)
 }));
+
+const commandPaletteVisible = ref(false);
+const commandPaletteQuery = ref("");
+
+const commandPaletteGroups: WlCommandPaletteGroup[] = [
+  {
+    id: "pages",
+    label: "Быстрые переходы",
+    showWhenEmpty: true,
+    items: [
+      {
+        id: "page-components",
+        label: "Все компоненты",
+        description: "Начало витрины",
+        icon: "file",
+        keywords: ["страницы", "каталог"],
+        href: "#pg-components",
+        data: { targetId: "pg-components" }
+      },
+      {
+        id: "page-colors",
+        label: "Цвета и токены",
+        description: "Foundation, semantic и component tokens",
+        icon: "image",
+        keywords: ["страницы", "тема", "палитра"],
+        href: "#pg-colors",
+        data: { targetId: "pg-colors" }
+      }
+    ]
+  },
+  {
+    id: "components",
+    label: "Компоненты",
+    showWhenEmpty: false,
+    items: wlManifest.map((entry) => ({
+      id: `component-${entry.name}`,
+      label: entry.name,
+      description: entry.description,
+      icon: "file",
+      keywords: [entry.category, entry.introducedIn],
+      data: { component: entry.name }
+    }))
+  },
+  {
+    id: "tasks-example",
+    label: "Задачи · пример данных потребителя",
+    showWhenEmpty: false,
+    items: [
+      {
+        id: "task-contracts",
+        label: "Проверить контракты компонентов",
+        description: "Пример результата из внешнего источника",
+        icon: "check",
+        keywords: ["задача", "контракт"],
+        data: { kind: "task", id: "demo-1" }
+      },
+      {
+        id: "task-navigation",
+        label: "Добавить навигацию по версиям",
+        description: "Пример результата из внешнего источника",
+        icon: "check",
+        keywords: ["задача", "версия"],
+        data: { kind: "task", id: "demo-2" }
+      }
+    ]
+  }
+];
+
+function onCommandPaletteSelect(item: WlCommandPaletteItem): void {
+  const data = item.data as { component?: string; targetId?: string } | undefined;
+  if (data?.component) {
+    scrollToComponent(data.component);
+  } else if (data?.targetId) {
+    document.getElementById(data.targetId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
 
 function componentDataWl(name: string): string {
   return name
@@ -425,11 +504,28 @@ const drawerVisible = ref(false);
     <span class="pg-logo">W</span>
     <b class="pg-title">WhiteLife UI Kit</b>
     <span class="muted">playground · все компоненты</span>
+    <WlButton size="sm" variant="secondary" @click="commandPaletteVisible = true">
+      <template #icon><WlIcon name="search" :size="15" /></template>
+      Поиск
+      <span class="pg-command-key">Ctrl K</span>
+    </WlButton>
     <div class="pg-theme">
       <WlChip :active="theme === 'white'" @click="theme = 'white'">White</WlChip>
       <WlChip :active="theme === 'graphite'" @click="theme = 'graphite'">Graphite</WlChip>
     </div>
   </header>
+
+  <WlCommandPalette
+    v-model:visible="commandPaletteVisible"
+    v-model:query="commandPaletteQuery"
+    :groups="commandPaletteGroups"
+    shortcut
+    @select="onCommandPaletteSelect"
+  >
+    <template #footer>
+      Быстрые ссылки видны сразу · задачи и компоненты ищутся той же строкой
+    </template>
+  </WlCommandPalette>
 
   <main class="pg-main">
     <div class="pg-shell">
@@ -455,6 +551,7 @@ const drawerVisible = ref(false);
       </aside>
 
       <div class="pg-content">
+    <span id="pg-components" class="pg-scroll-target" aria-hidden="true"></span>
     <h1 class="pg-h1">Компоненты</h1>
     <p class="pg-lead">
       Витрина @whitelife-core/ui-kit: Vue 3 + TypeScript, PrimeVue 4 в unstyled-режиме,
@@ -462,6 +559,7 @@ const drawerVisible = ref(false);
     </p>
 
     <!-- ==================== Цвета ==================== -->
+    <span id="pg-colors" class="pg-scroll-target" aria-hidden="true"></span>
     <section class="pg-sec">
       <h2 class="pg-sec-title">Цвета</h2>
       <p class="pg-sec-desc">
@@ -1256,6 +1354,24 @@ const drawerVisible = ref(false);
       </div>
 
       <div class="spec">
+        <div class="spec-h">
+          <span class="spec-name">WlCommandPalette</span>
+          <span class="spec-note">быстрые ссылки + единая строка поиска · Ctrl/Cmd+K</span>
+        </div>
+        <div class="spec-b">
+          <div class="row">
+            <WlButton variant="secondary" @click="commandPaletteVisible = true">
+              <template #icon><WlIcon name="search" :size="16" /></template>
+              Открыть палитру
+            </WlButton>
+            <span class="muted">
+              Группы «страницы», «компоненты» и пример внешних задач используют один контракт.
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
         <div class="spec-h"><span class="spec-name">WlMenu</span><span class="spec-note">статическое и popup, header / separator / danger</span></div>
         <div class="spec-b">
           <div class="row" style="align-items: flex-start">
@@ -1460,6 +1576,16 @@ const drawerVisible = ref(false);
   margin-left: auto;
   display: flex;
   gap: 8px;
+}
+.pg-command-key {
+  margin-left: 4px;
+  color: var(--wl-text-3);
+  font-family: var(--wl-mono);
+  font-size: 10px;
+}
+.pg-scroll-target {
+  display: block;
+  scroll-margin-top: 76px;
 }
 .pg-main {
   max-width: 1240px;

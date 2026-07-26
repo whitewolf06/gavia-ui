@@ -86,6 +86,30 @@ export interface WlMenuItem {
   command?: (item: WlMenuItem) => void;
 }
 
+export interface WlCommandPaletteItem {
+  id: string;
+  label: string;
+  description?: string;
+  keywords?: string[];
+  icon?: WlIconName;
+  shortcut?: string;
+  href?: string;
+  target?: "_self" | "_blank" | "_parent" | "_top";
+  disabled?: boolean;
+  /** Произвольные данные потребителя; UI-kit их не интерпретирует. */
+  data?: unknown;
+}
+
+export interface WlCommandPaletteGroup {
+  id: string;
+  label: string;
+  items: WlCommandPaletteItem[];
+  /** Показывать группу до ввода запроса. Удобно для быстрых ссылок. */
+  showWhenEmpty?: boolean;
+  /** Переопределяет локальную фильтрацию для этой группы; false подходит внешним результатам. */
+  filter?: boolean;
+}
+
 export interface WlAccordionItem {
   key: string;
   title: string;

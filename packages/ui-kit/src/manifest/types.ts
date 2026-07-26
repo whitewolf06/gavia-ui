@@ -79,6 +79,7 @@ export const WL_COMPONENT_INTRODUCED_IN: Readonly<Record<string, string>> = {
   WlCheckbox: "0.1.0",
   WlChip: "0.1.0",
   WlColorPicker: "0.1.0",
+  WlCommandPalette: "0.1.0",
   WlConfirmDialog: "0.1.0",
   WlDatePicker: "0.1.0",
   WlDialog: "0.1.0",
