@@ -1,6 +1,6 @@
 {
   "name": "@whitelife-core/ui-kit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "WhiteLife UI kit — Vue 3 + TypeScript component library on PrimeVue 4 (unstyled)",
   "type": "module",
   "license": "MIT",

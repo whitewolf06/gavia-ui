@@ -11,10 +11,13 @@ const props = withDefaults(
     active?: boolean;
     disabled?: boolean;
     href?: string;
+    collapsed?: boolean;
+    ariaLabel?: string;
   }>(),
   {
     active: false,
-    disabled: false
+    disabled: false,
+    collapsed: false
   }
 );
 
@@ -42,11 +45,14 @@ function onClick(event: MouseEvent): void {
     :class="{ 'is-active': active, 'is-disabled': disabled }"
     :disabled="tag === 'button' ? disabled : undefined"
     :aria-current="active ? 'page' : undefined"
+    :aria-label="ariaLabel ?? (collapsed ? label : undefined)"
+    :title="collapsed ? label : undefined"
     data-wl="nav-item"
+    :data-collapsed="collapsed"
     @click="onClick"
   >
     <WlIcon v-if="icon" :name="icon" :size="17" class="wl-nav-item__icon" />
-    <span class="wl-nav-item__label"><slot>{{ label }}</slot></span>
-    <span v-if="badge !== undefined" class="wl-nav-item__badge">{{ badge }}</span>
+    <span v-show="!collapsed" class="wl-nav-item__label"><slot>{{ label }}</slot></span>
+    <span v-if="badge !== undefined" v-show="!collapsed" class="wl-nav-item__badge">{{ badge }}</span>
   </component>
 </template>

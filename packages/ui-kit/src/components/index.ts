@@ -35,6 +35,7 @@ export { default as WlProgress } from "./WlProgress.vue";
 export { default as WlRadio } from "./WlRadio.vue";
 export { default as WlSegmented } from "./WlSegmented.vue";
 export { default as WlSelect } from "./WlSelect.vue";
+export { default as WlSidebar } from "./WlSidebar.vue";
 export { default as WlSkeleton } from "./WlSkeleton.vue";
 export { default as WlSlider } from "./WlSlider.vue";
 export { default as WlSpinner } from "./WlSpinner.vue";

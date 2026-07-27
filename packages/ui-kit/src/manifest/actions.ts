@@ -130,7 +130,14 @@ export const actionsManifest = defineComponentManifest([
       { name: "badge", type: "union", description: "Бейдж справа: number | string." },
       { name: "active", type: "boolean", default: false, description: "Текущий пункт (aria-current=page)." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает пункт." },
-      { name: "href", type: "string", description: "Если задан — рендерится <a>, иначе <button>." }
+      { name: "href", type: "string", description: "Если задан — рендерится <a>, иначе <button>." },
+      {
+        name: "collapsed",
+        type: "boolean",
+        default: false,
+        description: "Скрывает подпись и бейдж, сохраняя доступное имя пункта."
+      },
+      { name: "ariaLabel", type: "string", description: "Переопределяет доступное имя пункта." }
     ],
     slots: [{ name: "default", description: "Кастомный текст вместо label." }],
     emits: [{ name: "click", payload: "MouseEvent", description: "Клик (не срабатывает при disabled)." }]

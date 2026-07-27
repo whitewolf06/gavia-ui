@@ -45,6 +45,15 @@ export type WlIconName =
   | "eye"
   | "eye-off"
   | "calendar"
+  | "home"
+  | "task"
+  | "note"
+  | "clock"
+  | "activity"
+  | "sparkle"
+  | "help"
+  | "settings"
+  | "panel"
   | "upload"
   | "file"
   | "image"
@@ -84,6 +93,24 @@ export interface WlMenuItem {
   separator?: boolean;
   header?: string;
   command?: (item: WlMenuItem) => void;
+}
+
+export interface WlSidebarItem {
+  key: string;
+  label: string;
+  icon?: WlIconName;
+  badge?: number | string;
+  href?: string;
+  disabled?: boolean;
+  /** Произвольные данные потребителя; UI-kit их не интерпретирует. */
+  data?: unknown;
+}
+
+export interface WlSidebarGroup {
+  id: string;
+  label?: string;
+  separator?: boolean;
+  items: WlSidebarItem[];
 }
 
 export interface WlCommandPaletteItem {

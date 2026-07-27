@@ -38,6 +38,7 @@ import {
   WlRadio,
   WlSegmented,
   WlSelect,
+  WlSidebar,
   WlSkeleton,
   WlSlider,
   WlSpinner,
@@ -64,6 +65,8 @@ import type {
   WlMenuItem,
   WlPillVariant,
   WlSegmentedOption,
+  WlSidebarGroup,
+  WlSidebarItem,
   WlStepItem,
   WlTabItem,
   WlTableColumn,
@@ -93,6 +96,35 @@ const manifestGroups = manifestCategories.map((category) => ({
 
 const commandPaletteVisible = ref(false);
 const commandPaletteQuery = ref("");
+const sidebarActive = ref("today");
+const sidebarPinned = ref(false);
+const sidebarMobileOpen = ref(false);
+
+const sidebarGroups: WlSidebarGroup[] = [
+  {
+    id: "main",
+    items: [
+      { key: "today", label: "Сегодня", icon: "home" },
+      { key: "notes", label: "Заметки", icon: "note", badge: 24 },
+      { key: "tasks", label: "Задачи", icon: "task", badge: 5 },
+      { key: "calendar", label: "Календарь", icon: "calendar" },
+      { key: "time", label: "Время", icon: "clock" },
+      { key: "media", label: "Медиа", icon: "image" },
+      { key: "timeline", label: "Хроника", icon: "activity" }
+    ]
+  },
+  {
+    id: "tools",
+    label: "Инструменты",
+    separator: true,
+    items: [{ key: "assistant", label: "Ассистент", icon: "sparkle" }]
+  }
+];
+
+const sidebarFooterItems: WlSidebarItem[] = [
+  { key: "help", label: "Помощь", icon: "help" },
+  { key: "settings", label: "Настройки", icon: "settings" }
+];
 
 const commandPaletteGroups: WlCommandPaletteGroup[] = [
   {
@@ -1343,6 +1375,46 @@ const drawerVisible = ref(false);
 
       <div class="spec">
         <div class="spec-h">
+          <span class="spec-name">WlSidebar</span>
+          <span class="spec-note">WlNavItem внутри · hover / pinned / mobile drawer</span>
+        </div>
+        <div class="spec-b">
+          <div class="pg-sidebar-demo">
+            <WlSidebar
+              v-model="sidebarActive"
+              v-model:pinned="sidebarPinned"
+              v-model:mobile-open="sidebarMobileOpen"
+              :groups="sidebarGroups"
+              :footer-items="sidebarFooterItems"
+              brand="WhiteLife"
+              brand-mark="W"
+            />
+            <div class="pg-sidebar-demo__content">
+              <div class="row">
+                <WlIconButton
+                  icon="panel"
+                  variant="secondary"
+                  aria-label="Открыть мобильную навигацию"
+                  @click="sidebarMobileOpen = true"
+                />
+                <WlButton size="sm" variant="secondary" @click="sidebarPinned = !sidebarPinned">
+                  {{ sidebarPinned ? "Открепить" : "Закрепить" }}
+                </WlButton>
+              </div>
+              <div>
+                <strong>Активный пункт: {{ sidebarActive }}</strong>
+                <p class="muted" style="margin-top: 6px">
+                  Наведите на свёрнутую панель или закрепите её. Переходы и данные пунктов
+                  остаются ответственностью приложения.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h">
           <span class="spec-name">WlCommandPalette</span>
           <span class="spec-note">быстрые ссылки + единая строка поиска · Ctrl/Cmd+K</span>
         </div>
@@ -1596,6 +1668,22 @@ const drawerVisible = ref(false);
 .pg-scroll-target {
   display: block;
   scroll-margin-top: 76px;
+}
+.pg-sidebar-demo {
+  height: 520px;
+  display: flex;
+  overflow: hidden;
+  border: 1px solid var(--wl-border);
+  border-radius: var(--wl-radius-lg);
+  background: var(--wl-bg-soft);
+}
+.pg-sidebar-demo__content {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
 }
 .pg-main {
   max-width: 1240px;

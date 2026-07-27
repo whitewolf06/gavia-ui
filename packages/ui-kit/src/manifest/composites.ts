@@ -2,6 +2,72 @@ import { defineComponentManifest } from "./types";
 
 export const compositesManifest = defineComponentManifest([
   {
+    name: "WlSidebar",
+    category: "composites",
+    description:
+      "Адаптивный sidebar из WlNavItem: группы навигации, footer, collapsed/hover, закрепление и мобильный drawer. Не зависит от роутера.",
+    props: [
+      {
+        name: "groups",
+        type: "array",
+        default: [],
+        description: "WlSidebarGroup[]: секции с WlSidebarItem[] и необязательным separator."
+      },
+      {
+        name: "footerItems",
+        type: "array",
+        default: [],
+        description: "WlSidebarItem[] для нижней закреплённой области."
+      },
+      { name: "brand", type: "string", default: "", description: "Название продукта." },
+      { name: "brandMark", type: "string", default: "", description: "Короткая текстовая марка." },
+      { name: "ariaLabel", type: "string", default: "Основная навигация" },
+      { name: "collapsible", type: "boolean", default: true },
+      { name: "expandOnHover", type: "boolean", default: true },
+      { name: "showPin", type: "boolean", default: true },
+      { name: "pinLabel", type: "string", default: "Закрепить панель" },
+      { name: "unpinLabel", type: "string", default: "Открепить панель" },
+      { name: "density", type: "enum", default: "default", values: ["default", "compact"] },
+      {
+        name: "pinned",
+        type: "boolean",
+        default: false,
+        description: "Именованная модель v-model:pinned."
+      },
+      {
+        name: "mobileOpen",
+        type: "boolean",
+        default: false,
+        description: "Именованная модель v-model:mobile-open."
+      }
+    ],
+    slots: [
+      { name: "brand-mark", description: "Кастомная марка бренда." },
+      { name: "brand", description: "Кастомное название бренда." },
+      {
+        name: "item",
+        description: "Пункт основной группы; scope { item, group, active, expanded, select }."
+      },
+      {
+        name: "footer-item",
+        description: "Пункт footer; scope { item, active, expanded, select }."
+      },
+      { name: "footer", description: "Дополнительный footer; scope { expanded }." }
+    ],
+    emits: [
+      {
+        name: "select",
+        payload: "WlSidebarItem, WlSidebarGroup | undefined",
+        description: "Выбран пункт; навигацию выполняет потребитель."
+      }
+    ],
+    model: {
+      name: "modelValue",
+      type: "string",
+      description: "Ключ активного пункта."
+    }
+  },
+  {
     name: "WlCommandPalette",
     category: "composites",
     description:
