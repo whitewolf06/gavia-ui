@@ -234,7 +234,7 @@ const swatchGroups = [
   },
   {
     title: "Акцент и семантика",
-    note: "синий — единственный primary",
+    note: "primary и статусные spot-цвета",
     tokens: ["accent", "accent-hover", "accent-soft", "accent-border", "success", "warn", "danger"]
   }
 ] as const;
@@ -545,6 +545,9 @@ const drawerVisible = ref(false);
     <div class="pg-theme">
       <WlChip :active="theme === 'white'" @click="theme = 'white'">White</WlChip>
       <WlChip :active="theme === 'graphite'" @click="theme = 'graphite'">Graphite</WlChip>
+      <WlChip :active="theme === 'newspaper'" @click="theme = 'newspaper'">
+        Newspaper
+      </WlChip>
     </div>
   </header>
 
@@ -588,7 +591,7 @@ const drawerVisible = ref(false);
     <h1 class="pg-h1">Компоненты</h1>
     <p class="pg-lead">
       Витрина @whitelife-core/ui-kit: Vue 3 + TypeScript, PrimeVue 4 в unstyled-режиме,
-      токены --wl-* и темы white / graphite.
+      токены --wl-* и темы white / graphite / newspaper.
     </p>
 
     <!-- ==================== Цвета ==================== -->
@@ -629,7 +632,9 @@ const drawerVisible = ref(false);
     <!-- ==================== Типографика ==================== -->
     <section class="pg-sec">
       <h2 class="pg-sec-title">Типографика</h2>
-      <p class="pg-sec-desc">Системный шрифтовой стек, тёмный графит. Числа в данных — с tabular-nums.</p>
+      <p class="pg-sec-desc">
+        Шрифтовой стек и цвет текста задаёт тема. Числа в данных — с tabular-nums.
+      </p>
 
       <div class="spec">
         <div class="spec-h"><span class="spec-name">Шкала</span><span class="spec-note">размер/строка · насыщенность</span></div>
@@ -1652,6 +1657,7 @@ const drawerVisible = ref(false);
   justify-content: center;
 }
 .pg-title {
+  font-family: var(--wl-font-heading);
   font-size: 14.5px;
 }
 .pg-theme {
@@ -1760,6 +1766,7 @@ const drawerVisible = ref(false);
   font-size: 10px;
 }
 .pg-h1 {
+  font-family: var(--wl-font-heading);
   font-size: 26px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -1774,6 +1781,7 @@ const drawerVisible = ref(false);
   margin-bottom: 56px;
 }
 .pg-sec-title {
+  font-family: var(--wl-font-heading);
   font-size: 17px;
   font-weight: 650;
   letter-spacing: -0.01em;

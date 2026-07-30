@@ -113,7 +113,7 @@ UI-kit **не** вызывает `app.use(PrimeVue)` сам и не управл
   "@whitelife-core/ui-kit":                 "ESM + .d.ts (компоненты, типы, createWlPt)",
   "@whitelife-core/ui-kit/styles/base.css": "токены + стили компонентов (CSS Layers)",
   "@whitelife-core/ui-kit/styles/reset.css":"минимальный reset (отдельный слой)",
-  "@whitelife-core/ui-kit/themes/<theme>.css": "тема: white | graphite"
+  "@whitelife-core/ui-kit/themes/<theme>.css": "тема: white | graphite | newspaper"
 }
 ```
 
@@ -144,6 +144,20 @@ UI-kit **не** вызывает `app.use(PrimeVue)` сам и не управл
 // 2. Явный импорт только одной темы
 import "@whitelife-core/ui-kit/themes/graphite.css";
 ```
+
+Газетная тема из комплекта:
+
+```ts
+import "@whitelife-core/ui-kit/themes/newspaper.css";
+```
+
+```html
+<html data-wl-theme="newspaper">
+```
+
+Она сочетает почти белый бумажный фон, почти чёрные «чернила», антиквенные
+заголовки с нейтральным sans-serif интерфейсным текстом, тонкие границы и
+сдержанную геометрию. Компоненты и их DOM-контракт при этом не меняются.
 
 ### Своя тема без форка
 

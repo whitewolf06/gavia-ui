@@ -1,0 +1,78 @@
+/* WhiteLife UI — newspaper theme.
+   Near-white paper, editorial headings, fine rules and restrained print inks.
+   Applied via <html data-wl-theme="newspaper"> after importing this file. */
+[data-wl-theme="newspaper"] {
+  /* foundation: paper-to-ink neutral ramp */
+  --wl-gray-0: #fffefb;
+  --wl-gray-50: #fbfbfa;
+  --wl-gray-100: #f5f5f3;
+  --wl-gray-200: #e9e8e4;
+  --wl-gray-300: #d8d6d1;
+  --wl-gray-400: #b8b5ae;
+  --wl-gray-500: #85817a;
+  --wl-gray-600: #625f59;
+  --wl-gray-700: #46433f;
+  --wl-gray-800: #2e2c29;
+  --wl-gray-900: #1f1e1c;
+  --wl-gray-950: #141311;
+
+  /* foundation: neutral UI text with editorial headings */
+  --wl-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "Noto Sans", sans-serif;
+  --wl-font-heading: Georgia, "Times New Roman", Times, serif;
+  --wl-radius-sm: 2px;
+  --wl-radius: 3px;
+  --wl-radius-lg: 4px;
+  --wl-radius-xl: 5px;
+  --wl-input-radius: 6px;
+
+  /* semantic: paper, ink and hairline rules */
+  --wl-bg: var(--wl-gray-0);
+  --wl-bg-soft: var(--wl-gray-50);
+  --wl-bg-hover: var(--wl-gray-100);
+  --wl-border: var(--wl-gray-200);
+  --wl-border-2: var(--wl-gray-300);
+
+  --wl-text: var(--wl-gray-950);
+  --wl-text-2: var(--wl-gray-600);
+  --wl-text-3: var(--wl-gray-500);
+
+  /* primary actions use dense printing ink */
+  --wl-accent: #25211d;
+  --wl-accent-hover: #3a342e;
+  --wl-accent-soft: #f4f3f1;
+  --wl-accent-border: #dedbd5;
+  --wl-accent-soft-hover: #eceae6;
+  --wl-accent-border-hover: #cec9c0;
+  --wl-on-accent: #ffffff;
+
+  /* restrained spot inks */
+  --wl-success: #31704c;
+  --wl-success-soft: #edf4ed;
+  --wl-success-border: #cddfce;
+
+  --wl-warn: #9b6b26;
+  --wl-warn-soft: #f8f0df;
+  --wl-warn-border: #ead9b7;
+
+  --wl-danger: #b33a35;
+  --wl-danger-hover: #942e2a;
+  --wl-danger-soft: #f9e9e5;
+  --wl-danger-soft-hover: #f3ded9;
+  --wl-danger-border: #e7c5bd;
+
+  --wl-info-text: #385d7a;
+  --wl-ok-text: #275e3e;
+  --wl-warn-text: #76501b;
+  --wl-err-text: #8b2d29;
+
+  --wl-mask-bg: rgba(32, 29, 26, 0.32);
+  --wl-avatar-bg: var(--wl-gray-800);
+  --wl-tooltip-bg: var(--wl-gray-950);
+  --wl-tooltip-text: var(--wl-gray-0);
+
+  /* flat print surfaces; elevation is reserved for floating overlays */
+  --wl-shadow-card: none;
+  --wl-shadow-pop: 0 14px 36px rgba(48, 41, 32, 0.13);
+  --wl-shadow-knob: 0 1px 2px rgba(48, 41, 32, 0.22);
+}

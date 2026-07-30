@@ -188,4 +188,4 @@ export interface WlFileReject {
   reason: WlFileRejectReason;
 }
 
-export type WlThemeName = "white" | "graphite";
+export type WlThemeName = "white" | "graphite" | "newspaper";

@@ -55,7 +55,7 @@ import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 | `@whitelife-core/ui-kit`                   | ESM + `.d.ts`: компоненты, типы, `createWlPt`, `WlTooltip` |
 | `@whitelife-core/ui-kit/styles/reset.css`  | минимальный reset (слой `wl.reset`)          |
 | `@whitelife-core/ui-kit/styles/base.css`   | токены + стили компонентов (`wl.tokens`, `wl.components`) |
-| `@whitelife-core/ui-kit/themes/<theme>.css`| тема: `white` или `graphite`                 |
+| `@whitelife-core/ui-kit/themes/<theme>.css`| тема: `white`, `graphite` или `newspaper`    |
 
 ## Токены и темы
 
@@ -76,6 +76,18 @@ import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 ```
 
 или явным импортом одной темы. Своя тема создаётся заменой токенов, без форка:
+
+```ts
+import "@whitelife-core/ui-kit/themes/newspaper.css";
+```
+
+```html
+<html data-wl-theme="newspaper">
+```
+
+`newspaper` — светлая газетная тема с почти белой бумажной палитрой, антиквенными
+заголовками, sans-serif интерфейсным текстом, тонкими линейками и сдержанными
+spot-цветами.
 
 ```css
 [data-wl-theme="my-brand"] {
