@@ -1,60 +1,59 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from "vue";
-import {
-  WlAccordion,
-  WlAlert,
-  WlAutocomplete,
-  WlAvatar,
-  WlBadge,
-  WlBreadcrumbs,
-  WlButton,
-  WlButtonGroup,
-  WlCalendar,
-  WlCard,
-  WlCheckbox,
-  WlChip,
-  WlColorPicker,
-  WlCommandPalette,
-  WlConfirmDialog,
-  WlDatePicker,
-  WlDialog,
-  WlDivider,
-  WlDrawer,
-  WlEmpty,
-  WlField,
-  WlFileUpload,
-  WlIcon,
-  WlIconButton,
-  WlInput,
-  WlMenu,
-  WlMultiSelect,
-  WlNavItem,
-  WlNumberInput,
-  WlPagination,
-  WlPasswordInput,
-  WlPill,
-  WlPopover,
-  WlProgress,
-  WlRadio,
-  WlSegmented,
-  WlSelect,
-  WlSidebar,
-  WlSkeleton,
-  WlSlider,
-  WlSpinner,
-  WlStatCard,
-  WlSteps,
-  WlSwitch,
-  WlTable,
-  WlTabs,
-  WlTag,
-  WlTextarea,
-  WlToast,
-  WlTooltip,
-  useWlConfirm,
-  useWlToast,
-  wlManifest
-} from "@whitelife-core/ui-kit";
+import { computed, defineAsyncComponent, nextTick, onMounted, ref, watch } from "vue";
+import { wlManifest } from "../../../packages/ui-kit/src/manifest";
+import { WlTooltip } from "../../../packages/ui-kit/src/directives/tooltip";
+import { useWlConfirm } from "../../../packages/ui-kit/src/composables/useWlConfirm";
+import { useWlToast } from "../../../packages/ui-kit/src/composables/useWlToast";
+
+const WlAccordion = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlAccordion.vue"));
+const WlAlert = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlAlert.vue"));
+const WlAutocomplete = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlAutocomplete.vue"));
+const WlAvatar = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlAvatar.vue"));
+const WlBadge = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlBadge.vue"));
+const WlBreadcrumbs = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlBreadcrumbs.vue"));
+const WlButton = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlButton.vue"));
+const WlButtonGroup = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlButtonGroup.vue"));
+const WlCalendar = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlCalendar.vue"));
+const WlCard = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlCard.vue"));
+const WlCheckbox = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlCheckbox.vue"));
+const WlChip = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlChip.vue"));
+const WlColorPicker = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlColorPicker.vue"));
+const WlCommandPalette = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlCommandPalette.vue"));
+const WlConfirmDialog = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlConfirmDialog.vue"));
+const WlDatePicker = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlDatePicker.vue"));
+const WlDialog = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlDialog.vue"));
+const WlDivider = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlDivider.vue"));
+const WlDrawer = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlDrawer.vue"));
+const WlEmpty = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlEmpty.vue"));
+const WlField = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlField.vue"));
+const WlFileUpload = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlFileUpload.vue"));
+const WlIcon = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlIcon.vue"));
+const WlIconButton = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlIconButton.vue"));
+const WlInput = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlInput.vue"));
+const WlMenu = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlMenu.vue"));
+const WlMultiSelect = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlMultiSelect.vue"));
+const WlNavItem = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlNavItem.vue"));
+const WlNumberInput = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlNumberInput.vue"));
+const WlPagination = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlPagination.vue"));
+const WlPasswordInput = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlPasswordInput.vue"));
+const WlPill = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlPill.vue"));
+const WlPopover = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlPopover.vue"));
+const WlProgress = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlProgress.vue"));
+const WlRadio = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlRadio.vue"));
+const WlSegmented = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlSegmented.vue"));
+const WlSelect = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlSelect.vue"));
+const WlSidebar = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlSidebar.vue"));
+const WlSkeleton = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlSkeleton.vue"));
+const WlSlider = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlSlider.vue"));
+const WlSpinner = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlSpinner.vue"));
+const WlStatCard = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlStatCard.vue"));
+const WlSteps = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlSteps.vue"));
+const WlSwitch = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlSwitch.vue"));
+const WlTable = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlTable.vue"));
+const WlTabs = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlTabs.vue"));
+const WlTag = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlTag.vue"));
+const WlTextarea = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlTextarea.vue"));
+const WlToast = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlToast.vue"));
 import type {
   WlAccordionItem,
   WlBreadcrumbItem,

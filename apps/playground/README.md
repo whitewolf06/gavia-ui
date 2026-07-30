@@ -6,6 +6,14 @@ Playground потребляет библиотеку **только через p
 (`@whitelife-core/ui-kit`, `.../styles/*.css`, `.../themes/*.css`) — без алиасов на
 исходники. Поэтому он проверяет реальную публикуемую поверхность пакета.
 
+## Production loading
+
+`src/main.ts` loads the showcase bootstrap asynchronously. `App.vue` resolves
+each demonstration component with `defineAsyncComponent`, so the entry remains
+small and Vite emits component-sized chunks without `manualChunks`. The public
+package contract is unchanged; the playground's direct source-module imports
+are limited to this build-only showcase boundary.
+
 ## Важно: сначала соберите библиотеку
 
 Subpath export `.` указывает на `dist/`, поэтому перед запуском playground
@@ -24,7 +32,7 @@ pnpm build:playground   # production-сборка playground
 
 ## Что внутри
 
-- `src/main.ts` — эталонная интеграция: `app.use(PrimeVue, { unstyled: true, pt: createWlPt() })`
+- `src/main.ts` — явный импорт CSS и асинхронная загрузка bootstrap; `src/bootstrap.ts` — эталонная интеграция: `app.use(PrimeVue, { unstyled: true, pt: createWlPt() })`
   и явный импорт `reset.css`, `base.css`, `themes/white.css`, `themes/graphite.css`.
 - `src/App.vue` — витрина всех компонентов с вариантами, размерами и состояниями,
   переключатель темы (white/graphite), пример точечного переопределения токенов
