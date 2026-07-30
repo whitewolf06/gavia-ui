@@ -1,6 +1,6 @@
 {
   "name": "whitelife-ui",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "WhiteLife UI workspace: @whitelife-core/ui-kit library package and playground app",
   "packageManager": "pnpm@10.34.5",
