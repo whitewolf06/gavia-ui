@@ -70,4 +70,24 @@ describe("wlManifest", () => {
       expect(new Set(names).size, `${entry.name}: duplicate prop`).toBe(names.length);
     }
   });
+
+  it("keeps slot and emit names unique within a component", () => {
+    for (const entry of wlManifest) {
+      const slots = entry.slots.map((slot) => slot.name);
+      const emits = entry.emits.map((event) => event.name);
+      expect(new Set(slots).size, `${entry.name}: duplicate slot`).toBe(slots.length);
+      expect(new Set(emits).size, `${entry.name}: duplicate emit`).toBe(emits.length);
+    }
+  });
+
+  it("keeps enum defaults inside their documented values", () => {
+    for (const entry of wlManifest) {
+      for (const prop of entry.props) {
+        if (prop.type !== "enum" || prop.default === undefined) continue;
+        expect(prop.values, `${entry.name}.${prop.name}: missing enum values`).toContain(
+          prop.default
+        );
+      }
+    }
+  });
 });

@@ -3,57 +3,13 @@ import { describe, it, expect } from "vitest";
 
 describe("node import", () => {
   it("imports the library entry without a DOM and exposes the public API", async () => {
-    const mod = await import("../src/index");
+    const [mod, componentModule] = await Promise.all([
+      import("../src/index"),
+      import("../src/components")
+    ]);
 
-    const components = [
-      "WlAccordion",
-      "WlAlert",
-      "WlAvatar",
-      "WlBadge",
-      "WlBreadcrumbs",
-      "WlButton",
-      "WlButtonGroup",
-      "WlCalendar",
-      "WlCard",
-      "WlCheckbox",
-      "WlChip",
-      "WlColorPicker",
-      "WlDatePicker",
-      "WlDialog",
-      "WlDivider",
-      "WlDrawer",
-      "WlEmpty",
-      "WlField",
-      "WlFileUpload",
-      "WlIcon",
-      "WlIconButton",
-      "WlInput",
-      "WlMenu",
-      "WlNavItem",
-      "WlNumberInput",
-      "WlPagination",
-      "WlPasswordInput",
-      "WlPill",
-      "WlPopover",
-      "WlProgress",
-      "WlRadio",
-      "WlSegmented",
-      "WlSelect",
-      "WlSkeleton",
-      "WlSlider",
-      "WlSpinner",
-      "WlStatCard",
-      "WlSteps",
-      "WlSwitch",
-      "WlTable",
-      "WlTabs",
-      "WlTag",
-      "WlTextarea",
-      "WlToast"
-    ] as const;
-
-    for (const name of components) {
-      expect(mod[name], name).toBeTruthy();
+    for (const [name, component] of Object.entries(componentModule)) {
+      expect(mod[name as keyof typeof mod], `${name}: missing from the root entry`).toBe(component);
     }
 
     expect(typeof mod.createWlPt).toBe("function");

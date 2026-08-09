@@ -23,7 +23,11 @@ permissions:
 
 jobs:
   verify:
+    name: Verify on Node ${{ matrix.node-version }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 24]
     steps:
       - uses: actions/checkout@v4
 
@@ -31,13 +35,16 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: ${{ matrix.node-version }}
           cache: pnpm
           registry-url: "https://npm.pkg.github.com"
           scope: "@whitelife-core"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
 
       - name: Build library
         run: pnpm build

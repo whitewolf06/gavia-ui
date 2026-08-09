@@ -1,5 +1,5 @@
 import { afterAll, describe, it, expect, vi } from "vitest";
-import { defineComponent, nextTick } from "vue";
+import { defineComponent, nextTick, ref } from "vue";
 import { mount, type GlobalMountOptions } from "@vue/test-utils";
 import PrimeVue from "primevue/config";
 import { WlEmpty, WlMenu, WlPill, WlPopover, createWlPt } from "../src";
@@ -56,19 +56,28 @@ describe("WlMenu", () => {
       components: { WlMenu },
       setup() {
         const menuItems: WlMenuItem[] = [{ label: "Обновить" }];
-        return { menuItems };
+        const openCount = ref(0);
+        return { menuItems, openCount };
       },
       template: `
         <button class="anchor" @click="$refs.menu.toggle($event)">Меню</button>
-        <WlMenu ref="menu" popup :items="menuItems" />
+        <WlMenu ref="menu" popup :items="menuItems" aria-label="Actions" @open="openCount++" />
       `
     });
-    const wrapper = mount(Harness, { global, attachTo: document.body });
+    const wrapper = mount(Harness, {
+      global: { ...global, stubs: { transition: false } },
+      attachTo: document.body
+    });
     await wrapper.find(".anchor").trigger("click");
     await nextTick();
+    await new Promise((resolve) => setTimeout(resolve, 50));
     const overlay = document.body.querySelector('.wl-menu[data-p="popup"]');
     expect(overlay).toBeTruthy();
     expect(overlay!.textContent).toContain("Обновить");
+    expect(overlay!.querySelector('[role="menu"]')?.getAttribute("aria-label")).toBe(
+      "Actions"
+    );
+    expect(wrapper.vm.openCount).toBe(1);
     wrapper.unmount();
   });
 });
@@ -77,19 +86,28 @@ describe("WlPopover", () => {
   it("opens via exposed toggle and renders slot content", async () => {
     const Harness = defineComponent({
       components: { WlPopover },
+      setup() {
+        return { openCount: ref(0) };
+      },
       template: `
         <button class="anchor" @click="$refs.pop.toggle($event)">Открыть</button>
-        <WlPopover ref="pop"><div class="pop-body">Детали карточки</div></WlPopover>
+        <WlPopover ref="pop" aria-label="Card details" @open="openCount++"><div class="pop-body">Детали карточки</div></WlPopover>
       `
     });
-    const wrapper = mount(Harness, { global, attachTo: document.body });
+    const wrapper = mount(Harness, {
+      global: { ...global, stubs: { transition: false } },
+      attachTo: document.body
+    });
     expect(document.body.querySelector(".wl-popover")).toBeNull();
 
     await wrapper.find(".anchor").trigger("click");
     await nextTick();
+    await new Promise((resolve) => setTimeout(resolve, 50));
     const pop = document.body.querySelector(".wl-popover");
     expect(pop).toBeTruthy();
     expect(pop!.textContent).toContain("Детали карточки");
+    expect(pop!.getAttribute("aria-label")).toBe("Card details");
+    expect(wrapper.vm.openCount).toBe(1);
     wrapper.unmount();
   });
 });

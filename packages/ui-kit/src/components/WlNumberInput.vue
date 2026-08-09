@@ -2,6 +2,7 @@
 import { computed, ref, useAttrs, watch } from "vue";
 import WlIcon from "./WlIcon.vue";
 import type { WlDensity, WlSizeSm } from "../types";
+import { splitInputAttrs } from "../utils/inputAttrs";
 
 defineOptions({ inheritAttrs: false });
 
@@ -15,6 +16,8 @@ const props = withDefaults(
     disabled?: boolean;
     invalid?: boolean;
     ariaLabel?: string;
+    decrementLabel?: string;
+    incrementLabel?: string;
   }>(),
   {
     min: 0,
@@ -23,28 +26,24 @@ const props = withDefaults(
     size: "md",
     density: "default",
     disabled: false,
-    invalid: false
+    invalid: false,
+    decrementLabel: "Уменьшить",
+    incrementLabel: "Увеличить"
   }
 );
 
 const model = defineModel<number>({ default: 0 });
 const attrs = useAttrs();
 
-const innerAttrs = computed(() => {
-  const out: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(attrs)) {
-    if (key === "id" || key.startsWith("aria-")) out[key] = value;
-  }
-  return out;
-});
-
-const rootAttrs = computed(() => {
-  const out: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(attrs)) {
-    if (key !== "id" && !key.startsWith("aria-")) out[key] = value;
-  }
-  return out;
-});
+const attrGroups = computed(() => splitInputAttrs(attrs));
+const innerAttrs = computed(() => attrGroups.value.inputAttrs);
+const rootAttrs = computed(() => attrGroups.value.rootAttrs);
+const inputMode = computed(
+  () =>
+    (typeof innerAttrs.value.inputmode === "string"
+      ? innerAttrs.value.inputmode
+      : "numeric") as "none" | "text" | "decimal" | "numeric" | "tel" | "search" | "email" | "url"
+);
 
 const draft = ref(String(model.value));
 watch(model, (value) => {
@@ -89,12 +88,13 @@ function onKeydown(event: KeyboardEvent): void {
     v-bind="rootAttrs"
     data-wl="number-input"
     :data-size="size"
+    :data-density="density"
   >
     <button
       type="button"
       class="wl-stepper__btn"
       :disabled="disabled"
-      aria-label="Уменьшить"
+      :aria-label="decrementLabel"
       @click="bump(-1)"
     >
       <WlIcon name="minus" :size="14" />
@@ -110,10 +110,14 @@ function onKeydown(event: KeyboardEvent): void {
       ]"
       v-bind="innerAttrs"
       type="text"
-      inputmode="numeric"
+      role="spinbutton"
+      :inputmode="inputMode"
       :disabled="disabled"
       :aria-label="ariaLabel"
       :aria-invalid="invalid || undefined"
+      :aria-valuemin="min"
+      :aria-valuemax="max"
+      :aria-valuenow="model"
       @blur="commitDraft"
       @keydown.enter="commitDraft"
       @keydown="onKeydown"
@@ -122,7 +126,7 @@ function onKeydown(event: KeyboardEvent): void {
       type="button"
       class="wl-stepper__btn"
       :disabled="disabled"
-      aria-label="Увеличить"
+      :aria-label="incrementLabel"
       @click="bump(1)"
     >
       <WlIcon name="plus" :size="14" />

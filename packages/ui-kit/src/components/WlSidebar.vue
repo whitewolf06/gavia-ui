@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, useAttrs } from "vue";
+import { computed, ref, useAttrs } from "vue";
 import type { WlDensity, WlSidebarGroup, WlSidebarItem } from "../types";
+import { useOverlayLifecycle } from "../utils/overlayLifecycle";
 import WlNavItem from "./WlNavItem.vue";
 
 defineOptions({ inheritAttrs: false });
@@ -42,6 +43,7 @@ const activeKey = defineModel<string>();
 const pinned = defineModel<boolean>("pinned", { default: false });
 const mobileOpen = defineModel<boolean>("mobileOpen", { default: false });
 const hovered = ref(false);
+const asideRef = ref<HTMLElement | null>(null);
 const attrs = useAttrs();
 
 const expanded = computed(
@@ -59,19 +61,11 @@ function togglePinned(): void {
   pinned.value = !pinned.value;
 }
 
-function closeMobile(): void {
-  mobileOpen.value = false;
-}
-
-function onGlobalKeydown(event: KeyboardEvent): void {
-  if (event.key === "Escape" && mobileOpen.value) {
-    event.preventDefault();
-    closeMobile();
-  }
-}
-
-onMounted(() => document.addEventListener("keydown", onGlobalKeydown));
-onBeforeUnmount(() => document.removeEventListener("keydown", onGlobalKeydown));
+const { requestClose: closeMobile } = useOverlayLifecycle({
+  visible: mobileOpen,
+  container: asideRef,
+  lockScroll: true
+});
 
 defineExpose({
   openMobile: () => {
@@ -99,7 +93,7 @@ defineExpose({
     @mouseenter="expandOnHover && (hovered = true)"
     @mouseleave="hovered = false"
   >
-    <aside class="wl-sidebar" :aria-label="ariaLabel">
+    <aside ref="asideRef" class="wl-sidebar" :aria-label="ariaLabel" tabindex="-1">
       <div class="wl-sidebar__inner">
         <div v-if="brand || brandMark || $slots.brand || $slots['brand-mark']" class="wl-sidebar__brand">
           <slot name="brand-mark">

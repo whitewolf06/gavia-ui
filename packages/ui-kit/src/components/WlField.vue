@@ -30,8 +30,11 @@ const hasDesc = computed(() => Boolean(props.error || props.hint));
     <slot
       v-bind="{
         id: controlId,
+        inputId: controlId,
         ariaDescribedby: hasDesc ? descId : undefined,
-        invalid: Boolean(error)
+        ariaInvalid: error ? true : undefined,
+        invalid: Boolean(error),
+        required
       }"
     />
     <span v-if="error" :id="descId" class="wl-field__err" role="alert">

@@ -132,6 +132,7 @@ function onDrop(event: DragEvent): void {
 }
 
 function removeAt(index: number): void {
+  if (props.disabled) return;
   const next = model.value.slice();
   next.splice(index, 1);
   model.value = next;
@@ -150,8 +151,9 @@ function iconFor(file: File): WlIconName {
       class="wl-upload__drop"
       :class="{ 'is-dragover': dragOver, 'is-disabled': disabled }"
       role="button"
+      aria-label="Выбрать файлы или перетащить их сюда"
       :aria-disabled="disabled"
-      tabindex="0"
+      :tabindex="disabled ? -1 : 0"
       @click="openPicker"
       @keydown.enter.prevent="openPicker"
       @keydown.space.prevent="openPicker"
@@ -162,14 +164,12 @@ function iconFor(file: File): WlIconName {
     >
       <WlIcon name="upload" :size="22" class="wl-upload__icon" />
       <span class="wl-upload__text">Перетащите файлы сюда или</span>
-      <button
-        type="button"
+      <span
         class="wl-btn wl-btn--sm wl-upload__btn"
-        :disabled="disabled"
-        @click.stop="openPicker"
+        aria-hidden="true"
       >
         Выбрать файлы
-      </button>
+      </span>
       <input
         ref="input"
         type="file"
@@ -178,6 +178,7 @@ function iconFor(file: File): WlIconName {
         :multiple="multiple"
         :disabled="disabled"
         tabindex="-1"
+        @click.stop
         @change="onPick"
       />
     </div>
@@ -199,6 +200,7 @@ function iconFor(file: File): WlIconName {
           type="button"
           class="wl-upload__remove"
           :aria-label="`Удалить ${file.name}`"
+          :disabled="disabled"
           @click="removeAt(i)"
         >
           <WlIcon name="x" :size="13" />

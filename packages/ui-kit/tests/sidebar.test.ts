@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { mount } from "@vue/test-utils";
+import { nextTick } from "vue";
 import { WlNavItem, WlSidebar } from "../src";
 import type { WlSidebarGroup, WlSidebarItem } from "../src";
 
@@ -84,5 +85,24 @@ describe("WlSidebar", () => {
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
     expect(wrapper.emitted("update:mobileOpen")?.[1]).toEqual([false]);
     wrapper.unmount();
+  });
+  it("moves focus into the mobile drawer and restores it after closing", async () => {
+    const opener = document.createElement("button");
+    document.body.appendChild(opener);
+    opener.focus();
+    const wrapper = mount(WlSidebar, {
+      attachTo: document.body,
+      props: { groups, mobileOpen: false }
+    });
+
+    await wrapper.setProps({ mobileOpen: true });
+    await nextTick();
+    expect(wrapper.find("aside").element.contains(document.activeElement)).toBe(true);
+
+    await wrapper.setProps({ mobileOpen: false });
+    await nextTick();
+    expect(document.activeElement).toBe(opener);
+    wrapper.unmount();
+    opener.remove();
   });
 });

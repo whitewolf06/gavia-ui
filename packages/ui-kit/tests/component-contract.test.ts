@@ -13,7 +13,7 @@ describe("component public contract", () => {
     }
   });
 
-  it("publishes variant and size markers whenever those props are supported", () => {
+  it("publishes variant, size and density markers whenever those props are supported", () => {
     for (const [file, source] of Object.entries(componentSources)) {
       if (/\bvariant\?\s*:/.test(source)) {
         expect(source, `${file}: missing data-variant`).toMatch(/\bdata-variant=/);
@@ -21,6 +21,10 @@ describe("component public contract", () => {
 
       if (/\bsize\?\s*:/.test(source)) {
         expect(source, `${file}: missing data-size`).toMatch(/\bdata-size=/);
+      }
+
+      if (/\bdensity\?\s*:/.test(source)) {
+        expect(source, `${file}: missing data-density`).toMatch(/\bdata-density=/);
       }
     }
   });

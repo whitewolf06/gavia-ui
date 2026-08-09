@@ -1,6 +1,10 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, useAttrs } from "vue";
 import Checkbox from "primevue/checkbox";
+import { getPrimeControlProps, splitInputAttrs } from "../utils/inputAttrs";
+import { deepMerge } from "../utils/merge";
+
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(
   defineProps<{
@@ -17,6 +21,13 @@ const props = withDefaults(
 );
 
 const model = defineModel<boolean>({ default: false });
+const attrs = useAttrs();
+
+const attrGroups = computed(() => splitInputAttrs(attrs));
+const inputAttrs = computed(() => attrGroups.value.inputAttrs);
+const rootAttrs = computed(() => attrGroups.value.rootAttrs);
+const controlProps = computed(() => getPrimeControlProps(inputAttrs.value));
+const mergedPt = computed(() => deepMerge({ input: inputAttrs.value }, props.pt));
 
 const rootClass = computed(() => [
   "wl-checkbox",
@@ -27,14 +38,25 @@ const rootClass = computed(() => [
 </script>
 
 <template>
-  <label class="wl-checkline" :class="{ 'is-disabled': disabled }" data-wl="checkbox">
+  <label
+    v-bind="rootAttrs"
+    class="wl-checkline"
+    :class="{ 'is-disabled': disabled }"
+    data-wl="checkbox"
+  >
     <Checkbox
       v-model="model"
       :binary="true"
       :indeterminate="indeterminate"
       :disabled="disabled"
       :invalid="invalid"
-      :pt="pt"
+      :inputId="controlProps.inputId"
+      :name="controlProps.name"
+      :required="controlProps.required"
+      :readonly="controlProps.readonly"
+      :ariaLabel="controlProps.ariaLabel"
+      :ariaLabelledby="controlProps.ariaLabelledby"
+      :pt="mergedPt"
       :class="rootClass"
     />
     <span v-if="$slots.default" class="wl-checkline__label"><slot /></span>

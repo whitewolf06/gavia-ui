@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect, afterEach, vi } from "vitest";
 import { mount, flushPromises, type GlobalMountOptions } from "@vue/test-utils";
 import PrimeVue from "primevue/config";
 import { WlDatePicker, WlFileUpload, createWlPt, wlLocaleRu } from "../src";
@@ -94,6 +94,16 @@ describe("WlDatePicker", () => {
       props: { invalid: true }
     });
     expect(wrapper.find("input").classes()).toContain("is-invalid");
+    wrapper.unmount();
+  });
+
+  it("does not normalize impossible ISO dates into another day", () => {
+    const wrapper = mount(WlDatePicker, {
+      global,
+      attachTo: document.body,
+      props: { modelValue: "2026-02-31" }
+    });
+    expect((wrapper.find("input").element as HTMLInputElement).value).toBe("");
     wrapper.unmount();
   });
 });
@@ -194,5 +204,34 @@ describe("WlFileUpload", () => {
     const last = emitted[emitted.length - 1]![0] as File[];
     expect(last).toHaveLength(1);
     expect(last[0]!.name).toBe("b.txt");
+  });
+
+  it("uses one accessible dropzone without nested interactive controls", async () => {
+    const wrapper = mount(WlFileUpload, { global });
+    const drop = wrapper.find(".wl-upload__drop");
+    const input = wrapper.find('input[type="file"]');
+    const click = vi.spyOn(input.element as HTMLInputElement, "click");
+
+    expect(drop.attributes("role")).toBe("button");
+    expect(drop.attributes("aria-label")).toBeTruthy();
+    expect(drop.find("button").exists()).toBe(false);
+    await drop.trigger("keydown", { key: "Enter" });
+    expect(click).toHaveBeenCalledOnce();
+
+    await wrapper.setProps({ disabled: true });
+    expect(drop.attributes("tabindex")).toBe("-1");
+  });
+
+  it("does not remove an existing file while disabled", async () => {
+    const file = makeFile("locked.txt", 10);
+    const wrapper = mount(WlFileUpload, {
+      global,
+      props: { modelValue: [file], disabled: true }
+    });
+    const remove = wrapper.find(".wl-upload__remove");
+    expect(remove.attributes("disabled")).toBeDefined();
+    await remove.trigger("click");
+    expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+    expect(wrapper.findAll(".wl-upload__row")).toHaveLength(1);
   });
 });

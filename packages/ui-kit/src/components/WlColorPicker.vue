@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import type { WlColorPickerSize } from "../types";
 
 /** Kit accent / success / warn / danger + gray ramp (foundation hexes).
@@ -10,6 +10,10 @@ const props = withDefaults(
     modelValue?: string;
     swatches?: string[];
     size?: WlColorPickerSize;
+    disabled?: boolean;
+    invalid?: boolean;
+    paletteLabel?: string;
+    inputLabel?: string;
   }>(),
   {
     modelValue: "",
@@ -27,7 +31,11 @@ const props = withDefaults(
       "#43474f",
       "#22252b"
     ],
-    size: "md"
+    size: "md",
+    disabled: false,
+    invalid: false,
+    paletteLabel: "Палитра",
+    inputLabel: "HEX-код цвета"
   }
 );
 
@@ -52,9 +60,10 @@ function isSelected(hex: string): boolean {
 }
 
 function select(hex: string): void {
+  if (props.disabled) return;
   const n = normalizeHex(hex);
   if (!n) return;
-  invalid.value = false;
+  draftInvalid.value = false;
   draft.value = n;
   emit("update:modelValue", n);
 }
@@ -62,36 +71,83 @@ function select(hex: string): void {
 /* Hex text input: drafts validate on every keystroke; only valid
    normalized values are emitted, bad input just flags the field. */
 const draft = ref(props.modelValue);
-const invalid = ref(false);
+const draftInvalid = ref(false);
+const isInvalid = computed(() => props.invalid || draftInvalid.value);
+const focusedIndex = ref(0);
 
 watch(
   () => props.modelValue,
   (value) => {
     draft.value = value;
-    invalid.value = false;
+    draftInvalid.value = false;
+    const selected = props.swatches.findIndex((swatch) => isSelected(swatch));
+    if (selected >= 0) focusedIndex.value = selected;
+  },
+  { immediate: true }
+);
+
+watch(
+  () => props.swatches.length,
+  (length) => {
+    focusedIndex.value = Math.min(focusedIndex.value, Math.max(0, length - 1));
   }
 );
 
 function onInput(): void {
+  if (props.disabled) return;
   if (draft.value.trim() === "") {
-    invalid.value = false;
+    draftInvalid.value = false;
     return;
   }
   const n = normalizeHex(draft.value);
   if (n) {
-    invalid.value = false;
+    draftInvalid.value = false;
     emit("update:modelValue", n);
   } else {
-    invalid.value = true;
+    draftInvalid.value = true;
   }
+}
+
+async function onSwatchKeydown(event: KeyboardEvent, index: number): Promise<void> {
+  if (!props.swatches.length) return;
+  let nextIndex: number | undefined;
+  if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+    nextIndex = (index + 1) % props.swatches.length;
+  } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+    nextIndex = (index - 1 + props.swatches.length) % props.swatches.length;
+  } else if (event.key === "Home") {
+    nextIndex = 0;
+  } else if (event.key === "End") {
+    nextIndex = props.swatches.length - 1;
+  }
+  if (nextIndex === undefined) return;
+
+  event.preventDefault();
+  const grid = (event.currentTarget as HTMLElement).parentElement;
+  focusedIndex.value = nextIndex;
+  await nextTick();
+  const buttons = grid?.querySelectorAll<HTMLElement>(".wl-color-picker__sw");
+  buttons?.[nextIndex]?.focus();
 }
 </script>
 
 <template>
-  <div class="wl-color-picker" data-wl="color-picker" :data-size="size">
-    <div class="wl-color-picker__grid" role="listbox" aria-label="Палитра">
+  <div
+    class="wl-color-picker"
+    :class="{ 'is-disabled': disabled, 'is-invalid': isInvalid }"
+    data-wl="color-picker"
+    :data-size="size"
+    :data-disabled="disabled || undefined"
+    :data-invalid="isInvalid || undefined"
+  >
+    <div
+      class="wl-color-picker__grid"
+      role="listbox"
+      :aria-label="paletteLabel"
+      :aria-disabled="disabled || undefined"
+    >
       <button
-        v-for="hex in swatches"
+        v-for="(hex, index) in swatches"
         :key="hex"
         type="button"
         role="option"
@@ -99,17 +155,22 @@ function onInput(): void {
         :class="{ 'is-selected': isSelected(hex) }"
         :style="{ background: hex }"
         :aria-selected="isSelected(hex)"
+        :disabled="disabled"
+        :tabindex="index === focusedIndex ? 0 : -1"
         :aria-label="hex"
         :title="hex"
         @click="select(hex)"
+        @focus="focusedIndex = index"
+        @keydown="onSwatchKeydown($event, index)"
       />
     </div>
     <input
       v-model="draft"
       class="wl-color-picker__hex"
-      :class="{ 'is-invalid': invalid }"
-      :aria-invalid="invalid || undefined"
-      aria-label="HEX-код цвета"
+      :class="{ 'is-invalid': isInvalid }"
+      :aria-invalid="isInvalid || undefined"
+      :aria-label="inputLabel"
+      :disabled="disabled"
       placeholder="#000000"
       spellcheck="false"
       autocomplete="off"

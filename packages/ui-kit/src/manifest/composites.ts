@@ -2,6 +2,67 @@ import { defineComponentManifest } from "./types";
 
 export const compositesManifest = defineComponentManifest([
   {
+    name: "WlPageHeader",
+    category: "composites",
+    description:
+      "Воздушный заголовок страницы с breadcrumbs, основным заголовком, описанием, метаданными, действиями и навигацией. Не добавляет фоновую подложку и бизнес-логику.",
+    props: [
+      { name: "title", type: "string", default: "", description: "Основной заголовок страницы." },
+      { name: "description", type: "string", default: "", description: "Краткое описание страницы." },
+      { name: "eyebrow", type: "string", default: "", description: "Надзаголовок или контекст раздела." },
+      { name: "headingLevel", type: "union", default: 1, values: ["1", "2"] },
+      { name: "size", type: "enum", default: "lg", values: ["sm", "md", "lg"] },
+      { name: "density", type: "enum", default: "default", values: ["default", "compact"] }
+    ],
+    slots: [
+      { name: "breadcrumbs", description: "Навигационная цепочка над заголовком." },
+      { name: "eyebrow", description: "Произвольный надзаголовок." },
+      { name: "title", description: "Произвольное содержимое заголовка." },
+      { name: "description", description: "Расширенное описание страницы." },
+      { name: "meta", description: "Статусы, даты и другая компактная метаинформация." },
+      { name: "actions", description: "Основные и вторичные действия страницы." },
+      { name: "navigation", description: "Табы или переключатель режима под заголовком." }
+    ],
+    emits: []
+  },
+  {
+    name: "WlFilterBar",
+    category: "composites",
+    description:
+      "Адаптивная панель произвольных фильтров: горизонтальный toolbar на desktop и доступный drawer с фокусом, Escape, сбросом и применением на мобильном.",
+    props: [
+      { name: "activeCount", type: "number", default: 0, description: "Количество активных фильтров." },
+      { name: "ariaLabel", type: "string", default: "Фильтры" },
+      { name: "toggleLabel", type: "string", default: "Фильтры" },
+      { name: "panelTitle", type: "string", default: "Фильтры" },
+      { name: "clearLabel", type: "string", default: "Сбросить" },
+      { name: "applyLabel", type: "string", default: "Применить" },
+      { name: "closeLabel", type: "string", default: "Закрыть фильтры" },
+      { name: "showClear", type: "boolean", default: true },
+      { name: "showApply", type: "boolean", default: true },
+      { name: "disabled", type: "boolean", default: false },
+      { name: "density", type: "enum", default: "default", values: ["default", "compact"] }
+    ],
+    slots: [
+      { name: "default", description: "Контролы фильтров; scope { open, close, clear }." },
+      { name: "leading", description: "Поиск или другой ведущий контрол." },
+      { name: "actions", description: "Действия desktop-панели; scope { clear, close }." },
+      { name: "summary", description: "Активные фильтры или chips под панелью; scope { clear }." },
+      { name: "footer", description: "Действия мобильного drawer; scope { apply, clear, close }." }
+    ],
+    emits: [
+      { name: "clear", description: "Потребитель должен сбросить значения фильтров." },
+      { name: "apply", description: "Потребитель должен применить текущие значения." },
+      { name: "open" },
+      { name: "close" }
+    ],
+    model: {
+      name: "open",
+      type: "boolean",
+      description: "Открыт ли мобильный drawer фильтров."
+    }
+  },
+  {
     name: "WlSidebar",
     category: "composites",
     description:

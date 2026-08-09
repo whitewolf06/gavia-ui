@@ -27,6 +27,7 @@ const WlDrawer = defineAsyncComponent(() => import("../../../packages/ui-kit/src
 const WlEmpty = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlEmpty.vue"));
 const WlField = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlField.vue"));
 const WlFileUpload = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlFileUpload.vue"));
+const WlFilterBar = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlFilterBar.vue"));
 const WlIcon = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlIcon.vue"));
 const WlIconButton = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlIconButton.vue"));
 const WlInput = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlInput.vue"));
@@ -35,6 +36,7 @@ const WlMultiSelect = defineAsyncComponent(() => import("../../../packages/ui-ki
 const WlNavItem = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlNavItem.vue"));
 const WlNumberInput = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlNumberInput.vue"));
 const WlPagination = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlPagination.vue"));
+const WlPageHeader = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlPageHeader.vue"));
 const WlPasswordInput = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlPasswordInput.vue"));
 const WlPill = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlPill.vue"));
 const WlPopover = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlPopover.vue"));
@@ -98,6 +100,40 @@ const commandPaletteQuery = ref("");
 const sidebarActive = ref("today");
 const sidebarPinned = ref(false);
 const sidebarMobileOpen = ref(false);
+
+const filterBarOpen = ref(false);
+const filterSearch = ref("");
+const filterProject = ref<string | null>("atlas");
+const filterPriority = ref<string | null>(null);
+const filterStatus = ref<string | null>("progress");
+const filterProjectOptions = [
+  { label: "Atlas 2.0", value: "atlas" },
+  { label: "WhiteLife Core", value: "core" },
+  { label: "Личное", value: "personal" }
+];
+const filterPriorityOptions = [
+  { label: "Критический", value: "critical" },
+  { label: "Высокий", value: "high" },
+  { label: "Обычный", value: "normal" }
+];
+const filterStatusOptions = [
+  { label: "К выполнению", value: "todo" },
+  { label: "В работе", value: "progress" },
+  { label: "Готово", value: "done" }
+];
+const activeDemoFilters = computed(
+  () =>
+    [filterSearch.value, filterProject.value, filterPriority.value, filterStatus.value].filter(
+      Boolean
+    ).length
+);
+
+function clearDemoFilters(): void {
+  filterSearch.value = "";
+  filterProject.value = null;
+  filterPriority.value = null;
+  filterStatus.value = null;
+}
 
 const sidebarGroups: WlSidebarGroup[] = [
   {
@@ -1379,6 +1415,102 @@ const drawerVisible = ref(false);
 
       <div class="spec">
         <div class="spec-h">
+          <span class="spec-name">WlPageHeader</span>
+          <span class="spec-note">breadcrumbs · meta · actions · navigation · responsive</span>
+        </div>
+        <div class="spec-b pg-page-composite">
+          <WlPageHeader
+            title="Задачи"
+            eyebrow="Работа и личное время"
+            description="Структурированный список задач по проектам, приоритетам и статусам."
+          >
+            <template #breadcrumbs>
+              <WlBreadcrumbs :items="[{ label: 'WhiteLife' }, { label: 'Задачи' }]" />
+            </template>
+            <template #meta>
+              <WlPill variant="info">24 активных</WlPill>
+              <span>Обновлено сегодня в 12:40</span>
+            </template>
+            <template #actions>
+              <WlButton variant="secondary" size="sm">Импорт</WlButton>
+              <WlButton variant="primary" size="sm">
+                <template #icon><WlIcon name="plus" :size="15" /></template>
+                Новая задача
+              </WlButton>
+            </template>
+            <template #navigation>
+              <WlSegmented v-model="view" :options="viewOptions" aria-label="Режим отображения" />
+            </template>
+          </WlPageHeader>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h">
+          <span class="spec-name">WlFilterBar</span>
+          <span class="spec-note">desktop toolbar · mobile drawer · clear / apply</span>
+        </div>
+        <div class="spec-b">
+          <WlFilterBar
+            v-model:open="filterBarOpen"
+            :active-count="activeDemoFilters"
+            @clear="clearDemoFilters"
+            @apply="toast.info('Фильтры применены')"
+          >
+            <template #leading>
+              <WlInput
+                v-model="filterSearch"
+                class="pg-filter-search"
+                type="search"
+                placeholder="Поиск по задачам"
+                aria-label="Поиск по задачам"
+              >
+                <template #prefix><WlIcon name="search" :size="15" /></template>
+              </WlInput>
+            </template>
+
+            <WlSelect
+              v-model="filterProject"
+              class="pg-filter-select"
+              :options="filterProjectOptions"
+              option-label="label"
+              option-value="value"
+              placeholder="Проект"
+            />
+            <WlSelect
+              v-model="filterPriority"
+              class="pg-filter-select"
+              :options="filterPriorityOptions"
+              option-label="label"
+              option-value="value"
+              placeholder="Приоритет"
+            />
+            <WlSelect
+              v-model="filterStatus"
+              class="pg-filter-select"
+              :options="filterStatusOptions"
+              option-label="label"
+              option-value="value"
+              placeholder="Статус"
+            />
+
+            <template #summary>
+              <WlTag v-if="filterProject" variant="blue" removable @remove="filterProject = null">
+                Проект: Atlas 2.0
+              </WlTag>
+              <WlTag v-if="filterPriority" variant="red" removable @remove="filterPriority = null">
+                Приоритет: критический
+              </WlTag>
+              <WlTag v-if="filterStatus" variant="green" removable @remove="filterStatus = null">
+                Статус: в работе
+              </WlTag>
+            </template>
+          </WlFilterBar>
+        </div>
+      </div>
+
+      <div class="spec">
+        <div class="spec-h">
           <span class="spec-name">WlSidebar</span>
           <span class="spec-note">WlNavItem внутри · hover / pinned / mobile drawer</span>
         </div>
@@ -1682,6 +1814,19 @@ const drawerVisible = ref(false);
   border-radius: var(--wl-radius-lg);
   background: var(--wl-bg-soft);
 }
+.pg-page-composite {
+  padding-top: 14px;
+  padding-bottom: 8px;
+}
+.pg-filter-search {
+  width: min(320px, 100%);
+}
+.pg-filter-select {
+  width: auto;
+  min-width: 140px;
+  max-width: none;
+  flex: 1 1 140px;
+}
 .pg-sidebar-demo__content {
   min-width: 0;
   flex: 1;
@@ -1931,6 +2076,31 @@ code {
   }
   .pg-component-nav__title {
     grid-column: 1 / -1;
+  }
+}
+@media (max-width: 560px) {
+  .pg-top {
+    height: auto;
+    min-height: 60px;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+  }
+  .pg-theme {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+  }
+  .pg-theme::-webkit-scrollbar {
+    display: none;
+  }
+  .pg-main {
+    padding-inline: 12px;
+  }
+  .spec-b {
+    padding: 16px;
   }
 }
 </style>

@@ -39,11 +39,13 @@ function onClick(event: MouseEvent): void {
 <template>
   <component
     :is="tag"
-    :href="href"
+    :href="tag === 'a' && !disabled ? href : undefined"
     :type="tag === 'button' ? 'button' : undefined"
     class="wl-nav-item"
     :class="{ 'is-active': active, 'is-disabled': disabled }"
     :disabled="tag === 'button' ? disabled : undefined"
+    :aria-disabled="tag === 'a' && disabled ? true : undefined"
+    :tabindex="tag === 'a' && disabled ? -1 : undefined"
     :aria-current="active ? 'page' : undefined"
     :aria-label="ariaLabel ?? (collapsed ? label : undefined)"
     :title="collapsed ? label : undefined"

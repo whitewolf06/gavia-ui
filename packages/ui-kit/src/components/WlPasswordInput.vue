@@ -2,6 +2,7 @@
 import { computed, ref, useAttrs } from "vue";
 import WlIcon from "./WlIcon.vue";
 import type { WlDensity, WlSizeSm } from "../types";
+import { splitInputAttrs } from "../utils/inputAttrs";
 
 defineOptions({ inheritAttrs: false });
 
@@ -27,21 +28,9 @@ const model = defineModel<string>({ default: "" });
 const visible = ref(false);
 const attrs = useAttrs();
 
-const innerAttrs = computed(() => {
-  const out: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(attrs)) {
-    if (key === "id" || key.startsWith("aria-")) out[key] = value;
-  }
-  return out;
-});
-
-const rootAttrs = computed(() => {
-  const out: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(attrs)) {
-    if (key !== "id" && !key.startsWith("aria-")) out[key] = value;
-  }
-  return out;
-});
+const attrGroups = computed(() => splitInputAttrs(attrs));
+const innerAttrs = computed(() => attrGroups.value.inputAttrs);
+const rootAttrs = computed(() => attrGroups.value.rootAttrs);
 </script>
 
 <template>
@@ -51,6 +40,7 @@ const rootAttrs = computed(() => {
     v-bind="rootAttrs"
     data-wl="password-input"
     :data-size="size"
+    :data-density="density"
   >
     <input
       v-model="model"

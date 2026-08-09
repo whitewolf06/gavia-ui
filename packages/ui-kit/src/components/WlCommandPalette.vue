@@ -1,6 +1,16 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, useAttrs, watch } from "vue";
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  useId,
+  useAttrs,
+  watch
+} from "vue";
 import type { WlCommandPaletteGroup, WlCommandPaletteItem, WlDensity, WlSizeSm } from "../types";
+import { useOverlayLifecycle } from "../utils/overlayLifecycle";
 import WlIcon from "./WlIcon.vue";
 
 defineOptions({ inheritAttrs: false });
@@ -50,6 +60,7 @@ const query = defineModel<string>("query", { default: "" });
 const inputRef = ref<HTMLInputElement | null>(null);
 const panelRef = ref<HTMLElement | null>(null);
 const activeIndex = ref(0);
+const listboxId = `wl-command-palette-list-${useId()}`;
 
 interface VisibleGroup {
   group: WlCommandPaletteGroup;
@@ -96,25 +107,35 @@ const visibleItems = computed<VisibleItem[]>(() =>
 const selectableItems = computed(() => visibleItems.value.filter(({ item }) => !item.disabled));
 const hasResults = computed(() => visibleItems.value.length > 0);
 
+function activeDescendant(): string | undefined {
+  const active = selectableItems.value[activeIndex.value];
+  return active ? optionId(active.item) : undefined;
+}
+
 watch(query, (value) => {
   activeIndex.value = 0;
   emit("search", value);
 });
 
-watch(visible, async (isVisible, wasVisible) => {
-  if (isVisible) {
-    if (props.disabled) {
-      visible.value = false;
-      return;
-    }
+const { requestClose: close } = useOverlayLifecycle({
+  visible,
+  container: panelRef,
+  enabled: () => !props.disabled,
+  initialFocus: () => inputRef.value,
+  lockScroll: true,
+  onBeforeOpen: () => {
     activeIndex.value = 0;
-    await nextTick();
-    inputRef.value?.focus();
-    emit("open");
-  } else if (wasVisible) {
-    emit("close");
-  }
+  },
+  onOpen: () => emit("open"),
+  onClose: () => emit("close")
 });
+
+watch(
+  () => props.disabled,
+  (disabled) => {
+    if (disabled && visible.value) close();
+  }
+);
 
 watch(selectableItems, (items) => {
   if (!items.length) {
@@ -124,10 +145,6 @@ watch(selectableItems, (items) => {
   }
 });
 
-function close(): void {
-  visible.value = false;
-}
-
 function select(item: WlCommandPaletteItem, group: WlCommandPaletteGroup): void {
   if (item.disabled) return;
   emit("select", item, group);
@@ -136,6 +153,11 @@ function select(item: WlCommandPaletteItem, group: WlCommandPaletteGroup): void 
 
 function isActive(item: WlCommandPaletteItem): boolean {
   return selectableItems.value[activeIndex.value]?.item === item;
+}
+
+function optionId(item: WlCommandPaletteItem): string {
+  const index = visibleItems.value.findIndex((entry) => entry.item === item);
+  return `${listboxId}-option-${Math.max(0, index)}`;
 }
 
 async function moveActive(direction: 1 | -1): Promise<void> {
@@ -166,9 +188,6 @@ function onKeydown(event: KeyboardEvent): void {
   } else if (event.key === "Enter") {
     event.preventDefault();
     selectActive();
-  } else if (event.key === "Escape") {
-    event.preventDefault();
-    close();
   }
 }
 
@@ -221,7 +240,9 @@ defineExpose({
             type="search"
             role="combobox"
             aria-autocomplete="list"
-            aria-controls="wl-command-palette-list"
+            :aria-label="ariaLabel"
+            :aria-controls="listboxId"
+            :aria-activedescendant="activeDescendant()"
             :aria-expanded="visible"
             :placeholder="placeholder"
             :disabled="disabled"
@@ -230,12 +251,14 @@ defineExpose({
           <span class="wl-command-palette__key" aria-hidden="true">Esc</span>
         </div>
 
-        <div id="wl-command-palette-list" class="wl-command-palette__list" role="listbox">
+        <div :id="listboxId" class="wl-command-palette__list" role="listbox">
           <template v-if="hasResults">
             <section
               v-for="{ group, items } in visibleGroups"
               :key="group.id"
               class="wl-command-palette__group"
+              role="group"
+              :aria-label="group.label"
             >
               <div class="wl-command-palette__group-label">
                 <slot name="group" :group="group">{{ group.label }}</slot>
@@ -249,6 +272,7 @@ defineExpose({
                 :type="item.href ? undefined : 'button'"
                 class="wl-command-palette__item"
                 :class="{ 'is-active': isActive(item), 'is-disabled': item.disabled }"
+                :id="optionId(item)"
                 role="option"
                 :aria-selected="isActive(item)"
                 :aria-disabled="item.disabled || undefined"

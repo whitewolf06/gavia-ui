@@ -71,6 +71,25 @@ describe("WlNumberInput", () => {
     expect(root.exists()).toBe(true);
     expect(root.attributes("data-size")).toBe("sm");
   });
+
+  it("exposes spinbutton range semantics and configurable action labels", () => {
+    const wrapper = mount(WlNumberInput, {
+      props: {
+        modelValue: 4,
+        min: 1,
+        max: 8,
+        decrementLabel: "Убавить оценку",
+        incrementLabel: "Добавить оценку"
+      }
+    });
+    const input = wrapper.find("input");
+    expect(input.attributes("role")).toBe("spinbutton");
+    expect(input.attributes("aria-valuemin")).toBe("1");
+    expect(input.attributes("aria-valuemax")).toBe("8");
+    expect(input.attributes("aria-valuenow")).toBe("4");
+    expect(wrapper.find('[aria-label="Убавить оценку"]').exists()).toBe(true);
+    expect(wrapper.find('[aria-label="Добавить оценку"]').exists()).toBe(true);
+  });
 });
 
 describe("WlPasswordInput", () => {
@@ -223,8 +242,19 @@ describe("WlField", () => {
     const wrapper = mount(WlField, {
       props: { label: "Имя", required: true, hint: "Как в паспорте" },
       slots: {
-        default: (p: { id: string; ariaDescribedby?: string; invalid: boolean }) =>
-          h("input", { id: p.id, class: "ctl", "aria-describedby": p.ariaDescribedby })
+        default: (p: {
+          id: string;
+          inputId: string;
+          ariaDescribedby?: string;
+          invalid: boolean;
+          required: boolean;
+        }) =>
+          h("input", {
+            id: p.inputId,
+            class: "ctl",
+            required: p.required,
+            "aria-describedby": p.ariaDescribedby
+          })
       }
     });
 
@@ -232,6 +262,7 @@ describe("WlField", () => {
     const input = wrapper.find(".ctl");
     expect(label.attributes("for")).toBe(input.attributes("id"));
     expect(wrapper.find(".wl-field__req").text()).toBe("*");
+    expect(input.attributes("required")).toBeDefined();
 
     const hint = wrapper.find(".wl-field__hint");
     expect(hint.text()).toBe("Как в паспорте");

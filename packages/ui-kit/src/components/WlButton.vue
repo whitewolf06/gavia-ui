@@ -54,6 +54,7 @@ function onClick(event: MouseEvent): void {
     data-wl="button"
     :data-variant="variant"
     :data-size="size"
+    :data-density="density"
     @click="onClick"
   >
     <span v-if="loading" class="wl-btn__spinner" aria-hidden="true" />

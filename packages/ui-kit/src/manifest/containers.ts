@@ -73,6 +73,11 @@ export const containersManifest = defineComponentManifest([
       { name: "header", type: "string", description: "Заголовок (если не задан слот header)." },
       { name: "modal", type: "boolean", default: true, description: "Модальный режим с подложкой." },
       { name: "closable", type: "boolean", default: true, description: "Кнопка закрытия." },
+      { name: "dismissable", type: "boolean", default: false, description: "Закрытие кликом по подложке." },
+      { name: "closeOnEscape", type: "boolean", default: true, description: "Закрытие клавишей Escape." },
+      { name: "blockScroll", type: "boolean", default: true, description: "Блокирует прокрутку страницы, пока диалог открыт." },
+      { name: "ariaLabel", type: "string", description: "Доступное имя диалога без текстового заголовка." },
+      { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего диалог." },
       { name: "width", type: "string", description: "Ширина (CSS), например \"480px\"." },
       { name: "pt", type: "object", description: "PrimeVue pass-through." }
     ],
@@ -81,7 +86,10 @@ export const containersManifest = defineComponentManifest([
       { name: "header", description: "Кастомная шапка." },
       { name: "footer", description: "Подвал (кнопки)." }
     ],
-    emits: [],
+    emits: [
+      { name: "open", description: "Диалог полностью открылся." },
+      { name: "close", description: "Диалог закрылся." }
+    ],
     model: { name: "visible", type: "boolean", description: "v-model:visible — открыт ли (default false)." }
   },
   {
@@ -98,6 +106,11 @@ export const containersManifest = defineComponentManifest([
         description: "Сторона появления."
       },
       { name: "modal", type: "boolean", default: true, description: "Модальный режим с подложкой." },
+      { name: "dismissable", type: "boolean", default: true, description: "Закрытие кликом по подложке." },
+      { name: "closeOnEscape", type: "boolean", default: true, description: "Закрытие клавишей Escape." },
+      { name: "blockScroll", type: "boolean", default: true, description: "Блокирует прокрутку страницы, пока панель открыта." },
+      { name: "ariaLabel", type: "string", description: "Доступное имя панели без текстового заголовка." },
+      { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего панель." },
       { name: "pt", type: "object", description: "PrimeVue pass-through." }
     ],
     slots: [
@@ -105,16 +118,28 @@ export const containersManifest = defineComponentManifest([
       { name: "header", description: "Кастомная шапка." },
       { name: "footer", description: "Подвал." }
     ],
-    emits: [],
+    emits: [
+      { name: "open", description: "Панель полностью открылась." },
+      { name: "close", description: "Панель закрылась." }
+    ],
     model: { name: "visible", type: "boolean", description: "v-model:visible — открыта ли (default false)." }
   },
   {
     name: "WlPopover",
     category: "containers",
     description: "Поповер на PrimeVue Popover; управление только императивное — экспонирует toggle/show/hide.",
-    props: [{ name: "pt", type: "object", description: "PrimeVue pass-through." }],
+    props: [
+      { name: "dismissable", type: "boolean", default: true, description: "Закрытие кликом вне поповера." },
+      { name: "closeOnEscape", type: "boolean", default: true, description: "Закрытие клавишей Escape." },
+      { name: "ariaLabel", type: "string", description: "Доступное имя поповера." },
+      { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего поповер." },
+      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+    ],
     slots: [{ name: "default", description: "Содержимое поповера." }],
-    emits: []
+    emits: [
+      { name: "open", description: "Поповер открылся." },
+      { name: "close", description: "Поповер закрылся." }
+    ]
   },
   {
     name: "WlDivider",

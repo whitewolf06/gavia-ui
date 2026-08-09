@@ -1,5 +1,6 @@
 import type {
   WlAlertVariant,
+  WlAvatarSize,
   WlBadgeVariant,
   WlButtonVariant,
   WlColorPickerSize,
@@ -103,7 +104,7 @@ export const WL_COLOR_PICKER_SIZES = [
   "md"
 ] as const satisfies readonly WlColorPickerSize[];
 
-export const WL_AVATAR_SIZES = ["24", "28", "32", "36", "48"] as const;
+export const WL_AVATAR_SIZES = [24, 28, 32, 36, 48] as const satisfies readonly WlAvatarSize[];
 
 export const WL_AVATAR_PRESENCES = ["online", "busy", "offline"] as const;
 
@@ -113,6 +114,7 @@ export const WL_ICON_NAMES = [
   "plus",
   "minus",
   "search",
+  "filter",
   "chevron-down",
   "chevron-left",
   "chevron-right",

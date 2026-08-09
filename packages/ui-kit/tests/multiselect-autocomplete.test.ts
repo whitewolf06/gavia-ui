@@ -144,7 +144,25 @@ describe("WlAutocomplete", () => {
       global,
       props: { suggestions: [], modelValue: "", dropdown: true }
     });
-    expect(wrapper.find(".wl-autocomplete__dropdown").exists()).toBe(true);
+    const dropdown = wrapper.find(".wl-autocomplete__dropdown");
+    expect(dropdown.exists()).toBe(true);
+    expect(dropdown.attributes("aria-label")).toBe("Показать варианты");
+  });
+
+  it("merges a custom dropdown label with consumer pt options", () => {
+    const wrapper = mount(WlAutocomplete, {
+      global,
+      props: {
+        suggestions: [],
+        modelValue: "",
+        dropdown: true,
+        dropdownLabel: "Открыть города",
+        pt: { dropdown: { "data-consumer": "kept" } }
+      }
+    });
+    const dropdown = wrapper.find(".wl-autocomplete__dropdown");
+    expect(dropdown.attributes("aria-label")).toBe("Открыть города");
+    expect(dropdown.attributes("data-consumer")).toBe("kept");
   });
 });
 

@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, useAttrs } from "vue";
 import DatePicker from "primevue/datepicker";
 import type { WlSizeSm } from "../types";
+import { getPrimeControlProps, splitInputAttrs } from "../utils/inputAttrs";
+import { deepMerge } from "../utils/merge";
+
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(
   defineProps<{
@@ -30,6 +34,15 @@ const props = withDefaults(
 
 /** v-model — ISO "YYYY-MM-DD" string or null. */
 const model = defineModel<string | null>({ default: null });
+const attrs = useAttrs();
+
+const attrGroups = computed(() => splitInputAttrs(attrs));
+const inputAttrs = computed(() => attrGroups.value.inputAttrs);
+const rootAttrs = computed(() => attrGroups.value.rootAttrs);
+const controlProps = computed(() => getPrimeControlProps(inputAttrs.value));
+const mergedPt = computed(() =>
+  deepMerge({ pcInputText: { root: inputAttrs.value } }, props.pt)
+);
 
 const pad2 = (n: number): string => String(n).padStart(2, "0");
 
@@ -37,7 +50,13 @@ function parseIso(iso: string | null | undefined): Date | null {
   if (!iso) return null;
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
   if (!m) return null;
-  return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  const year = Number(m[1]);
+  const month = Number(m[2]) - 1;
+  const day = Number(m[3]);
+  const date = new Date(year, month, day);
+  return date.getFullYear() === year && date.getMonth() === month && date.getDate() === day
+    ? date
+    : null;
 }
 
 function toIso(date: Date | null): string | null {
@@ -66,6 +85,7 @@ const inputClass = computed(() => [
 
 <template>
   <DatePicker
+    v-bind="rootAttrs"
     v-model="dateValue"
     class="wl-dp"
     :data-size="size"
@@ -76,10 +96,16 @@ const inputClass = computed(() => [
     :disabled="disabled"
     :invalid="invalid"
     :showIcon="showIcon"
+    :inputId="controlProps.inputId"
+    :name="controlProps.name"
+    :required="controlProps.required"
+    :readonly="controlProps.readonly"
+    :ariaLabel="controlProps.ariaLabel"
+    :ariaLabelledby="controlProps.ariaLabelledby"
     iconDisplay="button"
     :minDate="minDateObj"
     :maxDate="maxDateObj"
     :inputClass="inputClass"
-    :pt="pt"
+    :pt="mergedPt"
   />
 </template>

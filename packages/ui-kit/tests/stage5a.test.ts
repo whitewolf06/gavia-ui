@@ -66,6 +66,40 @@ describe("WlColorPicker", () => {
     expect(wrapper.findAll(".wl-color-picker__sw").length).toBeGreaterThanOrEqual(12);
     expect(wrapper.find('[data-wl="color-picker"]').attributes("data-size")).toBe("sm");
   });
+
+  it("supports external invalid and a fully disabled state", async () => {
+    const wrapper = mount(WlColorPicker, {
+      global,
+      props: { modelValue: "#2563eb", invalid: true, disabled: true }
+    });
+    const root = wrapper.find('[data-wl="color-picker"]');
+    const input = wrapper.find("input");
+    const swatch = wrapper.find(".wl-color-picker__sw");
+    expect(root.attributes("data-disabled")).toBe("true");
+    expect(root.attributes("data-invalid")).toBe("true");
+    expect(input.attributes("disabled")).toBeDefined();
+    expect(input.attributes("aria-invalid")).toBe("true");
+    expect(swatch.attributes("disabled")).toBeDefined();
+    await swatch.trigger("click");
+    expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+  });
+
+  it("uses roving focus and arrow navigation for swatches", async () => {
+    const wrapper = mount(WlColorPicker, {
+      global,
+      attachTo: document.body,
+      props: { swatches: ["#111111", "#222222", "#333333"] }
+    });
+    const swatches = wrapper.findAll(".wl-color-picker__sw");
+    expect(swatches.map((swatch) => swatch.attributes("tabindex"))).toEqual(["0", "-1", "-1"]);
+    (swatches[0]!.element as HTMLButtonElement).focus();
+    await swatches[0]!.trigger("keydown", { key: "ArrowRight" });
+    expect(document.activeElement).toBe(swatches[1]!.element);
+    expect(swatches[1]!.attributes("tabindex")).toBe("0");
+    await swatches[1]!.trigger("keydown", { key: "End" });
+    expect(document.activeElement).toBe(swatches[2]!.element);
+    wrapper.unmount();
+  });
 });
 
 describe("WlCalendar", () => {
@@ -152,5 +186,43 @@ describe("WlCalendar", () => {
     const blue = wrapper.find('[data-date="2026-07-17"] .wl-cal__ev');
     expect(blue.text()).toBe("19:30");
     expect(blue.classes()).toContain("wl-cal__ev--blue");
+  });
+
+  it("exposes grid semantics, a roving tab stop and descriptive date labels", () => {
+    const wrapper = mount(WlCalendar, {
+      global,
+      props: {
+        month: "2026-07",
+        modelValue: "2026-07-15",
+        events: [
+          { id: "review-1", date: "2026-07-15", label: "Review" },
+          { id: "review-2", date: "2026-07-15", label: "Review" }
+        ]
+      }
+    });
+
+    expect(wrapper.find('[role="grid"]').exists()).toBe(true);
+    expect(wrapper.findAll('[role="columnheader"]')).toHaveLength(7);
+    expect(wrapper.findAll('[role="gridcell"]')).toHaveLength(35);
+    expect(wrapper.findAll('[role="gridcell"][tabindex="0"]')).toHaveLength(1);
+    const selectedDay = wrapper.find('[data-date="2026-07-15"]');
+    expect(selectedDay.attributes("aria-selected")).toBe("true");
+    expect(selectedDay.attributes("aria-label")).toContain("2 события");
+    expect(selectedDay.findAll(".wl-cal__ev")).toHaveLength(2);
+  });
+
+  it("moves the roving focus with arrow keys and selects with Enter", async () => {
+    const wrapper = mount(WlCalendar, {
+      global,
+      attachTo: document.body,
+      props: { month: "2026-07", modelValue: "2026-07-15" }
+    });
+    const current = wrapper.find('[data-date="2026-07-15"]');
+    (current.element as HTMLElement).focus();
+    await current.trigger("keydown", { key: "ArrowRight" });
+    expect(document.activeElement).toBe(wrapper.find('[data-date="2026-07-16"]').element);
+    await wrapper.find('[data-date="2026-07-16"]').trigger("keydown", { key: "Enter" });
+    expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["2026-07-16"]);
+    wrapper.unmount();
   });
 });

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import WlIcon from "./WlIcon.vue";
 import type { WlCalendarEvent } from "../types";
 
@@ -44,7 +44,9 @@ function currentMonth(): string {
 }
 
 /** Effective "YYYY-MM" (falls back to the current month on missing/invalid input). */
-const monthIso = computed(() => (/^\d{4}-\d{2}$/.test(viewMonth.value) ? viewMonth.value : currentMonth()));
+const monthIso = computed(() =>
+  /^\d{4}-(0[1-9]|1[0-2])$/.test(viewMonth.value) ? viewMonth.value : currentMonth()
+);
 
 const monthParts = computed(() => {
   const [y, m] = monthIso.value.split("-").map(Number);
@@ -120,6 +122,33 @@ const cells = computed<CalCell[]>(() => {
   return out;
 });
 
+const weeks = computed(() => {
+  const out: CalCell[][] = [];
+  for (let index = 0; index < cells.value.length; index += 7) {
+    out.push(cells.value.slice(index, index + 7));
+  }
+  return out;
+});
+
+const gridRef = ref<HTMLElement | null>(null);
+const focusedIso = ref("");
+
+watch(
+  [cells, selected],
+  ([nextCells]) => {
+    if (selected.value && nextCells.some((cell) => cell.iso === selected.value)) {
+      focusedIso.value = selected.value;
+    } else if (!nextCells.some((cell) => cell.iso === focusedIso.value)) {
+      focusedIso.value =
+        nextCells.find((cell) => cell.today)?.iso ??
+        nextCells.find((cell) => cell.inMonth)?.iso ??
+        nextCells[0]?.iso ??
+        "";
+    }
+  },
+  { immediate: true }
+);
+
 function shift(delta: number): void {
   const { y, mo } = monthParts.value;
   const d = new Date(y, mo + delta, 1);
@@ -127,10 +156,77 @@ function shift(delta: number): void {
 }
 
 function pick(cell: CalCell): void {
+  focusedIso.value = cell.iso;
   selected.value = cell.iso;
   if (!cell.inMonth) {
     viewMonth.value = cell.iso.slice(0, 7);
   }
+}
+
+function dateFromIso(iso: string): Date {
+  const [year, month, day] = iso.split("-").map(Number);
+  return new Date(year!, month! - 1, day!);
+}
+
+function cellLabel(cell: CalCell): string {
+  const date = new Intl.DateTimeFormat("ru-RU", { dateStyle: "long" }).format(
+    dateFromIso(cell.iso)
+  );
+  const events = cell.events.length;
+  if (!events) return date;
+  const suffix = events === 1 ? "событие" : events < 5 ? "события" : "событий";
+  return `${date}, ${events} ${suffix}`;
+}
+
+async function focusDate(iso: string, revealMonth = false): Promise<void> {
+  focusedIso.value = iso;
+  if (revealMonth) viewMonth.value = iso.slice(0, 7);
+  await nextTick();
+  gridRef.value?.querySelector<HTMLElement>(`[data-date="${iso}"]`)?.focus();
+}
+
+function shiftedIso(iso: string, months: number): string {
+  const source = dateFromIso(iso);
+  const year = source.getFullYear();
+  const month = source.getMonth() + months;
+  const day = source.getDate();
+  const lastDay = new Date(year, month + 1, 0).getDate();
+  const target = new Date(year, month, Math.min(day, lastDay));
+  return toIso(target.getFullYear(), target.getMonth(), target.getDate());
+}
+
+function onDayKeydown(event: KeyboardEvent, cell: CalCell): void {
+  const index = cells.value.findIndex((entry) => entry.iso === cell.iso);
+  let targetIndex = index;
+
+  if (event.key === "ArrowLeft") targetIndex -= 1;
+  else if (event.key === "ArrowRight") targetIndex += 1;
+  else if (event.key === "ArrowUp") targetIndex -= 7;
+  else if (event.key === "ArrowDown") targetIndex += 7;
+  else if (event.key === "Home") targetIndex -= index % 7;
+  else if (event.key === "End") targetIndex += 6 - (index % 7);
+  else if (event.key === "PageUp" || event.key === "PageDown") {
+    event.preventDefault();
+    void focusDate(shiftedIso(cell.iso, event.key === "PageUp" ? -1 : 1), true);
+    return;
+  } else if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    pick(cell);
+    return;
+  } else {
+    return;
+  }
+
+  event.preventDefault();
+  const target = cells.value[targetIndex];
+  if (target) {
+    void focusDate(target.iso);
+    return;
+  }
+
+  const date = dateFromIso(cell.iso);
+  date.setDate(date.getDate() + (targetIndex - index));
+  void focusDate(toIso(date.getFullYear(), date.getMonth(), date.getDate()), true);
 }
 </script>
 
@@ -145,33 +241,45 @@ function pick(cell: CalCell): void {
         <WlIcon name="chevron-right" :size="15" />
       </button>
     </div>
-    <div class="wl-cal__week">
-      <span v-for="wd in WEEKDAYS_RU" :key="wd" class="wl-cal__wd">{{ wd }}</span>
-    </div>
-    <div class="wl-cal__grid">
-      <button
-        v-for="cell in cells"
-        :key="cell.iso"
-        type="button"
-        class="wl-cal__day"
-        :class="{
-          'is-muted': !cell.inMonth,
-          'is-today': cell.today,
-          'is-selected': cell.selected
-        }"
-        :data-date="cell.iso"
-        :aria-pressed="cell.selected"
-        @click="pick(cell)"
-      >
-        <span class="wl-cal__dnum">{{ cell.day }}</span>
-        <span
-          v-for="ev in cell.events"
-          :key="ev.label"
-          class="wl-cal__ev"
-          :class="{ 'wl-cal__ev--blue': ev.tone === 'blue' }"
-          >{{ ev.label }}</span
-        >
-      </button>
+    <div class="wl-cal__body" role="grid" :aria-label="title">
+      <div class="wl-cal__week" role="row">
+        <span v-for="wd in WEEKDAYS_RU" :key="wd" class="wl-cal__wd" role="columnheader">
+          {{ wd }}
+        </span>
+      </div>
+      <div ref="gridRef" class="wl-cal__grid" role="rowgroup">
+        <div v-for="(week, weekIndex) in weeks" :key="weekIndex" class="wl-cal__row" role="row">
+          <button
+            v-for="cell in week"
+            :key="cell.iso"
+            type="button"
+            class="wl-cal__day"
+            :class="{
+              'is-muted': !cell.inMonth,
+              'is-today': cell.today,
+              'is-selected': cell.selected
+            }"
+            role="gridcell"
+            :data-date="cell.iso"
+            :tabindex="cell.iso === focusedIso ? 0 : -1"
+            :aria-label="cellLabel(cell)"
+            :aria-selected="cell.selected"
+            :aria-current="cell.today ? 'date' : undefined"
+            @focus="focusedIso = cell.iso"
+            @click="pick(cell)"
+            @keydown="onDayKeydown($event, cell)"
+          >
+            <span class="wl-cal__dnum">{{ cell.day }}</span>
+            <span
+              v-for="(ev, eventIndex) in cell.events"
+              :key="ev.id ?? `${ev.label}:${eventIndex}`"
+              class="wl-cal__ev"
+              :class="{ 'wl-cal__ev--blue': ev.tone === 'blue' }"
+              >{{ ev.label }}</span
+            >
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>

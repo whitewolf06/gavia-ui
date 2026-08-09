@@ -8,6 +8,8 @@ const props = withDefaults(
   defineProps<{
     items?: WlMenuItem[];
     popup?: boolean;
+    ariaLabel?: string;
+    ariaLabelledby?: string;
     pt?: Record<string, unknown>;
   }>(),
   {
@@ -15,6 +17,11 @@ const props = withDefaults(
     popup: false
   }
 );
+
+const emit = defineEmits<{
+  open: [];
+  close: [];
+}>();
 
 interface MenuModelItem {
   label?: string;
@@ -57,22 +64,49 @@ const model = computed<MenuModelItem[]>(() => {
 });
 
 const menuRef = ref<InstanceType<typeof Menu> | null>(null);
+let openState = false;
+
+function markOpen(): void {
+  if (openState) return;
+  openState = true;
+  emit("open");
+}
+
+function markClose(): void {
+  if (!openState) return;
+  openState = false;
+  emit("close");
+}
 
 function toggle(event: Event): void {
   (menuRef.value as unknown as { toggle: (e: Event) => void } | null)?.toggle(event);
+  openState ? markClose() : markOpen();
 }
 function show(event: Event): void {
   (menuRef.value as unknown as { show: (e: Event) => void } | null)?.show(event);
+  markOpen();
 }
 function hide(): void {
   (menuRef.value as unknown as { hide: () => void } | null)?.hide();
+  markClose();
 }
 
 defineExpose({ toggle, show, hide });
 </script>
 
 <template>
-  <Menu ref="menuRef" :model="model" :popup="popup" :pt="pt" class="wl-menu" data-wl="menu">
+  <Menu
+    ref="menuRef"
+    :model="model"
+    :popup="popup"
+    :ariaLabel="ariaLabel"
+    :ariaLabelledby="ariaLabelledby"
+    :pt="pt"
+    class="wl-menu"
+    data-wl="menu"
+    @show="markOpen"
+    @hide="markClose"
+  >
     <template #item="{ item, props: itemProps }">
       <a
         v-bind="itemProps.action"

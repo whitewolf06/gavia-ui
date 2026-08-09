@@ -115,10 +115,15 @@ export const actionsManifest = defineComponentManifest([
         description: "WlMenuItem[]: { key?, label?, icon?, shortcut?, danger?, disabled?, separator?, header?, command? }."
       },
       { name: "popup", type: "boolean", default: false, description: "Popup-режим (открытие через toggle/show)." },
+      { name: "ariaLabel", type: "string", description: "Доступное имя меню." },
+      { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего меню." },
       { name: "pt", type: "object", description: "PrimeVue pass-through." }
     ],
     slots: [],
-    emits: []
+    emits: [
+      { name: "open", description: "Popup-меню открылось." },
+      { name: "close", description: "Popup-меню закрылось." }
+    ]
   },
   {
     name: "WlNavItem",

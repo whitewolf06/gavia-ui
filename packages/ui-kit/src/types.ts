@@ -32,6 +32,7 @@ export type WlIconName =
   | "plus"
   | "minus"
   | "search"
+  | "filter"
   | "chevron-down"
   | "chevron-left"
   | "chevron-right"
@@ -164,6 +165,8 @@ export type WlColorPickerSize = "sm" | "md";
 export type WlCalendarEventTone = "blue" | "gray";
 
 export interface WlCalendarEvent {
+  /** Stable key when multiple events can share a label. */
+  id?: string;
   /** ISO date "YYYY-MM-DD". */
   date: string;
   label: string;

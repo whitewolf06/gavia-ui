@@ -62,7 +62,19 @@ export const inputsManifest = defineComponentManifest([
       { name: "density", type: "enum", default: "default", values: WL_DENSITIES, description: "Плотность." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает поле." },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
-      { name: "ariaLabel", type: "string", description: "aria-label инпута." }
+      { name: "ariaLabel", type: "string", description: "aria-label инпута." },
+      {
+        name: "decrementLabel",
+        type: "string",
+        default: "Уменьшить",
+        description: "Доступное имя кнопки уменьшения."
+      },
+      {
+        name: "incrementLabel",
+        type: "string",
+        default: "Увеличить",
+        description: "Доступное имя кнопки увеличения."
+      }
     ],
     slots: [],
     emits: [],
@@ -172,6 +184,12 @@ export const inputsManifest = defineComponentManifest([
       { name: "multiple", type: "boolean", default: false, description: "Множественный выбор (чипы)." },
       { name: "dropdown", type: "boolean", default: false, description: "Кнопка раскрытия списка." },
       {
+        name: "dropdownLabel",
+        type: "string",
+        default: "Показать варианты",
+        description: "Доступное имя кнопки раскрытия списка."
+      },
+      {
         name: "minLength",
         type: "number",
         default: 1,
@@ -229,6 +247,7 @@ export const inputsManifest = defineComponentManifest([
     props: [
       { name: "size", type: "enum", default: "md", values: WL_SWITCH_SIZES, description: "Размер." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает переключатель." },
+      { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
       { name: "pt", type: "object", description: "PrimeVue pass-through." }
     ],
     slots: [{ name: "default", description: "Подпись рядом с переключателем." }],
@@ -316,7 +335,11 @@ export const inputsManifest = defineComponentManifest([
         ],
         description: "Hex-цвета палитры."
       },
-      { name: "size", type: "enum", default: "md", values: WL_COLOR_PICKER_SIZES, description: "Размер свотчей." }
+      { name: "size", type: "enum", default: "md", values: WL_COLOR_PICKER_SIZES, description: "Размер свотчей." },
+      { name: "disabled", type: "boolean", default: false, description: "Отключает палитру и ввод." },
+      { name: "invalid", type: "boolean", default: false, description: "Внешнее состояние ошибки." },
+      { name: "paletteLabel", type: "string", default: "Палитра", description: "Доступное имя списка цветов." },
+      { name: "inputLabel", type: "string", default: "HEX-код цвета", description: "Доступное имя hex-поля." }
     ],
     slots: [],
     emits: [

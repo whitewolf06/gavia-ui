@@ -15,7 +15,7 @@ export interface WlPropManifest {
   required?: boolean;
   default?: unknown;
   /** Допустимые значения для enum/union/icon. */
-  values?: readonly string[];
+  values?: readonly (string | number)[];
   description?: string;
 }
 
@@ -89,6 +89,7 @@ export const WL_COMPONENT_INTRODUCED_IN: Readonly<Record<string, string>> = {
   WlEmpty: "0.1.0",
   WlField: "0.1.0",
   WlFileUpload: "0.1.0",
+  WlFilterBar: "0.3.0",
   WlIcon: "0.1.0",
   WlIconButton: "0.1.0",
   WlInput: "0.1.0",
@@ -97,6 +98,7 @@ export const WL_COMPONENT_INTRODUCED_IN: Readonly<Record<string, string>> = {
   WlNavItem: "0.1.0",
   WlNumberInput: "0.1.0",
   WlPagination: "0.1.0",
+  WlPageHeader: "0.3.0",
   WlPasswordInput: "0.1.0",
   WlPill: "0.1.0",
   WlPopover: "0.1.0",

@@ -136,6 +136,19 @@ describe("WlNavItem", () => {
     await item.trigger("click");
     expect(wrapper.emitted("click")).toHaveLength(1);
   });
+
+  it("removes disabled links from navigation and the tab order", async () => {
+    const wrapper = mount(WlNavItem, {
+      global,
+      props: { label: "Архив", href: "#/archive", disabled: true }
+    });
+    const item = wrapper.find("a");
+    expect(item.attributes("href")).toBeUndefined();
+    expect(item.attributes("aria-disabled")).toBe("true");
+    expect(item.attributes("tabindex")).toBe("-1");
+    await item.trigger("click");
+    expect(wrapper.emitted("click")).toBeUndefined();
+  });
 });
 
 describe("WlBreadcrumbs", () => {
