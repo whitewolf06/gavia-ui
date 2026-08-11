@@ -1,0 +1,2169 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>WhiteLife — WL-47</title>
+  <style>
+    :root {
+      --wl-bg: #ffffff;
+      --wl-surface: #ffffff;
+      --wl-surface-soft: #f7f8fa;
+      --wl-surface-hover: #f1f3f5;
+      --wl-border: #e3e7eb;
+      --wl-border-strong: #cdd4db;
+      --wl-text: #1b232c;
+      --wl-text-secondary: #59636e;
+      --wl-text-muted: #8a949f;
+      --wl-primary: #2463eb;
+      --wl-primary-hover: #1e54cc;
+      --wl-primary-soft: #eaf1ff;
+      --wl-primary-border: #cddcff;
+      --wl-success: #168360;
+      --wl-success-soft: #e7f6f0;
+      --wl-warning: #b5650b;
+      --wl-warning-soft: #fff4df;
+      --wl-danger: #c83b48;
+      --wl-danger-soft: #fff0f2;
+      --wl-purple: #7557d9;
+      --wl-purple-soft: #f1edff;
+      --wl-cyan: #0b8093;
+      --wl-cyan-soft: #e5f7fa;
+      --wl-sidebar-width: 232px;
+      --wl-header-height: 64px;
+      --wl-radius-xs: 6px;
+      --wl-radius-sm: 8px;
+      --wl-radius-md: 12px;
+      --wl-radius-lg: 16px;
+      --wl-shadow-sm: 0 1px 2px rgba(20, 30, 42, 0.05);
+      --wl-shadow-md: 0 16px 42px rgba(20, 30, 42, 0.14);
+      --wl-font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      overflow: hidden;
+      color: var(--wl-text);
+      background: var(--wl-bg);
+      font-family: var(--wl-font);
+      font-size: 14px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      color: inherit;
+      font: inherit;
+    }
+
+    button {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 2px solid var(--wl-primary);
+      outline-offset: 2px;
+    }
+
+    .wl-sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .wl-icon {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.8;
+    }
+
+    .wl-icon--sm {
+      width: 15px;
+      height: 15px;
+    }
+
+    .wl-app {
+      height: 100vh;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: var(--wl-sidebar-width) minmax(0, 1fr);
+    }
+
+    .wl-sidebar {
+      position: relative;
+      z-index: 40;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--wl-border);
+      background: var(--wl-surface);
+    }
+
+    .wl-brand {
+      height: var(--wl-header-height);
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      border-bottom: 1px solid var(--wl-border);
+    }
+
+    .wl-brand__mark {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 9px;
+      color: #fff;
+      background: var(--wl-primary);
+    }
+
+    .wl-brand__name {
+      font-size: 15px;
+      font-weight: 730;
+      letter-spacing: -0.02em;
+    }
+
+    .wl-brand__env {
+      margin-left: auto;
+      padding: 2px 6px;
+      border: 1px solid var(--wl-border);
+      border-radius: 5px;
+      color: var(--wl-text-muted);
+      background: var(--wl-surface-soft);
+      font-size: 9px;
+      font-weight: 720;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .wl-nav {
+      padding: 18px 12px;
+      display: grid;
+      gap: 3px;
+    }
+
+    .wl-nav__label {
+      padding: 0 10px 8px;
+      color: var(--wl-text-muted);
+      font-size: 10px;
+      font-weight: 710;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .wl-nav__item {
+      width: 100%;
+      height: 42px;
+      padding: 0 11px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-radius: var(--wl-radius-sm);
+      color: var(--wl-text-secondary);
+      text-align: left;
+      transition: color 120ms ease, background 120ms ease;
+    }
+
+    .wl-nav__item:hover {
+      color: var(--wl-text);
+      background: var(--wl-surface-hover);
+    }
+
+    .wl-nav__item[aria-current="page"] {
+      color: var(--wl-primary);
+      background: var(--wl-primary-soft);
+    }
+
+    .wl-nav__text {
+      flex: 1;
+      font-weight: 570;
+    }
+
+    .wl-nav__badge {
+      min-width: 22px;
+      height: 20px;
+      padding: 0 6px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 10px;
+      color: var(--wl-text-secondary);
+      background: var(--wl-surface-hover);
+      font-size: 11px;
+      font-weight: 680;
+    }
+
+    .wl-sidebar__footer {
+      margin-top: auto;
+      padding: 14px 12px;
+      border-top: 1px solid var(--wl-border);
+    }
+
+    .wl-profile {
+      width: 100%;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: var(--wl-radius-sm);
+      text-align: left;
+    }
+
+    .wl-profile:hover {
+      background: var(--wl-surface-hover);
+    }
+
+    .wl-avatar {
+      width: 30px;
+      height: 30px;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--wl-avatar-color, #607286);
+      font-size: 10px;
+      font-weight: 720;
+    }
+
+    .wl-profile__copy {
+      min-width: 0;
+      flex: 1;
+      display: grid;
+    }
+
+    .wl-profile__name {
+      overflow: hidden;
+      font-size: 12.5px;
+      font-weight: 630;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .wl-profile__role {
+      color: var(--wl-text-muted);
+      font-size: 11px;
+    }
+
+    .wl-main {
+      min-width: 0;
+      height: 100vh;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: var(--wl-header-height) minmax(0, 1fr);
+    }
+
+    .wl-topbar {
+      position: relative;
+      z-index: 30;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid var(--wl-border);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+    }
+
+    .wl-mobile-menu {
+      display: none;
+    }
+
+    .wl-workspace {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .wl-workspace__dot {
+      width: 8px;
+      height: 8px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--wl-primary);
+      box-shadow: 0 0 0 4px var(--wl-primary-soft);
+    }
+
+    .wl-workspace__name {
+      overflow: hidden;
+      font-size: 13px;
+      font-weight: 650;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .wl-global-search {
+      width: min(430px, 42vw);
+      height: 36px;
+      margin-left: auto;
+      padding: 0 11px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--wl-border);
+      border-radius: var(--wl-radius-sm);
+      color: var(--wl-text-muted);
+      background: var(--wl-surface-soft);
+      text-align: left;
+    }
+
+    .wl-global-search span {
+      overflow: hidden;
+      font-size: 12.5px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .wl-key {
+      margin-left: auto;
+      padding: 1px 6px;
+      border: 1px solid var(--wl-border-strong);
+      border-bottom-width: 2px;
+      border-radius: 5px;
+      color: var(--wl-text-muted);
+      background: #fff;
+      font-size: 10px;
+      font-weight: 650;
+    }
+
+    .wl-icon-button {
+      width: 36px;
+      height: 36px;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 1px solid transparent;
+      border-radius: var(--wl-radius-sm);
+      color: var(--wl-text-secondary);
+      transition: color 120ms ease, background 120ms ease, border-color 120ms ease;
+    }
+
+    .wl-icon-button:hover {
+      color: var(--wl-text);
+      background: var(--wl-surface-hover);
+    }
+
+    .wl-icon-button--bordered {
+      border-color: var(--wl-border);
+      background: var(--wl-surface);
+    }
+
+    .wl-content {
+      min-height: 0;
+      overflow: auto;
+      overscroll-behavior: contain;
+    }
+
+    .wl-page {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 22px 34px 76px;
+    }
+
+    .wl-breadcrumbs {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--wl-text-muted);
+      font-size: 11.5px;
+    }
+
+    .wl-breadcrumbs__item {
+      max-width: 190px;
+      padding: 4px 5px;
+      overflow: hidden;
+      border-radius: 5px;
+      color: inherit;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .wl-breadcrumbs__item:hover {
+      color: var(--wl-text);
+      background: var(--wl-surface-hover);
+    }
+
+    .wl-breadcrumbs .wl-icon {
+      width: 12px;
+      height: 12px;
+    }
+
+    .wl-task-header {
+      margin-top: 24px;
+    }
+
+    .wl-task-header__meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--wl-text-muted);
+      font-size: 11.5px;
+    }
+
+    .wl-type-icon {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      color: var(--wl-primary);
+    }
+
+    .wl-task-key {
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      font-size: 11px;
+      font-weight: 620;
+    }
+
+    .wl-task-header__title-row {
+      margin-top: 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .wl-task-title {
+      max-width: 850px;
+      margin: 0;
+      flex: 1;
+      font-size: clamp(25px, 3vw, 34px);
+      font-weight: 740;
+      letter-spacing: -0.04em;
+      line-height: 1.18;
+    }
+
+    .wl-task-header__actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .wl-button {
+      min-height: 38px;
+      padding: 0 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid var(--wl-border);
+      border-radius: var(--wl-radius-sm);
+      background: var(--wl-surface);
+      font-size: 13px;
+      font-weight: 620;
+      white-space: nowrap;
+      transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+    }
+
+    .wl-button:hover {
+      border-color: var(--wl-border-strong);
+      background: var(--wl-surface-hover);
+    }
+
+    .wl-button--primary {
+      border-color: var(--wl-primary);
+      color: #fff;
+      background: var(--wl-primary);
+    }
+
+    .wl-button--primary:hover {
+      border-color: var(--wl-primary-hover);
+      background: var(--wl-primary-hover);
+    }
+
+    .wl-button--success {
+      border-color: var(--wl-success);
+      color: #fff;
+      background: var(--wl-success);
+    }
+
+    .wl-task-header__summary {
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .wl-status {
+      height: 28px;
+      padding: 0 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 14px;
+      color: var(--wl-primary);
+      background: var(--wl-primary-soft);
+      font-size: 11.5px;
+      font-weight: 660;
+    }
+
+    .wl-status__dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .wl-priority {
+      height: 28px;
+      padding: 0 9px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 14px;
+      color: #d26a17;
+      background: var(--wl-warning-soft);
+      font-size: 11.5px;
+      font-weight: 650;
+    }
+
+    .wl-priority .wl-icon {
+      width: 13px;
+      height: 13px;
+    }
+
+    .wl-parent-link {
+      height: 28px;
+      padding: 0 9px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 14px;
+      color: var(--wl-purple);
+      background: var(--wl-purple-soft);
+      font-size: 11.5px;
+      font-weight: 590;
+    }
+
+    .wl-parent-link:hover {
+      text-decoration: underline;
+    }
+
+    .wl-tabs {
+      margin-top: 30px;
+      display: flex;
+      gap: 22px;
+      border-bottom: 1px solid var(--wl-border);
+    }
+
+    .wl-tab {
+      height: 40px;
+      margin-bottom: -1px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border-bottom: 2px solid transparent;
+      color: var(--wl-text-secondary);
+      font-size: 12.5px;
+      font-weight: 620;
+    }
+
+    .wl-tab:hover {
+      color: var(--wl-text);
+    }
+
+    .wl-tab[aria-selected="true"] {
+      border-bottom-color: var(--wl-primary);
+      color: var(--wl-primary);
+    }
+
+    .wl-tab__count {
+      min-width: 19px;
+      height: 18px;
+      padding: 0 5px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 9px;
+      color: var(--wl-text-muted);
+      background: var(--wl-surface-hover);
+      font-size: 10px;
+    }
+
+    .wl-detail-layout {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .wl-main-column {
+      min-width: 0;
+      display: grid;
+      gap: 32px;
+    }
+
+    .wl-tab-panel[hidden] {
+      display: none;
+    }
+
+    .wl-overview {
+      display: grid;
+      gap: 34px;
+    }
+
+    .wl-section {
+      min-width: 0;
+    }
+
+    .wl-section__head {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .wl-section__title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 690;
+    }
+
+    .wl-section__count {
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 10px;
+      color: var(--wl-text-muted);
+      background: var(--wl-surface-hover);
+      font-size: 10.5px;
+    }
+
+    .wl-section__action {
+      margin-left: auto;
+      padding: 5px 7px;
+      border-radius: 6px;
+      color: var(--wl-primary);
+      font-size: 11.5px;
+      font-weight: 620;
+    }
+
+    .wl-section__action:hover {
+      background: var(--wl-primary-soft);
+    }
+
+    .wl-description {
+      color: var(--wl-text-secondary);
+      font-size: 13.5px;
+      line-height: 1.75;
+    }
+
+    .wl-description p {
+      margin: 0 0 12px;
+    }
+
+    .wl-description ul {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .wl-description li {
+      margin: 5px 0;
+    }
+
+    .wl-description-editor {
+      display: none;
+    }
+
+    .wl-description-editor--visible {
+      display: grid;
+      gap: 10px;
+    }
+
+    .wl-textarea {
+      width: 100%;
+      min-height: 170px;
+      padding: 12px;
+      resize: vertical;
+      border: 1px solid var(--wl-border);
+      border-radius: var(--wl-radius-sm);
+      outline: 0;
+      line-height: 1.6;
+    }
+
+    .wl-textarea:focus {
+      border-color: var(--wl-primary);
+      box-shadow: 0 0 0 3px var(--wl-primary-soft);
+    }
+
+    .wl-editor-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .wl-callout {
+      padding: 12px 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      border-radius: var(--wl-radius-sm);
+      color: var(--wl-text-secondary);
+      background: var(--wl-primary-soft);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .wl-callout .wl-icon {
+      margin-top: 1px;
+      color: var(--wl-primary);
+    }
+
+    .wl-check-list {
+      display: grid;
+      gap: 3px;
+    }
+
+    .wl-check-row {
+      min-height: 42px;
+      padding: 7px 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: var(--wl-radius-sm);
+      transition: background 110ms ease;
+    }
+
+    .wl-check-row:hover {
+      background: var(--wl-surface-hover);
+    }
+
+    .wl-check-row input {
+      width: 17px;
+      height: 17px;
+      margin: 0;
+      flex: 0 0 auto;
+      accent-color: var(--wl-primary);
+    }
+
+    .wl-check-row__label {
+      flex: 1;
+      font-size: 12.5px;
+    }
+
+    .wl-check-row--done .wl-check-row__label {
+      color: var(--wl-text-muted);
+      text-decoration: line-through;
+    }
+
+    .wl-progress-line {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--wl-text-muted);
+      font-size: 11px;
+    }
+
+    .wl-progress-line__track {
+      height: 6px;
+      flex: 1;
+      overflow: hidden;
+      border-radius: 3px;
+      background: var(--wl-border);
+    }
+
+    .wl-progress-line__fill {
+      height: 100%;
+      display: block;
+      border-radius: inherit;
+      background: var(--wl-primary);
+      transition: width 160ms ease;
+    }
+
+    .wl-subtask-row {
+      min-height: 48px;
+      padding: 7px 8px;
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr) 94px 82px 28px;
+      align-items: center;
+      gap: 10px;
+      border-radius: var(--wl-radius-sm);
+      transition: background 110ms ease;
+    }
+
+    .wl-subtask-row:hover {
+      background: var(--wl-surface-hover);
+    }
+
+    .wl-subtask-row input {
+      width: 17px;
+      height: 17px;
+      margin: 0;
+      accent-color: var(--wl-primary);
+    }
+
+    .wl-subtask-row__main {
+      min-width: 0;
+      display: grid;
+    }
+
+    .wl-subtask-row__title {
+      overflow: hidden;
+      font-size: 12.5px;
+      font-weight: 580;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .wl-subtask-row__key {
+      margin-top: 2px;
+      color: var(--wl-text-muted);
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      font-size: 9.5px;
+    }
+
+    .wl-mini-status {
+      width: fit-content;
+      padding: 4px 7px;
+      border-radius: 10px;
+      color: var(--wl-primary);
+      background: var(--wl-primary-soft);
+      font-size: 10px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .wl-mini-status--done {
+      color: var(--wl-success);
+      background: var(--wl-success-soft);
+    }
+
+    .wl-mini-status--planned {
+      color: var(--wl-text-muted);
+      background: var(--wl-surface-hover);
+    }
+
+    .wl-subtask-row .wl-avatar {
+      width: 24px;
+      height: 24px;
+      font-size: 8.5px;
+    }
+
+    .wl-subtask-add {
+      margin-top: 8px;
+      display: none;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 8px;
+    }
+
+    .wl-subtask-add--visible {
+      display: grid;
+    }
+
+    .wl-input {
+      width: 100%;
+      height: 38px;
+      padding: 0 10px;
+      border: 1px solid var(--wl-border);
+      border-radius: var(--wl-radius-sm);
+      outline: 0;
+      background: var(--wl-surface);
+    }
+
+    .wl-input:focus {
+      border-color: var(--wl-primary);
+      box-shadow: 0 0 0 3px var(--wl-primary-soft);
+    }
+
+    .wl-relation-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .wl-relation-card {
+      min-width: 0;
+      padding: 12px;
+      display: grid;
+      gap: 7px;
+      border: 1px solid var(--wl-border);
+      border-radius: var(--wl-radius-sm);
+      text-align: left;
+      transition: border-color 120ms ease, background 120ms ease;
+    }
+
+    .wl-relation-card:hover {
+      border-color: var(--wl-border-strong);
+      background: var(--wl-surface-hover);
+    }
+
+    .wl-relation-card__type {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--wl-text-muted);
+      font-size: 10px;
+      font-weight: 690;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .wl-relation-card__title {
+      overflow: hidden;
+      font-size: 12px;
+      font-weight: 610;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .wl-relation-card__meta {
+      color: var(--wl-text-muted);
+      font-size: 10.5px;
+    }
+
+    .wl-attachments {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .wl-attachment {
+      min-width: 190px;
+      padding: 9px 10px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      border: 1px solid var(--wl-border);
+      border-radius: var(--wl-radius-sm);
+      text-align: left;
+    }
+
+    .wl-attachment:hover {
+      border-color: var(--wl-border-strong);
+      background: var(--wl-surface-hover);
+    }
+
+    .wl-attachment__icon {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 8px;
+      color: var(--wl-primary);
+      background: var(--wl-primary-soft);
+    }
+
+    .wl-attachment__copy {
+      min-width: 0;
+      display: grid;
+    }
+
+    .wl-attachment__name {
+      overflow: hidden;
+      font-size: 11.5px;
+      font-weight: 620;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .wl-attachment__meta {
+      color: var(--wl-text-muted);
+      font-size: 10px;
+    }
+
+    .wl-properties {
+      position: sticky;
+      top: 16px;
+      overflow: hidden;
+      border: 1px solid var(--wl-border);
+      border-radius: var(--wl-radius-md);
+      background: var(--wl-surface);
+    }
+
+    .wl-properties__head {
+      min-height: 46px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--wl-border);
+    }
+
+    .wl-properties__title {
+      font-size: 12px;
+      font-weight: 680;
+    }
+
+    .wl-properties__toggle {
+      display: none;
+    }
+
+    .wl-properties__body {
+      padding: 10px 14px 14px;
+    }
+
+    .wl-property {
+      min-height: 42px;
+      display: grid;
+      grid-template-columns: 104px minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+    }
+
+    .wl-property__label {
+      color: var(--wl-text-muted);
+      font-size: 11px;
+    }
+
+    .wl-property__value {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--wl-text);
+      font-size: 11.5px;
+      font-weight: 570;
+    }
+
+    .wl-property__value--link {
+      overflow: hidden;
+      color: var(--wl-primary);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .wl-property__select {
+      width: 100%;
+      height: 32px;
+      padding: 0 8px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      outline: 0;
+      background: transparent;
+      font-size: 11.5px;
+      font-weight: 580;
+      cursor: pointer;
+    }
+
+    .wl-property__select:hover {
+      border-color: var(--wl-border);
+      background: var(--wl-surface-soft);
+    }
+
+    .wl-property__select:focus {
+      border-color: var(--wl-primary);
+      box-shadow: 0 0 0 3px var(--wl-primary-soft);
+    }
+
+    .wl-property .wl-avatar {
+      width: 24px;
+      height: 24px;
+      font-size: 8.5px;
+    }
+
+    .wl-project-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--wl-primary);
+    }
+
+    .wl-tags {
+      margin-top: 6px;
+      padding-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      border-top: 1px solid var(--wl-border);
+    }
+
+    .wl-tag {
+      height: 24px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--wl-border);
+      border-radius: 12px;
+      color: var(--wl-text-secondary);
+      background: var(--wl-surface-soft);
+      font-size: 10.5px;
+      font-weight: 570;
+    }
+
+    .wl-time-box {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: var(--wl-radius-sm);
+      background: var(--wl-surface-soft);
+    }
+
+    .wl-time-box__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .wl-time-box__label {
+      color: var(--wl-text-muted);
+      font-size: 10.5px;
+      font-weight: 620;
+    }
+
+    .wl-timer {
+      margin-top: 5px;
+      font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+      font-size: 18px;
+      font-weight: 690;
+      letter-spacing: -0.02em;
+    }
+
+    .wl-timer-button {
+      height: 28px;
+      padding: 0 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid var(--wl-border);
+      border-radius: 7px;
+      color: var(--wl-text-secondary);
+      background: #fff;
+      font-size: 10.5px;
+      font-weight: 620;
+    }
+
+    .wl-timer-button--active {
+      border-color: var(--wl-danger);
+      color: var(--wl-danger);
+      background: var(--wl-danger-soft);
+    }
+
+    .wl-watchers {
+      margin-top: 14px;
+      padding-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-top: 1px solid var(--wl-border);
+    }
+
+    .wl-watchers__label {
+      color: var(--wl-text-muted);
+      font-size: 10.5px;
+    }
+
+    .wl-avatar-stack {
+      display: flex;
+    }
+
+    .wl-avatar-stack .wl-avatar {
+      width: 25px;
+      height: 25px;
+      margin-left: -5px;
+      border: 2px solid #fff;
+      font-size: 8px;
+    }
+
+    .wl-avatar-stack .wl-avatar:first-child {
+      margin-left: 0;
+    }
+
+    .wl-audit {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--wl-border);
+      color: var(--wl-text-muted);
+      font-size: 10px;
+      line-height: 1.65;
+    }
+
+    .wl-activity-panel {
+      display: grid;
+      gap: 20px;
+    }
+
+    .wl-comment-box {
+      padding: 12px;
+      border: 1px solid var(--wl-border);
+      border-radius: var(--wl-radius-md);
+    }
+
+    .wl-comment-box__head {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .wl-comment-box__head .wl-avatar {
+      width: 28px;
+      height: 28px;
+      font-size: 9px;
+    }
+
+    .wl-comment-input {
+      width: 100%;
+      min-height: 74px;
+      margin-top: 10px;
+      padding: 10px;
+      resize: vertical;
+      border: 0;
+      border-radius: 7px;
+      outline: 0;
+      background: var(--wl-surface-soft);
+      font-size: 12.5px;
+      line-height: 1.55;
+    }
+
+    .wl-comment-input:focus {
+      box-shadow: 0 0 0 2px var(--wl-primary-border);
+    }
+
+    .wl-comment-box__footer {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .wl-timeline {
+      position: relative;
+      display: grid;
+      gap: 2px;
+    }
+
+    .wl-timeline::before {
+      position: absolute;
+      top: 18px;
+      bottom: 18px;
+      left: 17px;
+      width: 1px;
+      background: var(--wl-border);
+      content: "";
+    }
+
+    .wl-timeline__item {
+      position: relative;
+      min-height: 60px;
+      padding: 9px 8px 9px 48px;
+      border-radius: var(--wl-radius-sm);
+    }
+
+    .wl-timeline__item:hover {
+      background: var(--wl-surface-hover);
+    }
+
+    .wl-timeline__avatar {
+      position: absolute;
+      top: 10px;
+      left: 4px;
+      z-index: 1;
+    }
+
+    .wl-timeline__avatar .wl-avatar {
+      width: 28px;
+      height: 28px;
+      font-size: 9px;
+    }
+
+    .wl-timeline__text {
+      color: var(--wl-text-secondary);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .wl-timeline__text strong {
+      color: var(--wl-text);
+    }
+
+    .wl-timeline__time {
+      margin-top: 3px;
+      color: var(--wl-text-muted);
+      font-size: 10px;
+    }
+
+    .wl-comment {
+      margin-top: 8px;
+      padding: 10px 12px;
+      border: 1px solid var(--wl-border);
+      border-radius: var(--wl-radius-sm);
+      color: var(--wl-text-secondary);
+      background: var(--wl-surface);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .wl-toast {
+      position: fixed;
+      z-index: 110;
+      right: 22px;
+      bottom: 22px;
+      max-width: min(380px, calc(100vw - 32px));
+      padding: 11px 14px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      border-radius: 10px;
+      color: #fff;
+      background: #202a34;
+      box-shadow: var(--wl-shadow-md);
+      transform: translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 160ms ease, opacity 160ms ease;
+    }
+
+    .wl-toast--visible {
+      transform: none;
+      opacity: 1;
+    }
+
+    .wl-toast .wl-icon {
+      color: #78e2ba;
+    }
+
+    .wl-sidebar-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 35;
+      visibility: hidden;
+      background: rgba(17, 26, 35, 0.28);
+      opacity: 0;
+      transition: opacity 170ms ease, visibility 170ms ease;
+    }
+
+    .wl-sidebar-backdrop--visible {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .wl-mobile-nav {
+      display: none;
+    }
+
+    @media (max-width: 1240px) {
+      :root {
+        --wl-sidebar-width: 76px;
+      }
+
+      .wl-brand {
+        padding: 0;
+        justify-content: center;
+      }
+
+      .wl-brand__name,
+      .wl-brand__env,
+      .wl-nav__label,
+      .wl-nav__text,
+      .wl-nav__badge,
+      .wl-profile__copy {
+        display: none;
+      }
+
+      .wl-nav__item,
+      .wl-profile {
+        justify-content: center;
+      }
+
+      .wl-detail-layout {
+        gap: 28px;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .wl-page {
+        padding-right: 20px;
+        padding-left: 20px;
+      }
+
+      .wl-detail-layout {
+        grid-template-columns: minmax(0, 1fr) 292px;
+      }
+
+      .wl-task-header__title-row {
+        flex-wrap: wrap;
+      }
+
+      .wl-task-header__actions {
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .wl-detail-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .wl-properties {
+        position: static;
+        grid-row: 1;
+      }
+
+      .wl-properties__toggle {
+        width: 30px;
+        height: 30px;
+        margin-left: auto;
+        display: grid;
+        place-items: center;
+        border-radius: 7px;
+        color: var(--wl-text-muted);
+      }
+
+      .wl-properties__toggle .wl-icon {
+        width: 14px;
+        height: 14px;
+        transition: transform 130ms ease;
+      }
+
+      .wl-properties__toggle[aria-expanded="false"] .wl-icon {
+        transform: rotate(-90deg);
+      }
+
+      .wl-properties__body--collapsed {
+        display: none;
+      }
+
+      .wl-property {
+        grid-template-columns: 130px minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 760px) {
+      :root {
+        --wl-header-height: 56px;
+      }
+
+      .wl-app {
+        height: 100dvh;
+        display: block;
+      }
+
+      .wl-sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 248px;
+        min-height: 0;
+        box-shadow: var(--wl-shadow-md);
+        transform: translateX(-105%);
+        transition: transform 180ms ease;
+      }
+
+      .wl-sidebar--visible {
+        transform: translateX(0);
+      }
+
+      .wl-brand {
+        padding: 0 18px;
+        justify-content: flex-start;
+      }
+
+      .wl-brand__name,
+      .wl-brand__env,
+      .wl-nav__label,
+      .wl-nav__text,
+      .wl-nav__badge,
+      .wl-profile__copy {
+        display: initial;
+      }
+
+      .wl-brand__env {
+        display: inline-block;
+      }
+
+      .wl-nav__item,
+      .wl-profile {
+        justify-content: flex-start;
+      }
+
+      .wl-main {
+        height: 100dvh;
+        min-height: 0;
+      }
+
+      .wl-topbar {
+        padding: 0 12px;
+        gap: 9px;
+      }
+
+      .wl-mobile-menu {
+        display: inline-grid;
+      }
+
+      .wl-workspace {
+        flex: 1;
+      }
+
+      .wl-workspace__name {
+        max-width: 150px;
+      }
+
+      .wl-global-search,
+      .wl-topbar > .wl-icon-button:last-child {
+        display: none;
+      }
+
+      .wl-page {
+        padding: 16px 12px 92px;
+      }
+
+      .wl-breadcrumbs__item:nth-of-type(2),
+      .wl-breadcrumbs__item:nth-of-type(3) {
+        display: none;
+      }
+
+      .wl-task-header {
+        margin-top: 18px;
+      }
+
+      .wl-task-header__title-row {
+        margin-top: 8px;
+      }
+
+      .wl-task-title {
+        width: 100%;
+        flex-basis: 100%;
+        font-size: 25px;
+      }
+
+      .wl-task-header__actions .wl-button:first-child span {
+        display: none;
+      }
+
+      .wl-tabs {
+        margin-top: 24px;
+      }
+
+      .wl-main-column {
+        gap: 26px;
+      }
+
+      .wl-overview {
+        gap: 28px;
+      }
+
+      .wl-subtask-row {
+        grid-template-columns: 18px minmax(0, 1fr) 28px;
+      }
+
+      .wl-subtask-row .wl-mini-status,
+      .wl-subtask-row > time {
+        display: none;
+      }
+
+      .wl-relation-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .wl-attachment {
+        width: 100%;
+      }
+
+      .wl-mobile-nav {
+        position: fixed;
+        z-index: 50;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 62px;
+        padding: 5px 8px max(5px, env(safe-area-inset-bottom));
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        border-top: 1px solid var(--wl-border);
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(12px);
+      }
+
+      .wl-mobile-nav__item {
+        min-width: 0;
+        display: grid;
+        place-items: center;
+        align-content: center;
+        gap: 2px;
+        border-radius: 8px;
+        color: var(--wl-text-muted);
+        font-size: 9.5px;
+      }
+
+      .wl-mobile-nav__item[aria-current="page"] {
+        color: var(--wl-primary);
+      }
+
+      .wl-mobile-nav__item .wl-icon {
+        width: 19px;
+        height: 19px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .wl-task-header__actions {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+      }
+
+      .wl-task-header__actions .wl-button--primary {
+        width: 100%;
+      }
+
+      .wl-task-header__summary {
+        align-items: flex-start;
+      }
+
+      .wl-parent-link {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .wl-property {
+        grid-template-columns: 102px minmax(0, 1fr);
+      }
+
+      .wl-subtask-add {
+        grid-template-columns: 1fr auto;
+      }
+
+      .wl-subtask-add .wl-button:last-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms;
+      }
+    }
+  </style>
+</head>
+<body>
+  <svg class="wl-sr-only" aria-hidden="true">
+    <symbol id="wl-i-logo" viewBox="0 0 24 24"><path d="M6 5.5 10.2 18l2.1-6.3 2 6.3L18 5.5"/></symbol>
+    <symbol id="wl-i-home" viewBox="0 0 24 24"><path d="m3 11 9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></symbol>
+    <symbol id="wl-i-check-square" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="m8 12 2.5 2.5L16 9"/></symbol>
+    <symbol id="wl-i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></symbol>
+    <symbol id="wl-i-note" viewBox="0 0 24 24"><path d="M5 3h11l3 3v15H5z"/><path d="M15 3v4h4M8 11h8M8 15h8"/></symbol>
+    <symbol id="wl-i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+    <symbol id="wl-i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></symbol>
+    <symbol id="wl-i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="wl-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="wl-i-bell" viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 8h18c0-1-3-1-3-8ZM10 21h4"/></symbol>
+    <symbol id="wl-i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="wl-i-chevron" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></symbol>
+    <symbol id="wl-i-arrow-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="wl-i-task" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></symbol>
+    <symbol id="wl-i-story" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></symbol>
+    <symbol id="wl-i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/></symbol>
+    <symbol id="wl-i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 5h11l-1.5 3L16 11H5"/></symbol>
+    <symbol id="wl-i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1-1"/></symbol>
+    <symbol id="wl-i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4H4v12h4"/></symbol>
+    <symbol id="wl-i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="wl-i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+    <symbol id="wl-i-edit" viewBox="0 0 24 24"><path d="m4 16-1 5 5-1L19 9l-4-4z"/><path d="m13.5 6.5 4 4"/></symbol>
+    <symbol id="wl-i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+    <symbol id="wl-i-paperclip" viewBox="0 0 24 24"><path d="m21 11-8.5 8.5a6 6 0 0 1-8.5-8.5L13 2a4 4 0 0 1 5.7 5.7L9.8 16.5a2 2 0 0 1-2.8-2.8L15 6"/></symbol>
+    <symbol id="wl-i-comment" viewBox="0 0 24 24"><path d="M20 15a3 3 0 0 1-3 3H8l-4 3v-6a3 3 0 0 1-1-2V7a3 3 0 0 1 3-3h11a3 3 0 0 1 3 3z"/></symbol>
+    <symbol id="wl-i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></symbol>
+    <symbol id="wl-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="wl-i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7z"/></symbol>
+    <symbol id="wl-i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="wl-i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="wl-i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  </svg>
+
+  <div class="wl-app" data-wl="task-detail-prototype">
+    <aside class="wl-sidebar" id="wl-sidebar">
+      <div class="wl-brand">
+        <span class="wl-brand__mark"><svg class="wl-icon"><use href="#wl-i-logo"></use></svg></span>
+        <span class="wl-brand__name">WhiteLife</span>
+        <span class="wl-brand__env">beta</span>
+      </div>
+      <nav class="wl-nav" aria-label="Основная навигация">
+        <div class="wl-nav__label">Пространство</div>
+        <button class="wl-nav__item" type="button"><svg class="wl-icon"><use href="#wl-i-home"></use></svg><span class="wl-nav__text">Сегодня</span></button>
+        <button class="wl-nav__item" type="button" aria-current="page"><svg class="wl-icon"><use href="#wl-i-check-square"></use></svg><span class="wl-nav__text">Задачи</span><span class="wl-nav__badge">18</span></button>
+        <button class="wl-nav__item" type="button"><svg class="wl-icon"><use href="#wl-i-calendar"></use></svg><span class="wl-nav__text">Календарь</span></button>
+        <button class="wl-nav__item" type="button"><svg class="wl-icon"><use href="#wl-i-note"></use></svg><span class="wl-nav__text">Заметки</span></button>
+        <button class="wl-nav__item" type="button"><svg class="wl-icon"><use href="#wl-i-chart"></use></svg><span class="wl-nav__text">Обзор</span></button>
+        <div class="wl-nav__label">Система</div>
+        <button class="wl-nav__item" type="button"><svg class="wl-icon"><use href="#wl-i-settings"></use></svg><span class="wl-nav__text">Настройки</span></button>
+      </nav>
+      <div class="wl-sidebar__footer">
+        <button class="wl-profile" type="button"><span class="wl-avatar" style="--wl-avatar-color:#4f6f93">ЕА</span><span class="wl-profile__copy"><span class="wl-profile__name">Елена Алексеева</span><span class="wl-profile__role">Product Lead</span></span><svg class="wl-icon wl-icon--sm"><use href="#wl-i-more"></use></svg></button>
+      </div>
+    </aside>
+    <div class="wl-sidebar-backdrop" id="wl-sidebar-backdrop"></div>
+
+    <main class="wl-main">
+      <header class="wl-topbar">
+        <button class="wl-icon-button wl-mobile-menu" id="wl-mobile-menu" type="button" aria-label="Открыть меню"><svg class="wl-icon"><use href="#wl-i-menu"></use></svg></button>
+        <div class="wl-workspace"><span class="wl-workspace__dot"></span><span class="wl-workspace__name">Команда продукта</span><svg class="wl-icon wl-icon--sm"><use href="#wl-i-chevron"></use></svg></div>
+        <button class="wl-global-search" type="button"><svg class="wl-icon wl-icon--sm"><use href="#wl-i-search"></use></svg><span>Искать задачи, проекты, людей…</span><kbd class="wl-key">/</kbd></button>
+        <button class="wl-icon-button" type="button" aria-label="Уведомления"><svg class="wl-icon"><use href="#wl-i-bell"></use></svg></button>
+      </header>
+
+      <div class="wl-content">
+        <article class="wl-page">
+          <nav class="wl-breadcrumbs" aria-label="Путь к задаче">
+            <button class="wl-breadcrumbs__item" type="button"><svg class="wl-icon"><use href="#wl-i-arrow-left"></use></svg>Задачи</button>
+            <svg class="wl-icon"><use href="#wl-i-chevron"></use></svg>
+            <button class="wl-breadcrumbs__item" type="button">Атлас 2.0</button>
+            <svg class="wl-icon"><use href="#wl-i-chevron"></use></svg>
+            <button class="wl-breadcrumbs__item" type="button">WL-41 · Новый онбординг</button>
+            <svg class="wl-icon"><use href="#wl-i-chevron"></use></svg>
+            <button class="wl-breadcrumbs__item" type="button">WL-45 · Первая сессия</button>
+          </nav>
+
+          <header class="wl-task-header">
+            <div class="wl-task-header__meta">
+              <span class="wl-type-icon" title="Задача"><svg class="wl-icon"><use href="#wl-i-task"></use></svg></span>
+              <span class="wl-task-key">WL-47</span>
+              <span>создана 24 июля</span>
+              <button class="wl-icon-button" id="wl-copy-link" type="button" aria-label="Скопировать ссылку"><svg class="wl-icon wl-icon--sm"><use href="#wl-i-copy"></use></svg></button>
+              <button class="wl-icon-button" id="wl-watch" type="button" aria-label="Наблюдать за задачей" aria-pressed="true"><svg class="wl-icon wl-icon--sm"><use href="#wl-i-eye"></use></svg></button>
+            </div>
+            <div class="wl-task-header__title-row">
+              <h1 class="wl-task-title" id="wl-task-title">Адаптировать экран выбора цели</h1>
+              <div class="wl-task-header__actions">
+                <button class="wl-button" id="wl-edit-title" type="button"><svg class="wl-icon wl-icon--sm"><use href="#wl-i-edit"></use></svg><span>Изменить</span></button>
+                <button class="wl-button wl-button--primary" id="wl-complete-task" type="button"><svg class="wl-icon wl-icon--sm"><use href="#wl-i-check"></use></svg><span>Завершить</span></button>
+                <button class="wl-icon-button wl-icon-button--bordered" type="button" aria-label="Дополнительные действия"><svg class="wl-icon"><use href="#wl-i-more"></use></svg></button>
+              </div>
+            </div>
+            <div class="wl-task-header__summary">
+              <span class="wl-status" id="wl-header-status"><span class="wl-status__dot"></span>В работе</span>
+              <span class="wl-priority" id="wl-header-priority"><svg class="wl-icon"><use href="#wl-i-flag"></use></svg>Высокий</span>
+              <button class="wl-parent-link" type="button"><svg class="wl-icon wl-icon--sm"><use href="#wl-i-story"></use></svg>WL-45 · Первая полезная сессия</button>
+            </div>
+          </header>
+
+          <div class="wl-tabs" role="tablist" aria-label="Разделы задачи">
+            <button class="wl-tab" id="wl-tab-overview" type="button" role="tab" aria-selected="true" aria-controls="wl-panel-overview"><svg class="wl-icon wl-icon--sm"><use href="#wl-i-task"></use></svg>Обзор</button>
+            <button class="wl-tab" id="wl-tab-activity" type="button" role="tab" aria-selected="false" aria-controls="wl-panel-activity"><svg class="wl-icon wl-icon--sm"><use href="#wl-i-history"></use></svg>Активность<span class="wl-tab__count" id="wl-activity-count">7</span></button>
+          </div>
+
+          <div class="wl-detail-layout">
+            <div class="wl-main-column">
+              <section class="wl-tab-panel" id="wl-panel-overview" role="tabpanel" aria-labelledby="wl-tab-overview">
+                <div class="wl-overview">
+                  <section class="wl-section">
+                    <div class="wl-section__head"><h2 class="wl-section__title">Описание</h2><button class="wl-section__action" id="wl-edit-description" type="button">Редактировать</button></div>
+                    <div class="wl-description" id="wl-description">
+                      <p>Пересобрать экран выбора цели для первого запуска: сократить количество решений, сделать формулировки понятными без продуктового контекста и сохранить возможность пропустить шаг.</p>
+                      <p>Нужно подготовить состояния для desktop и mobile, проверить длинные переводы и передать разработке готовую спецификацию.</p>
+                      <ul>
+                        <li>Не более пяти целей на первом экране.</li>
+                        <li>Выбранная цель должна быть очевидна без дополнительного текста.</li>
+                        <li>Продолжение доступно только после выбора.</li>
+                      </ul>
+                    </div>
+                    <div class="wl-description-editor" id="wl-description-editor">
+                      <textarea class="wl-textarea" id="wl-description-input">Пересобрать экран выбора цели для первого запуска: сократить количество решений, сделать формулировки понятными без продуктового контекста и сохранить возможность пропустить шаг.
+
+Нужно подготовить состояния для desktop и mobile, проверить длинные переводы и передать разработке готовую спецификацию.</textarea>
+                      <div class="wl-editor-actions"><button class="wl-button" id="wl-description-cancel" type="button">Отмена</button><button class="wl-button wl-button--primary" id="wl-description-save" type="button">Сохранить</button></div>
+                    </div>
+                  </section>
+
+                  <div class="wl-callout"><svg class="wl-icon"><use href="#wl-i-info"></use></svg><span><strong>Цель задачи:</strong> увеличить завершение первого шага онбординга с 71% до 82% без ухудшения времени до первого полезного действия.</span></div>
+
+                  <section class="wl-section">
+                    <div class="wl-section__head"><h2 class="wl-section__title">Критерии готовности</h2><span class="wl-section__count" id="wl-criteria-count">2/4</span></div>
+                    <div class="wl-check-list" id="wl-criteria-list">
+                      <label class="wl-check-row wl-check-row--done"><input type="checkbox" checked><span class="wl-check-row__label">Подготовлены desktop-состояния экрана</span></label>
+                      <label class="wl-check-row wl-check-row--done"><input type="checkbox" checked><span class="wl-check-row__label">Подготовлены mobile-состояния до 360 px</span></label>
+                      <label class="wl-check-row"><input type="checkbox"><span class="wl-check-row__label">Пройдена проверка управления с клавиатуры</span></label>
+                      <label class="wl-check-row"><input type="checkbox"><span class="wl-check-row__label">Спецификация согласована с разработкой и аналитикой</span></label>
+                    </div>
+                  </section>
+
+                  <section class="wl-section">
+                    <div class="wl-section__head"><h2 class="wl-section__title">Подзадачи</h2><span class="wl-section__count" id="wl-subtask-count">2/4</span><button class="wl-section__action" id="wl-add-subtask" type="button">+ Добавить</button></div>
+                    <div class="wl-progress-line"><span class="wl-progress-line__track"><span class="wl-progress-line__fill" id="wl-subtask-progress" style="width:50%"></span></span><span id="wl-subtask-progress-label">50%</span></div>
+                    <div id="wl-subtask-list">
+                      <div class="wl-subtask-row" data-subtask>
+                        <input type="checkbox" checked aria-label="Завершить подзадачу">
+                        <span class="wl-subtask-row__main"><span class="wl-subtask-row__title">Собрать базовую сетку desktop</span><span class="wl-subtask-row__key">WL-91</span></span>
+                        <span class="wl-mini-status wl-mini-status--done">Готово</span><time>25 июл</time><span class="wl-avatar" style="--wl-avatar-color:#7557d9">МК</span>
+                      </div>
+                      <div class="wl-subtask-row" data-subtask>
+                        <input type="checkbox" checked aria-label="Завершить подзадачу">
+                        <span class="wl-subtask-row__main"><span class="wl-subtask-row__title">Проработать мобильный сценарий</span><span class="wl-subtask-row__key">WL-92</span></span>
+                        <span class="wl-mini-status wl-mini-status--done">Готово</span><time>26 июл</time><span class="wl-avatar" style="--wl-avatar-color:#b85f68">АС</span>
+                      </div>
+                      <div class="wl-subtask-row" data-subtask>
+                        <input type="checkbox" aria-label="Завершить подзадачу">
+                        <span class="wl-subtask-row__main"><span class="wl-subtask-row__title">Проверить длинные переводы</span><span class="wl-subtask-row__key">WL-93</span></span>
+                        <span class="wl-mini-status">В работе</span><time>сегодня</time><span class="wl-avatar" style="--wl-avatar-color:#9b6b32">ДН</span>
+                      </div>
+                      <div class="wl-subtask-row" data-subtask>
+                        <input type="checkbox" aria-label="Завершить подзадачу">
+                        <span class="wl-subtask-row__main"><span class="wl-subtask-row__title">Описать состояния ошибок</span><span class="wl-subtask-row__key">WL-94</span></span>
+                        <span class="wl-mini-status wl-mini-status--planned">План</span><time>29 июл</time><span class="wl-avatar" style="--wl-avatar-color:#0b8093">ИП</span>
+                      </div>
+                    </div>
+                    <form class="wl-subtask-add" id="wl-subtask-form">
+                      <input class="wl-input" id="wl-subtask-title" type="text" placeholder="Название подзадачи" required>
+                      <button class="wl-button" id="wl-subtask-cancel" type="button">Отмена</button>
+                      <button class="wl-button wl-button--primary" type="submit">Добавить</button>
+                    </form>
+                  </section>
+
+                  <section class="wl-section">
+                    <div class="wl-section__head"><h2 class="wl-section__title">Связи и зависимости</h2><span class="wl-section__count">3</span><button class="wl-section__action" type="button">+ Связать</button></div>
+                    <div class="wl-relation-grid">
+                      <button class="wl-relation-card" type="button"><span class="wl-relation-card__type" style="color:var(--wl-danger)"><svg class="wl-icon wl-icon--sm"><use href="#wl-i-link"></use></svg>Зависит от</span><span class="wl-relation-card__title">WL-46 · Переписать тексты трёх шагов</span><span class="wl-relation-card__meta">На проверке · Дарья Новикова</span></button>
+                      <button class="wl-relation-card" type="button"><span class="wl-relation-card__type" style="color:var(--wl-success)"><svg class="wl-icon wl-icon--sm"><use href="#wl-i-link"></use></svg>Блокирует</span><span class="wl-relation-card__title">WL-49 · Подключить событие активации</span><span class="wl-relation-card__meta">Заблокировано · Илья Петров</span></button>
+                      <button class="wl-relation-card" type="button"><span class="wl-relation-card__type"><svg class="wl-icon wl-icon--sm"><use href="#wl-i-note"></use></svg>Связанная заметка</span><span class="wl-relation-card__title">Исследование первого запуска</span><span class="wl-relation-card__meta">обновлена вчера</span></button>
+                    </div>
+                  </section>
+
+                  <section class="wl-section">
+                    <div class="wl-section__head"><h2 class="wl-section__title">Вложения</h2><span class="wl-section__count">2</span><button class="wl-section__action" type="button">+ Добавить файл</button></div>
+                    <div class="wl-attachments">
+                      <button class="wl-attachment" type="button"><span class="wl-attachment__icon"><svg class="wl-icon"><use href="#wl-i-paperclip"></use></svg></span><span class="wl-attachment__copy"><span class="wl-attachment__name">goal-selection-v4.fig</span><span class="wl-attachment__meta">4,2 МБ · вчера</span></span></button>
+                      <button class="wl-attachment" type="button"><span class="wl-attachment__icon"><svg class="wl-icon"><use href="#wl-i-note"></use></svg></span><span class="wl-attachment__copy"><span class="wl-attachment__name">research-summary.pdf</span><span class="wl-attachment__meta">1,8 МБ · 24 июля</span></span></button>
+                    </div>
+                  </section>
+                </div>
+              </section>
+
+              <section class="wl-tab-panel" id="wl-panel-activity" role="tabpanel" aria-labelledby="wl-tab-activity" hidden>
+                <div class="wl-activity-panel">
+                  <form class="wl-comment-box" id="wl-comment-form">
+                    <div class="wl-comment-box__head"><span class="wl-avatar" style="--wl-avatar-color:#4f6f93">ЕА</span><strong>Добавить комментарий</strong></div>
+                    <textarea class="wl-comment-input" id="wl-comment-input" placeholder="Напишите обновление или упомяните коллегу через @…" required></textarea>
+                    <div class="wl-comment-box__footer"><button class="wl-icon-button" type="button" aria-label="Прикрепить файл"><svg class="wl-icon"><use href="#wl-i-paperclip"></use></svg></button><button class="wl-button wl-button--primary" type="submit">Отправить</button></div>
+                  </form>
+                  <div class="wl-timeline" id="wl-timeline">
+                    <article class="wl-timeline__item"><span class="wl-timeline__avatar"><span class="wl-avatar" style="--wl-avatar-color:#7557d9">МК</span></span><div class="wl-timeline__text"><strong>Михаил Котов</strong> прикрепил файл <strong>goal-selection-v4.fig</strong><div class="wl-comment">Обновил мобильный сценарий и состояния выбора. Нужна финальная проверка текстов до передачи в разработку.</div></div><div class="wl-timeline__time">вчера, 18:42</div></article>
+                    <article class="wl-timeline__item"><span class="wl-timeline__avatar"><span class="wl-avatar" style="--wl-avatar-color:#b85f68">АС</span></span><div class="wl-timeline__text"><strong>Анна Смирнова</strong> завершила подзадачу <strong>WL-92</strong></div><div class="wl-timeline__time">вчера, 16:18</div></article>
+                    <article class="wl-timeline__item"><span class="wl-timeline__avatar"><span class="wl-avatar" style="--wl-avatar-color:#0b8093">ИП</span></span><div class="wl-timeline__text"><strong>Илья Петров</strong> изменил оценку с <strong>5 ч</strong> на <strong>8 ч</strong></div><div class="wl-timeline__time">25 июля, 14:07</div></article>
+                    <article class="wl-timeline__item"><span class="wl-timeline__avatar"><span class="wl-avatar" style="--wl-avatar-color:#4f6f93">ЕА</span></span><div class="wl-timeline__text"><strong>Елена Алексеева</strong> перевела задачу в статус <strong>В работе</strong></div><div class="wl-timeline__time">24 июля, 11:32</div></article>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <aside class="wl-properties" aria-label="Свойства задачи">
+              <header class="wl-properties__head">
+                <span class="wl-properties__title">Свойства</span>
+                <button class="wl-properties__toggle" id="wl-properties-toggle" type="button" aria-label="Свернуть свойства" aria-expanded="true"><svg class="wl-icon"><use href="#wl-i-chevron"></use></svg></button>
+              </header>
+              <div class="wl-properties__body" id="wl-properties-body">
+                <div class="wl-property"><span class="wl-property__label">Статус</span><select class="wl-property__select" id="wl-status-select"><option value="planned">Запланировано</option><option value="progress" selected>В работе</option><option value="review">На проверке</option><option value="blocked">Заблокировано</option><option value="done">Готово</option></select></div>
+                <div class="wl-property"><span class="wl-property__label">Приоритет</span><select class="wl-property__select" id="wl-priority-select"><option value="critical">Критический</option><option value="high" selected>Высокий</option><option value="medium">Средний</option><option value="low">Низкий</option></select></div>
+                <div class="wl-property"><span class="wl-property__label">Исполнитель</span><span class="wl-property__value"><span class="wl-avatar" style="--wl-avatar-color:#7557d9">МК</span>Михаил Котов</span></div>
+                <div class="wl-property"><span class="wl-property__label">Проект</span><span class="wl-property__value"><span class="wl-project-dot"></span>Атлас 2.0</span></div>
+                <div class="wl-property"><span class="wl-property__label">Эпик</span><button class="wl-property__value wl-property__value--link" type="button">WL-41 · Новый онбординг</button></div>
+                <div class="wl-property"><span class="wl-property__label">История</span><button class="wl-property__value wl-property__value--link" type="button">WL-45 · Первая сессия</button></div>
+                <div class="wl-property"><span class="wl-property__label">Срок</span><span class="wl-property__value">28 июля, 18:00</span></div>
+                <div class="wl-property"><span class="wl-property__label">Спринт</span><span class="wl-property__value">Спринт 34</span></div>
+                <div class="wl-property"><span class="wl-property__label">Оценка</span><span class="wl-property__value">8 часов</span></div>
+                <div class="wl-property"><span class="wl-property__label">Учтено</span><span class="wl-property__value" id="wl-tracked-time">1 ч 42 мин</span></div>
+                <div class="wl-tags"><span class="wl-tag">onboarding</span><span class="wl-tag">design</span><span class="wl-tag">mobile</span><button class="wl-tag" type="button">+ тег</button></div>
+                <div class="wl-time-box">
+                  <div class="wl-time-box__head"><span class="wl-time-box__label">Текущая сессия</span><button class="wl-timer-button" id="wl-timer-button" type="button"><svg class="wl-icon wl-icon--sm"><use href="#wl-i-play"></use></svg><span>Старт</span></button></div>
+                  <div class="wl-timer" id="wl-timer">00:00:00</div>
+                </div>
+                <div class="wl-watchers"><span class="wl-watchers__label">Наблюдают</span><span class="wl-avatar-stack"><span class="wl-avatar" style="--wl-avatar-color:#4f6f93">ЕА</span><span class="wl-avatar" style="--wl-avatar-color:#7557d9">МК</span><span class="wl-avatar" style="--wl-avatar-color:#b85f68">АС</span></span><button class="wl-icon-button" type="button" aria-label="Добавить наблюдателя"><svg class="wl-icon wl-icon--sm"><use href="#wl-i-plus"></use></svg></button></div>
+                <div class="wl-audit">Создала Елена Алексеева · 24 июля, 10:14<br>Изменено Михаилом Котовым · вчера, 18:42</div>
+              </div>
+            </aside>
+          </div>
+        </article>
+      </div>
+    </main>
+  </div>
+
+  <nav class="wl-mobile-nav" aria-label="Мобильная навигация">
+    <button class="wl-mobile-nav__item" type="button"><svg class="wl-icon"><use href="#wl-i-home"></use></svg><span>Сегодня</span></button>
+    <button class="wl-mobile-nav__item" type="button" aria-current="page"><svg class="wl-icon"><use href="#wl-i-check-square"></use></svg><span>Задачи</span></button>
+    <button class="wl-mobile-nav__item" type="button"><svg class="wl-icon"><use href="#wl-i-calendar"></use></svg><span>Календарь</span></button>
+    <button class="wl-mobile-nav__item" type="button"><svg class="wl-icon"><use href="#wl-i-note"></use></svg><span>Заметки</span></button>
+  </nav>
+
+  <div class="wl-toast" id="wl-toast" role="status" aria-live="polite"><svg class="wl-icon"><use href="#wl-i-check"></use></svg><span id="wl-toast-text">Готово</span></div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const STATUS = {
+        planned: { label: "Запланировано", color: "#66717b", background: "#f1f3f5" },
+        progress: { label: "В работе", color: "#2463eb", background: "#eaf1ff" },
+        review: { label: "На проверке", color: "#7557d9", background: "#f1edff" },
+        blocked: { label: "Заблокировано", color: "#c83b48", background: "#fff0f2" },
+        done: { label: "Готово", color: "#168360", background: "#e7f6f0" }
+      };
+
+      const PRIORITY = {
+        critical: { label: "Критический", color: "#c83b48", background: "#fff0f2" },
+        high: { label: "Высокий", color: "#d26a17", background: "#fff4df" },
+        medium: { label: "Средний", color: "#2463eb", background: "#eaf1ff" },
+        low: { label: "Низкий", color: "#66717b", background: "#f1f3f5" }
+      };
+
+      const $ = (selector, context = document) => context.querySelector(selector);
+      const $$ = (selector, context = document) => Array.from(context.querySelectorAll(selector));
+      const icon = (name, small = false) => `<svg class="wl-icon${small ? " wl-icon--sm" : ""}" aria-hidden="true"><use href="#wl-i-${name}"></use></svg>`;
+      const sidebar = $("#wl-sidebar");
+      const sidebarBackdrop = $("#wl-sidebar-backdrop");
+      let toastTimer;
+      let timerInterval = null;
+      let timerSeconds = 0;
+      let subtaskSequence = 95;
+
+      function showToast(message) {
+        clearTimeout(toastTimer);
+        $("#wl-toast-text").textContent = message;
+        $("#wl-toast").classList.add("wl-toast--visible");
+        toastTimer = window.setTimeout(() => $("#wl-toast").classList.remove("wl-toast--visible"), 2300);
+      }
+
+      function updateStatus(value) {
+        const status = STATUS[value];
+        const badge = $("#wl-header-status");
+        badge.innerHTML = `<span class="wl-status__dot"></span>${status.label}`;
+        badge.style.color = status.color;
+        badge.style.background = status.background;
+        $("#wl-complete-task").classList.toggle("wl-button--success", value === "done");
+        $("#wl-complete-task").innerHTML = value === "done"
+          ? `${icon("check", true)}<span>Выполнено</span>`
+          : `${icon("check", true)}<span>Завершить</span>`;
+      }
+
+      function updatePriority(value) {
+        const priority = PRIORITY[value];
+        const badge = $("#wl-header-priority");
+        badge.innerHTML = `${icon("flag", true)}${priority.label}`;
+        badge.style.color = priority.color;
+        badge.style.background = priority.background;
+      }
+
+      function updateCriteria() {
+        const rows = $$("label", $("#wl-criteria-list"));
+        const done = rows.filter((row) => $("input", row).checked).length;
+        rows.forEach((row) => row.classList.toggle("wl-check-row--done", $("input", row).checked));
+        $("#wl-criteria-count").textContent = `${done}/${rows.length}`;
+      }
+
+      function updateSubtasks() {
+        const rows = $$("[data-subtask]", $("#wl-subtask-list"));
+        const done = rows.filter((row) => $("input", row).checked).length;
+        const progress = rows.length ? Math.round(done / rows.length * 100) : 0;
+        $("#wl-subtask-count").textContent = `${done}/${rows.length}`;
+        $("#wl-subtask-progress").style.width = `${progress}%`;
+        $("#wl-subtask-progress-label").textContent = `${progress}%`;
+        rows.forEach((row) => {
+          const checked = $("input", row).checked;
+          const status = $(".wl-mini-status", row);
+          if (checked) {
+            status.textContent = "Готово";
+            status.className = "wl-mini-status wl-mini-status--done";
+          } else if (status.classList.contains("wl-mini-status--planned")) {
+            status.textContent = "План";
+            status.className = "wl-mini-status wl-mini-status--planned";
+          } else {
+            status.textContent = "В работе";
+            status.className = "wl-mini-status";
+          }
+        });
+      }
+
+      function switchTab(tabName) {
+        const overview = tabName === "overview";
+        $("#wl-tab-overview").setAttribute("aria-selected", String(overview));
+        $("#wl-tab-activity").setAttribute("aria-selected", String(!overview));
+        $("#wl-panel-overview").hidden = !overview;
+        $("#wl-panel-activity").hidden = overview;
+      }
+
+      function formatTimer(seconds) {
+        const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
+        const minutes = String(Math.floor(seconds % 3600 / 60)).padStart(2, "0");
+        const rest = String(seconds % 60).padStart(2, "0");
+        return `${hours}:${minutes}:${rest}`;
+      }
+
+      $("#wl-tab-overview").addEventListener("click", () => switchTab("overview"));
+      $("#wl-tab-activity").addEventListener("click", () => switchTab("activity"));
+
+      $("#wl-edit-description").addEventListener("click", () => {
+        $("#wl-description").hidden = true;
+        $("#wl-description-editor").classList.add("wl-description-editor--visible");
+        $("#wl-description-input").focus();
+      });
+
+      $("#wl-description-cancel").addEventListener("click", () => {
+        $("#wl-description").hidden = false;
+        $("#wl-description-editor").classList.remove("wl-description-editor--visible");
+      });
+
+      $("#wl-description-save").addEventListener("click", () => {
+        const text = $("#wl-description-input").value.trim();
+        $("#wl-description").innerHTML = text.split(/\n+/).map((paragraph) => `<p>${paragraph.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#039;" })[character])}</p>`).join("");
+        $("#wl-description").hidden = false;
+        $("#wl-description-editor").classList.remove("wl-description-editor--visible");
+        showToast("Описание обновлено");
+      });
+
+      $("#wl-criteria-list").addEventListener("change", updateCriteria);
+      $("#wl-subtask-list").addEventListener("change", updateSubtasks);
+
+      $("#wl-add-subtask").addEventListener("click", () => {
+        $("#wl-subtask-form").classList.add("wl-subtask-add--visible");
+        $("#wl-subtask-title").focus();
+      });
+
+      $("#wl-subtask-cancel").addEventListener("click", () => {
+        $("#wl-subtask-form").classList.remove("wl-subtask-add--visible");
+        $("#wl-subtask-form").reset();
+      });
+
+      $("#wl-subtask-form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const title = $("#wl-subtask-title").value.trim().replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#039;" })[character]);
+        const row = document.createElement("div");
+        row.className = "wl-subtask-row";
+        row.dataset.subtask = "";
+        row.innerHTML = `<input type="checkbox" aria-label="Завершить подзадачу"><span class="wl-subtask-row__main"><span class="wl-subtask-row__title">${title}</span><span class="wl-subtask-row__key">WL-${subtaskSequence++}</span></span><span class="wl-mini-status wl-mini-status--planned">План</span><time>не задан</time><span class="wl-avatar" style="--wl-avatar-color:#4f6f93">ЕА</span>`;
+        $("#wl-subtask-list").append(row);
+        $("#wl-subtask-form").classList.remove("wl-subtask-add--visible");
+        $("#wl-subtask-form").reset();
+        updateSubtasks();
+        showToast("Подзадача добавлена");
+      });
+
+      $("#wl-status-select").addEventListener("change", (event) => {
+        updateStatus(event.target.value);
+        showToast(`Статус: ${STATUS[event.target.value].label}`);
+      });
+
+      $("#wl-priority-select").addEventListener("change", (event) => {
+        updatePriority(event.target.value);
+        showToast(`Приоритет: ${PRIORITY[event.target.value].label}`);
+      });
+
+      $("#wl-complete-task").addEventListener("click", () => {
+        const select = $("#wl-status-select");
+        select.value = select.value === "done" ? "progress" : "done";
+        updateStatus(select.value);
+        showToast(select.value === "done" ? "Задача завершена" : "Задача возвращена в работу");
+      });
+
+      $("#wl-copy-link").addEventListener("click", () => showToast("Ссылка на WL-47 скопирована"));
+
+      $("#wl-watch").addEventListener("click", (event) => {
+        const active = event.currentTarget.getAttribute("aria-pressed") === "true";
+        event.currentTarget.setAttribute("aria-pressed", String(!active));
+        event.currentTarget.style.color = active ? "" : "var(--wl-primary)";
+        showToast(active ? "Вы больше не наблюдаете за задачей" : "Вы наблюдаете за задачей");
+      });
+
+      $("#wl-edit-title").addEventListener("click", () => {
+        const title = window.prompt("Название задачи", $("#wl-task-title").textContent);
+        if (title?.trim()) {
+          $("#wl-task-title").textContent = title.trim();
+          showToast("Название обновлено");
+        }
+      });
+
+      $("#wl-properties-toggle").addEventListener("click", (event) => {
+        const expanded = event.currentTarget.getAttribute("aria-expanded") === "true";
+        event.currentTarget.setAttribute("aria-expanded", String(!expanded));
+        $("#wl-properties-body").classList.toggle("wl-properties__body--collapsed", expanded);
+      });
+
+      $("#wl-comment-form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const text = $("#wl-comment-input").value.trim();
+        const item = document.createElement("article");
+        item.className = "wl-timeline__item";
+        item.innerHTML = `<span class="wl-timeline__avatar"><span class="wl-avatar" style="--wl-avatar-color:#4f6f93">ЕА</span></span><div class="wl-timeline__text"><strong>Елена Алексеева</strong> добавила комментарий<div class="wl-comment"></div></div><div class="wl-timeline__time">только что</div>`;
+        $(".wl-comment", item).textContent = text;
+        $("#wl-timeline").prepend(item);
+        $("#wl-comment-form").reset();
+        const count = Number($("#wl-activity-count").textContent) + 1;
+        $("#wl-activity-count").textContent = count;
+        showToast("Комментарий добавлен");
+      });
+
+      $("#wl-timer-button").addEventListener("click", (event) => {
+        const button = event.currentTarget;
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          button.classList.remove("wl-timer-button--active");
+          button.innerHTML = `${icon("play", true)}<span>Продолжить</span>`;
+          showToast("Таймер приостановлен");
+        } else {
+          timerInterval = window.setInterval(() => {
+            timerSeconds += 1;
+            $("#wl-timer").textContent = formatTimer(timerSeconds);
+          }, 1000);
+          button.classList.add("wl-timer-button--active");
+          button.innerHTML = `${icon("pause", true)}<span>Пауза</span>`;
+          showToast("Учёт времени запущен");
+        }
+      });
+
+      $("#wl-mobile-menu").addEventListener("click", () => {
+        sidebar.classList.add("wl-sidebar--visible");
+        sidebarBackdrop.classList.add("wl-sidebar-backdrop--visible");
+      });
+
+      sidebarBackdrop.addEventListener("click", () => {
+        sidebar.classList.remove("wl-sidebar--visible");
+        sidebarBackdrop.classList.remove("wl-sidebar-backdrop--visible");
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          sidebar.classList.remove("wl-sidebar--visible");
+          sidebarBackdrop.classList.remove("wl-sidebar-backdrop--visible");
+          $("#wl-description").hidden = false;
+          $("#wl-description-editor").classList.remove("wl-description-editor--visible");
+        }
+      });
+
+      updateCriteria();
+      updateSubtasks();
+      updateStatus("progress");
+      updatePriority("high");
+    })();
+  </script>
+</body>
+</html>
