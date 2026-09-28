@@ -11,7 +11,7 @@ export const inputsManifest = defineComponentManifest([
   {
     name: "WlInput",
     category: "inputs",
-    description: "Текстовое поле на PrimeVue InputText со слотами prefix/suffix.",
+    description: "Текстовое поле со слотами prefix/suffix.",
     props: [
       { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер поля." },
       {
@@ -25,7 +25,7 @@ export const inputsManifest = defineComponentManifest([
       { name: "disabled", type: "boolean", default: false, description: "Отключает поле." },
       { name: "placeholder", type: "string", description: "Плейсхолдер." },
       { name: "type", type: "string", default: "text", description: "Нативный type инпута." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [
       { name: "prefix", description: "Содержимое слева внутри поля." },
@@ -83,14 +83,14 @@ export const inputsManifest = defineComponentManifest([
   {
     name: "WlTextarea",
     category: "inputs",
-    description: "Многострочное поле на PrimeVue Textarea.",
+    description: "Многострочное поле с опциональной авто-высотой.",
     props: [
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает поле." },
       { name: "rows", type: "number", default: 3, description: "Число строк." },
       { name: "autoResize", type: "boolean", default: false, description: "Автовысота по содержимому." },
       { name: "placeholder", type: "string", description: "Плейсхолдер." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
     emits: [],
@@ -99,7 +99,7 @@ export const inputsManifest = defineComponentManifest([
   {
     name: "WlSelect",
     category: "inputs",
-    description: "Выпадающий список на PrimeVue Select.",
+    description: "Выпадающий список с клавиатурной навигацией.",
     props: [
       { name: "options", type: "array", default: [], description: "Опции (произвольные значения)." },
       {
@@ -117,7 +117,7 @@ export const inputsManifest = defineComponentManifest([
       { name: "disabled", type: "boolean", default: false, description: "Отключает поле." },
       { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер поля." },
       { name: "density", type: "enum", default: "default", values: WL_DENSITIES, description: "Плотность." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
     emits: [],
@@ -127,7 +127,7 @@ export const inputsManifest = defineComponentManifest([
     name: "WlMultiSelect",
     category: "inputs",
     description:
-      "Мультивыбор на PrimeVue MultiSelect: выбранные значения чипами или comma-строкой, фильтр в оверлее.",
+      "Мультивыбор: выбранные значения чипами или comma-строкой, фильтр в оверлее.",
     props: [
       { name: "options", type: "array", default: [], description: "Опции (произвольные значения)." },
       {
@@ -158,7 +158,7 @@ export const inputsManifest = defineComponentManifest([
         type: "number",
         description: "Максимум подписей до свёртки в счётчик (только display=\"comma\")."
       },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
     emits: [],
@@ -168,7 +168,7 @@ export const inputsManifest = defineComponentManifest([
     name: "WlAutocomplete",
     category: "inputs",
     description:
-      "Поле с подсказками на PrimeVue AutoComplete; список suggestions обновляется по событию complete.",
+      "Поле с подсказками; список suggestions обновляется по событию complete.",
     props: [
       { name: "suggestions", type: "array", default: [], description: "Текущий список подсказок." },
       {
@@ -195,7 +195,7 @@ export const inputsManifest = defineComponentManifest([
         default: 1,
         description: "Минимум символов для запуска поиска."
       },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
     emits: [
@@ -214,12 +214,12 @@ export const inputsManifest = defineComponentManifest([
   {
     name: "WlCheckbox",
     category: "inputs",
-    description: "Чекбокс (binary) на PrimeVue Checkbox с подписью в слоте.",
+    description: "Чекбокс (binary) с подписью в слоте.",
     props: [
       { name: "disabled", type: "boolean", default: false, description: "Отключает чекбокс." },
       { name: "indeterminate", type: "boolean", default: false, description: "Промежуточное состояние." },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [{ name: "default", description: "Подпись рядом с чекбоксом." }],
     emits: [],
@@ -228,13 +228,13 @@ export const inputsManifest = defineComponentManifest([
   {
     name: "WlRadio",
     category: "inputs",
-    description: "Радиокнопка на PrimeVue RadioButton; value — значение опции, v-model — выбранное.",
+    description: "Радиокнопка; value — значение опции, v-model — выбранное.",
     props: [
       { name: "value", type: "union", required: true, description: "Значение опции (произвольное)." },
       { name: "name", type: "string", description: "Нативный name группы." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает радиокнопку." },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [{ name: "default", description: "Подпись рядом с радиокнопкой." }],
     emits: [],
@@ -243,12 +243,12 @@ export const inputsManifest = defineComponentManifest([
   {
     name: "WlSwitch",
     category: "inputs",
-    description: "Переключатель на PrimeVue ToggleSwitch с подписью в слоте.",
+    description: "Переключатель с подписью в слоте.",
     props: [
       { name: "size", type: "enum", default: "md", values: WL_SWITCH_SIZES, description: "Размер." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает переключатель." },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [{ name: "default", description: "Подпись рядом с переключателем." }],
     emits: [],
@@ -273,7 +273,7 @@ export const inputsManifest = defineComponentManifest([
     name: "WlDatePicker",
     category: "inputs",
     description:
-      "Выбор даты на PrimeVue DatePicker; v-model — ISO-строка \"YYYY-MM-DD\" или null. Локаль задаёт конфигурация PrimeVue приложения.",
+      "Выбор даты; v-model — ISO-строка \"YYYY-MM-DD\" или null. Локаль задаёт WlConfig приложения.",
     props: [
       { name: "placeholder", type: "string", default: "дд.мм.гггг", description: "Плейсхолдер." },
       { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер поля." },
@@ -282,7 +282,7 @@ export const inputsManifest = defineComponentManifest([
       { name: "showIcon", type: "boolean", default: false, description: "Кнопка-иконка календаря." },
       { name: "minDate", type: "string", description: "Минимальная дата, ISO \"YYYY-MM-DD\"." },
       { name: "maxDate", type: "string", description: "Максимальная дата, ISO \"YYYY-MM-DD\"." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
     emits: [],

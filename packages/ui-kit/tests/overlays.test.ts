@@ -1,14 +1,14 @@
 import { afterAll, describe, it, expect, vi } from "vitest";
 import { defineComponent, nextTick, ref } from "vue";
 import { mount, type GlobalMountOptions } from "@vue/test-utils";
-import PrimeVue from "primevue/config";
+import { WlConfig } from "../src";
 import { WlEmpty, WlMenu, WlPill, WlPopover, createWlPt } from "../src";
 import type { WlMenuItem } from "../src";
 
 // Wire the kit pt map exactly like a real app does, so inner sections
 // (menu header/separator) carry their wl-* classes.
 const global: GlobalMountOptions = {
-  plugins: [[PrimeVue, { unstyled: true, pt: createWlPt() }]]
+  plugins: [[WlConfig, { pt: createWlPt() }]]
 };
 
 // PrimeVue overlay positioning schedules timers after show/hide;
@@ -71,7 +71,7 @@ describe("WlMenu", () => {
     await wrapper.find(".anchor").trigger("click");
     await nextTick();
     await new Promise((resolve) => setTimeout(resolve, 50));
-    const overlay = document.body.querySelector('.wl-menu[data-p="popup"]');
+    const overlay = document.body.querySelector('.wl-menu[data-wl="menu"]');
     expect(overlay).toBeTruthy();
     expect(overlay!.textContent).toContain("Обновить");
     expect(overlay!.querySelector('[role="menu"]')?.getAttribute("aria-label")).toBe(

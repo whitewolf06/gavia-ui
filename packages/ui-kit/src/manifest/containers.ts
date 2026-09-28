@@ -5,10 +5,10 @@ export const containersManifest = defineComponentManifest([
   {
     name: "WlCard",
     category: "containers",
-    description: "Карточка на PrimeVue Card с секциями header/title/subtitle/content/footer.",
+    description: "Карточка с секциями header/title/subtitle/content/footer.",
     props: [
       { name: "hoverable", type: "boolean", default: false, description: "Подсветка при наведении." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [
       { name: "default", description: "Основное содержимое." },
@@ -47,7 +47,7 @@ export const containersManifest = defineComponentManifest([
   {
     name: "WlTabs",
     category: "containers",
-    description: "Вкладки на PrimeVue Tabs; панели наполняются через scoped-слот panel.",
+    description: "Вкладки с клавиатурной навигацией; панели наполняются через scoped-слот panel.",
     props: [
       {
         name: "items",
@@ -55,7 +55,7 @@ export const containersManifest = defineComponentManifest([
         default: [],
         description: "WlTabItem[]: { key, label, icon?, count? }."
       },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [{ name: "panel", description: "Содержимое панели; scope: { item }." }],
     emits: [],
@@ -68,7 +68,7 @@ export const containersManifest = defineComponentManifest([
   {
     name: "WlDialog",
     category: "containers",
-    description: "Модальный диалог на PrimeVue Dialog.",
+    description: "Модальный диалог с управлением фокусом и Escape.",
     props: [
       { name: "header", type: "string", description: "Заголовок (если не задан слот header)." },
       { name: "modal", type: "boolean", default: true, description: "Модальный режим с подложкой." },
@@ -79,7 +79,7 @@ export const containersManifest = defineComponentManifest([
       { name: "ariaLabel", type: "string", description: "Доступное имя диалога без текстового заголовка." },
       { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего диалог." },
       { name: "width", type: "string", description: "Ширина (CSS), например \"480px\"." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [
       { name: "default", description: "Тело диалога." },
@@ -95,7 +95,7 @@ export const containersManifest = defineComponentManifest([
   {
     name: "WlDrawer",
     category: "containers",
-    description: "Боковая панель на PrimeVue Drawer.",
+    description: "Боковая панель с управлением фокусом и Escape.",
     props: [
       { name: "header", type: "string", description: "Заголовок (если не задан слот header)." },
       {
@@ -111,7 +111,7 @@ export const containersManifest = defineComponentManifest([
       { name: "blockScroll", type: "boolean", default: true, description: "Блокирует прокрутку страницы, пока панель открыта." },
       { name: "ariaLabel", type: "string", description: "Доступное имя панели без текстового заголовка." },
       { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего панель." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [
       { name: "default", description: "Содержимое панели." },
@@ -127,13 +127,13 @@ export const containersManifest = defineComponentManifest([
   {
     name: "WlPopover",
     category: "containers",
-    description: "Поповер на PrimeVue Popover; управление только императивное — экспонирует toggle/show/hide.",
+    description: "Поповер с императивным управлением toggle/show/hide.",
     props: [
       { name: "dismissable", type: "boolean", default: true, description: "Закрытие кликом вне поповера." },
       { name: "closeOnEscape", type: "boolean", default: true, description: "Закрытие клавишей Escape." },
       { name: "ariaLabel", type: "string", description: "Доступное имя поповера." },
       { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего поповер." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [{ name: "default", description: "Содержимое поповера." }],
     emits: [
@@ -144,8 +144,8 @@ export const containersManifest = defineComponentManifest([
   {
     name: "WlDivider",
     category: "containers",
-    description: "Разделитель на PrimeVue Divider; без слота — простая линия.",
-    props: [{ name: "pt", type: "object", description: "PrimeVue pass-through." }],
+    description: "Разделитель; без слота — простая линия.",
+    props: [{ name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }],
     slots: [{ name: "default", description: "Текст/содержимое по центру линии." }],
     emits: []
   }

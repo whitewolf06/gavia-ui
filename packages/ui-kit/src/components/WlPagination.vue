@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import Paginator from "primevue/paginator";
+import { useWlPt } from "../config";
 import WlIcon from "./WlIcon.vue";
 
 const props = withDefaults(
@@ -23,6 +23,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: "update:page", value: number): void;
 }>();
+const section = useWlPt("paginator", computed(() => props.pt));
 
 type PagerItem = number | "gap";
 
@@ -59,6 +60,7 @@ function onFirst(value: number): void {
   const next = clamp(value + 1);
   if (next !== props.page) emit("update:page", next);
 }
+const changePageCallback = onFirst;
 
 /* Compact variant: editable draft committed on Enter / blur. */
 const draft = ref(String(props.page));
@@ -78,18 +80,14 @@ function commit(changePage: (page: number) => void): void {
 </script>
 
 <template>
-  <Paginator
-    :first="page - 1"
-    :rows="1"
-    :total-records="Math.max(pageCount, 1)"
-    :always-show="true"
-    :pt="pt"
+  <nav
+    v-bind="section('root')"
+    aria-label="Страницы"
     class="wl-pagination"
     :class="{ 'wl-pagination--compact': compact }"
     data-wl="pagination"
     @update:first="onFirst"
   >
-    <template #container="{ changePageCallback }">
       <div v-if="!compact" class="wl-pager">
         <button
           type="button"
@@ -175,6 +173,5 @@ function commit(changePage: (page: number) => void): void {
           <WlIcon name="chevron-right" :size="14" />
         </button>
       </div>
-    </template>
-  </Paginator>
+  </nav>
 </template>

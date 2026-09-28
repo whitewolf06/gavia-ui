@@ -1,7 +1,7 @@
 import { afterAll, describe, it, expect, vi } from "vitest";
 import { defineComponent, nextTick, ref } from "vue";
 import { mount, type GlobalMountOptions } from "@vue/test-utils";
-import PrimeVue from "primevue/config";
+import { WlConfig } from "../src";
 import {
   WlAutocomplete,
   WlConfirmDialog,
@@ -14,11 +14,11 @@ import {
 // Wire the kit pt map exactly like a real app does, so inner sections
 // (overlay, options, chips) carry their wl-* classes.
 const global: GlobalMountOptions = {
-  plugins: [[PrimeVue, { unstyled: true, pt: createWlPt() }]]
+  plugins: [[WlConfig, { pt: createWlPt() }]]
 };
 
 const confirmGlobal: GlobalMountOptions = {
-  plugins: [[PrimeVue, { unstyled: true, pt: createWlPt() }], WlConfirmationService]
+  plugins: [[WlConfig, { pt: createWlPt() }], WlConfirmationService]
 };
 
 // PrimeVue overlay positioning schedules timers after show/hide;

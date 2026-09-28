@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { mount, type GlobalMountOptions } from "@vue/test-utils";
-import PrimeVue from "primevue/config";
+import { WlConfig } from "../src";
 import { WlButton } from "../src";
 
-const global: GlobalMountOptions = { plugins: [[PrimeVue, { unstyled: true }]] };
+const global: GlobalMountOptions = { plugins: [[WlConfig]] };
 
 describe("WlButton", () => {
   it("applies variant/size modifier classes and data attributes", () => {

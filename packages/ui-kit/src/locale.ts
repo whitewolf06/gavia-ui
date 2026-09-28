@@ -1,11 +1,21 @@
 import type { WlDatePickerLocale } from "./types";
 
+export interface WlLocale extends WlDatePickerLocale {
+  firstDayOfWeek: number;
+  dayNamesMin: string[];
+  monthNames: string[];
+  accept: string;
+  reject: string;
+  chooseDate: string;
+  prevMonth: string;
+  nextMonth: string;
+}
+
 /**
- * Russian locale for PrimeVue overlay components (DatePicker).
- * Applied by WlDatePicker by default; also usable at the app level:
- *   app.use(PrimeVue, { unstyled: true, pt: createWlPt(), locale: wlLocaleRu })
+ * Russian locale for WhiteUI controls. Applied by default and overridable per app:
+ *   app.use(WlConfig, { locale: wlLocaleRu })
  */
-export const wlLocaleRu: WlDatePickerLocale = {
+export const wlLocaleRu: WlLocale = {
   firstDayOfWeek: 1,
   dayNames: [
     "Воскресенье",

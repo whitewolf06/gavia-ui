@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import Button from "primevue/button";
+import { useWlPt } from "../config";
 import type { WlButtonVariant, WlDensity, WlSize } from "../types";
 
 const props = withDefaults(
@@ -38,6 +38,7 @@ const rootClass = computed(() => [
   props.loading && "is-loading",
   props.disabled && "is-disabled"
 ]);
+const section = useWlPt("button", computed(() => props.pt));
 
 function onClick(event: MouseEvent): void {
   if (props.disabled || props.loading) return;
@@ -46,19 +47,20 @@ function onClick(event: MouseEvent): void {
 </script>
 
 <template>
-  <Button
+  <button
+    v-bind="section('root')"
     :class="rootClass"
     :type="type"
     :disabled="disabled || loading"
-    :pt="pt"
+    :aria-busy="loading || undefined"
     data-wl="button"
     :data-variant="variant"
     :data-size="size"
     :data-density="density"
     @click="onClick"
   >
-    <span v-if="loading" class="wl-btn__spinner" aria-hidden="true" />
+    <span v-if="loading" v-bind="section('loadingIcon')" class="wl-btn__spinner" aria-hidden="true" />
     <slot v-else name="icon" />
-    <span v-if="$slots.default" class="wl-btn__label"><slot /></span>
-  </Button>
+    <span v-if="$slots.default" v-bind="section('label')" class="wl-btn__label"><slot /></span>
+  </button>
 </template>

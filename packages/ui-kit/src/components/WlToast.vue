@@ -1,22 +1,36 @@
 <script setup lang="ts">
-import Toast from "primevue/toast";
+import { computed } from "vue";
+import { useWlPt } from "../config";
+import { useToastStore } from "../services/toast";
+import WlIcon from "./WlIcon.vue";
 
-withDefaults(
-  defineProps<{
-    group?: string;
-    pt?: Record<string, unknown>;
-  }>(),
-  {}
-);
+const props = defineProps<{
+  group?: string;
+  pt?: Record<string, unknown>;
+}>();
+const store = useToastStore();
+const section = useWlPt("toast", computed(() => props.pt));
+const messages = computed(() => store.messages.value.filter((message) => message.group === props.group));
+const iconName = { success: "check", info: "info", warn: "warn", error: "x" } as const;
 </script>
 
 <template>
-  <Toast
-    position="bottom-center"
-    :auto-z-index="false"
-    :group="group"
-    :pt="pt"
-    class="wl-toast"
-    data-wl="toast"
-  />
+  <Teleport to="body">
+    <div v-bind="section('root')" class="wl-toast" data-wl="toast" aria-live="polite">
+      <div v-for="message in messages" :key="message.id"
+        v-bind="section('message')" class="wl-toast__message" :data-severity="message.severity">
+        <div v-bind="section('messageContent')" class="wl-toast__content">
+          <WlIcon v-bind="section('messageIcon')" :name="iconName[message.severity]" :size="18" class="wl-toast__icon" />
+          <div v-bind="section('messageText')" class="wl-toast__text">
+            <div v-bind="section('summary')" class="wl-toast__summary">{{ message.summary }}</div>
+            <div v-if="message.detail" v-bind="section('detail')" class="wl-toast__detail">{{ message.detail }}</div>
+          </div>
+          <button v-bind="section('closeButton')" type="button" class="wl-toast__close"
+            aria-label="Закрыть" @click="store.remove(message.id)">
+            <WlIcon v-bind="section('closeIcon')" name="x" :size="14" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </Teleport>
 </template>

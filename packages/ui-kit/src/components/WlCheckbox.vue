@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, useAttrs } from "vue";
-import Checkbox from "primevue/checkbox";
-import { getPrimeControlProps, splitInputAttrs } from "../utils/inputAttrs";
+import { useWlPt } from "../config";
+import { getWlControlProps, splitInputAttrs } from "../utils/inputAttrs";
 import { deepMerge } from "../utils/merge";
 
 defineOptions({ inheritAttrs: false });
@@ -26,8 +26,9 @@ const attrs = useAttrs();
 const attrGroups = computed(() => splitInputAttrs(attrs));
 const inputAttrs = computed(() => attrGroups.value.inputAttrs);
 const rootAttrs = computed(() => attrGroups.value.rootAttrs);
-const controlProps = computed(() => getPrimeControlProps(inputAttrs.value));
+const controlProps = computed(() => getWlControlProps(inputAttrs.value));
 const mergedPt = computed(() => deepMerge({ input: inputAttrs.value }, props.pt));
+const section = useWlPt("checkbox", mergedPt);
 
 const rootClass = computed(() => [
   "wl-checkbox",
@@ -44,21 +45,27 @@ const rootClass = computed(() => [
     :class="{ 'is-disabled': disabled }"
     data-wl="checkbox"
   >
-    <Checkbox
+    <span :class="rootClass">
+    <input
+      v-bind="section('input', { checked: model, indeterminate, disabled })"
+      class="wl-check-input"
+      type="checkbox"
       v-model="model"
-      :binary="true"
       :indeterminate="indeterminate"
       :disabled="disabled"
-      :invalid="invalid"
-      :inputId="controlProps.inputId"
+      :aria-invalid="invalid || undefined"
+      :id="controlProps.inputId"
       :name="controlProps.name"
       :required="controlProps.required"
       :readonly="controlProps.readonly"
-      :ariaLabel="controlProps.ariaLabel"
-      :ariaLabelledby="controlProps.ariaLabelledby"
-      :pt="mergedPt"
-      :class="rootClass"
+      :aria-label="controlProps.ariaLabel"
+      :aria-labelledby="controlProps.ariaLabelledby"
     />
+    <span v-bind="section('box', { checked: model, indeterminate, disabled })" class="wl-checkbox__box" aria-hidden="true">
+      <span v-if="indeterminate" class="wl-checkbox__icon">−</span>
+      <span v-else-if="model" class="wl-checkbox__icon">✓</span>
+    </span>
+    </span>
     <span v-if="$slots.default" class="wl-checkline__label"><slot /></span>
   </label>
 </template>

@@ -6,17 +6,19 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "preview": "vite preview",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@whitelife-core/ui-kit": "workspace:*",
-    "primeicons": "^7.0.0",
-    "primevue": "^4.3.1",
     "vue": "^3.5.13"
   },
   "devDependencies": {
+    "@types/node": "^22.15.0",
     "@vitejs/plugin-vue": "^5.2.4",
     "typescript": "~5.8.3",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vue-tsc": "^2.2.10"
   }
 }

@@ -11,7 +11,7 @@ export const actionsManifest = defineComponentManifest([
   {
     name: "WlButton",
     category: "actions",
-    description: "Кнопка действия на PrimeVue Button с вариантами, размерами и состоянием загрузки.",
+    description: "Кнопка действия с вариантами, размерами и состоянием загрузки.",
     props: [
       {
         name: "variant",
@@ -44,7 +44,7 @@ export const actionsManifest = defineComponentManifest([
         values: ["button", "submit", "reset"],
         description: "Нативный type кнопки."
       },
-      { name: "pt", type: "object", description: "PrimeVue pass-through для внутренних элементов." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [
       { name: "default", description: "Текст/содержимое кнопки." },
@@ -71,7 +71,7 @@ export const actionsManifest = defineComponentManifest([
       { name: "count", type: "number", description: "Числовой бейдж (показывается при > 0)." },
       { name: "dot", type: "boolean", default: false, description: "Точка-индикатор (если нет count)." },
       { name: "ariaLabel", type: "string", description: "aria-label кнопки." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [{ name: "default", description: "Кастомное содержимое вместо иконки." }],
     emits: [{ name: "click", payload: "MouseEvent", description: "Клик (не срабатывает при disabled)." }]
@@ -87,7 +87,7 @@ export const actionsManifest = defineComponentManifest([
   {
     name: "WlSegmented",
     category: "actions",
-    description: "Сегментированный переключатель (один выбор из options) на PrimeVue SelectButton.",
+    description: "Сегментированный переключатель с одним выбором из options.",
     props: [
       {
         name: "options",
@@ -96,7 +96,7 @@ export const actionsManifest = defineComponentManifest([
         description: "Опции WlSegmentedOption[]: { label, value, icon?, disabled? }."
       },
       { name: "disabled", type: "boolean", default: false, description: "Отключает весь переключатель." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
     emits: [],
@@ -117,7 +117,7 @@ export const actionsManifest = defineComponentManifest([
       { name: "popup", type: "boolean", default: false, description: "Popup-режим (открытие через toggle/show)." },
       { name: "ariaLabel", type: "string", description: "Доступное имя меню." },
       { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего меню." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
     emits: [

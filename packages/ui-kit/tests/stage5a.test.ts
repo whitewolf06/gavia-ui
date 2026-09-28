@@ -1,12 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { mount, type GlobalMountOptions } from "@vue/test-utils";
-import PrimeVue from "primevue/config";
+import { WlConfig } from "../src";
 import { WlCalendar, WlColorPicker } from "../src";
 import type { WlCalendarEvent } from "../src";
 
 // Own components need no PrimeVue sections; the plugin is added for repo-wide consistency.
 const global: GlobalMountOptions = {
-  plugins: [[PrimeVue, { unstyled: true }]]
+  plugins: [[WlConfig]]
 };
 
 const pad2 = (n: number): string => String(n).padStart(2, "0");

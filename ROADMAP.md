@@ -4,8 +4,7 @@
 Статусы: ✅ реализовано · 🚧 в работе · ⬜ запланировано · ⛔ не входит в kit
 (прикладной уровень WhiteLife, собирается в приложении поверх kit).
 
-Каждый этап завершается контрольными проверками: `pnpm build`,
-`pnpm test`, `pnpm build:playground`, `pnpm run pack` (см. agents.md §6).
+Каждый этап завершается контрольными проверками из `agents.md` §6.
 
 ---
 
@@ -21,12 +20,12 @@
 
 - ✅ pnpm workspace: `packages/ui-kit` + `apps/playground`.
 - ✅ Vite library mode: ESM + TypeScript declarations, strict TS.
-- ✅ PrimeVue 4 unstyled; `vue`/`primevue` — peers, `primeicons` — optional peer.
+- ✅ Vue 3 — единственный peer; компоненты и сервисы реализованы внутри kit.
 - ✅ Токены `--wl-*`: foundation → semantic → component; CSS Layers
   (`wl.reset`, `wl.tokens`, `wl.components`).
 - ✅ Темы `white` + `graphite` через `data-wl-theme` / явный импорт.
 - ✅ Subpath exports: `.`, `styles/base.css`, `styles/reset.css`, `themes/*.css`.
-- ✅ `createWlPt()` — расширяемая pt-карта; без `app.use(PrimeVue)` внутри kit.
+- ✅ `createWlPt()` — расширяемая pt-карта; `WlConfig` — конфигурация приложения.
 - ✅ README (интеграция, темизация, контракт) и agents.md (правила репозитория).
 
 ## Этап 2. Базовые компоненты — ✅ (21 + директива)
@@ -57,7 +56,7 @@
 | `WlTooltip` (директива) | ✅ | `[data-tip]` |
 
 Проверки этапа: build ✓ · typecheck ✓ · 30/30 тестов ✓ · playground ✓ ·
-pack ✓ (Vue/PrimeVue вне бандла).
+pack ✓ (Vue вне бандла).
 
 ## Этап 3. Навигация и оверлеи — ✅ (11 компонентов + composable)
 
@@ -65,7 +64,7 @@ pack ✓ (Vue/PrimeVue вне бандла).
 | --- | --- | --- |
 | `WlIconButton` (sm/md, счётчик/точка) | ✅ | `.icb` |
 | `WlButtonGroup` | ✅ | `.btn-group` |
-| `WlSegmented` (поверх SelectButton) | ✅ | `.seg` |
+| `WlSegmented` | ✅ | `.seg` |
 | `WlNavItem` (рейк с бейджем, width: 100%) | ✅ | `.nav-item` |
 | `WlBreadcrumbs` (последний — `aria-current`) | ✅ | `.crumbs` |
 | `WlPagination` (1-based `v-model:page` + compact) | ✅ | `.pager` |
@@ -80,8 +79,7 @@ pack ✓ (в архиве только dist/styles/themes/README/package.json).
 
 ## Этап 4. Формы и данные — ✅ (8 компонентов)
 
-Политика реализации (уточнена): формы — собственные компоненты напрямую из
-прототипа; таблица — обёртка PrimeVue DataTable.
+Политика реализации: формы и таблица реализованы внутри kit.
 
 | Компонент | Статус | Прототип |
 | --- | --- | --- |
@@ -91,11 +89,10 @@ pack ✓ (в архиве только dist/styles/themes/README/package.json).
 | `WlAccordion` (details/summary, single, controlled) | ✅ | `.acc` |
 | `WlSteps` (done/current/pending) | ✅ | `.steps` |
 | `WlField` (label + hint + error, useId-связка) | ✅ | `.field` |
-| `WlTable` (DataTable: columns, cell-слоты, numeric, empty) | ✅ | `.table` |
+| `WlTable` (columns, cell-слоты, numeric, empty) | ✅ | `.table` |
 | `WlStatCard` (label + value + focus-bar) | ✅ | `.stat-card` |
 
-Заход 4a (формы) — собственные компоненты без PrimeVue; заход 4b — таблица на
-DataTable, stat-card свой, плюс проброс `id`/aria во внутренние поля у
+Заход 4a (формы) и 4b (таблица, stat-card), плюс проброс `id`/aria во внутренние поля у
 `WlInput`/`WlPasswordInput`/`WlNumberInput`. Проверки: build ✓ · typecheck ✓ ·
 93/93 тестов ✓ · playground ✓ · pack ✓ (в kit 40 компонентов).
 
@@ -107,11 +104,18 @@ DataTable, stat-card свой, плюс проброс `id`/aria во внутр
 | Playground: секция «Типографика» (шкала, mono, ссылки) | ✅ | playground-стили с `pg-` префиксом, не в библиотеке |
 | `WlColorPicker` (свотчи + hex-инпут) | ✅ | свой, нормализация в `#rrggbb` |
 | `WlCalendar` (месячная сетка: today/selected/события) | ✅ | свой, `v-model` = ISO `YYYY-MM-DD` |
-| `WlDatePicker` (ISO v-model, ru-locale, panel в стиле kit) | ✅ | обёртка PrimeVue DatePicker |
+| `WlDatePicker` (ISO v-model, ru-locale, panel в стиле kit) | ✅ | собственный календарь |
 | `WlFileUpload` (dropzone + список файлов + reject-события) | ✅ | свой, файлы не загружаются — отдаёт потребителю |
 
 Проверки этапа: build ✓ · typecheck ✓ · 115/115 тестов ✓ · playground ✓ ·
 pack ✓ (в kit 44 компонента).
+
+## Этап 5b. Независимость от PrimeVue — ✅ в ветке `codex/remove-primevue`
+
+- ✅ Собственные реализации всех 51 компонентов; Vue 3 остаётся peer.
+- ✅ `WlConfig` и сервисы с состоянием каждого Vue-приложения.
+- ✅ SVG-каталог, пакетные `icons:sync` и `icons:check`.
+- ✅ Контрактные, браузерные и пакетные проверки; миграция 0.5.
 
 ## Этап 6. Прикладной слой WhiteLife — ⛔ не в kit
 

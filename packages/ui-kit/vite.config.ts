@@ -36,12 +36,12 @@ export default defineConfig({
       fileName: () => "index.js"
     },
     rollupOptions: {
-      external: [/^vue($|\/)/, /^primevue($|\/)/, /^@primevue($|\/)/, /^@primeuix($|\/)/, /^primeicons($|\/)/]
+      external: [/^vue($|\/)/]
     }
   },
   test: {
     environment: "jsdom",
-    include: ["tests/**/*.test.ts"],
+    include: ["tests/**/*.test.{ts,mjs}"],
     setupFiles: ["tests/setup.ts"],
     testTimeout: 20000
   }

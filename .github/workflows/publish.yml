@@ -29,11 +29,11 @@ jobs:
       matrix:
         node-version: [18, 24]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           cache: pnpm
@@ -45,6 +45,12 @@ jobs:
 
       - name: Typecheck
         run: pnpm typecheck
+
+      - name: Verify dependency boundary
+        run: pnpm verify:dependencies
+
+      - name: Verify icon registry
+        run: pnpm icons:check
 
       - name: Build library
         run: pnpm build
@@ -60,21 +66,54 @@ jobs:
 
       - name: Verify package contents
         run: |
-          if tar -tf packages/ui-kit/whitelife-core-ui-kit-*.tgz | grep -E '(^|/)(node_modules|vue|primevue)(/|$)'; then
-            echo "Package must not contain bundled Vue or PrimeVue dependencies."
+          if tar -tf packages/ui-kit/whitelife-core-ui-kit-*.tgz | grep -E '(^|/)(node_modules|vue|primevue|primeicons)(/|$)'; then
+            echo "Package must not contain bundled peer dependencies."
             exit 1
           fi
 
+      - name: Verify packed package in consumer app
+        run: pnpm verify:package
+
+  browser:
+    name: Browser regression tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
+
+      - name: Run browser tests
+        run: pnpm test:e2e
+
+      - name: Save theme screenshots and traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: whiteui-browser-results
+          path: apps/playground/test-results/
+          if-no-files-found: ignore
+
   publish:
-    needs: verify
+    needs: [verify, browser]
     if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: pnpm

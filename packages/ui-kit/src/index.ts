@@ -1,12 +1,16 @@
 export * from "./components";
 export * from "./types";
+export { WL_ICON_NAMES } from "./icons.generated";
 export * from "./manifest";
 export { createWlPt } from "./theme";
 export type { WlPtConfig, WlPtSection, WlPtCallbackOptions } from "./theme";
+export { WlConfig } from "./config";
+export type { WlConfigOptions } from "./config";
 export { wlLocaleRu } from "./locale";
+export type { WlLocale } from "./locale";
 export { WlTooltip } from "./directives/tooltip";
 export { useWlConfirm } from "./composables/useWlConfirm";
 export type { WlConfirmOptions } from "./composables/useWlConfirm";
 export { useWlToast } from "./composables/useWlToast";
-export { default as WlConfirmationService } from "primevue/confirmationservice";
-export { default as WlToastService } from "primevue/toastservice";
+export { WlConfirmationService } from "./services/confirmation";
+export { WlToastService } from "./services/toast";

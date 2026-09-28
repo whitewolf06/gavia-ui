@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import Textarea from "primevue/textarea";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
+import { useWlPt } from "../config";
 
 const props = withDefaults(
   defineProps<{
@@ -20,6 +20,17 @@ const props = withDefaults(
 );
 
 const model = defineModel<string>({ default: "" });
+const control = ref<HTMLTextAreaElement | null>(null);
+const section = useWlPt("textarea", computed(() => props.pt));
+async function resize(): Promise<void> {
+  if (!props.autoResize) return;
+  await nextTick();
+  if (!control.value) return;
+  control.value.style.height = "auto";
+  control.value.style.height = `${control.value.scrollHeight}px`;
+}
+watch([model, () => props.autoResize], resize);
+onMounted(resize);
 
 const rootClass = computed(() => [
   "wl-textarea",
@@ -29,15 +40,15 @@ const rootClass = computed(() => [
 </script>
 
 <template>
-  <Textarea
+  <textarea
+    ref="control"
+    v-bind="section('root')"
     v-model="model"
     :class="rootClass"
     :rows="rows"
-    :autoResize="autoResize"
     :placeholder="placeholder"
     :disabled="disabled"
-    :invalid="invalid"
-    :pt="pt"
+    :aria-invalid="invalid || undefined"
     data-wl="textarea"
   />
 </template>

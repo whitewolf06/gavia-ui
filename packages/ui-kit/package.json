@@ -1,7 +1,7 @@
 {
   "name": "@whitelife-core/ui-kit",
-  "version": "0.3.0",
-  "description": "WhiteLife UI kit — Vue 3 + TypeScript component library on PrimeVue 4 (unstyled)",
+  "version": "0.5.0",
+  "description": "WhiteLife UI kit — Vue 3 + TypeScript component library",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -36,24 +36,17 @@
     "build": "vite build",
     "test": "vitest run",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
-    "pack": "pnpm pack"
+    "pack": "pnpm pack",
+    "icons:sync": "node scripts/sync-icons.mjs",
+    "icons:check": "node scripts/sync-icons.mjs --check"
   },
   "peerDependencies": {
-    "primeicons": "^7.0.0",
-    "primevue": "^4.0.0",
     "vue": "^3.4.0"
-  },
-  "peerDependenciesMeta": {
-    "primeicons": {
-      "optional": true
-    }
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.4",
     "@vue/test-utils": "^2.4.6",
     "jsdom": "^26.1.0",
-    "primeicons": "^7.0.0",
-    "primevue": "^4.3.1",
     "typescript": "~5.8.3",
     "vite": "^6.3.5",
     "vite-plugin-dts": "^4.5.4",

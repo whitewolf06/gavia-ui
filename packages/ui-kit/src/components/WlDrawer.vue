@@ -1,68 +1,59 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import Drawer from "primevue/drawer";
+import { computed, ref, useId } from "vue";
+import { useWlPt } from "../config";
 import type { WlDrawerPosition } from "../types";
-import { deepMerge } from "../utils/merge";
+import { useOverlayLifecycle } from "../utils/overlayLifecycle";
+import WlIcon from "./WlIcon.vue";
 
-const props = withDefaults(
-  defineProps<{
-    header?: string;
-    position?: WlDrawerPosition;
-    modal?: boolean;
-    dismissable?: boolean;
-    closeOnEscape?: boolean;
-    blockScroll?: boolean;
-    ariaLabel?: string;
-    ariaLabelledby?: string;
-    pt?: Record<string, unknown>;
-  }>(),
-  {
-    position: "right",
-    modal: true,
-    dismissable: true,
-    closeOnEscape: true,
-    blockScroll: true
-  }
-);
-
-const emit = defineEmits<{
-  open: [];
-  close: [];
-}>();
-
+const props = withDefaults(defineProps<{
+  header?: string;
+  position?: WlDrawerPosition;
+  modal?: boolean;
+  dismissable?: boolean;
+  closeOnEscape?: boolean;
+  blockScroll?: boolean;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
+  pt?: Record<string, unknown>;
+}>(), {
+  position: "right", modal: true, dismissable: true, closeOnEscape: true, blockScroll: true
+});
+const emit = defineEmits<{ open: []; close: [] }>();
 const visible = defineModel<boolean>("visible", { default: false });
-
-const rootClass = computed(() => ["wl-drawer", `wl-drawer--${props.position}`]);
-const mergedPt = computed(() =>
-  deepMerge(
-    {
-      root: {
-        "aria-label": props.ariaLabel,
-        "aria-labelledby": props.ariaLabelledby
-      }
-    },
-    props.pt
-  )
-);
+const drawer = ref<HTMLElement | null>(null);
+const titleId = useId();
+const section = useWlPt("drawer", computed(() => props.pt));
+useOverlayLifecycle({
+  visible, container: drawer,
+  closeOnEscape: () => props.closeOnEscape,
+  trapFocus: () => props.modal,
+  lockScroll: () => props.modal && props.blockScroll,
+  onOpen: () => emit("open"),
+  onClose: () => emit("close")
+});
+function onMask(event: MouseEvent): void {
+  if (event.target === event.currentTarget && props.dismissable) visible.value = false;
+}
 </script>
 
 <template>
-  <Drawer
-    v-model:visible="visible"
-    :header="header"
-    :position="position"
-    :modal="modal"
-    :dismissable="dismissable"
-    :closeOnEscape="closeOnEscape"
-    :blockScroll="blockScroll"
-    :class="rootClass"
-    :pt="mergedPt"
-    data-wl="drawer"
-    @show="emit('open')"
-    @hide="emit('close')"
-  >
-    <template v-if="$slots.header" #header><slot name="header" /></template>
-    <slot />
-    <template v-if="$slots.footer" #footer><slot name="footer" /></template>
-  </Drawer>
+  <Teleport to="body">
+    <div v-if="visible" v-bind="section('mask')" class="wl-drawer-mask"
+      :class="{ 'wl-mask': modal, 'wl-drawer-host': !modal }" @mousedown="onMask">
+      <aside ref="drawer" v-bind="section('root')" class="wl-drawer" :class="`wl-drawer--${position}`"
+        role="dialog" :aria-modal="modal || undefined" :aria-label="ariaLabel"
+        :aria-labelledby="ariaLabelledby ?? (!ariaLabel && header ? titleId : undefined)"
+        tabindex="-1" data-wl="drawer">
+        <header v-if="header || $slots.header" v-bind="section('header')" class="wl-drawer__header">
+          <slot name="header">
+            <span v-bind="section('title')" :id="titleId" class="wl-drawer__title">{{ header }}</span>
+          </slot>
+          <button v-bind="section('pcCloseButton.root')" type="button" class="wl-overlay-close"
+            aria-label="Закрыть" @click="visible = false"><WlIcon v-bind="section('pcCloseButton.icon')" name="x" :size="14" /></button>
+        </header>
+        <div v-bind="section('content')" class="wl-drawer__content"><slot /></div>
+        <footer v-if="$slots.footer" v-bind="section('footer')" class="wl-drawer__footer"><slot name="footer" /></footer>
+      </aside>
+    </div>
+  </Teleport>
 </template>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, useSlots } from "vue";
-import Divider from "primevue/divider";
+import { useWlPt } from "../config";
 
-defineProps<{
+const props = defineProps<{
   pt?: Record<string, unknown>;
 }>();
 
@@ -13,10 +13,11 @@ const rootClass = computed(() => {
   if (!slots.default) classes.push("wl-divider--plain");
   return classes;
 });
+const section = useWlPt("divider", computed(() => props.pt));
 </script>
 
 <template>
-  <Divider :class="rootClass" :pt="pt" data-wl="divider">
-    <slot v-if="$slots.default" />
-  </Divider>
+  <div v-bind="section('root')" :class="rootClass" role="separator" data-wl="divider">
+    <span v-if="$slots.default" v-bind="section('content')"><slot /></span>
+  </div>
 </template>

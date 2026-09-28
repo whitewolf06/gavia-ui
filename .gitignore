@@ -8,3 +8,6 @@ coverage/
 # local tooling (portable pnpm bootstrap, not part of the repo)
 .tools/
 .pnpm-store/
+.tmp/
+apps/playground/test-results/
+apps/playground/playwright-report/

@@ -1,7 +1,7 @@
 # WhiteLife UI
 
 Современная техническая основа для UI WhiteLife и других проектов: библиотека компонентов
-`@whitelife-core/ui-kit` (Vue 3 + TypeScript, PrimeVue 4 в unstyled-режиме) и изолированный
+`@whitelife-core/ui-kit` (Vue 3 + TypeScript, собственные компоненты) и изолированный
 playground для разработки и проверки.
 
 ## Структура
@@ -19,7 +19,12 @@ pnpm build              # сборка библиотеки (ESM + TypeScript de
 pnpm test               # тесты библиотеки (Vitest + Vue Test Utils)
 pnpm dev                # playground в dev-режиме
 pnpm build:playground   # сборка playground
+pnpm typecheck          # проверка типов библиотеки
+pnpm test:e2e           # Chromium, Firefox, WebKit и мобильный Chromium
+pnpm icons:check        # проверка SVG-каталога и сгенерированного реестра
 pnpm run pack          # tar-архив пакета (без публикации); важно: именно `run pack`, см. ниже
+pnpm verify:package     # изолированный потребитель архива с одним Vue
+pnpm verify:dependencies # отсутствие PrimeVue/PrimeIcons в коде и зависимостях
 ```
 
 > **Примечание.** pnpm выполняет одноимённую builtin-команду вместо script'а:
@@ -58,26 +63,22 @@ pnpm add @whitelife-core/ui-kit
 ### Peer dependencies
 
 Пакет не тащит за собой фреймворк — приложение-потребитель предоставляет его само,
-поэтому дублирующихся экземпляров Vue и PrimeVue не возникает:
+поэтому дублирующего экземпляра Vue не возникает:
 
 | Пакет        | Версия | Обязательность            |
 | ------------ | ------ | ------------------------- |
 | `vue`        | ^3.4   | обязательный peer         |
-| `primevue`   | ^4     | обязательный peer         |
-| `primeicons` | ^7     | опциональный peer (иконки)|
 
 ## Подключение (минимальная интеграция)
 
-Четыре шага, без смены стека потребителя (Vue 3 + PrimeVue Unstyled + Vite):
+Библиотека использует Vue 3 и не требует установки других UI-пакетов:
 
 ```ts
 // main.ts
 import { createApp } from "vue";
-import PrimeVue from "primevue/config";
-import { createWlPt, wlLocaleRu } from "@whitelife-core/ui-kit";
+import { WlConfig, WlToastService, WlConfirmationService, wlLocaleRu } from "@whitelife-core/ui-kit";
 
-// 2. PrimeVue в unstyled-режиме (настраивает потребитель, не библиотека)
-// 3. Стили подключаются явно: reset → base → тема
+// Стили подключаются явно: reset → base → тема
 import "@whitelife-core/ui-kit/styles/reset.css";
 import "@whitelife-core/ui-kit/styles/base.css";
 import "@whitelife-core/ui-kit/themes/white.css";
@@ -85,12 +86,14 @@ import "@whitelife-core/ui-kit/themes/white.css";
 import App from "./App.vue";
 
 const app = createApp(App);
-app.use(PrimeVue, { unstyled: true, pt: createWlPt(), locale: wlLocaleRu });
+app.use(WlConfig, { locale: wlLocaleRu });
+app.use(WlToastService);
+app.use(WlConfirmationService);
 app.mount("#app");
 ```
 
 ```vue
-<!-- 4. Именованный импорт компонентов -->
+<!-- Именованный импорт компонентов -->
 <script setup lang="ts">
 import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 </script>
@@ -102,9 +105,10 @@ import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 </template>
 ```
 
-UI-kit **не** вызывает `app.use(PrimeVue)` сам и не управляет конфигурацией приложения.
-Локаль календаря задаёт потребитель через `locale: wlLocaleRu`; `WlDatePicker` не
-изменяет глобальную конфигурацию PrimeVue.
+`WlConfig` необязателен: без него используются стандартные `pt` и русская локаль.
+Сервисы уведомлений и подтверждений устанавливаются отдельно, если используются.
+Их состояние принадлежит каждому экземпляру Vue-приложения. Переход с версии 0.3
+описан в [руководстве по миграции](docs/migration-0.5.md).
 
 ## Subpath exports
 
@@ -213,19 +217,17 @@ import "@whitelife-core/ui-kit/themes/newspaper.css";
 CSS-классы стабильны, namespaced и с низкой специфичностью:
 `wl-btn`, `wl-btn--primary`, `wl-btn--sm`, состояния — `is-loading`, `is-disabled`.
 
-## PrimeVue pass-through (`pt`)
+## Pass-through (`pt`)
 
 `pt` — открытая, расширяемая настройка, а не закрытая внутри библиотеки:
 
 ```ts
-import { createWlPt } from "@whitelife-core/ui-kit";
+import { WlConfig } from "@whitelife-core/ui-kit";
 
-// глобально, при подключении PrimeVue
-app.use(PrimeVue, {
-  unstyled: true,
-  pt: createWlPt({
+app.use(WlConfig, {
+  pt: {
     button: { root: { "data-test": "app-button" } },
-  }),
+  },
 });
 ```
 
@@ -234,11 +236,16 @@ app.use(PrimeVue, {
 <WlButton :pt="{ root: { 'aria-label': 'Создать задачу' } }">Создать</WlButton>
 ```
 
-`createWlPt()` возвращает дефолтную pt-карту библиотеки; переданный объект
-глубоко мёржится поверх. `pt` prop компонента мёржится последним и побеждает.
+`createWlPt()` возвращает дефолтную карту и принимает переопределения для
+совместимости. Порядок применения к каждому DOM-разделу: дефолт → `WlConfig.pt`
+→ `pt` экземпляра. `class` и `style` объединяются; прочие атрибуты последнего
+уровня перекрывают предыдущие. Разделы перечислены в
+[архитектурном руководстве](docs/architecture.md#pt-и-публичный-dom).
 
 ## Правила потребления
 
 - Reset и стили **не** импортируются автоматически — подключайте явно.
 - Типографика, цвета и поведение меняются токенами, а не форком компонентов.
 - В библиотеке нет Pinia, роутера, API-клиентов и бизнес-логики — и не будет.
+- Исходные SVG и пакетное добавление иконок: [docs/icons.md](docs/icons.md).
+- Архитектурные правила и практическое применение SOLID: [docs/architecture.md](docs/architecture.md).

@@ -70,7 +70,7 @@ export interface WlOverlayLifecycleOptions {
   onClose?: () => void;
 }
 
-/** Shared lifecycle for kit-owned modal surfaces. PrimeVue overlays keep their native lifecycle. */
+/** Shared lifecycle for modal surfaces owned by WhiteUI. */
 export function useOverlayLifecycle(options: WlOverlayLifecycleOptions): {
   requestClose: () => void;
 } {

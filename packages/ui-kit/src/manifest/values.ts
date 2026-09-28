@@ -7,7 +7,6 @@ import type {
   WlDensity,
   WlDrawerPosition,
   WlIconButtonVariant,
-  WlIconName,
   WlMultiSelectDisplay,
   WlPillVariant,
   WlProgressVariant,
@@ -18,6 +17,7 @@ import type {
   WlSwitchSize,
   WlTagVariant
 } from "../types";
+export { WL_ICON_NAMES } from "../icons.generated";
 
 /** Рантайм-списки допустимых значений enum-пропсов (зеркало union-типов из types.ts). */
 
@@ -107,38 +107,3 @@ export const WL_COLOR_PICKER_SIZES = [
 export const WL_AVATAR_SIZES = [24, 28, 32, 36, 48] as const satisfies readonly WlAvatarSize[];
 
 export const WL_AVATAR_PRESENCES = ["online", "busy", "offline"] as const;
-
-export const WL_ICON_NAMES = [
-  "check",
-  "x",
-  "plus",
-  "minus",
-  "search",
-  "filter",
-  "chevron-down",
-  "chevron-left",
-  "chevron-right",
-  "chevron-up",
-  "info",
-  "warn",
-  "edit",
-  "trash",
-  "bell",
-  "user",
-  "eye",
-  "eye-off",
-  "calendar",
-  "home",
-  "task",
-  "note",
-  "clock",
-  "activity",
-  "sparkle",
-  "help",
-  "settings",
-  "panel",
-  "upload",
-  "file",
-  "image",
-  "music"
-] as const satisfies readonly WlIconName[];

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, useAttrs } from "vue";
-import ToggleSwitch from "primevue/toggleswitch";
+import { useWlPt } from "../config";
 import type { WlSwitchSize } from "../types";
-import { getPrimeControlProps, splitInputAttrs } from "../utils/inputAttrs";
+import { getWlControlProps, splitInputAttrs } from "../utils/inputAttrs";
 import { deepMerge } from "../utils/merge";
 
 defineOptions({ inheritAttrs: false });
@@ -27,8 +27,9 @@ const attrs = useAttrs();
 const attrGroups = computed(() => splitInputAttrs(attrs));
 const inputAttrs = computed(() => attrGroups.value.inputAttrs);
 const rootAttrs = computed(() => attrGroups.value.rootAttrs);
-const controlProps = computed(() => getPrimeControlProps(inputAttrs.value));
+const controlProps = computed(() => getWlControlProps(inputAttrs.value));
 const mergedPt = computed(() => deepMerge({ input: inputAttrs.value }, props.pt));
+const section = useWlPt("toggleswitch", mergedPt);
 
 const rootClass = computed(() => [
   "wl-switch",
@@ -47,18 +48,26 @@ const rootClass = computed(() => [
     data-wl="switch"
     :data-size="size"
   >
-    <ToggleSwitch
+    <span :class="rootClass">
+    <input
+      v-bind="section('input', { checked: model, disabled })"
+      class="wl-check-input"
+      type="checkbox"
+      role="switch"
+      :aria-checked="model"
       v-model="model"
       :disabled="disabled"
-      :invalid="invalid"
-      :inputId="controlProps.inputId"
+      :aria-invalid="invalid || undefined"
+      :id="controlProps.inputId"
       :name="controlProps.name"
       :readonly="controlProps.readonly"
-      :ariaLabel="controlProps.ariaLabel"
-      :ariaLabelledby="controlProps.ariaLabelledby"
-      :pt="mergedPt"
-      :class="rootClass"
+      :aria-label="controlProps.ariaLabel"
+      :aria-labelledby="controlProps.ariaLabelledby"
     />
+    <span v-bind="section('slider', { checked: model, disabled })" class="wl-switch__slider" aria-hidden="true">
+      <span v-bind="section('handle')" class="wl-switch__handle" />
+    </span>
+    </span>
     <span v-if="$slots.default" class="wl-switch-wrap__label"><slot /></span>
   </label>
 </template>

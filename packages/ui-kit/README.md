@@ -1,7 +1,7 @@
 # @whitelife-core/ui-kit
 
-Библиотека компонентов WhiteLife: Vue 3 + TypeScript (strict), PrimeVue 4 в
-unstyled-режиме как headless-база, стили — обычный CSS с custom properties
+Библиотека компонентов WhiteLife: Vue 3 + TypeScript (strict), собственный DOM
+и поведение; стили — обычный CSS с custom properties
 `--wl-*` и CSS Layers. Без Pinia, роутера, API-клиентов и бизнес-логики.
 
 ## Peer dependencies
@@ -9,16 +9,13 @@ unstyled-режиме как headless-база, стили — обычный CS
 | Пакет        | Версия | Обязательность             |
 | ------------ | ------ | -------------------------- |
 | `vue`        | ^3.4   | обязательный peer          |
-| `primevue`   | ^4     | обязательный peer          |
-| `primeicons` | ^7     | опциональный peer (иконки) |
 
 ## Подключение
 
 ```ts
 // main.ts
 import { createApp } from "vue";
-import PrimeVue from "primevue/config";
-import { createWlPt, wlLocaleRu } from "@whitelife-core/ui-kit";
+import { WlConfig, WlToastService, WlConfirmationService, wlLocaleRu } from "@whitelife-core/ui-kit";
 
 // Стили подключаются явно: reset → base → тема
 import "@whitelife-core/ui-kit/styles/reset.css";
@@ -28,7 +25,9 @@ import "@whitelife-core/ui-kit/themes/white.css";
 import App from "./App.vue";
 
 const app = createApp(App);
-app.use(PrimeVue, { unstyled: true, pt: createWlPt(), locale: wlLocaleRu });
+app.use(WlConfig, { locale: wlLocaleRu });
+app.use(WlToastService);
+app.use(WlConfirmationService);
 app.mount("#app");
 ```
 
@@ -44,9 +43,9 @@ import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 </template>
 ```
 
-Библиотека **не** вызывает `app.use(PrimeVue)` сама и не импортирует CSS из JS.
-Локаль календаря также задаётся один раз при инициализации приложения через
-`locale: wlLocaleRu`; `WlDatePicker` не изменяет глобальную конфигурацию PrimeVue.
+Библиотека не импортирует CSS из JS. `WlConfig` необязателен; русская локаль и
+стандартная карта `pt` используются по умолчанию. Сервисы устанавливаются только
+если нужны соответствующие компоненты. См. [миграцию 0.5](https://github.com/whitelife-core/whiteui/blob/main/docs/migration-0.5.md).
 
 ## Exports
 
@@ -139,16 +138,15 @@ dismiss-поведение и доступную подпись; диалог и
 
 ## Pass-through (`pt`)
 
-`createWlPt()` возвращает дефолтную pt-карту библиотеки. Переданный объект
-глубоко мёржится поверх дефолтов; `pt` prop компонента мёржится последним
-(сам PrimeVue) и побеждает:
+`createWlPt()` возвращает дефолтную карту и может объединять переопределения.
+Порядок применения: дефолты → конфигурация приложения → `pt` экземпляра.
+`class` и `style` объединяются, прочие атрибуты заменяются последним значением.
 
 ```ts
-app.use(PrimeVue, {
-  unstyled: true,
-  pt: createWlPt({
+app.use(WlConfig, {
+  pt: {
     button: { root: { "data-test": "app-button" } }
-  })
+  }
 });
 ```
 
@@ -226,7 +224,7 @@ import manifest from "@whitelife-core/ui-kit/manifest.json";
 `WlModelManifest`, `WlManifestCategory`, `WlManifestPropType`. Категории:
 `actions`, `inputs`, `data`, `containers`, `navigation`, `feedback`, `misc`.
 Пропсы типа `icon` принимают значения из `WlIconName`, тип `object` — это
-PrimeVue pass-through (`pt`) или сложные объекты вроде `locale`.
+pass-through (`pt`) или сложные объекты вроде `locale`.
 
 ## Разработка
 
@@ -234,4 +232,8 @@ PrimeVue pass-through (`pt`) или сложные объекты вроде `lo
 pnpm build      # сборка (vite lib mode → dist/index.js + dist/*.d.ts)
 pnpm test       # Vitest + Vue Test Utils
 pnpm typecheck  # vue-tsc --noEmit
+pnpm test:e2e   # desktop/mobile, Chromium/Firefox/WebKit
+pnpm icons:check
+pnpm verify:package
+pnpm verify:dependencies
 ```

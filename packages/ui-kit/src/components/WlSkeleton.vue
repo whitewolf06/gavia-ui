@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import Skeleton from "primevue/skeleton";
+import { computed } from "vue";
+import { useWlPt } from "../config";
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     width?: string;
     height?: string;
@@ -15,16 +16,10 @@ withDefaults(
     shape: "rectangle"
   }
 );
+const section = useWlPt("skeleton", computed(() => props.pt));
 </script>
 
 <template>
-  <Skeleton
-    class="wl-skeleton"
-    :width="width"
-    :height="height"
-    :borderRadius="borderRadius"
-    :shape="shape"
-    :pt="pt"
-    data-wl="skeleton"
-  />
+  <span v-bind="section('root')" class="wl-skeleton" aria-hidden="true" data-wl="skeleton"
+    :style="{ width, height, borderRadius: shape === 'circle' ? '50%' : borderRadius }" />
 </template>

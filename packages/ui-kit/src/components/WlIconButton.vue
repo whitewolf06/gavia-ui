@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import Button from "primevue/button";
+import { useWlPt } from "../config";
 import WlIcon from "./WlIcon.vue";
 import type { WlIconButtonVariant, WlIconName } from "../types";
 
@@ -36,6 +36,7 @@ const rootClass = computed(() => [
   props.active && "is-active",
   props.disabled && "is-disabled"
 ]);
+const section = useWlPt("button", computed(() => props.pt));
 
 function onClick(event: MouseEvent): void {
   if (props.disabled) return;
@@ -44,11 +45,12 @@ function onClick(event: MouseEvent): void {
 </script>
 
 <template>
-  <Button
+  <button
+    v-bind="section('root')"
+    type="button"
     :class="rootClass"
     :disabled="disabled"
     :aria-label="ariaLabel"
-    :pt="pt"
     data-wl="icon-button"
     :data-variant="variant"
     :data-size="size"
@@ -59,5 +61,5 @@ function onClick(event: MouseEvent): void {
     </slot>
     <span v-if="count !== undefined && count > 0" class="wl-iconbtn__count">{{ count }}</span>
     <span v-else-if="dot" class="wl-iconbtn__dot" aria-hidden="true" />
-  </Button>
+  </button>
 </template>

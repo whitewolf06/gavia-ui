@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import Tag from "primevue/tag";
+import { useWlPt } from "../config";
 import WlIcon from "./WlIcon.vue";
 import type { WlTagVariant } from "../types";
 
@@ -23,11 +23,12 @@ const emit = defineEmits<{
 }>();
 
 const rootClass = computed(() => ["wl-tag", `wl-tag--${props.variant}`]);
+const section = useWlPt("tag", computed(() => props.pt));
 </script>
 
 <template>
-  <Tag :class="rootClass" :pt="pt" data-wl="tag" :data-variant="variant">
-    <span class="wl-tag__text"><slot /></span>
+  <span v-bind="section('root')" :class="rootClass" data-wl="tag" :data-variant="variant">
+    <span v-bind="section('label')" class="wl-tag__text"><slot /></span>
     <button
       v-if="removable"
       type="button"
@@ -37,5 +38,5 @@ const rootClass = computed(() => ["wl-tag", `wl-tag--${props.variant}`]);
     >
       <WlIcon name="x" :size="10" />
     </button>
-  </Tag>
+  </span>
 </template>

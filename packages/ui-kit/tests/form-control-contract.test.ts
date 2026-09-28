@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { mount, type GlobalMountOptions } from "@vue/test-utils";
-import PrimeVue from "primevue/config";
+import { WlConfig } from "../src";
 import {
   WlAutocomplete,
   WlCheckbox,
@@ -13,7 +13,7 @@ import {
 } from "../src";
 
 const global: GlobalMountOptions = {
-  plugins: [[PrimeVue, { unstyled: true, pt: createWlPt() }]]
+  plugins: [[WlConfig, { pt: createWlPt() }]]
 };
 
 const sharedAttrs = {

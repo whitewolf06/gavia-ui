@@ -1,6 +1,7 @@
 /* WhiteLife UI — newspaper theme.
    Near-white paper, editorial headings, fine rules and restrained print inks.
    Applied via <html data-wl-theme="newspaper"> after importing this file. */
+@layer wl.tokens {
 [data-wl-theme="newspaper"] {
   /* foundation: paper-to-ink neutral ramp */
   --wl-gray-0: #fffefb;
@@ -75,4 +76,5 @@
   --wl-shadow-card: none;
   --wl-shadow-pop: 0 14px 36px rgba(48, 41, 32, 0.13);
   --wl-shadow-knob: 0 1px 2px rgba(48, 41, 32, 0.22);
+}
 }

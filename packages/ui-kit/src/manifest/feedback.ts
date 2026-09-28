@@ -22,10 +22,10 @@ export const feedbackManifest = defineComponentManifest([
     name: "WlToast",
     category: "feedback",
     description:
-      "Тост-контейнер на PrimeVue Toast (позиция bottom-center); показ — через useWlToast / ToastService.",
+      "Тост-контейнер (позиция bottom-center); показ — через useWlToast / WlToastService.",
     props: [
-      { name: "group", type: "string", description: "Группа тостов PrimeVue." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "group", type: "string", description: "Группа тостов WhiteUI." },
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
     emits: []
@@ -34,10 +34,10 @@ export const feedbackManifest = defineComponentManifest([
     name: "WlConfirmDialog",
     category: "feedback",
     description:
-      "Диалог подтверждения на PrimeVue ConfirmDialog (кнопки accept/reject — wl-btn); показ — через useWlConfirm. Требует app.use(WlConfirmationService) и один <WlConfirmDialog /> в корне приложения.",
+      "Диалог подтверждения (кнопки accept/reject — wl-btn); показ — через useWlConfirm. Требует app.use(WlConfirmationService) и один <WlConfirmDialog /> в корне приложения.",
     props: [
-      { name: "group", type: "string", description: "Группа диалога PrimeVue (обычно не нужна)." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "group", type: "string", description: "Группа диалога WhiteUI (обычно не нужна)." },
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
     emits: []

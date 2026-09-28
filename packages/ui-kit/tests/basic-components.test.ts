@@ -1,7 +1,7 @@
 import { afterAll, describe, expect, it } from "vitest";
 import { nextTick } from "vue";
 import { flushPromises, mount, type GlobalMountOptions } from "@vue/test-utils";
-import PrimeVue from "primevue/config";
+import { WlConfig } from "../src";
 import {
   WlAvatar,
   WlBadge,
@@ -20,7 +20,7 @@ import {
 } from "../src";
 
 const global: GlobalMountOptions = {
-  plugins: [[PrimeVue, { unstyled: true, pt: createWlPt() }]]
+  plugins: [[WlConfig, { pt: createWlPt() }]]
 };
 
 afterAll(async () => {

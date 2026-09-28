@@ -1,0 +1,2569 @@
+[
+  {
+    "name": "WlButton",
+    "category": "actions",
+    "props": [
+      {
+        "name": "variant",
+        "type": "enum",
+        "default": "secondary",
+        "values": [
+          "primary",
+          "secondary",
+          "ghost",
+          "soft",
+          "danger",
+          "danger-quiet",
+          "soft-danger",
+          "link"
+        ]
+      },
+      {
+        "name": "size",
+        "type": "enum",
+        "default": "md",
+        "values": [
+          "xs",
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "name": "density",
+        "type": "enum",
+        "default": "default",
+        "values": [
+          "default",
+          "compact"
+        ]
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "block",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "type",
+        "type": "enum",
+        "default": "button",
+        "values": [
+          "button",
+          "submit",
+          "reset"
+        ]
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      },
+      {
+        "name": "icon"
+      }
+    ],
+    "emits": [
+      {
+        "name": "click",
+        "payload": "MouseEvent"
+      }
+    ],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlIconButton",
+    "category": "actions",
+    "props": [
+      {
+        "name": "variant",
+        "type": "enum",
+        "default": "ghost",
+        "values": [
+          "ghost",
+          "secondary",
+          "soft"
+        ]
+      },
+      {
+        "name": "size",
+        "type": "enum",
+        "default": "md",
+        "values": [
+          "md",
+          "sm"
+        ]
+      },
+      {
+        "name": "icon",
+        "type": "icon",
+        "values": [
+          "check",
+          "x",
+          "plus",
+          "minus",
+          "search",
+          "filter",
+          "chevron-down",
+          "chevron-left",
+          "chevron-right",
+          "chevron-up",
+          "info",
+          "warn",
+          "edit",
+          "trash",
+          "bell",
+          "user",
+          "eye",
+          "eye-off",
+          "calendar",
+          "home",
+          "task",
+          "note",
+          "clock",
+          "activity",
+          "sparkle",
+          "help",
+          "settings",
+          "panel",
+          "upload",
+          "file",
+          "image",
+          "music"
+        ]
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "count",
+        "type": "number"
+      },
+      {
+        "name": "dot",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string"
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      }
+    ],
+    "emits": [
+      {
+        "name": "click",
+        "payload": "MouseEvent"
+      }
+    ],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlButtonGroup",
+    "category": "actions",
+    "props": [
+      {
+        "name": "ariaLabel",
+        "type": "string"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      }
+    ],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlSegmented",
+    "category": "actions",
+    "props": [
+      {
+        "name": "options",
+        "type": "array",
+        "default": []
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "model": {
+      "name": "modelValue",
+      "type": "string | null"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlMenu",
+    "category": "actions",
+    "props": [
+      {
+        "name": "items",
+        "type": "array",
+        "default": []
+      },
+      {
+        "name": "popup",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string"
+      },
+      {
+        "name": "ariaLabelledby",
+        "type": "string"
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [],
+    "emits": [
+      {
+        "name": "open"
+      },
+      {
+        "name": "close"
+      }
+    ],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlNavItem",
+    "category": "actions",
+    "props": [
+      {
+        "name": "label",
+        "type": "string"
+      },
+      {
+        "name": "icon",
+        "type": "icon",
+        "values": [
+          "check",
+          "x",
+          "plus",
+          "minus",
+          "search",
+          "filter",
+          "chevron-down",
+          "chevron-left",
+          "chevron-right",
+          "chevron-up",
+          "info",
+          "warn",
+          "edit",
+          "trash",
+          "bell",
+          "user",
+          "eye",
+          "eye-off",
+          "calendar",
+          "home",
+          "task",
+          "note",
+          "clock",
+          "activity",
+          "sparkle",
+          "help",
+          "settings",
+          "panel",
+          "upload",
+          "file",
+          "image",
+          "music"
+        ]
+      },
+      {
+        "name": "badge",
+        "type": "union"
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "href",
+        "type": "string"
+      },
+      {
+        "name": "collapsed",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      }
+    ],
+    "emits": [
+      {
+        "name": "click",
+        "payload": "MouseEvent"
+      }
+    ],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlInput",
+    "category": "inputs",
+    "props": [
+      {
+        "name": "size",
+        "type": "enum",
+        "default": "md",
+        "values": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "name": "density",
+        "type": "enum",
+        "default": "default",
+        "values": [
+          "default",
+          "compact"
+        ]
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "placeholder",
+        "type": "string"
+      },
+      {
+        "name": "type",
+        "type": "string",
+        "default": "text"
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [
+      {
+        "name": "prefix"
+      },
+      {
+        "name": "suffix"
+      }
+    ],
+    "emits": [],
+    "model": {
+      "name": "modelValue",
+      "type": "string"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlPasswordInput",
+    "category": "inputs",
+    "props": [
+      {
+        "name": "size",
+        "type": "enum",
+        "default": "md",
+        "values": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "name": "density",
+        "type": "enum",
+        "default": "default",
+        "values": [
+          "default",
+          "compact"
+        ]
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "default": "Пароль"
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string"
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "model": {
+      "name": "modelValue",
+      "type": "string"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlNumberInput",
+    "category": "inputs",
+    "props": [
+      {
+        "name": "min",
+        "type": "number",
+        "default": 0
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "default": 99
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "default": 1
+      },
+      {
+        "name": "size",
+        "type": "enum",
+        "default": "md",
+        "values": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "name": "density",
+        "type": "enum",
+        "default": "default",
+        "values": [
+          "default",
+          "compact"
+        ]
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string"
+      },
+      {
+        "name": "decrementLabel",
+        "type": "string",
+        "default": "Уменьшить"
+      },
+      {
+        "name": "incrementLabel",
+        "type": "string",
+        "default": "Увеличить"
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "model": {
+      "name": "modelValue",
+      "type": "number"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlTextarea",
+    "category": "inputs",
+    "props": [
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "rows",
+        "type": "number",
+        "default": 3
+      },
+      {
+        "name": "autoResize",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "placeholder",
+        "type": "string"
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "model": {
+      "name": "modelValue",
+      "type": "string"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlSelect",
+    "category": "inputs",
+    "props": [
+      {
+        "name": "options",
+        "type": "array",
+        "default": []
+      },
+      {
+        "name": "optionLabel",
+        "type": "union"
+      },
+      {
+        "name": "optionValue",
+        "type": "union"
+      },
+      {
+        "name": "placeholder",
+        "type": "string"
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "size",
+        "type": "enum",
+        "default": "md",
+        "values": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "name": "density",
+        "type": "enum",
+        "default": "default",
+        "values": [
+          "default",
+          "compact"
+        ]
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "model": {
+      "name": "modelValue",
+      "type": "unknown"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlMultiSelect",
+    "category": "inputs",
+    "props": [
+      {
+        "name": "options",
+        "type": "array",
+        "default": []
+      },
+      {
+        "name": "optionLabel",
+        "type": "union"
+      },
+      {
+        "name": "optionValue",
+        "type": "union"
+      },
+      {
+        "name": "placeholder",
+        "type": "string"
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "size",
+        "type": "enum",
+        "default": "md",
+        "values": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "name": "density",
+        "type": "enum",
+        "default": "default",
+        "values": [
+          "default",
+          "compact"
+        ]
+      },
+      {
+        "name": "filter",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "display",
+        "type": "enum",
+        "default": "comma",
+        "values": [
+          "comma",
+          "chip"
+        ]
+      },
+      {
+        "name": "maxSelectedLabels",
+        "type": "number"
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "model": {
+      "name": "modelValue",
+      "type": "unknown[]"
+    },
+    "introducedIn": "0.2.0"
+  },
+  {
+    "name": "WlAutocomplete",
+    "category": "inputs",
+    "props": [
+      {
+        "name": "suggestions",
+        "type": "array",
+        "default": []
+      },
+      {
+        "name": "optionLabel",
+        "type": "union"
+      },
+      {
+        "name": "placeholder",
+        "type": "string"
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "size",
+        "type": "enum",
+        "default": "md",
+        "values": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "name": "density",
+        "type": "enum",
+        "default": "default",
+        "values": [
+          "default",
+          "compact"
+        ]
+      },
+      {
+        "name": "multiple",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "dropdown",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "dropdownLabel",
+        "type": "string",
+        "default": "Показать варианты"
+      },
+      {
+        "name": "minLength",
+        "type": "number",
+        "default": 1
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [],
+    "emits": [
+      {
+        "name": "complete",
+        "payload": "WlAutocompleteCompleteEvent"
+      }
+    ],
+    "model": {
+      "name": "modelValue",
+      "type": "unknown"
+    },
+    "introducedIn": "0.2.0"
+  },
+  {
+    "name": "WlCheckbox",
+    "category": "inputs",
+    "props": [
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "indeterminate",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      }
+    ],
+    "emits": [],
+    "model": {
+      "name": "modelValue",
+      "type": "boolean"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlRadio",
+    "category": "inputs",
+    "props": [
+      {
+        "name": "value",
+        "type": "union",
+        "required": true
+      },
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      }
+    ],
+    "emits": [],
+    "model": {
+      "name": "modelValue",
+      "type": "unknown"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlSwitch",
+    "category": "inputs",
+    "props": [
+      {
+        "name": "size",
+        "type": "enum",
+        "default": "md",
+        "values": [
+          "sm",
+          "md"
+        ]
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      }
+    ],
+    "emits": [],
+    "model": {
+      "name": "modelValue",
+      "type": "boolean"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlSlider",
+    "category": "inputs",
+    "props": [
+      {
+        "name": "min",
+        "type": "number",
+        "default": 0
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "default": 100
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "default": 1
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string"
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "model": {
+      "name": "modelValue",
+      "type": "number"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlDatePicker",
+    "category": "inputs",
+    "props": [
+      {
+        "name": "placeholder",
+        "type": "string",
+        "default": "дд.мм.гггг"
+      },
+      {
+        "name": "size",
+        "type": "enum",
+        "default": "md",
+        "values": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "showIcon",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "minDate",
+        "type": "string"
+      },
+      {
+        "name": "maxDate",
+        "type": "string"
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "model": {
+      "name": "modelValue",
+      "type": "string | null"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlCalendar",
+    "category": "inputs",
+    "props": [
+      {
+        "name": "events",
+        "type": "array",
+        "default": []
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "model": {
+      "name": "modelValue",
+      "type": "string"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlColorPicker",
+    "category": "inputs",
+    "props": [
+      {
+        "name": "modelValue",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "name": "swatches",
+        "type": "array",
+        "default": [
+          "#2563eb",
+          "#2e9e68",
+          "#bf8615",
+          "#d2494f",
+          "#f7f7f8",
+          "#e7e7ea",
+          "#dcdce1",
+          "#b9bdc6",
+          "#9aa0aa",
+          "#5d626c",
+          "#43474f",
+          "#22252b"
+        ]
+      },
+      {
+        "name": "size",
+        "type": "enum",
+        "default": "md",
+        "values": [
+          "sm",
+          "md"
+        ]
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "paletteLabel",
+        "type": "string",
+        "default": "Палитра"
+      },
+      {
+        "name": "inputLabel",
+        "type": "string",
+        "default": "HEX-код цвета"
+      }
+    ],
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:modelValue",
+        "payload": "string"
+      }
+    ],
+    "model": {
+      "name": "modelValue",
+      "type": "string"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlFileUpload",
+    "category": "inputs",
+    "props": [
+      {
+        "name": "accept",
+        "type": "string"
+      },
+      {
+        "name": "multiple",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "maxFiles",
+        "type": "number"
+      },
+      {
+        "name": "maxSize",
+        "type": "number"
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      }
+    ],
+    "slots": [],
+    "emits": [
+      {
+        "name": "reject",
+        "payload": "WlFileReject"
+      }
+    ],
+    "model": {
+      "name": "modelValue",
+      "type": "File[]"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlTable",
+    "category": "data",
+    "props": [
+      {
+        "name": "value",
+        "type": "array",
+        "default": []
+      },
+      {
+        "name": "columns",
+        "type": "array"
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "emptyMessage",
+        "type": "string",
+        "default": "Нет данных"
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      },
+      {
+        "name": "empty"
+      },
+      {
+        "name": "cell-<key>"
+      }
+    ],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlPagination",
+    "category": "data",
+    "props": [
+      {
+        "name": "page",
+        "type": "number",
+        "default": 1
+      },
+      {
+        "name": "pageCount",
+        "type": "number",
+        "required": true
+      },
+      {
+        "name": "siblings",
+        "type": "number",
+        "default": 1
+      },
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [],
+    "emits": [
+      {
+        "name": "update:page",
+        "payload": "number"
+      }
+    ],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlBadge",
+    "category": "data",
+    "props": [
+      {
+        "name": "value",
+        "type": "union"
+      },
+      {
+        "name": "variant",
+        "type": "enum",
+        "default": "accent",
+        "values": [
+          "gray",
+          "accent",
+          "success",
+          "warn",
+          "danger"
+        ]
+      },
+      {
+        "name": "dot",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlTag",
+    "category": "data",
+    "props": [
+      {
+        "name": "variant",
+        "type": "enum",
+        "default": "gray",
+        "values": [
+          "gray",
+          "blue",
+          "green",
+          "amber",
+          "red"
+        ]
+      },
+      {
+        "name": "removable",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "removeLabel",
+        "type": "string",
+        "default": "Удалить"
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      }
+    ],
+    "emits": [
+      {
+        "name": "remove",
+        "payload": "MouseEvent"
+      }
+    ],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlChip",
+    "category": "data",
+    "props": [
+      {
+        "name": "active",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "count",
+        "type": "number"
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      }
+    ],
+    "emits": [
+      {
+        "name": "click",
+        "payload": "MouseEvent"
+      },
+      {
+        "name": "update:active",
+        "payload": "boolean"
+      }
+    ],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlPill",
+    "category": "data",
+    "props": [
+      {
+        "name": "variant",
+        "type": "enum",
+        "default": "neutral",
+        "values": [
+          "neutral",
+          "info",
+          "ok",
+          "warn",
+          "err"
+        ]
+      },
+      {
+        "name": "label",
+        "type": "string"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      }
+    ],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlAvatar",
+    "category": "data",
+    "props": [
+      {
+        "name": "label",
+        "type": "string"
+      },
+      {
+        "name": "image",
+        "type": "string"
+      },
+      {
+        "name": "size",
+        "type": "enum",
+        "default": 32,
+        "values": [
+          24,
+          28,
+          32,
+          36,
+          48
+        ]
+      },
+      {
+        "name": "presence",
+        "type": "enum",
+        "values": [
+          "online",
+          "busy",
+          "offline"
+        ]
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      }
+    ],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlStatCard",
+    "category": "data",
+    "props": [
+      {
+        "name": "icon",
+        "type": "icon",
+        "values": [
+          "check",
+          "x",
+          "plus",
+          "minus",
+          "search",
+          "filter",
+          "chevron-down",
+          "chevron-left",
+          "chevron-right",
+          "chevron-up",
+          "info",
+          "warn",
+          "edit",
+          "trash",
+          "bell",
+          "user",
+          "eye",
+          "eye-off",
+          "calendar",
+          "home",
+          "task",
+          "note",
+          "clock",
+          "activity",
+          "sparkle",
+          "help",
+          "settings",
+          "panel",
+          "upload",
+          "file",
+          "image",
+          "music"
+        ]
+      },
+      {
+        "name": "label",
+        "type": "string"
+      },
+      {
+        "name": "value",
+        "type": "string"
+      },
+      {
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "name": "progress",
+        "type": "number"
+      },
+      {
+        "name": "tone",
+        "type": "enum",
+        "default": "accent",
+        "values": [
+          "accent",
+          "success"
+        ]
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      },
+      {
+        "name": "footer"
+      }
+    ],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlProgress",
+    "category": "data",
+    "props": [
+      {
+        "name": "value",
+        "type": "number",
+        "default": 0
+      },
+      {
+        "name": "variant",
+        "type": "enum",
+        "default": "default",
+        "values": [
+          "default",
+          "ok"
+        ]
+      },
+      {
+        "name": "thin",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "showValue",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlSkeleton",
+    "category": "data",
+    "props": [
+      {
+        "name": "width",
+        "type": "string",
+        "default": "100%"
+      },
+      {
+        "name": "height",
+        "type": "string",
+        "default": "12px"
+      },
+      {
+        "name": "borderRadius",
+        "type": "string"
+      },
+      {
+        "name": "shape",
+        "type": "enum",
+        "default": "rectangle",
+        "values": [
+          "rectangle",
+          "circle"
+        ]
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlEmpty",
+    "category": "data",
+    "props": [
+      {
+        "name": "icon",
+        "type": "icon",
+        "values": [
+          "check",
+          "x",
+          "plus",
+          "minus",
+          "search",
+          "filter",
+          "chevron-down",
+          "chevron-left",
+          "chevron-right",
+          "chevron-up",
+          "info",
+          "warn",
+          "edit",
+          "trash",
+          "bell",
+          "user",
+          "eye",
+          "eye-off",
+          "calendar",
+          "home",
+          "task",
+          "note",
+          "clock",
+          "activity",
+          "sparkle",
+          "help",
+          "settings",
+          "panel",
+          "upload",
+          "file",
+          "image",
+          "music"
+        ]
+      },
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "description",
+        "type": "string"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      },
+      {
+        "name": "icon"
+      },
+      {
+        "name": "action"
+      }
+    ],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlCard",
+    "category": "containers",
+    "props": [
+      {
+        "name": "hoverable",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      },
+      {
+        "name": "header"
+      },
+      {
+        "name": "title"
+      },
+      {
+        "name": "subtitle"
+      },
+      {
+        "name": "footer"
+      }
+    ],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlAccordion",
+    "category": "containers",
+    "props": [
+      {
+        "name": "items",
+        "type": "array",
+        "default": []
+      },
+      {
+        "name": "single",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "openKeys",
+        "type": "array"
+      }
+    ],
+    "slots": [
+      {
+        "name": "item"
+      }
+    ],
+    "emits": [
+      {
+        "name": "update:openKeys",
+        "payload": "string[]"
+      }
+    ],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlTabs",
+    "category": "containers",
+    "props": [
+      {
+        "name": "items",
+        "type": "array",
+        "default": []
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [
+      {
+        "name": "panel"
+      }
+    ],
+    "emits": [],
+    "model": {
+      "name": "modelValue",
+      "type": "string"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlDialog",
+    "category": "containers",
+    "props": [
+      {
+        "name": "header",
+        "type": "string"
+      },
+      {
+        "name": "modal",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "closable",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "dismissable",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "closeOnEscape",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "blockScroll",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string"
+      },
+      {
+        "name": "ariaLabelledby",
+        "type": "string"
+      },
+      {
+        "name": "width",
+        "type": "string"
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      },
+      {
+        "name": "header"
+      },
+      {
+        "name": "footer"
+      }
+    ],
+    "emits": [
+      {
+        "name": "open"
+      },
+      {
+        "name": "close"
+      }
+    ],
+    "model": {
+      "name": "visible",
+      "type": "boolean"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlDrawer",
+    "category": "containers",
+    "props": [
+      {
+        "name": "header",
+        "type": "string"
+      },
+      {
+        "name": "position",
+        "type": "enum",
+        "default": "right",
+        "values": [
+          "left",
+          "right",
+          "top",
+          "bottom",
+          "full"
+        ]
+      },
+      {
+        "name": "modal",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "dismissable",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "closeOnEscape",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "blockScroll",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string"
+      },
+      {
+        "name": "ariaLabelledby",
+        "type": "string"
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      },
+      {
+        "name": "header"
+      },
+      {
+        "name": "footer"
+      }
+    ],
+    "emits": [
+      {
+        "name": "open"
+      },
+      {
+        "name": "close"
+      }
+    ],
+    "model": {
+      "name": "visible",
+      "type": "boolean"
+    },
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlPopover",
+    "category": "containers",
+    "props": [
+      {
+        "name": "dismissable",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "closeOnEscape",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string"
+      },
+      {
+        "name": "ariaLabelledby",
+        "type": "string"
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      }
+    ],
+    "emits": [
+      {
+        "name": "open"
+      },
+      {
+        "name": "close"
+      }
+    ],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlDivider",
+    "category": "containers",
+    "props": [
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      }
+    ],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlPageHeader",
+    "category": "composites",
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "name": "eyebrow",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "name": "headingLevel",
+        "type": "union",
+        "default": 1,
+        "values": [
+          "1",
+          "2"
+        ]
+      },
+      {
+        "name": "size",
+        "type": "enum",
+        "default": "lg",
+        "values": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "name": "density",
+        "type": "enum",
+        "default": "default",
+        "values": [
+          "default",
+          "compact"
+        ]
+      }
+    ],
+    "slots": [
+      {
+        "name": "breadcrumbs"
+      },
+      {
+        "name": "eyebrow"
+      },
+      {
+        "name": "title"
+      },
+      {
+        "name": "description"
+      },
+      {
+        "name": "meta"
+      },
+      {
+        "name": "actions"
+      },
+      {
+        "name": "navigation"
+      }
+    ],
+    "emits": [],
+    "introducedIn": "0.3.0"
+  },
+  {
+    "name": "WlFilterBar",
+    "category": "composites",
+    "props": [
+      {
+        "name": "activeCount",
+        "type": "number",
+        "default": 0
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string",
+        "default": "Фильтры"
+      },
+      {
+        "name": "toggleLabel",
+        "type": "string",
+        "default": "Фильтры"
+      },
+      {
+        "name": "panelTitle",
+        "type": "string",
+        "default": "Фильтры"
+      },
+      {
+        "name": "clearLabel",
+        "type": "string",
+        "default": "Сбросить"
+      },
+      {
+        "name": "applyLabel",
+        "type": "string",
+        "default": "Применить"
+      },
+      {
+        "name": "closeLabel",
+        "type": "string",
+        "default": "Закрыть фильтры"
+      },
+      {
+        "name": "showClear",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "showApply",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "density",
+        "type": "enum",
+        "default": "default",
+        "values": [
+          "default",
+          "compact"
+        ]
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      },
+      {
+        "name": "leading"
+      },
+      {
+        "name": "actions"
+      },
+      {
+        "name": "summary"
+      },
+      {
+        "name": "footer"
+      }
+    ],
+    "emits": [
+      {
+        "name": "clear"
+      },
+      {
+        "name": "apply"
+      },
+      {
+        "name": "open"
+      },
+      {
+        "name": "close"
+      }
+    ],
+    "model": {
+      "name": "open",
+      "type": "boolean"
+    },
+    "introducedIn": "0.3.0"
+  },
+  {
+    "name": "WlSidebar",
+    "category": "composites",
+    "props": [
+      {
+        "name": "groups",
+        "type": "array",
+        "default": []
+      },
+      {
+        "name": "footerItems",
+        "type": "array",
+        "default": []
+      },
+      {
+        "name": "brand",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "name": "brandMark",
+        "type": "string",
+        "default": ""
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string",
+        "default": "Основная навигация"
+      },
+      {
+        "name": "collapsible",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "expandOnHover",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "showPin",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "pinLabel",
+        "type": "string",
+        "default": "Закрепить панель"
+      },
+      {
+        "name": "unpinLabel",
+        "type": "string",
+        "default": "Открепить панель"
+      },
+      {
+        "name": "density",
+        "type": "enum",
+        "default": "default",
+        "values": [
+          "default",
+          "compact"
+        ]
+      },
+      {
+        "name": "pinned",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "mobileOpen",
+        "type": "boolean",
+        "default": false
+      }
+    ],
+    "slots": [
+      {
+        "name": "brand-mark"
+      },
+      {
+        "name": "brand"
+      },
+      {
+        "name": "item"
+      },
+      {
+        "name": "footer-item"
+      },
+      {
+        "name": "footer"
+      }
+    ],
+    "emits": [
+      {
+        "name": "select",
+        "payload": "WlSidebarItem, WlSidebarGroup | undefined"
+      }
+    ],
+    "model": {
+      "name": "modelValue",
+      "type": "string"
+    },
+    "introducedIn": "0.2.0"
+  },
+  {
+    "name": "WlCommandPalette",
+    "category": "composites",
+    "props": [
+      {
+        "name": "groups",
+        "type": "array",
+        "default": []
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "default": "Поиск или переход…"
+      },
+      {
+        "name": "emptyText",
+        "type": "string",
+        "default": "Ничего не найдено"
+      },
+      {
+        "name": "loadingText",
+        "type": "string",
+        "default": "Поиск…"
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string",
+        "default": "Командная палитра"
+      },
+      {
+        "name": "filter",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "shortcut",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "closeOnSelect",
+        "type": "boolean",
+        "default": true
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "size",
+        "type": "enum",
+        "default": "md",
+        "values": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "name": "density",
+        "type": "enum",
+        "default": "default",
+        "values": [
+          "default",
+          "compact"
+        ]
+      }
+    ],
+    "slots": [
+      {
+        "name": "group"
+      },
+      {
+        "name": "item"
+      },
+      {
+        "name": "item-icon"
+      },
+      {
+        "name": "empty"
+      },
+      {
+        "name": "footer"
+      }
+    ],
+    "emits": [
+      {
+        "name": "search",
+        "payload": "string"
+      },
+      {
+        "name": "select",
+        "payload": "WlCommandPaletteItem, WlCommandPaletteGroup"
+      },
+      {
+        "name": "open"
+      },
+      {
+        "name": "close"
+      }
+    ],
+    "model": {
+      "name": "visible",
+      "type": "boolean"
+    },
+    "introducedIn": "0.2.0"
+  },
+  {
+    "name": "WlBreadcrumbs",
+    "category": "navigation",
+    "props": [
+      {
+        "name": "items",
+        "type": "array",
+        "default": []
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlSteps",
+    "category": "navigation",
+    "props": [
+      {
+        "name": "items",
+        "type": "array",
+        "default": []
+      },
+      {
+        "name": "current",
+        "type": "number",
+        "default": 0
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlAlert",
+    "category": "feedback",
+    "props": [
+      {
+        "name": "variant",
+        "type": "enum",
+        "default": "info",
+        "values": [
+          "info",
+          "ok",
+          "warn",
+          "err"
+        ]
+      },
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "name": "closable",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "closeLabel",
+        "type": "string",
+        "default": "Закрыть"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      },
+      {
+        "name": "action"
+      }
+    ],
+    "emits": [
+      {
+        "name": "close",
+        "payload": "MouseEvent"
+      }
+    ],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlToast",
+    "category": "feedback",
+    "props": [
+      {
+        "name": "group",
+        "type": "string"
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlConfirmDialog",
+    "category": "feedback",
+    "props": [
+      {
+        "name": "group",
+        "type": "string"
+      },
+      {
+        "name": "pt",
+        "type": "object"
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "introducedIn": "0.2.0"
+  },
+  {
+    "name": "WlSpinner",
+    "category": "feedback",
+    "props": [
+      {
+        "name": "size",
+        "type": "enum",
+        "default": "md",
+        "values": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "name": "light",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": "Загрузка"
+      }
+    ],
+    "slots": [],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlField",
+    "category": "misc",
+    "props": [
+      {
+        "name": "label",
+        "type": "string"
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "default": false
+      },
+      {
+        "name": "hint",
+        "type": "string"
+      },
+      {
+        "name": "error",
+        "type": "string"
+      },
+      {
+        "name": "id",
+        "type": "string"
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      }
+    ],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  },
+  {
+    "name": "WlIcon",
+    "category": "misc",
+    "props": [
+      {
+        "name": "name",
+        "type": "icon",
+        "values": [
+          "check",
+          "x",
+          "plus",
+          "minus",
+          "search",
+          "filter",
+          "chevron-down",
+          "chevron-left",
+          "chevron-right",
+          "chevron-up",
+          "info",
+          "warn",
+          "edit",
+          "trash",
+          "bell",
+          "user",
+          "eye",
+          "eye-off",
+          "calendar",
+          "home",
+          "task",
+          "note",
+          "clock",
+          "activity",
+          "sparkle",
+          "help",
+          "settings",
+          "panel",
+          "upload",
+          "file",
+          "image",
+          "music"
+        ]
+      },
+      {
+        "name": "size",
+        "type": "union",
+        "default": 18
+      }
+    ],
+    "slots": [
+      {
+        "name": "default"
+      }
+    ],
+    "emits": [],
+    "introducedIn": "0.1.0"
+  }
+]

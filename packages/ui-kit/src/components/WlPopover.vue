@@ -1,80 +1,32 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import Popover from "primevue/popover";
-import { deepMerge } from "../utils/merge";
+import { computed } from "vue";
+import { useWlPt } from "../config";
+import { useAnchoredOverlay } from "../utils/anchoredOverlay";
 
-const props = withDefaults(
-  defineProps<{
-    dismissable?: boolean;
-    closeOnEscape?: boolean;
-    ariaLabel?: string;
-    ariaLabelledby?: string;
-    pt?: Record<string, unknown>;
-  }>(),
-  {
-    dismissable: true,
-    closeOnEscape: true
-  }
-);
-
-const emit = defineEmits<{
-  open: [];
-  close: [];
-}>();
-
-const popRef = ref<InstanceType<typeof Popover> | null>(null);
-let openState = false;
-const mergedPt = computed(() =>
-  deepMerge(
-    {
-      root: {
-        "aria-label": props.ariaLabel,
-        "aria-labelledby": props.ariaLabelledby
-      }
-    },
-    props.pt
-  )
-);
-
-function markOpen(): void {
-  if (openState) return;
-  openState = true;
-  emit("open");
-}
-
-function markClose(): void {
-  if (!openState) return;
-  openState = false;
-  emit("close");
-}
-
-function toggle(event: Event): void {
-  (popRef.value as unknown as { toggle: (e: Event) => void } | null)?.toggle(event);
-  openState ? markClose() : markOpen();
-}
-function show(event: Event): void {
-  (popRef.value as unknown as { show: (e: Event) => void } | null)?.show(event);
-  markOpen();
-}
-function hide(): void {
-  (popRef.value as unknown as { hide: () => void } | null)?.hide();
-  markClose();
-}
-
+const props = withDefaults(defineProps<{
+  dismissable?: boolean;
+  closeOnEscape?: boolean;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
+  pt?: Record<string, unknown>;
+}>(), { dismissable: true, closeOnEscape: true });
+const emit = defineEmits<{ open: []; close: [] }>();
+const section = useWlPt("popover", computed(() => props.pt));
+const { visible, panel, style, toggle, show, hide } = useAnchoredOverlay({
+  dismissable: () => props.dismissable,
+  closeOnEscape: () => props.closeOnEscape,
+  onOpen: () => emit("open"),
+  onClose: () => emit("close")
+});
 defineExpose({ toggle, show, hide });
 </script>
 
 <template>
-  <Popover
-    ref="popRef"
-    :dismissable="dismissable"
-    :closeOnEscape="closeOnEscape"
-    :pt="mergedPt"
-    class="wl-popover"
-    data-wl="popover"
-    @show="markOpen"
-    @hide="markClose"
-  >
-    <slot />
-  </Popover>
+  <Teleport to="body">
+    <div v-if="visible" ref="panel" v-bind="section('root')"
+      class="wl-popover" :style="style" role="dialog"
+      :aria-label="ariaLabel" :aria-labelledby="ariaLabelledby" data-wl="popover">
+      <div v-bind="section('content')" class="wl-popover__content"><slot /></div>
+    </div>
+  </Teleport>
 </template>

@@ -1,122 +1,67 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import Menu from "primevue/menu";
+import { useWlPt } from "../config";
+import type { WlMenuItem } from "../types";
+import { useAnchoredOverlay } from "../utils/anchoredOverlay";
 import WlIcon from "./WlIcon.vue";
-import type { WlIconName, WlMenuItem } from "../types";
 
-const props = withDefaults(
-  defineProps<{
-    items?: WlMenuItem[];
-    popup?: boolean;
-    ariaLabel?: string;
-    ariaLabelledby?: string;
-    pt?: Record<string, unknown>;
-  }>(),
-  {
-    items: () => [],
-    popup: false
-  }
-);
-
-const emit = defineEmits<{
-  open: [];
-  close: [];
-}>();
-
-interface MenuModelItem {
-  label?: string;
-  icon?: string;
-  disabled?: boolean;
-  separator?: boolean;
-  shortcut?: string;
-  danger?: boolean;
-  items?: MenuModelItem[];
-  class?: string;
-  command?: () => void;
-}
-
-/** Flat { header / separator / item } list → PrimeVue's nested group model. */
-const model = computed<MenuModelItem[]>(() => {
-  const out: MenuModelItem[] = [];
-  let group: MenuModelItem | null = null;
-  for (const item of props.items) {
-    if (item.header !== undefined) {
-      group = { label: item.header, items: [] };
-      out.push(group);
-      continue;
-    }
-    const target = group && group.items ? group.items : out;
-    if (item.separator) {
-      target.push({ separator: true });
-      continue;
-    }
-    target.push({
-      label: item.label,
-      icon: item.icon,
-      disabled: item.disabled,
-      shortcut: item.shortcut,
-      danger: item.danger,
-      class: item.danger ? "is-danger" : undefined,
-      command: item.command ? () => item.command?.(item) : undefined
-    });
-  }
-  return out;
+const props = withDefaults(defineProps<{
+  items?: WlMenuItem[];
+  popup?: boolean;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
+  pt?: Record<string, unknown>;
+}>(), { items: () => [], popup: false });
+const emit = defineEmits<{ open: []; close: [] }>();
+const section = useWlPt("menu", computed(() => props.pt));
+const { visible, panel, style, toggle, show, hide } = useAnchoredOverlay({
+  onOpen: () => emit("open"),
+  onClose: () => emit("close")
 });
-
-const menuRef = ref<InstanceType<typeof Menu> | null>(null);
-let openState = false;
-
-function markOpen(): void {
-  if (openState) return;
-  openState = true;
-  emit("open");
+const links = ref<HTMLElement[]>([]);
+function activate(item: WlMenuItem, event: MouseEvent): void {
+  event.preventDefault();
+  if (item.disabled) return;
+  item.command?.(item);
+  if (props.popup) hide();
 }
-
-function markClose(): void {
-  if (!openState) return;
-  openState = false;
-  emit("close");
+function onKeydown(event: KeyboardEvent): void {
+  if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+  const enabled = links.value.filter((node) => node.getAttribute("aria-disabled") !== "true");
+  if (!enabled.length) return;
+  event.preventDefault();
+  const current = enabled.indexOf(document.activeElement as HTMLElement);
+  const next = event.key === "Home" ? 0 : event.key === "End" ? enabled.length - 1
+    : event.key === "ArrowDown" ? (current + 1) % enabled.length
+    : (current + enabled.length - 1) % enabled.length;
+  enabled[next]?.focus();
 }
-
-function toggle(event: Event): void {
-  (menuRef.value as unknown as { toggle: (e: Event) => void } | null)?.toggle(event);
-  openState ? markClose() : markOpen();
-}
-function show(event: Event): void {
-  (menuRef.value as unknown as { show: (e: Event) => void } | null)?.show(event);
-  markOpen();
-}
-function hide(): void {
-  (menuRef.value as unknown as { hide: () => void } | null)?.hide();
-  markClose();
-}
-
 defineExpose({ toggle, show, hide });
 </script>
 
 <template>
-  <Menu
-    ref="menuRef"
-    :model="model"
-    :popup="popup"
-    :ariaLabel="ariaLabel"
-    :ariaLabelledby="ariaLabelledby"
-    :pt="pt"
-    class="wl-menu"
-    data-wl="menu"
-    @show="markOpen"
-    @hide="markClose"
-  >
-    <template #item="{ item, props: itemProps }">
-      <a
-        v-bind="itemProps.action"
-        class="wl-menu__link"
-        :class="{ 'is-danger': item.danger, 'is-disabled': item.disabled }"
-      >
-        <WlIcon v-if="item.icon" :name="(item.icon as WlIconName)" :size="16" class="wl-menu__icon" />
-        <span class="wl-menu__label">{{ item.label }}</span>
-        <span v-if="item.shortcut" class="wl-menu__meta">{{ item.shortcut }}</span>
-      </a>
-    </template>
-  </Menu>
+  <Teleport to="body" :disabled="!popup">
+    <div v-if="!popup || visible" ref="panel" v-bind="section('root')"
+      class="wl-menu" :style="popup ? style : undefined" data-wl="menu">
+      <ul v-bind="section('list')" class="wl-menu__list" role="menu"
+        :aria-label="ariaLabel" :aria-labelledby="ariaLabelledby" @keydown="onKeydown">
+        <li v-for="(item, index) in items" :key="item.key ?? index" v-bind="section('item')"
+          class="wl-menu__item" :role="item.separator ? 'separator' : 'none'">
+          <div v-if="item.header !== undefined" v-bind="section('submenuLabel')" class="wl-menu__head">{{ item.header }}</div>
+          <div v-else-if="item.separator" v-bind="section('separator')" class="wl-menu__sep" />
+          <div v-else v-bind="section('itemContent')" class="wl-menu__item-content">
+            <a :ref="(element) => { if (element) links[index] = element as HTMLElement; }"
+              v-bind="section('itemLink')" class="wl-menu__link"
+              :class="{ 'is-danger': item.danger, 'is-disabled': item.disabled }"
+              role="menuitem" :aria-disabled="item.disabled || undefined" :tabindex="item.disabled ? -1 : 0"
+              @click="activate(item, $event)">
+              <WlIcon v-if="item.icon" :name="item.icon" :size="16" class="wl-menu__icon" />
+              <span class="wl-menu__label">{{ item.label }}</span>
+              <span v-if="item.shortcut" class="wl-menu__meta">{{ item.shortcut }}</span>
+            </a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </Teleport>
 </template>

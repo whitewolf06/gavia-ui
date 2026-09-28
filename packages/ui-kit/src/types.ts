@@ -26,39 +26,8 @@ export type WlSwitchSize = "sm" | "md";
 export type WlSpinnerSize = "sm" | "md" | "lg";
 export type WlDrawerPosition = "left" | "right" | "top" | "bottom" | "full";
 
-export type WlIconName =
-  | "check"
-  | "x"
-  | "plus"
-  | "minus"
-  | "search"
-  | "filter"
-  | "chevron-down"
-  | "chevron-left"
-  | "chevron-right"
-  | "chevron-up"
-  | "info"
-  | "warn"
-  | "edit"
-  | "trash"
-  | "bell"
-  | "user"
-  | "eye"
-  | "eye-off"
-  | "calendar"
-  | "home"
-  | "task"
-  | "note"
-  | "clock"
-  | "activity"
-  | "sparkle"
-  | "help"
-  | "settings"
-  | "panel"
-  | "upload"
-  | "file"
-  | "image"
-  | "music";
+import type { WlIconName } from "./icons.generated";
+export type { WlIconName } from "./icons.generated";
 
 export interface WlTabItem {
   key: string;
@@ -173,7 +142,7 @@ export interface WlCalendarEvent {
   tone?: WlCalendarEventTone;
 }
 
-/** Subset of the PrimeVue locale object used by overlay calendars. */
+/** Calendar locale shape accepted by WhiteUI configuration. */
 export interface WlDatePickerLocale {
   firstDayOfWeek?: number;
   dayNames?: string[];

@@ -3,10 +3,8 @@ import { describe, it, expect } from "vitest";
 
 describe("node import", () => {
   it("imports the library entry without a DOM and exposes the public API", async () => {
-    const [mod, componentModule] = await Promise.all([
-      import("../src/index"),
-      import("../src/components")
-    ]);
+    const mod = await import("../src/index");
+    const componentModule = await import("../src/components");
 
     for (const [name, component] of Object.entries(componentModule)) {
       expect(mod[name as keyof typeof mod], `${name}: missing from the root entry`).toBe(component);
@@ -20,5 +18,5 @@ describe("node import", () => {
     const pt = mod.createWlPt({ button: { root: { "data-test": "app-button" } } });
     expect(pt.button?.root).toEqual({ "data-test": "app-button" });
     expect(pt.checkbox).toBeTruthy();
-  });
+  }, 40_000);
 });

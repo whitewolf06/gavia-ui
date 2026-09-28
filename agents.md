@@ -9,19 +9,18 @@
 - Vue 3 + TypeScript (strict). Никакого React и других фреймворков.
 - Vite в library mode для пакета; обычный Vite для playground.
 - pnpm — единственный package manager. Не использовать npm/yarn/bun для install.
-- PrimeVue 4 только в `unstyled`-режиме. Это НЕ база по умолчанию, а точечный
-  инструмент. Правило выбора реализации: если прототип полностью задаёт DOM и
-  поведение компонента — пишем собственный компонент напрямую из прототипа
-  (быстрее, легче, без pt-прокладок); PrimeVue-обёртку делаем только там, где
-  поведение сложное и в прототипе не описано: выпадающие списки, диалоги,
-  оверлеи с позиционированием, таблицы (Select, Dialog, Menu, DataTable и т.п.).
+- Компоненты и их поведение реализуются в `packages/ui-kit`; новые UI-библиотеки
+  и зависимости на PrimeVue/PrimeIcons не добавлять. Повторяемую логику выбора,
+  фокуса, позиционирования и сервисов выносить в небольшие composables/модули.
 - CSS Custom Properties + обычный CSS. Tailwind и CSS-in-JS запрещены.
-- Vitest + Vue Test Utils для тестов.
+- Vitest + Vue Test Utils для контрактных тестов; Playwright для взаимодействия
+  в браузере на desktop/mobile и проверки трёх тем.
 
 ## 2. Зависимости
 
-- `vue` и `primevue` — всегда `peerDependencies` библиотеки, никогда не runtime deps.
-- `primeicons` — только optional peer.
+- `vue` — единственный обязательный `peerDependency` библиотеки, не runtime dep.
+- PrimeVue и PrimeIcons отсутствуют в peer/dev/runtime зависимостях, исходниках
+  и собранном архиве.
 - В runtime-зависимости библиотеки запрещено добавлять: Pinia, Vue Router,
   API-клиенты, Markdown/Mermaid, бизнес-логику, зависимости от WhiteLife.
 - Любая новая devDependency — с обоснованием в коммите.
@@ -47,9 +46,11 @@
 - CSS-классы: стабильные, namespaced (`wl-*`), низкая специфичность (один класс,
   без вложенных цепочек и `!important`).
 - Компонент не обращается к DOM/window при импорте модуля — только в хуках.
-- UI-kit не вызывает `app.use(PrimeVue)` и не настраивает приложение потребителя.
-- PrimeVue `pt` остаётся открытым: дефолты через `createWlPt()`, точечная
-  настройка через `pt` prop; оба мёржатся, а не перезаписываются.
+- Конфигурация приложения передаётся через необязательный `WlConfig`; состояние
+  сервисов изолировано по экземпляру Vue-приложения.
+- `pt` остаётся открытым: дефолты через `createWlPt()`, конфигурация через
+  `WlConfig.pt`, локальная настройка через `pt` prop. Порядок: дефолт →
+  приложение → экземпляр; `class` и `style` объединяются.
 
 ## 5. Код и структура
 
@@ -58,6 +59,13 @@
   обязан покрывать: `.`, `styles/base.css`, `styles/reset.css`, `themes/*.css`.
 - Структура workspace фиксирована: `packages/ui-kit` — пакет,
   `apps/playground` — приложение для проверки. Бизнес-код сюда не добавлять.
+- Соблюдать границы модулей и SOLID: компонент отвечает за DOM/props/emits,
+  composable — за переиспользуемое поведение, сервис — за состояние приложения.
+  Зависимости направлять на контракты типов, а не на конкретный компонент;
+  расширять через props/slots/`pt` без копирования компонента. Подробности в
+  `docs/architecture.md`.
+- Новые иконки добавлять исходными SVG в `packages/ui-kit/icons`, затем запускать
+  `pnpm icons:sync` и `pnpm icons:check`. Правила партии — `docs/icons.md`.
 
 ## 6. Проверки перед завершением изменений
 
@@ -65,12 +73,17 @@
 
 ```bash
 pnpm build
+pnpm typecheck
 pnpm test
 pnpm build:playground
 pnpm run pack
+pnpm verify:package
+pnpm verify:dependencies
+pnpm icons:check
+pnpm test:e2e
 ```
 
-Архив `pnpm run pack` не должен содержать Vue/PrimeVue внутри bundle
+Архив `pnpm run pack` не должен содержать Vue внутри bundle
 (проверять содержимое tar). Внимание: голый `pnpm pack` — это builtin-команда
 pnpm, она упакует корневой проект; для архива библиотеки нужен именно
 `pnpm run pack`.

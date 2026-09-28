@@ -1,10 +1,10 @@
 import { describe, it, expect, afterEach, vi } from "vitest";
 import { mount, flushPromises, type GlobalMountOptions } from "@vue/test-utils";
-import PrimeVue from "primevue/config";
+import { WlConfig } from "../src";
 import { WlDatePicker, WlFileUpload, createWlPt, wlLocaleRu } from "../src";
 
 const global: GlobalMountOptions = {
-  plugins: [[PrimeVue, { unstyled: true, pt: createWlPt(), locale: wlLocaleRu }]]
+  plugins: [[WlConfig, { pt: createWlPt(), locale: wlLocaleRu }]]
 };
 
 const pad2 = (n: number): string => String(n).padStart(2, "0");
@@ -73,6 +73,41 @@ describe("WlDatePicker", () => {
     const now = new Date();
     const expected = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-15`;
     expect(wrapper.emitted("update:modelValue")![0]).toEqual([expected]);
+    wrapper.unmount();
+  });
+
+  it("navigates years and months, respects bounds, and applies picker pt sections", async () => {
+    const wrapper = mount(WlDatePicker, {
+      global,
+      attachTo: document.body,
+      props: {
+        showIcon: true,
+        modelValue: "2026-06-15",
+        minDate: "2026-05-10",
+        maxDate: "2026-09-20",
+        pt: { monthView: { "data-test": "month-view" }, dayCell: { "data-test": "day-cell" } }
+      }
+    });
+    await wrapper.find(".wl-dp__trigger").trigger("click");
+    await flushPromises();
+    document.querySelector<HTMLButtonElement>('[aria-label^="Выбрать год"]')!.click();
+    await flushPromises();
+
+    const years = Array.from(document.querySelectorAll<HTMLButtonElement>(".wl-dp__choice"));
+    expect(years.find((button) => button.textContent === "2025")?.disabled).toBe(true);
+    years.find((button) => button.textContent === "2026")!.click();
+    await flushPromises();
+
+    expect(document.querySelector('[data-test="month-view"]')).not.toBeNull();
+    const months = Array.from(document.querySelectorAll<HTMLButtonElement>(".wl-dp__choice"));
+    expect(months.find((button) => button.textContent === "Апрель")?.disabled).toBe(true);
+    months.find((button) => button.textContent === "Июль")!.click();
+    await flushPromises();
+
+    expect(document.querySelector('[data-test="day-cell"]')).not.toBeNull();
+    document.querySelector<HTMLButtonElement>('[aria-label="2026-07-15"]')!.click();
+    await flushPromises();
+    expect(wrapper.emitted("update:modelValue")?.at(-1)).toEqual(["2026-07-15"]);
     wrapper.unmount();
   });
 

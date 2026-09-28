@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import Breadcrumb from "primevue/breadcrumb";
+import { useWlPt } from "../config";
 import WlIcon from "./WlIcon.vue";
 import type { WlBreadcrumbItem, WlIconName } from "../types";
 
@@ -29,22 +29,23 @@ const model = computed<BreadcrumbModelItem[]>(() =>
     current: index === props.items.length - 1
   }))
 );
+const section = useWlPt("breadcrumb", computed(() => props.pt));
 </script>
 
 <template>
-  <Breadcrumb :model="model" :pt="pt" class="wl-breadcrumbs" data-wl="breadcrumbs">
-    <template #item="{ item, props: itemProps }">
-      <span v-if="item.current" class="wl-breadcrumbs__link is-current" aria-current="page">
-        <WlIcon v-if="item.icon" :name="(item.icon as WlIconName)" :size="14" class="wl-breadcrumbs__icon" />
-        <span class="wl-breadcrumbs__label">{{ item.label }}</span>
-      </span>
-      <a v-else v-bind="itemProps.action" :href="item.url" class="wl-breadcrumbs__link">
-        <WlIcon v-if="item.icon" :name="(item.icon as WlIconName)" :size="14" class="wl-breadcrumbs__icon" />
-        <span class="wl-breadcrumbs__label">{{ item.label }}</span>
-      </a>
-    </template>
-    <template #separator>
-      <span class="wl-breadcrumbs__sep" aria-hidden="true">/</span>
-    </template>
-  </Breadcrumb>
+  <nav v-bind="section('root')" class="wl-breadcrumbs" aria-label="Хлебные крошки" data-wl="breadcrumbs">
+    <ol v-bind="section('list')" class="wl-breadcrumbs__list">
+      <li v-for="(item, index) in model" :key="index" v-bind="section('item')" class="wl-breadcrumbs__item">
+        <span v-if="item.current" class="wl-breadcrumbs__link is-current" aria-current="page">
+          <WlIcon v-if="item.icon" :name="(item.icon as WlIconName)" :size="14" class="wl-breadcrumbs__icon" />
+          <span class="wl-breadcrumbs__label">{{ item.label }}</span>
+        </span>
+        <a v-else :href="item.url" class="wl-breadcrumbs__link">
+          <WlIcon v-if="item.icon" :name="(item.icon as WlIconName)" :size="14" class="wl-breadcrumbs__icon" />
+          <span class="wl-breadcrumbs__label">{{ item.label }}</span>
+        </a>
+        <span v-if="index < model.length - 1" v-bind="section('separator')" class="wl-breadcrumbs__sep" aria-hidden="true">/</span>
+      </li>
+    </ol>
+  </nav>
 </template>

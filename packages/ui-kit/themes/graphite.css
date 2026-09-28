@@ -1,5 +1,6 @@
 /* WhiteLife UI — graphite theme (dark).
    Applied via <html data-wl-theme="graphite"> after importing this file. */
+@layer wl.tokens {
 [data-wl-theme="graphite"] {
   --wl-bg: #17181c;
   --wl-bg-soft: #1e2025;
@@ -46,4 +47,5 @@
   --wl-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.25);
   --wl-shadow-pop: 0 4px 14px rgba(0, 0, 0, 0.35), 0 16px 44px rgba(0, 0, 0, 0.45);
   --wl-shadow-knob: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
 }

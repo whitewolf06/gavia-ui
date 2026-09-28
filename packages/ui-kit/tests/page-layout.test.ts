@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { nextTick } from "vue";
 import { mount, type GlobalMountOptions, type VueWrapper } from "@vue/test-utils";
-import PrimeVue from "primevue/config";
+import { WlConfig } from "../src";
 import { WlFilterBar, WlPageHeader, createWlPt } from "../src";
 
 const global: GlobalMountOptions = {
-  plugins: [[PrimeVue, { unstyled: true, pt: createWlPt() }]]
+  plugins: [[WlConfig, { pt: createWlPt() }]]
 };
 
 describe("WlPageHeader", () => {

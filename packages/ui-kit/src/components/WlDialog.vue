@@ -1,68 +1,63 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import Dialog from "primevue/dialog";
-import { deepMerge } from "../utils/merge";
+import { computed, ref, useAttrs, useId } from "vue";
+import { mergeWlAttrs, useWlPt } from "../config";
+import { useOverlayLifecycle } from "../utils/overlayLifecycle";
+import WlIcon from "./WlIcon.vue";
 
-const props = withDefaults(
-  defineProps<{
-    header?: string;
-    modal?: boolean;
-    closable?: boolean;
-    dismissable?: boolean;
-    closeOnEscape?: boolean;
-    blockScroll?: boolean;
-    ariaLabel?: string;
-    ariaLabelledby?: string;
-    width?: string;
-    pt?: Record<string, unknown>;
-  }>(),
-  {
-    modal: true,
-    closable: true,
-    dismissable: false,
-    closeOnEscape: true,
-    blockScroll: true
-  }
-);
-
-const emit = defineEmits<{
-  open: [];
-  close: [];
-}>();
-
+defineOptions({ inheritAttrs: false });
+const props = withDefaults(defineProps<{
+  header?: string;
+  modal?: boolean;
+  closable?: boolean;
+  dismissable?: boolean;
+  closeOnEscape?: boolean;
+  blockScroll?: boolean;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
+  width?: string;
+  pt?: Record<string, unknown>;
+}>(), {
+  modal: true, closable: true, dismissable: false, closeOnEscape: true, blockScroll: true
+});
+const emit = defineEmits<{ open: []; close: [] }>();
 const visible = defineModel<boolean>("visible", { default: false });
-
-const mergedPt = computed(() =>
-  deepMerge(
-    {
-      root: {
-        "aria-label": props.ariaLabel,
-        "aria-labelledby": props.ariaLabelledby
-      }
-    },
-    props.pt
-  )
-);
+const dialog = ref<HTMLElement | null>(null);
+const titleId = useId();
+const attrs = useAttrs();
+const section = useWlPt("dialog", computed(() => props.pt));
+useOverlayLifecycle({
+  visible, container: dialog,
+  closeOnEscape: () => props.closeOnEscape,
+  trapFocus: () => props.modal,
+  lockScroll: () => props.modal && props.blockScroll,
+  onOpen: () => emit("open"),
+  onClose: () => emit("close")
+});
+function onMask(event: MouseEvent): void {
+  if (event.target === event.currentTarget && props.dismissable) visible.value = false;
+}
 </script>
 
 <template>
-  <Dialog
-    v-model:visible="visible"
-    :header="header"
-    :modal="modal"
-    :closable="closable"
-    :dismissableMask="dismissable"
-    :closeOnEscape="closeOnEscape"
-    :blockScroll="blockScroll"
-    :style="width ? { width } : undefined"
-    class="wl-dialog"
-    :pt="mergedPt"
-    data-wl="dialog"
-    @show="emit('open')"
-    @hide="emit('close')"
-  >
-    <template v-if="$slots.header" #header><slot name="header" /></template>
-    <slot />
-    <template v-if="$slots.footer" #footer><slot name="footer" /></template>
-  </Dialog>
+  <Teleport to="body">
+    <div v-if="visible" v-bind="section('mask')" class="wl-dialog-mask"
+      :class="{ 'wl-mask': modal, 'wl-dialog-host': !modal }" @mousedown="onMask">
+      <section ref="dialog" data-wl="dialog" v-bind="mergeWlAttrs(section('root'), attrs)" class="wl-dialog" role="dialog"
+        :aria-modal="modal || undefined" :aria-label="ariaLabel"
+        :aria-labelledby="ariaLabelledby ?? (!ariaLabel && header ? titleId : undefined)"
+        :style="{ width }" tabindex="-1">
+        <header v-if="header || $slots.header || closable" v-bind="section('header')" class="wl-dialog__header">
+          <slot name="header">
+            <span v-if="header" v-bind="section('title')" :id="titleId" class="wl-dialog__title">{{ header }}</span>
+          </slot>
+          <div v-if="closable" v-bind="section('headerActions')" class="wl-dialog__actions">
+            <button v-bind="section('pcCloseButton.root')" type="button" class="wl-overlay-close" aria-label="Закрыть"
+              @click="visible = false"><WlIcon v-bind="section('pcCloseButton.icon')" name="x" :size="14" /></button>
+          </div>
+        </header>
+        <div v-bind="section('content')" class="wl-dialog__content"><slot /></div>
+        <footer v-if="$slots.footer" v-bind="section('footer')" class="wl-dialog__footer"><slot name="footer" /></footer>
+      </section>
+    </div>
+  </Teleport>
 </template>

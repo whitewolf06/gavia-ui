@@ -25,13 +25,13 @@ const cx = (...parts: Array<string | false | null | undefined>): string =>
   parts.filter(Boolean).join(" ");
 
 /**
- * Default PrimeVue pass-through map of the kit.
+ * Default DOM section attributes of the kit.
  *
  * Wire it once at the app level:
- *   app.use(PrimeVue, { unstyled: true, pt: createWlPt() })
+ *   app.use(WlConfig, { pt: createWlPt() })
  *
- * `overrides` is deep-merged on top of the defaults, and a component-level
- * `pt` prop is merged by PrimeVue itself after both.
+ * `overrides` is deep-merged on top of the defaults. Component-level `pt`
+ * attributes are applied by WhiteUI after app-level attributes.
  */
 export function createWlPt(overrides: Record<string, unknown> = {}): WlPtConfig {
   const base: WlPtConfig = {
@@ -242,6 +242,10 @@ export function createWlPt(overrides: Record<string, unknown> = {}): WlPtConfig 
         icon: { class: "wl-dp__nav-icon" }
       },
       dayView: { class: "wl-dp__table" },
+      monthView: { class: "wl-dp__choices" },
+      month: { class: "wl-dp__choice" },
+      yearView: { class: "wl-dp__choices" },
+      year: { class: "wl-dp__choice" },
       tableHeaderCell: { class: "wl-dp__wd-cell" },
       weekDay: { class: "wl-dp__weekday" },
       dayCell: { class: "wl-dp__day-cell" },

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, useAttrs, useSlots } from "vue";
-import InputText from "primevue/inputtext";
+import { mergeWlAttrs, useWlPt } from "../config";
 import type { WlDensity, WlSizeSm } from "../types";
 import { splitInputAttrs } from "../utils/inputAttrs";
 
@@ -46,6 +46,7 @@ const inputClass = computed(() => [
   props.disabled && "is-disabled",
   props.density === "compact" && "is-compact"
 ]);
+const section = useWlPt("inputtext", computed(() => props.pt));
 </script>
 
 <template>
@@ -57,15 +58,14 @@ const inputClass = computed(() => [
     :data-density="density"
   >
     <span v-if="slots.prefix" class="wl-input-wrap__prefix"><slot name="prefix" /></span>
-    <InputText
+    <input
+      v-bind="mergeWlAttrs(innerAttrs, section('root'))"
       v-model="model"
       :class="inputClass"
-      v-bind="innerAttrs"
       :type="type"
       :placeholder="placeholder"
       :disabled="disabled"
-      :invalid="invalid"
-      :pt="pt"
+      :aria-invalid="invalid || undefined"
     />
     <span v-if="slots.suffix" class="wl-input-wrap__suffix"><slot name="suffix" /></span>
   </div>

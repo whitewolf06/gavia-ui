@@ -1,7 +1,7 @@
 import { afterAll, describe, it, expect } from "vitest";
 import { defineComponent, nextTick } from "vue";
 import { mount } from "@vue/test-utils";
-import PrimeVue from "primevue/config";
+import { WlConfig } from "../src";
 import { WlToast, WlToastService, createWlPt, useWlToast } from "../src";
 
 // Toast messages auto-remove on a life timer; let pending timers fire
@@ -27,7 +27,7 @@ const Harness = defineComponent({
 
 function mountHarness() {
   return mount(Harness, {
-    global: { plugins: [[PrimeVue, { unstyled: true, pt: createWlPt() }], WlToastService] },
+    global: { plugins: [[WlConfig, { pt: createWlPt() }], WlToastService] },
     attachTo: document.body
   });
 }
@@ -40,7 +40,7 @@ describe("WlToast + useWlToast", () => {
 
     const message = document.body.querySelector(".wl-toast__message");
     expect(message).toBeTruthy();
-    expect(message!.getAttribute("data-p")).toBe("success");
+    expect(message!.getAttribute("data-severity")).toBe("success");
     expect(message!.textContent).toContain("Сохранено");
     expect(document.body.querySelector(".wl-toast__summary")).toBeTruthy();
     wrapper.unmount();
@@ -53,7 +53,7 @@ describe("WlToast + useWlToast", () => {
 
     const message = document.body.querySelector(".wl-toast__message");
     expect(message).toBeTruthy();
-    expect(message!.getAttribute("data-p")).toBe("error");
+    expect(message!.getAttribute("data-severity")).toBe("error");
     expect(message!.textContent).toContain("Не удалось сохранить");
     wrapper.unmount();
   });
@@ -61,7 +61,7 @@ describe("WlToast + useWlToast", () => {
   it("renders the toast container at bottom-center", async () => {
     const wrapper = mountHarness();
     await nextTick(); // Portal teleports to body after the mounted hook
-    const root = document.body.querySelector('.wl-toast[data-p="bottom-center"]');
+    const root = document.body.querySelector('.wl-toast[data-wl="toast"]');
     expect(root).toBeTruthy();
     wrapper.unmount();
   });

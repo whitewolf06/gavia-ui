@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { mount, type GlobalMountOptions } from "@vue/test-utils";
-import PrimeVue from "primevue/config";
+import { WlConfig } from "../src";
 import {
   WlBreadcrumbs,
   WlButton,
@@ -16,7 +16,7 @@ import type { WlBreadcrumbItem, WlSegmentedOption } from "../src";
 // Wire the kit pt map exactly like a real app does, so inner sections
 // (segmented items, breadcrumb list) carry their wl-* classes.
 const global: GlobalMountOptions = {
-  plugins: [[PrimeVue, { unstyled: true, pt: createWlPt() }]]
+  plugins: [[WlConfig, { pt: createWlPt() }]]
 };
 
 describe("WlIconButton", () => {
@@ -97,8 +97,8 @@ describe("WlSegmented", () => {
     const items = wrapper.findAll(".wl-segmented__item");
     expect(items).toHaveLength(3);
     expect(items[0]!.classes()).toContain("is-active");
-    expect(items[0]!.attributes("data-p-checked")).toBe("true");
-    expect(items[1]!.attributes("data-p-checked")).toBe("false");
+    expect(items[0]!.attributes("aria-pressed")).toBe("true");
+    expect(items[1]!.attributes("aria-pressed")).toBe("false");
   });
 
   it("emits update:modelValue on select", async () => {

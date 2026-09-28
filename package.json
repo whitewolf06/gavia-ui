@@ -1,6 +1,6 @@
 {
   "name": "whitelife-ui",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "private": true,
   "description": "WhiteLife UI workspace: @whitelife-core/ui-kit library package and playground app",
   "packageManager": "pnpm@10.34.5",
@@ -12,7 +12,15 @@
     "build": "pnpm --filter @whitelife-core/ui-kit build",
     "build:playground": "pnpm --filter @whitelife-core/playground build",
     "test": "pnpm --filter @whitelife-core/ui-kit test",
-    "typecheck": "pnpm --filter @whitelife-core/ui-kit typecheck",
-    "pack": "pnpm --filter @whitelife-core/ui-kit run pack"
+    "typecheck": "pnpm --filter @whitelife-core/ui-kit typecheck && pnpm --filter @whitelife-core/playground typecheck",
+    "pack": "pnpm --filter @whitelife-core/ui-kit run pack",
+    "verify:package": "node scripts/verify-package.mjs",
+    "verify:dependencies": "node scripts/check-dependencies.mjs",
+    "test:e2e": "pnpm exec playwright test -c apps/playground/playwright.config.ts",
+    "icons:sync": "pnpm --filter @whitelife-core/ui-kit icons:sync",
+    "icons:check": "pnpm --filter @whitelife-core/ui-kit icons:check"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.58.2"
   }
 }

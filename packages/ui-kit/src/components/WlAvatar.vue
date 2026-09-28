@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import Avatar from "primevue/avatar";
+import { useWlPt } from "../config";
 import type { WlAvatarPresence, WlAvatarSize } from "../types";
 
 const props = withDefaults(
@@ -17,13 +17,17 @@ const props = withDefaults(
 );
 
 const rootClass = computed(() => ["wl-avatar", `wl-avatar--${props.size}`]);
+const section = useWlPt("avatar", computed(() => props.pt));
 </script>
 
 <template>
   <span class="wl-avatar-wrap" data-wl="avatar" :data-size="size">
-    <Avatar :label="label" :image="image" shape="circle" :class="rootClass" :pt="pt">
-      <slot />
-    </Avatar>
+    <span v-bind="section('root')" :class="rootClass">
+      <slot>
+        <img v-if="image" v-bind="section('image')" class="wl-avatar__img" :src="image" :alt="label ?? ''" />
+        <span v-else v-bind="section('label')">{{ label }}</span>
+      </slot>
+    </span>
     <span
       v-if="presence"
       class="wl-avatar__presence"

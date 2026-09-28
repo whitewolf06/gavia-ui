@@ -1,12 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { mount, type GlobalMountOptions } from "@vue/test-utils";
-import PrimeVue from "primevue/config";
+import { WlConfig } from "../src";
 import { WlInput, WlNumberInput, WlPasswordInput, WlStatCard, WlTable, WlTextarea, createWlPt } from "../src";
 import type { WlTableColumn, WlTableRow } from "../src";
 
 // Wire the kit pt map like a real app, so DataTable sections get wl-* classes.
 const global: GlobalMountOptions = {
-  plugins: [[PrimeVue, { unstyled: true, pt: createWlPt() }]]
+  plugins: [[WlConfig, { pt: createWlPt() }]]
 };
 
 const columns: WlTableColumn[] = [

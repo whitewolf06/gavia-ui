@@ -1,25 +1,16 @@
-import { useToast } from "primevue/usetoast";
+import { useToastStore, type WlToastSeverity } from "../services/toast";
 
-const WL_TOAST_LIFE = 2200;
-
-type WlToastSeverity = "success" | "info" | "warn" | "error";
-
-/**
- * App-level toast helper. Requires `app.use(WlToastService)` and one
- * `<WlToast />` mounted near the app root.
- */
+/** App-level toast helper; install WlToastService and mount WlToast once. */
 export function useWlToast(): {
   ok: (message: string, detail?: string) => void;
   info: (message: string, detail?: string) => void;
   warn: (message: string, detail?: string) => void;
   err: (message: string, detail?: string) => void;
 } {
-  const toast = useToast();
-
-  function push(severity: WlToastSeverity, message: string, detail?: string): void {
-    toast.add({ severity, summary: message, detail, life: WL_TOAST_LIFE });
-  }
-
+  const store = useToastStore();
+  const push = (severity: WlToastSeverity, summary: string, detail?: string): void => {
+    store.add({ severity, summary, detail });
+  };
   return {
     ok: (message, detail) => push("success", message, detail),
     info: (message, detail) => push("info", message, detail),

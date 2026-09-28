@@ -60,8 +60,8 @@ function booleanAttr(attrs: Record<string, unknown>, key: string): boolean | und
   return true;
 }
 
-/** Props shared by PrimeVue controls whose actual focus target lives below their root. */
-export interface WlPrimeControlProps {
+/** Native attributes shared by controls whose focus target lives below their root. */
+export interface WlControlProps {
   inputId?: string;
   name?: string;
   required?: boolean;
@@ -70,9 +70,9 @@ export interface WlPrimeControlProps {
   ariaLabelledby?: string;
 }
 
-export function getPrimeControlProps(
+export function getWlControlProps(
   inputAttrs: Record<string, unknown>
-): WlPrimeControlProps {
+): WlControlProps {
   return {
     inputId: stringAttr(inputAttrs, "id"),
     name: stringAttr(inputAttrs, "name"),

@@ -578,7 +578,7 @@
     white-space: nowrap;
     outline: none;
   }
-  .wl-select__label[data-p~="placeholder"] {
+  .wl-select__label[data-placeholder="true"] {
     color: var(--wl-text-3);
   }
   .wl-select__dropdown {
@@ -626,10 +626,10 @@
     cursor: pointer;
   }
   .wl-select__option:hover,
-  .wl-select__option[data-p-focused="true"] {
+  .wl-select__option[data-active="true"] {
     background: var(--wl-bg-soft);
   }
-  .wl-select__option[data-p-selected="true"] {
+  .wl-select__option[aria-selected="true"] {
     background: var(--wl-accent-soft);
     color: var(--wl-accent);
   }
@@ -702,6 +702,14 @@
     padding: 0;
     list-style: none;
   }
+  .wl-multiselect__focus {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
   .wl-multiselect__label {
     flex: 1;
     min-width: 0;
@@ -710,7 +718,7 @@
     white-space: nowrap;
     outline: none;
   }
-  .wl-multiselect__label[data-p~="placeholder"] {
+  .wl-multiselect__label[data-placeholder="true"] {
     color: var(--wl-text-3);
   }
   .wl-multiselect__chip-item {
@@ -732,6 +740,8 @@
     white-space: nowrap;
   }
   .wl-multiselect__chip-remove {
+    position: relative;
+    z-index: 1;
     width: 12px;
     height: 12px;
     color: var(--wl-text-3);
@@ -1701,7 +1711,7 @@
 
   /* ---------- Tooltip ---------- */
   .wl-tooltip {
-    position: absolute;
+    position: fixed;
     pointer-events: none;
     z-index: var(--wl-overlay-z);
   }
@@ -1720,50 +1730,16 @@
     display: none;
   }
 
-  /* ---------- Overlay transitions (PrimeVue transition names) ---------- */
-  .p-dialog-enter-active,
-  .p-dialog-leave-active {
-    transition: opacity var(--wl-dur-4) var(--wl-ease), transform var(--wl-dur-4) var(--wl-ease);
+  .wl-dialog-host,
+  .wl-drawer-host {
+    position: fixed;
+    inset: 0;
+    z-index: var(--wl-mask-z);
+    pointer-events: none;
   }
-  .p-dialog-enter-from,
-  .p-dialog-leave-to {
-    opacity: 0;
-    transform: translateY(8px) scale(0.98);
-  }
-  .p-drawer-enter-active,
-  .p-drawer-leave-active {
-    transition: transform var(--wl-dur-5) var(--wl-ease), opacity var(--wl-dur-5) var(--wl-ease);
-  }
-  .p-drawer-enter-from,
-  .p-drawer-leave-to {
-    opacity: 0;
-  }
-  .wl-drawer--right.p-drawer-enter-from,
-  .wl-drawer--right.p-drawer-leave-to {
-    transform: translateX(100%);
-  }
-  .wl-drawer--left.p-drawer-enter-from,
-  .wl-drawer--left.p-drawer-leave-to {
-    transform: translateX(-100%);
-  }
-  .wl-drawer--top.p-drawer-enter-from,
-  .wl-drawer--top.p-drawer-leave-to {
-    transform: translateY(-100%);
-  }
-  .wl-drawer--bottom.p-drawer-enter-from,
-  .wl-drawer--bottom.p-drawer-leave-to {
-    transform: translateY(100%);
-  }
-  .p-anchored-overlay-enter-active {
-    transition: opacity var(--wl-dur-2) var(--wl-ease), transform var(--wl-dur-2) var(--wl-ease);
-  }
-  .p-anchored-overlay-leave-active {
-    transition: opacity var(--wl-dur-1) var(--wl-ease);
-  }
-  .p-anchored-overlay-enter-from,
-  .p-anchored-overlay-leave-to {
-    opacity: 0;
-    transform: translateY(-4px);
+  .wl-dialog-host > .wl-dialog,
+  .wl-drawer-host > .wl-drawer {
+    pointer-events: auto;
   }
 
   /* ---------- Keyframes ---------- */
@@ -1937,12 +1913,12 @@
     color: var(--wl-text);
   }
   .wl-segmented__item.is-active,
-  .wl-segmented__item[data-p-checked="true"] {
+  .wl-segmented__item[aria-pressed="true"] {
     background: var(--wl-bg);
     color: var(--wl-text);
     box-shadow: var(--wl-segmented-shadow);
   }
-  .wl-segmented__item[data-p-disabled="true"] {
+  .wl-segmented__item:disabled {
     opacity: 0.5;
     pointer-events: none;
   }
@@ -2200,7 +2176,7 @@
     color: var(--wl-danger);
   }
   .wl-menu__link.is-disabled,
-  .wl-menu__item[data-p-disabled="true"] .wl-menu__link {
+  .wl-menu__link[aria-disabled="true"] {
     opacity: 0.5;
     pointer-events: none;
   }
@@ -2212,6 +2188,7 @@
 
   /* ---------- Popover ---------- */
   .wl-popover {
+    z-index: var(--wl-overlay-z);
     width: var(--wl-popover-width);
     background: var(--wl-bg);
     border: 1px solid var(--wl-border);
@@ -2230,7 +2207,7 @@
     position: fixed;
     z-index: var(--wl-toast-z);
   }
-  .wl-toast[data-p="bottom-center"] {
+  .wl-toast {
     bottom: 26px;
     left: 50%;
     transform: translateX(-50%);
@@ -2255,16 +2232,16 @@
     width: 16px;
     height: 16px;
   }
-  .wl-toast__message[data-p="info"] .wl-toast__icon {
+  .wl-toast__message[data-severity="info"] .wl-toast__icon {
     color: var(--wl-toast-icon-info);
   }
-  .wl-toast__message[data-p="success"] .wl-toast__icon {
+  .wl-toast__message[data-severity="success"] .wl-toast__icon {
     color: var(--wl-toast-icon-ok);
   }
-  .wl-toast__message[data-p="warn"] .wl-toast__icon {
+  .wl-toast__message[data-severity="warn"] .wl-toast__icon {
     color: var(--wl-toast-icon-warn);
   }
-  .wl-toast__message[data-p="error"] .wl-toast__icon {
+  .wl-toast__message[data-severity="error"] .wl-toast__icon {
     color: var(--wl-toast-icon-err);
   }
   .wl-toast__summary {
@@ -2294,22 +2271,6 @@
   }
   .wl-toast__close:hover {
     opacity: 1;
-  }
-  .p-toast-message-enter-active {
-    transition:
-      opacity var(--wl-dur-4) var(--wl-ease),
-      transform var(--wl-dur-4) var(--wl-ease);
-  }
-  .p-toast-message-leave-active {
-    transition: opacity var(--wl-dur-2) var(--wl-ease);
-  }
-  .p-toast-message-enter-from,
-  .p-toast-message-leave-to {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  .p-toast-message-move {
-    transition: transform var(--wl-dur-4) var(--wl-ease);
   }
 
   /* ---------- Empty ---------- */
@@ -2385,7 +2346,7 @@
 }
 
 /* ============================================================
-   STAGE 4a — own form components (no PrimeVue).
+   STAGE 4a — form components.
    ============================================================ */
 @layer wl.components {
   /* ---------- NumberInput (stepper) ---------- */
@@ -2641,7 +2602,7 @@
 }
 
 /* ============================================================
-   STAGE 4b — data display: table (PrimeVue DataTable) + stat card.
+   STAGE 4b — data display: table + stat card.
    ============================================================ */
 @layer wl.components {
   /* ---------- Table ---------- */
@@ -2961,7 +2922,7 @@
 }
 
 /* ============================================================
-   STAGE 5b — date picker (PrimeVue) + file upload (own).
+   STAGE 5b — date picker + file upload.
    ============================================================ */
 @layer wl.components {
   /* ---------- DatePicker ---------- */
@@ -3067,6 +3028,33 @@
   }
   .wl-dp__table {
     border-collapse: collapse;
+  }
+  .wl-dp__choices {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+    width: 238px;
+  }
+  .wl-dp__choice {
+    min-width: 0;
+    padding: 8px 2px;
+    border-radius: var(--wl-radius-sm);
+    color: var(--wl-text);
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .wl-dp__choice:hover {
+    background: var(--wl-bg-soft);
+  }
+  .wl-dp__choice.is-selected {
+    background: var(--wl-accent-soft);
+    color: var(--wl-accent);
+    font-weight: 600;
+  }
+  .wl-dp__choice:disabled {
+    color: var(--wl-text-3);
+    opacity: 0.45;
+    cursor: default;
   }
   .wl-dp__wd-cell {
     text-align: center;
@@ -3867,16 +3855,18 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  [data-wl],
-  [data-wl] *,
-  [data-wl]::before,
-  [data-wl]::after,
-  [data-wl] *::before,
-  [data-wl] *::after {
-    animation-duration: 0.01ms;
-    animation-iteration-count: 1;
-    scroll-behavior: auto;
-    transition-duration: 0.01ms;
+@layer wl.components {
+  @media (prefers-reduced-motion: reduce) {
+    [data-wl],
+    [data-wl] *,
+    [data-wl]::before,
+    [data-wl]::after,
+    [data-wl] *::before,
+    [data-wl] *::after {
+      animation-duration: 0.01ms;
+      animation-iteration-count: 1;
+      scroll-behavior: auto;
+      transition-duration: 0.01ms;
+    }
   }
 }

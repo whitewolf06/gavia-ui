@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, nextTick, onMounted, ref, watch } from "vue";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
+import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
+import { version as uiKitVersion } from "../../../packages/ui-kit/package.json";
 import { WlTooltip } from "../../../packages/ui-kit/src/directives/tooltip";
 import { useWlConfirm } from "../../../packages/ui-kit/src/composables/useWlConfirm";
 import { useWlToast } from "../../../packages/ui-kit/src/composables/useWlToast";
@@ -569,8 +571,11 @@ const drawerVisible = ref(false);
 
 <template>
   <header class="pg-top">
-    <span class="pg-logo">W</span>
-    <b class="pg-title">WhiteLife UI Kit</b>
+    <div class="pg-brand">
+      <span class="pg-logo">W</span>
+      <b class="pg-title">WhiteLife UI Kit</b>
+      <span class="pg-kit-version" :aria-label="`Версия UI Kit ${uiKitVersion}`">v{{ uiKitVersion }}</span>
+    </div>
     <span class="muted">playground · все компоненты</span>
     <WlButton size="sm" variant="secondary" @click="commandPaletteVisible = true">
       <template #icon><WlIcon name="search" :size="15" /></template>
@@ -625,7 +630,7 @@ const drawerVisible = ref(false);
     <span id="pg-components" class="pg-scroll-target" aria-hidden="true"></span>
     <h1 class="pg-h1">Компоненты</h1>
     <p class="pg-lead">
-      Витрина @whitelife-core/ui-kit: Vue 3 + TypeScript, PrimeVue 4 в unstyled-режиме,
+      Витрина @whitelife-core/ui-kit: Vue 3 + TypeScript, собственные компоненты,
       токены --wl-* и темы white / graphite / newspaper.
     </p>
 
@@ -659,6 +664,26 @@ const drawerVisible = ref(false);
                 <span class="pg-sw-h">{{ resolvedHex[t] || "…" }}</span>
               </span>
             </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== Иконки ==================== -->
+    <section class="pg-sec">
+      <h2 class="pg-sec-title">Иконки</h2>
+      <p class="pg-sec-desc">Собственный SVG-каталог: {{ WL_ICON_NAMES.length }} иконок.</p>
+      <div class="spec">
+        <div class="spec-b">
+          <div class="pg-icon-grid">
+            <div v-for="name in WL_ICON_NAMES" :key="name" class="pg-icon-cell">
+              <span class="pg-icon-sizes">
+                <WlIcon :name="name" :size="16" />
+                <WlIcon :name="name" :size="20" />
+                <WlIcon :name="name" :size="24" />
+              </span>
+              <span>{{ name }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1295,7 +1320,7 @@ const drawerVisible = ref(false);
     <!-- ==================== Цвет и дата ==================== -->
     <section class="pg-sec">
       <h2 class="pg-sec-title">Цвет и дата</h2>
-      <p class="pg-sec-desc">Собственные компоненты без PrimeVue: палитра и месячный календарь.</p>
+      <p class="pg-sec-desc">Палитра и месячный календарь.</p>
 
       <div class="spec">
         <div class="spec-h">
@@ -1723,7 +1748,7 @@ const drawerVisible = ref(false);
             >
               Кнопка с pt
             </WlButton>
-            <span class="muted">root получит aria-label и data-test через PrimeVue pt.</span>
+            <span class="muted">root получит aria-label и data-test через WhiteUI pt.</span>
           </div>
         </div>
       </div>
@@ -1787,9 +1812,24 @@ const drawerVisible = ref(false);
   align-items: center;
   justify-content: center;
 }
+.pg-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
 .pg-title {
   font-family: var(--wl-font-heading);
   font-size: 14.5px;
+}
+.pg-kit-version {
+  padding: 3px 6px;
+  border: 1px solid var(--wl-border);
+  border-radius: var(--wl-radius-sm);
+  color: var(--wl-text-2);
+  font-family: var(--wl-mono);
+  font-size: 11px;
+  line-height: 1;
 }
 .pg-theme {
   margin-left: auto;
@@ -2102,5 +2142,27 @@ code {
   .spec-b {
     padding: 16px;
   }
+}
+.pg-icon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+}
+.pg-icon-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--wl-border);
+  border-radius: var(--wl-radius-sm);
+  color: var(--wl-text);
+  font-size: 11px;
+}
+.pg-icon-sizes {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 24px;
 }
 </style>

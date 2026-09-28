@@ -15,21 +15,21 @@ export const dataManifest = defineComponentManifest([
     name: "WlTable",
     category: "data",
     description:
-      "Таблица на PrimeVue DataTable: декларативные columns или полностью кастомное содержимое через слот.",
+      "Таблица: декларативные columns и scoped-слоты cell-*; без columns default-слот для собственной таблицы.",
     props: [
       { name: "value", type: "array", default: [], description: "Строки WlTableRow[] (Record<string, unknown>)." },
       {
         name: "columns",
         type: "array",
         description:
-          "WlTableColumn[]: { key, label, numeric?, width? }. Если не заданы — рендерится default-слот (кастомные Column)."
+          "WlTableColumn[]: { key, label, numeric?, width? }. Если не заданы — рендерится default-слот."
       },
       { name: "loading", type: "boolean", default: false, description: "Состояние загрузки." },
       { name: "emptyMessage", type: "string", default: "Нет данных", description: "Текст пустого состояния." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [
-      { name: "default", description: "Кастомные PrimeVue Column (когда columns не заданы)." },
+      { name: "default", description: "Кастомное содержимое таблицы, когда columns не заданы." },
       { name: "empty", description: "Кастомное пустое состояние." },
       {
         name: "cell-<key>",
@@ -48,7 +48,7 @@ export const dataManifest = defineComponentManifest([
       { name: "siblings", type: "number", default: 1, description: "Сколько страниц показывать вокруг текущей." },
       { name: "compact", type: "boolean", default: false, description: "Компактный вид с полем ввода." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает навигацию." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
     emits: [{ name: "update:page", payload: "number", description: "Смена страницы (1-based)." }]
@@ -56,12 +56,12 @@ export const dataManifest = defineComponentManifest([
   {
     name: "WlBadge",
     category: "data",
-    description: "Бейдж со значением или точкой на PrimeVue Badge.",
+    description: "Бейдж со значением или точкой.",
     props: [
       { name: "value", type: "union", description: "Значение: string | number." },
       { name: "variant", type: "enum", default: "accent", values: WL_BADGE_VARIANTS, description: "Цветовой вариант." },
       { name: "dot", type: "boolean", default: false, description: "Режим точки (value игнорируется)." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
     emits: []
@@ -69,12 +69,12 @@ export const dataManifest = defineComponentManifest([
   {
     name: "WlTag",
     category: "data",
-    description: "Тег на PrimeVue Tag с опциональной кнопкой удаления.",
+    description: "Тег с опциональной кнопкой удаления.",
     props: [
       { name: "variant", type: "enum", default: "gray", values: WL_TAG_VARIANTS, description: "Цветовой вариант." },
       { name: "removable", type: "boolean", default: false, description: "Показать кнопку удаления." },
       { name: "removeLabel", type: "string", default: "Удалить", description: "aria-label кнопки удаления." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [{ name: "default", description: "Текст тега." }],
     emits: [{ name: "remove", payload: "MouseEvent", description: "Клик по кнопке удаления." }]
@@ -108,13 +108,13 @@ export const dataManifest = defineComponentManifest([
   {
     name: "WlAvatar",
     category: "data",
-    description: "Аватар на PrimeVue Avatar: инициалы (label) или image, с индикатором присутствия.",
+    description: "Аватар: инициалы (label) или image, с индикатором присутствия.",
     props: [
       { name: "label", type: "string", description: "Инициалы." },
       { name: "image", type: "string", description: "URL изображения." },
       { name: "size", type: "enum", default: 32, values: WL_AVATAR_SIZES, description: "Размер в px: 24 | 28 | 32 | 36 | 48." },
       { name: "presence", type: "enum", values: WL_AVATAR_PRESENCES, description: "Индикатор присутствия." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [{ name: "default", description: "Кастомное содержимое вместо label/image." }],
     emits: []
@@ -140,13 +140,13 @@ export const dataManifest = defineComponentManifest([
   {
     name: "WlProgress",
     category: "data",
-    description: "Линейный прогресс-бар на PrimeVue ProgressBar.",
+    description: "Линейный прогресс-бар.",
     props: [
       { name: "value", type: "number", default: 0, description: "Процент 0–100." },
       { name: "variant", type: "enum", default: "default", values: WL_PROGRESS_VARIANTS, description: "Цветовой вариант." },
       { name: "thin", type: "boolean", default: false, description: "Тонкая полоска." },
       { name: "showValue", type: "boolean", default: false, description: "Показывать процент." },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
     emits: []
@@ -154,7 +154,7 @@ export const dataManifest = defineComponentManifest([
   {
     name: "WlSkeleton",
     category: "data",
-    description: "Скелетон-заглушка на PrimeVue Skeleton.",
+    description: "Скелетон-заглушка.",
     props: [
       { name: "width", type: "string", default: "100%", description: "Ширина (CSS)." },
       { name: "height", type: "string", default: "12px", description: "Высота (CSS)." },
@@ -166,7 +166,7 @@ export const dataManifest = defineComponentManifest([
         values: ["rectangle", "circle"],
         description: "Форма."
       },
-      { name: "pt", type: "object", description: "PrimeVue pass-through." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
     emits: []
