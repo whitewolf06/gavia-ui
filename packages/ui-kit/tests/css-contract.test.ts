@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
+import { fileURLToPath, URL as NodeURL } from "node:url";
 
+// jsdom's global URL is not a native filesystem URL on Node 18.
 const cssSources: Record<string, string> = Object.fromEntries(
   [
     "../styles/base.css",
@@ -9,7 +11,7 @@ const cssSources: Record<string, string> = Object.fromEntries(
     "../themes/white.css",
     "../themes/graphite.css",
     "../themes/newspaper.css"
-  ].map((file) => [file, readFileSync(new URL(file, import.meta.url), "utf8")])
+  ].map((file) => [file, readFileSync(fileURLToPath(new NodeURL(file, import.meta.url)), "utf8")])
 );
 
 function topLevelBlockHeaders(source: string): string[] {

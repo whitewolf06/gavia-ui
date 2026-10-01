@@ -110,6 +110,10 @@ Foundation → semantic → component — направление ссылок CS
 ширину, три темы и всю партию иконок. `vue-tsc` в playground проверяет
 потребительские шаблоны на этапе разработки.
 
+В тестах jsdom пути для `node:fs` получайте через `fileURLToPath` и `URL`
+из `node:url`. Глобальный `URL` в этом окружении принадлежит jsdom и не
+принимается файловыми API Node 18; передавайте в них строковый путь.
+
 `pnpm build`, `pnpm typecheck`, `pnpm test`, `pnpm build:playground`,
 `pnpm run pack`, `pnpm verify:package`, `pnpm verify:dependencies`,
 `pnpm icons:check`, `pnpm test:e2e`.
