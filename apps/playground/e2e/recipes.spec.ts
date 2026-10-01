@@ -24,8 +24,9 @@ test.beforeEach(async ({ page }) => {
 for (const category of [...new Set(wlManifest.map((entry) => entry.category))]) {
   test(`all ${category} components have a live example and public copyable source`, async ({ page }) => {
     const entries = wlManifest.filter((item) => item.category === category);
-    // This is a batch of independently lazy-loaded examples, not one interaction.
-    test.setTimeout(Math.max(60_000, 20_000 + entries.length * 5_000));
+    // Each lazy example needs three settled clicks (open, select, show source).
+    // Give the batch time for those actions and startup; assertions stay at 5 s.
+    test.setTimeout(Math.max(60_000, 20_000 + entries.length * 15_000));
     const failures: string[] = [];
     page.on("pageerror", (error) => failures.push(error.message));
     for (const entry of entries) {
