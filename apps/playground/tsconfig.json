@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["vite/client", "node"]
   },
-  "include": ["src/**/*.ts", "src/**/*.vue", "e2e/**/*.ts", "e2e/**/*.vue", "playwright.config.ts", "vite.config.ts"]
+  "include": ["src/**/*.ts", "src/**/*.vue", "e2e/**/*.ts", "e2e/**/*.vue", "playwright*.config.ts", "vite.config.ts"]
 }

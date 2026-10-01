@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, useAttrs } from "vue";
-import { mergeWlAttrs, useWlPt } from "../config";
+import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
 import type { WlDensity, WlSizeSm } from "../types";
 import { splitInputAttrs } from "../utils/inputAttrs";
 import { useAnchoredOverlay } from "../utils/anchoredOverlay";
+import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import { optionLabel as resolveOptionLabel, optionValue as resolveOptionValue, useListNavigation } from "../utils/options";
 
 defineOptions({ inheritAttrs: false });
@@ -16,13 +17,15 @@ const props = withDefaults(defineProps<{
   disabled?: boolean;
   size?: WlSizeSm;
   density?: WlDensity;
+  motion?: boolean;
   pt?: Record<string, unknown>;
-}>(), { options: () => [], invalid: false, disabled: false, size: "md", density: "default" });
+}>(), { options: () => [], invalid: false, disabled: false, size: "md", density: "default", motion: undefined });
 const model = defineModel<unknown>();
 const attrs = useAttrs();
 const attrGroups = computed(() => splitInputAttrs(attrs));
 const root = ref<HTMLElement | null>(null);
 const section = useWlPt("select", computed(() => props.pt));
+const motion = useWlMotion(computed(() => props.motion));
 const { visible, panel, style, show, hide } = useAnchoredOverlay();
 const selected = computed(() => props.options.find((option) => Object.is(resolveOptionValue(option, props.optionValue), model.value)));
 const display = computed(() => selected.value === undefined ? props.placeholder ?? "" : resolveOptionLabel(selected.value, props.optionLabel));
@@ -63,6 +66,9 @@ function onKeydown(event: KeyboardEvent): void {
     <input v-if="attrGroups.inputAttrs.name" type="hidden" :name="String(attrGroups.inputAttrs.name)" :value="model == null ? '' : String(model)" />
   </div>
   <Teleport to="body">
+    <Transition name="wl-pop-motion" :css="motion"
+      @before-leave="markOverlayLeaving" @before-enter="restoreOverlayEntering"
+      @leave-cancelled="restoreOverlayEntering">
     <div v-if="visible" ref="panel" v-bind="section('overlay')" class="wl-overlay wl-select-overlay" :style="style">
       <div v-bind="section('listContainer')" class="wl-select__list-container">
         <div v-bind="section('list')" class="wl-select__list" role="listbox">
@@ -76,5 +82,6 @@ function onKeydown(event: KeyboardEvent): void {
         </div>
       </div>
     </div>
+    </Transition>
   </Teleport>
 </template>

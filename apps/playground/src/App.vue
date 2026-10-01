@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, nextTick, onMounted, ref, watch } from "vue";
+import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
 import { version as uiKitVersion } from "../../../packages/ui-kit/package.json";
@@ -58,6 +58,7 @@ const WlTabs = defineAsyncComponent(() => import("../../../packages/ui-kit/src/c
 const WlTag = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlTag.vue"));
 const WlTextarea = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlTextarea.vue"));
 const WlToast = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlToast.vue"));
+const DesignSystem = defineAsyncComponent(() => import("./DesignSystem.vue"));
 import type {
   WlAccordionItem,
   WlBreadcrumbItem,
@@ -80,6 +81,38 @@ import type {
 } from "@whitelife-core/ui-kit";
 
 const vWlTooltip = WlTooltip;
+const headerElement = ref<HTMLElement | null>(null);
+let restoreScrollPadding: (() => void) | undefined;
+
+const activeView = ref<"components" | "system">(
+  typeof window !== "undefined" && new URLSearchParams(window.location.search).get("view") === "system" ? "system" : "components"
+);
+function readView(): void {
+  activeView.value = new URLSearchParams(window.location.search).get("view") === "system" ? "system" : "components";
+}
+async function showView(value: "components" | "system"): Promise<void> {
+  if (activeView.value === value) return;
+  activeView.value = value;
+  const url = new URL(window.location.href);
+  if (value === "system") url.searchParams.set("view", "system");
+  else url.searchParams.delete("view");
+  url.hash = "";
+  window.history.pushState(null, "", url);
+  await nextTick();
+  window.scrollTo({ top: 0 });
+}
+onMounted(() => {
+  readView();
+  window.addEventListener("popstate", readView);
+  const rootStyle = document.documentElement.style;
+  const previous = rootStyle.scrollPaddingTop;
+  const update = () => { rootStyle.scrollPaddingTop = `${(headerElement.value?.offsetHeight ?? 60) + 16}px`; };
+  const observer = new ResizeObserver(update);
+  if (headerElement.value) observer.observe(headerElement.value);
+  update();
+  restoreScrollPadding = () => { observer.disconnect(); rootStyle.scrollPaddingTop = previous; };
+});
+onBeforeUnmount(() => { window.removeEventListener("popstate", readView); restoreScrollPadding?.(); });
 
 const manifestCategories = [
   { id: "actions", label: "Действия" },
@@ -179,6 +212,14 @@ const commandPaletteGroups: WlCommandPaletteGroup[] = [
         data: { targetId: "pg-components" }
       },
       {
+        id: "page-design-system",
+        label: "Дизайн-система",
+        description: "Основы, типографика, токены и паттерны",
+        icon: "image",
+        keywords: ["правила", "стиль", "дизайн"],
+        data: { view: "system" }
+      },
+      {
         id: "page-colors",
         label: "Цвета и токены",
         description: "Foundation, semantic и component tokens",
@@ -227,11 +268,14 @@ const commandPaletteGroups: WlCommandPaletteGroup[] = [
   }
 ];
 
-function onCommandPaletteSelect(item: WlCommandPaletteItem): void {
-  const data = item.data as { component?: string; targetId?: string } | undefined;
-  if (data?.component) {
+async function onCommandPaletteSelect(item: WlCommandPaletteItem): Promise<void> {
+  const data = item.data as { component?: string; targetId?: string; view?: "system" } | undefined;
+  if (data?.view) {
+    await showView(data.view);
+  } else if (data?.component) {
     scrollToComponent(data.component);
   } else if (data?.targetId) {
+    await showView("components");
     document.getElementById(data.targetId)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 }
@@ -243,7 +287,9 @@ function componentDataWl(name: string): string {
     .toLowerCase();
 }
 
-function scrollToComponent(name: string): void {
+async function scrollToComponent(name: string): Promise<void> {
+  await showView("components");
+  await nextTick();
   const dataWl = componentDataWl(name);
   const directTarget = document.querySelector<HTMLElement>(`[data-wl="${dataWl}"]`);
   const showcaseTarget = Array.from(document.querySelectorAll<HTMLElement>(".spec")).find((element) =>
@@ -570,13 +616,16 @@ const drawerVisible = ref(false);
 </script>
 
 <template>
-  <header class="pg-top">
+  <header ref="headerElement" class="pg-top">
     <div class="pg-brand">
       <span class="pg-logo">W</span>
       <b class="pg-title">WhiteLife UI Kit</b>
       <span class="pg-kit-version" :aria-label="`Версия UI Kit ${uiKitVersion}`">v{{ uiKitVersion }}</span>
     </div>
-    <span class="muted">playground · все компоненты</span>
+    <nav class="pg-views" aria-label="Режим витрины">
+      <WlButton size="sm" variant="ghost" :aria-current="activeView === 'components' ? 'page' : undefined" @click="showView('components')">Компоненты</WlButton>
+      <WlButton size="sm" variant="ghost" :aria-current="activeView === 'system' ? 'page' : undefined" @click="showView('system')">Дизайн-система</WlButton>
+    </nav>
     <WlButton size="sm" variant="secondary" @click="commandPaletteVisible = true">
       <template #icon><WlIcon name="search" :size="15" /></template>
       Поиск
@@ -603,7 +652,8 @@ const drawerVisible = ref(false);
     </template>
   </WlCommandPalette>
 
-  <main class="pg-main">
+  <DesignSystem v-if="activeView === 'system'" :theme="theme" @component="scrollToComponent" />
+  <main v-else class="pg-main">
     <div class="pg-shell">
       <aside class="pg-component-nav" aria-label="Навигация по компонентам">
         <div class="pg-component-nav__head">
@@ -1799,6 +1849,12 @@ const drawerVisible = ref(false);
   top: 0;
   background: var(--wl-bg);
   z-index: 50;
+}
+.pg-views { display: flex; gap: 4px; }
+.pg-views [aria-current="page"] { background: var(--wl-accent-soft); color: var(--wl-text); }
+@media (max-width: 1100px) {
+  .pg-top { height: auto; min-height: 60px; flex-wrap: wrap; padding-block: 8px; }
+  .pg-theme { margin-left: 0; }
 }
 .pg-logo {
   width: 26px;

@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { consumerSource } from "./example-source.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, "..");
@@ -105,12 +106,44 @@ try {
   write("index.html", '<!doctype html><html><body><div id="app"></div><script type="module" src="/src/main.ts"></script></body></html>\n');
   write(
     "src/main.ts",
-    `import { createApp } from "vue";\nimport { WlConfig, createWlPt, wlLocaleRu, wlManifest } from "@whitelife-core/ui-kit";\nimport packageManifest from "@whitelife-core/ui-kit/manifest.json";\nimport "@whitelife-core/ui-kit/styles/reset.css";\nimport "@whitelife-core/ui-kit/styles/base.css";\nimport "@whitelife-core/ui-kit/themes/white.css";\nimport "@whitelife-core/ui-kit/themes/graphite.css";\nimport "@whitelife-core/ui-kit/themes/newspaper.css";\nimport App from "./App.vue";\n\nif (wlManifest.length !== packageManifest.length) {\n  throw new Error("Runtime and JSON manifests differ");\n}\n\ncreateApp(App).use(WlConfig, { pt: createWlPt(), locale: wlLocaleRu }).mount("#app");\n`
+    `import { createApp } from "vue";
+import { WlConfig, WlToastService, WlConfirmationService, createWlPt, wlLocaleRu, wlManifest, wlDesignTokens, resolveWlToken, getWlThemeTokens, type WlDesignTokenName, type WlSpace } from "@whitelife-core/ui-kit";
+import packageManifest from "@whitelife-core/ui-kit/manifest.json";
+import designCatalog from "@whitelife-core/ui-kit/design-tokens.json";
+import "@whitelife-core/ui-kit/styles/reset.css";
+import "@whitelife-core/ui-kit/styles/base.css";
+import "@whitelife-core/ui-kit/styles/primitives.css";
+import "@whitelife-core/ui-kit/themes/white.css";
+import "@whitelife-core/ui-kit/themes/graphite.css";
+import "@whitelife-core/ui-kit/themes/newspaper.css";
+import App from "./App.vue";
+
+const spacing: WlSpace = "lg";
+const token: WlDesignTokenName = "--wl-space-lg";
+if (wlManifest.length !== packageManifest.length) throw new Error("Runtime and JSON manifests differ");
+if (wlDesignTokens.length !== designCatalog.tokens.length || resolveWlToken(token) !== "16px") throw new Error("Design token exports differ");
+if (getWlThemeTokens("graphite")[token] !== "16px" || spacing !== "lg") throw new Error("Theme snapshot differs");
+createApp(App).use(WlConfig, { pt: createWlPt(), locale: wlLocaleRu })
+  .use(WlToastService).use(WlConfirmationService).mount("#app");
+`
   );
-  write(
-    "src/App.vue",
-    `<script setup lang="ts">\nimport { ref } from "vue";\nimport { WlButton, WlFilterBar, WlPageHeader, WlSelect } from "@whitelife-core/ui-kit";\n\nconst filtersOpen = ref(false);\nconst selected = ref<string | null>(null);\n</script>\n\n<template>\n  <WlPageHeader title="Consumer smoke" subtitle="Packed package" />\n  <WlFilterBar v-model:open="filtersOpen">\n    <WlButton>Apply</WlButton>\n    <WlSelect v-model="selected" :options="['A', 'B']" />\n  </WlFilterBar>\n</template>\n`
-  );
+  // Compile the exact code copied from the showcase using only the packed public API.
+  const copiedExamples = [];
+  for (const category of ["examples", "recipes"]) {
+    const directory = join(repoRoot, "apps", "playground", "src", "design-system", category);
+    for (const filename of readdirSync(directory).filter((name) => name.endsWith(".vue")).sort()) {
+      write(`src/${category}/${filename}`, consumerSource(readFileSync(join(directory, filename), "utf8")));
+      copiedExamples.push(`./${category}/${filename}`);
+    }
+  }
+  const exampleImports = copiedExamples.map((path, index) => `import Example${index} from "${path}";`).join("\n");
+  write("src/App.vue", `<script setup lang="ts">
+${exampleImports}
+import { WlToast, WlConfirmDialog } from "@whitelife-core/ui-kit";
+const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", ")}];
+</script>
+<template><component :is="examples[0]" /><WlToast /><WlConfirmDialog /></template>
+`);
 
   runPnpm(["--ignore-workspace", "install", "--offline", "--ignore-scripts"], consumerDir);
   runPnpm(["--ignore-workspace", "run", "typecheck"], consumerDir);
@@ -121,8 +154,10 @@ try {
     "dist/index.js",
     "dist/index.d.ts",
     "dist/manifest.json",
+    "dist/design-tokens.json",
     "styles/reset.css",
     "styles/base.css",
+    "styles/primitives.css",
     "themes/white.css",
     "themes/graphite.css",
     "themes/newspaper.css"
@@ -152,6 +187,7 @@ try {
   }
 
   console.log(`Consumer smoke passed for ${packageJson.name}@${packageJson.version}`);
+  console.log(`Copied showcase sources passed typecheck and build: ${copiedExamples.length}`);
 } finally {
   rmSync(temporaryRoot, { recursive: true, force: true });
 }

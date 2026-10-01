@@ -21,7 +21,10 @@ pnpm dev                # playground в dev-режиме
 pnpm build:playground   # сборка playground
 pnpm typecheck          # проверка типов библиотеки
 pnpm test:e2e           # Chromium, Firefox, WebKit и мобильный Chromium
+pnpm test:visual        # сравнение desktop/mobile с эталонами трёх тем (Windows)
 pnpm icons:check        # проверка SVG-каталога и сгенерированного реестра
+pnpm tokens:sync        # обновление CSS, тем и каталогов из source.json
+pnpm tokens:check       # слои, ссылки, контраст и актуальность дизайн-токенов
 pnpm run pack          # tar-архив пакета (без публикации); важно: именно `run pack`, см. ниже
 pnpm verify:package     # изолированный потребитель архива с одним Vue
 pnpm verify:dependencies # отсутствие PrimeVue/PrimeIcons в коде и зависимостях
@@ -110,6 +113,11 @@ import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 Их состояние принадлежит каждому экземпляру Vue-приложения. Переход с версии 0.3
 описан в [руководстве по миграции](docs/migration-0.5.md).
 
+Анимация всплывающих элементов включена по умолчанию. Отключить её во всём
+приложении можно через `app.use(WlConfig, { motion: false })`, а для отдельного
+компонента — через `:motion="false"`. Поддерживаются системные настройки
+уменьшения движения. Подробности — в [документации пакета](packages/ui-kit/README.md#анимация-оверлеев).
+
 ## Subpath exports
 
 ```jsonc
@@ -122,6 +130,21 @@ import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 ```
 
 ## Система стилизации
+
+### Дизайн-система
+
+В playground выберите **Дизайн-система** (или откройте `?view=system`): основы,
+типографика, отступы, каталог токенов, контракты всех компонентов, рабочие
+паттерны и отчёт контраста White / Graphite / Newspaper. Для каждого компонента
+есть живой Vue-пример, применимые состояния и код с копированием. Шесть рецептов
+показывают список с CRUD, форму, настройки, деталь, пошаговую форму и вложения.
+Отдельно доступны сложный контент и вложенные оверлеи. Правила и интеграция —
+[docs/design-system.md](docs/design-system.md).
+
+`tokens/source.json` — единый источник для CSS, тем, типизированного API
+`wlDesignTokens` / `resolveWlToken` и экспорта `@whitelife-core/ui-kit/design-tokens.json`.
+Примитивы `wl-stack`, `wl-inline`, `wl-grid`, `wl-surface`, `wl-text-*` доступны
+через явный импорт `@whitelife-core/ui-kit/styles/primitives.css`.
 
 ### Токены `--wl-*`
 

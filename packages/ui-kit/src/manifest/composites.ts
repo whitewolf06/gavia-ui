@@ -151,7 +151,8 @@ export const compositesManifest = defineComponentManifest([
       { name: "loading", type: "boolean", default: false },
       { name: "disabled", type: "boolean", default: false },
       { name: "size", type: "enum", default: "md", values: ["sm", "md", "lg"] },
-      { name: "density", type: "enum", default: "default", values: ["default", "compact"] }
+      { name: "density", type: "enum", default: "default", values: ["default", "compact"] },
+      { name: "motion", type: "boolean", description: "Анимация окна; по умолчанию WlConfig.motion (true)." }
     ],
     slots: [
       { name: "group", description: "Заголовок группы; scope { group }." },

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, useAttrs, useId } from "vue";
-import { mergeWlAttrs, useWlPt } from "../config";
+import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
+import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import WlIcon from "./WlIcon.vue";
 
 defineOptions({ inheritAttrs: false });
@@ -15,16 +16,19 @@ const props = withDefaults(defineProps<{
   ariaLabel?: string;
   ariaLabelledby?: string;
   width?: string;
+  motion?: boolean;
   pt?: Record<string, unknown>;
 }>(), {
-  modal: true, closable: true, dismissable: false, closeOnEscape: true, blockScroll: true
+  modal: true, closable: true, dismissable: false, closeOnEscape: true, blockScroll: true,
+  motion: undefined
 });
-const emit = defineEmits<{ open: []; close: [] }>();
+const emit = defineEmits<{ open: []; close: []; afterLeave: [] }>();
 const visible = defineModel<boolean>("visible", { default: false });
 const dialog = ref<HTMLElement | null>(null);
 const titleId = useId();
 const attrs = useAttrs();
 const section = useWlPt("dialog", computed(() => props.pt));
+const motion = useWlMotion(computed(() => props.motion));
 useOverlayLifecycle({
   visible, container: dialog,
   closeOnEscape: () => props.closeOnEscape,
@@ -40,6 +44,9 @@ function onMask(event: MouseEvent): void {
 
 <template>
   <Teleport to="body">
+    <Transition name="wl-dialog-motion" :css="motion"
+      @before-leave="markOverlayLeaving" @before-enter="restoreOverlayEntering"
+      @leave-cancelled="restoreOverlayEntering" @after-leave="emit('afterLeave')">
     <div v-if="visible" v-bind="section('mask')" class="wl-dialog-mask"
       :class="{ 'wl-mask': modal, 'wl-dialog-host': !modal }" @mousedown="onMask">
       <section ref="dialog" data-wl="dialog" v-bind="mergeWlAttrs(section('root'), attrs)" class="wl-dialog" role="dialog"
@@ -59,5 +66,6 @@ function onMask(event: MouseEvent): void {
         <footer v-if="$slots.footer" v-bind="section('footer')" class="wl-dialog__footer"><slot name="footer" /></footer>
       </section>
     </div>
+    </Transition>
   </Teleport>
 </template>

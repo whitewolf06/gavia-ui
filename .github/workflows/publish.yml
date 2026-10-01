@@ -52,6 +52,9 @@ jobs:
       - name: Verify icon registry
         run: pnpm icons:check
 
+      - name: Verify design tokens and theme contrast
+        run: pnpm tokens:check
+
       - name: Build library
         run: pnpm build
 
@@ -104,8 +107,34 @@ jobs:
           path: apps/playground/test-results/
           if-no-files-found: ignore
 
+  visual:
+    name: Reviewed visual regression (desktop/mobile, three themes)
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build library CSS and public API
+        run: pnpm build
+      - name: Install pinned Chromium
+        run: pnpm exec playwright install chromium
+      - name: Compare reviewed screenshots
+        run: pnpm test:visual
+      - name: Save expected, actual, diff images and traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: whiteui-visual-results
+          path: apps/playground/test-results/
+          if-no-files-found: ignore
+
   publish:
-    needs: [verify, browser]
+    needs: [verify, browser, visual]
     if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:

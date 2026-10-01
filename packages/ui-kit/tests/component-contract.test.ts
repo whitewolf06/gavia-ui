@@ -36,19 +36,47 @@ describe("component public contract", () => {
       key === "description" ? undefined : value
     )) as typeof baseline;
     expect(current).toHaveLength(51);
+    expect(current.map((entry) => entry.name)).toEqual(baseline.map((entry) => entry.name));
     for (const [index, entry] of current.entries()) {
       const original = baseline[index]!;
-      for (const [propIndex, prop] of entry.props.entries()) {
-        if (prop.type !== "icon") continue;
-        const previousNames = (original.props[propIndex] as { values?: string[] } | undefined)?.values ?? [];
-        const iconProp = prop as { values?: string[] };
-        expect(iconProp.values, `${entry.name}.${prop.name}: old icons must remain`).toEqual(
-          expect.arrayContaining(previousNames)
-        );
-        iconProp.values = previousNames;
-      }
+      const props = original.props.map((previous) => {
+        const actual = entry.props.find((prop) => prop.name === previous.name);
+        expect(actual, `${entry.name}.${previous.name}: original prop removed`).toBeDefined();
+        const comparable = { ...actual } as Record<string, unknown>;
+        if (previous.type === "icon") {
+          const previousNames = (previous as { values?: string[] }).values ?? [];
+          expect(comparable.values, `${entry.name}.${previous.name}: old icons must remain`).toEqual(
+            expect.arrayContaining(previousNames)
+          );
+          comparable.values = previousNames;
+        }
+        return comparable;
+      });
+      const slots = original.slots.map((previous) =>
+        entry.slots.find((slot) => slot.name === previous.name)
+      );
+      const emits = original.emits.map((previous) =>
+        entry.emits.find((event) => event.name === previous.name)
+      );
+      expect(slots, `${entry.name}: original slot removed`).not.toContain(undefined);
+      expect(emits, `${entry.name}: original event removed`).not.toContain(undefined);
+      expect({ ...entry, props, slots, emits }).toEqual(original);
     }
-    expect(current).toEqual(baseline);
+  });
+
+  it("documents the optional motion API for every animated surface", () => {
+    for (const name of [
+      "WlDialog", "WlConfirmDialog", "WlDrawer", "WlPopover", "WlMenu",
+      "WlSelect", "WlMultiSelect", "WlAutocomplete", "WlDatePicker",
+      "WlCommandPalette", "WlToast"
+    ]) {
+      const entry = wlManifest.find((component) => component.name === name);
+      expect(entry?.props.find((prop) => prop.name === "motion"), name).toMatchObject({
+        name: "motion", type: "boolean"
+      });
+    }
+    expect(wlManifest.find((entry) => entry.name === "WlDialog")?.emits.map((event) => event.name))
+      .toContain("afterLeave");
   });
 
   it("gives every component a stable data-wl root marker", () => {

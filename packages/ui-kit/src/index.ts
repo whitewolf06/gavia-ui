@@ -1,5 +1,6 @@
 export * from "./components";
 export * from "./types";
+export * from "./design-system";
 export { WL_ICON_NAMES } from "./icons.generated";
 export * from "./manifest";
 export { createWlPt } from "./theme";

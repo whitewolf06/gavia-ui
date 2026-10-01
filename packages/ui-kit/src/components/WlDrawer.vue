@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, useId } from "vue";
-import { useWlPt } from "../config";
+import { useWlMotion, useWlPt } from "../config";
 import type { WlDrawerPosition } from "../types";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
+import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import WlIcon from "./WlIcon.vue";
 
 const props = withDefaults(defineProps<{
@@ -14,15 +15,18 @@ const props = withDefaults(defineProps<{
   blockScroll?: boolean;
   ariaLabel?: string;
   ariaLabelledby?: string;
+  motion?: boolean;
   pt?: Record<string, unknown>;
 }>(), {
-  position: "right", modal: true, dismissable: true, closeOnEscape: true, blockScroll: true
+  position: "right", modal: true, dismissable: true, closeOnEscape: true, blockScroll: true,
+  motion: undefined
 });
 const emit = defineEmits<{ open: []; close: [] }>();
 const visible = defineModel<boolean>("visible", { default: false });
 const drawer = ref<HTMLElement | null>(null);
 const titleId = useId();
 const section = useWlPt("drawer", computed(() => props.pt));
+const motion = useWlMotion(computed(() => props.motion));
 useOverlayLifecycle({
   visible, container: drawer,
   closeOnEscape: () => props.closeOnEscape,
@@ -38,6 +42,9 @@ function onMask(event: MouseEvent): void {
 
 <template>
   <Teleport to="body">
+    <Transition name="wl-drawer-motion" :css="motion"
+      @before-leave="markOverlayLeaving" @before-enter="restoreOverlayEntering"
+      @leave-cancelled="restoreOverlayEntering">
     <div v-if="visible" v-bind="section('mask')" class="wl-drawer-mask"
       :class="{ 'wl-mask': modal, 'wl-drawer-host': !modal }" @mousedown="onMask">
       <aside ref="drawer" v-bind="section('root')" class="wl-drawer" :class="`wl-drawer--${position}`"
@@ -55,5 +62,6 @@ function onMask(event: MouseEvent): void {
         <footer v-if="$slots.footer" v-bind="section('footer')" class="wl-drawer__footer"><slot name="footer" /></footer>
       </aside>
     </div>
+    </Transition>
   </Teleport>
 </template>

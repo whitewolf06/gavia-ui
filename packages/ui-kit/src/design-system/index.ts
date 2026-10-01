@@ -1,0 +1,28 @@
+import type { WlThemeName } from "../types";
+import type { WlDesignTokenDefinition } from "./types";
+import { wlDesignTokens, type WlDesignTokenName } from "./tokens.generated";
+
+export * from "./types";
+export * from "./tokens.generated";
+
+const definitions = new Map<string, WlDesignTokenDefinition>(wlDesignTokens.map((token) => [token.name, token]));
+
+/** Resolves the shipped theme snapshot without reading DOM or consumer overrides. */
+export function resolveWlToken(name: WlDesignTokenName, theme: WlThemeName = "white"): string {
+  if (!["white", "graphite", "newspaper"].includes(theme)) throw new Error(`Unknown WhiteUI theme: ${theme}`);
+  function resolve(reference: string, trail: string[]): string {
+    if (trail.includes(reference)) throw new Error(`Circular WhiteUI token: ${reference}`);
+    const token = definitions.get(reference);
+    if (!token) throw new Error(`Unknown WhiteUI token: ${reference}`);
+    return (token.themes?.[theme] ?? token.value).replace(
+      /var\((--wl-[a-z0-9-]+)\)/g,
+      (_, dependency: string) => resolve(dependency, [...trail, reference])
+    );
+  }
+  return resolve(name, []);
+}
+
+/** Returns a new, immutable snapshot suitable for editors and server rendering. */
+export function getWlThemeTokens(theme: WlThemeName = "white"): Readonly<Record<WlDesignTokenName, string>> {
+  return Object.freeze(Object.fromEntries(wlDesignTokens.map((token) => [token.name, resolveWlToken(token.name, theme)]))) as Readonly<Record<WlDesignTokenName, string>>;
+}

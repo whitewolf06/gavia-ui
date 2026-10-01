@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, useAttrs, watch } from "vue";
-import { mergeWlAttrs, useWlLocale, useWlPt } from "../config";
+import { mergeWlAttrs, useWlLocale, useWlMotion, useWlPt } from "../config";
 import type { WlSizeSm } from "../types";
 import { splitInputAttrs } from "../utils/inputAttrs";
 import { useAnchoredOverlay } from "../utils/anchoredOverlay";
+import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import WlIcon from "./WlIcon.vue";
 
 defineOptions({ inheritAttrs: false });
@@ -15,15 +16,18 @@ const props = withDefaults(defineProps<{
   showIcon?: boolean;
   minDate?: string;
   maxDate?: string;
+  motion?: boolean;
   pt?: Record<string, unknown>;
 }>(), {
-  placeholder: "дд.мм.гггг", size: "md", disabled: false, invalid: false, showIcon: false
+  placeholder: "дд.мм.гггг", size: "md", disabled: false, invalid: false, showIcon: false,
+  motion: undefined
 });
 const model = defineModel<string | null>({ default: null });
 const attrs = useAttrs();
 const attrGroups = computed(() => splitInputAttrs(attrs));
 const locale = useWlLocale();
 const section = useWlPt("datepicker", computed(() => props.pt));
+const motion = useWlMotion(computed(() => props.motion));
 const control = ref<HTMLInputElement | null>(null);
 const text = ref("");
 const initial = parseIso(model.value) ?? new Date();
@@ -131,6 +135,9 @@ function onKeydown(event: KeyboardEvent): void {
     </button>
   </div>
   <Teleport to="body">
+    <Transition name="wl-pop-motion" :css="motion"
+      @before-leave="markOverlayLeaving" @before-enter="restoreOverlayEntering"
+      @leave-cancelled="restoreOverlayEntering">
     <div v-if="visible" ref="panel" v-bind="section('panel')" class="wl-overlay wl-dp__panel" :style="style">
       <div v-bind="section('calendarContainer')" class="wl-dp__container">
         <div v-bind="section('calendar')" class="wl-dp__calendar">
@@ -175,5 +182,6 @@ function onKeydown(event: KeyboardEvent): void {
         </div>
       </div>
     </div>
+    </Transition>
   </Teleport>
 </template>

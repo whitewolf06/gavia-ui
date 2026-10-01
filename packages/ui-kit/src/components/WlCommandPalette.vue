@@ -9,8 +9,10 @@ import {
   useAttrs,
   watch
 } from "vue";
+import { useWlMotion } from "../config";
 import type { WlCommandPaletteGroup, WlCommandPaletteItem, WlDensity, WlSizeSm } from "../types";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
+import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import WlIcon from "./WlIcon.vue";
 
 defineOptions({ inheritAttrs: false });
@@ -29,6 +31,7 @@ const props = withDefaults(
     disabled?: boolean;
     size?: WlSizeSm;
     density?: WlDensity;
+    motion?: boolean;
   }>(),
   {
     groups: () => [],
@@ -42,11 +45,13 @@ const props = withDefaults(
     loading: false,
     disabled: false,
     size: "md",
-    density: "default"
+    density: "default",
+    motion: undefined
   }
 );
 
 const attrs = useAttrs();
+const motion = useWlMotion(computed(() => props.motion));
 
 const emit = defineEmits<{
   search: [query: string];
@@ -213,6 +218,9 @@ defineExpose({
 
 <template>
   <Teleport to="body">
+    <Transition name="wl-command-motion" :css="motion"
+      @before-leave="markOverlayLeaving" @before-enter="restoreOverlayEntering"
+      @leave-cancelled="restoreOverlayEntering">
     <div
       v-if="visible"
       v-bind="attrs"
@@ -311,5 +319,6 @@ defineExpose({
         </div>
       </div>
     </div>
+    </Transition>
   </Teleport>
 </template>

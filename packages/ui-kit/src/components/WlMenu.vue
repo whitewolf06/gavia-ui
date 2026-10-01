@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useWlPt } from "../config";
+import { useWlMotion, useWlPt } from "../config";
 import type { WlMenuItem } from "../types";
 import { useAnchoredOverlay } from "../utils/anchoredOverlay";
+import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import WlIcon from "./WlIcon.vue";
 
 const props = withDefaults(defineProps<{
@@ -10,10 +11,12 @@ const props = withDefaults(defineProps<{
   popup?: boolean;
   ariaLabel?: string;
   ariaLabelledby?: string;
+  motion?: boolean;
   pt?: Record<string, unknown>;
-}>(), { items: () => [], popup: false });
+}>(), { items: () => [], popup: false, motion: undefined });
 const emit = defineEmits<{ open: []; close: [] }>();
 const section = useWlPt("menu", computed(() => props.pt));
+const motion = useWlMotion(computed(() => props.motion));
 const { visible, panel, style, toggle, show, hide } = useAnchoredOverlay({
   onOpen: () => emit("open"),
   onClose: () => emit("close")
@@ -41,6 +44,9 @@ defineExpose({ toggle, show, hide });
 
 <template>
   <Teleport to="body" :disabled="!popup">
+    <Transition name="wl-pop-motion" :css="popup && motion"
+      @before-leave="markOverlayLeaving" @before-enter="restoreOverlayEntering"
+      @leave-cancelled="restoreOverlayEntering">
     <div v-if="!popup || visible" ref="panel" v-bind="section('root')"
       class="wl-menu" :style="popup ? style : undefined" data-wl="menu">
       <ul v-bind="section('list')" class="wl-menu__list" role="menu"
@@ -63,5 +69,6 @@ defineExpose({ toggle, show, hide });
         </li>
       </ul>
     </div>
+    </Transition>
   </Teleport>
 </template>

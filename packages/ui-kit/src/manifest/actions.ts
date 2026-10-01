@@ -117,6 +117,7 @@ export const actionsManifest = defineComponentManifest([
       { name: "popup", type: "boolean", default: false, description: "Popup-режим (открытие через toggle/show)." },
       { name: "ariaLabel", type: "string", description: "Доступное имя меню." },
       { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего меню." },
+      { name: "motion", type: "boolean", description: "Анимация popup-меню; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],

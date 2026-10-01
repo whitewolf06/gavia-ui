@@ -183,7 +183,7 @@ function iconFor(file: File): WlIconName {
       />
     </div>
 
-    <ul v-if="errors.length" class="wl-upload__errors">
+    <ul v-if="errors.length" class="wl-upload__errors" role="alert">
       <li v-for="(err, i) in errors" :key="i" class="wl-upload__error">
         <WlIcon name="warn" :size="13" />
         <span class="wl-upload__error-name">{{ err.name }}</span>

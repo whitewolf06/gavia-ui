@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useWlPt } from "../config";
+import { useWlMotion, useWlPt } from "../config";
 import { useToastStore } from "../services/toast";
+import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import WlIcon from "./WlIcon.vue";
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   group?: string;
+  motion?: boolean;
   pt?: Record<string, unknown>;
-}>();
+}>(), { motion: undefined });
 const store = useToastStore();
 const section = useWlPt("toast", computed(() => props.pt));
+const motion = useWlMotion(computed(() => props.motion));
 const messages = computed(() => store.messages.value.filter((message) => message.group === props.group));
 const iconName = { success: "check", info: "info", warn: "warn", error: "x" } as const;
 </script>
@@ -17,6 +20,9 @@ const iconName = { success: "check", info: "info", warn: "warn", error: "x" } as
 <template>
   <Teleport to="body">
     <div v-bind="section('root')" class="wl-toast" data-wl="toast" aria-live="polite">
+      <TransitionGroup name="wl-toast-motion" :css="motion"
+        @before-leave="markOverlayLeaving" @before-enter="restoreOverlayEntering"
+        @leave-cancelled="restoreOverlayEntering">
       <div v-for="message in messages" :key="message.id"
         v-bind="section('message')" class="wl-toast__message" :data-severity="message.severity">
         <div v-bind="section('messageContent')" class="wl-toast__content">
@@ -31,6 +37,7 @@ const iconName = { success: "check", info: "info", warn: "warn", error: "x" } as
           </button>
         </div>
       </div>
+      </TransitionGroup>
     </div>
   </Teleport>
 </template>

@@ -37,6 +37,19 @@ describe("WlButton", () => {
     expect(wrapper.emitted("click")).toHaveLength(1);
   });
 
+  it("establishes the opener focus before the consumer click handler", async () => {
+    let focusedDuringClick: Element | null = null;
+    const wrapper = mount(WlButton, {
+      global, attachTo: document.body,
+      props: { onClick: () => { focusedDuringClick = document.activeElement; } }
+    });
+    try {
+      await wrapper.find("button").trigger("click");
+      expect(focusedDuringClick).toBe(wrapper.find("button").element);
+      expect(document.activeElement).toBe(wrapper.find("button").element);
+    } finally { wrapper.unmount(); }
+  });
+
   it("applies disabled state and blocks click", async () => {
     const wrapper = mount(WlButton, {
       global,

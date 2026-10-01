@@ -1,5 +1,24 @@
 # @whitelife-core/ui-kit
 
+## Дизайн-система
+
+Общие роли типографики, шкала расстояний, поверхности, состояния и UI-паттерны
+описаны в [руководстве](../../docs/design-system.md). Playground `?view=system`
+показывает каталог токенов, три темы и контракты 51 компонента.
+
+Опциональная компоновка и типографика: явный импорт
+`@whitelife-core/ui-kit/styles/primitives.css`. Экспорты `wlDesignTokens`,
+`wlDesignThemes`, `wlSpacing`, `wlTypography`, `wlBreakpoints`, `resolveWlToken`,
+`getWlThemeTokens` работают без DOM. JSON-каталог доступен по
+`@whitelife-core/ui-kit/design-tokens.json`. Исходник токенов обновляется через
+`pnpm tokens:sync`, проверяется через `pnpm tokens:check`.
+
+Старые CSS-токены сохраняют имена и значения. Для доступного контраста кнопки
+primary/danger используют новые роли `--wl-action-primary-*` и
+`--wl-action-danger-*`. Собственные цвета кнопок настраивайте через bg/hover/text
+и проверяйте их сочетания. Во всех темах добавлена видимая обводка фокуса.
+Подсказки полей, заголовки и пустые состояния используют `--wl-text-muted`.
+
 Библиотека компонентов WhiteLife: Vue 3 + TypeScript (strict), собственный DOM
 и поведение; стили — обычный CSS с custom properties
 `--wl-*` и CSS Layers. Без Pinia, роутера, API-клиентов и бизнес-логики.
@@ -135,6 +154,34 @@ spot-цветами.
 dismiss-поведение и доступную подпись; диалог и дровер также позволяют управлять
 `blockScroll`. Собственные мобильные оверлеи кита закрываются только верхним
 слоем, удерживают фокус внутри и корректно возвращают его в триггер.
+При блокировке страницы место существующей вертикальной полосы прокрутки
+сохраняется, чтобы контент не смещался при открытии и закрытии.
+
+### Анимация оверлеев
+
+Появление и закрытие диалогов, дроверов, всплывающих меню и панелей выбора,
+палитры команд, уведомлений и подсказок анимируются по умолчанию. Настройка
+приложения действует на все эти элементы:
+
+```ts
+app.use(WlConfig, { motion: false });
+```
+
+Локальный `motion` имеет приоритет над `WlConfig.motion`. Его принимают
+`WlDialog`, `WlConfirmDialog`, `WlDrawer`, `WlPopover`, popup-`WlMenu`,
+`WlSelect`, `WlMultiSelect`, `WlAutocomplete`, `WlDatePicker`,
+`WlCommandPalette` и `WlToast`:
+
+```vue
+<WlDrawer v-model:visible="open" :motion="false" />
+```
+
+Для директивы подсказки используйте объект
+`v-wl-tooltip="{ value: 'Помощь', motion: false }"`. Значение `true` локально
+включает анимацию даже при `WlConfig.motion: false`. При системной настройке
+`prefers-reduced-motion: reduce` длительности переходов сокращаются почти до
+нуля; подсказка удаляется сразу. Скорость можно настроить токенами
+`--wl-dur-3`, `--wl-dur-4` и `--wl-dur-5`.
 
 ## Pass-through (`pt`)
 
@@ -233,7 +280,9 @@ pnpm build      # сборка (vite lib mode → dist/index.js + dist/*.d.ts)
 pnpm test       # Vitest + Vue Test Utils
 pnpm typecheck  # vue-tsc --noEmit
 pnpm test:e2e   # desktop/mobile, Chromium/Firefox/WebKit
+pnpm test:visual # сравнение эталонов трёх тем на desktop/mobile
 pnpm icons:check
+pnpm tokens:check
 pnpm verify:package
 pnpm verify:dependencies
 ```

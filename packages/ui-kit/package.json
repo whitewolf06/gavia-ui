@@ -22,8 +22,10 @@
     },
     "./styles/reset.css": "./styles/reset.css",
     "./styles/base.css": "./styles/base.css",
+    "./styles/primitives.css": "./styles/primitives.css",
     "./themes/*.css": "./themes/*.css",
     "./manifest.json": "./dist/manifest.json",
+    "./design-tokens.json": "./dist/design-tokens.json",
     "./package.json": "./package.json"
   },
   "files": [
@@ -38,7 +40,9 @@
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
     "pack": "pnpm pack",
     "icons:sync": "node scripts/sync-icons.mjs",
-    "icons:check": "node scripts/sync-icons.mjs --check"
+    "icons:check": "node scripts/sync-icons.mjs --check",
+    "tokens:sync": "node scripts/sync-tokens.mjs",
+    "tokens:check": "node scripts/sync-tokens.mjs --check"
   },
   "peerDependencies": {
     "vue": "^3.4.0"

@@ -42,6 +42,9 @@ const section = useWlPt("button", computed(() => props.pt));
 
 function onClick(event: MouseEvent): void {
   if (props.disabled || props.loading) return;
+  // Safari does not focus buttons on pointer activation. Establish the opener
+  // before consumers show an overlay so its normal focus restoration works.
+  if (event.currentTarget instanceof HTMLElement) event.currentTarget.focus({ preventScroll: true });
   emit("click", event);
 }
 </script>

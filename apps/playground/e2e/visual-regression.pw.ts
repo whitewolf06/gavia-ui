@@ -1,0 +1,75 @@
+import { expect, test } from "@playwright/test";
+const themes = [{ name: "white", label: "White" }, { name: "graphite", label: "Graphite" }, { name: "newspaper", label: "Newspaper" }];
+test.beforeEach(async ({ page }) => {
+  // Fixed time and locally available fonts prevent unrelated machine/date changes.
+  await page.clock.setFixedTime(new Date("2026-10-01T12:00:00Z"));
+  await page.goto("/?view=system", { waitUntil: "domcontentloaded" });
+  await page.getByRole("heading", { name: "Единый язык интерфейсов" }).waitFor({ state: "visible" });
+  // Capture the example itself: the showcase header must not cover tall mobile screens.
+  // Functional tests retain the actual sticky header and normal viewport.
+  await page.addStyleTag({ content: 'html { --wl-font: Arial, sans-serif; --wl-mono: Consolas, monospace; scroll-behavior: auto; } .pg-top { position: static; }' });
+  await page.evaluate(() => document.fonts.ready);
+});
+for (const theme of themes) {
+  test(`${theme.name}: six complete screens`, async ({ page }) => {
+    await page.locator(".pg-theme").getByText(theme.label, { exact: true }).click();
+    for (const id of ["MaterialList", "ProfileForm", "Preferences", "MaterialDetail", "ProjectWizard", "AttachmentUpload"]) {
+      await page.locator(`[data-testid="ds-recipes"] [data-recipe="${id}"]`).first().click();
+      const preview = page.getByTestId("ds-recipe-preview");
+      await expect(preview).toHaveAttribute("data-recipe", id);
+      await expect(preview.locator(":scope > :first-child")).toBeVisible();
+      await page.mouse.move(0, 0);
+      await expect(preview).toHaveScreenshot(`${theme.name}-recipe-${id}.png`);
+    }
+    await expect(page.getByTestId("ds-stress")).toHaveScreenshot(`${theme.name}-long-content.png`);
+  });
+  test(`${theme.name}: interactive states and overlay focus`, async ({ page }) => {
+    await page.locator(".pg-theme").getByText(theme.label, { exact: true }).click();
+    const explorer = page.getByTestId("ds-explorer");
+    const preview = page.getByTestId("ds-example-preview");
+    async function select(name: string): Promise<void> {
+      await page.getByRole("combobox", { name: "Компонент", exact: true }).click();
+      await page.getByRole("listbox").getByRole("option", { name, exact: true }).click();
+      await expect(explorer).toHaveAttribute("data-component", name);
+      await expect(preview.locator(":scope > .wl-stack")).toBeVisible();
+    }
+    await select("WlButton");
+    await explorer.getByLabel("Пример: variant", { exact: true }).selectOption("primary");
+    await explorer.getByRole("button", { name: "Проверить фокус" }).press("Enter");
+    await expect(preview.getByRole("button", { name: "Добавить" })).toBeFocused();
+    await expect(preview).toHaveScreenshot(`${theme.name}-button-focus.png`);
+    await select("WlInput");
+    await explorer.getByRole("checkbox", { name: "invalid", exact: true }).check();
+    await page.mouse.move(0, 0);
+    await expect(preview).toHaveScreenshot(`${theme.name}-input-invalid.png`);
+    await select("WlSelect");
+    await preview.getByRole("combobox", { name: "Область" }).press("Enter");
+    // Vue removes entry classes on animation frames even with reduced motion.
+    // Wait for the actual final geometry before cropping the list's screenshot.
+    const selectOverlay = page.locator(".wl-select-overlay");
+    await expect(selectOverlay).not.toHaveClass(/wl-pop-motion-enter-/);
+    await expect(selectOverlay).toHaveCSS("transform", "none");
+    // This cropped image checks the list's drawing, independently of placement.
+    // A fractional fixed top changes glyph rasterization by a pixel between crops.
+    // Preserve fonts, dimensions and styles, and align only the raster origin.
+    await selectOverlay.evaluate((element: HTMLElement) => {
+      for (const axis of ["top", "left"] as const) {
+        element.style[axis] = `${Math.round(Number.parseFloat(element.style[axis]))}px`;
+      }
+    });
+    await expect(page.getByRole("listbox")).toHaveScreenshot(`${theme.name}-select-open.png`);
+    await page.keyboard.press("Escape");
+    await select("WlDialog");
+    await preview.getByRole("button", { name: "Открыть диалог" }).press("Enter");
+    await expect(page.getByRole("dialog", { name: "Сведения о материале" })).toHaveScreenshot(`${theme.name}-dialog.png`);
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("dialog", { name: "Сведения о материале" })).toHaveCount(0);
+    await select("WlDrawer");
+    await preview.getByRole("button", { name: "Открыть Drawer" }).press("Enter");
+    await expect(page.getByRole("dialog", { name: "Детали материала" })).toHaveScreenshot(`${theme.name}-drawer.png`);
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("dialog", { name: "Детали материала" })).toHaveCount(0);
+    await page.locator(".pg-top").getByRole("button", { name: /^Поиск/ }).press("Enter");
+    await expect(page.locator(".wl-command-palette")).toHaveScreenshot(`${theme.name}-palette-focus.png`);
+  });
+}

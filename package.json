@@ -17,8 +17,11 @@
     "verify:package": "node scripts/verify-package.mjs",
     "verify:dependencies": "node scripts/check-dependencies.mjs",
     "test:e2e": "pnpm exec playwright test -c apps/playground/playwright.config.ts",
+    "test:visual": "pnpm exec playwright test -c apps/playground/playwright.visual.config.ts",
     "icons:sync": "pnpm --filter @whitelife-core/ui-kit icons:sync",
-    "icons:check": "pnpm --filter @whitelife-core/ui-kit icons:check"
+    "icons:check": "pnpm --filter @whitelife-core/ui-kit icons:check",
+    "tokens:sync": "pnpm --filter @whitelife-core/ui-kit tokens:sync",
+    "tokens:check": "pnpm --filter @whitelife-core/ui-kit tokens:check"
   },
   "devDependencies": {
     "@playwright/test": "1.58.2"

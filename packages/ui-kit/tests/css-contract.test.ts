@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 const cssSources: Record<string, string> = Object.fromEntries(
   [
     "../styles/base.css",
+    "../styles/primitives.css",
     "../styles/reset.css",
     "../themes/white.css",
     "../themes/graphite.css",
@@ -62,6 +63,7 @@ describe("CSS public contract", () => {
     expect(base).toContain("@layer wl.reset, wl.tokens, wl.components;");
     expect(topLevelBlockHeaders(base).every((header) => /^@layer wl\.(tokens|components)$/.test(header))).toBe(true);
     expect(topLevelBlockHeaders(reset)).toEqual(["@layer wl.reset"]);
+    expect(topLevelBlockHeaders(cssSources["../styles/primitives.css"]!)).toEqual(["@layer wl.components"]);
 
     for (const [file, source] of Object.entries(cssSources)) {
       if (!file.includes("/themes/")) continue;

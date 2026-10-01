@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, shallowRef, watch } from "vue";
 import { useWlPt } from "../config";
-import { useConfirmationStore } from "../services/confirmation";
+import { useConfirmationStore, type WlConfirmation } from "../services/confirmation";
 import WlButton from "./WlButton.vue";
 import WlDialog from "./WlDialog.vue";
 import WlIcon from "./WlIcon.vue";
 
-const props = defineProps<{ group?: string; pt?: Record<string, unknown> }>();
+const props = withDefaults(defineProps<{ group?: string; motion?: boolean; pt?: Record<string, unknown> }>(), {
+  motion: undefined
+});
 const store = useConfirmationStore();
 const section = useWlPt("confirmdialog", computed(() => props.pt));
 const dialogPt = computed(() => Object.fromEntries(
@@ -16,6 +18,10 @@ const entry = computed(() => {
   const current = store.current.value;
   return current && current.group === props.group ? current : null;
 });
+// Keep the message in the DOM until the dialog's exit transition finishes.
+const lastEntry = shallowRef<WlConfirmation | null>(null);
+watch(entry, (value) => { if (value) lastEntry.value = value; }, { immediate: true });
+const displayed = computed(() => entry.value ?? lastEntry.value);
 const visible = computed({
   get: () => entry.value !== null,
   set: (value: boolean) => {
@@ -33,14 +39,14 @@ function accept(): void {
 </script>
 
 <template>
-  <WlDialog v-model:visible="visible" class="wl-confirm" :header="entry?.header" :pt="dialogPt" :closable="false" data-wl="confirm-dialog">
+  <WlDialog v-model:visible="visible" class="wl-confirm" :header="displayed?.header" :pt="dialogPt" :motion="motion" :closable="false" data-wl="confirm-dialog" @after-leave="lastEntry = null">
     <div v-bind="section('content')" class="wl-confirm__content">
-      <WlIcon v-if="entry?.danger" v-bind="section('icon')" name="warn" :size="20" class="wl-confirm__icon wl-confirm__icon--danger" />
-      <span v-bind="section('message')" class="wl-confirm__message">{{ entry?.message }}</span>
+      <WlIcon v-if="displayed?.danger" v-bind="section('icon')" name="warn" :size="20" class="wl-confirm__icon wl-confirm__icon--danger" />
+      <span v-bind="section('message')" class="wl-confirm__message">{{ displayed?.message }}</span>
     </div>
     <template #footer>
-      <WlButton variant="secondary" @click="visible = false">{{ entry?.rejectLabel }}</WlButton>
-      <WlButton :variant="entry?.danger ? 'danger' : 'primary'" @click="accept">{{ entry?.acceptLabel }}</WlButton>
+      <WlButton variant="secondary" @click="visible = false">{{ displayed?.rejectLabel }}</WlButton>
+      <WlButton :variant="displayed?.danger ? 'danger' : 'primary'" @click="accept">{{ displayed?.acceptLabel }}</WlButton>
     </template>
   </WlDialog>
 </template>

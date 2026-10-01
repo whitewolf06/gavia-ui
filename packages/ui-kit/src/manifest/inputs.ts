@@ -117,6 +117,7 @@ export const inputsManifest = defineComponentManifest([
       { name: "disabled", type: "boolean", default: false, description: "Отключает поле." },
       { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер поля." },
       { name: "density", type: "enum", default: "default", values: WL_DENSITIES, description: "Плотность." },
+      { name: "motion", type: "boolean", description: "Анимация списка; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
@@ -158,6 +159,7 @@ export const inputsManifest = defineComponentManifest([
         type: "number",
         description: "Максимум подписей до свёртки в счётчик (только display=\"comma\")."
       },
+      { name: "motion", type: "boolean", description: "Анимация списка; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
@@ -195,6 +197,7 @@ export const inputsManifest = defineComponentManifest([
         default: 1,
         description: "Минимум символов для запуска поиска."
       },
+      { name: "motion", type: "boolean", description: "Анимация подсказок; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],
@@ -282,6 +285,7 @@ export const inputsManifest = defineComponentManifest([
       { name: "showIcon", type: "boolean", default: false, description: "Кнопка-иконка календаря." },
       { name: "minDate", type: "string", description: "Минимальная дата, ISO \"YYYY-MM-DD\"." },
       { name: "maxDate", type: "string", description: "Максимальная дата, ISO \"YYYY-MM-DD\"." },
+      { name: "motion", type: "boolean", description: "Анимация календаря; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [],

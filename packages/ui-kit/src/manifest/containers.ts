@@ -79,6 +79,7 @@ export const containersManifest = defineComponentManifest([
       { name: "ariaLabel", type: "string", description: "Доступное имя диалога без текстового заголовка." },
       { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего диалог." },
       { name: "width", type: "string", description: "Ширина (CSS), например \"480px\"." },
+      { name: "motion", type: "boolean", description: "Анимация открытия и закрытия; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [
@@ -88,7 +89,8 @@ export const containersManifest = defineComponentManifest([
     ],
     emits: [
       { name: "open", description: "Диалог полностью открылся." },
-      { name: "close", description: "Диалог закрылся." }
+      { name: "close", description: "Диалог закрылся." },
+      { name: "afterLeave", description: "Переход закрытия завершился и DOM диалога удалён." }
     ],
     model: { name: "visible", type: "boolean", description: "v-model:visible — открыт ли (default false)." }
   },
@@ -111,6 +113,7 @@ export const containersManifest = defineComponentManifest([
       { name: "blockScroll", type: "boolean", default: true, description: "Блокирует прокрутку страницы, пока панель открыта." },
       { name: "ariaLabel", type: "string", description: "Доступное имя панели без текстового заголовка." },
       { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего панель." },
+      { name: "motion", type: "boolean", description: "Анимация открытия и закрытия; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [
@@ -133,6 +136,7 @@ export const containersManifest = defineComponentManifest([
       { name: "closeOnEscape", type: "boolean", default: true, description: "Закрытие клавишей Escape." },
       { name: "ariaLabel", type: "string", description: "Доступное имя поповера." },
       { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего поповер." },
+      { name: "motion", type: "boolean", description: "Анимация открытия и закрытия; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
     ],
     slots: [{ name: "default", description: "Содержимое поповера." }],

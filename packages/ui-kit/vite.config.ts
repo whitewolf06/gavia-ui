@@ -4,6 +4,7 @@ import type { Plugin } from "vite";
 import vue from "@vitejs/plugin-vue";
 import dts from "vite-plugin-dts";
 import { wlManifest } from "./src/manifest";
+import { readFileSync } from "node:fs";
 
 /** Emits dist/manifest.json — machine-readable component manifest for editors/agents. */
 function wlManifestPlugin(): Plugin {
@@ -14,6 +15,11 @@ function wlManifestPlugin(): Plugin {
         type: "asset",
         fileName: "manifest.json",
         source: JSON.stringify(wlManifest, null, 2)
+      });
+      this.emitFile({
+        type: "asset",
+        fileName: "design-tokens.json",
+        source: readFileSync(new URL("./tokens/catalog.generated.json", import.meta.url), "utf8")
       });
     }
   };
@@ -41,6 +47,8 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
+    maxWorkers: 4,
+    minWorkers: 1,
     include: ["tests/**/*.test.{ts,mjs}"],
     setupFiles: ["tests/setup.ts"],
     testTimeout: 20000

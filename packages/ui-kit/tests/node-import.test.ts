@@ -14,6 +14,8 @@ describe("node import", () => {
     expect(mod.WlTooltip).toBeTruthy();
     expect(typeof mod.useWlToast).toBe("function");
     expect(mod.WlToastService).toBeTruthy();
+    expect(mod.wlDesignTokens.length).toBeGreaterThan(0);
+    expect(mod.resolveWlToken("--wl-space-lg")).toBe("16px");
 
     const pt = mod.createWlPt({ button: { root: { "data-test": "app-button" } } });
     expect(pt.button?.root).toEqual({ "data-test": "app-button" });

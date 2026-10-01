@@ -33,12 +33,21 @@ export function useAnchoredOverlay(options: {
       : Math.min(window.innerHeight - 4, rect.bottom + 4);
     const top = Math.max(4, Math.min(preferredTop, window.innerHeight - height - 4));
     const left = Math.max(4, Math.min(rect.left, window.innerWidth - width - 4));
-    style.value = { position: "fixed", top: `${top}px`, left: `${left}px`, minWidth: `${rect.width}px` };
+    // A body portal must sit above the modal/sidebar/filter containing its anchor.
+    const baseLayer = Number.parseInt(getComputedStyle(panel.value).zIndex, 10) || 0;
+    let anchorLayer = 0;
+    for (let parent = anchor.parentElement; parent; parent = parent.parentElement) {
+      const layer = Number.parseInt(getComputedStyle(parent).zIndex, 10);
+      if (Number.isFinite(layer)) anchorLayer = Math.max(anchorLayer, layer);
+    }
+    style.value = { position: "fixed", top: `${top}px`, left: `${left}px`, minWidth: `${rect.width}px`,
+      zIndex: String(Math.max(baseLayer, anchorLayer + 1)) };
   }
   function show(event?: Event): void {
     const target = event?.currentTarget ?? event?.target;
     if (target instanceof HTMLElement) anchor = target;
     previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    if (!visible.value) style.value = {};
     visible.value = true;
   }
   function hide(): void {

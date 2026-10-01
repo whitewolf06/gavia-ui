@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import {
-  WlAutocomplete, WlButton, WlConfirmDialog, WlDatePicker, WlDialog, WlDrawer,
+  WlAutocomplete, WlButton, WlCommandPalette, WlConfirmDialog, WlDatePicker, WlDialog, WlDrawer,
   WlMenu, WlMultiSelect, WlPopover, WlSelect, WlTable, WlToast,
   useWlConfirm, useWlToast
 } from "../../../packages/ui-kit/src";
@@ -17,13 +17,20 @@ const automaticValue = computed(() => {
 const suggestions = ref<unknown[]>(choices);
 const date = ref<string | null>(null);
 const dialog = ref(false);
+const dialogMotion = ref<boolean | undefined>();
 const drawer = ref(false);
+const palette = ref(false);
 const menu = ref<InstanceType<typeof WlMenu> | null>(null);
 const popover = ref<InstanceType<typeof WlPopover> | null>(null);
 const status = ref("Ожидание");
 const toast = useWlToast();
 const { confirmDanger } = useWlConfirm();
 const items = [{ label: "Выполнить", command: () => { status.value = "Меню выполнено"; } }];
+const commands = [{ id: "actions", label: "Действия", items: [{ id: "save", label: "Сохранить" }] }];
+function openDialog(motion?: boolean): void {
+  dialogMotion.value = motion;
+  dialog.value = true;
+}
 function ask(): void {
   confirmDanger({ message: "Удалить элемент?", acceptLabel: "Удалить", accept: () => { status.value = "Подтверждено"; } });
 }
@@ -49,13 +56,17 @@ function ask(): void {
       </div>
       <div class="fixture-card">
         <h2>Оверлеи</h2>
-        <WlButton id="dialog-open" @click="dialog = true">Диалог</WlButton>
+        <WlButton id="dialog-open" @click="openDialog()">Диалог</WlButton>
+        <WlButton id="dialog-motion-open" @click="openDialog(true)">Диалог с анимацией</WlButton>
+        <WlButton id="dialog-static-open" @click="openDialog(false)">Диалог без анимации</WlButton>
         <WlButton id="drawer-open" @click="drawer = true">Панель</WlButton>
+        <WlButton id="palette-open" @click="palette = true">Командная палитра</WlButton>
         <WlButton id="menu-open" @click="menu?.toggle($event)">Меню</WlButton>
         <WlButton id="popover-open" @click="popover?.toggle($event)">Поповер</WlButton>
         <WlButton id="toast-open" @click="toast.ok('Сохранено')">Toast</WlButton>
         <WlButton id="confirm-open" @click="ask">Подтверждение</WlButton>
         <WlButton id="tooltip-anchor" v-wl-tooltip="'Подсказка'">Tooltip</WlButton>
+        <WlButton id="tooltip-static-anchor" v-wl-tooltip="{ value: 'Без анимации', motion: false }">Tooltip без анимации</WlButton>
         <output id="action-status">{{ status }}</output>
       </div>
       <div class="fixture-card fixture-card--wide">
@@ -65,8 +76,9 @@ function ask(): void {
       </div>
     </section>
   </main>
-  <WlDialog v-model:visible="dialog" header="Проверка диалога"><WlButton id="dialog-action">Действие</WlButton></WlDialog>
+  <WlDialog v-model:visible="dialog" :motion="dialogMotion" header="Проверка диалога"><WlButton id="dialog-action">Действие</WlButton></WlDialog>
   <WlDrawer v-model:visible="drawer" header="Проверка панели">Содержимое панели</WlDrawer>
+  <WlCommandPalette v-model:visible="palette" :groups="commands" />
   <WlMenu ref="menu" popup aria-label="Действия" :items="items" />
   <WlPopover ref="popover" aria-label="Детали">Содержимое поповера</WlPopover>
   <WlToast />

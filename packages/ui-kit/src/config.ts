@@ -5,6 +5,8 @@ import { createWlPt, type WlPtCallbackOptions, type WlPtConfig } from "./theme";
 export interface WlConfigOptions {
   pt?: WlPtConfig;
   locale?: Partial<WlLocale>;
+  /** Animate overlay entry and exit; individual components may override this. */
+  motion?: boolean;
 }
 
 const configKey = Symbol("wl-config");
@@ -83,4 +85,10 @@ export function wlConfigForDirective(instance: DirectiveBinding["instance"]): Wl
 export function useWlLocale(): ComputedRef<WlLocale> {
   const config = inject<WlConfigOptions>(configKey, {});
   return computed(() => ({ ...wlLocaleRu, ...config.locale }));
+}
+
+/** Motion defaults on, with a local prop taking precedence over app configuration. */
+export function useWlMotion(local: ComputedRef<boolean | undefined>): ComputedRef<boolean> {
+  const config = inject<WlConfigOptions>(configKey, {});
+  return computed(() => local.value ?? config.motion ?? true);
 }

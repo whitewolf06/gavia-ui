@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, ref, useAttrs, watch } from "vue";
-import { mergeWlAttrs, useWlPt } from "../config";
+import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
 import type { WlDensity, WlSizeSm } from "../types";
 import { splitInputAttrs } from "../utils/inputAttrs";
 import { useAnchoredOverlay } from "../utils/anchoredOverlay";
+import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import { optionLabel as resolveOptionLabel, useListNavigation } from "../utils/options";
 
 defineOptions({ inheritAttrs: false });
@@ -23,16 +24,19 @@ const props = withDefaults(defineProps<{
   dropdown?: boolean;
   dropdownLabel?: string;
   minLength?: number;
+  motion?: boolean;
   pt?: Record<string, unknown>;
 }>(), {
   suggestions: () => [], invalid: false, disabled: false, size: "md", density: "default",
-  multiple: false, dropdown: false, dropdownLabel: "Показать варианты", minLength: 1
+  multiple: false, dropdown: false, dropdownLabel: "Показать варианты", minLength: 1,
+  motion: undefined
 });
 const emit = defineEmits<{ complete: [event: WlAutocompleteCompleteEvent] }>();
 const model = defineModel<unknown>();
 const attrs = useAttrs();
 const attrGroups = computed(() => splitInputAttrs(attrs));
 const section = useWlPt("autocomplete", computed(() => props.pt));
+const motion = useWlMotion(computed(() => props.motion));
 const control = ref<HTMLInputElement | null>(null);
 const query = ref("");
 let timer: ReturnType<typeof setTimeout> | undefined;
@@ -101,6 +105,9 @@ onBeforeUnmount(() => { if (timer) clearTimeout(timer); });
     </button>
   </div>
   <Teleport to="body">
+    <Transition name="wl-pop-motion" :css="motion"
+      @before-leave="markOverlayLeaving" @before-enter="restoreOverlayEntering"
+      @leave-cancelled="restoreOverlayEntering">
     <div v-if="visible" ref="panel" v-bind="section('overlay')" class="wl-overlay wl-autocomplete-overlay" :style="style">
       <div v-bind="section('listContainer')" class="wl-select__list-container">
         <div v-bind="section('list')" class="wl-select__list" role="listbox">
@@ -112,5 +119,6 @@ onBeforeUnmount(() => { if (timer) clearTimeout(timer); });
         </div>
       </div>
     </div>
+    </Transition>
   </Teleport>
 </template>

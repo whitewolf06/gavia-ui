@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, useAttrs } from "vue";
-import { mergeWlAttrs, useWlPt } from "../config";
+import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
 import type { WlDensity, WlMultiSelectDisplay, WlSizeSm } from "../types";
 import { splitInputAttrs } from "../utils/inputAttrs";
 import { useAnchoredOverlay } from "../utils/anchoredOverlay";
+import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import { optionLabel as resolveOptionLabel, optionValue as resolveOptionValue, useListNavigation } from "../utils/options";
 import WlIcon from "./WlIcon.vue";
 
@@ -20,10 +21,11 @@ const props = withDefaults(defineProps<{
   filter?: boolean;
   display?: WlMultiSelectDisplay;
   maxSelectedLabels?: number;
+  motion?: boolean;
   pt?: Record<string, unknown>;
 }>(), {
   options: () => [], invalid: false, disabled: false, size: "md", density: "default",
-  filter: false, display: "comma"
+    filter: false, display: "comma", motion: undefined
 });
 const model = defineModel<unknown[]>({ default: () => [] });
 const attrs = useAttrs();
@@ -32,6 +34,7 @@ const control = ref<HTMLInputElement | null>(null);
 const filterInput = ref<HTMLInputElement | null>(null);
 const query = ref("");
 const section = useWlPt("multiselect", computed(() => props.pt));
+const motion = useWlMotion(computed(() => props.motion));
 const { visible, panel, style, show, hide } = useAnchoredOverlay();
 const selectedOptions = computed(() => props.options.filter((option) => model.value.some((value) => Object.is(resolveOptionValue(option, props.optionValue), value))));
 const filtered = computed(() => props.options.filter((option) => !query.value || resolveOptionLabel(option, props.optionLabel).toLocaleLowerCase().includes(query.value.toLocaleLowerCase())));
@@ -94,6 +97,9 @@ function onKeydown(event: KeyboardEvent): void {
     </span>
   </div>
   <Teleport to="body">
+    <Transition name="wl-pop-motion" :css="motion"
+      @before-leave="markOverlayLeaving" @before-enter="restoreOverlayEntering"
+      @leave-cancelled="restoreOverlayEntering">
     <div v-if="visible" ref="panel" v-bind="section('overlay')" class="wl-overlay wl-multiselect-overlay" :style="style">
       <div v-if="filter" v-bind="section('header')" class="wl-multiselect__header">
         <WlIcon v-bind="section('filterIcon')" name="search" :size="14" />
@@ -111,5 +117,6 @@ function onKeydown(event: KeyboardEvent): void {
         </div>
       </div>
     </div>
+    </Transition>
   </Teleport>
 </template>
