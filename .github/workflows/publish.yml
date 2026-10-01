@@ -43,6 +43,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Playground imports the public package types; a fresh checkout has no dist.
+      - name: Build library
+        run: pnpm build
+
       - name: Typecheck
         run: pnpm typecheck
 
@@ -54,9 +58,6 @@ jobs:
 
       - name: Verify design tokens and theme contrast
         run: pnpm tokens:check
-
-      - name: Build library
-        run: pnpm build
 
       - name: Test
         run: pnpm test
@@ -92,6 +93,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build library CSS and public API
+        run: pnpm build
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium firefox webkit

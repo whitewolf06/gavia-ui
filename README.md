@@ -22,7 +22,7 @@ pnpm build              # сборка библиотеки (ESM + TypeScript de
 pnpm test               # тесты библиотеки (Vitest + Vue Test Utils)
 pnpm dev                # playground в dev-режиме
 pnpm build:playground   # сборка playground
-pnpm typecheck          # проверка типов библиотеки
+pnpm typecheck          # проверка типов библиотеки и playground
 pnpm test:e2e           # Chromium, Firefox, WebKit и мобильный Chromium
 pnpm test:visual        # сравнение desktop/mobile с эталонами трёх тем (Windows)
 pnpm icons:check        # проверка SVG-каталога и сгенерированного реестра
@@ -32,6 +32,10 @@ pnpm run pack          # tar-архив пакета (без публикаци�
 pnpm verify:package     # изолированный потребитель архива с одним Vue
 pnpm verify:dependencies # отсутствие PrimeVue/PrimeIcons в коде и зависимостях
 ```
+
+После установки в чистом checkout сначала выполните `pnpm build`: playground
+использует публичные типы пакета из `dist`. Сборка требуется перед `typecheck`,
+запуском витрины и браузерными тестами; CI выполняет её в каждом таком job.
 
 > **Примечание.** pnpm выполняет одноимённую builtin-команду вместо script'а:
 > голый `pnpm pack` в корне упакует корневой проект, а не библиотеку.

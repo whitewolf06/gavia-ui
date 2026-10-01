@@ -223,8 +223,11 @@ test("wizard validates, restores earlier values, focuses each step and completes
 });
 
 test("attachment upload rejects bad files, supports error/retry and cancels progress", async ({ page }) => {
-  await page.clock.install();
+  await page.clock.install({ time: new Date("2026-01-01T00:00:00Z") });
   const preview = await recipe(page, "AttachmentUpload");
+  // Keep the 600 ms upload pending while WebKit scrolls and settles the controls.
+  // Only explicit runFor calls should advance the progress demonstration.
+  await page.clock.pauseAt(new Date("2026-01-01T01:00:00Z"));
   const upload = preview.getByRole("button", { name: "Загрузить вложения" });
   await expect(upload).toBeDisabled();
   const fileInput = preview.locator('input[type="file"]');
@@ -245,8 +248,13 @@ test("attachment upload rejects bad files, supports error/retry and cancels prog
   await preview.getByRole("button", { name: "Удалить guide.txt" }).click();
   await fileInput.setInputFiles({ name: "again.txt", mimeType: "text/plain", buffer: Buffer.from("again") });
   await upload.click();
+  await page.clock.runFor(300);
+  await expect(preview.getByRole("progressbar", { name: "Загрузка вложений" })).toHaveAttribute("aria-valuenow", "50");
   await preview.getByRole("button", { name: "Отменить загрузку" }).click();
+  await page.clock.runFor(600);
   await expect(upload).toBeEnabled();
+  await expect(preview.getByRole("progressbar")).toHaveCount(0);
+  await expect(preview.getByRole("button", { name: "Отменить загрузку" })).toHaveCount(0);
   await expect(preview.getByRole("alert")).toHaveCount(0);
   await expect(preview.locator(".wl-upload__row")).toHaveCount(1);
 });

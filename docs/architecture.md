@@ -110,7 +110,7 @@ Foundation → semantic → component — направление ссылок CS
 ширину, три темы и всю партию иконок. `vue-tsc` в playground проверяет
 потребительские шаблоны на этапе разработки.
 
-`pnpm typecheck`, `pnpm build`, `pnpm test`, `pnpm build:playground`,
+`pnpm build`, `pnpm typecheck`, `pnpm test`, `pnpm build:playground`,
 `pnpm run pack`, `pnpm verify:package`, `pnpm verify:dependencies`,
 `pnpm icons:check`, `pnpm test:e2e`.
 Дополнительно `pnpm tokens:check` проверяет три темы и актуальность генерации.
@@ -120,6 +120,13 @@ Foundation → semantic → component — направление ссылок CS
 Браузерные тесты проверяют Chromium, Firefox, WebKit,
 мобильный Chromium и снимки тем. Прохождение статической сборки не заменяет
 проверку взаимодействия.
+
+В чистом checkout сборка предшествует проверке типов и запуску браузеров:
+playground использует публичные типы и точку входа пакета из `dist`.
+В тестах демонстрационных запросов и прогресса устанавливайте Playwright Clock
+перед сценарием и приостанавливайте его после загрузки примера. Время продвигайте
+явно; отмена должна проверять и промежуточный прогресс, и отсутствие позднего
+результата. Клик не должен соревноваться с коротким таймером загрузки.
 
 `pnpm test:visual` сравнивает reviewed PNG в трёх темах на desktop/mobile;
 эталоны и окружение Windows/Chromium описаны в `docs/design-system.md`.
