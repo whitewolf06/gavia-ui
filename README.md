@@ -4,6 +4,9 @@
 `@whitelife-core/ui-kit` (Vue 3 + TypeScript, собственные компоненты) и изолированный
 playground для разработки и проверки.
 
+Версия `0.6.0`: [изменения и переход](docs/migration-0.6.md),
+[правила дизайн-системы](docs/design-system.md).
+
 ## Структура
 
 ```
@@ -57,11 +60,15 @@ pnpm add @whitelife-core/ui-kit
 
 ### Релиз новой версии (для мейнтейнера)
 
-1. Поднять `version` в `packages/ui-kit/package.json`, прогнать проверки
-   (`pnpm build && pnpm test && pnpm run pack`), закоммитить.
-2. `git tag v<version> && git push origin main --tags`.
-3. GitHub Action `.github/workflows/publish.yml` соберёт, протестирует
-   и опубликует пакет в GitHub Packages автоматически.
+1. Зафиксировать реализацию отдельно; поднять `version` в корневом и
+   `packages/ui-kit/package.json`, обновить заметку о миграции и прогнать
+   все проверки из `agents.md`. Изучить изменения снимков перед их обновлением.
+2. Закоммитить версию и отправить `main`.
+3. Создать аннотированный тег `git tag -a v<version> -m "WhiteUI <version>"`
+   и отправить именно его: `git push origin v<version>`.
+4. GitHub Action `.github/workflows/publish.yml` повторит проверки и опубликует
+   пакет в GitHub Packages. Подтвердить успешный job `publish` и появление новой
+   версии на странице пакета; отправленный тег сам по себе не подтверждает публикацию.
 
 ### Peer dependencies
 

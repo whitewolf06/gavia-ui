@@ -1,9 +1,11 @@
 # @whitelife-core/ui-kit
 
+Версия `0.6.0`. [Изменения и переход](https://github.com/whitelife-core/whiteui/blob/main/docs/migration-0.6.md).
+
 ## Дизайн-система
 
 Общие роли типографики, шкала расстояний, поверхности, состояния и UI-паттерны
-описаны в [руководстве](../../docs/design-system.md). Playground `?view=system`
+описаны в [руководстве](https://github.com/whitelife-core/whiteui/blob/main/docs/design-system.md). Playground `?view=system`
 показывает каталог токенов, три темы и контракты 51 компонента.
 
 Опциональная компоновка и типографика: явный импорт
