@@ -4,6 +4,8 @@
 
 A free, open source Vue 3 component library and design system.
 
+[![Смотреть демо Gavia UI](https://img.shields.io/badge/LIVE_DEMO-2563EB?style=for-the-badge)](https://whitewolf06.github.io/gavia-ui/ "Смотреть демо Gavia UI")
+
 Независимая библиотека компонентов Vue 3 + TypeScript: 51 компонент,
 47 встроенных SVG-иконок, 416 дизайн-токенов и три темы — White, Graphite,
 Newspaper. В репозитории есть изолированный playground с живыми примерами и
@@ -20,6 +22,10 @@ Runtime-зависимостей нет. **Vue 3 — единственный о
 Пакет [gavia-ui](https://www.npmjs.com/package/gavia-ui) опубликован в публичном npm.
 Первый выпуск `0.7.0` — 2026-10-05 (Москва). Публичные `Wl*`, классы и токены сохраняются;
 [переход на Gavia UI](docs/migration-gavia.md).
+
+Версия `0.7.1`: исправления индикаторов выбора и очистка прототипов.
+[Полный список изменений](CHANGELOG.md). Публикация этого выпуска в npm
+проверяется отдельно по [правилам релиза](docs/releases.md).
 
 Версия `0.7.0`: [изменения и переход](docs/migration-0.7.md).
 Первый публичный npm-релиз опубликован; установка в Vue-приложении: `pnpm add gavia-ui@0.7.0`.
@@ -99,10 +105,10 @@ pnpm install
 pnpm build
 pnpm run pack
 # В приложении-потребителе:
-pnpm add /absolute/path/to/gavia-ui/packages/ui-kit/gavia-ui-0.7.0.tgz vue
+pnpm add /absolute/path/to/gavia-ui/packages/ui-kit/gavia-ui-0.7.1.tgz vue
 ```
 
-Текущая версия кода — `0.7.0`; имя архива определяется версией в манифесте.
+Текущая версия кода — `0.7.1`; имя архива определяется версией в манифесте.
 История и действия при обновлении — [CHANGELOG.md](CHANGELOG.md).
 Порядок следующих выпусков — [docs/releases.md](docs/releases.md).
 

@@ -218,10 +218,21 @@ jobs:
         id: package
         run: |
           pnpm run pack
-          node -e "const p=require('./packages/ui-kit/package.json'); console.log('archive=gavia-ui-'+p.version+'.tgz')" >> "$GITHUB_OUTPUT"
+          node -e "const fs=require('node:fs'), crypto=require('node:crypto'); const p=require('./packages/ui-kit/package.json'); const archive='gavia-ui-'+p.version+'.tgz'; const bytes=fs.readFileSync('packages/ui-kit/'+archive); console.log('archive='+archive); console.log('version='+p.version); console.log('integrity=sha512-'+crypto.createHash('sha512').update(bytes).digest('base64'));" >> "$GITHUB_OUTPUT"
 
       - name: Verify exact release archive in consumer app
         run: pnpm verify:package --archive "packages/ui-kit/${{ steps.package.outputs.archive }}"
+
+      - name: Record checked release integrity
+        run: echo "Checked release archive integrity ${{ steps.package.outputs.integrity }}"
+
+      - name: Save checked release archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: gavia-ui-release-${{ steps.package.outputs.version }}
+          path: packages/ui-kit/${{ steps.package.outputs.archive }}
+          if-no-files-found: error
+          retention-days: 30
 
       # npm CLI is used only for OIDC publication, never for dependency installation.
       - name: Publish checked archive to public npm

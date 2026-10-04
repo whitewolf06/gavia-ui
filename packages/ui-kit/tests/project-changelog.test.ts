@@ -14,11 +14,30 @@ describe("public changelog rendering", () => {
     const document = parseChangelog(source, docsBase);
     expect(document.sections[0]).toMatchObject({ title: "Не выпущено", id: "project-unreleased", unreleased: true });
     const versions = document.sections.filter((section) => section.version).map((section) => section.version);
-    expect(versions).toEqual(["0.7.0", "0.6.0", "0.3.0", "0.2.1", "0.2.0", "0.1.0"]);
+    expect(versions).toEqual(["0.7.1", "0.7.0", "0.6.0", "0.3.0", "0.2.1", "0.2.0", "0.1.0"]);
     const current = document.sections.find((section) => section.version === "0.6.0")!;
     const firstPublic = document.sections.find((section) => section.version === "0.7.0")!;
     expect(firstPublic).toMatchObject({ date: "2026-10-05", id: "project-release-0-7-0", unreleased: false });
-    expect(document.sections[0]!.blocks.every((block) => block.kind !== "list")).toBe(true);
+    expect(document.sections[0]!.blocks).toEqual([
+      { kind: "paragraph", content: [{ kind: "text", value: "Изменений для следующего выпуска пока нет." }] }
+    ]);
+    const patch = document.sections.find((section) => section.version === "0.7.1")!;
+    expect(patch).toMatchObject({ date: "2026-10-05", id: "project-release-0-7-1", unreleased: false });
+    expect(patch.blocks.filter((block) => block.kind === "heading").map((block) => text(block.content)))
+      .toEqual(["Исправлено", "Изменено"]);
+    const patchBullets = patch.blocks.flatMap((block) => block.kind === "list" ? block.items : []);
+    expect(patchBullets.map(text)).toEqual([
+      "Отметки WlCheckbox в состояниях checked и indeterminate используют SVG-иконки вместо символов шрифта: рисунок и выравнивание одинаковы в трёх темах.",
+      "Отключённые WlCheckbox и WlRadio сохраняют своё оформление при наведении.",
+      "Стрелки раскрытия WlSelect, WlMultiSelect и WlAutocomplete заменены SVG-иконками с единым выравниванием вместо текстовых символов.",
+      "Удалены девять завершённых HTML-прототипов; рабочие примеры остаются в Vue-витрине, а исходные иконки — в SVG-каталоге.",
+      "Дорожная карта и инструкции по добавлению иконок ссылаются на живые SFC-примеры и SVG-каталог. История прототипов сохранена в Git. В начале README размещена заметная ссылка на публичную демо-витрину."
+    ]);
+    expect(patchBullets[0]).toContainEqual({ kind: "code", value: "WlCheckbox" });
+    expect(patchBullets[1]).toContainEqual({ kind: "code", value: "WlRadio" });
+    for (const value of ["WlSelect", "WlMultiSelect", "WlAutocomplete"]) {
+      expect(patchBullets[2]).toContainEqual({ kind: "code", value });
+    }
     expect(current).toMatchObject({ date: "2026-10-01", id: "project-release-0-6-0", unreleased: false });
     expect(current.blocks.filter((block) => block.kind === "heading").map((block) => text(block.content)))
       .toEqual(["Добавлено", "Изменено", "Исправлено"]);
