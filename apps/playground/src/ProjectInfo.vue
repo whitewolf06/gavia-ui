@@ -61,7 +61,7 @@ onBeforeUnmount(() => {
       <div class="wl-stack" data-space="sm">
         <h2 id="project-setup-title" class="wl-text-heading">Подключение библиотеки</h2>
         <p v-if="!project.npmPublished" class="wl-text-body" data-testid="project-npm-status">Первый выпуск <code class="project-inline-code wl-text-code">{{ project.packageName }}</code> в публичном npm ещё не опубликован. Сейчас библиотеку можно собрать и установить из исходников по инструкции.</p>
-        <p v-else class="wl-text-body">Пакет <code class="project-inline-code wl-text-code">{{ project.packageName }}</code> доступен в публичном npm.</p>
+        <p v-else class="wl-text-body" data-testid="project-npm-status">Пакет <a class="project-link" :href="project.packageUrl">{{ project.packageName }}@{{ project.publishedVersion }}</a> опубликован в публичном npm. Установка в Vue-приложении: <code class="project-inline-code wl-text-code">pnpm add {{ project.packageName }}@{{ project.publishedVersion }}</code>.</p>
       </div>
       <nav class="wl-inline" data-space="lg" aria-label="Документация подключения">
         <a class="project-link" :href="project.instructionsUrl">Сборка и установка</a>

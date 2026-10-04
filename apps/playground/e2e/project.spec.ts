@@ -1,7 +1,9 @@
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, URL as NodeURL } from "node:url";
+const publishedVersion = "0.7.0";
 const packageMetadata = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../../../packages/ui-kit/package.json", import.meta.url)), "utf8")) as {
+  name: string;
   version: string;
   author: { name: string; url: string };
 };
@@ -10,7 +12,9 @@ const project = {
   documentationBaseUrl: "https://github.com/whitewolf06/gavia-ui/blob/main/",
   licenseUrl: "https://github.com/whitewolf06/gavia-ui/blob/main/LICENSE",
   instructionsUrl: "https://github.com/whitewolf06/gavia-ui/blob/main/README.md",
-  npmPublished: false
+  packageName: packageMetadata.name,
+  packageUrl: "https://www.npmjs.com/package/gavia-ui",
+  npmPublished: true
 };
 import { parseChangelog } from "../src/project/changelog";
 import type { ChangelogInline } from "../src/project/changelog";
@@ -33,9 +37,13 @@ test("shows the creator, current source version, license and truthful package st
   await expect(page.locator(".pg-views [aria-current='page']")).toHaveText("О проекте");
   await expect(main.getByRole("link", { name: project.author.name, exact: true })).toHaveAttribute("href", project.author.url);
   await expect(main.getByTestId("project-version")).toHaveText(project.version);
+  await expect(page.locator(".pg-kit-version")).toHaveText(`v${project.version}`);
   await expect(main.getByRole("link", { name: "MIT", exact: true })).toHaveAttribute("href", project.licenseUrl);
   await expect(main.getByRole("link", { name: "Подключение и инструкции", exact: true })).toHaveAttribute("href", project.instructionsUrl);
-  if (!project.npmPublished) await expect(main.getByTestId("project-npm-status")).toContainText("ещё не опубликован");
+  const packageStatus = main.getByTestId("project-npm-status");
+  await expect(packageStatus).toContainText("опубликован в публичном npm");
+  await expect(packageStatus.getByRole("link", { name: `${project.packageName}@${publishedVersion}`, exact: true })).toHaveAttribute("href", project.packageUrl);
+  await expect(packageStatus.locator("code")).toHaveText(`pnpm add ${project.packageName}@${publishedVersion}`);
   await expect(page.locator(".pg-footer")).toContainText(`Создатель: ${project.author.name}`);
 });
 

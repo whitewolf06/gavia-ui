@@ -17,12 +17,12 @@ Runtime-зависимостей нет. **Vue 3 — единственный о
 Стили подключаются явно. PrimeVue, PrimeIcons, роутер, хранилище состояния
 и API-клиенты для работы библиотеки не нужны.
 
-Пакет `gavia-ui` подготовлен для публичного npm; первая публикация
-ещё не выполнена. Публичные `Wl*`, классы и токены сохраняются;
+Пакет [gavia-ui](https://www.npmjs.com/package/gavia-ui) опубликован в публичном npm.
+Первый выпуск `0.7.0` — 2026-10-05 (Москва). Публичные `Wl*`, классы и токены сохраняются;
 [переход на Gavia UI](docs/migration-gavia.md).
 
 Версия `0.7.0`: [изменения и переход](docs/migration-0.7.md).
-Первый публичный npm-релиз подготовлен; его публикация ещё не подтверждена.
+Первый публичный npm-релиз опубликован; установка в Vue-приложении: `pnpm add gavia-ui@0.7.0`.
 История дизайн-системы 0.6.0 — [миграция 0.6](docs/migration-0.6.md).
 [Дизайн-система](docs/design-system.md) · [Changelog](CHANGELOG.md)
 · [Правила участия](CONTRIBUTING.md)
@@ -37,9 +37,9 @@ Playground объединяет компоненты, дизайн-систем�
 собирается непосредственно из корневого `CHANGELOG.md`; отдельную копию для UI
 вести не нужно. Перейти к странице локально: `/?view=project`.
 
-Для публикации подготовлен GitHub Pages: адрес после включения и первого
-успешного деплоя — `https://whitewolf06.github.io/gavia-ui/`.
-Сайт ещё не опубликован. [Настройка и проверка публикации](docs/hosting.md).
+Публичная витрина опубликована в GitHub Pages: [Gavia UI](https://whitewolf06.github.io/gavia-ui/).
+[Автор и changelog](https://whitewolf06.github.io/gavia-ui/?view=project) доступны на сайте.
+[Настройка и проверка публикации](docs/hosting.md).
 
 ## Структура
 
@@ -83,14 +83,14 @@ pnpm verify:dependencies # отсутствие PrimeVue/PrimeIcons в коде 
 
 ### Установка
 
-Новое имя `gavia-ui` подготовлено для публичного **npm**. После первой публикации:
+Пакет [gavia-ui@0.7.0](https://www.npmjs.com/package/gavia-ui) доступен в публичном **npm**:
 
 ```bash
-pnpm add gavia-ui vue
+pnpm add gavia-ui@0.7.0 vue
 ```
 
 GitHub PAT и специальный scope registry для нового пакета не требуются.
-До первого выпуска можно собрать архив из исходников:
+Архив также можно собрать из исходников:
 
 ```bash
 git clone https://github.com/whitewolf06/gavia-ui.git
@@ -104,7 +104,7 @@ pnpm add /absolute/path/to/gavia-ui/packages/ui-kit/gavia-ui-0.7.0.tgz vue
 
 Текущая версия кода — `0.7.0`; имя архива определяется версией в манифесте.
 История и действия при обновлении — [CHANGELOG.md](CHANGELOG.md).
-Порядок первого выпуска — [docs/releases.md](docs/releases.md).
+Порядок следующих выпусков — [docs/releases.md](docs/releases.md).
 
 ### Peer dependencies
 

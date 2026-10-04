@@ -1,4 +1,10 @@
 import { expect, test, type Page } from "@playwright/test";
+import { readFileSync } from "node:fs";
+import { fileURLToPath, URL as NodeURL } from "node:url";
+
+const packageMetadata = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../../../packages/ui-kit/package.json", import.meta.url)), "utf8")) as { name: string; version: string };
+const packageUrl = "https://www.npmjs.com/package/gavia-ui";
+const publishedVersion = "0.7.0";
 
 const pagesPath = "/gavia-ui/";
 const projectTitle = "Интерфейсы с ясным характером";
@@ -54,6 +60,12 @@ test("project query survives refresh and production assets use the Pages prefix"
   await expect(page.getByRole("heading", { name: projectTitle, exact: true })).toBeVisible();
   await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("О проекте");
   expectPagesLocation(page, "project");
+  await expect(page.getByTestId("project-version")).toHaveText(packageMetadata.version);
+  await expect(page.locator(".pg-kit-version")).toHaveText(`v${packageMetadata.version}`);
+  const packageStatus = page.getByTestId("project-npm-status");
+  await expect(packageStatus).toContainText("опубликован в публичном npm");
+  await expect(packageStatus.getByRole("link", { name: `${packageMetadata.name}@${publishedVersion}`, exact: true })).toHaveAttribute("href", packageUrl);
+  await expect(packageStatus.locator("code")).toHaveText(`pnpm add ${packageMetadata.name}@${publishedVersion}`);
 
   const logo = page.locator(".pg-logo");
   await expect(logo).toBeVisible();
