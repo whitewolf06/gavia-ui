@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page, type Locator } from "@playwright/test";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 
 async function selectComponent(page: Page, name: string): Promise<void> {
@@ -300,3 +300,220 @@ test("long content fits 320px, 200% text; nested overlays close from the top and
   await expect(drawer).toHaveCount(0);
   await expect(open).toBeFocused();
 });
+
+async function expectCenteredCheckboxMark(box: Locator): Promise<void> {
+  const mark = box.locator("svg.wl-checkbox__icon");
+  await expect(mark).toBeVisible();
+  const geometry = await mark.evaluate((element: SVGSVGElement) => {
+    const boxElement = element.closest(".wl-checkbox__box")!;
+    const boxRect = boxElement.getBoundingClientRect();
+    const markRect = element.getBoundingClientRect();
+    const ink = element.getBBox();
+    const view = element.viewBox.baseVal;
+    const stroke = Number.parseFloat(getComputedStyle(element).strokeWidth) / 2;
+    return {
+      width: markRect.width,
+      height: markRect.height,
+      centerX: Math.abs(markRect.x + markRect.width / 2 - boxRect.x - boxRect.width / 2),
+      centerY: Math.abs(markRect.y + markRect.height / 2 - boxRect.y - boxRect.height / 2),
+      insideBox: markRect.x >= boxRect.x && markRect.y >= boxRect.y
+        && markRect.right <= boxRect.right && markRect.bottom <= boxRect.bottom,
+      inkFits: ink.width > 0 && ink.x - stroke >= view.x && ink.y - stroke >= view.y
+        && ink.x + ink.width + stroke <= view.x + view.width
+        && ink.y + ink.height + stroke <= view.y + view.height,
+      text: element.textContent?.trim()
+    };
+  });
+  expect(geometry.width).toBe(12);
+  expect(geometry.height).toBe(12);
+  expect(geometry.centerX).toBeLessThanOrEqual(0.5);
+  expect(geometry.centerY).toBeLessThanOrEqual(0.5);
+  expect(geometry.insideBox).toBe(true);
+  expect(geometry.inkFits).toBe(true);
+  expect(geometry.text).toBe("");
+}
+
+async function resolvedTokenColor(locator: Locator, token: string): Promise<string> {
+  return locator.evaluate((element, name) => {
+    const probe = document.createElement("span");
+    probe.style.cssText = `position:absolute;visibility:hidden;color:var(${name})`;
+    element.append(probe);
+    const color = getComputedStyle(probe).color;
+    probe.remove();
+    return color;
+  }, token);
+}
+
+for (const theme of [
+  { name: "white", label: "White" },
+  { name: "graphite", label: "Graphite" },
+  { name: "newspaper", label: "Newspaper" }
+]) {
+  test(`${theme.name}: checkbox marks stay centered and disabled binary controls ignore hover and activation`, async ({ page }) => {
+    await page.locator(".pg-theme").getByText(theme.label, { exact: true }).click();
+    await selectComponent(page, "WlCheckbox");
+    await expect(page.locator(".wl-select-overlay")).toHaveCount(0);
+    const explorer = page.getByTestId("ds-explorer");
+    const preview = page.getByTestId("ds-example-preview");
+    const checkbox = preview.getByRole("checkbox", { name: "Получать обновления" });
+    const box = preview.locator(".wl-checkbox__box");
+
+    await expect(checkbox).toBeChecked();
+    await expectCenteredCheckboxMark(box);
+
+    const focusAction = explorer.getByRole("button", { name: "Проверить фокус" });
+    await focusAction.focus();
+    await page.keyboard.press("Shift+Tab");
+    await expect(checkbox).toBeFocused();
+    await expect(box).toHaveCSS("outline-width", "2px");
+    await expect(box).toHaveCSS("outline-style", "solid");
+    await checkbox.press("Space");
+    await expect(checkbox).not.toBeChecked();
+    await expect(box.locator(".wl-checkbox__icon")).toHaveCount(0);
+    await checkbox.press("Space");
+    await expect(checkbox).toBeChecked();
+    await expectCenteredCheckboxMark(box);
+
+    await explorer.getByRole("checkbox", { name: "indeterminate", exact: true }).check();
+    expect(await checkbox.evaluate((input: HTMLInputElement) => input.indeterminate)).toBe(true);
+    await expect(box).toHaveClass(/is-indeterminate/);
+    await expectCenteredCheckboxMark(box);
+
+    const disabledControl = explorer.getByRole("checkbox", { name: "disabled", exact: true });
+    await disabledControl.check();
+    await expect(disabledControl).toBeEnabled();
+    await expect(checkbox).toBeDisabled();
+    // These controls reproduce the reported drawing defect even when text grows.
+    await page.addStyleTag({ content: ".ds-explorer-controls { font-size: 24px; line-height: 2; }" });
+    await expectCenteredCheckboxMark(explorer.locator(".wl-checkline").filter({ has: page.getByRole("checkbox", { name: "disabled", exact: true }) }).locator(".wl-checkbox__box"));
+    const disabledBackground = await resolvedTokenColor(box, "--wl-bg-soft");
+    const disabledBorder = await resolvedTokenColor(box, "--wl-border");
+    await expect(box).toHaveCSS("background-color", disabledBackground);
+    await expect(box).toHaveCSS("border-color", disabledBorder);
+    await checkbox.hover();
+    await expect(box).toHaveCSS("background-color", disabledBackground);
+    await expect(box).toHaveCSS("border-color", disabledBorder);
+    await preview.locator(".wl-checkline").evaluate((label: HTMLLabelElement) => label.click());
+    await expect(checkbox).toBeChecked();
+    expect(await checkbox.evaluate((input: HTMLInputElement) => input.indeterminate)).toBe(true);
+
+    await disabledControl.uncheck();
+    await explorer.getByRole("checkbox", { name: "indeterminate", exact: true }).uncheck();
+    await expect(checkbox).toBeEnabled();
+    await expect(checkbox).toBeChecked();
+    await expectCenteredCheckboxMark(box);
+
+    await selectComponent(page, "WlRadio");
+    const radio = preview.getByRole("radio", { name: "Вся команда" });
+    const radioBox = preview.locator(".wl-radio__box").first();
+    await expect(radio).toBeChecked();
+    await explorer.getByRole("checkbox", { name: "disabled", exact: true }).check();
+    await expect(radio).toBeDisabled();
+    await expect(radioBox).toHaveCSS("background-color", disabledBackground);
+    await expect(radioBox).toHaveCSS("border-color", disabledBorder);
+    await radio.hover();
+    await expect(radioBox).toHaveCSS("background-color", disabledBackground);
+    await expect(radioBox).toHaveCSS("border-color", disabledBorder);
+    await preview.locator(".wl-checkline").first().evaluate((label: HTMLLabelElement) => label.click());
+    await expect(radio).toBeChecked();
+    await expect(preview.getByRole("radio", { name: "Только я" })).not.toBeChecked();
+  });
+}
+
+async function expectCenteredDropdown(root: Locator, dropdown: Locator): Promise<void> {
+  const arrow = dropdown.locator("svg");
+  await expect(arrow).toBeVisible();
+  await expect(arrow).toHaveAttribute("aria-hidden", "true");
+  const rootRect = await root.boundingBox();
+  const dropdownRect = await dropdown.boundingBox();
+  const geometry = await arrow.evaluate((element: SVGSVGElement) => {
+    const rect = element.getBoundingClientRect();
+    const ink = element.getBBox();
+    const view = element.viewBox.baseVal;
+    const stroke = Number.parseFloat(getComputedStyle(element).strokeWidth) / 2;
+    return {
+      x: rect.x, y: rect.y, width: rect.width, height: rect.height,
+      inkFits: ink.width > 0 && ink.x - stroke >= view.x && ink.y - stroke >= view.y
+        && ink.x + ink.width + stroke <= view.x + view.width
+        && ink.y + ink.height + stroke <= view.y + view.height,
+      text: element.textContent?.trim()
+    };
+  });
+  expect(rootRect).not.toBeNull();
+  expect(dropdownRect).not.toBeNull();
+  expect(geometry.width).toBe(14);
+  expect(geometry.height).toBe(14);
+  expect(Math.abs(geometry.y + geometry.height / 2 - rootRect!.y - rootRect!.height / 2)).toBeLessThanOrEqual(0.5);
+  expect(Math.abs(geometry.x + geometry.width / 2 - dropdownRect!.x - dropdownRect!.width / 2)).toBeLessThanOrEqual(0.5);
+  expect(geometry.x).toBeGreaterThanOrEqual(rootRect!.x);
+  expect(geometry.x + geometry.width).toBeLessThanOrEqual(rootRect!.x + rootRect!.width);
+  expect(geometry.inkFits).toBe(true);
+  expect(geometry.text).toBe("");
+}
+
+for (const entry of [
+  { name: "WlSelect", root: ".wl-select", dropdown: ".wl-select__dropdown", label: "Область" },
+  { name: "WlMultiSelect", root: ".wl-multiselect", dropdown: ".wl-multiselect__dropdown", label: "Направления" },
+  { name: "WlAutocomplete", root: ".wl-autocomplete", dropdown: ".wl-autocomplete__dropdown", label: "Участник" }
+]) {
+  test(`${entry.name}: SVG dropdown stays centered across themes, sizes and keyboard or disabled interaction`, async ({ page }) => {
+    await selectComponent(page, entry.name);
+    await expect(page.locator(".wl-select-overlay")).toHaveCount(0);
+    const explorer = page.getByTestId("ds-explorer");
+    const preview = page.getByTestId("ds-example-preview");
+    const root = preview.locator(entry.root);
+    const dropdown = preview.locator(entry.dropdown);
+    const control = preview.getByRole("combobox", { name: entry.label, exact: true });
+    // Font metrics must not affect a decorative arrow or its control height.
+    await page.addStyleTag({ content: ".ds-example-preview { font-size:24px; line-height:2.5; }" });
+    for (const theme of [
+      { name: "white", label: "White" },
+      { name: "graphite", label: "Graphite" },
+      { name: "newspaper", label: "Newspaper" }
+    ]) {
+      await page.locator(".pg-theme").getByText(theme.label, { exact: true }).click();
+      for (const size of ["sm", "md", "lg"]) {
+        await explorer.getByLabel("Пример: size", { exact: true }).selectOption(size);
+        await expect(root).toHaveAttribute("data-size", size);
+        await expectCenteredDropdown(root, dropdown);
+      }
+      await explorer.getByLabel("Пример: size", { exact: true }).selectOption("md");
+      await explorer.getByLabel("Пример: density", { exact: true }).selectOption("compact");
+      await expectCenteredDropdown(root, dropdown);
+      await explorer.getByLabel("Пример: density", { exact: true }).selectOption("default");
+
+      await control.press("ArrowDown");
+      const listbox = page.getByRole("listbox");
+      await expect(listbox).toBeVisible();
+      await control.press("End");
+      const wasSelected = entry.name === "WlMultiSelect"
+        ? await listbox.getByRole("option", { name: "Исследования" }).getAttribute("aria-selected")
+        : undefined;
+      await control.press("Enter");
+      if (entry.name === "WlSelect") {
+        await expect(root.locator(".wl-select__label")).toHaveText("Личное");
+      } else if (entry.name === "WlMultiSelect") {
+        await expect(listbox.getByRole("option", { name: "Исследования" })).toHaveAttribute("aria-selected", wasSelected === "true" ? "false" : "true");
+        await control.press("Escape");
+      } else {
+        await expect(control).toHaveValue("Мария");
+      }
+      await expect(page.getByRole("listbox")).toHaveCount(0);
+      await expect(control).toBeFocused();
+      await expectCenteredDropdown(root, dropdown);
+
+      const valueBefore = await control.evaluate((element) => element instanceof HTMLInputElement ? element.value : element.textContent);
+      const disabled = explorer.getByRole("checkbox", { name: "disabled", exact: true });
+      await disabled.check();
+      await expect(control).toBeDisabled();
+      await expectCenteredDropdown(root, dropdown);
+      if (entry.name === "WlAutocomplete") await expect(dropdown).toBeDisabled();
+      await dropdown.evaluate((element: HTMLElement) => element.click());
+      await control.evaluate((element) => element.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })));
+      await expect(page.getByRole("listbox")).toHaveCount(0);
+      expect(await control.evaluate((element) => element instanceof HTMLInputElement ? element.value : element.textContent)).toBe(valueBefore);
+      await disabled.uncheck();
+      await expect(control).toBeEnabled();
+    }
+  });
+}

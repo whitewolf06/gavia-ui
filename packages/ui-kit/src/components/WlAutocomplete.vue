@@ -7,6 +7,8 @@ import { useAnchoredOverlay } from "../utils/anchoredOverlay";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import { optionLabel as resolveOptionLabel, useListNavigation } from "../utils/options";
 
+import WlIcon from "./WlIcon.vue";
+
 defineOptions({ inheritAttrs: false });
 export interface WlAutocompleteCompleteEvent {
   originalEvent: Event;
@@ -101,7 +103,7 @@ onBeforeUnmount(() => { if (timer) clearTimeout(timer); });
       @input="model = query; complete($event)" @keydown="onKeydown" />
     <button v-if="dropdown" v-bind="section('dropdown')" type="button"
       class="wl-autocomplete__dropdown" :aria-label="dropdownLabel" :disabled="disabled" @click="open">
-      <span v-bind="section('dropdownIcon')" class="wl-autocomplete__dropdown-icon">⌄</span>
+      <WlIcon v-bind="section('dropdownIcon')" class="wl-autocomplete__dropdown-icon" name="chevron-down" :size="14" />
     </button>
   </div>
   <Teleport to="body">

@@ -246,3 +246,90 @@ describe("WlConfirmDialog + useWlConfirm", () => {
     wrapper.unmount();
   });
 });
+
+describe("dropdown SVG contracts", () => {
+  it.each([false, true])("preserves MultiSelect icon pt and selection when disabled=%s", async (disabled) => {
+    const wrapper = mount(WlMultiSelect, {
+      attachTo: document.body,
+      global: { plugins: [[WlConfig, { pt: createWlPt({
+        multiselect: { dropdownIcon: { class: "app-arrow", "data-app": "kept", "data-source": "app" } }
+      }) }]] },
+      props: {
+        options: ["One", "Two"], modelValue: [], disabled, motion: false,
+        pt: { dropdownIcon: { class: "local-arrow", "data-source": "local" } }
+      }
+    });
+    try {
+      const arrow = wrapper.get("svg.wl-multiselect__dropdown-icon");
+      expect(arrow.classes()).toContain("app-arrow");
+      expect(arrow.classes()).toContain("local-arrow");
+      expect(arrow.attributes("data-app")).toBe("kept");
+      expect(arrow.attributes("data-source")).toBe("local");
+      expect(arrow.attributes("aria-hidden")).toBe("true");
+      expect(arrow.get("path").attributes("d")).toBe("m6 9 6 6 6-6");
+      expect(wrapper.get(".wl-multiselect__dropdown").text()).toBe("");
+      await arrow.trigger("click");
+      const control = wrapper.get('input[role="combobox"]');
+      if (disabled) {
+        await control.trigger("keydown", { key: "ArrowDown" });
+        expect(control.attributes("aria-expanded")).toBe("false");
+        expect((control.element as HTMLInputElement).disabled).toBe(true);
+        expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+      } else {
+        expect(control.attributes("aria-expanded")).toBe("true");
+        await control.trigger("keydown", { key: "End" });
+        await control.trigger("keydown", { key: "Enter" });
+        expect(wrapper.emitted("update:modelValue")).toEqual([[["Two"]]]);
+        await wrapper.setProps({ modelValue: ["Two"] });
+        expect(wrapper.get(".wl-multiselect__label").text()).toBe("Two");
+        await control.trigger("keydown", { key: "Escape" });
+        expect(control.attributes("aria-expanded")).toBe("false");
+      }
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
+  it.each([false, true])("preserves Autocomplete dropdown pt, keyboard and disabled behavior with multiple=%s", async (multiple) => {
+    const wrapper = mount(WlAutocomplete, {
+      attachTo: document.body,
+      global: { plugins: [[WlConfig, { pt: createWlPt({
+        autocomplete: { dropdownIcon: { class: "app-arrow", "data-app": "kept", "data-source": "app" } }
+      }) }]] },
+      props: {
+        suggestions: ["One", "Two"], modelValue: multiple ? [] : "", multiple,
+        dropdown: true, dropdownLabel: "Open suggestions", motion: false,
+        pt: { dropdownIcon: { class: "local-arrow", "data-source": "local" } }
+      }
+    });
+    try {
+      const arrow = wrapper.get("svg.wl-autocomplete__dropdown-icon");
+      expect(arrow.classes()).toContain("app-arrow");
+      expect(arrow.classes()).toContain("local-arrow");
+      expect(arrow.attributes("data-app")).toBe("kept");
+      expect(arrow.attributes("data-source")).toBe("local");
+      expect(arrow.attributes("aria-hidden")).toBe("true");
+      expect(arrow.get("path").attributes("d")).toBe("m6 9 6 6 6-6");
+      const dropdown = wrapper.get("button.wl-autocomplete__dropdown");
+      expect(dropdown.attributes("aria-label")).toBe("Open suggestions");
+      expect(dropdown.text()).toBe("");
+      await dropdown.trigger("click");
+      const control = wrapper.get('input[role="combobox"]');
+      expect(control.attributes("aria-expanded")).toBe("true");
+      await control.trigger("keydown", { key: "End" });
+      await control.trigger("keydown", { key: "Enter" });
+      expect(wrapper.emitted("update:modelValue")).toEqual([[multiple ? ["Two"] : "Two"]]);
+      expect(wrapper.emitted("complete")).toBeUndefined();
+      await wrapper.setProps({ modelValue: multiple ? ["Two"] : "Two", disabled: true });
+      (dropdown.element as HTMLButtonElement).click();
+      await control.trigger("keydown", { key: "ArrowDown" });
+      expect(control.attributes("aria-expanded")).toBe("false");
+      expect((control.element as HTMLInputElement).disabled).toBe(true);
+      expect((dropdown.element as HTMLButtonElement).disabled).toBe(true);
+      expect(wrapper.emitted("update:modelValue")).toHaveLength(1);
+      expect(arrow.attributes("data-source")).toBe("local");
+    } finally {
+      wrapper.unmount();
+    }
+  });
+});

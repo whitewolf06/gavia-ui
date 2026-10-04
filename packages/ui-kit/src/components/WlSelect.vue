@@ -7,6 +7,8 @@ import { useAnchoredOverlay } from "../utils/anchoredOverlay";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import { optionLabel as resolveOptionLabel, optionValue as resolveOptionValue, useListNavigation } from "../utils/options";
 
+import WlIcon from "./WlIcon.vue";
+
 defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<{
   options?: unknown[];
@@ -61,7 +63,7 @@ function onKeydown(event: KeyboardEvent): void {
     @click="open" @keydown="onKeydown">
     <span v-bind="section('label')" class="wl-select__label" :data-placeholder="selected === undefined || undefined">{{ display }}</span>
     <span v-bind="section('dropdown')" class="wl-select__dropdown" aria-hidden="true">
-      <span v-bind="section('dropdownIcon')" class="wl-select__dropdown-icon">⌄</span>
+      <WlIcon v-bind="section('dropdownIcon')" class="wl-select__dropdown-icon" name="chevron-down" :size="14" />
     </span>
     <input v-if="attrGroups.inputAttrs.name" type="hidden" :name="String(attrGroups.inputAttrs.name)" :value="model == null ? '' : String(model)" />
   </div>

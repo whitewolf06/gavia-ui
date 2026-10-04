@@ -3,6 +3,7 @@ import { computed, useAttrs } from "vue";
 import { useWlPt } from "../config";
 import { getWlControlProps, splitInputAttrs } from "../utils/inputAttrs";
 import { deepMerge } from "../utils/merge";
+import WlIcon from "./WlIcon.vue";
 
 defineOptions({ inheritAttrs: false });
 
@@ -62,8 +63,13 @@ const rootClass = computed(() => [
       :aria-labelledby="controlProps.ariaLabelledby"
     />
     <span v-bind="section('box', { checked: model, indeterminate, disabled })" class="wl-checkbox__box" aria-hidden="true">
-      <span v-if="indeterminate" class="wl-checkbox__icon">−</span>
-      <span v-else-if="model" class="wl-checkbox__icon">✓</span>
+      <WlIcon
+        v-if="indeterminate || model"
+        v-bind="section('icon', { checked: model, indeterminate, disabled })"
+        class="wl-checkbox__icon"
+        :name="indeterminate ? 'minus' : 'check'"
+        :size="12"
+      />
     </span>
     </span>
     <span v-if="$slots.default" class="wl-checkline__label"><slot /></span>

@@ -93,7 +93,7 @@ function onKeydown(event: KeyboardEvent): void {
         :disabled="disabled" :value="label" @keydown="onKeydown" />
     </div>
     <span v-bind="section('dropdown')" class="wl-multiselect__dropdown" aria-hidden="true">
-      <span v-bind="section('dropdownIcon')" class="wl-multiselect__dropdown-icon">⌄</span>
+      <WlIcon v-bind="section('dropdownIcon')" class="wl-multiselect__dropdown-icon" name="chevron-down" :size="14" />
     </span>
   </div>
   <Teleport to="body">

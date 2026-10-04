@@ -781,9 +781,14 @@
     transform: translateY(-50%);
     color: var(--wl-text-3);
     display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
     pointer-events: none;
   }
   .wl-select__dropdown-icon {
+    display: block;
+    flex: none;
     width: 14px;
     height: 14px;
   }
@@ -951,9 +956,14 @@
     transform: translateY(-50%);
     color: var(--wl-text-3);
     display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
     pointer-events: none;
   }
   .wl-multiselect__dropdown-icon {
+    display: block;
+    flex: none;
     width: 14px;
     height: 14px;
   }
@@ -993,12 +1003,21 @@
     opacity: 0.7;
   }
   .wl-autocomplete__dropdown {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    flex: none;
+    height: auto;
+    line-height: 0;
     margin-left: -1px;
     padding: 0 12px;
     border-radius: 0 var(--wl-input-radius) var(--wl-input-radius) 0;
     color: var(--wl-text-3);
   }
   .wl-autocomplete__dropdown-icon {
+    display: block;
+    flex: none;
     width: 14px;
     height: 14px;
   }
@@ -1119,19 +1138,22 @@
     transition: background var(--wl-dur-2), border-color var(--wl-dur-2);
   }
   .wl-checkbox__icon {
+    display: block;
+    flex: none;
     width: 12px;
     height: 12px;
+    stroke-width: 2.5;
   }
   .wl-checkbox__box.is-checked,
   .wl-checkbox__box.is-indeterminate {
     background: var(--wl-accent);
     border-color: var(--wl-accent);
   }
-  .wl-check-input:hover + .wl-checkbox__box {
+  .wl-check-input:where(:not(:disabled)):hover + .wl-checkbox__box {
     border-color: var(--wl-text-3);
   }
-  .wl-check-input:hover + .wl-checkbox__box.is-checked,
-  .wl-check-input:hover + .wl-checkbox__box.is-indeterminate {
+  .wl-check-input:where(:not(:disabled)):hover + .wl-checkbox__box.is-checked,
+  .wl-check-input:where(:not(:disabled)):hover + .wl-checkbox__box.is-indeterminate {
     border-color: var(--wl-accent-hover);
     background: var(--wl-accent-hover);
   }
@@ -1179,10 +1201,10 @@
   .wl-radio__icon {
     display: none;
   }
-  .wl-check-input:hover + .wl-radio__box {
+  .wl-check-input:where(:not(:disabled)):hover + .wl-radio__box {
     border-color: var(--wl-text-3);
   }
-  .wl-check-input:hover + .wl-radio__box.is-checked {
+  .wl-check-input:where(:not(:disabled)):hover + .wl-radio__box.is-checked {
     border-color: var(--wl-accent-hover);
     background: var(--wl-accent-hover);
   }
