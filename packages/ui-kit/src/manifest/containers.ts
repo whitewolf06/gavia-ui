@@ -8,7 +8,7 @@ export const containersManifest = defineComponentManifest([
     description: "Карточка с секциями header/title/subtitle/content/footer.",
     props: [
       { name: "hoverable", type: "boolean", default: false, description: "Подсветка при наведении." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [
       { name: "default", description: "Основное содержимое." },
@@ -55,7 +55,7 @@ export const containersManifest = defineComponentManifest([
         default: [],
         description: "WlTabItem[]: { key, label, icon?, count? }."
       },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [{ name: "panel", description: "Содержимое панели; scope: { item }." }],
     emits: [],
@@ -80,7 +80,7 @@ export const containersManifest = defineComponentManifest([
       { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего диалог." },
       { name: "width", type: "string", description: "Ширина (CSS), например \"480px\"." },
       { name: "motion", type: "boolean", description: "Анимация открытия и закрытия; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [
       { name: "default", description: "Тело диалога." },
@@ -114,7 +114,7 @@ export const containersManifest = defineComponentManifest([
       { name: "ariaLabel", type: "string", description: "Доступное имя панели без текстового заголовка." },
       { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего панель." },
       { name: "motion", type: "boolean", description: "Анимация открытия и закрытия; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [
       { name: "default", description: "Содержимое панели." },
@@ -137,7 +137,7 @@ export const containersManifest = defineComponentManifest([
       { name: "ariaLabel", type: "string", description: "Доступное имя поповера." },
       { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего поповер." },
       { name: "motion", type: "boolean", description: "Анимация открытия и закрытия; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [{ name: "default", description: "Содержимое поповера." }],
     emits: [
@@ -149,7 +149,7 @@ export const containersManifest = defineComponentManifest([
     name: "WlDivider",
     category: "containers",
     description: "Разделитель; без слота — простая линия.",
-    props: [{ name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }],
+    props: [{ name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }],
     slots: [{ name: "default", description: "Текст/содержимое по центру линии." }],
     emits: []
   }

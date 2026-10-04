@@ -142,7 +142,7 @@ export interface WlCalendarEvent {
   tone?: WlCalendarEventTone;
 }
 
-/** Calendar locale shape accepted by WhiteUI configuration. */
+/** Calendar locale shape accepted by Gavia UI configuration. */
 export interface WlDatePickerLocale {
   firstDayOfWeek?: number;
   dayNames?: string[];

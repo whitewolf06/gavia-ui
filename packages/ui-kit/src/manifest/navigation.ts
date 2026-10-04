@@ -12,7 +12,7 @@ export const navigationManifest = defineComponentManifest([
         default: [],
         description: "WlBreadcrumbItem[]: { label, to?, href?, icon? }."
       },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [],
     emits: []

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WhiteLife — AI агент</title>
+  <title>Gavia UI — AI агент</title>
   <style>
     @layer wl.reset, wl.tokens, wl.components;
 
@@ -703,7 +703,7 @@
 
   <div class="wl-app" data-wl="ai-agent-dialog-prototype">
     <aside class="wl-sidebar" id="wl-sidebar">
-      <div class="wl-brand"><span class="wl-brand__mark"><svg class="wl-icon"><use href="#wl-i-logo"></use></svg></span><span class="wl-brand__name">WhiteLife</span><span class="wl-brand__env">beta</span></div>
+      <div class="wl-brand"><span class="wl-brand__mark"><svg class="wl-icon"><use href="#wl-i-logo"></use></svg></span><span class="wl-brand__name">Gavia UI</span><span class="wl-brand__env">beta</span></div>
       <nav class="wl-nav" aria-label="Основная навигация">
         <div class="wl-nav__label">Пространство</div>
         <button class="wl-nav__item" type="button"><svg class="wl-icon"><use href="#wl-i-home"></use></svg><span class="wl-nav__text">Сегодня</span></button>
@@ -763,7 +763,7 @@
                   <article class="wl-message">
                     <span class="wl-message__avatar"><svg class="wl-icon wl-icon--sm"><use href="#wl-i-sparkle"></use></svg></span>
                     <div class="wl-message__content">
-                      <div class="wl-message__meta"><strong>WhiteLife Agent</strong><span>·</span><span>проверено 8 сущностей</span></div>
+                      <div class="wl-message__meta"><strong>Gavia Agent</strong><span>·</span><span>проверено 8 сущностей</span></div>
                       <div class="wl-message__text">
                         <p>Нашёл <strong>три точки риска</strong>. Критичного системного блокера нет, но без двух решений релиз, вероятно, сдвинется на день.</p>
                         <ol class="wl-message__list">
@@ -958,7 +958,7 @@
         const article = document.createElement("article");
         article.className = "wl-message";
         article.id = "wl-active-typing";
-        article.innerHTML = `<span class="wl-message__avatar">${icon("sparkle", "sm")}</span><div class="wl-message__content"><div class="wl-message__meta"><strong>WhiteLife Agent</strong><span>·</span><span>ищет в пространстве</span></div><div class="wl-typing"><i></i><i></i><i></i></div></div>`;
+        article.innerHTML = `<span class="wl-message__avatar">${icon("sparkle", "sm")}</span><div class="wl-message__content"><div class="wl-message__meta"><strong>Gavia Agent</strong><span>·</span><span>ищет в пространстве</span></div><div class="wl-typing"><i></i><i></i><i></i></div></div>`;
         $("#wl-chat-messages").appendChild(article);
       }
 
@@ -974,12 +974,12 @@
           answer = "За неделю команда закрыла 14 задач, обновила 6 заметок и провела 9 встреч. Главный незавершённый блок — мобильный сценарий Atlas 2.0 и связанные тексты пустых состояний.";
           sources = `<button class="wl-source" type="button" data-source="note-nav">${icon("note", "xs")}Итоги недели</button><button class="wl-source" type="button" data-source="task-47">${icon("task", "xs")}Atlas 2.0</button>`;
         } else if (lower.includes("без срока") || lower.includes("исполнител")) {
-          answer = "Нашёл 4 задачи без срока и 2 задачи без исполнителя. Три из них относятся к WhiteLife Core. Могу подготовить предложение по назначению ответственных и сроков.";
+          answer = "Нашёл 4 задачи без срока и 2 задачи без исполнителя. Три из них относятся к Gavia Core. Могу подготовить предложение по назначению ответственных и сроков.";
           sources = `<button class="wl-source" type="button">${icon("task", "xs")}6 задач</button>`;
         }
         const article = document.createElement("article");
         article.className = "wl-message";
-        article.innerHTML = `<span class="wl-message__avatar">${icon("sparkle", "sm")}</span><div class="wl-message__content"><div class="wl-message__meta"><strong>WhiteLife Agent</strong><span>·</span><span>только что</span></div><div class="wl-message__text"><p>${answer}</p></div><div class="wl-sources">${sources}</div><div class="wl-message-actions"><button class="wl-icon-button" type="button" aria-label="Копировать ответ">${icon("copy", "sm")}</button><button class="wl-icon-button" type="button" aria-label="Полезный ответ">${icon("like", "sm")}</button></div></div>`;
+        article.innerHTML = `<span class="wl-message__avatar">${icon("sparkle", "sm")}</span><div class="wl-message__content"><div class="wl-message__meta"><strong>Gavia Agent</strong><span>·</span><span>только что</span></div><div class="wl-message__text"><p>${answer}</p></div><div class="wl-sources">${sources}</div><div class="wl-message-actions"><button class="wl-icon-button" type="button" aria-label="Копировать ответ">${icon("copy", "sm")}</button><button class="wl-icon-button" type="button" aria-label="Полезный ответ">${icon("like", "sm")}</button></div></div>`;
         $("#wl-chat-messages").appendChild(article);
         $$("[data-source]", article).forEach(button => button.addEventListener("click", () => openContext(button.dataset.source)));
         scrollChat();
@@ -1068,7 +1068,7 @@
       });
 
       function startNewChat() {
-        $("#wl-chat-messages").innerHTML = `<div class="wl-conversation-date">Новый диалог</div><article class="wl-message"><span class="wl-message__avatar">${icon("sparkle", "sm")}</span><div class="wl-message__content"><div class="wl-message__meta"><strong>WhiteLife Agent</strong><span>·</span><span>готов к работе</span></div><div class="wl-message__text"><p>Чем помочь? Могу найти информацию, собрать сводку или подготовить действие для подтверждения.</p></div></div></article>`;
+        $("#wl-chat-messages").innerHTML = `<div class="wl-conversation-date">Новый диалог</div><article class="wl-message"><span class="wl-message__avatar">${icon("sparkle", "sm")}</span><div class="wl-message__content"><div class="wl-message__meta"><strong>Gavia Agent</strong><span>·</span><span>готов к работе</span></div><div class="wl-message__text"><p>Чем помочь? Могу найти информацию, собрать сводку или подготовить действие для подтверждения.</p></div></div></article>`;
         $("#wl-chat-input").focus();
         showToast("Новый диалог создан");
       }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WhiteLife — трекер событий</title>
+  <title>Gavia UI — трекер событий</title>
   <style>
     @layer wl.reset, wl.tokens, wl.components;
 
@@ -662,7 +662,7 @@
     <aside class="wl-sidebar" id="wl-sidebar">
       <div class="wl-brand">
         <span class="wl-brand__mark"><svg class="wl-icon"><use href="#wl-i-logo"></use></svg></span>
-        <span class="wl-brand__name">WhiteLife</span>
+        <span class="wl-brand__name">Gavia UI</span>
         <span class="wl-brand__env">beta</span>
       </div>
       <nav class="wl-nav" aria-label="Основная навигация">
@@ -755,7 +755,7 @@
   <div class="wl-filter-popover" id="wl-filter-popover">
     <div class="wl-filter-head"><h2 class="wl-filter-title">Фильтры событий</h2><button class="wl-filter-reset" id="wl-filter-reset" type="button">Сбросить</button></div>
     <div class="wl-filter-grid">
-      <div class="wl-field"><label for="wl-filter-project">Проект</label><select class="wl-select" id="wl-filter-project"><option value="">Все проекты</option><option value="atlas">Atlas 2.0</option><option value="core">WhiteLife Core</option><option value="mobile">Мобильное приложение</option></select></div>
+      <div class="wl-field"><label for="wl-filter-project">Проект</label><select class="wl-select" id="wl-filter-project"><option value="">Все проекты</option><option value="atlas">Atlas 2.0</option><option value="core">Gavia Core</option><option value="mobile">Мобильное приложение</option></select></div>
       <div class="wl-field"><label for="wl-filter-type">Тип события</label><select class="wl-select" id="wl-filter-type"><option value="">Все типы</option><option value="task">Задачи</option><option value="note">Заметки</option><option value="calendar">Календарь</option><option value="comment">Комментарии</option><option value="system">Система</option></select></div>
       <div class="wl-field"><label for="wl-filter-actor">Участник</label><select class="wl-select" id="wl-filter-actor"><option value="">Все участники</option><option value="me">Я</option><option value="mk">Мария Ким</option><option value="ip">Иван Петров</option><option value="ak">Анна Котова</option></select></div>
     </div>
@@ -768,7 +768,7 @@
       <div class="wl-field"><label for="wl-new-title">Название</label><input class="wl-input" id="wl-new-title" type="text" placeholder="Что произошло?" required></div>
       <div class="wl-form-grid">
         <div class="wl-field"><label for="wl-new-type">Тип</label><select class="wl-select" id="wl-new-type"><option value="task">Задача</option><option value="note">Заметка</option><option value="calendar">Календарь</option><option value="comment">Комментарий</option><option value="system">Система</option></select></div>
-        <div class="wl-field"><label for="wl-new-project">Проект</label><select class="wl-select" id="wl-new-project"><option value="atlas">Atlas 2.0</option><option value="core">WhiteLife Core</option><option value="mobile">Мобильное приложение</option></select></div>
+        <div class="wl-field"><label for="wl-new-project">Проект</label><select class="wl-select" id="wl-new-project"><option value="atlas">Atlas 2.0</option><option value="core">Gavia Core</option><option value="mobile">Мобильное приложение</option></select></div>
       </div>
       <div class="wl-field"><label for="wl-new-description">Описание</label><textarea class="wl-textarea" id="wl-new-description" placeholder="Добавьте контекст события"></textarea></div>
       <div class="wl-modal__footer"><button class="wl-button" id="wl-modal-cancel" type="button">Отмена</button><button class="wl-button wl-button--primary" type="submit">Записать</button></div>
@@ -792,10 +792,10 @@
         comment: { label: "Комментарий", icon: "comment", color: "var(--wl-green)", bg: "var(--wl-green-soft)" },
         system: { label: "Система", icon: "system", color: "var(--wl-graphite)", bg: "var(--wl-graphite-soft)" }
       };
-      const projects = { atlas: "Atlas 2.0", core: "WhiteLife Core", mobile: "Мобильное приложение" };
+      const projects = { atlas: "Atlas 2.0", core: "Gavia Core", mobile: "Мобильное приложение" };
       const events = [
         {
-          id: 1, day: "today", dayLabel: "Сегодня", dateLabel: "27 июля", time: "17:42", type: "system", project: "core", actor: "system", actorName: "WhiteLife", initials: "WL", avatar: "#42505d", mine: false, important: true,
+          id: 1, day: "today", dayLabel: "Сегодня", dateLabel: "27 июля", time: "17:42", type: "system", project: "core", actor: "system", actorName: "Gavia UI", initials: "WL", avatar: "#42505d", mine: false, important: true,
           title: "Подготовлена версия UI-kit 0.2.0", description: "Сборка, тесты и архив пакета успешно проверены. Релиз ожидает ручного подтверждения владельца.",
           details: [{ icon: "check", text: "144 теста успешно" }, { icon: "download", text: "пакет собран" }],
           payload: { service: "release", version: "0.2.0", status: "ready_for_review" }
@@ -833,7 +833,7 @@
         {
           id: 7, day: "yesterday", dayLabel: "Вчера", dateLabel: "26 июля", time: "10:14", type: "note", project: "core", actor: "me", actorName: "Елена Алексеева", initials: "ЕА", avatar: "#4f6f93", mine: true, important: false,
           title: "Заметка «Правила именования компонентов» открыта команде", description: "Все участники пространства получили доступ на чтение и комментирование.",
-          details: [{ icon: "users", text: "12 участников" }, { icon: "link", text: "WhiteLife Core" }],
+          details: [{ icon: "users", text: "12 участников" }, { icon: "link", text: "Gavia Core" }],
           payload: { note: "Правила именования компонентов", access: "workspace", permission: "comment" }
         },
         {
@@ -843,7 +843,7 @@
           payload: { task: "WL-52", board: "Atlas 2.0", column: "review" }
         },
         {
-          id: 9, day: "july25", dayLabel: "Суббота", dateLabel: "25 июля", time: "09:08", type: "system", project: "core", actor: "system", actorName: "WhiteLife", initials: "WL", avatar: "#42505d", mine: false, important: false,
+          id: 9, day: "july25", dayLabel: "Суббота", dateLabel: "25 июля", time: "09:08", type: "system", project: "core", actor: "system", actorName: "Gavia UI", initials: "WL", avatar: "#42505d", mine: false, important: false,
           title: "Подключена интеграция календаря", description: "Синхронизация успешно завершена. Импортировано 18 событий, конфликтов не обнаружено.",
           details: [{ icon: "calendar", text: "18 событий" }, { icon: "check", text: "без конфликтов" }],
           payload: { integration: "calendar", imported: "18", conflicts: "0" }

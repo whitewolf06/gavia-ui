@@ -31,7 +31,7 @@ const cx = (...parts: Array<string | false | null | undefined>): string =>
  *   app.use(WlConfig, { pt: createWlPt() })
  *
  * `overrides` is deep-merged on top of the defaults. Component-level `pt`
- * attributes are applied by WhiteUI after app-level attributes.
+ * attributes are applied by Gavia UI after app-level attributes.
  */
 export function createWlPt(overrides: Record<string, unknown> = {}): WlPtConfig {
   const base: WlPtConfig = {

@@ -1,29 +1,30 @@
 {
-  "name": "whitelife-ui",
+  "name": "gavia-ui-workspace",
   "version": "0.6.0",
   "private": true,
-  "description": "WhiteLife UI workspace: @whitelife-core/ui-kit library package and playground app",
+  "description": "Gavia UI workspace: an independent Vue 3 design system and component library",
   "packageManager": "pnpm@10.34.5",
   "engines": {
     "node": ">=18"
   },
   "scripts": {
-    "dev": "pnpm --filter @whitelife-core/playground dev",
-    "build": "pnpm --filter @whitelife-core/ui-kit build",
-    "build:playground": "pnpm --filter @whitelife-core/playground build",
-    "test": "pnpm --filter @whitelife-core/ui-kit test",
-    "typecheck": "pnpm --filter @whitelife-core/ui-kit typecheck && pnpm --filter @whitelife-core/playground typecheck",
-    "pack": "pnpm --filter @whitelife-core/ui-kit run pack",
+    "dev": "pnpm --filter gavia-ui-playground dev",
+    "build": "pnpm --filter gavia-ui build",
+    "build:playground": "pnpm --filter gavia-ui-playground build",
+    "test": "pnpm --filter gavia-ui test",
+    "typecheck": "pnpm --filter gavia-ui typecheck && pnpm --filter gavia-ui-playground typecheck",
+    "pack": "pnpm --filter gavia-ui run pack",
     "verify:package": "node scripts/verify-package.mjs",
     "verify:dependencies": "node scripts/check-dependencies.mjs",
     "test:e2e": "pnpm exec playwright test -c apps/playground/playwright.config.ts",
     "test:visual": "pnpm exec playwright test -c apps/playground/playwright.visual.config.ts",
-    "icons:sync": "pnpm --filter @whitelife-core/ui-kit icons:sync",
-    "icons:check": "pnpm --filter @whitelife-core/ui-kit icons:check",
-    "tokens:sync": "pnpm --filter @whitelife-core/ui-kit tokens:sync",
-    "tokens:check": "pnpm --filter @whitelife-core/ui-kit tokens:check"
+    "icons:sync": "pnpm --filter gavia-ui icons:sync",
+    "icons:check": "pnpm --filter gavia-ui icons:check",
+    "tokens:sync": "pnpm --filter gavia-ui tokens:sync",
+    "tokens:check": "pnpm --filter gavia-ui tokens:check"
   },
   "devDependencies": {
     "@playwright/test": "1.58.2"
-  }
+  },
+  "license": "MIT"
 }

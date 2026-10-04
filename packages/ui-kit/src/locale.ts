@@ -12,7 +12,7 @@ export interface WlLocale extends WlDatePickerLocale {
 }
 
 /**
- * Russian locale for WhiteUI controls. Applied by default and overridable per app:
+ * Russian locale for Gavia UI controls. Applied by default and overridable per app:
  *   app.use(WlConfig, { locale: wlLocaleRu })
  */
 export const wlLocaleRu: WlLocale = {

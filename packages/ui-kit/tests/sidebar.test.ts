@@ -28,12 +28,12 @@ const footerItems: WlSidebarItem[] = [
 describe("WlSidebar", () => {
   it("composes navigation from WlNavItem primitives", () => {
     const wrapper = mount(WlSidebar, {
-      props: { groups, footerItems, brand: "WhiteLife", brandMark: "W" }
+      props: { groups, footerItems, brand: "Gavia UI", brandMark: "G" }
     });
 
     expect(wrapper.findAllComponents(WlNavItem)).toHaveLength(6);
     expect(wrapper.find('[data-wl="sidebar"]').attributes("data-expanded")).toBe("false");
-    expect(wrapper.find(".wl-sidebar__brand-mark").text()).toBe("W");
+    expect(wrapper.find(".wl-sidebar__brand-mark").text()).toBe("G");
     expect(wrapper.find(".wl-sidebar__group-label").text()).toBe("Инструменты");
     expect(wrapper.find(".wl-sidebar__group-label").attributes("style")).toContain("display: none");
     expect(wrapper.findAllComponents(WlNavItem)[0]!.attributes("aria-label")).toBe("Сегодня");
@@ -41,7 +41,7 @@ describe("WlSidebar", () => {
 
   it("expands on hover and keeps active state controlled by v-model", async () => {
     const wrapper = mount(WlSidebar, {
-      props: { groups, modelValue: "today", brand: "WhiteLife" }
+      props: { groups, modelValue: "today", brand: "Gavia UI" }
     });
     const root = wrapper.find('[data-wl="sidebar"]');
 

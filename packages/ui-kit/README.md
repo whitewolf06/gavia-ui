@@ -1,18 +1,32 @@
-# @whitelife-core/ui-kit
+# Gavia UI
 
-Версия `0.6.0`. [Изменения и переход](https://github.com/whitelife-core/whiteui/blob/main/docs/migration-0.6.md).
+Версия `0.6.0`. [Изменения и переход](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.6.md).
+
+## Лицензия и установка
+
+MIT — бесплатно для личного и коммерческого использования. Можно использовать,
+изменять и распространять при сохранении уведомления об авторских правах и
+текста лицензии. Полный текст включён в [LICENSE](LICENSE).
+
+Имя `gavia-ui` подготовлено к первой публикации в публичном npm.
+После неё установка: `pnpm add gavia-ui vue`. GitHub-токен не нужен.
+До первого выпуска используйте архив, собранный из
+[репозитория](https://github.com/whitewolf06/gavia-ui).
+Runtime-зависимостей нет; Vue 3 — единственный обязательный peer.
+[История изменений](CHANGELOG.md) и
+[переход с прежнего имени](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-gavia.md).
 
 ## Дизайн-система
 
 Общие роли типографики, шкала расстояний, поверхности, состояния и UI-паттерны
-описаны в [руководстве](https://github.com/whitelife-core/whiteui/blob/main/docs/design-system.md). Playground `?view=system`
+описаны в [руководстве](https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md). Playground `?view=system`
 показывает каталог токенов, три темы и контракты 51 компонента.
 
 Опциональная компоновка и типографика: явный импорт
-`@whitelife-core/ui-kit/styles/primitives.css`. Экспорты `wlDesignTokens`,
+`gavia-ui/styles/primitives.css`. Экспорты `wlDesignTokens`,
 `wlDesignThemes`, `wlSpacing`, `wlTypography`, `wlBreakpoints`, `resolveWlToken`,
 `getWlThemeTokens` работают без DOM. JSON-каталог доступен по
-`@whitelife-core/ui-kit/design-tokens.json`. Исходник токенов обновляется через
+`gavia-ui/design-tokens.json`. Исходник токенов обновляется через
 `pnpm tokens:sync`, проверяется через `pnpm tokens:check`.
 
 Старые CSS-токены сохраняют имена и значения. Для доступного контраста кнопки
@@ -21,7 +35,7 @@ primary/danger используют новые роли `--wl-action-primary-*` 
 и проверяйте их сочетания. Во всех темах добавлена видимая обводка фокуса.
 Подсказки полей, заголовки и пустые состояния используют `--wl-text-muted`.
 
-Библиотека компонентов WhiteLife: Vue 3 + TypeScript (strict), собственный DOM
+Независимая библиотека компонентов Gavia UI: Vue 3 + TypeScript (strict), собственный DOM
 и поведение; стили — обычный CSS с custom properties
 `--wl-*` и CSS Layers. Без Pinia, роутера, API-клиентов и бизнес-логики.
 
@@ -36,12 +50,12 @@ primary/danger используют новые роли `--wl-action-primary-*` 
 ```ts
 // main.ts
 import { createApp } from "vue";
-import { WlConfig, WlToastService, WlConfirmationService, wlLocaleRu } from "@whitelife-core/ui-kit";
+import { WlConfig, WlToastService, WlConfirmationService, wlLocaleRu } from "gavia-ui";
 
 // Стили подключаются явно: reset → base → тема
-import "@whitelife-core/ui-kit/styles/reset.css";
-import "@whitelife-core/ui-kit/styles/base.css";
-import "@whitelife-core/ui-kit/themes/white.css";
+import "gavia-ui/styles/reset.css";
+import "gavia-ui/styles/base.css";
+import "gavia-ui/themes/white.css";
 
 import App from "./App.vue";
 
@@ -54,7 +68,10 @@ app.mount("#app");
 
 ```vue
 <script setup lang="ts">
-import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
+import { ref } from "vue";
+import { WlButton, WlInput, WlTag } from "gavia-ui";
+
+const text = ref("");
 </script>
 
 <template>
@@ -66,16 +83,16 @@ import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 
 Библиотека не импортирует CSS из JS. `WlConfig` необязателен; русская локаль и
 стандартная карта `pt` используются по умолчанию. Сервисы устанавливаются только
-если нужны соответствующие компоненты. См. [миграцию 0.5](https://github.com/whitelife-core/whiteui/blob/main/docs/migration-0.5.md).
+если нужны соответствующие компоненты. См. [миграцию 0.5](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.5.md).
 
 ## Exports
 
 | Subpath                               | Содержимое                                   |
 | ------------------------------------- | -------------------------------------------- |
-| `@whitelife-core/ui-kit`                   | ESM + `.d.ts`: компоненты, типы, `createWlPt`, `WlTooltip` |
-| `@whitelife-core/ui-kit/styles/reset.css`  | минимальный reset (слой `wl.reset`)          |
-| `@whitelife-core/ui-kit/styles/base.css`   | токены + стили компонентов (`wl.tokens`, `wl.components`) |
-| `@whitelife-core/ui-kit/themes/<theme>.css`| тема: `white`, `graphite` или `newspaper`    |
+| `gavia-ui`                   | ESM + `.d.ts`: компоненты, типы, `createWlPt`, `WlTooltip` |
+| `gavia-ui/styles/reset.css`  | минимальный reset (слой `wl.reset`)          |
+| `gavia-ui/styles/base.css`   | токены + стили компонентов (`wl.tokens`, `wl.components`) |
+| `gavia-ui/themes/<theme>.css`| тема: `white`, `graphite` или `newspaper`    |
 
 ## Токены и темы
 
@@ -98,7 +115,7 @@ import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 или явным импортом одной темы. Своя тема создаётся заменой токенов, без форка:
 
 ```ts
-import "@whitelife-core/ui-kit/themes/newspaper.css";
+import "gavia-ui/themes/newspaper.css";
 ```
 
 ```html
@@ -218,14 +235,14 @@ app.use(WlConfig, {
 
 ```ts
 // main.ts
-import { WlConfirmationService } from "@whitelife-core/ui-kit";
+import { WlConfirmationService } from "gavia-ui";
 
 app.use(WlConfirmationService);
 ```
 
 ```vue
 <script setup lang="ts">
-import { WlButton, WlConfirmDialog, useWlConfirm } from "@whitelife-core/ui-kit";
+import { WlButton, WlConfirmDialog, useWlConfirm } from "gavia-ui";
 
 const { confirm, confirmDanger } = useWlConfirm();
 
@@ -257,8 +274,8 @@ function remove(): void {
 инспектор пропсов) и AI-агентов, генерирующих разметку.
 
 ```ts
-import { wlManifest } from "@whitelife-core/ui-kit";
-import type { WlComponentManifest } from "@whitelife-core/ui-kit";
+import { wlManifest } from "gavia-ui";
+import type { WlComponentManifest } from "gavia-ui";
 
 const button = wlManifest.find((entry) => entry.name === "WlButton");
 ```
@@ -266,7 +283,7 @@ const button = wlManifest.find((entry) => entry.name === "WlButton");
 Либо как статический JSON (генерируется при сборке в `dist/manifest.json`):
 
 ```ts
-import manifest from "@whitelife-core/ui-kit/manifest.json";
+import manifest from "gavia-ui/manifest.json";
 ```
 
 Типы: `WlComponentManifest`, `WlPropManifest`, `WlSlotManifest`, `WlEmitManifest`,

@@ -1,11 +1,11 @@
 
 // Стили подключаются явно: reset → base → темы
-import "@whitelife-core/ui-kit/styles/reset.css";
-import "@whitelife-core/ui-kit/styles/base.css";
-import "@whitelife-core/ui-kit/styles/primitives.css";
-import "@whitelife-core/ui-kit/themes/white.css";
-import "@whitelife-core/ui-kit/themes/graphite.css";
-import "@whitelife-core/ui-kit/themes/newspaper.css";
+import "gavia-ui/styles/reset.css";
+import "gavia-ui/styles/base.css";
+import "gavia-ui/styles/primitives.css";
+import "gavia-ui/themes/white.css";
+import "gavia-ui/themes/graphite.css";
+import "gavia-ui/themes/newspaper.css";
 
 /** The component gallery is deliberately excluded from the initial entry. */
 void import("./bootstrap");

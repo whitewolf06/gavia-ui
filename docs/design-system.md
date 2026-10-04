@@ -1,6 +1,6 @@
-# Дизайн-система WhiteUI
+# Дизайн-система Gavia UI
 
-WhiteUI объединяет 51 Vue-компонент, SVG-иконки, дизайн-токены, три темы и
+Gavia UI объединяет 51 Vue-компонент, SVG-иконки, дизайн-токены, три темы и
 правила сборки интерфейсов. Версия пакета — `0.6.0`. В playground
 раздел **Дизайн-система** открывается через `?view=system`; **Компоненты**
 содержит полную витрину иконок и компонентов.
@@ -69,7 +69,7 @@ Component ссылается на semantic. Циклы запрещены. Found
 и задавайте `data-wl-theme` на `html`. Каждый файл содержит полный набор токенов,
 поэтому вложенный `data-wl-theme="white"` внутри Graphite возвращает светлые
 поверхности, размеры и шрифты. Локальная тема задаёт собственные значения;
-добавляйте пользовательские переопределения после файлов WhiteUI. Телепортируемые
+добавляйте пользовательские переопределения после файлов Gavia UI. Телепортируемые
 оверлеи наследуют тему `body`/`html`, а не локальную тему карточки.
 
 Все 165 прежних публичных токенов и их итоговые значения сохранены во всех трёх
@@ -121,10 +121,10 @@ xl; между разделами — 3xl/4xl. Старые размеры ко�
 Необязательные примитивы подключаются из CSS:
 
 ```ts
-import "@whitelife-core/ui-kit/styles/reset.css";
-import "@whitelife-core/ui-kit/styles/base.css";
-import "@whitelife-core/ui-kit/styles/primitives.css";
-import "@whitelife-core/ui-kit/themes/white.css";
+import "gavia-ui/styles/reset.css";
+import "gavia-ui/styles/base.css";
+import "gavia-ui/styles/primitives.css";
+import "gavia-ui/themes/white.css";
 ```
 
 ```html
@@ -230,8 +230,8 @@ Motion включён по умолчанию: глобальный `WlConfig.mo
 import {
   wlDesignTokens, wlDesignThemes, wlSpacing, wlTypography, wlBreakpoints,
   resolveWlToken, getWlThemeTokens, type WlDesignTokenName, type WlSpace
-} from "@whitelife-core/ui-kit";
-import catalog from "@whitelife-core/ui-kit/design-tokens.json";
+} from "gavia-ui";
+import catalog from "gavia-ui/design-tokens.json";
 
 const name: WlDesignTokenName = "--wl-space-lg";
 const space: WlSpace = "lg";
@@ -300,7 +300,7 @@ CSS-классы для имитации браузерных псевдосос
 
 «Копировать код» берёт тот же SFC, который используется в живом примере,
 подставляет текущие настройки и заменяет внутренний импорт публичным
-`@whitelife-core/ui-kit`. Обработка находится в `scripts/example-source.mjs`;
+`gavia-ui`. Обработка находится в `scripts/example-source.mjs`;
 её же использует изолированный потребитель в `verify:package`.
 Если браузер запрещает запись в буфер, появляется поле для ручного копирования.
 Успех показывается только после успешной записи.
@@ -378,8 +378,8 @@ CI никогда не обновляет эталоны автоматичес�
 артефактом. Изменение эталона должно сопровождаться описанием причины в ревью.
 
 По умолчанию браузерные команды запускают отдельный Vite на 4173. Для локальной
-проверки уже работающего playground можно задать `WHITEUI_E2E_BASE_URL`, например
-в PowerShell: `$env:WHITEUI_E2E_BASE_URL = 'http://127.0.0.1:5175'`.
+проверки уже работающего playground можно задать `GAVIA_E2E_BASE_URL`, например
+в PowerShell: `$env:GAVIA_E2E_BASE_URL = 'http://127.0.0.1:5175'`.
 Без этой переменной CI продолжает поднимать собственный стенд. Тесты сценариев
 и эталонов отключают плавную прокрутку страницы; анимации оверлеев проверяются
 отдельным набором взаимодействий.

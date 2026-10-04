@@ -3,7 +3,9 @@ import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 // Local QA can reuse the running development stand; CI starts its own Vite.
-const existingStand = process.env.WHITEUI_E2E_BASE_URL;
+const existingStand = process.env.GAVIA_E2E_BASE_URL;
+// Opt into the full pinned Chromium when the local headless shell cannot start.
+const chromiumChannel = process.env.GAVIA_E2E_CHROMIUM_CHANNEL;
 export default defineConfig({
   testDir: "./e2e",
   testMatch: "*.spec.ts",
@@ -14,8 +16,8 @@ export default defineConfig({
   workers: 1,
   use: { baseURL: existingStand ?? "http://127.0.0.1:4173", trace: "retain-on-failure" },
   projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    { name: "mobile-chromium", use: { ...devices["Pixel 7"] } },
+    { name: "chromium", use: { ...devices["Desktop Chrome"], channel: chromiumChannel } },
+    { name: "mobile-chromium", use: { ...devices["Pixel 7"], channel: chromiumChannel } },
     { name: "firefox", use: { ...devices["Desktop Firefox"] } },
     { name: "webkit", use: { ...devices["Desktop Safari"] } }
   ],

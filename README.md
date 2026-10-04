@@ -1,16 +1,35 @@
-# WhiteLife UI
+<p><img src="docs/brand/gavia-ui-mark-v2.png" alt="Gavia UI" width="72" height="72"></p>
 
-Современная техническая основа для UI WhiteLife и других проектов: библиотека компонентов
-`@whitelife-core/ui-kit` (Vue 3 + TypeScript, собственные компоненты) и изолированный
-playground для разработки и проверки.
+# Gavia UI
 
-Версия `0.6.0`: [изменения и переход](docs/migration-0.6.md),
-[правила дизайн-системы](docs/design-system.md).
+A free, open source Vue 3 component library and design system.
+
+Независимая библиотека компонентов Vue 3 + TypeScript: 51 компонент,
+47 встроенных SVG-иконок, 416 дизайн-токенов и три темы — White, Graphite,
+Newspaper. В репозитории есть изолированный playground с живыми примерами и
+готовыми сценариями для форм, таблиц, навигации и оверлеев.
+
+**MIT:** бесплатно для личных и коммерческих проектов. Можно использовать,
+изменять и распространять при сохранении текста лицензии и уведомления
+об авторских правах. Полные условия — [LICENSE](LICENSE).
+
+Runtime-зависимостей нет. **Vue 3 — единственный обязательный peer**.
+Стили подключаются явно. PrimeVue, PrimeIcons, роутер, хранилище состояния
+и API-клиенты для работы библиотеки не нужны.
+
+Пакет `gavia-ui` подготовлен для публичного npm; первая публикация
+ещё не выполнена. Публичные `Wl*`, классы и токены сохраняются;
+[переход на Gavia UI](docs/migration-gavia.md).
+
+Версия `0.6.0`: [изменения и переход](docs/migration-0.6.md).
+Текущий ребрендинг — [«Не выпущено»](CHANGELOG.md#не-выпущено).
+[Дизайн-система](docs/design-system.md) · [Changelog](CHANGELOG.md)
+· [Правила участия](CONTRIBUTING.md)
 
 ## Структура
 
 ```
-packages/ui-kit   — публикуемый пакет @whitelife-core/ui-kit
+packages/ui-kit   — публикуемый пакет gavia-ui
 apps/playground   — изолированное приложение для разработки и проверки
 ```
 
@@ -39,40 +58,36 @@ pnpm verify:dependencies # отсутствие PrimeVue/PrimeIcons в коде 
 
 > **Примечание.** pnpm выполняет одноимённую builtin-команду вместо script'а:
 > голый `pnpm pack` в корне упакует корневой проект, а не библиотеку.
-> Для архива `@whitelife-core/ui-kit` используйте `pnpm run pack`.
+> Для архива `gavia-ui` используйте `pnpm run pack`.
 
 ---
 
-# @whitelife-core/ui-kit
+## Пакет gavia-ui
 
-## Установка
+### Установка
 
-Пакет публикуется приватно в **GitHub Packages** (видимость — как у репозитория).
-Перед первой установкой создайте в проекте `.npmrc`:
-
-```
-@whitelife-core:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
-```
-
-и задайте в окружении `NODE_AUTH_TOKEN` — GitHub PAT со скоупом `read:packages`.
-Файл можно коммитить: токена в нём нет. Дальше обычная установка:
+Новое имя `gavia-ui` подготовлено для публичного **npm**. После первой публикации:
 
 ```bash
-pnpm add @whitelife-core/ui-kit
+pnpm add gavia-ui vue
 ```
 
-### Релиз новой версии (для мейнтейнера)
+GitHub PAT и специальный scope registry для нового пакета не требуются.
+До первого выпуска можно собрать архив из исходников:
 
-1. Зафиксировать реализацию отдельно; поднять `version` в корневом и
-   `packages/ui-kit/package.json`, обновить заметку о миграции и прогнать
-   все проверки из `agents.md`. Изучить изменения снимков перед их обновлением.
-2. Закоммитить версию и отправить `main`.
-3. Создать аннотированный тег `git tag -a v<version> -m "WhiteUI <version>"`
-   и отправить именно его: `git push origin v<version>`.
-4. GitHub Action `.github/workflows/publish.yml` повторит проверки и опубликует
-   пакет в GitHub Packages. Подтвердить успешный job `publish` и появление новой
-   версии на странице пакета; отправленный тег сам по себе не подтверждает публикацию.
+```bash
+git clone https://github.com/whitewolf06/gavia-ui.git
+cd gavia-ui
+pnpm install
+pnpm build
+pnpm run pack
+# В приложении-потребителе:
+pnpm add /absolute/path/to/gavia-ui/packages/ui-kit/gavia-ui-0.6.0.tgz vue
+```
+
+Текущая версия кода — `0.6.0`; имя архива определяется версией в манифесте.
+История и действия при обновлении — [CHANGELOG.md](CHANGELOG.md).
+Будущая публикация — [docs/releases.md](docs/releases.md).
 
 ### Peer dependencies
 
@@ -90,12 +105,12 @@ pnpm add @whitelife-core/ui-kit
 ```ts
 // main.ts
 import { createApp } from "vue";
-import { WlConfig, WlToastService, WlConfirmationService, wlLocaleRu } from "@whitelife-core/ui-kit";
+import { WlConfig, WlToastService, WlConfirmationService, wlLocaleRu } from "gavia-ui";
 
 // Стили подключаются явно: reset → base → тема
-import "@whitelife-core/ui-kit/styles/reset.css";
-import "@whitelife-core/ui-kit/styles/base.css";
-import "@whitelife-core/ui-kit/themes/white.css";
+import "gavia-ui/styles/reset.css";
+import "gavia-ui/styles/base.css";
+import "gavia-ui/themes/white.css";
 
 import App from "./App.vue";
 
@@ -109,7 +124,10 @@ app.mount("#app");
 ```vue
 <!-- Именованный импорт компонентов -->
 <script setup lang="ts">
-import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
+import { ref } from "vue";
+import { WlButton, WlInput, WlTag } from "gavia-ui";
+
+const text = ref("");
 </script>
 
 <template>
@@ -133,10 +151,10 @@ import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 
 ```jsonc
 {
-  "@whitelife-core/ui-kit":                 "ESM + .d.ts (компоненты, типы, createWlPt)",
-  "@whitelife-core/ui-kit/styles/base.css": "токены + стили компонентов (CSS Layers)",
-  "@whitelife-core/ui-kit/styles/reset.css":"минимальный reset (отдельный слой)",
-  "@whitelife-core/ui-kit/themes/<theme>.css": "тема: white | graphite | newspaper"
+  "gavia-ui":                 "ESM + .d.ts (компоненты, типы, createWlPt)",
+  "gavia-ui/styles/base.css": "токены + стили компонентов (CSS Layers)",
+  "gavia-ui/styles/reset.css":"минимальный reset (отдельный слой)",
+  "gavia-ui/themes/<theme>.css": "тема: white | graphite | newspaper"
 }
 ```
 
@@ -153,9 +171,9 @@ import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 [docs/design-system.md](docs/design-system.md).
 
 `tokens/source.json` — единый источник для CSS, тем, типизированного API
-`wlDesignTokens` / `resolveWlToken` и экспорта `@whitelife-core/ui-kit/design-tokens.json`.
+`wlDesignTokens` / `resolveWlToken` и экспорта `gavia-ui/design-tokens.json`.
 Примитивы `wl-stack`, `wl-inline`, `wl-grid`, `wl-surface`, `wl-text-*` доступны
-через явный импорт `@whitelife-core/ui-kit/styles/primitives.css`.
+через явный импорт `gavia-ui/styles/primitives.css`.
 
 ### Токены `--wl-*`
 
@@ -180,13 +198,13 @@ import { WlButton, WlInput, WlTag } from "@whitelife-core/ui-kit";
 
 ```ts
 // 2. Явный импорт только одной темы
-import "@whitelife-core/ui-kit/themes/graphite.css";
+import "gavia-ui/themes/graphite.css";
 ```
 
 Газетная тема из комплекта:
 
 ```ts
-import "@whitelife-core/ui-kit/themes/newspaper.css";
+import "gavia-ui/themes/newspaper.css";
 ```
 
 ```html
@@ -256,7 +274,7 @@ CSS-классы стабильны, namespaced и с низкой специф�
 `pt` — открытая, расширяемая настройка, а не закрытая внутри библиотеки:
 
 ```ts
-import { WlConfig } from "@whitelife-core/ui-kit";
+import { WlConfig } from "gavia-ui";
 
 app.use(WlConfig, {
   pt: {

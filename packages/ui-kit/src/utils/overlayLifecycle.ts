@@ -70,7 +70,7 @@ export interface WlOverlayLifecycleOptions {
   onClose?: () => void;
 }
 
-/** Shared lifecycle for modal surfaces owned by WhiteUI. */
+/** Shared lifecycle for modal surfaces owned by Gavia UI. */
 export function useOverlayLifecycle(options: WlOverlayLifecycleOptions): {
   requestClose: () => void;
 } {

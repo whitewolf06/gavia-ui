@@ -24,9 +24,9 @@ export const feedbackManifest = defineComponentManifest([
     description:
       "Тост-контейнер (позиция bottom-center); показ — через useWlToast / WlToastService.",
     props: [
-      { name: "group", type: "string", description: "Группа тостов WhiteUI." },
+      { name: "group", type: "string", description: "Группа тостов Gavia UI." },
       { name: "motion", type: "boolean", description: "Анимация сообщений; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [],
     emits: []
@@ -37,9 +37,9 @@ export const feedbackManifest = defineComponentManifest([
     description:
       "Диалог подтверждения (кнопки accept/reject — wl-btn); показ — через useWlConfirm. Требует app.use(WlConfirmationService) и один <WlConfirmDialog /> в корне приложения.",
     props: [
-      { name: "group", type: "string", description: "Группа диалога WhiteUI (обычно не нужна)." },
+      { name: "group", type: "string", description: "Группа диалога Gavia UI (обычно не нужна)." },
       { name: "motion", type: "boolean", description: "Анимация окна; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [],
     emits: []

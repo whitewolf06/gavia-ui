@@ -1,0 +1,10 @@
+Gavia UI logo v2 — circular eye
+Generated with the built-in imagegen tool on 2026-10-04.
+Edit target: gavia-ui-logo-v1.png
+Output: gavia-ui-logo-v2-eye.png
+
+Use case: precise-object-edit.
+Asset type: Gavia UI logo variant.
+Input image: The supplied image is the exact edit target: an approved blue G-shaped loon symbol beside the graphite wordmark "Gavia UI" on a transparent background.
+Primary request: Add ONE small circular eye to the bird, in the upper blue head of the G, just behind the base of the pointed beak. The eye should be a clean transparent circular cutout inside the blue silhouette, about 4% of the mark height in diameter. It must make the bird recognizable while preserving the letter G. Do not place the dot floating above the silhouette; place it within the head, comfortably below the top curve and above the inner opening.
+Constraints: This is a single-detail edit. Preserve the approved G shape, pointed beak, lower curve, negative spaces, blue color, graphite wordmark, the exact text "Gavia UI", typography, spacing, positions, dimensions, and composition. Preserve the existing transparent background and alpha, including the negative spaces. Only add the one circular eye. No additional eyes or features, no cartoon expression, no other dots, no design changes, no mockup, no extra text or background.

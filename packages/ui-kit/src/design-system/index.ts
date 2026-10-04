@@ -9,11 +9,11 @@ const definitions = new Map<string, WlDesignTokenDefinition>(wlDesignTokens.map(
 
 /** Resolves the shipped theme snapshot without reading DOM or consumer overrides. */
 export function resolveWlToken(name: WlDesignTokenName, theme: WlThemeName = "white"): string {
-  if (!["white", "graphite", "newspaper"].includes(theme)) throw new Error(`Unknown WhiteUI theme: ${theme}`);
+  if (!["white", "graphite", "newspaper"].includes(theme)) throw new Error(`Unknown Gavia UI theme: ${theme}`);
   function resolve(reference: string, trail: string[]): string {
-    if (trail.includes(reference)) throw new Error(`Circular WhiteUI token: ${reference}`);
+    if (trail.includes(reference)) throw new Error(`Circular Gavia UI token: ${reference}`);
     const token = definitions.get(reference);
-    if (!token) throw new Error(`Unknown WhiteUI token: ${reference}`);
+    if (!token) throw new Error(`Unknown Gavia UI token: ${reference}`);
     return (token.themes?.[theme] ?? token.value).replace(
       /var\((--wl-[a-z0-9-]+)\)/g,
       (_, dependency: string) => resolve(dependency, [...trail, reference])

@@ -22,13 +22,13 @@ const component = computed(() => components[`./recipes/${selected.value}.vue`]);
 function select(id: string): void { selected.value = id; revision.value++; }
 const setupSource = `// main.ts — CSS подключается явно; тему задаёт data-wl-theme на html.
 import { createApp } from "vue";
-import { WlConfig, WlToastService, WlConfirmationService, createWlPt, wlLocaleRu } from "@whitelife-core/ui-kit";
-import "@whitelife-core/ui-kit/styles/reset.css";
-import "@whitelife-core/ui-kit/styles/base.css";
-import "@whitelife-core/ui-kit/styles/primitives.css";
-import "@whitelife-core/ui-kit/themes/white.css";
-import "@whitelife-core/ui-kit/themes/graphite.css";
-import "@whitelife-core/ui-kit/themes/newspaper.css";
+import { WlConfig, WlToastService, WlConfirmationService, createWlPt, wlLocaleRu } from "gavia-ui";
+import "gavia-ui/styles/reset.css";
+import "gavia-ui/styles/base.css";
+import "gavia-ui/styles/primitives.css";
+import "gavia-ui/themes/white.css";
+import "gavia-ui/themes/graphite.css";
+import "gavia-ui/themes/newspaper.css";
 import App from "./App.vue";
 
 // WlConfig merges application pt with defaults; local component pt is applied last.

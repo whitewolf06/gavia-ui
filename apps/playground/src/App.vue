@@ -2,6 +2,7 @@
 import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
+import gaviaMarkUrl from "../../../docs/brand/gavia-ui-mark-v2.png";
 import { version as uiKitVersion } from "../../../packages/ui-kit/package.json";
 import { WlTooltip } from "../../../packages/ui-kit/src/directives/tooltip";
 import { useWlConfirm } from "../../../packages/ui-kit/src/composables/useWlConfirm";
@@ -78,7 +79,7 @@ import type {
   WlTagVariant,
   WlThemeName,
   WlManifestCategory
-} from "@whitelife-core/ui-kit";
+} from "gavia-ui";
 
 const vWlTooltip = WlTooltip;
 const headerElement = ref<HTMLElement | null>(null);
@@ -143,7 +144,7 @@ const filterPriority = ref<string | null>(null);
 const filterStatus = ref<string | null>("progress");
 const filterProjectOptions = [
   { label: "Atlas 2.0", value: "atlas" },
-  { label: "WhiteLife Core", value: "core" },
+  { label: "Gavia Core", value: "core" },
   { label: "Личное", value: "personal" }
 ];
 const filterPriorityOptions = [
@@ -409,7 +410,7 @@ const accItems: WlAccordionItem[] = [
     key: "focus",
     title: "Что такое фокус-режим?",
     content:
-      "Режим, в котором WhiteLife скрывает всё, кроме текущей задачи: без уведомлений, бейджей и лишних панелей."
+      "Режим, скрывающий всё, кроме текущей задачи: без уведомлений, бейджей и лишних панелей."
   },
   {
     key: "time",
@@ -471,7 +472,7 @@ const navActive = ref("tasks");
 
 const crumbItems: WlBreadcrumbItem[] = [
   { label: "Проекты", href: "#/projects" },
-  { label: "WhiteLife", href: "#/projects/whitelife" },
+  { label: "Gavia UI", href: "#/projects/gavia" },
   { label: "Спринт 24" }
 ];
 
@@ -618,8 +619,8 @@ const drawerVisible = ref(false);
 <template>
   <header ref="headerElement" class="pg-top">
     <div class="pg-brand">
-      <span class="pg-logo">W</span>
-      <b class="pg-title">WhiteLife UI Kit</b>
+      <img class="pg-logo" :src="gaviaMarkUrl" alt="" width="26" height="26" />
+      <b class="pg-title">Gavia UI</b>
       <span class="pg-kit-version" :aria-label="`Версия UI Kit ${uiKitVersion}`">v{{ uiKitVersion }}</span>
     </div>
     <nav class="pg-views" aria-label="Режим витрины">
@@ -680,7 +681,7 @@ const drawerVisible = ref(false);
     <span id="pg-components" class="pg-scroll-target" aria-hidden="true"></span>
     <h1 class="pg-h1">Компоненты</h1>
     <p class="pg-lead">
-      Витрина @whitelife-core/ui-kit: Vue 3 + TypeScript, собственные компоненты,
+      Витрина gavia-ui: Vue 3 + TypeScript, собственные компоненты,
       токены --wl-* и темы white / graphite / newspaper.
     </p>
 
@@ -1500,7 +1501,7 @@ const drawerVisible = ref(false);
             description="Структурированный список задач по проектам, приоритетам и статусам."
           >
             <template #breadcrumbs>
-              <WlBreadcrumbs :items="[{ label: 'WhiteLife' }, { label: 'Задачи' }]" />
+              <WlBreadcrumbs :items="[{ label: 'Gavia UI' }, { label: 'Задачи' }]" />
             </template>
             <template #meta>
               <WlPill variant="info">24 активных</WlPill>
@@ -1597,8 +1598,8 @@ const drawerVisible = ref(false);
               v-model:mobile-open="sidebarMobileOpen"
               :groups="sidebarGroups"
               :footer-items="sidebarFooterItems"
-              brand="WhiteLife"
-              brand-mark="W"
+              brand="Gavia UI"
+              brand-mark="G"
             />
             <div class="pg-sidebar-demo__content">
               <div class="row">
@@ -1798,7 +1799,7 @@ const drawerVisible = ref(false);
             >
               Кнопка с pt
             </WlButton>
-            <span class="muted">root получит aria-label и data-test через WhiteUI pt.</span>
+            <span class="muted">root получит aria-label и data-test через Gavia UI pt.</span>
           </div>
         </div>
       </div>
@@ -1859,14 +1860,9 @@ const drawerVisible = ref(false);
 .pg-logo {
   width: 26px;
   height: 26px;
-  border-radius: 7px;
-  background: var(--wl-accent);
-  color: var(--wl-on-accent);
-  font-weight: 700;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  object-fit: contain;
+  flex: none;
 }
 .pg-brand {
   display: inline-flex;

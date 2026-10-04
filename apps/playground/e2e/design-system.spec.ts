@@ -127,6 +127,7 @@ test("themes, nested previews and responsive layout agree with the catalog", asy
   for (const theme of wlDesignThemes) {
     await page.locator(".pg-theme").getByText(theme.label, { exact: true }).click();
     const durations = await page.locator(".ds-theme-preview").evaluateAll((elements) => elements.map((element) => getComputedStyle(element).getPropertyValue("--wl-dur-5").trim()));
-    expect(durations).toEqual(["0.01ms", "0.01ms", "0.01ms"]);
+    // Production CSS may omit the leading zero; duration and units stay exact.
+    expect(durations.map((duration) => duration.replace(/^0(?=\.)/, ""))).toEqual([".01ms", ".01ms", ".01ms"]);
   }
 });

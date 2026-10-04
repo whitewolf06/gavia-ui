@@ -1,11 +1,7 @@
 name: publish
 
-# Публикация @whitelife-core/ui-kit в GitHub Packages по тегу v*.
-# Релизный цикл:
-#   1. поднять version в packages/ui-kit/package.json и закоммитить
-#   2. git tag v<version> && git push origin main --tags
-#   3. Action соберёт, протестирует и опубликует пакет (приватно,
-#      видимость наследуется от репозитория)
+# Gavia UI: checks on main/PR; public npm publication only from a new version tag.
+# First npm publication and trusted-publisher setup: docs/releases.md.
 
 on:
   push:
@@ -19,7 +15,6 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 jobs:
   verify:
@@ -37,8 +32,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: pnpm
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@whitelife-core"
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -70,7 +64,7 @@ jobs:
 
       - name: Verify package contents
         run: |
-          if tar -tf packages/ui-kit/whitelife-core-ui-kit-*.tgz | grep -E '(^|/)(node_modules|vue|primevue|primeicons)(/|$)'; then
+          if tar -tf packages/ui-kit/gavia-ui-*.tgz | grep -E '(^|/)(node_modules|vue|primevue|primeicons)(/|$)'; then
             echo "Package must not contain bundled peer dependencies."
             exit 1
           fi
@@ -107,7 +101,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: whiteui-browser-results
+          name: gavia-ui-browser-results
           path: apps/playground/test-results/
           if-no-files-found: ignore
 
@@ -133,13 +127,16 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: whiteui-visual-results
+          name: gavia-ui-visual-results
           path: apps/playground/test-results/
           if-no-files-found: ignore
 
   publish:
     needs: [verify, browser, visual]
-    if: github.ref_type == 'tag'
+    if: github.ref_type == 'tag' && github.repository == 'whitewolf06/gavia-ui'
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -149,9 +146,8 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: pnpm
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@whitelife-core"
+          package-manager-cache: false
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -159,7 +155,13 @@ jobs:
       - name: Build library
         run: pnpm build
 
-      - name: Publish to GitHub Packages
-        run: pnpm --filter @whitelife-core/ui-kit publish --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check release tag
+        run: node -e "const p=require('./packages/ui-kit/package.json'); if(process.env.GITHUB_REF_NAME !== 'v'+p.version) throw new Error('Tag and package version differ');"
+
+      - name: Pack checked library
+        run: pnpm run pack
+
+      # npm CLI is used only for OIDC publication, never for dependency installation.
+      - name: Publish checked archive to public npm
+        working-directory: packages/ui-kit
+        run: npm publish ./gavia-ui-*.tgz --access public --provenance

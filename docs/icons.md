@@ -1,4 +1,4 @@
-# Иконки WhiteUI
+# Иконки Gavia UI
 
 Источник каждого рисунка — `packages/ui-kit/icons/<name>.svg`. Генератор
 `pnpm icons:sync` одним запуском проверяет все файлы и обновляет
@@ -7,7 +7,7 @@
 если сгенерированный файл устарел. Ручное редактирование реестра запрещено.
 
 Каталог начинается с прежних рисунков `WlIcon` и недостающих символов из 46
-SVG-символов `whitelife-uikit-prototipe.html`; стабильные публичные имена
+SVG-символов `gavia-ui-prototype.html`; стабильные публичные имена
 сохранены. Например, `i-cal` соответствует `calendar`, `i-clip` —
 `paperclip`, `i-mic` — `microphone`, `i-msg` — `message`, `i-zap` —
 `lightning`, `i-chev-*` — `chevron-*`. Витрина в playground показывает весь

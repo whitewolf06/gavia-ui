@@ -33,7 +33,7 @@ for (const category of [...new Set(wlManifest.map((entry) => entry.category))]) 
       await selectComponent(page, entry.name);
       const explorer = page.getByTestId("ds-explorer");
       await explorer.getByText("Показать Vue-код", { exact: true }).click();
-      await expect(explorer.locator("pre code")).toContainText('@whitelife-core/ui-kit');
+      await expect(explorer.locator("pre code")).toContainText('gavia-ui');
       await expect(explorer.locator("pre code")).not.toContainText('v-bind="preview"');
       await expect(explorer.locator("pre code")).not.toContainText("packages/ui-kit");
     }

@@ -94,9 +94,9 @@ const tokenCode = `.page {
 <template>
   <main class="ds-main wl-container" id="ds-top">
     <header class="ds-hero wl-stack" data-space="lg">
-      <p class="ds-eyebrow">WhiteUI / Design system</p>
+      <p class="ds-eyebrow">Gavia UI / Design system</p>
       <h1 class="wl-text-display">Единый язык интерфейсов</h1>
-      <p class="ds-lead wl-text-body wl-text-muted">Знакомый стиль WhiteLife: спокойные поверхности, ясная иерархия и предсказуемое поведение. От значения токена до готового сценария — одна система в трёх темах.</p>
+      <p class="ds-lead wl-text-body wl-text-muted">Спокойные поверхности, ясная иерархия и предсказуемое поведение. От значения токена до готового сценария — одна система в трёх темах.</p>
       <div class="ds-metrics wl-inline" data-space="xl">
         <span><strong>{{ wlManifest.length }}</strong> компонентов</span>
         <span><strong>{{ wlDesignTokens.length }}</strong> токенов</span>
@@ -242,7 +242,7 @@ const tokenCode = `.page {
           <div class="ds-table-scroll" tabindex="0" role="region" aria-label="Контраст темы"><table class="ds-token-table"><thead><tr><th scope="col">Пара / {{ theme }}</th><th scope="col">Факт</th><th scope="col">Минимум</th></tr></thead><tbody><tr v-for="pair in themeContrast" :key="pair.name"><th scope="row">{{ pair.label }}</th><td class="ds-contrast-pass">{{ pair.ratio }}:1</td><td>{{ pair.minimum }}:1</td></tr></tbody></table></div>
           <p class="wl-text-small wl-text-muted">Новые токены проходят tokens:check. Паттерны проверяются в Chromium, Firefox, WebKit и мобильном Chromium. Перед релизом также проверяются типы, архив и изолированный потребитель.</p>
         </section>
-        <footer class="ds-footer wl-text-small wl-text-muted">WhiteUI · Vue 3 · открытые контракты · документация в docs/design-system.md</footer>
+        <footer class="ds-footer wl-text-small wl-text-muted">Gavia UI · Vue 3 · открытые контракты · документация в docs/design-system.md</footer>
       </div>
     </div>
     <WlDrawer v-model:visible="drawerVisible" header="Настройка представления" :motion="motion">

@@ -1,16 +1,17 @@
 {
-  "name": "@whitelife-core/ui-kit",
+  "name": "gavia-ui",
   "version": "0.6.0",
-  "description": "WhiteLife UI kit — Vue 3 + TypeScript component library",
+  "description": "Gavia UI — a free, open source Vue 3 and TypeScript component library and design system",
   "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/whitelife-core/whiteui.git",
+    "url": "git+https://github.com/whitewolf06/gavia-ui.git",
     "directory": "packages/ui-kit"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
   },
   "sideEffects": [
     "**/*.css"
@@ -32,7 +33,9 @@
     "dist",
     "styles",
     "themes",
-    "README.md"
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "vite build",
@@ -57,5 +60,18 @@
     "vitest": "^3.2.4",
     "vue": "^3.5.13",
     "vue-tsc": "^2.2.10"
-  }
+  },
+  "homepage": "https://github.com/whitewolf06/gavia-ui#readme",
+  "bugs": {
+    "url": "https://github.com/whitewolf06/gavia-ui/issues"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "components",
+    "ui",
+    "design-system",
+    "typescript",
+    "gavia"
+  ]
 }

@@ -14,7 +14,7 @@ importers:
 
   apps/playground:
     dependencies:
-      '@whitelife-core/ui-kit':
+      gavia-ui:
         specifier: workspace:*
         version: link:../../packages/ui-kit
       vue:

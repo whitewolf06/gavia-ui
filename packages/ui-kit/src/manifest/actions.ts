@@ -44,7 +44,7 @@ export const actionsManifest = defineComponentManifest([
         values: ["button", "submit", "reset"],
         description: "Нативный type кнопки."
       },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [
       { name: "default", description: "Текст/содержимое кнопки." },
@@ -71,7 +71,7 @@ export const actionsManifest = defineComponentManifest([
       { name: "count", type: "number", description: "Числовой бейдж (показывается при > 0)." },
       { name: "dot", type: "boolean", default: false, description: "Точка-индикатор (если нет count)." },
       { name: "ariaLabel", type: "string", description: "aria-label кнопки." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [{ name: "default", description: "Кастомное содержимое вместо иконки." }],
     emits: [{ name: "click", payload: "MouseEvent", description: "Клик (не срабатывает при disabled)." }]
@@ -96,7 +96,7 @@ export const actionsManifest = defineComponentManifest([
         description: "Опции WlSegmentedOption[]: { label, value, icon?, disabled? }."
       },
       { name: "disabled", type: "boolean", default: false, description: "Отключает весь переключатель." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [],
     emits: [],
@@ -118,7 +118,7 @@ export const actionsManifest = defineComponentManifest([
       { name: "ariaLabel", type: "string", description: "Доступное имя меню." },
       { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего меню." },
       { name: "motion", type: "boolean", description: "Анимация popup-меню; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [],
     emits: [

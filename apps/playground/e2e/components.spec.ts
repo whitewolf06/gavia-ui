@@ -8,7 +8,7 @@ const uiKitVersion = (JSON.parse(readFileSync(
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/e2e.html");
-  await expect(page.getByRole("heading", { name: "WhiteUI regression" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Gavia UI regression" })).toBeVisible();
 });
 
 async function openDialogMotion(page: Page, buttonId: string) {

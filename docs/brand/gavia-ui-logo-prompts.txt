@@ -1,0 +1,19 @@
+Gavia UI logo v1
+Generated with the built-in imagegen tool on 2026-10-04.
+Final assets: gavia-ui-logo-v1-preview.png and gavia-ui-logo-v1.png.
+Raster PNG assets; this generation does not produce an SVG master.
+
+Final design prompt (refinement of an initial loon logo):
+Use case: logo-brand refinement.
+Refine the supplied Gavia UI logo into a finished modern design-system identity.
+Keep the exact correctly spelled wordmark "Gavia UI" and the concept of a loon (Gavia), but replace the overly wide full-body bird with ONE compact, distinctive geometric brand mark. The mark must fit a nearly square footprint and be recognizable at 24 pixels. Design it around a rounded, open letter G whose upper end suggests the head and pointed bill of a loon looking right, with a simple flowing lower curve suggesting its low waterbird body. Make the bird and G read as one coherent intentional symbol, not two pasted shapes. Use balanced, generous negative space; the eye can be omitted. No long swan neck, no wide trailing wing, no generic social-media bird, no tiny details, no separate water lines, no stock swoosh.
+Color: Mark is ONE uniform solid blue #2563eb. Wordmark is ONE uniform solid graphite #17181c. Truly flat colors: no shading, gradients, transparency variations inside shapes, texture or shadows.
+Typography: Refined modern geometric-humanist sans-serif, crisp and moderately semibold, readable and carefully kerned. "Gavia" is primary; "UI" is quieter and smaller or lighter, separated by an intentional modest space.
+Layout: ONE single horizontal lockup, blue square-footprint mark at left and text at right. Mark optically aligned with text, similar visual height. Comfortable margins. Moderate width, approximately 3:1 or 4:1, with balanced spacing. The logo should fill the useful canvas. Do not provide multiple alternatives or a brand sheet.
+For this preview use a pure WHITE #ffffff background across the entire canvas. No other objects, no mockups, captions, guidelines, watermarks or extra text. Original professional logo artwork with precise edges.
+
+Transparent asset prompt (input: gavia-ui-logo-v1-preview.png):
+Use case: precise background removal for a final logo asset.
+Take this exact Gavia UI logo and remove only the white background, replacing it with true transparent alpha. Preserve the logo's layout, dimensions, blue G-shaped loon symbol, graphite wordmark, exact text "Gavia UI", letterforms, spacing, proportions and sharp edges. Preserve the negative spaces inside the bird and letters as transparent too.
+Make both colored areas clean solid flat fills: the symbol blue #2563eb, the text graphite #17181c, without gradients or textured shading. Keep opacity fully solid inside the logo and smooth antialiasing only at the edges.
+Do not redesign, add objects, crop parts, add a border, change typography, create a background shadow, add annotations or create a mockup. The entire background must be transparent, including the spaces between the symbol and wordmark. Deliver the same single complete horizontal logo as a transparent PNG.

@@ -25,7 +25,7 @@ export const inputsManifest = defineComponentManifest([
       { name: "disabled", type: "boolean", default: false, description: "Отключает поле." },
       { name: "placeholder", type: "string", description: "Плейсхолдер." },
       { name: "type", type: "string", default: "text", description: "Нативный type инпута." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [
       { name: "prefix", description: "Содержимое слева внутри поля." },
@@ -90,7 +90,7 @@ export const inputsManifest = defineComponentManifest([
       { name: "rows", type: "number", default: 3, description: "Число строк." },
       { name: "autoResize", type: "boolean", default: false, description: "Автовысота по содержимому." },
       { name: "placeholder", type: "string", description: "Плейсхолдер." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [],
     emits: [],
@@ -118,7 +118,7 @@ export const inputsManifest = defineComponentManifest([
       { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер поля." },
       { name: "density", type: "enum", default: "default", values: WL_DENSITIES, description: "Плотность." },
       { name: "motion", type: "boolean", description: "Анимация списка; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [],
     emits: [],
@@ -160,7 +160,7 @@ export const inputsManifest = defineComponentManifest([
         description: "Максимум подписей до свёртки в счётчик (только display=\"comma\")."
       },
       { name: "motion", type: "boolean", description: "Анимация списка; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [],
     emits: [],
@@ -198,7 +198,7 @@ export const inputsManifest = defineComponentManifest([
         description: "Минимум символов для запуска поиска."
       },
       { name: "motion", type: "boolean", description: "Анимация подсказок; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [],
     emits: [
@@ -222,7 +222,7 @@ export const inputsManifest = defineComponentManifest([
       { name: "disabled", type: "boolean", default: false, description: "Отключает чекбокс." },
       { name: "indeterminate", type: "boolean", default: false, description: "Промежуточное состояние." },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [{ name: "default", description: "Подпись рядом с чекбоксом." }],
     emits: [],
@@ -237,7 +237,7 @@ export const inputsManifest = defineComponentManifest([
       { name: "name", type: "string", description: "Нативный name группы." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает радиокнопку." },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [{ name: "default", description: "Подпись рядом с радиокнопкой." }],
     emits: [],
@@ -251,7 +251,7 @@ export const inputsManifest = defineComponentManifest([
       { name: "size", type: "enum", default: "md", values: WL_SWITCH_SIZES, description: "Размер." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает переключатель." },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [{ name: "default", description: "Подпись рядом с переключателем." }],
     emits: [],
@@ -286,7 +286,7 @@ export const inputsManifest = defineComponentManifest([
       { name: "minDate", type: "string", description: "Минимальная дата, ISO \"YYYY-MM-DD\"." },
       { name: "maxDate", type: "string", description: "Максимальная дата, ISO \"YYYY-MM-DD\"." },
       { name: "motion", type: "boolean", description: "Анимация календаря; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов WhiteUI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [],
     emits: [],

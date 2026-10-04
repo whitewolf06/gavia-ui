@@ -40,8 +40,8 @@ describe("design system public contract", () => {
     for (const pair of wlContrastReport) expect(pair.ratio).toBeGreaterThanOrEqual(pair.minimum);
   });
   it("rejects unknown runtime names and themes", () => {
-    expect(() => resolveWlToken("--wl-missing" as WlDesignTokenName)).toThrow("Unknown WhiteUI token");
+    expect(() => resolveWlToken("--wl-missing" as WlDesignTokenName)).toThrow("Unknown Gavia UI token");
     // JavaScript consumers also receive an explicit error.
-    expect(() => getWlThemeTokens("missing" as "white")).toThrow("Unknown WhiteUI theme");
+    expect(() => getWlThemeTokens("missing" as "white")).toThrow("Unknown Gavia UI theme");
   });
 });

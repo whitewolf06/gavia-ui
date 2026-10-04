@@ -38,7 +38,7 @@ function ask(): void {
 
 <template>
   <main class="fixture">
-    <h1>WhiteUI regression</h1>
+    <h1>Gavia UI regression</h1>
     <section class="fixture-grid">
       <div class="fixture-card">
         <h2>Формы</h2>

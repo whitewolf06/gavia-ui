@@ -16,7 +16,7 @@ if (!packageManager) {
 const packageJson = JSON.parse(readFileSync(join(uiKitDir, "package.json"), "utf8"));
 const temporaryBase = join(repoRoot, ".tmp");
 mkdirSync(temporaryBase, { recursive: true });
-const temporaryRoot = mkdtempSync(join(temporaryBase, "whiteui-consumer-"));
+const temporaryRoot = mkdtempSync(join(temporaryBase, "gavia-ui-consumer-"));
 const packDir = join(temporaryRoot, "package");
 const consumerDir = join(temporaryRoot, "consumer");
 
@@ -59,7 +59,7 @@ try {
 
   const archivePath = join(packDir, archiveName);
   const consumerPackage = {
-    name: "whiteui-package-consumer-smoke",
+    name: "gavia-ui-package-consumer-smoke",
     private: true,
     type: "module",
     scripts: {
@@ -67,7 +67,7 @@ try {
       typecheck: "vue-tsc --noEmit -p tsconfig.json"
     },
     dependencies: {
-      "@whitelife-core/ui-kit": `file:${archivePath.replaceAll("\\", "/")}`,
+      "gavia-ui": `file:${archivePath.replaceAll("\\", "/")}`,
       vue: localPackage("vue")
     },
     devDependencies: {
@@ -107,15 +107,15 @@ try {
   write(
     "src/main.ts",
     `import { createApp } from "vue";
-import { WlConfig, WlToastService, WlConfirmationService, createWlPt, wlLocaleRu, wlManifest, wlDesignTokens, resolveWlToken, getWlThemeTokens, type WlDesignTokenName, type WlSpace } from "@whitelife-core/ui-kit";
-import packageManifest from "@whitelife-core/ui-kit/manifest.json";
-import designCatalog from "@whitelife-core/ui-kit/design-tokens.json";
-import "@whitelife-core/ui-kit/styles/reset.css";
-import "@whitelife-core/ui-kit/styles/base.css";
-import "@whitelife-core/ui-kit/styles/primitives.css";
-import "@whitelife-core/ui-kit/themes/white.css";
-import "@whitelife-core/ui-kit/themes/graphite.css";
-import "@whitelife-core/ui-kit/themes/newspaper.css";
+import { WlConfig, WlToastService, WlConfirmationService, createWlPt, wlLocaleRu, wlManifest, wlDesignTokens, resolveWlToken, getWlThemeTokens, type WlDesignTokenName, type WlSpace } from "gavia-ui";
+import packageManifest from "gavia-ui/manifest.json";
+import designCatalog from "gavia-ui/design-tokens.json";
+import "gavia-ui/styles/reset.css";
+import "gavia-ui/styles/base.css";
+import "gavia-ui/styles/primitives.css";
+import "gavia-ui/themes/white.css";
+import "gavia-ui/themes/graphite.css";
+import "gavia-ui/themes/newspaper.css";
 import App from "./App.vue";
 
 const spacing: WlSpace = "lg";
@@ -139,7 +139,7 @@ createApp(App).use(WlConfig, { pt: createWlPt(), locale: wlLocaleRu })
   const exampleImports = copiedExamples.map((path, index) => `import Example${index} from "${path}";`).join("\n");
   write("src/App.vue", `<script setup lang="ts">
 ${exampleImports}
-import { WlToast, WlConfirmDialog } from "@whitelife-core/ui-kit";
+import { WlToast, WlConfirmDialog } from "gavia-ui";
 const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", ")}];
 </script>
 <template><component :is="examples[0]" /><WlToast /><WlConfirmDialog /></template>
@@ -149,8 +149,10 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   runPnpm(["--ignore-workspace", "run", "typecheck"], consumerDir);
   runPnpm(["--ignore-workspace", "run", "build"], consumerDir);
 
-  const installedPackageDir = join(consumerDir, "node_modules", "@whitelife-core", "ui-kit");
+  const installedPackageDir = join(consumerDir, "node_modules", ...packageJson.name.split("/"));
   const requiredFiles = [
+    "LICENSE",
+    "CHANGELOG.md",
     "dist/index.js",
     "dist/index.d.ts",
     "dist/manifest.json",
@@ -177,6 +179,17 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   const installedManifest = JSON.parse(readFileSync(join(installedPackageDir, "package.json"), "utf8"));
   if (JSON.stringify(installedManifest).match(/primevue|primeicons|@primeuix/i)) {
     throw new Error("Published manifest still references PrimeVue or PrimeIcons");
+  }
+  if (installedManifest.license !== "MIT") {
+    throw new Error("Published manifest must declare MIT");
+  }
+  if (readFileSync(join(installedPackageDir, "LICENSE"), "utf8") !== readFileSync(join(repoRoot, "LICENSE"), "utf8")) {
+    throw new Error("Packed LICENSE differs from the repository license");
+  }
+  const canonicalChangelog = readFileSync(join(repoRoot, "CHANGELOG.md"), "utf8")
+    .replaceAll("(docs/", "(https://github.com/whitewolf06/gavia-ui/blob/main/docs/");
+  if (readFileSync(join(installedPackageDir, "CHANGELOG.md"), "utf8") !== canonicalChangelog) {
+    throw new Error("Packed changelog is out of sync with the repository");
   }
   if (readFileSync(join(installedPackageDir, "dist", "index.js"), "utf8").match(/primevue|primeicons|@primeuix/i)) {
     throw new Error("Published JavaScript still references PrimeVue or PrimeIcons");

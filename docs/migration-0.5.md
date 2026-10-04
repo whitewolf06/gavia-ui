@@ -1,26 +1,29 @@
-# Переход с WhiteUI 0.3 на 0.5
+# Переход с API 0.3 на 0.5
 
 Версия 0.5 сохраняет Vue 3, публичные `Wl*` компоненты, их props, события,
 слоты, `v-model`, `wl-*` классы, токены, `data-wl`, имена и рисунки иконок.
 PrimeVue и PrimeIcons больше не требуются пакету. Проверьте собственные
 использования этих библиотек в приложении прежде, чем удалять их из приложения.
 
+Примеры используют актуальное имя пакета; смена импортов описана
+в [руководстве перехода на Gavia UI](migration-gavia.md).
+
 ## Инициализация приложения
 
-Раньше WhiteUI получал конфигурацию через PrimeVue:
+Раньше Gavia UI получал конфигурацию через PrimeVue:
 
 ```ts
 import PrimeVue from "primevue/config";
-import { createWlPt, wlLocaleRu } from "@whitelife-core/ui-kit";
+import { createWlPt, wlLocaleRu } from "gavia-ui";
 app.use(PrimeVue, { unstyled: true, pt: createWlPt(), locale: wlLocaleRu });
 ```
 
-Теперь конфигурация WhiteUI передаётся в `WlConfig`:
+Теперь конфигурация Gavia UI передаётся в `WlConfig`:
 
 ```ts
 import {
   WlConfig, WlToastService, WlConfirmationService, wlLocaleRu
-} from "@whitelife-core/ui-kit";
+} from "gavia-ui";
 
 app.use(WlConfig, { locale: wlLocaleRu, pt: {
   button: { root: { "data-test": "app-button" } }
@@ -89,7 +92,7 @@ app.use(WlConfirmationService);  // если используются WlConfirmD
 1. Обновите импорт конфигурации и установите используемые сервисы.
 2. Замените `<Column>` внутри `WlTable` на `columns`/`cell-*`.
 3. Если приложение само использует PrimeVue или PrimeIcons, оставьте их
-   зависимости для этого кода; WhiteUI их больше не импортирует.
+   зависимости для этого кода; Gavia UI их больше не импортирует.
 4. Соберите приложение, проверьте клавиатуру и фокус в выпадающих списках и
    модальных окнах, выбор даты, таблицы, уведомления и все используемые темы.
 

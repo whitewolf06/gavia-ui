@@ -1,0 +1,4 @@
+Use case: precise-object-edit.
+Input image: approved Gavia UI logo with the blue G-shaped loon and circular transparent eye. This is the exact edit target.
+Primary request: Extract only the blue G-shaped loon brand symbol as a square standalone mark for the repository avatar, README and playground header. Remove the entire "Gavia UI" wordmark and all unused horizontal space. Center the existing bird mark on a square transparent canvas with modest clear space.
+Constraints: Preserve the exact approved silhouette, proportions, pointed beak, transparent circular eye and negative-space openings. Do not redesign or add anything. Keep the blue appearance and clean edges. No text, no border, no shadow, no gradient added, no background. The eye and all negative space must remain truly transparent.

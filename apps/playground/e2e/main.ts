@@ -3,11 +3,11 @@ import {
   WlConfig, WlConfirmationService, WlToastService, WlTooltip, createWlPt, wlLocaleRu
 } from "../../../packages/ui-kit/src";
 import Fixture from "./Fixture.vue";
-import "@whitelife-core/ui-kit/styles/reset.css";
-import "@whitelife-core/ui-kit/styles/base.css";
-import "@whitelife-core/ui-kit/themes/white.css";
-import "@whitelife-core/ui-kit/themes/graphite.css";
-import "@whitelife-core/ui-kit/themes/newspaper.css";
+import "gavia-ui/styles/reset.css";
+import "gavia-ui/styles/base.css";
+import "gavia-ui/themes/white.css";
+import "gavia-ui/themes/graphite.css";
+import "gavia-ui/themes/newspaper.css";
 
 const app = createApp(Fixture);
 app.use(WlConfig, {
