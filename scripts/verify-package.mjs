@@ -195,7 +195,10 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   if (installedManifest.license !== "MIT") {
     throw new Error("Published manifest must declare MIT");
   }
-  if (readFileSync(join(installedPackageDir, "LICENSE"), "utf8") !== readFileSync(join(repoRoot, "LICENSE"), "utf8")) {
+  // Git checkouts may use CRLF on Windows and LF on the publishing runner.
+  const packedLicense = readFileSync(join(installedPackageDir, "LICENSE"), "utf8").replaceAll("\r\n", "\n");
+  const canonicalLicense = readFileSync(join(repoRoot, "LICENSE"), "utf8").replaceAll("\r\n", "\n");
+  if (packedLicense !== canonicalLicense) {
     throw new Error("Packed LICENSE differs from the repository license");
   }
   const canonicalChangelog = readFileSync(join(repoRoot, "CHANGELOG.md"), "utf8")

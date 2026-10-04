@@ -23,12 +23,12 @@ Runtime-зависимостей нет. **Vue 3 — единственный о
 Первый выпуск `0.7.0` — 2026-10-05 (Москва). Публичные `Wl*`, классы и токены сохраняются;
 [переход на Gavia UI](docs/migration-gavia.md).
 
-Версия `0.7.1`: исправления индикаторов выбора и очистка прототипов.
-[Полный список изменений](CHANGELOG.md). Публикация этого выпуска в npm
-проверяется отдельно по [правилам релиза](docs/releases.md).
+[gavia-ui@0.7.1](https://www.npmjs.com/package/gavia-ui) опубликован в публичном npm
+2026-10-05 (Москва) через GitHub Actions и OIDC.
+[Изменения 0.7.1](CHANGELOG.md) · [Подтверждённый выпуск и правила релиза](docs/releases.md).
 
 Версия `0.7.0`: [изменения и переход](docs/migration-0.7.md).
-Первый публичный npm-релиз опубликован; установка в Vue-приложении: `pnpm add gavia-ui@0.7.0`.
+Текущая опубликованная версия — `0.7.1`; установка в Vue-приложении: `pnpm add gavia-ui@0.7.1`.
 История дизайн-системы 0.6.0 — [миграция 0.6](docs/migration-0.6.md).
 [Дизайн-система](docs/design-system.md) · [Changelog](CHANGELOG.md)
 · [Правила участия](CONTRIBUTING.md)
@@ -89,10 +89,10 @@ pnpm verify:dependencies # отсутствие PrimeVue/PrimeIcons в коде 
 
 ### Установка
 
-Пакет [gavia-ui@0.7.0](https://www.npmjs.com/package/gavia-ui) доступен в публичном **npm**:
+Пакет [gavia-ui@0.7.1](https://www.npmjs.com/package/gavia-ui) доступен в публичном **npm**:
 
 ```bash
-pnpm add gavia-ui@0.7.0 vue
+pnpm add gavia-ui@0.7.1 vue
 ```
 
 GitHub PAT и специальный scope registry для нового пакета не требуются.
