@@ -21,10 +21,25 @@ Runtime-зависимостей нет. **Vue 3 — единственный о
 ещё не выполнена. Публичные `Wl*`, классы и токены сохраняются;
 [переход на Gavia UI](docs/migration-gavia.md).
 
-Версия `0.6.0`: [изменения и переход](docs/migration-0.6.md).
-Текущий ребрендинг — [«Не выпущено»](CHANGELOG.md#не-выпущено).
+Версия `0.7.0`: [изменения и переход](docs/migration-0.7.md).
+Первый публичный npm-релиз подготовлен; его публикация ещё не подтверждена.
+История дизайн-системы 0.6.0 — [миграция 0.6](docs/migration-0.6.md).
 [Дизайн-система](docs/design-system.md) · [Changelog](CHANGELOG.md)
 · [Правила участия](CONTRIBUTING.md)
+
+## Создатель и публичная витрина
+
+Создатель и сопровождающий — [Gorbach Dmitry](https://github.com/whitewolf06).
+Участие в развитии проекта описано в [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Playground объединяет компоненты, дизайн-систему, живые SFC-примеры и страницу
+«О проекте» с лицензией, автором и полной историей изменений. Changelog на сайте
+собирается непосредственно из корневого `CHANGELOG.md`; отдельную копию для UI
+вести не нужно. Перейти к странице локально: `/?view=project`.
+
+Для публикации подготовлен GitHub Pages: адрес после включения и первого
+успешного деплоя — `https://whitewolf06.github.io/gavia-ui/`.
+Сайт ещё не опубликован. [Настройка и проверка публикации](docs/hosting.md).
 
 ## Структура
 
@@ -41,6 +56,8 @@ pnpm build              # сборка библиотеки (ESM + TypeScript de
 pnpm test               # тесты библиотеки (Vitest + Vue Test Utils)
 pnpm dev                # playground в dev-режиме
 pnpm build:playground   # сборка playground
+pnpm build:pages        # production-сборка для /gavia-ui/
+pnpm test:pages         # desktop/mobile smoke production-сборки Pages
 pnpm typecheck          # проверка типов библиотеки и playground
 pnpm test:e2e           # Chromium, Firefox, WebKit и мобильный Chromium
 pnpm test:visual        # сравнение desktop/mobile с эталонами трёх тем (Windows)
@@ -82,12 +99,12 @@ pnpm install
 pnpm build
 pnpm run pack
 # В приложении-потребителе:
-pnpm add /absolute/path/to/gavia-ui/packages/ui-kit/gavia-ui-0.6.0.tgz vue
+pnpm add /absolute/path/to/gavia-ui/packages/ui-kit/gavia-ui-0.7.0.tgz vue
 ```
 
-Текущая версия кода — `0.6.0`; имя архива определяется версией в манифесте.
+Текущая версия кода — `0.7.0`; имя архива определяется версией в манифесте.
 История и действия при обновлении — [CHANGELOG.md](CHANGELOG.md).
-Будущая публикация — [docs/releases.md](docs/releases.md).
+Порядок первого выпуска — [docs/releases.md](docs/releases.md).
 
 ### Peer dependencies
 

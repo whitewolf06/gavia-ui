@@ -3,7 +3,8 @@ import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, r
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
 import gaviaMarkUrl from "../../../docs/brand/gavia-ui-mark-v2.png";
-import { version as uiKitVersion } from "../../../packages/ui-kit/package.json";
+import { gaviaProjectInfo as project } from "./project/project-info";
+const uiKitVersion = project.version;
 import { WlTooltip } from "../../../packages/ui-kit/src/directives/tooltip";
 import { useWlConfirm } from "../../../packages/ui-kit/src/composables/useWlConfirm";
 import { useWlToast } from "../../../packages/ui-kit/src/composables/useWlToast";
@@ -60,6 +61,7 @@ const WlTag = defineAsyncComponent(() => import("../../../packages/ui-kit/src/co
 const WlTextarea = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlTextarea.vue"));
 const WlToast = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlToast.vue"));
 const DesignSystem = defineAsyncComponent(() => import("./DesignSystem.vue"));
+const ProjectInfo = defineAsyncComponent(() => import("./ProjectInfo.vue"));
 import type {
   WlAccordionItem,
   WlBreadcrumbItem,
@@ -85,18 +87,21 @@ const vWlTooltip = WlTooltip;
 const headerElement = ref<HTMLElement | null>(null);
 let restoreScrollPadding: (() => void) | undefined;
 
-const activeView = ref<"components" | "system">(
-  typeof window !== "undefined" && new URLSearchParams(window.location.search).get("view") === "system" ? "system" : "components"
-);
-function readView(): void {
-  activeView.value = new URLSearchParams(window.location.search).get("view") === "system" ? "system" : "components";
+type PlaygroundView = "components" | "system" | "project";
+function viewFromLocation(): PlaygroundView {
+  const view = typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("view");
+  return view === "system" || view === "project" ? view : "components";
 }
-async function showView(value: "components" | "system"): Promise<void> {
+const activeView = ref<PlaygroundView>(viewFromLocation());
+function readView(): void {
+  activeView.value = viewFromLocation();
+}
+async function showView(value: PlaygroundView): Promise<void> {
   if (activeView.value === value) return;
   activeView.value = value;
   const url = new URL(window.location.href);
-  if (value === "system") url.searchParams.set("view", "system");
-  else url.searchParams.delete("view");
+  if (value === "components") url.searchParams.delete("view");
+  else url.searchParams.set("view", value);
   url.hash = "";
   window.history.pushState(null, "", url);
   await nextTick();
@@ -228,6 +233,14 @@ const commandPaletteGroups: WlCommandPaletteGroup[] = [
         keywords: ["страницы", "тема", "палитра"],
         href: "#pg-colors",
         data: { targetId: "pg-colors" }
+      },
+      {
+        id: "page-project",
+        label: "О проекте и changelog",
+        description: "Создатель, лицензия и история изменений",
+        icon: "file",
+        keywords: ["автор", "версия", "история", "changelog"],
+        data: { view: "project" }
       }
     ]
   },
@@ -270,7 +283,7 @@ const commandPaletteGroups: WlCommandPaletteGroup[] = [
 ];
 
 async function onCommandPaletteSelect(item: WlCommandPaletteItem): Promise<void> {
-  const data = item.data as { component?: string; targetId?: string; view?: "system" } | undefined;
+  const data = item.data as { component?: string; targetId?: string; view?: PlaygroundView } | undefined;
   if (data?.view) {
     await showView(data.view);
   } else if (data?.component) {
@@ -626,6 +639,7 @@ const drawerVisible = ref(false);
     <nav class="pg-views" aria-label="Режим витрины">
       <WlButton size="sm" variant="ghost" :aria-current="activeView === 'components' ? 'page' : undefined" @click="showView('components')">Компоненты</WlButton>
       <WlButton size="sm" variant="ghost" :aria-current="activeView === 'system' ? 'page' : undefined" @click="showView('system')">Дизайн-система</WlButton>
+      <WlButton size="sm" variant="ghost" :aria-current="activeView === 'project' ? 'page' : undefined" @click="showView('project')">О проекте</WlButton>
     </nav>
     <WlButton size="sm" variant="secondary" @click="commandPaletteVisible = true">
       <template #icon><WlIcon name="search" :size="15" /></template>
@@ -654,6 +668,7 @@ const drawerVisible = ref(false);
   </WlCommandPalette>
 
   <DesignSystem v-if="activeView === 'system'" :theme="theme" @component="scrollToComponent" />
+  <ProjectInfo v-else-if="activeView === 'project'" />
   <main v-else class="pg-main">
     <div class="pg-shell">
       <aside class="pg-component-nav" aria-label="Навигация по компонентам">
@@ -1808,6 +1823,12 @@ const drawerVisible = ref(false);
     </div>
   </main>
 
+  <footer class="pg-footer">
+    <span>Gavia UI · v{{ project.version }} · <a :href="project.licenseUrl">MIT</a></span>
+    <span>Создатель: <a :href="project.author.url">{{ project.author.name }}</a></span>
+    <a :href="project.repositoryUrl">GitHub</a>
+  </footer>
+
   <!-- Оверлеи -->
   <WlToast />
   <WlConfirmDialog />
@@ -1851,7 +1872,10 @@ const drawerVisible = ref(false);
   background: var(--wl-bg);
   z-index: 50;
 }
-.pg-views { display: flex; gap: 4px; }
+.pg-footer { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; padding: 24px; border-top: 1px solid var(--wl-border); color: var(--wl-text-2); font-size: var(--wl-type-small-size); }
+.pg-footer a { color: var(--wl-accent); text-underline-offset: 3px; }
+.pg-footer a:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 3px; }
+.pg-views { display: flex; flex-wrap: wrap; max-width: 100%; gap: 4px; }
 .pg-views [aria-current="page"] { background: var(--wl-accent-soft); color: var(--wl-text); }
 @media (max-width: 1100px) {
   .pg-top { height: auto; min-height: 60px; flex-wrap: wrap; padding-block: 8px; }

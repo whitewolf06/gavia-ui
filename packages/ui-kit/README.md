@@ -1,6 +1,10 @@
 # Gavia UI
 
-Версия `0.6.0`. [Изменения и переход](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.6.md).
+Версия `0.7.0`. [Изменения и переход](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.7.md).
+
+Создатель и сопровождающий — [Gorbach Dmitry](https://github.com/whitewolf06).
+Витрина в репозитории включает живые примеры, страницу об авторе и полный changelog;
+[публикация документации](https://github.com/whitewolf06/gavia-ui/blob/main/docs/hosting.md).
 
 ## Лицензия и установка
 
@@ -8,10 +12,15 @@ MIT — бесплатно для личного и коммерческого �
 изменять и распространять при сохранении уведомления об авторских правах и
 текста лицензии. Полный текст включён в [LICENSE](LICENSE).
 
-Имя `gavia-ui` подготовлено к первой публикации в публичном npm.
-После неё установка: `pnpm add gavia-ui vue`. GitHub-токен не нужен.
-До первого выпуска используйте архив, собранный из
-[репозитория](https://github.com/whitewolf06/gavia-ui).
+Установка опубликованного пакета:
+
+```bash
+pnpm add gavia-ui@0.7.0 vue
+```
+
+GitHub-токен не нужен. Актуальное состояние публикации пакета и витрины —
+в [каноническом README](https://github.com/whitewolf06/gavia-ui/blob/main/README.md).
+Архив также можно собрать из [репозитория](https://github.com/whitewolf06/gavia-ui).
 Runtime-зависимостей нет; Vue 3 — единственный обязательный peer.
 [История изменений](CHANGELOG.md) и
 [переход с прежнего имени](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-gavia.md).

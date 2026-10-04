@@ -60,17 +60,20 @@ jobs:
         run: pnpm build:playground
 
       - name: Pack library
-        run: pnpm run pack
+        id: package
+        run: |
+          pnpm run pack
+          node -e "const p=require('./packages/ui-kit/package.json'); console.log('archive=gavia-ui-'+p.version+'.tgz')" >> "$GITHUB_OUTPUT"
 
       - name: Verify package contents
         run: |
-          if tar -tf packages/ui-kit/gavia-ui-*.tgz | grep -E '(^|/)(node_modules|vue|primevue|primeicons)(/|$)'; then
+          if tar -tf "packages/ui-kit/${{ steps.package.outputs.archive }}" | grep -E '(^|/)(node_modules|vue|primevue|primeicons)(/|$)'; then
             echo "Package must not contain bundled peer dependencies."
             exit 1
           fi
 
       - name: Verify packed package in consumer app
-        run: pnpm verify:package
+        run: pnpm verify:package --archive "packages/ui-kit/${{ steps.package.outputs.archive }}"
 
   browser:
     name: Browser regression tests
@@ -131,9 +134,62 @@ jobs:
           path: apps/playground/test-results/
           if-no-files-found: ignore
 
+  pages:
+    name: Publish documentation to GitHub Pages
+    needs: [verify, browser, visual]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'whitewolf06/gavia-ui'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: gavia-ui-pages
+      cancel-in-progress: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build library CSS and public API
+        run: pnpm build
+      - name: Build public documentation for its repository path
+        run: pnpm build:pages
+      - name: Install pinned Chromium
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Verify production Pages build
+        run: pnpm test:pages
+      - name: Save Pages smoke traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gavia-ui-pages-results
+          path: apps/playground/test-results/
+          if-no-files-found: ignore
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: apps/playground/dist
+      - name: Require the current main commit
+        shell: bash
+        run: |
+          latest="$(git ls-remote origin refs/heads/main | cut -f1)"
+          test "$latest" = "$GITHUB_SHA"
+      - uses: actions/deploy-pages@v5
+        id: deployment
+
   publish:
     needs: [verify, browser, visual]
-    if: github.ref_type == 'tag' && github.repository == 'whitewolf06/gavia-ui'
+    # Bootstrap 0.7.0 is published manually; its new tag records history only.
+    # See docs/releases.md for the first release and trusted-publisher setup.
+    if: github.ref_type == 'tag' && github.repository == 'whitewolf06/gavia-ui' && github.ref_name != 'v0.7.0'
     permissions:
       contents: read
       id-token: write
@@ -159,9 +215,15 @@ jobs:
         run: node -e "const p=require('./packages/ui-kit/package.json'); if(process.env.GITHUB_REF_NAME !== 'v'+p.version) throw new Error('Tag and package version differ');"
 
       - name: Pack checked library
-        run: pnpm run pack
+        id: package
+        run: |
+          pnpm run pack
+          node -e "const p=require('./packages/ui-kit/package.json'); console.log('archive=gavia-ui-'+p.version+'.tgz')" >> "$GITHUB_OUTPUT"
+
+      - name: Verify exact release archive in consumer app
+        run: pnpm verify:package --archive "packages/ui-kit/${{ steps.package.outputs.archive }}"
 
       # npm CLI is used only for OIDC publication, never for dependency installation.
       - name: Publish checked archive to public npm
         working-directory: packages/ui-kit
-        run: npm publish ./gavia-ui-*.tgz --access public --provenance
+        run: npm publish "./${{ steps.package.outputs.archive }}" --access public --provenance

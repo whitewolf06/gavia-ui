@@ -32,6 +32,8 @@ for (const theme of themes) {
       await page.getByRole("listbox").getByRole("option", { name, exact: true }).click();
       await expect(explorer).toHaveAttribute("data-component", name);
       await expect(preview.locator(":scope > .wl-stack")).toBeVisible();
+      // Finish removing the component picker before opening an overlay in its preview.
+      await expect(page.locator(".wl-select-overlay")).toHaveCount(0);
     }
     await select("WlButton");
     await explorer.getByLabel("Пример: variant", { exact: true }).selectOption("primary");

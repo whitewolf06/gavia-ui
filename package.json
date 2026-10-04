@@ -1,6 +1,6 @@
 {
   "name": "gavia-ui-workspace",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "description": "Gavia UI workspace: an independent Vue 3 design system and component library",
   "packageManager": "pnpm@10.34.5",
@@ -21,7 +21,9 @@
     "icons:sync": "pnpm --filter gavia-ui icons:sync",
     "icons:check": "pnpm --filter gavia-ui icons:check",
     "tokens:sync": "pnpm --filter gavia-ui tokens:sync",
-    "tokens:check": "pnpm --filter gavia-ui tokens:check"
+    "tokens:check": "pnpm --filter gavia-ui tokens:check",
+    "build:pages": "pnpm --filter gavia-ui-playground build --base=/gavia-ui/",
+    "test:pages": "pnpm exec playwright test -c apps/playground/playwright.pages.config.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.58.2"

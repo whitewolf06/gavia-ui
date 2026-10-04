@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { consumerSource } from "./example-source.mjs";
@@ -7,6 +7,14 @@ import { consumerSource } from "./example-source.mjs";
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, "..");
 const uiKitDir = join(repoRoot, "packages", "ui-kit");
+const args = process.argv.slice(2);
+if (args.length !== 0 && (args.length !== 2 || args[0] !== "--archive" || !args[1].trim())) {
+  throw new Error("Usage: pnpm verify:package [--archive <path>]");
+}
+const requestedArchive = args.length === 2 ? resolve(args[1]) : undefined;
+if (requestedArchive && (!existsSync(requestedArchive) || !statSync(requestedArchive).isFile())) {
+  throw new Error(`Archive must be an existing file: ${requestedArchive}`);
+}
 const packageManager = process.env.npm_execpath;
 
 if (!packageManager) {
@@ -47,17 +55,18 @@ function write(relativePath, contents) {
 }
 
 try {
-  mkdirSync(packDir, { recursive: true });
   mkdirSync(consumerDir, { recursive: true });
 
-  runPnpm(["pack", "--pack-destination", packDir], uiKitDir);
-
-  const archiveName = readdirSync(packDir).find((file) => file.endsWith(".tgz"));
-  if (!archiveName) {
-    throw new Error("pnpm pack did not produce a .tgz archive");
+  let archivePath = requestedArchive;
+  if (!archivePath) {
+    mkdirSync(packDir, { recursive: true });
+    runPnpm(["pack", "--pack-destination", packDir], uiKitDir);
+    const archives = readdirSync(packDir).filter((file) => file.endsWith(".tgz"));
+    if (archives.length !== 1) {
+      throw new Error("pnpm pack must produce exactly one .tgz archive");
+    }
+    archivePath = join(packDir, archives[0]);
   }
-
-  const archivePath = join(packDir, archiveName);
   const consumerPackage = {
     name: "gavia-ui-package-consumer-smoke",
     private: true,
@@ -177,6 +186,9 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     }
   }
   const installedManifest = JSON.parse(readFileSync(join(installedPackageDir, "package.json"), "utf8"));
+  if (installedManifest.name !== packageJson.name || installedManifest.version !== packageJson.version) {
+    throw new Error(`Packed package must be ${packageJson.name}@${packageJson.version}, received ${installedManifest.name}@${installedManifest.version}`);
+  }
   if (JSON.stringify(installedManifest).match(/primevue|primeicons|@primeuix/i)) {
     throw new Error("Published manifest still references PrimeVue or PrimeIcons");
   }
