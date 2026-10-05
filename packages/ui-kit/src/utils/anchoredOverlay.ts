@@ -1,11 +1,12 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, watch, type Ref } from "vue";
+import { addOverlayLayer, isTopOverlayLayer, ownsOverlayTarget, removeOverlayLayer } from "./overlayStack";
 
 export interface AnchoredOverlay {
   visible: Ref<boolean>;
   panel: Ref<HTMLElement | null>;
   style: Ref<Record<string, string>>;
   show: (event?: Event) => void;
-  hide: () => void;
+  hide: (event?: Event) => void;
   toggle: (event?: Event) => void;
 }
 
@@ -21,6 +22,7 @@ export function useAnchoredOverlay(options: {
   const style = ref<Record<string, string>>({});
   let anchor: HTMLElement | null = null;
   let previouslyFocused: HTMLElement | null = null;
+  const layer = { visible: () => visible.value, panel: () => panel.value, anchor: () => anchor };
 
   function position(): void {
     if (!anchor || !panel.value) return;
@@ -47,11 +49,16 @@ export function useAnchoredOverlay(options: {
     const target = event?.currentTarget ?? event?.target;
     if (target instanceof HTMLElement) anchor = target;
     previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    if (!visible.value) style.value = {};
+    if (!visible.value) {
+      style.value = {};
+      addOverlayLayer(layer);
+    }
     visible.value = true;
   }
-  function hide(): void {
+  function hide(event?: Event): void {
+    if (visible.value && event instanceof KeyboardEvent && event.key === "Escape") event.preventDefault();
     visible.value = false;
+    removeOverlayLayer(layer);
   }
   function toggle(event?: Event): void {
     if (visible.value) hide();
@@ -60,13 +67,14 @@ export function useAnchoredOverlay(options: {
   function onPointer(event: PointerEvent): void {
     if (!visible.value || options.dismissable?.() === false) return;
     const target = event.target;
-    if (target instanceof Node && !panel.value?.contains(target) && !anchor?.contains(target)) hide();
+    if (target instanceof Node && !ownsOverlayTarget(layer, target)) hide();
   }
   function onKeydown(event: KeyboardEvent): void {
-    if (visible.value && event.key === "Escape" && options.closeOnEscape?.() !== false) {
+    if (!event.defaultPrevented && visible.value && isTopOverlayLayer(layer) &&
+      event.key === "Escape" && options.closeOnEscape?.() !== false) {
       event.preventDefault();
-      hide();
-      previouslyFocused?.focus();
+      hide(event);
+      if (previouslyFocused?.isConnected) previouslyFocused.focus();
     }
   }
   watch(visible, async (open, previous) => {
@@ -85,6 +93,7 @@ export function useAnchoredOverlay(options: {
     window.addEventListener("scroll", position, true);
   });
   onBeforeUnmount(() => {
+    removeOverlayLayer(layer);
     document.removeEventListener("pointerdown", onPointer);
     document.removeEventListener("keydown", onKeydown);
     window.removeEventListener("resize", position);

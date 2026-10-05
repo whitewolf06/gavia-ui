@@ -122,7 +122,7 @@ function choose(iso: string, disabled: boolean): void {
 function onKeydown(event: KeyboardEvent): void {
   if (event.key === "ArrowDown") { event.preventDefault(); open(event); }
   if (event.key === "Enter") { commit(); hide(); }
-  if (event.key === "Escape") hide();
+  if (event.key === "Escape") hide(event);
 }
 </script>
 

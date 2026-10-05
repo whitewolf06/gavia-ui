@@ -15,7 +15,7 @@ export function optionLabel(option: unknown, resolver: OptionResolver): string {
   return value == null ? "" : String(value);
 }
 
-export function useListNavigation(length: () => number, select: (index: number) => void, close: () => void): {
+export function useListNavigation(length: () => number, select: (index: number) => void, close: (event?: KeyboardEvent) => void): {
   active: Ref<number>;
   onKeydown: (event: KeyboardEvent) => void;
 } {
@@ -23,7 +23,7 @@ export function useListNavigation(length: () => number, select: (index: number) 
   function onKeydown(event: KeyboardEvent): void {
     const count = length();
     if (event.key === "Escape") {
-      close();
+      close(event);
       return;
     }
     if (!count) return;

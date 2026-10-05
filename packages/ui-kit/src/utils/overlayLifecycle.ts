@@ -1,5 +1,6 @@
 import { nextTick, onBeforeUnmount, onMounted, watch, type Ref } from "vue";
 import { lockBodyScroll } from "./bodyScrollLock";
+import { addOverlayLayer, isTopOverlayLayer, removeOverlayLayer } from "./overlayStack";
 
 const FOCUSABLE_SELECTOR = [
   'a[href]:not([aria-disabled="true"])',
@@ -106,6 +107,7 @@ export function useOverlayLifecycle(options: WlOverlayLifecycleOptions): {
   let lifecycleId = 0;
   let previouslyFocused: HTMLElement | null = null;
   let releaseBodyScroll: (() => void) | undefined;
+  const layer = { visible: () => active && options.visible.value, panel: () => options.container.value, anchor: () => previouslyFocused };
 
   function requestClose(): void {
     if (options.visible.value) options.visible.value = false;
@@ -124,6 +126,7 @@ export function useOverlayLifecycle(options: WlOverlayLifecycleOptions): {
       document.activeElement instanceof HTMLElement ? document.activeElement : null;
     removeFromStack(token);
     overlayStack.push(token);
+    addOverlayLayer(layer);
     if (resolveFlag(options.lockScroll, false)) releaseBodyScroll = lockBodyScroll();
     options.onBeforeOpen?.();
 
@@ -144,6 +147,7 @@ export function useOverlayLifecycle(options: WlOverlayLifecycleOptions): {
     const focusToRestore = previouslyFocused;
     previouslyFocused = null;
     removeFromStack(token);
+    removeOverlayLayer(layer);
     releaseBodyScroll?.();
     releaseBodyScroll = undefined;
     if (opened) options.onClose?.();
@@ -168,6 +172,7 @@ export function useOverlayLifecycle(options: WlOverlayLifecycleOptions): {
     ) {
       return;
     }
+    if (event.key === "Escape" && !isTopOverlayLayer(layer)) return;
     if (event.key === "Escape" && resolveFlag(options.closeOnEscape, true)) {
       event.preventDefault();
       event.stopPropagation();
@@ -194,6 +199,7 @@ export function useOverlayLifecycle(options: WlOverlayLifecycleOptions): {
     lifecycleId += 1;
     document.removeEventListener("keydown", onGlobalKeydown);
     removeFromStack(token);
+    removeOverlayLayer(layer);
     releaseBodyScroll?.();
     releaseBodyScroll = undefined;
     if (active && options.restoreFocus !== false && previouslyFocused?.isConnected) {

@@ -14,11 +14,13 @@ describe("public changelog rendering", () => {
     const document = parseChangelog(source, docsBase);
     expect(document.sections[0]).toMatchObject({ title: "Не выпущено", id: "project-unreleased", unreleased: true });
     const versions = document.sections.filter((section) => section.version).map((section) => section.version);
-    expect(versions).toEqual(["0.7.1", "0.7.0", "0.6.0", "0.3.0", "0.2.1", "0.2.0", "0.1.0"]);
+    expect(versions).toEqual(["0.8.1", "0.7.1", "0.7.0", "0.6.0", "0.3.0", "0.2.1", "0.2.0", "0.1.0"]);
     const current = document.sections.find((section) => section.version === "0.6.0")!;
     const firstPublic = document.sections.find((section) => section.version === "0.7.0")!;
     expect(firstPublic).toMatchObject({ date: "2026-10-05", id: "project-release-0-7-0", unreleased: false });
-    expect(document.sections[0]!.blocks).toEqual(expect.arrayContaining([
+    const release = document.sections.find((section) => section.version === "0.8.1")!;
+    expect(release).toMatchObject({ date: "2026-10-06", id: "project-release-0-8-1", unreleased: false });
+    expect(release.blocks).toEqual(expect.arrayContaining([
       { kind: "heading", content: [{ kind: "text", value: "Исправлено" }] },
       expect.objectContaining({ kind: "list", items: expect.arrayContaining([[
         { kind: "text", value: "Проверка " },

@@ -1,17 +1,40 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { resolveWlToken, wlDesignTokens, wlDesignThemes, wlContrastReport } from "../../../packages/ui-kit/src/design-system";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
+
+type RuntimeCounts = { pageErrors: number; warnings: number; errors: number };
+const nestedRuntime = new WeakMap<Page, RuntimeCounts>();
 
 function rgb(hex: string): string {
   return `rgb(${[1, 3, 5].map((start) => parseInt(hex.slice(start, start + 2), 16)).join(", ")})`;
 }
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page }, testInfo) => {
+  if (testInfo.title.startsWith("nested anchored portals:")) {
+    const counts = { pageErrors: 0, warnings: 0, errors: 0 };
+    nestedRuntime.set(page, counts);
+    page.on("pageerror", () => { counts.pageErrors += 1; });
+    page.on("console", (message) => {
+      if (message.type() === "warning") counts.warnings += 1;
+      if (message.type() === "error") counts.errors += 1;
+    });
+    await page.setViewportSize(testInfo.project.use.isMobile
+      ? { width: 390, height: 844 } : { width: 1440, height: 900 });
+  }
   await page.goto("/?view=system");
   const heading = page.getByRole("heading", { name: "Единый язык интерфейсов" });
   // The view loads as an async chunk after the navigation load event.
   await heading.waitFor({ state: "visible" });
   await expect(heading).toBeVisible();
+});
+
+test.afterEach(async ({ page }, testInfo) => {
+  const counts = nestedRuntime.get(page);
+  if (!counts) return;
+  await testInfo.attach("nested-overlay-runtime-counts", {
+    body: JSON.stringify(counts), contentType: "application/json"
+  });
+  expect(counts).toEqual({ pageErrors: 0, warnings: 0, errors: 0 });
 });
 
 test("catalog filters all tokens and resolves the selected theme", async ({ page }) => {
@@ -129,5 +152,105 @@ test("themes, nested previews and responsive layout agree with the catalog", asy
     const durations = await page.locator(".ds-theme-preview").evaluateAll((elements) => elements.map((element) => getComputedStyle(element).getPropertyValue("--wl-dur-5").trim()));
     // Production CSS may omit the leading zero; duration and units stay exact.
     expect(durations.map((duration) => duration.replace(/^0(?=\.)/, ""))).toEqual([".01ms", ".01ms", ".01ms"]);
+  }
+});
+
+test.describe("nested anchored portal interactions", () => {
+  test.describe.configure({ retries: 0, timeout: 45_000 });
+  for (const theme of wlDesignThemes) {
+    test(`nested anchored portals: ${theme.label}`, async ({ page }) => {
+      await page.locator(".pg-theme").getByText(theme.label, { exact: true }).click();
+      await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme.name);
+      await page.getByRole("combobox", { name: "Компонент", exact: true }).click();
+      await page.getByRole("listbox").getByRole("option", { name: "WlPopover", exact: true }).click();
+      await expect(page.getByTestId("ds-explorer")).toHaveAttribute("data-component", "WlPopover");
+      const preview = page.getByTestId("ds-example-preview");
+      const open = preview.getByRole("button", { name: "Сведения", exact: true });
+      const popover = page.getByRole("dialog", { name: "Сведения о материале", exact: true });
+      await open.click();
+      const select = popover.getByRole("combobox", { name: "Тип материала", exact: true });
+      await select.click();
+      // Ordinary pointer selection exercises pointerdown before option mousedown/click.
+      await page.getByRole("listbox").getByRole("option", { name: "Сроки задач", exact: true }).click();
+      await expect(preview.getByRole("status", { name: "Выбранный тип", exact: true })).toHaveText("task_deadline");
+      await expect(select).toHaveText("Сроки задач");
+      await expect(select).toBeFocused();
+      await expect(popover).toBeVisible();
+      await expect(page.getByRole("listbox")).toHaveCount(0);
+      await select.click();
+      await page.keyboard.press("Escape");
+      await expect(page.getByRole("listbox")).toHaveCount(0);
+      await expect(popover).toBeVisible();
+      await expect(select).toBeFocused();
+      await page.keyboard.press("Escape");
+      await expect(popover).toHaveCount(0);
+      await expect(open).toBeFocused();
+
+      await open.click();
+      await select.click();
+      const openDialog = preview.getByRole("button", { name: "Вложенные фильтры", exact: true });
+      // Anchored panels are clamped at least 4 px inside the viewport.
+      // This real pointer is outside both panels and does not depend on a covered sibling button.
+      await page.mouse.click(1, 1);
+      await expect(popover).toHaveCount(0);
+      await expect(page.getByRole("listbox")).toHaveCount(0);
+      await openDialog.click();
+      const dialog = page.getByRole("dialog", { name: "Вложенные фильтры", exact: true });
+      await expect(dialog).toBeVisible();
+      const openFilters = dialog.getByRole("button", { name: "Открыть фильтры", exact: true });
+      await openFilters.click();
+      const nested = page.getByRole("dialog", { name: "Фильтры в диалоге", exact: true });
+      const nestedSelect = nested.getByRole("combobox", { name: "Тип в диалоге", exact: true });
+      await nestedSelect.click();
+      await page.getByRole("listbox").getByRole("option", { name: "Сроки задач", exact: true }).click();
+      await expect(dialog.getByRole("status", { name: "Выбранный тип в диалоге", exact: true })).toHaveText("task_deadline");
+      await expect(nestedSelect).toHaveText("Сроки задач");
+      await expect(nested).toBeVisible();
+      await expect(dialog).toBeVisible();
+      await nestedSelect.click();
+      const first = dialog.locator("button").first();
+      const last = dialog.getByRole("button", { name: "Готово", exact: true });
+      await last.focus();
+      await page.keyboard.press("Tab");
+      await expect(first).toBeFocused();
+      await expect(page.getByRole("listbox")).toBeVisible();
+      await page.keyboard.press("Shift+Tab");
+      await expect(last).toBeFocused();
+      await expect(page.getByRole("listbox")).toBeVisible();
+      await nestedSelect.focus();
+      await page.keyboard.press("Escape");
+      await expect(page.getByRole("listbox")).toHaveCount(0);
+      await expect(nested).toBeVisible();
+      await expect(dialog).toBeVisible();
+      await expect(nestedSelect).toBeFocused();
+      await nested.getByRole("button", { name: "Действие фильтра", exact: true }).click();
+      await page.keyboard.press("Escape");
+      await expect(nested).toHaveCount(0);
+      await expect(dialog).toBeVisible();
+      await expect(openFilters).toBeFocused();
+      await openFilters.click();
+      const date = nested.getByRole("textbox", { name: "Дата в диалоге", exact: true });
+      await date.click();
+      await page.getByRole("button", { name: "2026-10-09", exact: true }).click();
+      await expect(dialog.getByRole("status", { name: "Выбранная дата в диалоге", exact: true })).toHaveText("2026-10-09");
+      await expect(date).toHaveValue("09.10.2026");
+      await expect(date).toBeFocused();
+      await expect(nested).toBeVisible();
+      await expect(dialog).toBeVisible();
+      await date.click();
+      await expect(page.locator(".wl-dp__panel")).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(page.locator(".wl-dp__panel")).toHaveCount(0);
+      await expect(date).toBeFocused();
+      await expect(nested).toBeVisible();
+      await expect(dialog).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(nested).toHaveCount(0);
+      await expect(dialog).toBeVisible();
+      await expect(openFilters).toBeFocused();
+      await page.keyboard.press("Escape");
+      await expect(dialog).toHaveCount(0);
+      await expect(openDialog).toBeFocused();
+    });
   }
 });

@@ -29,7 +29,7 @@ Runtime-зависимостей нет. **Vue 3 — единственный о
 
 Версия `0.7.0`: [изменения и переход](docs/migration-0.7.md).
 Текущая опубликованная версия — `0.7.1`; установка в Vue-приложении: `pnpm add gavia-ui@0.7.1`.
-Версия исходников 0.8.0 готовится к выпуску: [переход потребителя](docs/migration-0.8.md).
+Версия исходников 0.8.1 готовится к выпуску: [переход потребителя](docs/migration-0.8.md).
 История дизайн-системы 0.6.0 — [миграция 0.6](docs/migration-0.6.md).
 [Дизайн-система](docs/design-system.md) · [Changelog](CHANGELOG.md)
 · [Правила участия](CONTRIBUTING.md)
@@ -106,10 +106,10 @@ pnpm install
 pnpm build
 pnpm run pack
 # В приложении-потребителе:
-pnpm add /absolute/path/to/gavia-ui/packages/ui-kit/gavia-ui-0.7.1.tgz vue
+pnpm add /absolute/path/to/gavia-ui/packages/ui-kit/gavia-ui-0.8.1.tgz vue
 ```
 
-Текущая версия кода — `0.7.1`; имя архива определяется версией в манифесте.
+Текущая версия кода — `0.8.1`; имя архива определяется версией в манифесте.
 История и действия при обновлении — [CHANGELOG.md](CHANGELOG.md).
 Порядок следующих выпусков — [docs/releases.md](docs/releases.md).
 

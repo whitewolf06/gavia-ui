@@ -2,7 +2,7 @@
 
 [![Смотреть демо Gavia UI](https://img.shields.io/badge/LIVE_DEMO-2563EB?style=for-the-badge)](https://whitewolf06.github.io/gavia-ui/ "Смотреть демо Gavia UI")
 
-Версия исходников `0.8.0` готовится к выпуску; опубликованная npm-версия пока `0.7.1`. [История изменений](CHANGELOG.md).
+Версия исходников `0.8.1` готовится к выпуску; опубликованная npm-версия пока `0.7.1`. [История изменений](CHANGELOG.md).
 [Переход на Gavia UI](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.7.md).
 
 [Новые компоненты и переход 0.8](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.8.md).
@@ -25,7 +25,7 @@ pnpm add gavia-ui vue
 
 GitHub-токен не нужен. Актуальное состояние публикации пакета и витрины —
 в [каноническом README](https://github.com/whitewolf06/gavia-ui/blob/main/README.md).
-Архив текущих исходников `0.8.0` также можно собрать из
+Архив текущих исходников `0.8.1` также можно собрать из
 [репозитория](https://github.com/whitewolf06/gavia-ui):
 
 ```bash
@@ -33,7 +33,7 @@ GitHub-токен не нужен. Актуальное состояние пу�
 pnpm build
 pnpm run pack
 # В приложении-потребителе:
-pnpm add /absolute/path/to/gavia-ui/packages/ui-kit/gavia-ui-0.8.0.tgz vue
+pnpm add /absolute/path/to/gavia-ui/packages/ui-kit/gavia-ui-0.8.1.tgz vue
 ```
 
 Runtime-зависимостей нет; Vue 3 — единственный обязательный peer.
