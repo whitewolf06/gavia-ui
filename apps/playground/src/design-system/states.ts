@@ -1,6 +1,6 @@
 import type { WlComponentManifest, WlPropManifest } from "../../../../packages/ui-kit/src/manifest";
 export interface StateCase { id: string; label: string; props: Record<string, unknown> }
-const axes = new Set(["variant", "size", "density", "presence", "display", "position", "tone", "shape"]);
+const axes = new Set(["variant", "size", "density", "presence", "display", "position", "tone", "shape", "displayFormat"]);
 const flags = new Set(["disabled", "loading", "invalid", "active", "indeterminate", "removable", "hoverable", "thin", "dot", "closable", "compact", "light", "motion"]);
 /** Only real public props are exposed; unsupported states are never passed to components. */
 export function stateControls(entry: WlComponentManifest): WlPropManifest[] {

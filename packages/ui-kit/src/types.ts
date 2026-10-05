@@ -26,13 +26,14 @@ export type WlSwitchSize = "sm" | "md";
 export type WlSpinnerSize = "sm" | "md" | "lg";
 export type WlDrawerPosition = "left" | "right" | "top" | "bottom" | "full";
 
-import type { WlIconName } from "./icons.generated";
 export type { WlIconName } from "./icons.generated";
+import type { WlIconInput } from "./iconNames";
+export type { WlIconInput } from "./iconNames";
 
 export interface WlTabItem {
   key: string;
   label: string;
-  icon?: WlIconName;
+  icon?: WlIconInput;
   count?: number;
 }
 
@@ -42,7 +43,7 @@ export type WlPillVariant = "neutral" | "info" | "ok" | "warn" | "err";
 export interface WlSegmentedOption {
   label: string;
   value: string;
-  icon?: WlIconName;
+  icon?: WlIconInput;
   disabled?: boolean;
 }
 
@@ -50,13 +51,13 @@ export interface WlBreadcrumbItem {
   label: string;
   to?: string;
   href?: string;
-  icon?: WlIconName;
+  icon?: WlIconInput;
 }
 
 export interface WlMenuItem {
   key?: string;
   label?: string;
-  icon?: WlIconName;
+  icon?: WlIconInput;
   shortcut?: string;
   danger?: boolean;
   disabled?: boolean;
@@ -68,7 +69,7 @@ export interface WlMenuItem {
 export interface WlSidebarItem {
   key: string;
   label: string;
-  icon?: WlIconName;
+  icon?: WlIconInput;
   badge?: number | string;
   href?: string;
   disabled?: boolean;
@@ -88,7 +89,7 @@ export interface WlCommandPaletteItem {
   label: string;
   description?: string;
   keywords?: string[];
-  icon?: WlIconName;
+  icon?: WlIconInput;
   shortcut?: string;
   href?: string;
   target?: "_self" | "_blank" | "_parent" | "_top";

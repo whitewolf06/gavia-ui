@@ -6,8 +6,8 @@ A free, open source Vue 3 component library and design system.
 
 [![Смотреть демо Gavia UI](https://img.shields.io/badge/LIVE_DEMO-2563EB?style=for-the-badge)](https://whitewolf06.github.io/gavia-ui/ "Смотреть демо Gavia UI")
 
-Независимая библиотека компонентов Vue 3 + TypeScript: 51 компонент,
-47 встроенных SVG-иконок, 416 дизайн-токенов и три темы — White, Graphite,
+Независимая библиотека компонентов Vue 3 + TypeScript: 53 компонента,
+встроенные SVG-иконки, 416 дизайн-токенов и три темы — White, Graphite,
 Newspaper. В репозитории есть изолированный playground с живыми примерами и
 готовыми сценариями для форм, таблиц, навигации и оверлеев.
 
@@ -29,6 +29,7 @@ Runtime-зависимостей нет. **Vue 3 — единственный о
 
 Версия `0.7.0`: [изменения и переход](docs/migration-0.7.md).
 Текущая опубликованная версия — `0.7.1`; установка в Vue-приложении: `pnpm add gavia-ui@0.7.1`.
+Версия исходников 0.8.0 готовится к выпуску: [переход потребителя](docs/migration-0.8.md).
 История дизайн-системы 0.6.0 — [миграция 0.6](docs/migration-0.6.md).
 [Дизайн-система](docs/design-system.md) · [Changelog](CHANGELOG.md)
 · [Правила участия](CONTRIBUTING.md)

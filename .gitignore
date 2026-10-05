@@ -10,4 +10,5 @@ coverage/
 .pnpm-store/
 .tmp/
 apps/playground/test-results/
+apps/playground/test-results-*/
 apps/playground/playwright-report/

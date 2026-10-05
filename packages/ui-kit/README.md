@@ -2,8 +2,10 @@
 
 [![Смотреть демо Gavia UI](https://img.shields.io/badge/LIVE_DEMO-2563EB?style=for-the-badge)](https://whitewolf06.github.io/gavia-ui/ "Смотреть демо Gavia UI")
 
-Версия `0.7.1`. [История изменений](CHANGELOG.md).
+Версия исходников `0.8.0` готовится к выпуску; опубликованная npm-версия пока `0.7.1`. [История изменений](CHANGELOG.md).
 [Переход на Gavia UI](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.7.md).
+
+[Новые компоненты и переход 0.8](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.8.md).
 
 Создатель и сопровождающий — [Gorbach Dmitry](https://github.com/whitewolf06).
 Витрина в репозитории включает живые примеры, страницу об авторе и полный changelog;
@@ -23,7 +25,7 @@ pnpm add gavia-ui vue
 
 GitHub-токен не нужен. Актуальное состояние публикации пакета и витрины —
 в [каноническом README](https://github.com/whitewolf06/gavia-ui/blob/main/README.md).
-Архив текущих исходников `0.7.1` также можно собрать из
+Архив текущих исходников `0.8.0` также можно собрать из
 [репозитория](https://github.com/whitewolf06/gavia-ui):
 
 ```bash
@@ -31,7 +33,7 @@ GitHub-токен не нужен. Актуальное состояние пу�
 pnpm build
 pnpm run pack
 # В приложении-потребителе:
-pnpm add /absolute/path/to/gavia-ui/packages/ui-kit/gavia-ui-0.7.1.tgz vue
+pnpm add /absolute/path/to/gavia-ui/packages/ui-kit/gavia-ui-0.8.0.tgz vue
 ```
 
 Runtime-зависимостей нет; Vue 3 — единственный обязательный peer.
@@ -42,7 +44,7 @@ Runtime-зависимостей нет; Vue 3 — единственный об
 
 Общие роли типографики, шкала расстояний, поверхности, состояния и UI-паттерны
 описаны в [руководстве](https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md). Playground `?view=system`
-показывает каталог токенов, три темы и контракты 51 компонента.
+показывает каталог токенов, три темы и контракты 53 компонентов.
 
 Опциональная компоновка и типографика: явный импорт
 `gavia-ui/styles/primitives.css`. Экспорты `wlDesignTokens`,
@@ -290,7 +292,7 @@ function remove(): void {
 
 ## Component manifest
 
-Машиночитаемое описание всех 51 компонентов: пропсы (типы, дефолты, enum-значения),
+Машиночитаемое описание всех 53 компонентов: пропсы (типы, дефолты, enum-значения),
 слоты, события, `v-model` и `introducedIn` — первая публичная версия, содержащая
 компонент. Предназначен для визуальных редакторов (палитра +
 инспектор пропсов) и AI-агентов, генерирующих разметку.

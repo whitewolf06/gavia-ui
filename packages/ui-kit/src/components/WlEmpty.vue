@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import WlIcon from "./WlIcon.vue";
-import type { WlIconName } from "../types";
+import type { WlIconInput } from "../types";
 
 withDefaults(
   defineProps<{
-    icon?: WlIconName;
+    icon?: WlIconInput;
     title?: string;
     description?: string;
   }>(),

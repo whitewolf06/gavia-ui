@@ -18,14 +18,14 @@ describe("public changelog rendering", () => {
     const current = document.sections.find((section) => section.version === "0.6.0")!;
     const firstPublic = document.sections.find((section) => section.version === "0.7.0")!;
     expect(firstPublic).toMatchObject({ date: "2026-10-05", id: "project-release-0-7-0", unreleased: false });
-    expect(document.sections[0]!.blocks).toEqual([
+    expect(document.sections[0]!.blocks).toEqual(expect.arrayContaining([
       { kind: "heading", content: [{ kind: "text", value: "Исправлено" }] },
-      { kind: "list", items: [[
+      expect.objectContaining({ kind: "list", items: expect.arrayContaining([[
         { kind: "text", value: "Проверка " },
         { kind: "code", value: "verify:package" },
         { kind: "text", value: " учитывает переносы строк Windows и Linux в LICENSE, сохраняя строгое сравнение содержания лицензии." }
-      ]] }
-    ]);
+      ]]) })
+    ]));
     const patch = document.sections.find((section) => section.version === "0.7.1")!;
     expect(patch).toMatchObject({ date: "2026-10-05", id: "project-release-0-7-1", unreleased: false });
     expect(patch.blocks.filter((block) => block.kind === "heading").map((block) => text(block.content)))

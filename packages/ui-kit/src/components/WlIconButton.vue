@@ -2,13 +2,14 @@
 import { computed } from "vue";
 import { useWlPt } from "../config";
 import WlIcon from "./WlIcon.vue";
-import type { WlIconButtonVariant, WlIconName } from "../types";
+import type { WlIconButtonVariant } from "../types";
+import type { WlIconInput } from "../iconNames";
 
 const props = withDefaults(
   defineProps<{
     variant?: WlIconButtonVariant;
     size?: "md" | "sm";
-    icon?: WlIconName;
+    icon?: WlIconInput;
     active?: boolean;
     disabled?: boolean;
     count?: number;

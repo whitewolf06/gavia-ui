@@ -89,6 +89,7 @@ export const WL_COMPONENT_INTRODUCED_IN: Readonly<Record<string, string>> = {
   WlEmpty: "0.1.0",
   WlField: "0.1.0",
   WlFileUpload: "0.1.0",
+  WlFilePicker: "0.8.0",
   WlFilterBar: "0.3.0",
   WlIcon: "0.1.0",
   WlIconButton: "0.1.0",
@@ -117,6 +118,7 @@ export const WL_COMPONENT_INTRODUCED_IN: Readonly<Record<string, string>> = {
   WlTabs: "0.1.0",
   WlTag: "0.1.0",
   WlTextarea: "0.1.0",
+  WlTimePicker: "0.8.0",
   WlToast: "0.1.0"
 };
 

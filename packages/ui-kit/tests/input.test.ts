@@ -13,6 +13,30 @@ describe("WlInput", () => {
     expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["Название задачи"]);
   });
 
+  it("retains string values for native numeric typing and clearing", async () => {
+    const wrapper = mount(WlInput, { global, props: { modelValue: "", type: "number" } });
+    const input = wrapper.get("input");
+    await input.setValue("120");
+    expect(wrapper.emitted("update:modelValue")?.at(-1)).toEqual(["120"]);
+    await wrapper.setProps({ modelValue: "120" });
+    await input.setValue("0.7");
+    expect(wrapper.emitted("update:modelValue")?.at(-1)).toEqual(["0.7"]);
+    await wrapper.setProps({ modelValue: "0.7" });
+    await input.setValue("");
+    expect(wrapper.emitted("update:modelValue")?.at(-1)).toEqual([""]);
+  });
+
+  it("commits text only after native IME composition ends", async () => {
+    const wrapper = mount(WlInput, { global, props: { modelValue: "" } });
+    const input = wrapper.get("input");
+    await input.trigger("compositionstart");
+    input.element.value = "に";
+    await input.trigger("input");
+    expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+    input.element.value = "日本";
+    await input.trigger("compositionend");
+    expect(wrapper.emitted("update:modelValue")).toEqual([["日本"]]);
+  });
   it("applies invalid class", () => {
     const wrapper = mount(WlInput, { global, props: { invalid: true } });
     expect(wrapper.find("input").classes()).toContain("is-invalid");

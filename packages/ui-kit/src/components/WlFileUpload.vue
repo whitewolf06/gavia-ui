@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useNativeFilePicker } from "../composables/useNativeFilePicker";
 import WlIcon from "./WlIcon.vue";
 import type { WlFileReject, WlFileRejectReason, WlIconName } from "../types";
 
@@ -32,7 +33,7 @@ const emit = defineEmits<{
  */
 const model = defineModel<File[]>({ default: () => [] });
 
-const input = ref<HTMLInputElement | null>(null);
+const { input, choose: openPicker, onChange: onPick } = useNativeFilePicker(() => props.disabled, addFiles);
 const dragDepth = ref(0);
 const dragOver = ref(false);
 const errors = ref<Array<{ name: string; message: string }>>([]);
@@ -93,17 +94,6 @@ function addFiles(list: Iterable<File>): void {
     next.push(file);
   }
   model.value = next;
-}
-
-function openPicker(): void {
-  if (props.disabled) return;
-  input.value?.click();
-}
-
-function onPick(event: Event): void {
-  const target = event.target as HTMLInputElement;
-  if (target.files?.length) addFiles(target.files);
-  target.value = ""; // picking the same file again still fires change
 }
 
 function onDragEnter(event: DragEvent): void {

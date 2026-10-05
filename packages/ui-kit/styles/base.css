@@ -4187,3 +4187,23 @@
     outline: none;
   }
 }
+
+@layer wl.components {
+  /* Native time inputs can focus a clock/segment while the input's :focus is false. */
+  .wl-time-picker .wl-input:focus-within {
+    border-color: var(--wl-accent);
+    box-shadow: var(--wl-focus-ring);
+    outline: none;
+  }
+  .wl-time-picker .wl-input.is-invalid:focus-within {
+    border-color: var(--wl-danger);
+    box-shadow: var(--wl-focus-ring-danger);
+  }
+  .wl-file-picker {
+    display: inline-flex;
+    align-items: center;
+  }
+  .wl-file-picker:where([hidden]) {
+    display: none;
+  }
+}

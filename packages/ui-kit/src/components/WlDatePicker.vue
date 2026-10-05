@@ -16,11 +16,12 @@ const props = withDefaults(defineProps<{
   showIcon?: boolean;
   minDate?: string;
   maxDate?: string;
+  displayFormat?: "dd.mm.yyyy" | "yyyy-mm-dd";
   motion?: boolean;
   pt?: Record<string, unknown>;
 }>(), {
   placeholder: "дд.мм.гггг", size: "md", disabled: false, invalid: false, showIcon: false,
-  motion: undefined
+  motion: undefined, displayFormat: "dd.mm.yyyy"
 });
 const model = defineModel<string | null>({ default: null });
 const attrs = useAttrs();
@@ -65,13 +66,15 @@ function parseIso(value: string | null | undefined): Date | null {
 }
 function display(value: string | null): string {
   const date = parseIso(value);
+  if (date && props.displayFormat === "yyyy-mm-dd") return value!;
   return date ? `${pad2(date.getDate())}.${pad2(date.getMonth() + 1)}.${date.getFullYear()}` : "";
 }
-watch(model, (value) => { text.value = display(value); }, { immediate: true });
+watch([model, () => props.displayFormat], ([value]) => { text.value = display(value); }, { immediate: true });
 function commit(): void {
   if (!text.value.trim()) { model.value = null; return; }
   const match = /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/.exec(text.value.trim());
-  const iso = match ? `${match[3]}-${pad2(Number(match[2]))}-${pad2(Number(match[1]))}` : null;
+  const iso = props.displayFormat === "yyyy-mm-dd" ? text.value.trim()
+    : match ? `${match[3]}-${pad2(Number(match[2]))}-${pad2(Number(match[1]))}` : null;
   if (iso && parseIso(iso) && (!props.minDate || iso >= props.minDate) && (!props.maxDate || iso <= props.maxDate)) {
     model.value = iso;
   } else {

@@ -31,6 +31,31 @@ export function getFocusableElements(container: HTMLElement | null): HTMLElement
   );
 }
 
+function getInitialFocusTarget(container: HTMLElement | null): HTMLElement | null {
+  const focusable = getFocusableElements(container);
+  const autofocus = focusable.find((element) => {
+    if (
+      !element.hasAttribute("autofocus") ||
+      element.tabIndex < 0 ||
+      element.matches(':disabled, [aria-disabled="true"], input[type="hidden"]') ||
+      element.closest('[hidden], [aria-hidden="true"]')
+    ) {
+      return false;
+    }
+    for (let ancestor: HTMLElement | null = element; ancestor; ancestor = ancestor.parentElement) {
+      const style = getComputedStyle(ancestor);
+      if (
+        style.display === "none" ||
+        (ancestor === element && (style.visibility === "hidden" || style.visibility === "collapse"))
+      ) {
+        return false;
+      }
+    }
+    return true;
+  });
+  return autofocus ?? focusable[0] ?? container;
+}
+
 export function trapOverlayFocus(event: KeyboardEvent, container: HTMLElement | null): void {
   if (!container) return;
   const focusable = getFocusableElements(container);
@@ -106,8 +131,7 @@ export function useOverlayLifecycle(options: WlOverlayLifecycleOptions): {
     if (!active || activationId !== lifecycleId || !options.visible.value) return;
     const target =
       options.initialFocus?.() ??
-      getFocusableElements(options.container.value)[0] ??
-      options.container.value;
+      getInitialFocusTarget(options.container.value);
     target?.focus();
     opened = true;
     options.onOpen?.();

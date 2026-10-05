@@ -25,7 +25,8 @@ const props = withDefaults(
   }
 );
 
-const model = defineModel<string>({ default: "" });
+// Native type="number" v-model coerces to a number; WlInput keeps its string contract.
+const model = defineModel<string>({ default: "", set: (value) => String(value ?? "") });
 const slots = useSlots();
 const attrs = useAttrs();
 

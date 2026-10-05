@@ -377,7 +377,12 @@ test("the complete icon batch renders at three sizes in each theme", async ({ pa
     await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme);
     await expect(gallery.locator(".pg-icon-cell").first()).toBeVisible();
     if (browserName === "chromium") {
-      await gallery.locator(".pg-icon-grid").screenshot({ path: testInfo.outputPath(`icons-${theme}.png`) });
+      // A tall element screenshot scrolls beneath the sticky showcase header.
+      // Hide that header only while capturing the drawings it would obscure.
+      await gallery.locator(".pg-icon-grid").screenshot({
+        path: testInfo.outputPath(`icons-${theme}.png`),
+        style: ".pg-top { visibility: hidden; }"
+      });
     }
   }
 });

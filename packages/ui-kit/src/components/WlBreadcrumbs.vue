@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { useWlPt } from "../config";
 import WlIcon from "./WlIcon.vue";
-import type { WlBreadcrumbItem, WlIconName } from "../types";
+import type { WlBreadcrumbItem } from "../types";
 
 const props = withDefaults(
   defineProps<{
@@ -37,11 +37,11 @@ const section = useWlPt("breadcrumb", computed(() => props.pt));
     <ol v-bind="section('list')" class="wl-breadcrumbs__list">
       <li v-for="(item, index) in model" :key="index" v-bind="section('item')" class="wl-breadcrumbs__item">
         <span v-if="item.current" class="wl-breadcrumbs__link is-current" aria-current="page">
-          <WlIcon v-if="item.icon" :name="(item.icon as WlIconName)" :size="14" class="wl-breadcrumbs__icon" />
+          <WlIcon v-if="item.icon" :name="item.icon" :size="14" class="wl-breadcrumbs__icon" />
           <span class="wl-breadcrumbs__label">{{ item.label }}</span>
         </span>
         <a v-else :href="item.url" class="wl-breadcrumbs__link">
-          <WlIcon v-if="item.icon" :name="(item.icon as WlIconName)" :size="14" class="wl-breadcrumbs__icon" />
+          <WlIcon v-if="item.icon" :name="item.icon" :size="14" class="wl-breadcrumbs__icon" />
           <span class="wl-breadcrumbs__label">{{ item.label }}</span>
         </a>
         <span v-if="index < model.length - 1" v-bind="section('separator')" class="wl-breadcrumbs__sep" aria-hidden="true">/</span>

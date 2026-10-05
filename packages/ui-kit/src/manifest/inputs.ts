@@ -9,6 +9,43 @@ import {
 
 export const inputsManifest = defineComponentManifest([
   {
+    name: "WlTimePicker",
+    category: "inputs",
+    description: "Нативный выбор локального времени с точностью до минуты; без даты и часового пояса.",
+    props: [
+      { name: "minTime", type: "string", description: "Нижняя граница HH:mm; minTime > maxTime задаёт ночной диапазон." },
+      { name: "maxTime", type: "string", description: "Верхняя граница HH:mm." },
+      { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер поля." },
+      { name: "density", type: "enum", default: "default", values: WL_DENSITIES, description: "Плотность." },
+      { name: "disabled", type: "boolean", default: false, description: "Отключает выбор." },
+      { name: "invalid", type: "boolean", default: false, description: "Внешнее состояние ошибки." },
+      { name: "pt", type: "object", description: "Атрибуты root и input." }
+    ],
+    slots: [],
+    emits: [],
+    model: { name: "modelValue", type: "string | null", description: "Время HH:mm или null (default null)." }
+  },
+  {
+    name: "WlFilePicker",
+    category: "inputs",
+    description: "Выбор файлов браузером без собственного списка, фильтрации, лимитов или загрузки. Методы choose()/clear() доступны через ref.",
+    props: [
+      { name: "accept", type: "string", description: "Подсказка браузеру по расширениям/MIME; проверку выполняет приложение." },
+      { name: "multiple", type: "boolean", default: false, description: "Разрешает выбор нескольких файлов." },
+      { name: "disabled", type: "boolean", default: false, description: "Отключает trigger и choose()." },
+      { name: "chooseLabel", type: "string", default: "Выбрать файлы", description: "Подпись стандартной кнопки." },
+      { name: "ariaLabel", type: "string", description: "Доступное имя стандартной кнопки." },
+      { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер кнопки." },
+      { name: "density", type: "enum", default: "default", values: WL_DENSITIES, description: "Плотность кнопки." },
+      { name: "pt", type: "object", description: "Атрибуты root, trigger и input." }
+    ],
+    slots: [{ name: "trigger", description: "Собственная кнопка; параметры { choose, clear, disabled, attrs } (attrs для фокуса/aria)." }],
+    emits: [
+      { name: "select", payload: "File[]", description: "Неизменённая выбранная партия файлов; событие не накапливает список." },
+      { name: "cancel", description: "Браузер отменил выбор; выбранные приложением файлы не изменяются." }
+    ]
+  },
+  {
     name: "WlInput",
     category: "inputs",
     description: "Текстовое поле со слотами prefix/suffix.",
@@ -285,6 +322,7 @@ export const inputsManifest = defineComponentManifest([
       { name: "showIcon", type: "boolean", default: false, description: "Кнопка-иконка календаря." },
       { name: "minDate", type: "string", description: "Минимальная дата, ISO \"YYYY-MM-DD\"." },
       { name: "maxDate", type: "string", description: "Максимальная дата, ISO \"YYYY-MM-DD\"." },
+      { name: "displayFormat", type: "enum", default: "dd.mm.yyyy", values: ["dd.mm.yyyy", "yyyy-mm-dd"], description: "Формат отображения и ручного ввода; модель остаётся ISO." },
       { name: "motion", type: "boolean", description: "Анимация календаря; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],

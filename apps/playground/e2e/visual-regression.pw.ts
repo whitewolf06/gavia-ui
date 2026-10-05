@@ -1,9 +1,11 @@
 import { expect, test } from "@playwright/test";
 const themes = [{ name: "white", label: "White" }, { name: "graphite", label: "Graphite" }, { name: "newspaper", label: "Newspaper" }];
+// Keep a configured production subpath when comparing the same built showcase.
+const showcaseUrl = new URL("?view=system", process.env.GAVIA_E2E_BASE_URL ?? "http://127.0.0.1:4173/").href;
 test.beforeEach(async ({ page }) => {
   // Fixed time and locally available fonts prevent unrelated machine/date changes.
   await page.clock.setFixedTime(new Date("2026-10-01T12:00:00Z"));
-  await page.goto("/?view=system", { waitUntil: "domcontentloaded" });
+  await page.goto(showcaseUrl, { waitUntil: "domcontentloaded" });
   await page.getByRole("heading", { name: "Единый язык интерфейсов" }).waitFor({ state: "visible" });
   // Capture the example itself: the showcase header must not cover tall mobile screens.
   // Functional tests retain the actual sticky header and normal viewport.
@@ -11,7 +13,7 @@ test.beforeEach(async ({ page }) => {
   await page.evaluate(() => document.fonts.ready);
 });
 for (const theme of themes) {
-  test(`${theme.name}: six complete screens`, async ({ page }) => {
+  test(`${theme.name}: six complete screens`, async ({ page }, testInfo) => {
     await page.locator(".pg-theme").getByText(theme.label, { exact: true }).click();
     for (const id of ["MaterialList", "ProfileForm", "Preferences", "MaterialDetail", "ProjectWizard", "AttachmentUpload"]) {
       await page.locator(`[data-testid="ds-recipes"] [data-recipe="${id}"]`).first().click();
@@ -19,7 +21,26 @@ for (const theme of themes) {
       await expect(preview).toHaveAttribute("data-recipe", id);
       await expect(preview.locator(":scope > :first-child")).toBeVisible();
       await page.mouse.move(0, 0);
-      await expect(preview).toHaveScreenshot(`${theme.name}-recipe-${id}.png`);
+      let transform: string | undefined;
+      if (testInfo.project.name === "mobile" && id === "AttachmentUpload") {
+        await preview.scrollIntoViewIfNeeded();
+        // This crop checks the drawing, independently of the catalog's position.
+        // A fractional document origin encloses one extra bottom-border pixel.
+        // Preserve dimensions/styles and align only its screenshot raster origin.
+        transform = await preview.evaluate((element: HTMLElement) => {
+          const rect = element.getBoundingClientRect();
+          const original = element.style.transform;
+          const documentTop = rect.top + window.scrollY;
+          element.style.transform = `translateY(${Math.round(documentTop) - documentTop}px)`;
+          return original;
+        });
+      }
+      try {
+        // Compare the entire recipe batch so one difference cannot hide later screens.
+        await expect.soft(preview).toHaveScreenshot(`${theme.name}-recipe-${id}.png`);
+      } finally {
+        if (transform !== undefined) await preview.evaluate((element: HTMLElement, value) => { element.style.transform = value; }, transform);
+      }
     }
     await expect(page.getByTestId("ds-stress")).toHaveScreenshot(`${theme.name}-long-content.png`);
   });

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import WlIcon from "./WlIcon.vue";
-import type { WlIconName } from "../types";
+import type { WlIconInput } from "../types";
 
 const props = withDefaults(
   defineProps<{
     label?: string;
-    icon?: WlIconName;
+    icon?: WlIconInput;
     badge?: number | string;
     active?: boolean;
     disabled?: boolean;

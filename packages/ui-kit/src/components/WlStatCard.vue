@@ -2,11 +2,11 @@
 import { computed } from "vue";
 import WlCard from "./WlCard.vue";
 import WlIcon from "./WlIcon.vue";
-import type { WlIconName, WlStatCardTone } from "../types";
+import type { WlIconInput, WlStatCardTone } from "../types";
 
 const props = withDefaults(
   defineProps<{
-    icon?: WlIconName;
+    icon?: WlIconInput;
     label?: string;
     value?: string;
     description?: string;

@@ -11,8 +11,8 @@ const global: GlobalMountOptions = {
   plugins: [[WlConfig, { pt: createWlPt() }]]
 };
 
-// PrimeVue overlay positioning schedules timers after show/hide;
-// let them fire while the jsdom environment is still alive.
+// Allow pending overlay positioning callbacks to finish
+// while the jsdom environment is still alive.
 afterAll(async () => {
   await new Promise((resolve) => setTimeout(resolve, 300));
 });

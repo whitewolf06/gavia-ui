@@ -2,6 +2,8 @@ export * from "./components";
 export * from "./types";
 export * from "./design-system";
 export { WL_ICON_NAMES } from "./icons.generated";
+export { resolveWlIconName } from "./iconNames";
+export type { WlIconInput } from "./iconNames";
 export * from "./manifest";
 export { createWlPt } from "./theme";
 export type { WlPtConfig, WlPtSection, WlPtCallbackOptions } from "./theme";

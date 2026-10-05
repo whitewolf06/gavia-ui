@@ -35,10 +35,9 @@ describe("component public contract", () => {
     const current = JSON.parse(JSON.stringify(wlManifest, (key, value) =>
       key === "description" ? undefined : value
     )) as typeof baseline;
-    expect(current).toHaveLength(51);
-    expect(current.map((entry) => entry.name)).toEqual(baseline.map((entry) => entry.name));
-    for (const [index, entry] of current.entries()) {
-      const original = baseline[index]!;
+    expect(current.map((entry) => entry.name)).toEqual(expect.arrayContaining(baseline.map((entry) => entry.name)));
+    for (const original of baseline) {
+      const entry = current.find((candidate) => candidate.name === original.name)!;
       const props = original.props.map((previous) => {
         const actual = entry.props.find((prop) => prop.name === previous.name);
         expect(actual, `${entry.name}.${previous.name}: original prop removed`).toBeDefined();
