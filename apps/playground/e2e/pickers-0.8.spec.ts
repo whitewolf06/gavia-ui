@@ -37,7 +37,14 @@ test("time picker uses its labelled native input for keyboard focus and minute p
   await focusTimeViaKeyboard();
   // Native time segments differ in :focus-visible heuristics; the control must still show its focus ring.
   await expect(input).not.toHaveCSS("box-shadow", "none");
-  const normalRing = await input.evaluate((element) => getComputedStyle(element).boxShadow);
+  const normalRing = await input.evaluate((element) => {
+    const expected = document.createElement("span").style;
+    expected.boxShadow = getComputedStyle(element).getPropertyValue("--wl-focus-ring");
+    return expected.boxShadow;
+  });
+  expect(normalRing).not.toBe("");
+  expect(normalRing).not.toBe("none");
+  await expect(input).toHaveCSS("box-shadow", normalRing);
 
   const invalid = explorer.getByRole("checkbox", { name: "invalid", exact: true });
   await invalid.check();
