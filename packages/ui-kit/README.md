@@ -2,7 +2,7 @@
 
 [![Смотреть демо Gavia UI](https://img.shields.io/badge/LIVE_DEMO-2563EB?style=for-the-badge)](https://whitewolf06.github.io/gavia-ui/ "Смотреть демо Gavia UI")
 
-Версия исходников `0.8.1` готовится к выпуску; опубликованная npm-версия пока `0.7.1`. [История изменений](CHANGELOG.md).
+Версия `0.8.1` опубликована в публичном npm 2026-10-06 (Москва). [История изменений](CHANGELOG.md).
 [Переход на Gavia UI](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.7.md).
 
 [Новые компоненты и переход 0.8](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.8.md).
@@ -20,7 +20,7 @@ MIT — бесплатно для личного и коммерческого �
 Установка из публичного npm:
 
 ```bash
-pnpm add gavia-ui vue
+pnpm add gavia-ui@0.8.1 vue
 ```
 
 GitHub-токен не нужен. Актуальное состояние публикации пакета и витрины —
