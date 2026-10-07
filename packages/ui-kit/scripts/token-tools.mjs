@@ -25,7 +25,7 @@ export function contrastRatio(foreground, background) {
 export function validateCatalog(catalog) {
   if (catalog.schemaVersion !== 1) throw new Error("Unsupported token schemaVersion");
   const themes = catalog.themes.map((theme) => theme.name);
-  if (themes.slice().sort().join(",") !== "graphite,newspaper,white"
+  if (themes.slice().sort().join(",") !== "gavia,graphite,newspaper,white"
     || catalog.themes.some((theme) => !theme.label || !theme.description || !["light", "dark"].includes(theme.colorScheme))) {
     throw new Error("Invalid theme catalog");
   }
@@ -129,8 +129,14 @@ export function renderPrimitiveCss(catalog) {
     "@layer wl.components {",
     "  .wl-stack { display: flex; flex-direction: column; gap: var(--wl-space-lg); min-width: 0; }",
     "  .wl-inline { display: flex; flex-wrap: wrap; align-items: center; gap: var(--wl-space-lg); min-width: 0; }",
-    "  .wl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: var(--wl-layout-grid-gap); min-width: 0; }",
-    "  .wl-container { width: 100%; max-width: var(--wl-layout-page-max); margin-inline: auto; padding-inline: var(--wl-layout-page-gutter); }",
+    "  .wl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--wl-layout-grid-min)), 1fr)); gap: var(--wl-layout-grid-gap); min-width: 0; }",
+    "  .wl-container { box-sizing: border-box; min-width: 0; width: 100%; max-width: var(--wl-layout-page-max); margin-inline: auto; padding-inline: var(--wl-layout-page-gutter); }",
+    "  .wl-container--narrow { max-width: var(--wl-layout-reading-max); }",
+    "  .wl-container--fluid { max-width: none; }",
+    "  .wl-container--full { max-width: none; padding-inline: 0; }",
+    "  .wl-rule { width: 100%; margin: 0; border: 0; border-block-start: 1px solid var(--wl-border); }",
+    "  .wl-scroll-area { min-width: 0; max-width: 100%; overflow: auto; }",
+    "  .wl-isolate { isolation: isolate; }",
     "  .wl-surface { background: var(--wl-bg); color: var(--wl-text); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); padding: var(--wl-space-xl); }",
     "  .wl-text-muted { color: var(--wl-text-muted); }",
     "  .wl-visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }"

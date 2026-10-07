@@ -67,6 +67,7 @@
   --wl-font-heading: var(--wl-font);
   --wl-mono: "SF Mono", ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
   --wl-bg: var(--wl-palette-bg);
+  --wl-bg-raised: var(--wl-palette-bg-raised);
   --wl-bg-soft: var(--wl-palette-bg-soft);
   --wl-bg-hover: var(--wl-palette-bg-hover);
   --wl-border: var(--wl-palette-border);
@@ -169,6 +170,7 @@
   --wl-upload-drop-pad-y: var(--wl-metric-upload-drop-pad-y);
   --wl-upload-drop-pad-x: var(--wl-metric-upload-drop-pad-x);
   --wl-palette-bg: var(--wl-gray-0);
+  --wl-palette-bg-raised: var(--wl-palette-bg);
   --wl-palette-bg-soft: var(--wl-gray-50);
   --wl-palette-bg-hover: var(--wl-gray-100);
   --wl-palette-border: var(--wl-gray-200);
@@ -183,6 +185,9 @@
   --wl-palette-accent-soft-hover: var(--wl-blue-75);
   --wl-palette-accent-border-hover: var(--wl-blue-200);
   --wl-palette-on-accent: #ffffff;
+  --wl-palette-action-primary-bg: var(--wl-palette-accent);
+  --wl-palette-action-primary-hover: var(--wl-palette-accent-hover);
+  --wl-palette-action-primary-text: var(--wl-palette-on-accent);
   --wl-palette-success: var(--wl-green-500);
   --wl-palette-success-soft: var(--wl-green-50);
   --wl-palette-success-border: var(--wl-green-100);
@@ -419,6 +424,27 @@
   --wl-motion-normal: var(--wl-dur-4);
   --wl-motion-slow: var(--wl-dur-5);
   --wl-motion-ease: var(--wl-ease);
+  --wl-size-reading-max: 72ch;
+  --wl-layout-reading-max: var(--wl-size-reading-max);
+  --wl-size-grid-min: 240px;
+  --wl-layout-grid-min: var(--wl-size-grid-min);
+  --wl-z-base: 0;
+  --wl-layer-base: var(--wl-z-base);
+  --wl-z-sticky: 50;
+  --wl-layer-sticky: var(--wl-z-sticky);
+  --wl-palette-action-primary-active: var(--wl-palette-action-primary-hover);
+  --wl-palette-accent-warm: var(--wl-palette-warn);
+  --wl-palette-accent-warm-soft: var(--wl-palette-warn-soft);
+  --wl-action-primary-active: var(--wl-action-primary-hover);
+  --wl-accent-warm: var(--wl-palette-accent-warm);
+  --wl-accent-warm-soft: var(--wl-palette-accent-warm-soft);
+  --wl-dimension-btn-radius: var(--wl-radius);
+  --wl-dimension-btn-radius-sm: var(--wl-radius-sm);
+  --wl-dimension-btn-radius-lg: var(--wl-radius-lg);
+  --wl-corner-button: var(--wl-dimension-btn-radius);
+  --wl-corner-button-sm: var(--wl-dimension-btn-radius-sm);
+  --wl-corner-button-lg: var(--wl-dimension-btn-radius-lg);
+  --wl-btn-radius-lg: var(--wl-corner-button-lg);
 }
 @media (prefers-reduced-motion: reduce) {
 :root,

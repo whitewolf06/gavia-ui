@@ -1,0 +1,15 @@
+Gavia 0.600 — 2026-10-06
+
+OFL derivative based on the Onest letter and extended-glyph drawing.
+Letters uniformly narrowed to 96%; source vertical proportions and full kerning retained.
+Restrained non-affine terminal refinements in a/а, e/е and a small straight foot on l.
+All ten numerals independently authored: four Bezier skeletons, four filled designs and two loop/diagonal unions.
+Numeral proportions are set before stroke expansion; no per-character post-stroke stretching.
+Six weights 100/300/400/500/600/700; upright and 7-degree geometric oblique.
+Level wide-bar three with a gentler diagonal and open lower bowl; long vertically cut one with broad foot; short-stemmed four; bracketed seven; broader eight and compact six/nine with flat terminals.
+Common baseline/cap alignment with optical overshoots; expanded heights solved before final translation.
+Only the three drawing changes from 0.5; other nine numerals, letters, non-numeric glyphs and kerning are unchanged.
+Actual Regular ink widths are the 0.1/0.4 midpoint, within rounding; contours are not mathematically blended.
+Default/tnum 600-unit advances; pnum changes placement and advance only.
+No JetBrains Mono outlines imported. Historical specimens are preserved in Git commit 32ec879.
+Source bytecode removed; optical refinement and native rendering review remain.

@@ -9,6 +9,7 @@ import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
 import type { WlThemeName, WlTableColumn } from "../../../packages/ui-kit/src/types";
 import type { WlComponentManifest } from "../../../packages/ui-kit/src/manifest/types";
 import ComponentExplorer from "./design-system/ComponentExplorer.vue";
+import CodePanel from "./design-system/CodePanel.vue";
 import RecipeGallery from "./design-system/RecipeGallery.vue";
 import ContentStress from "./design-system/ContentStress.vue";
 
@@ -35,7 +36,12 @@ const semanticColors = ["bg", "bg-soft", "text", "text-muted", "accent", "succes
 const query = ref("");
 const layer = ref("semantic");
 const category = ref("all");
+const layerOptions = [
+  { label: "Все слои", value: "all" }, { label: "Foundation", value: "foundation" },
+  { label: "Semantic", value: "semantic" }, { label: "Component", value: "component" }
+];
 const categories = [...new Set(wlDesignTokens.map((token) => token.category))].sort();
+const categoryOptions = [{ label: "Все категории", value: "all" }, ...categories.map((value) => ({ label: value, value }))];
 const tokenRows = computed(() => {
   const needle = query.value.toLowerCase().trim();
   return wlDesignTokens.filter((token) => (layer.value === "all" || token.layer === layer.value)
@@ -96,7 +102,7 @@ const tokenCode = `.page {
     <header class="ds-hero wl-stack" data-space="lg">
       <p class="ds-eyebrow">Gavia UI / Design system</p>
       <h1 class="wl-text-display">Единый язык интерфейсов</h1>
-      <p class="ds-lead wl-text-body wl-text-muted">Спокойные поверхности, ясная иерархия и предсказуемое поведение. От значения токена до готового сценария — одна система в трёх темах.</p>
+      <p class="ds-lead wl-text-body wl-text-muted">Спокойные поверхности, ясная иерархия и предсказуемое поведение. От значения токена до готового сценария — одна система в четырёх темах.</p>
       <div class="ds-metrics wl-inline" data-space="xl">
         <span><strong>{{ wlManifest.length }}</strong> компонентов</span>
         <span><strong>{{ wlDesignTokens.length }}</strong> токенов</span>
@@ -156,7 +162,7 @@ const tokenCode = `.page {
           </div>
           <div class="wl-grid" data-space="lg">
             <div class="wl-surface wl-stack" data-space="md"><h3 class="wl-text-subheading">Адаптивная сетка</h3><div class="wl-grid" data-space="sm"><div class="ds-grid-cell">Карточка A</div><div class="ds-grid-cell">Карточка B</div></div><p class="wl-text-small wl-text-muted">Карточки автоматически переходят в одну колонку. Контейнер: {{ resolved('--wl-layout-page-max') }}.</p></div>
-            <pre class="ds-code"><code>{{ layoutCode }}</code></pre>
+            <CodePanel :source="layoutCode" language="html" title="HTML · примитивы компоновки" :expanded="true" />
           </div>
           <div class="wl-inline wl-text-small wl-text-muted" data-space="lg"><span v-for="(width, key) in wlBreakpoints" :key="key">{{ key }}: {{ width }} px</span></div>
           <p class="wl-text-small wl-text-muted">CSS подключается явно: styles/primitives.css. На узком экране сохраняйте логичный порядок чтения, переносите действия и используйте горизонтальную прокрутку только внутри таблиц.</p>
@@ -164,11 +170,11 @@ const tokenCode = `.page {
 
         <section id="ds-tokens" class="ds-section wl-stack" data-space="xl">
           <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">04 / Токены</p><h2 class="wl-text-title">Каталог значений</h2><p class="wl-text-body wl-text-muted">Foundation → semantic → component. Каталог, CSS и типы генерируются из tokens/source.json. Значения ниже соответствуют теме {{ theme }}.</p></div>
-          <pre class="ds-code"><code>{{ tokenCode }}</code></pre>
+          <CodePanel :source="tokenCode" language="css" title="CSS · настройка токенов" :expanded="true" />
           <div class="ds-token-filters wl-grid" data-space="md">
             <WlField label="Поиск токена" id="ds-token-search" v-slot="field"><WlInput :id="field.id" v-model="query" placeholder="Название, описание или значение" type="search" /></WlField>
-            <div class="wl-stack" data-space="sm"><label class="wl-text-label" for="ds-token-layer">Слой</label><select id="ds-token-layer" v-model="layer" class="ds-native-select"><option value="all">Все слои</option><option value="foundation">Foundation</option><option value="semantic">Semantic</option><option value="component">Component</option></select></div>
-            <div class="wl-stack" data-space="sm"><label class="wl-text-label" for="ds-token-category">Категория</label><select id="ds-token-category" v-model="category" class="ds-native-select"><option value="all">Все категории</option><option v-for="item in categories" :key="item" :value="item">{{ item }}</option></select></div>
+            <div class="wl-stack" data-space="sm"><span id="ds-token-layer-label" class="wl-text-label">Слой</span><WlSelect id="ds-token-layer" v-model="layer" aria-labelledby="ds-token-layer-label" :options="layerOptions" option-label="label" option-value="value" /></div>
+            <div class="wl-stack" data-space="sm"><span id="ds-token-category-label" class="wl-text-label">Категория</span><WlSelect id="ds-token-category" v-model="category" aria-labelledby="ds-token-category-label" :options="categoryOptions" option-label="label" option-value="value" /></div>
           </div>
           <p class="wl-text-small wl-text-muted" role="status">Найдено токенов: <strong data-testid="ds-token-count">{{ tokenRows.length }}</strong> / {{ wlDesignTokens.length }}</p>
           <div class="ds-table-scroll ds-token-catalog" tabindex="0" role="region" aria-label="Каталог токенов">
@@ -194,7 +200,7 @@ const tokenCode = `.page {
           </div>
           <WlField label="Компонент" id="ds-component-picker" v-slot="field"><WlSelect :id="field.id" aria-label="Компонент" v-model="selectedComponent" :options="componentOptions" option-label="label" option-value="value" /></WlField>
           <article class="wl-surface wl-stack" data-space="lg" data-testid="ds-contract">
-            <div class="wl-inline" data-space="sm"><h3 class="wl-text-heading">{{ contract.name }}</h3><span class="wl-text-small wl-text-muted">С версии {{ contract.introducedIn }}</span><WlButton size="sm" @click="emit('component', contract.name)">Открыть в витрине</WlButton></div>
+            <div class="wl-inline" data-space="sm"><h3 class="wl-text-heading">{{ contract.name }}</h3><span class="wl-text-small wl-text-muted">С версии {{ contract.introducedIn }}</span><WlButton size="sm" @click="emit('component', contract.name)">Открыть руководство</WlButton></div>
             <p class="wl-text-body wl-text-muted">{{ contract.description }}</p>
             <div v-if="contract.model" class="ds-contract-model wl-text-code">v-model{{ contract.model.name === 'modelValue' ? '' : `:${contract.model.name}` }}: {{ contract.model.type }}</div>
             <div class="ds-table-scroll" tabindex="0" role="region" :aria-label="`Props ${contract.name}`"><table class="ds-token-table"><thead><tr><th scope="col">Prop</th><th scope="col">Тип / значения</th><th scope="col">Назначение</th></tr></thead><tbody><tr v-for="prop in contract.props" :key="prop.name"><th scope="row"><code>{{ prop.name }}{{ prop.required ? ' *' : '' }}</code></th><td><code>{{ prop.values?.join(' | ') ?? prop.type }}</code></td><td class="wl-text-small">{{ prop.description }}<p v-if="prop.default !== undefined" class="wl-text-muted">По умолчанию: {{ JSON.stringify(prop.default) }}</p></td></tr></tbody></table></div>
@@ -263,7 +269,7 @@ const tokenCode = `.page {
 .ds-nav { position: sticky; top: 84px; align-self: start; display: flex; flex-direction: column; gap: 4px; border-left: 1px solid var(--wl-border); padding-left: var(--wl-space-md); }
 .ds-nav a { color: var(--wl-text-muted); font-size: 13px; padding: 8px; text-decoration: none; border-radius: var(--wl-radius-sm); }
 .ds-nav a:hover { color: var(--wl-text); background: var(--wl-bg-soft); }
-.ds-nav a:focus-visible, .ds-native-select:focus-visible, .ds-table-scroll:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 2px; }
+.ds-nav a:focus-visible, .ds-table-scroll:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 2px; }
 .ds-content { min-width: 0; }
 .ds-section { scroll-margin-top: 90px; }
 .ds-section > div:first-child > p:last-child { max-width: 72ch; }
@@ -282,9 +288,7 @@ const tokenCode = `.page {
 .ds-space-row { display: grid; grid-template-columns: 42px 80px 1fr; gap: var(--wl-space-lg); align-items: center; }
 .ds-space-bar { height: 14px; background: var(--wl-accent); border-radius: 2px; }
 .ds-grid-cell { padding: var(--wl-space-lg); border: 1px dashed var(--wl-accent-border); background: var(--wl-accent-soft); border-radius: var(--wl-radius-sm); color: var(--wl-text); font-size: 12px; }
-.ds-code { padding: var(--wl-space-lg); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg-soft); color: var(--wl-text); overflow: auto; font-family: var(--wl-mono); font-size: 12px; line-height: 20px; max-width: 100%; white-space: pre-wrap; overflow-wrap: anywhere; }
 .ds-token-filters { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
-.ds-native-select { height: var(--wl-input-height); border: 1px solid var(--wl-border); border-radius: var(--wl-input-radius); padding-inline: var(--wl-space-md); background: var(--wl-bg); color: var(--wl-text); font: inherit; width: 100%; }
 .ds-table-scroll { overflow: auto; border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); max-width: 100%; }
 .ds-token-catalog { max-height: 560px; }
 .ds-token-catalog thead { position: sticky; top: 0; z-index: 1; }

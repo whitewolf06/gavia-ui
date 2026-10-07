@@ -98,7 +98,7 @@ Foundation → semantic → component — направление ссылок CS
 | `popover` | `content` |
 | `toast` | `message`, `messageContent`, `messageIcon`, `messageText`, `summary`, `detail`, `closeButton`, `closeIcon` |
 | `datatable` | `table`, `thead`, `tbody`, `bodyRow`, `emptyMessage`, `emptyMessageCell`, `mask`, `loadingIcon` |
-| `datepicker` | `dropdown`, `dropdownIcon`, `panel`, `calendarContainer`, `calendar`, `header`, `title`, `selectMonth`, `selectYear`, `pcPrevButton.root`, `pcPrevButton.icon`, `pcNextButton.root`, `pcNextButton.icon`, `dayView`, `monthView`, `month`, `yearView`, `year`, `tableHeaderCell`, `weekDay`, `dayCell`, `day` |
+| `datepicker` | `pcInputText.root`, `startLabel`, `endLabel`, `endInput`, `rangeHint`, `dropdown`, `dropdownIcon`, `panel`, `calendarContainer`, `calendar`, `header`, `title`, `selectMonth`, `selectYear`, `pcPrevButton.root`, `pcPrevButton.icon`, `pcNextButton.root`, `pcNextButton.icon`, `dayView`, `monthView`, `month`, `yearView`, `year`, `tableHeaderCell`, `weekDay`, `dayCell`, `day` |
 
 Разделы применяются там, где соответствующий DOM существует. Например,
 `footer` диалога появляется при наличии слота `footer`.

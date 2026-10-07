@@ -1,3 +1,4 @@
+import { createDocumentationControls, type DocumentationControl } from "./documentation-controls";
 import type { WlComponentManifest, WlPropManifest } from "../../../../packages/ui-kit/src/manifest";
 export interface StateCase { id: string; label: string; props: Record<string, unknown> }
 const axes = new Set(["variant", "size", "density", "presence", "display", "position", "tone", "shape", "displayFormat"]);
@@ -21,4 +22,9 @@ export function stateCases(entry: WlComponentManifest): StateCase[] {
   if (entry.name === "WlSteps") for (const current of [0, 1, 2]) cases.push({ id: `step-${current}`, label: `Шаг: ${current + 1}`, props: { current } });
   if (entry.name === "WlIcon") for (const size of [12, 16, 24, 32]) cases.push({ id: `size-${size}`, label: `size: ${size}`, props: { size } });
   return cases;
+}
+
+/** Typed public controls supported by the canonical documentation SFC. */
+export function documentationControls(entry: WlComponentManifest, source?: string): DocumentationControl[] {
+  return createDocumentationControls(entry, source);
 }

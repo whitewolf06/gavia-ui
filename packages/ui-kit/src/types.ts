@@ -22,6 +22,13 @@ export type WlAvatarPresence = "online" | "busy" | "offline";
 
 export type WlMultiSelectDisplay = "comma" | "chip";
 
+/** DatePicker mode; single keeps the original ISO string model. */
+export type WlDatePickerSelectionMode = "single" | "range";
+/** Inclusive ISO range. A null end means the first date has been selected. */
+export type WlDateRange = [start: string, end: string | null];
+export type WlDatePickerModel<Mode extends WlDatePickerSelectionMode = "single"> =
+  (Mode extends "range" ? WlDateRange : string) | null;
+
 export type WlSwitchSize = "sm" | "md";
 export type WlSpinnerSize = "sm" | "md" | "lg";
 export type WlDrawerPosition = "left" | "right" | "top" | "bottom" | "full";
@@ -161,4 +168,4 @@ export interface WlFileReject {
   reason: WlFileRejectReason;
 }
 
-export type WlThemeName = "white" | "graphite" | "newspaper";
+export type WlThemeName = "gavia" | "white" | "graphite" | "newspaper";

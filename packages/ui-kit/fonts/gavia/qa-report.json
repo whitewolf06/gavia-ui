@@ -1,0 +1,3917 @@
+{
+  "status": "passed",
+  "version": "0.600",
+  "verificationMode": "standalone accepted Gavia 0.600",
+  "historicalCrossVersionComparisons": {
+    "performed": false,
+    "reason": "Only current accepted files and licensed source fonts are loaded; earlier Gavia specimens are not required."
+  },
+  "faces": 12,
+  "commonLineMetrics": [
+    970,
+    -305,
+    0,
+    1009,
+    304
+  ],
+  "requiredCharacters": 186,
+  "fontToolsRoundtrip": true,
+  "harfBuzzShaping": true,
+  "facesDetailed": [
+    {
+      "face": "Gavia-Thin",
+      "cmapCharacters": 780,
+      "glyphs": 886,
+      "ttfBytes": 102528,
+      "woff2Bytes": 37316,
+      "defaultDigits": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ],
+      "proportionalDigits": [
+        542,
+        528,
+        544,
+        540,
+        523,
+        540,
+        558,
+        533,
+        556,
+        558
+      ],
+      "designChecks": {
+        "outlineProvenance": {
+          "independentDigits": 10,
+          "refinedOnestLetters": 5,
+          "unchangedSourceMatchesInCheckedSet": 0,
+          "letterBase": "Onest with shared 0.96 horizontal scale",
+          "fingerprints": {
+            "0": {
+              "sha256": "123571e9bcbf13c252eacaf1b55cab14622d6a89271476a95d9084e0ec643936",
+              "contours": 2,
+              "points": 60
+            },
+            "1": {
+              "sha256": "68680b9817ff045bbaeab17b697108ed227ecf809c3db9db6ed7eb5889ea6ba1",
+              "contours": 1,
+              "points": 11
+            },
+            "2": {
+              "sha256": "f3adcded496ad59859a892f3103ee7c63f395354b3efe6f11b9842042292cfe3",
+              "contours": 1,
+              "points": 53
+            },
+            "3": {
+              "sha256": "42585c6bf0be5c37df19873a3b98be3faedf647357362a2f5c2bc6f83f2d63d3",
+              "contours": 1,
+              "points": 43
+            },
+            "4": {
+              "sha256": "f812016cbdbb7289d0195b736617e371d32b315e33c2946e33c9a64be4c3d046",
+              "contours": 1,
+              "points": 12
+            },
+            "5": {
+              "sha256": "be2ef41d0b4e9fb251843c258a2b978cd5adbe225794bc786765f62a199bed3f",
+              "contours": 1,
+              "points": 62
+            },
+            "6": {
+              "sha256": "8df731ac245ea9a8927566d2f978022a7518def5599f298645c7796e8be41237",
+              "contours": 2,
+              "points": 67
+            },
+            "7": {
+              "sha256": "ae32a738673f8eaa7a8c30807e869c19da7b06ef597abbaf31093b44f86447d2",
+              "contours": 1,
+              "points": 9
+            },
+            "8": {
+              "sha256": "1c45db2556f8e03593da0e15d47d44a2df7f242722013c34cc792e958be97d62",
+              "contours": 3,
+              "points": 100
+            },
+            "9": {
+              "sha256": "4b2c73c6fb39017f1a0a1b430cb154e30bc0f4b81623eea1dd471a67390c753c",
+              "contours": 2,
+              "points": 67
+            },
+            "a": {
+              "sha256": "5bfe0738b346b69fbe6be9ddb28c58e89ff3aa8b3be083b2e0f1b8298bfd57fa",
+              "contours": 2,
+              "points": 51
+            },
+            "а": {
+              "sha256": "7fdabccd3c56679fb0f79caa43c95b152812323056ead9bff1348ec80baf288c",
+              "contours": 2,
+              "points": 51
+            },
+            "e": {
+              "sha256": "71eae82c279529e7a8c14d3bfa4b902162b34318d1a39cfb1e00627ab907d762",
+              "contours": 2,
+              "points": 39
+            },
+            "е": {
+              "sha256": "ab662b576ae59a59307baa3d41226a989084e222d6669ab0132edffffc6af6c7",
+              "contours": 2,
+              "points": 39
+            },
+            "l": {
+              "sha256": "c936d0bb86117b6b7ca02b2b6c0e1eedaab825200c173c1b9069f27fa95a5837",
+              "contours": 1,
+              "points": 6
+            }
+          }
+        },
+        "zeroContours": 2,
+        "consistentScriptPairs": [
+          "o/о"
+        ],
+        "sharedRefinementPairs": [
+          "a/а",
+          "e/е"
+        ],
+        "digitStemConsistency": {
+          "method": "filled outline scan-line intersections after deskew; 128 samples per Bezier",
+          "targetStem": 40,
+          "toleranceUnits": 2.0,
+          "scans": [
+            {
+              "zeroY": 340,
+              "oneY": 250,
+              "zeroLeft": 40.0,
+              "zeroRight": 40.0,
+              "one": 40.0
+            },
+            {
+              "zeroY": 350,
+              "oneY": 260,
+              "zeroLeft": 40.0,
+              "zeroRight": 40.0,
+              "one": 40.0
+            },
+            {
+              "zeroY": 360,
+              "oneY": 270,
+              "zeroLeft": 40.0,
+              "zeroRight": 40.0,
+              "one": 40.0
+            }
+          ]
+        },
+        "extendedOneEntry": {
+          "method": "actual deskewed outline terminal segment relative to straight stem scanned at y250",
+          "stemScanHeight": 250,
+          "verticalTerminal": {
+            "leftProjection": 245.0,
+            "verticalSpan": 45.0,
+            "bottom": 547.0,
+            "top": 592.0
+          },
+          "minimumTerminalSpan": 34.0,
+          "minimumLeftProjection": 125
+        },
+        "threeLevelTopBar": {
+          "method": "actual deskewed outline top-edge segment and vertical filled-ink section at its left quarter",
+          "capHeight": 707,
+          "topEdgeLength": 387.0,
+          "minimumTopEdgeLength": 215.0,
+          "topEdgeY": [
+            707.0,
+            707.0
+          ],
+          "measuredBarThickness": 37.0,
+          "expectedBarThickness": 36.8,
+          "thicknessToleranceUnits": 2.0
+        },
+        "digitVerticalAlignment": {
+          "method": "actual quadratic outline extrema in font units",
+          "toleranceUnits": 1.0,
+          "digits": {
+            "0": {
+              "bottom": -8.0,
+              "top": 715,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "1": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "2": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            },
+            "3": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "4": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "5": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "6": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "7": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "8": {
+              "bottom": -8.0,
+              "top": 715.0,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "9": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            }
+          }
+        },
+        "sourceLetterScale": {
+          "method": "deskewed actual quadratic bounds and advances against independently instantiated Onest",
+          "horizontalScale": 0.96,
+          "toleranceUnits": 1.5,
+          "probes": {
+            "H": {
+              "actualInkWidth": 518.0,
+              "expectedInkWidth": 517.44,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707,
+              "advance": 696,
+              "expectedAdvance": 696
+            },
+            "n": {
+              "actualInkWidth": 429.0,
+              "expectedInkWidth": 429.12,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 534,
+              "sourceTop": 534,
+              "advance": 566,
+              "expectedAdvance": 566
+            },
+            "o": {
+              "actualInkWidth": 479.0,
+              "expectedInkWidth": 479.04,
+              "bottom": -7,
+              "sourceBottom": -7,
+              "top": 534,
+              "sourceTop": 534,
+              "advance": 581,
+              "expectedAdvance": 581
+            },
+            "Н": {
+              "actualInkWidth": 518.0,
+              "expectedInkWidth": 517.44,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707,
+              "advance": 696,
+              "expectedAdvance": 696
+            },
+            "о": {
+              "actualInkWidth": 479.0,
+              "expectedInkWidth": 479.04,
+              "bottom": -7,
+              "sourceBottom": -7,
+              "top": 534,
+              "sourceTop": 534,
+              "advance": 581,
+              "expectedAdvance": 581
+            }
+          }
+        },
+        "approvedReleaseIntegrity": {
+          "acceptedVersion": "0.600",
+          "ttfSha256": "36e9ac3ed86418b3d8a9c7230135ca636552442f40db1ef9a68dbcaf898e9b7f",
+          "woff2Sha256": "b023efaa8e41a16e2619a528d48dd92d216923d04c63dcd6076d1afc0e2b7957",
+          "scope": "complete accepted file content, including all glyphs, metrics and layout tables"
+        }
+      },
+      "checks": "metadata, checksums, TTF/WOFF2 roundtrip, coverage, all glyph components, clipping, HarfBuzz shaping, tnum/pnum, digit provenance, refined letter outlines, measured zero/one stems, extended one entry, level three top bar, unchanged pnum geometry, actual numeral vertical bounds, complete files match accepted 0.600 SHA; source letter widths at 96%; no historical cross-version comparison"
+    },
+    {
+      "face": "Gavia-ThinItalic",
+      "cmapCharacters": 780,
+      "glyphs": 886,
+      "ttfBytes": 106084,
+      "woff2Bytes": 38696,
+      "defaultDigits": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ],
+      "proportionalDigits": [
+        542,
+        528,
+        544,
+        540,
+        523,
+        540,
+        558,
+        533,
+        556,
+        558
+      ],
+      "designChecks": {
+        "outlineProvenance": {
+          "independentDigits": 10,
+          "refinedOnestLetters": 5,
+          "unchangedSourceMatchesInCheckedSet": 0,
+          "letterBase": "Onest with shared 0.96 horizontal scale",
+          "fingerprints": {
+            "0": {
+              "sha256": "bc17c2a3b66646e88dbbcffe20573c19c9e63fa82dcb9afc026dd0fefc5558c9",
+              "contours": 2,
+              "points": 60
+            },
+            "1": {
+              "sha256": "7893f51e74a6b3a35f21aac3115e70cd4d4095bda097bc303edc923974298d71",
+              "contours": 1,
+              "points": 11
+            },
+            "2": {
+              "sha256": "8c1aba8af947969ab0409846a013d6214d74881ada1145f64610a57ec1393f21",
+              "contours": 1,
+              "points": 53
+            },
+            "3": {
+              "sha256": "6bd6b2a34639a30a647fbf594d5061fd7a4a04a2cd5034d86570fb8b1e32dea8",
+              "contours": 1,
+              "points": 43
+            },
+            "4": {
+              "sha256": "c58697b1917c507eabd70f5aabae4417318dc6d347248c56e4e68cc796b07c04",
+              "contours": 1,
+              "points": 12
+            },
+            "5": {
+              "sha256": "4e4f95a6e3378bb712f59011c25c3f95c633f7a5dd8213934983ad087ff84c04",
+              "contours": 1,
+              "points": 62
+            },
+            "6": {
+              "sha256": "78f86efc65264e501395a8282d0dbc963905fc34d0afb609ae6540b3606bd2fd",
+              "contours": 2,
+              "points": 67
+            },
+            "7": {
+              "sha256": "f6ace8bddd70795875a966bd9427ac2a546c1356b9efed19f5688b6c828c3bc4",
+              "contours": 1,
+              "points": 9
+            },
+            "8": {
+              "sha256": "842b9aabe3c1aca9cd81a532a4ce07bff24b0bac75ee7a6767607f2d10b77394",
+              "contours": 3,
+              "points": 100
+            },
+            "9": {
+              "sha256": "08151eea962aa8015e8bb75fb4f7a427c516b6828d38aeffc8bd46ab1d1b14a8",
+              "contours": 2,
+              "points": 67
+            },
+            "a": {
+              "sha256": "1677b7d272a89e967f0b216a6f844c2c66f6313d8b8f38a94507f80b2a693ac9",
+              "contours": 2,
+              "points": 51
+            },
+            "а": {
+              "sha256": "0c163f4b640a7a9d0be27fd8a26295ce8fc363fb9c8722e7b6f00889b1828aeb",
+              "contours": 2,
+              "points": 51
+            },
+            "e": {
+              "sha256": "3d0bd668f2bb35b8622a98eef47832b38a0281c675c22f98eb080b132603b3ee",
+              "contours": 2,
+              "points": 39
+            },
+            "е": {
+              "sha256": "c669cc51764781cb611a63aeca01841cfc6bd558e4163f08a7fbc2c91889f1a9",
+              "contours": 2,
+              "points": 39
+            },
+            "l": {
+              "sha256": "63d1b9dda47b2fa6883956944d3d32893dcdbcf796c2b098681602e462fb76de",
+              "contours": 1,
+              "points": 6
+            }
+          }
+        },
+        "zeroContours": 2,
+        "consistentScriptPairs": [
+          "o/о"
+        ],
+        "sharedRefinementPairs": [
+          "a/а",
+          "e/е"
+        ],
+        "digitStemConsistency": {
+          "method": "filled outline scan-line intersections after deskew; 128 samples per Bezier",
+          "targetStem": 40,
+          "toleranceUnits": 2.0,
+          "scans": [
+            {
+              "zeroY": 340,
+              "oneY": 250,
+              "zeroLeft": 40.0,
+              "zeroRight": 40.0,
+              "one": 40.159
+            },
+            {
+              "zeroY": 350,
+              "oneY": 260,
+              "zeroLeft": 40.0,
+              "zeroRight": 40.0,
+              "one": 40.166
+            },
+            {
+              "zeroY": 360,
+              "oneY": 270,
+              "zeroLeft": 40.0,
+              "zeroRight": 40.0,
+              "one": 40.174
+            }
+          ]
+        },
+        "extendedOneEntry": {
+          "method": "actual deskewed outline terminal segment relative to straight stem scanned at y250",
+          "stemScanHeight": 250,
+          "verticalTerminal": {
+            "leftProjection": 245.14,
+            "verticalSpan": 45.0,
+            "bottom": 547.0,
+            "top": 592.0
+          },
+          "minimumTerminalSpan": 34.0,
+          "minimumLeftProjection": 125
+        },
+        "threeLevelTopBar": {
+          "method": "actual deskewed outline top-edge segment and vertical filled-ink section at its left quarter",
+          "capHeight": 707,
+          "topEdgeLength": 387.0,
+          "minimumTopEdgeLength": 215.422,
+          "topEdgeY": [
+            707.0,
+            707.0
+          ],
+          "measuredBarThickness": 37.0,
+          "expectedBarThickness": 36.8,
+          "thicknessToleranceUnits": 2.0
+        },
+        "digitVerticalAlignment": {
+          "method": "actual quadratic outline extrema in font units",
+          "toleranceUnits": 1.0,
+          "digits": {
+            "0": {
+              "bottom": -8.0,
+              "top": 715,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "1": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "2": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            },
+            "3": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "4": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "5": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "6": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "7": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "8": {
+              "bottom": -8.0,
+              "top": 715.0,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "9": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            }
+          }
+        },
+        "sourceLetterScale": {
+          "method": "deskewed actual quadratic bounds and advances against independently instantiated Onest",
+          "horizontalScale": 0.96,
+          "toleranceUnits": 1.5,
+          "probes": {
+            "H": {
+              "actualInkWidth": 518.191,
+              "expectedInkWidth": 517.44,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707,
+              "advance": 696,
+              "expectedAdvance": 696
+            },
+            "n": {
+              "actualInkWidth": 429.147,
+              "expectedInkWidth": 429.12,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 534,
+              "sourceTop": 534,
+              "advance": 566,
+              "expectedAdvance": 566
+            },
+            "o": {
+              "actualInkWidth": 479.012,
+              "expectedInkWidth": 479.04,
+              "bottom": -7,
+              "sourceBottom": -7,
+              "top": 534,
+              "sourceTop": 534,
+              "advance": 581,
+              "expectedAdvance": 581
+            },
+            "Н": {
+              "actualInkWidth": 518.191,
+              "expectedInkWidth": 517.44,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707,
+              "advance": 696,
+              "expectedAdvance": 696
+            },
+            "о": {
+              "actualInkWidth": 479.012,
+              "expectedInkWidth": 479.04,
+              "bottom": -7,
+              "sourceBottom": -7,
+              "top": 534,
+              "sourceTop": 534,
+              "advance": 581,
+              "expectedAdvance": 581
+            }
+          }
+        },
+        "approvedReleaseIntegrity": {
+          "acceptedVersion": "0.600",
+          "ttfSha256": "90d24966dad25aa26ff6c3cd11cd02680052500e86697abb4e48976b96bb1de1",
+          "woff2Sha256": "404c539aed97c35abeedb2ce201fc39bdaa44b0d3cd10ca41e5222bb1b658482",
+          "scope": "complete accepted file content, including all glyphs, metrics and layout tables"
+        }
+      },
+      "checks": "metadata, checksums, TTF/WOFF2 roundtrip, coverage, all glyph components, clipping, HarfBuzz shaping, tnum/pnum, digit provenance, refined letter outlines, measured zero/one stems, extended one entry, level three top bar, unchanged pnum geometry, actual numeral vertical bounds, complete files match accepted 0.600 SHA; source letter widths at 96%; no historical cross-version comparison"
+    },
+    {
+      "face": "Gavia-Light",
+      "cmapCharacters": 780,
+      "glyphs": 886,
+      "ttfBytes": 102420,
+      "woff2Bytes": 38396,
+      "defaultDigits": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ],
+      "proportionalDigits": [
+        542,
+        528,
+        544,
+        540,
+        523,
+        540,
+        558,
+        533,
+        556,
+        558
+      ],
+      "designChecks": {
+        "outlineProvenance": {
+          "independentDigits": 10,
+          "refinedOnestLetters": 5,
+          "unchangedSourceMatchesInCheckedSet": 0,
+          "letterBase": "Onest with shared 0.96 horizontal scale",
+          "fingerprints": {
+            "0": {
+              "sha256": "9f515fdbe98f3bb2c092d0b7e942fbba2add3836f0935bd984fcb09e1ceb40f4",
+              "contours": 2,
+              "points": 60
+            },
+            "1": {
+              "sha256": "6e5310cb5f1f78e0750a1504e48f96f54ad50d2b8278cb898a4396afdc159026",
+              "contours": 1,
+              "points": 11
+            },
+            "2": {
+              "sha256": "05cea134b1d09cb85d0128fdd2739b2bf3b29f63945814a210d3e10430e77b93",
+              "contours": 1,
+              "points": 45
+            },
+            "3": {
+              "sha256": "9674b60f02ce9e4322ddd183aafed297f9c8040e83ac231556edb76e499ca231",
+              "contours": 1,
+              "points": 42
+            },
+            "4": {
+              "sha256": "70a5d4a68d92b859bd52e58252441f389f6d7fa7670004eb358ab3744242bb37",
+              "contours": 1,
+              "points": 12
+            },
+            "5": {
+              "sha256": "1acacafec1c81afa8754ee2cc360cc9477ff4ea26700307a05d3f8054bde249c",
+              "contours": 1,
+              "points": 56
+            },
+            "6": {
+              "sha256": "1c3075e3a047f1b2143646944d437d19bebcdfafb213d250912740d7fe331e9e",
+              "contours": 2,
+              "points": 67
+            },
+            "7": {
+              "sha256": "846f3b07c4dd9b26047b73aea3f4a8a287056e246f0d64a7133aad3890821e9e",
+              "contours": 1,
+              "points": 9
+            },
+            "8": {
+              "sha256": "2a5e17acc7641f7b6c8bf3795f90d1eb4d7621a060baa927756bd0154af8e0fb",
+              "contours": 3,
+              "points": 92
+            },
+            "9": {
+              "sha256": "c6424db42907a193ea860f4411255909e0f7fe5c5a16e41d0f81826c6db3d6bf",
+              "contours": 2,
+              "points": 67
+            },
+            "a": {
+              "sha256": "2f91e74d4b148faa0b3b00aa42a1cf6efee82dc64de968c81a98aa00d32f5c7d",
+              "contours": 2,
+              "points": 51
+            },
+            "а": {
+              "sha256": "7d9f91d4f4f5f4bc4a0e90c137c0547ef8ca23a22f09dbbec5c21176c4b2fa9f",
+              "contours": 2,
+              "points": 51
+            },
+            "e": {
+              "sha256": "b0367b952dd3788f4ea27b94dc33416fae047b191a22badb6e462876f08cc8c2",
+              "contours": 2,
+              "points": 39
+            },
+            "е": {
+              "sha256": "5ff727011fb15366283dccb4161edce78e57924362c6775347b4346ad3144147",
+              "contours": 2,
+              "points": 39
+            },
+            "l": {
+              "sha256": "3661491ea1092d25089668881e2da51e3323cabf07769998345819d88e08f011",
+              "contours": 1,
+              "points": 6
+            }
+          }
+        },
+        "zeroContours": 2,
+        "consistentScriptPairs": [
+          "o/о"
+        ],
+        "sharedRefinementPairs": [
+          "a/а",
+          "e/е"
+        ],
+        "digitStemConsistency": {
+          "method": "filled outline scan-line intersections after deskew; 128 samples per Bezier",
+          "targetStem": 69,
+          "toleranceUnits": 2.0,
+          "scans": [
+            {
+              "zeroY": 340,
+              "oneY": 250,
+              "zeroLeft": 69.0,
+              "zeroRight": 69.0,
+              "one": 69.0
+            },
+            {
+              "zeroY": 350,
+              "oneY": 260,
+              "zeroLeft": 69.0,
+              "zeroRight": 69.0,
+              "one": 69.0
+            },
+            {
+              "zeroY": 360,
+              "oneY": 270,
+              "zeroLeft": 69.0,
+              "zeroRight": 69.0,
+              "one": 69.0
+            }
+          ]
+        },
+        "extendedOneEntry": {
+          "method": "actual deskewed outline terminal segment relative to straight stem scanned at y250",
+          "stemScanHeight": 250,
+          "verticalTerminal": {
+            "leftProjection": 216.0,
+            "verticalSpan": 80.0,
+            "bottom": 512.0,
+            "top": 592.0
+          },
+          "minimumTerminalSpan": 58.65,
+          "minimumLeftProjection": 125
+        },
+        "threeLevelTopBar": {
+          "method": "actual deskewed outline top-edge segment and vertical filled-ink section at its left quarter",
+          "capHeight": 707,
+          "topEdgeLength": 387.0,
+          "minimumTopEdgeLength": 215.0,
+          "topEdgeY": [
+            707.0,
+            707.0
+          ],
+          "measuredBarThickness": 63.0,
+          "expectedBarThickness": 63.48,
+          "thicknessToleranceUnits": 2.0
+        },
+        "digitVerticalAlignment": {
+          "method": "actual quadratic outline extrema in font units",
+          "toleranceUnits": 1.0,
+          "digits": {
+            "0": {
+              "bottom": -8.0,
+              "top": 715,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "1": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "2": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            },
+            "3": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "4": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "5": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "6": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "7": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "8": {
+              "bottom": -8.0,
+              "top": 715.0,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "9": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            }
+          }
+        },
+        "sourceLetterScale": {
+          "method": "deskewed actual quadratic bounds and advances against independently instantiated Onest",
+          "horizontalScale": 0.96,
+          "toleranceUnits": 1.5,
+          "probes": {
+            "H": {
+              "actualInkWidth": 527.0,
+              "expectedInkWidth": 526.4,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707,
+              "advance": 697,
+              "expectedAdvance": 697
+            },
+            "n": {
+              "actualInkWidth": 438.0,
+              "expectedInkWidth": 437.44,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 533,
+              "sourceTop": 533.333,
+              "advance": 567,
+              "expectedAdvance": 567
+            },
+            "o": {
+              "actualInkWidth": 480.0,
+              "expectedInkWidth": 480.32,
+              "bottom": -6,
+              "sourceBottom": -6.333,
+              "top": 533,
+              "sourceTop": 533.333,
+              "advance": 574,
+              "expectedAdvance": 574
+            },
+            "Н": {
+              "actualInkWidth": 527.0,
+              "expectedInkWidth": 526.4,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707,
+              "advance": 697,
+              "expectedAdvance": 697
+            },
+            "о": {
+              "actualInkWidth": 480.0,
+              "expectedInkWidth": 480.32,
+              "bottom": -6,
+              "sourceBottom": -6.333,
+              "top": 533,
+              "sourceTop": 533.333,
+              "advance": 574,
+              "expectedAdvance": 574
+            }
+          }
+        },
+        "approvedReleaseIntegrity": {
+          "acceptedVersion": "0.600",
+          "ttfSha256": "53685ed8bfc9dea4463cd423f509388a3352784db40e6adf8d12a3640030a73f",
+          "woff2Sha256": "40fb548cd699d2235203d1f9b0f6d2ada227793b73d761fb7e61649727f3c844",
+          "scope": "complete accepted file content, including all glyphs, metrics and layout tables"
+        }
+      },
+      "checks": "metadata, checksums, TTF/WOFF2 roundtrip, coverage, all glyph components, clipping, HarfBuzz shaping, tnum/pnum, digit provenance, refined letter outlines, measured zero/one stems, extended one entry, level three top bar, unchanged pnum geometry, actual numeral vertical bounds, complete files match accepted 0.600 SHA; source letter widths at 96%; no historical cross-version comparison"
+    },
+    {
+      "face": "Gavia-LightItalic",
+      "cmapCharacters": 780,
+      "glyphs": 886,
+      "ttfBytes": 105964,
+      "woff2Bytes": 39952,
+      "defaultDigits": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ],
+      "proportionalDigits": [
+        542,
+        528,
+        544,
+        540,
+        523,
+        540,
+        558,
+        533,
+        556,
+        558
+      ],
+      "designChecks": {
+        "outlineProvenance": {
+          "independentDigits": 10,
+          "refinedOnestLetters": 5,
+          "unchangedSourceMatchesInCheckedSet": 0,
+          "letterBase": "Onest with shared 0.96 horizontal scale",
+          "fingerprints": {
+            "0": {
+              "sha256": "42a90cc2b6c1270c7282f0c1c16f7875438281735ad9794d2c91700784e17350",
+              "contours": 2,
+              "points": 60
+            },
+            "1": {
+              "sha256": "fb206c95b26da8de6ad001c8a4fec7c86d49bca823666a4d3265b7cc0d523238",
+              "contours": 1,
+              "points": 11
+            },
+            "2": {
+              "sha256": "255a219d60b26fa6855592e6de7773b9f5b35811ae6330eaddd31a8585af6d07",
+              "contours": 1,
+              "points": 45
+            },
+            "3": {
+              "sha256": "14a8e452b8664c153c2bb5166d861ecb1ba2c6cf17943ac8d1eef633deaf0d7f",
+              "contours": 1,
+              "points": 42
+            },
+            "4": {
+              "sha256": "ae15673a0aafd1a21d72c8cd14ef65f1dc783e319e956de63858bab47a5ffc0e",
+              "contours": 1,
+              "points": 12
+            },
+            "5": {
+              "sha256": "6625d17eecc8066361bec7f7e94335b5b156ab1ca6212636daa9f5498ae64287",
+              "contours": 1,
+              "points": 56
+            },
+            "6": {
+              "sha256": "696ca466ba84f2487d4bfc5e22bdeec34dfeeed08770f45323e978dee47d8a5c",
+              "contours": 2,
+              "points": 67
+            },
+            "7": {
+              "sha256": "b30addd543a33e5de99762b18474bbbce4c1b96159d7e5fd048b1d83ab1a11af",
+              "contours": 1,
+              "points": 9
+            },
+            "8": {
+              "sha256": "1ad08515897df6a2104f6ec9c7d5e89fc303b3b6ade8787cbf5a638b808852cc",
+              "contours": 3,
+              "points": 92
+            },
+            "9": {
+              "sha256": "7869817cd8cc863bbe5c4d5c2b8c842c320b2df0b4ece22b91f62daa5a3522a8",
+              "contours": 2,
+              "points": 67
+            },
+            "a": {
+              "sha256": "c63a0e1e12688ae44427190cbefc12dc4c48d792162e576f4c692f0b7658ecd1",
+              "contours": 2,
+              "points": 51
+            },
+            "а": {
+              "sha256": "79a6f93a60ebc5bca21be4e9ff4f987e0a21037857cf76345aaabd7938cff7f2",
+              "contours": 2,
+              "points": 51
+            },
+            "e": {
+              "sha256": "5df2720ca978d2fa4976ff5b14cba173b77d5e7c7d2aab98ebab95cb578d1351",
+              "contours": 2,
+              "points": 39
+            },
+            "е": {
+              "sha256": "0a52ebf01d6641c5639a0bbfba2c482dfbe4156e4e2d1b3b141dc399e171886e",
+              "contours": 2,
+              "points": 39
+            },
+            "l": {
+              "sha256": "23f0f7f7fc9441a692b16a4be48b5ea58b8c656f1538da9f644ae0c1cb642261",
+              "contours": 1,
+              "points": 6
+            }
+          }
+        },
+        "zeroContours": 2,
+        "consistentScriptPairs": [
+          "o/о"
+        ],
+        "sharedRefinementPairs": [
+          "a/а",
+          "e/е"
+        ],
+        "digitStemConsistency": {
+          "method": "filled outline scan-line intersections after deskew; 128 samples per Bezier",
+          "targetStem": 69,
+          "toleranceUnits": 2.0,
+          "scans": [
+            {
+              "zeroY": 340,
+              "oneY": 250,
+              "zeroLeft": 69.0,
+              "zeroRight": 69.0,
+              "one": 69.135
+            },
+            {
+              "zeroY": 350,
+              "oneY": 260,
+              "zeroLeft": 69.0,
+              "zeroRight": 69.0,
+              "one": 69.142
+            },
+            {
+              "zeroY": 360,
+              "oneY": 270,
+              "zeroLeft": 69.0,
+              "zeroRight": 69.0,
+              "one": 69.149
+            }
+          ]
+        },
+        "extendedOneEntry": {
+          "method": "actual deskewed outline terminal segment relative to straight stem scanned at y250",
+          "stemScanHeight": 250,
+          "verticalTerminal": {
+            "leftProjection": 215.886,
+            "verticalSpan": 80.0,
+            "bottom": 512.0,
+            "top": 592.0
+          },
+          "minimumTerminalSpan": 58.65,
+          "minimumLeftProjection": 125
+        },
+        "threeLevelTopBar": {
+          "method": "actual deskewed outline top-edge segment and vertical filled-ink section at its left quarter",
+          "capHeight": 707,
+          "topEdgeLength": 387.0,
+          "minimumTopEdgeLength": 215.422,
+          "topEdgeY": [
+            707.0,
+            707.0
+          ],
+          "measuredBarThickness": 63.0,
+          "expectedBarThickness": 63.48,
+          "thicknessToleranceUnits": 2.0
+        },
+        "digitVerticalAlignment": {
+          "method": "actual quadratic outline extrema in font units",
+          "toleranceUnits": 1.0,
+          "digits": {
+            "0": {
+              "bottom": -8.0,
+              "top": 715,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "1": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "2": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            },
+            "3": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "4": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "5": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "6": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "7": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "8": {
+              "bottom": -8.0,
+              "top": 715.0,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "9": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            }
+          }
+        },
+        "sourceLetterScale": {
+          "method": "deskewed actual quadratic bounds and advances against independently instantiated Onest",
+          "horizontalScale": 0.96,
+          "toleranceUnits": 1.5,
+          "probes": {
+            "H": {
+              "actualInkWidth": 527.191,
+              "expectedInkWidth": 526.4,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707,
+              "advance": 697,
+              "expectedAdvance": 697
+            },
+            "n": {
+              "actualInkWidth": 438.0,
+              "expectedInkWidth": 437.44,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 533,
+              "sourceTop": 533.333,
+              "advance": 567,
+              "expectedAdvance": 567
+            },
+            "o": {
+              "actualInkWidth": 481.0,
+              "expectedInkWidth": 480.32,
+              "bottom": -6,
+              "sourceBottom": -6.333,
+              "top": 533,
+              "sourceTop": 533.333,
+              "advance": 574,
+              "expectedAdvance": 574
+            },
+            "Н": {
+              "actualInkWidth": 527.191,
+              "expectedInkWidth": 526.4,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707,
+              "advance": 697,
+              "expectedAdvance": 697
+            },
+            "о": {
+              "actualInkWidth": 481.0,
+              "expectedInkWidth": 480.32,
+              "bottom": -6,
+              "sourceBottom": -6.333,
+              "top": 533,
+              "sourceTop": 533.333,
+              "advance": 574,
+              "expectedAdvance": 574
+            }
+          }
+        },
+        "approvedReleaseIntegrity": {
+          "acceptedVersion": "0.600",
+          "ttfSha256": "f105bb175fd8c640aa666db7c399d8dd85415f5b5f6876d8f71274f376382e7e",
+          "woff2Sha256": "d6d3644b74046f3fec5d98c2e2b5fd810080664845cee54d9aaba45f827feebd",
+          "scope": "complete accepted file content, including all glyphs, metrics and layout tables"
+        }
+      },
+      "checks": "metadata, checksums, TTF/WOFF2 roundtrip, coverage, all glyph components, clipping, HarfBuzz shaping, tnum/pnum, digit provenance, refined letter outlines, measured zero/one stems, extended one entry, level three top bar, unchanged pnum geometry, actual numeral vertical bounds, complete files match accepted 0.600 SHA; source letter widths at 96%; no historical cross-version comparison"
+    },
+    {
+      "face": "Gavia-Regular",
+      "cmapCharacters": 780,
+      "glyphs": 886,
+      "ttfBytes": 102192,
+      "woff2Bytes": 37768,
+      "defaultDigits": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ],
+      "proportionalDigits": [
+        542,
+        528,
+        544,
+        540,
+        523,
+        540,
+        558,
+        533,
+        556,
+        558
+      ],
+      "designChecks": {
+        "outlineProvenance": {
+          "independentDigits": 10,
+          "refinedOnestLetters": 5,
+          "unchangedSourceMatchesInCheckedSet": 0,
+          "letterBase": "Onest with shared 0.96 horizontal scale",
+          "fingerprints": {
+            "0": {
+              "sha256": "0a937b0ba5dd9a154c13b82b0339a4921de9fd0812ffdea1d75b94d196e7a56d",
+              "contours": 2,
+              "points": 56
+            },
+            "1": {
+              "sha256": "83743147ce0f17bf3ef54344abc8b88cc38eeb02eb69a6a30e9c8b8044d5f28a",
+              "contours": 1,
+              "points": 11
+            },
+            "2": {
+              "sha256": "f008de5eb5d77fb99c5faba63f515cc82178f11018cd756f61a166c7452da72d",
+              "contours": 1,
+              "points": 47
+            },
+            "3": {
+              "sha256": "72ffa4be73cb04e4501722a40ba3b6d1156578268990ac64b8d32d320a7d1e06",
+              "contours": 1,
+              "points": 42
+            },
+            "4": {
+              "sha256": "9bfb333e23cdeb8736f9a35008b075043c3443d8c924b815ac471948a8a6c597",
+              "contours": 1,
+              "points": 12
+            },
+            "5": {
+              "sha256": "09885f625a430f402e0baac33c458b8ecb584962354bd77b3d411e8b8b0a4bb8",
+              "contours": 1,
+              "points": 56
+            },
+            "6": {
+              "sha256": "1b92e814586ce13be217d638996314d364e9ad5631e84a50827800b929e018cf",
+              "contours": 2,
+              "points": 67
+            },
+            "7": {
+              "sha256": "21c5bfe08e23e28cdce6be71a624871cb77aba5988e398d2d0e6f06176bea196",
+              "contours": 1,
+              "points": 9
+            },
+            "8": {
+              "sha256": "5d1c4f887da93065b23ee3a73d8ed7842080f5b0192a634a5c2a45ffaf5487c6",
+              "contours": 3,
+              "points": 88
+            },
+            "9": {
+              "sha256": "d3d21616fb3149e29ecd8f364840ae90bc790e8f10321e4424325407c7042d52",
+              "contours": 2,
+              "points": 67
+            },
+            "a": {
+              "sha256": "4012d1b1c288aafc9982b5933e0c30a36d51b2e6ee8b0cc8629b08df706afee6",
+              "contours": 2,
+              "points": 51
+            },
+            "а": {
+              "sha256": "889a1dbeb3052b0d6ed9f45efe1883570bd509dbb09d690ac6c1208a4bf205ee",
+              "contours": 2,
+              "points": 51
+            },
+            "e": {
+              "sha256": "918fda571aeb65d3641f8b690dc94662598a0491071d6607732ec1e688b06741",
+              "contours": 2,
+              "points": 39
+            },
+            "е": {
+              "sha256": "f99056d74565781ec20e98924b18c6ed838d19e4b519ce23cbd76939b5f5ae61",
+              "contours": 2,
+              "points": 39
+            },
+            "l": {
+              "sha256": "e32c4f8ff88a396bfae25df552df7c511a8a67980fab7eb417533881eefe60c2",
+              "contours": 1,
+              "points": 6
+            }
+          }
+        },
+        "zeroContours": 2,
+        "consistentScriptPairs": [
+          "o/о"
+        ],
+        "sharedRefinementPairs": [
+          "a/а",
+          "e/е"
+        ],
+        "digitStemConsistency": {
+          "method": "filled outline scan-line intersections after deskew; 128 samples per Bezier",
+          "targetStem": 84,
+          "toleranceUnits": 2.0,
+          "scans": [
+            {
+              "zeroY": 340,
+              "oneY": 250,
+              "zeroLeft": 84.0,
+              "zeroRight": 84.0,
+              "one": 84.0
+            },
+            {
+              "zeroY": 350,
+              "oneY": 260,
+              "zeroLeft": 84.0,
+              "zeroRight": 84.0,
+              "one": 84.0
+            },
+            {
+              "zeroY": 360,
+              "oneY": 270,
+              "zeroLeft": 84.0,
+              "zeroRight": 84.0,
+              "one": 84.0
+            }
+          ]
+        },
+        "extendedOneEntry": {
+          "method": "actual deskewed outline terminal segment relative to straight stem scanned at y250",
+          "stemScanHeight": 250,
+          "verticalTerminal": {
+            "leftProjection": 201.0,
+            "verticalSpan": 99.0,
+            "bottom": 493.0,
+            "top": 592.0
+          },
+          "minimumTerminalSpan": 71.4,
+          "minimumLeftProjection": 125
+        },
+        "threeLevelTopBar": {
+          "method": "actual deskewed outline top-edge segment and vertical filled-ink section at its left quarter",
+          "capHeight": 707,
+          "topEdgeLength": 387.0,
+          "minimumTopEdgeLength": 215.0,
+          "topEdgeY": [
+            707.0,
+            707.0
+          ],
+          "measuredBarThickness": 77.0,
+          "expectedBarThickness": 77.28,
+          "thicknessToleranceUnits": 2.0
+        },
+        "digitVerticalAlignment": {
+          "method": "actual quadratic outline extrema in font units",
+          "toleranceUnits": 1.0,
+          "digits": {
+            "0": {
+              "bottom": -8.0,
+              "top": 715,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "1": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "2": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            },
+            "3": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "4": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "5": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "6": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "7": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "8": {
+              "bottom": -8.0,
+              "top": 715.0,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "9": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            }
+          }
+        },
+        "regularApprovedInkWidths": {
+          "method": "actual quadratic outline X extrema; Regular upright only",
+          "acceptedVersion": "0.600",
+          "toleranceUnits": 1.5,
+          "scope": "current accepted widths; historical midpoint comparison is not performed",
+          "digits": {
+            "0": {
+              "actualInkWidth": 432,
+              "acceptedInkWidth": 432,
+              "deviationFromAccepted": 0
+            },
+            "1": {
+              "actualInkWidth": 418,
+              "acceptedInkWidth": 418,
+              "deviationFromAccepted": 0
+            },
+            "2": {
+              "actualInkWidth": 434,
+              "acceptedInkWidth": 434,
+              "deviationFromAccepted": 0
+            },
+            "3": {
+              "actualInkWidth": 430,
+              "acceptedInkWidth": 430,
+              "deviationFromAccepted": 0
+            },
+            "4": {
+              "actualInkWidth": 413,
+              "acceptedInkWidth": 413,
+              "deviationFromAccepted": 0
+            },
+            "5": {
+              "actualInkWidth": 430,
+              "acceptedInkWidth": 430,
+              "deviationFromAccepted": 0
+            },
+            "6": {
+              "actualInkWidth": 448.0,
+              "acceptedInkWidth": 448,
+              "deviationFromAccepted": 0.0
+            },
+            "7": {
+              "actualInkWidth": 423,
+              "acceptedInkWidth": 423,
+              "deviationFromAccepted": 0
+            },
+            "8": {
+              "actualInkWidth": 446,
+              "acceptedInkWidth": 446,
+              "deviationFromAccepted": 0
+            },
+            "9": {
+              "actualInkWidth": 448.0,
+              "acceptedInkWidth": 448,
+              "deviationFromAccepted": 0.0
+            }
+          }
+        },
+        "sourceLetterScale": {
+          "method": "deskewed actual quadratic bounds and advances against independently instantiated Onest",
+          "horizontalScale": 0.96,
+          "toleranceUnits": 1.5,
+          "probes": {
+            "H": {
+              "actualInkWidth": 530.0,
+              "expectedInkWidth": 530.88,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707,
+              "advance": 698,
+              "expectedAdvance": 698
+            },
+            "n": {
+              "actualInkWidth": 442.0,
+              "expectedInkWidth": 441.6,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 533,
+              "sourceTop": 533,
+              "advance": 567,
+              "expectedAdvance": 567
+            },
+            "o": {
+              "actualInkWidth": 481.0,
+              "expectedInkWidth": 480.96,
+              "bottom": -6,
+              "sourceBottom": -6,
+              "top": 533,
+              "sourceTop": 533,
+              "advance": 571,
+              "expectedAdvance": 571
+            },
+            "Н": {
+              "actualInkWidth": 530.0,
+              "expectedInkWidth": 530.88,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707,
+              "advance": 698,
+              "expectedAdvance": 698
+            },
+            "о": {
+              "actualInkWidth": 481.0,
+              "expectedInkWidth": 480.96,
+              "bottom": -6,
+              "sourceBottom": -6,
+              "top": 533,
+              "sourceTop": 533,
+              "advance": 571,
+              "expectedAdvance": 571
+            }
+          }
+        },
+        "approvedReleaseIntegrity": {
+          "acceptedVersion": "0.600",
+          "ttfSha256": "c2d1f45a03fd59d81eaea27d28d654ed437de1b70bb8dceff23d9a6dc8aca32d",
+          "woff2Sha256": "8dd3bf1a81fb269f8042c4f0e3373f01a0252c49ba72ad9040efc94f5d4fd528",
+          "scope": "complete accepted file content, including all glyphs, metrics and layout tables"
+        }
+      },
+      "checks": "metadata, checksums, TTF/WOFF2 roundtrip, coverage, all glyph components, clipping, HarfBuzz shaping, tnum/pnum, digit provenance, refined letter outlines, measured zero/one stems, extended one entry, level three top bar, unchanged pnum geometry, actual numeral vertical bounds, complete files match accepted 0.600 SHA; source letter widths at 96%; no historical cross-version comparison"
+    },
+    {
+      "face": "Gavia-RegularItalic",
+      "cmapCharacters": 780,
+      "glyphs": 886,
+      "ttfBytes": 105728,
+      "woff2Bytes": 39204,
+      "defaultDigits": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ],
+      "proportionalDigits": [
+        542,
+        528,
+        544,
+        540,
+        523,
+        540,
+        558,
+        533,
+        556,
+        558
+      ],
+      "designChecks": {
+        "outlineProvenance": {
+          "independentDigits": 10,
+          "refinedOnestLetters": 5,
+          "unchangedSourceMatchesInCheckedSet": 0,
+          "letterBase": "Onest with shared 0.96 horizontal scale",
+          "fingerprints": {
+            "0": {
+              "sha256": "ba0e58432bdd91ab18c4bebb9842c537cf7a89201935da7f86631f8902d06b49",
+              "contours": 2,
+              "points": 56
+            },
+            "1": {
+              "sha256": "8c9210d1d6dfd710246630852a088e51d13783a8ddeafb08b854bf62d6981c6c",
+              "contours": 1,
+              "points": 11
+            },
+            "2": {
+              "sha256": "8e7e716ff46d6566ca9d91a4c245236b7c8dbe1cd4b193e000c62cca182275cf",
+              "contours": 1,
+              "points": 47
+            },
+            "3": {
+              "sha256": "cb596a4bf7de669c6f634d5c5849218b5fb87cea61b06c705147e4901e84d274",
+              "contours": 1,
+              "points": 41
+            },
+            "4": {
+              "sha256": "09c23e65d5c9d218ab3ae6e76b86d3e8100b78bbe0b43ab476c609b85c69dcce",
+              "contours": 1,
+              "points": 12
+            },
+            "5": {
+              "sha256": "940d5136155b2ec46189f9cc78c535dea0fe76d4efb262f6a872359d49ea1d06",
+              "contours": 1,
+              "points": 56
+            },
+            "6": {
+              "sha256": "ee4cfd78850ab4702c2d5655d01178982c381e893411a0efc302be44b22f0a80",
+              "contours": 2,
+              "points": 67
+            },
+            "7": {
+              "sha256": "096885884b5b290c9a39db483fc3946b4e9ec91d118832fc590d555d5e41e1d2",
+              "contours": 1,
+              "points": 9
+            },
+            "8": {
+              "sha256": "54aad3bc7b052c825bfc97f570cb2bb60ce020c189061d4e0d1c27d0f6e8eba7",
+              "contours": 3,
+              "points": 88
+            },
+            "9": {
+              "sha256": "716d3d048e89856884af8f9f5481307167635100eb4bb8ccf3440fe8ad130867",
+              "contours": 2,
+              "points": 67
+            },
+            "a": {
+              "sha256": "8867e43e818fbb4c26a7f8c78d76a6ca7209b0d6ddcb59f3c7717a17614c682f",
+              "contours": 2,
+              "points": 51
+            },
+            "а": {
+              "sha256": "7b8545ddadcbe02d0f420a65b82485488c0881ef4efd5c31b65c62d8026f04d4",
+              "contours": 2,
+              "points": 51
+            },
+            "e": {
+              "sha256": "5d9bfbd06caa74582ca03957dcdab3682151a6601715b13f6944aa948e8d4da7",
+              "contours": 2,
+              "points": 39
+            },
+            "е": {
+              "sha256": "5def9e8b2cce7f85e1caaec00b08ba3202aa832214278d9115f6fe970cecefa6",
+              "contours": 2,
+              "points": 39
+            },
+            "l": {
+              "sha256": "6f8131feb6ca15c99ac30f157ab40c04f57079e4a15eff4f59b1e2dcbabcac9d",
+              "contours": 1,
+              "points": 6
+            }
+          }
+        },
+        "zeroContours": 2,
+        "consistentScriptPairs": [
+          "o/о"
+        ],
+        "sharedRefinementPairs": [
+          "a/а",
+          "e/е"
+        ],
+        "digitStemConsistency": {
+          "method": "filled outline scan-line intersections after deskew; 128 samples per Bezier",
+          "targetStem": 84,
+          "toleranceUnits": 2.0,
+          "scans": [
+            {
+              "zeroY": 340,
+              "oneY": 250,
+              "zeroLeft": 84.0,
+              "zeroRight": 84.0,
+              "one": 83.994
+            },
+            {
+              "zeroY": 350,
+              "oneY": 260,
+              "zeroLeft": 84.0,
+              "zeroRight": 84.0,
+              "one": 83.994
+            },
+            {
+              "zeroY": 360,
+              "oneY": 270,
+              "zeroLeft": 84.0,
+              "zeroRight": 84.0,
+              "one": 83.993
+            }
+          ]
+        },
+        "extendedOneEntry": {
+          "method": "actual deskewed outline terminal segment relative to straight stem scanned at y250",
+          "stemScanHeight": 250,
+          "verticalTerminal": {
+            "leftProjection": 200.34,
+            "verticalSpan": 99.0,
+            "bottom": 493.0,
+            "top": 592.0
+          },
+          "minimumTerminalSpan": 71.4,
+          "minimumLeftProjection": 125
+        },
+        "threeLevelTopBar": {
+          "method": "actual deskewed outline top-edge segment and vertical filled-ink section at its left quarter",
+          "capHeight": 707,
+          "topEdgeLength": 387.0,
+          "minimumTopEdgeLength": 215.422,
+          "topEdgeY": [
+            707.0,
+            707.0
+          ],
+          "measuredBarThickness": 77.0,
+          "expectedBarThickness": 77.28,
+          "thicknessToleranceUnits": 2.0
+        },
+        "digitVerticalAlignment": {
+          "method": "actual quadratic outline extrema in font units",
+          "toleranceUnits": 1.0,
+          "digits": {
+            "0": {
+              "bottom": -8.0,
+              "top": 715,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "1": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "2": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            },
+            "3": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "4": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "5": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "6": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "7": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "8": {
+              "bottom": -8.0,
+              "top": 715.0,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "9": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            }
+          }
+        },
+        "sourceLetterScale": {
+          "method": "deskewed actual quadratic bounds and advances against independently instantiated Onest",
+          "horizontalScale": 0.96,
+          "toleranceUnits": 1.5,
+          "probes": {
+            "H": {
+              "actualInkWidth": 531.0,
+              "expectedInkWidth": 530.88,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707,
+              "advance": 698,
+              "expectedAdvance": 698
+            },
+            "n": {
+              "actualInkWidth": 442.27,
+              "expectedInkWidth": 441.6,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 533,
+              "sourceTop": 533,
+              "advance": 567,
+              "expectedAdvance": 567
+            },
+            "o": {
+              "actualInkWidth": 481.012,
+              "expectedInkWidth": 480.96,
+              "bottom": -6,
+              "sourceBottom": -6,
+              "top": 533,
+              "sourceTop": 533,
+              "advance": 571,
+              "expectedAdvance": 571
+            },
+            "Н": {
+              "actualInkWidth": 531.0,
+              "expectedInkWidth": 530.88,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707,
+              "advance": 698,
+              "expectedAdvance": 698
+            },
+            "о": {
+              "actualInkWidth": 481.012,
+              "expectedInkWidth": 480.96,
+              "bottom": -6,
+              "sourceBottom": -6,
+              "top": 533,
+              "sourceTop": 533,
+              "advance": 571,
+              "expectedAdvance": 571
+            }
+          }
+        },
+        "approvedReleaseIntegrity": {
+          "acceptedVersion": "0.600",
+          "ttfSha256": "b5221c831f85eb1b40a8925e72004f36005d4ffa2993f721c7af950c17c3a686",
+          "woff2Sha256": "683c881ca63ecd89f780fae02b5cbc6868f52ed0f9f1086857494ac60da3acfa",
+          "scope": "complete accepted file content, including all glyphs, metrics and layout tables"
+        }
+      },
+      "checks": "metadata, checksums, TTF/WOFF2 roundtrip, coverage, all glyph components, clipping, HarfBuzz shaping, tnum/pnum, digit provenance, refined letter outlines, measured zero/one stems, extended one entry, level three top bar, unchanged pnum geometry, actual numeral vertical bounds, complete files match accepted 0.600 SHA; source letter widths at 96%; no historical cross-version comparison"
+    },
+    {
+      "face": "Gavia-Medium",
+      "cmapCharacters": 780,
+      "glyphs": 886,
+      "ttfBytes": 102468,
+      "woff2Bytes": 39040,
+      "defaultDigits": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ],
+      "proportionalDigits": [
+        542,
+        528,
+        544,
+        540,
+        523,
+        540,
+        558,
+        533,
+        556,
+        558
+      ],
+      "designChecks": {
+        "outlineProvenance": {
+          "independentDigits": 10,
+          "refinedOnestLetters": 5,
+          "unchangedSourceMatchesInCheckedSet": 0,
+          "letterBase": "Onest with shared 0.96 horizontal scale",
+          "fingerprints": {
+            "0": {
+              "sha256": "fd1ad2bb1169a55313aac39b23b988ffc1336f9b2c1fce78ceddcefe23995db3",
+              "contours": 2,
+              "points": 58
+            },
+            "1": {
+              "sha256": "26cce350e2aa89e14ce1858265988275b065e12184c592b2d3f2b6dd2b63aa07",
+              "contours": 1,
+              "points": 11
+            },
+            "2": {
+              "sha256": "46441fff9eaa867071b38a297e3b94383337e0f16c67453ba33efa57cff530f1",
+              "contours": 1,
+              "points": 47
+            },
+            "3": {
+              "sha256": "b8f8abf2ee32711bea173a3984c9ad879100fc4daf8c89f0e242e7671be40927",
+              "contours": 1,
+              "points": 40
+            },
+            "4": {
+              "sha256": "ad10c1cde412b12a608fc1f34b09f4491e6888b0b46149b3dd841b9a84fa224d",
+              "contours": 1,
+              "points": 12
+            },
+            "5": {
+              "sha256": "dfc88db53b645e689e9f5527dfe3c367d94cd3f69290d487b88db226f619bfe6",
+              "contours": 1,
+              "points": 56
+            },
+            "6": {
+              "sha256": "ad9bbe5469e6900c28e8f677bc476ded9ce48783ae41d4b26878be38f933fc9b",
+              "contours": 2,
+              "points": 67
+            },
+            "7": {
+              "sha256": "0b3e4fcd9f1a40f133948308eb1cc9e2889d6ca94df0289eb5149a1be9e44649",
+              "contours": 1,
+              "points": 9
+            },
+            "8": {
+              "sha256": "1252a1ff2f8fa333b30bf1dad5feddb7604fb231bcb950d8feaa9bf4f15fb73a",
+              "contours": 3,
+              "points": 82
+            },
+            "9": {
+              "sha256": "d35fb6686f3b41774665f408dbb3f7e2fb5ddc745cb470208313dc19bd62e1f0",
+              "contours": 2,
+              "points": 67
+            },
+            "a": {
+              "sha256": "b04d056af0ce78e59a3834e44329640c53f8ec45b1bb1e4ed72be9dd0436f099",
+              "contours": 2,
+              "points": 51
+            },
+            "а": {
+              "sha256": "718890a1d9f7a289f549ece08d69803a83742b31842b01cdeb273c0a7f53346b",
+              "contours": 2,
+              "points": 51
+            },
+            "e": {
+              "sha256": "296f5472f4662833c040d9c21061132b17156633e51b6613aa0abd3c12133178",
+              "contours": 2,
+              "points": 39
+            },
+            "е": {
+              "sha256": "6c236b8ea06dd8a5eb32bb435ece7b05bb361392989c2009fdf56e00d8c3928c",
+              "contours": 2,
+              "points": 39
+            },
+            "l": {
+              "sha256": "93e2abb9cff23223b11daf4dc46cff180178339f4527264f2c66cc639af8172a",
+              "contours": 1,
+              "points": 6
+            }
+          }
+        },
+        "zeroContours": 2,
+        "consistentScriptPairs": [
+          "o/о"
+        ],
+        "sharedRefinementPairs": [
+          "a/а",
+          "e/е"
+        ],
+        "digitStemConsistency": {
+          "method": "filled outline scan-line intersections after deskew; 128 samples per Bezier",
+          "targetStem": 102,
+          "toleranceUnits": 2.0,
+          "scans": [
+            {
+              "zeroY": 340,
+              "oneY": 250,
+              "zeroLeft": 102.0,
+              "zeroRight": 102.0,
+              "one": 102.0
+            },
+            {
+              "zeroY": 350,
+              "oneY": 260,
+              "zeroLeft": 102.0,
+              "zeroRight": 102.0,
+              "one": 102.0
+            },
+            {
+              "zeroY": 360,
+              "oneY": 270,
+              "zeroLeft": 102.0,
+              "zeroRight": 102.0,
+              "one": 102.0
+            }
+          ]
+        },
+        "extendedOneEntry": {
+          "method": "actual deskewed outline terminal segment relative to straight stem scanned at y250",
+          "stemScanHeight": 250,
+          "verticalTerminal": {
+            "leftProjection": 183.0,
+            "verticalSpan": 124.0,
+            "bottom": 468.0,
+            "top": 592.0
+          },
+          "minimumTerminalSpan": 86.7,
+          "minimumLeftProjection": 125
+        },
+        "threeLevelTopBar": {
+          "method": "actual deskewed outline top-edge segment and vertical filled-ink section at its left quarter",
+          "capHeight": 707,
+          "topEdgeLength": 387.0,
+          "minimumTopEdgeLength": 215.0,
+          "topEdgeY": [
+            707.0,
+            707.0
+          ],
+          "measuredBarThickness": 94.0,
+          "expectedBarThickness": 93.84,
+          "thicknessToleranceUnits": 2.0
+        },
+        "digitVerticalAlignment": {
+          "method": "actual quadratic outline extrema in font units",
+          "toleranceUnits": 1.0,
+          "digits": {
+            "0": {
+              "bottom": -8.0,
+              "top": 715,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "1": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "2": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            },
+            "3": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "4": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "5": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "6": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "7": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "8": {
+              "bottom": -8.0,
+              "top": 715.0,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "9": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            }
+          }
+        },
+        "sourceLetterScale": {
+          "method": "deskewed actual quadratic bounds and advances against independently instantiated Onest",
+          "horizontalScale": 0.96,
+          "toleranceUnits": 1.5,
+          "probes": {
+            "H": {
+              "actualInkWidth": 543.0,
+              "expectedInkWidth": 543.553,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707.2,
+              "advance": 703,
+              "expectedAdvance": 703
+            },
+            "n": {
+              "actualInkWidth": 454.0,
+              "expectedInkWidth": 453.697,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 534,
+              "sourceTop": 534.0,
+              "advance": 572,
+              "expectedAdvance": 572
+            },
+            "o": {
+              "actualInkWidth": 490.0,
+              "expectedInkWidth": 489.793,
+              "bottom": -6,
+              "sourceBottom": -6.4,
+              "top": 534,
+              "sourceTop": 534.0,
+              "advance": 572,
+              "expectedAdvance": 572
+            },
+            "Н": {
+              "actualInkWidth": 543.0,
+              "expectedInkWidth": 543.553,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707.2,
+              "advance": 703,
+              "expectedAdvance": 703
+            },
+            "о": {
+              "actualInkWidth": 490.0,
+              "expectedInkWidth": 489.793,
+              "bottom": -6,
+              "sourceBottom": -6.4,
+              "top": 534,
+              "sourceTop": 534.0,
+              "advance": 572,
+              "expectedAdvance": 572
+            }
+          }
+        },
+        "approvedReleaseIntegrity": {
+          "acceptedVersion": "0.600",
+          "ttfSha256": "3c874da4658b1ea0b43ccb2833ca057661e8b8e7e9a8002bcb79870ee4d7e937",
+          "woff2Sha256": "05cd0d5b0033a5d4cf5de6df4b18435d3c1c23a1d7ab9f721efec3b81ab0db56",
+          "scope": "complete accepted file content, including all glyphs, metrics and layout tables"
+        }
+      },
+      "checks": "metadata, checksums, TTF/WOFF2 roundtrip, coverage, all glyph components, clipping, HarfBuzz shaping, tnum/pnum, digit provenance, refined letter outlines, measured zero/one stems, extended one entry, level three top bar, unchanged pnum geometry, actual numeral vertical bounds, complete files match accepted 0.600 SHA; source letter widths at 96%; no historical cross-version comparison"
+    },
+    {
+      "face": "Gavia-MediumItalic",
+      "cmapCharacters": 780,
+      "glyphs": 886,
+      "ttfBytes": 105960,
+      "woff2Bytes": 40636,
+      "defaultDigits": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ],
+      "proportionalDigits": [
+        542,
+        528,
+        544,
+        540,
+        523,
+        540,
+        558,
+        533,
+        556,
+        558
+      ],
+      "designChecks": {
+        "outlineProvenance": {
+          "independentDigits": 10,
+          "refinedOnestLetters": 5,
+          "unchangedSourceMatchesInCheckedSet": 0,
+          "letterBase": "Onest with shared 0.96 horizontal scale",
+          "fingerprints": {
+            "0": {
+              "sha256": "afb95b6d5b012defd850cca0756cb9c59be2de1ff06726e6c353953f01b88be2",
+              "contours": 2,
+              "points": 58
+            },
+            "1": {
+              "sha256": "597a278f0e3338a39e119492d1af2364444d81d939e545d952f00ea7581d920e",
+              "contours": 1,
+              "points": 11
+            },
+            "2": {
+              "sha256": "db082e84d45f0e2f1e812a3565778cfb1a7f5262d87c93b92ce85fd565cefebf",
+              "contours": 1,
+              "points": 47
+            },
+            "3": {
+              "sha256": "523936cfac57b40675efc672d302310357ea5dcdae3dbc1542ae273d6986f144",
+              "contours": 1,
+              "points": 40
+            },
+            "4": {
+              "sha256": "148a2a38223345282dd3596ce50369c1cf0b765f9cda3629a79f3a69193e31f5",
+              "contours": 1,
+              "points": 12
+            },
+            "5": {
+              "sha256": "3eb9d6477326cc0cfe4a63dd12b13dd4a9878ab20f044b454c807d7ed496d670",
+              "contours": 1,
+              "points": 56
+            },
+            "6": {
+              "sha256": "9544539473a60c69909defb74bb994d78c40c90c0905350d077dd32717fe510e",
+              "contours": 2,
+              "points": 67
+            },
+            "7": {
+              "sha256": "c9f942bdae9647048660f335ba6c3e0ebf8c35217d8b398a27ae0d2d849d90a9",
+              "contours": 1,
+              "points": 9
+            },
+            "8": {
+              "sha256": "3257fc32fc34002a8f4aeca35ba12e9c37a5d38c450bc473c6253d64059e2c1c",
+              "contours": 3,
+              "points": 82
+            },
+            "9": {
+              "sha256": "9c4314d6206de377190f0eea781f702166af689e6240542b52304cfad9ac36aa",
+              "contours": 2,
+              "points": 67
+            },
+            "a": {
+              "sha256": "1c1bd425fe91bdf33ff781483ff819cf6e9bcda4be5cc247854712f9c86a09e9",
+              "contours": 2,
+              "points": 51
+            },
+            "а": {
+              "sha256": "f5b365a9dd14c3d29ec056852ecb0d72dd004e3ae243c9c3b94789e21e2eab49",
+              "contours": 2,
+              "points": 51
+            },
+            "e": {
+              "sha256": "a7580aac944da68416a72e651ac76938cc2b9137951d4860d69586e72092f2f9",
+              "contours": 2,
+              "points": 39
+            },
+            "е": {
+              "sha256": "2eb745634aa0a4408893fd9bd382328c8c8416d46880f9361a3b4f35a58b8ff5",
+              "contours": 2,
+              "points": 39
+            },
+            "l": {
+              "sha256": "e1ce55687be54713e8247107f32acaaaa93f33fa668c77aaafc2918748cbbcab",
+              "contours": 1,
+              "points": 6
+            }
+          }
+        },
+        "zeroContours": 2,
+        "consistentScriptPairs": [
+          "o/о"
+        ],
+        "sharedRefinementPairs": [
+          "a/а",
+          "e/е"
+        ],
+        "digitStemConsistency": {
+          "method": "filled outline scan-line intersections after deskew; 128 samples per Bezier",
+          "targetStem": 102,
+          "toleranceUnits": 2.0,
+          "scans": [
+            {
+              "zeroY": 340,
+              "oneY": 250,
+              "zeroLeft": 102.0,
+              "zeroRight": 102.0,
+              "one": 102.054
+            },
+            {
+              "zeroY": 350,
+              "oneY": 260,
+              "zeroLeft": 102.0,
+              "zeroRight": 102.0,
+              "one": 102.058
+            },
+            {
+              "zeroY": 360,
+              "oneY": 270,
+              "zeroLeft": 102.0,
+              "zeroRight": 102.0,
+              "one": 102.061
+            }
+          ]
+        },
+        "extendedOneEntry": {
+          "method": "actual deskewed outline terminal segment relative to straight stem scanned at y250",
+          "stemScanHeight": 250,
+          "verticalTerminal": {
+            "leftProjection": 183.412,
+            "verticalSpan": 124.0,
+            "bottom": 468.0,
+            "top": 592.0
+          },
+          "minimumTerminalSpan": 86.7,
+          "minimumLeftProjection": 125
+        },
+        "threeLevelTopBar": {
+          "method": "actual deskewed outline top-edge segment and vertical filled-ink section at its left quarter",
+          "capHeight": 707,
+          "topEdgeLength": 387.0,
+          "minimumTopEdgeLength": 215.422,
+          "topEdgeY": [
+            707.0,
+            707.0
+          ],
+          "measuredBarThickness": 94.0,
+          "expectedBarThickness": 93.84,
+          "thicknessToleranceUnits": 2.0
+        },
+        "digitVerticalAlignment": {
+          "method": "actual quadratic outline extrema in font units",
+          "toleranceUnits": 1.0,
+          "digits": {
+            "0": {
+              "bottom": -8.0,
+              "top": 715,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "1": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "2": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            },
+            "3": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "4": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "5": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "6": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "7": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "8": {
+              "bottom": -8.0,
+              "top": 715.0,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "9": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            }
+          }
+        },
+        "sourceLetterScale": {
+          "method": "deskewed actual quadratic bounds and advances against independently instantiated Onest",
+          "horizontalScale": 0.96,
+          "toleranceUnits": 1.5,
+          "probes": {
+            "H": {
+              "actualInkWidth": 543.191,
+              "expectedInkWidth": 543.553,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707.2,
+              "advance": 703,
+              "expectedAdvance": 703
+            },
+            "n": {
+              "actualInkWidth": 454.27,
+              "expectedInkWidth": 453.697,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 534,
+              "sourceTop": 534.0,
+              "advance": 572,
+              "expectedAdvance": 572
+            },
+            "o": {
+              "actualInkWidth": 489.153,
+              "expectedInkWidth": 489.793,
+              "bottom": -6,
+              "sourceBottom": -6.4,
+              "top": 534,
+              "sourceTop": 534.0,
+              "advance": 572,
+              "expectedAdvance": 572
+            },
+            "Н": {
+              "actualInkWidth": 543.191,
+              "expectedInkWidth": 543.553,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707.2,
+              "advance": 703,
+              "expectedAdvance": 703
+            },
+            "о": {
+              "actualInkWidth": 489.153,
+              "expectedInkWidth": 489.793,
+              "bottom": -6,
+              "sourceBottom": -6.4,
+              "top": 534,
+              "sourceTop": 534.0,
+              "advance": 572,
+              "expectedAdvance": 572
+            }
+          }
+        },
+        "approvedReleaseIntegrity": {
+          "acceptedVersion": "0.600",
+          "ttfSha256": "320abe0dc51e6ef52be9798fc1abadebcac401560649018e2f24447eb21c81fb",
+          "woff2Sha256": "8fadd7b094ee2aeb1bd9ec392712b62d9e6f1a1febea8820589857dcf5ed0385",
+          "scope": "complete accepted file content, including all glyphs, metrics and layout tables"
+        }
+      },
+      "checks": "metadata, checksums, TTF/WOFF2 roundtrip, coverage, all glyph components, clipping, HarfBuzz shaping, tnum/pnum, digit provenance, refined letter outlines, measured zero/one stems, extended one entry, level three top bar, unchanged pnum geometry, actual numeral vertical bounds, complete files match accepted 0.600 SHA; source letter widths at 96%; no historical cross-version comparison"
+    },
+    {
+      "face": "Gavia-SemiBold",
+      "cmapCharacters": 780,
+      "glyphs": 886,
+      "ttfBytes": 102364,
+      "woff2Bytes": 39160,
+      "defaultDigits": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ],
+      "proportionalDigits": [
+        542,
+        528,
+        544,
+        540,
+        523,
+        540,
+        558,
+        533,
+        556,
+        558
+      ],
+      "designChecks": {
+        "outlineProvenance": {
+          "independentDigits": 10,
+          "refinedOnestLetters": 5,
+          "unchangedSourceMatchesInCheckedSet": 0,
+          "letterBase": "Onest with shared 0.96 horizontal scale",
+          "fingerprints": {
+            "0": {
+              "sha256": "c85d28b363f60cf5cf0147636496874666eb112072bc05ff75a396839b03932e",
+              "contours": 2,
+              "points": 58
+            },
+            "1": {
+              "sha256": "f596f7afb54f2ef7b79f38009d5a5ed305df7952c1bac7b6c809b828685da3a6",
+              "contours": 1,
+              "points": 11
+            },
+            "2": {
+              "sha256": "642a0fb1c158eb60216e9a899e42cc18f1e0cf61af389849dba223edf49dac73",
+              "contours": 1,
+              "points": 47
+            },
+            "3": {
+              "sha256": "bad89f257aab254064fd3c03d35d712d0500b3409df706d908a925b044ba414a",
+              "contours": 1,
+              "points": 40
+            },
+            "4": {
+              "sha256": "500d2596086c196524aca7fba9e46d1cb9cbc527ec5dc9fc6239019c57d26c2e",
+              "contours": 1,
+              "points": 12
+            },
+            "5": {
+              "sha256": "214670474caae389eca96ae256ecd08ca0b1a646c867659461a1c7811de06763",
+              "contours": 1,
+              "points": 58
+            },
+            "6": {
+              "sha256": "f2c194e25d2487853e5410e4e536b9553146331903da19d5f9fcdaec98e096dd",
+              "contours": 2,
+              "points": 58
+            },
+            "7": {
+              "sha256": "95e9bd077a67c7a68e7b99e91ab87f67d4703ae516a5b596a55bd8e238e0ca11",
+              "contours": 1,
+              "points": 9
+            },
+            "8": {
+              "sha256": "15b68aace796c53944378a7c6ec3d24261c706b63f87fad85e4a8085924021c3",
+              "contours": 3,
+              "points": 82
+            },
+            "9": {
+              "sha256": "db7dfd8b34b35344fcc303b66bc5610ca7da9e6b8e22c105966e4cf5e1375e75",
+              "contours": 2,
+              "points": 58
+            },
+            "a": {
+              "sha256": "807aa82a3d510a916589d211ca306a2d957208db49a4cdb650630f401896b10d",
+              "contours": 2,
+              "points": 51
+            },
+            "а": {
+              "sha256": "ce0ee2c99d9c5adbbe8d0e2ccd5d6300324517192ce4de7b0a799fa66a9a9088",
+              "contours": 2,
+              "points": 51
+            },
+            "e": {
+              "sha256": "204d581c0b4af0e11f59a953c6a94adb4bf0946eadd4140480bc275166925d44",
+              "contours": 2,
+              "points": 39
+            },
+            "е": {
+              "sha256": "b9ca0cb6b9a5f08499dcd801376bb361191f7585b33fb8558ab73bebc45058bc",
+              "contours": 2,
+              "points": 39
+            },
+            "l": {
+              "sha256": "b96ad0b1049fceec871dee1024feb6578455b6222f5e62deeb436268c23bcbc1",
+              "contours": 1,
+              "points": 6
+            }
+          }
+        },
+        "zeroContours": 2,
+        "consistentScriptPairs": [
+          "o/о"
+        ],
+        "sharedRefinementPairs": [
+          "a/а",
+          "e/е"
+        ],
+        "digitStemConsistency": {
+          "method": "filled outline scan-line intersections after deskew; 128 samples per Bezier",
+          "targetStem": 120,
+          "toleranceUnits": 2.0,
+          "scans": [
+            {
+              "zeroY": 340,
+              "oneY": 250,
+              "zeroLeft": 120.0,
+              "zeroRight": 120.0,
+              "one": 120.0
+            },
+            {
+              "zeroY": 350,
+              "oneY": 260,
+              "zeroLeft": 120.0,
+              "zeroRight": 120.0,
+              "one": 120.0
+            },
+            {
+              "zeroY": 360,
+              "oneY": 270,
+              "zeroLeft": 120.0,
+              "zeroRight": 120.0,
+              "one": 120.0
+            }
+          ]
+        },
+        "extendedOneEntry": {
+          "method": "actual deskewed outline terminal segment relative to straight stem scanned at y250",
+          "stemScanHeight": 250,
+          "verticalTerminal": {
+            "leftProjection": 165.0,
+            "verticalSpan": 152.0,
+            "bottom": 440.0,
+            "top": 592.0
+          },
+          "minimumTerminalSpan": 102.0,
+          "minimumLeftProjection": 125
+        },
+        "threeLevelTopBar": {
+          "method": "actual deskewed outline top-edge segment and vertical filled-ink section at its left quarter",
+          "capHeight": 707,
+          "topEdgeLength": 387.0,
+          "minimumTopEdgeLength": 215.0,
+          "topEdgeY": [
+            707.0,
+            707.0
+          ],
+          "measuredBarThickness": 110.0,
+          "expectedBarThickness": 110.4,
+          "thicknessToleranceUnits": 2.0
+        },
+        "digitVerticalAlignment": {
+          "method": "actual quadratic outline extrema in font units",
+          "toleranceUnits": 1.0,
+          "digits": {
+            "0": {
+              "bottom": -8.0,
+              "top": 715,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "1": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "2": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            },
+            "3": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "4": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "5": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "6": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "7": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "8": {
+              "bottom": -8.0,
+              "top": 715.0,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "9": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            }
+          }
+        },
+        "sourceLetterScale": {
+          "method": "deskewed actual quadratic bounds and advances against independently instantiated Onest",
+          "horizontalScale": 0.96,
+          "toleranceUnits": 1.5,
+          "probes": {
+            "H": {
+              "actualInkWidth": 556.0,
+              "expectedInkWidth": 556.226,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707.4,
+              "advance": 708,
+              "expectedAdvance": 708
+            },
+            "n": {
+              "actualInkWidth": 465.0,
+              "expectedInkWidth": 465.793,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 535,
+              "sourceTop": 535.0,
+              "advance": 576,
+              "expectedAdvance": 576
+            },
+            "o": {
+              "actualInkWidth": 499.0,
+              "expectedInkWidth": 498.625,
+              "bottom": -7,
+              "sourceBottom": -6.8,
+              "top": 535,
+              "sourceTop": 535.0,
+              "advance": 573,
+              "expectedAdvance": 573
+            },
+            "Н": {
+              "actualInkWidth": 556.0,
+              "expectedInkWidth": 556.226,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707.4,
+              "advance": 708,
+              "expectedAdvance": 708
+            },
+            "о": {
+              "actualInkWidth": 499.0,
+              "expectedInkWidth": 498.625,
+              "bottom": -7,
+              "sourceBottom": -6.8,
+              "top": 535,
+              "sourceTop": 535.0,
+              "advance": 573,
+              "expectedAdvance": 573
+            }
+          }
+        },
+        "approvedReleaseIntegrity": {
+          "acceptedVersion": "0.600",
+          "ttfSha256": "932504e72eb1c1644b497dee990c8318f2e1220d8a438c7d2636382a4adf6d48",
+          "woff2Sha256": "fae4307cc7d4bf44c48e651569fde5dc124837a31b8d45e200713064624297f2",
+          "scope": "complete accepted file content, including all glyphs, metrics and layout tables"
+        }
+      },
+      "checks": "metadata, checksums, TTF/WOFF2 roundtrip, coverage, all glyph components, clipping, HarfBuzz shaping, tnum/pnum, digit provenance, refined letter outlines, measured zero/one stems, extended one entry, level three top bar, unchanged pnum geometry, actual numeral vertical bounds, complete files match accepted 0.600 SHA; source letter widths at 96%; no historical cross-version comparison"
+    },
+    {
+      "face": "Gavia-SemiBoldItalic",
+      "cmapCharacters": 780,
+      "glyphs": 886,
+      "ttfBytes": 105836,
+      "woff2Bytes": 40884,
+      "defaultDigits": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ],
+      "proportionalDigits": [
+        542,
+        528,
+        544,
+        540,
+        523,
+        540,
+        558,
+        533,
+        556,
+        558
+      ],
+      "designChecks": {
+        "outlineProvenance": {
+          "independentDigits": 10,
+          "refinedOnestLetters": 5,
+          "unchangedSourceMatchesInCheckedSet": 0,
+          "letterBase": "Onest with shared 0.96 horizontal scale",
+          "fingerprints": {
+            "0": {
+              "sha256": "628a61b4fc3fc683829b504b36741838f5ae48b6a45d4c545ca562f36f0816f3",
+              "contours": 2,
+              "points": 58
+            },
+            "1": {
+              "sha256": "6b1fd48f5c3fbc9a516d18b18ca7c9c4ccabe783f402b408bedb13c4a507d760",
+              "contours": 1,
+              "points": 11
+            },
+            "2": {
+              "sha256": "62392b05e84a5690aa94e7fb1c68ebb543570a1ae4a5ef711b5a35a6fd4de947",
+              "contours": 1,
+              "points": 47
+            },
+            "3": {
+              "sha256": "121768f0be5868ebcd50d8b6a931e2a35a1092e757a9032a5b6e420ba6012c30",
+              "contours": 1,
+              "points": 40
+            },
+            "4": {
+              "sha256": "4ed0eaa26950c8821ac8e31f00573db96a96a1de574ee12400a7a91a909c49e3",
+              "contours": 1,
+              "points": 12
+            },
+            "5": {
+              "sha256": "321a9da6eca337386a757df3c96548f3c073ba8e93ca52ff229f591a0c764774",
+              "contours": 1,
+              "points": 58
+            },
+            "6": {
+              "sha256": "31678b99cdd67897b3030c75f1bce2db055358084293e3bc186696a914bc3eca",
+              "contours": 2,
+              "points": 58
+            },
+            "7": {
+              "sha256": "49ad1fb72e6a731328b1539b9a3e6c940fa6da4337f0eae05772ca227126cd4e",
+              "contours": 1,
+              "points": 9
+            },
+            "8": {
+              "sha256": "c7ecf8b6d6ced26d6e3936e4d95a5130f7ddbefb697198e0ce01dd1b4a94e501",
+              "contours": 3,
+              "points": 82
+            },
+            "9": {
+              "sha256": "c0ad502549f1487b9c2b803411bf62fc08e40b4566f5b0ee2953726c9afea179",
+              "contours": 2,
+              "points": 58
+            },
+            "a": {
+              "sha256": "2123bb3b2c2789c9c7af5a82e5b2506b4a7a2758e903b580a0dab30fa14f17f3",
+              "contours": 2,
+              "points": 51
+            },
+            "а": {
+              "sha256": "b0b3d69dbf82d46b6850b06dadf84c76b8f80abd7c33c4ba0c95fa6962515a6e",
+              "contours": 2,
+              "points": 51
+            },
+            "e": {
+              "sha256": "7611ea7fb68f1d79255392ea60b29c5e5fc5f5d770b7506f939a2addf6954ace",
+              "contours": 2,
+              "points": 39
+            },
+            "е": {
+              "sha256": "55fb2db7076f5cc230616be8e1d5e909f797fb1bd765084087d2736c936cb41e",
+              "contours": 2,
+              "points": 39
+            },
+            "l": {
+              "sha256": "80d38dca97f8cb76e76cfbe5f8685e3e488fb6c267389235b62e2071cf9288f7",
+              "contours": 1,
+              "points": 6
+            }
+          }
+        },
+        "zeroContours": 2,
+        "consistentScriptPairs": [
+          "o/о"
+        ],
+        "sharedRefinementPairs": [
+          "a/а",
+          "e/е"
+        ],
+        "digitStemConsistency": {
+          "method": "filled outline scan-line intersections after deskew; 128 samples per Bezier",
+          "targetStem": 120,
+          "toleranceUnits": 2.0,
+          "scans": [
+            {
+              "zeroY": 340,
+              "oneY": 250,
+              "zeroLeft": 120.0,
+              "zeroRight": 120.0,
+              "one": 120.001
+            },
+            {
+              "zeroY": 350,
+              "oneY": 260,
+              "zeroLeft": 120.0,
+              "zeroRight": 120.0,
+              "one": 120.001
+            },
+            {
+              "zeroY": 360,
+              "oneY": 270,
+              "zeroLeft": 120.0,
+              "zeroRight": 120.0,
+              "one": 120.001
+            }
+          ]
+        },
+        "extendedOneEntry": {
+          "method": "actual deskewed outline terminal segment relative to straight stem scanned at y250",
+          "stemScanHeight": 250,
+          "verticalTerminal": {
+            "leftProjection": 165.279,
+            "verticalSpan": 152.0,
+            "bottom": 440.0,
+            "top": 592.0
+          },
+          "minimumTerminalSpan": 102.0,
+          "minimumLeftProjection": 125
+        },
+        "threeLevelTopBar": {
+          "method": "actual deskewed outline top-edge segment and vertical filled-ink section at its left quarter",
+          "capHeight": 707,
+          "topEdgeLength": 387.0,
+          "minimumTopEdgeLength": 215.422,
+          "topEdgeY": [
+            707.0,
+            707.0
+          ],
+          "measuredBarThickness": 110.0,
+          "expectedBarThickness": 110.4,
+          "thicknessToleranceUnits": 2.0
+        },
+        "digitVerticalAlignment": {
+          "method": "actual quadratic outline extrema in font units",
+          "toleranceUnits": 1.0,
+          "digits": {
+            "0": {
+              "bottom": -8.0,
+              "top": 715,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "1": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "2": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            },
+            "3": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "4": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "5": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "6": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "7": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "8": {
+              "bottom": -8.0,
+              "top": 715.0,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "9": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            }
+          }
+        },
+        "sourceLetterScale": {
+          "method": "deskewed actual quadratic bounds and advances against independently instantiated Onest",
+          "horizontalScale": 0.96,
+          "toleranceUnits": 1.5,
+          "probes": {
+            "H": {
+              "actualInkWidth": 556.191,
+              "expectedInkWidth": 556.226,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707.4,
+              "advance": 708,
+              "expectedAdvance": 708
+            },
+            "n": {
+              "actualInkWidth": 466.0,
+              "expectedInkWidth": 465.793,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 535,
+              "sourceTop": 535.0,
+              "advance": 576,
+              "expectedAdvance": 576
+            },
+            "o": {
+              "actualInkWidth": 498.247,
+              "expectedInkWidth": 498.625,
+              "bottom": -7,
+              "sourceBottom": -6.8,
+              "top": 535,
+              "sourceTop": 535.0,
+              "advance": 573,
+              "expectedAdvance": 573
+            },
+            "Н": {
+              "actualInkWidth": 556.191,
+              "expectedInkWidth": 556.226,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 707,
+              "sourceTop": 707.4,
+              "advance": 708,
+              "expectedAdvance": 708
+            },
+            "о": {
+              "actualInkWidth": 498.247,
+              "expectedInkWidth": 498.625,
+              "bottom": -7,
+              "sourceBottom": -6.8,
+              "top": 535,
+              "sourceTop": 535.0,
+              "advance": 573,
+              "expectedAdvance": 573
+            }
+          }
+        },
+        "approvedReleaseIntegrity": {
+          "acceptedVersion": "0.600",
+          "ttfSha256": "4a0ab5488d76a08f583e221e0458c8d10f2540371e5c4f7c6ca3c25475d74ea4",
+          "woff2Sha256": "76a2c69289f9efc2613306f0d904264b3c1cde622a1bb2faf3e83812cdcfbf2e",
+          "scope": "complete accepted file content, including all glyphs, metrics and layout tables"
+        }
+      },
+      "checks": "metadata, checksums, TTF/WOFF2 roundtrip, coverage, all glyph components, clipping, HarfBuzz shaping, tnum/pnum, digit provenance, refined letter outlines, measured zero/one stems, extended one entry, level three top bar, unchanged pnum geometry, actual numeral vertical bounds, complete files match accepted 0.600 SHA; source letter widths at 96%; no historical cross-version comparison"
+    },
+    {
+      "face": "Gavia-Bold",
+      "cmapCharacters": 780,
+      "glyphs": 886,
+      "ttfBytes": 102300,
+      "woff2Bytes": 39116,
+      "defaultDigits": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ],
+      "proportionalDigits": [
+        542,
+        528,
+        544,
+        540,
+        523,
+        540,
+        558,
+        533,
+        556,
+        558
+      ],
+      "designChecks": {
+        "outlineProvenance": {
+          "independentDigits": 10,
+          "refinedOnestLetters": 5,
+          "unchangedSourceMatchesInCheckedSet": 0,
+          "letterBase": "Onest with shared 0.96 horizontal scale",
+          "fingerprints": {
+            "0": {
+              "sha256": "c761dea0ce14891f5a458c19beab06297951ace89f981da04cc97c2f97932478",
+              "contours": 2,
+              "points": 60
+            },
+            "1": {
+              "sha256": "89d846a1e8a4589d3dd51765bf21db42adbdbdee023bebb8db095a3c2d4b7663",
+              "contours": 1,
+              "points": 11
+            },
+            "2": {
+              "sha256": "674299a295600b5d9b77e4b962f98db6032fcdcdf19a188f8b95816bfef0416d",
+              "contours": 1,
+              "points": 45
+            },
+            "3": {
+              "sha256": "289ccfcff360af1e4e755026103902feec5cb7605c345910eb2473e15dc8b99a",
+              "contours": 1,
+              "points": 40
+            },
+            "4": {
+              "sha256": "17dc59288102bab95d8a279e41dcc11e7938e27ff1821448ee97c6496f639959",
+              "contours": 2,
+              "points": 13
+            },
+            "5": {
+              "sha256": "0a5e2fd489851017531d1598219c96ef32c3fc7d78444cde783f04a36591395c",
+              "contours": 1,
+              "points": 58
+            },
+            "6": {
+              "sha256": "af70e8db676db2ccf8131afb624f84ae814ac2e913fbac347631ce72cc5ae073",
+              "contours": 2,
+              "points": 58
+            },
+            "7": {
+              "sha256": "2269bd123a39dd7ac9c362af881e348ec8e5e60e425364621270cf063fdcec80",
+              "contours": 1,
+              "points": 9
+            },
+            "8": {
+              "sha256": "6dae22bd8f76bbeb75933b0a4892089ee502a520d03c0050789ffc0b838e2c84",
+              "contours": 3,
+              "points": 79
+            },
+            "9": {
+              "sha256": "e773800d02e2e55aea7fb31ba86f874597d107dbdcd386d66adc77db72e1b9ab",
+              "contours": 2,
+              "points": 58
+            },
+            "a": {
+              "sha256": "99cd9371c562385362643a79d291c3b522117de9934ff64627b35f82422b6d97",
+              "contours": 2,
+              "points": 51
+            },
+            "а": {
+              "sha256": "dada3b6650ab38a43e5dedc9b1b2bb7e5a7065f57fafb333b41b2429091a1602",
+              "contours": 2,
+              "points": 51
+            },
+            "e": {
+              "sha256": "df7b5366bb62db4c077710b80f1e9c2c4b24b01f0a48c8b8e988520d60545b0d",
+              "contours": 2,
+              "points": 39
+            },
+            "е": {
+              "sha256": "9f6691d81473475d19ec9a554c967d50312401ca95fc9b4c540b60b05f24ef6a",
+              "contours": 2,
+              "points": 39
+            },
+            "l": {
+              "sha256": "1cf239fe0f2288973eb9c540ca6d574916915bc70320e956cc9ed67133e835bf",
+              "contours": 1,
+              "points": 6
+            }
+          }
+        },
+        "zeroContours": 2,
+        "consistentScriptPairs": [
+          "o/о"
+        ],
+        "sharedRefinementPairs": [
+          "a/а",
+          "e/е"
+        ],
+        "digitStemConsistency": {
+          "method": "filled outline scan-line intersections after deskew; 128 samples per Bezier",
+          "targetStem": 137,
+          "toleranceUnits": 2.0,
+          "scans": [
+            {
+              "zeroY": 340,
+              "oneY": 250,
+              "zeroLeft": 137.0,
+              "zeroRight": 137.0,
+              "one": 137.0
+            },
+            {
+              "zeroY": 350,
+              "oneY": 260,
+              "zeroLeft": 137.0,
+              "zeroRight": 137.0,
+              "one": 137.0
+            },
+            {
+              "zeroY": 360,
+              "oneY": 270,
+              "zeroLeft": 137.0,
+              "zeroRight": 137.0,
+              "one": 137.0
+            }
+          ]
+        },
+        "extendedOneEntry": {
+          "method": "actual deskewed outline terminal segment relative to straight stem scanned at y250",
+          "stemScanHeight": 250,
+          "verticalTerminal": {
+            "leftProjection": 148.0,
+            "verticalSpan": 182.0,
+            "bottom": 410.0,
+            "top": 592.0
+          },
+          "minimumTerminalSpan": 116.45,
+          "minimumLeftProjection": 125
+        },
+        "threeLevelTopBar": {
+          "method": "actual deskewed outline top-edge segment and vertical filled-ink section at its left quarter",
+          "capHeight": 707,
+          "topEdgeLength": 387.0,
+          "minimumTopEdgeLength": 215.0,
+          "topEdgeY": [
+            707.0,
+            707.0
+          ],
+          "measuredBarThickness": 126.0,
+          "expectedBarThickness": 126.04,
+          "thicknessToleranceUnits": 2.0
+        },
+        "digitVerticalAlignment": {
+          "method": "actual quadratic outline extrema in font units",
+          "toleranceUnits": 1.0,
+          "digits": {
+            "0": {
+              "bottom": -8.0,
+              "top": 715,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "1": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "2": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            },
+            "3": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "4": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "5": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "6": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "7": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "8": {
+              "bottom": -8.0,
+              "top": 715.0,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "9": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            }
+          }
+        },
+        "sourceLetterScale": {
+          "method": "deskewed actual quadratic bounds and advances against independently instantiated Onest",
+          "horizontalScale": 0.96,
+          "toleranceUnits": 1.5,
+          "probes": {
+            "H": {
+              "actualInkWidth": 569.0,
+              "expectedInkWidth": 568.894,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 708,
+              "sourceTop": 707.6,
+              "advance": 713,
+              "expectedAdvance": 713
+            },
+            "n": {
+              "actualInkWidth": 478.0,
+              "expectedInkWidth": 477.887,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 536,
+              "sourceTop": 536.0,
+              "advance": 581,
+              "expectedAdvance": 581
+            },
+            "o": {
+              "actualInkWidth": 507.0,
+              "expectedInkWidth": 507.455,
+              "bottom": -7,
+              "sourceBottom": -7.2,
+              "top": 536,
+              "sourceTop": 536.0,
+              "advance": 575,
+              "expectedAdvance": 575
+            },
+            "Н": {
+              "actualInkWidth": 569.0,
+              "expectedInkWidth": 568.894,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 708,
+              "sourceTop": 707.6,
+              "advance": 713,
+              "expectedAdvance": 713
+            },
+            "о": {
+              "actualInkWidth": 507.0,
+              "expectedInkWidth": 507.455,
+              "bottom": -7,
+              "sourceBottom": -7.2,
+              "top": 536,
+              "sourceTop": 536.0,
+              "advance": 575,
+              "expectedAdvance": 575
+            }
+          }
+        },
+        "approvedReleaseIntegrity": {
+          "acceptedVersion": "0.600",
+          "ttfSha256": "9b85cdf1e578770ec0e1e3a301831263b31eb538616983aea423b17ccd4e1afb",
+          "woff2Sha256": "01e2a8b4350ee9ad9c645fa5b4bfc0d5570bb166b993caf4c8dcdbfa2b199d52",
+          "scope": "complete accepted file content, including all glyphs, metrics and layout tables"
+        }
+      },
+      "checks": "metadata, checksums, TTF/WOFF2 roundtrip, coverage, all glyph components, clipping, HarfBuzz shaping, tnum/pnum, digit provenance, refined letter outlines, measured zero/one stems, extended one entry, level three top bar, unchanged pnum geometry, actual numeral vertical bounds, complete files match accepted 0.600 SHA; source letter widths at 96%; no historical cross-version comparison"
+    },
+    {
+      "face": "Gavia-BoldItalic",
+      "cmapCharacters": 780,
+      "glyphs": 886,
+      "ttfBytes": 105680,
+      "woff2Bytes": 40660,
+      "defaultDigits": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ],
+      "proportionalDigits": [
+        542,
+        528,
+        544,
+        540,
+        523,
+        540,
+        558,
+        533,
+        556,
+        558
+      ],
+      "designChecks": {
+        "outlineProvenance": {
+          "independentDigits": 10,
+          "refinedOnestLetters": 5,
+          "unchangedSourceMatchesInCheckedSet": 0,
+          "letterBase": "Onest with shared 0.96 horizontal scale",
+          "fingerprints": {
+            "0": {
+              "sha256": "c05173895577e02a9d3c394665850fbfc2578213f7ead500e67ef44de19e76c5",
+              "contours": 2,
+              "points": 60
+            },
+            "1": {
+              "sha256": "bdb0c971f15baabffd9a4a983385513f463de90c047c9fafdc1b2382b7e88847",
+              "contours": 1,
+              "points": 11
+            },
+            "2": {
+              "sha256": "65f7cf4ebe365d42188470eb94973bcc44049284413d8666dcd0c47b6baa75df",
+              "contours": 1,
+              "points": 45
+            },
+            "3": {
+              "sha256": "44ab2f0700143bb354be74aca48b63d7a24e83032ccd482ac8c7b9845d99cce1",
+              "contours": 1,
+              "points": 40
+            },
+            "4": {
+              "sha256": "862b27740aefb8a9dde94502dfc0027016287d557c489718cd6c0e977669444b",
+              "contours": 2,
+              "points": 13
+            },
+            "5": {
+              "sha256": "1b7ed2fc424d330912102654296b3457f503dde0a3a9e20efb9ea44353242e02",
+              "contours": 1,
+              "points": 58
+            },
+            "6": {
+              "sha256": "e6ecb38d3a7a899592398ddd2363551864ed44cfd714667eae7b2faadbbe917b",
+              "contours": 2,
+              "points": 58
+            },
+            "7": {
+              "sha256": "ff6c8d9f0f6d6e1329b37721b1d2e8ca923a9f0eb98eb425df7b63b9121e3c37",
+              "contours": 1,
+              "points": 9
+            },
+            "8": {
+              "sha256": "be1d6ee31431c7a933fc30f342f2cbc226e6f89a2e991cc065f11c1c4a266682",
+              "contours": 3,
+              "points": 79
+            },
+            "9": {
+              "sha256": "592f51bbdef074cf742b4c225d4040f09c6341cc19acc934a076d97568b3566b",
+              "contours": 2,
+              "points": 58
+            },
+            "a": {
+              "sha256": "c061c3886418507a09b77403890e753cd1aa9165375847c3c4b10adaa73e05aa",
+              "contours": 2,
+              "points": 51
+            },
+            "а": {
+              "sha256": "8602e0587479dfcbcdfbec32e4949b07b5a2c5b60658cab91c563081c3d9bde0",
+              "contours": 2,
+              "points": 51
+            },
+            "e": {
+              "sha256": "c1ca1dfc249bb66d3b5f3472c5c55a277387e6358ad2ddf6bdbe8b16ef34ef0e",
+              "contours": 2,
+              "points": 39
+            },
+            "е": {
+              "sha256": "d1f3f84fcdfbed088aa09a865695736791262fd652266bafe3c9a1c593811d88",
+              "contours": 2,
+              "points": 39
+            },
+            "l": {
+              "sha256": "e7ce306fad61eb9d896215ac45e573b1f21fba37126e5d2213089ba09b89ccde",
+              "contours": 1,
+              "points": 6
+            }
+          }
+        },
+        "zeroContours": 2,
+        "consistentScriptPairs": [
+          "o/о"
+        ],
+        "sharedRefinementPairs": [
+          "a/а",
+          "e/е"
+        ],
+        "digitStemConsistency": {
+          "method": "filled outline scan-line intersections after deskew; 128 samples per Bezier",
+          "targetStem": 137,
+          "toleranceUnits": 2.0,
+          "scans": [
+            {
+              "zeroY": 340,
+              "oneY": 250,
+              "zeroLeft": 137.0,
+              "zeroRight": 137.0,
+              "one": 137.054
+            },
+            {
+              "zeroY": 350,
+              "oneY": 260,
+              "zeroLeft": 137.0,
+              "zeroRight": 137.0,
+              "one": 137.059
+            },
+            {
+              "zeroY": 360,
+              "oneY": 270,
+              "zeroLeft": 137.0,
+              "zeroRight": 137.0,
+              "one": 137.063
+            }
+          ]
+        },
+        "extendedOneEntry": {
+          "method": "actual deskewed outline terminal segment relative to straight stem scanned at y250",
+          "stemScanHeight": 250,
+          "verticalTerminal": {
+            "leftProjection": 147.631,
+            "verticalSpan": 182.0,
+            "bottom": 410.0,
+            "top": 592.0
+          },
+          "minimumTerminalSpan": 116.45,
+          "minimumLeftProjection": 125
+        },
+        "threeLevelTopBar": {
+          "method": "actual deskewed outline top-edge segment and vertical filled-ink section at its left quarter",
+          "capHeight": 707,
+          "topEdgeLength": 387.0,
+          "minimumTopEdgeLength": 215.422,
+          "topEdgeY": [
+            707.0,
+            707.0
+          ],
+          "measuredBarThickness": 126.0,
+          "expectedBarThickness": 126.04,
+          "thicknessToleranceUnits": 2.0
+        },
+        "digitVerticalAlignment": {
+          "method": "actual quadratic outline extrema in font units",
+          "toleranceUnits": 1.0,
+          "digits": {
+            "0": {
+              "bottom": -8.0,
+              "top": 715,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "1": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "2": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            },
+            "3": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "4": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "5": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "6": {
+              "bottom": -8,
+              "top": 707,
+              "expectedBottom": -8,
+              "expectedTop": 707
+            },
+            "7": {
+              "bottom": 0,
+              "top": 707,
+              "expectedBottom": 0,
+              "expectedTop": 707
+            },
+            "8": {
+              "bottom": -8.0,
+              "top": 715.0,
+              "expectedBottom": -8,
+              "expectedTop": 715
+            },
+            "9": {
+              "bottom": 0,
+              "top": 715,
+              "expectedBottom": 0,
+              "expectedTop": 715
+            }
+          }
+        },
+        "sourceLetterScale": {
+          "method": "deskewed actual quadratic bounds and advances against independently instantiated Onest",
+          "horizontalScale": 0.96,
+          "toleranceUnits": 1.5,
+          "probes": {
+            "H": {
+              "actualInkWidth": 569.069,
+              "expectedInkWidth": 568.894,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 708,
+              "sourceTop": 707.6,
+              "advance": 713,
+              "expectedAdvance": 713
+            },
+            "n": {
+              "actualInkWidth": 478.0,
+              "expectedInkWidth": 477.887,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 536,
+              "sourceTop": 536.0,
+              "advance": 581,
+              "expectedAdvance": 581
+            },
+            "o": {
+              "actualInkWidth": 507.13,
+              "expectedInkWidth": 507.455,
+              "bottom": -7,
+              "sourceBottom": -7.2,
+              "top": 536,
+              "sourceTop": 536.0,
+              "advance": 575,
+              "expectedAdvance": 575
+            },
+            "Н": {
+              "actualInkWidth": 569.069,
+              "expectedInkWidth": 568.894,
+              "bottom": 0,
+              "sourceBottom": 0,
+              "top": 708,
+              "sourceTop": 707.6,
+              "advance": 713,
+              "expectedAdvance": 713
+            },
+            "о": {
+              "actualInkWidth": 507.13,
+              "expectedInkWidth": 507.455,
+              "bottom": -7,
+              "sourceBottom": -7.2,
+              "top": 536,
+              "sourceTop": 536.0,
+              "advance": 575,
+              "expectedAdvance": 575
+            }
+          }
+        },
+        "approvedReleaseIntegrity": {
+          "acceptedVersion": "0.600",
+          "ttfSha256": "d107280ad1453ba37d41adcf182ee38fd914f0d63d5598e9c66e42e14c0b2646",
+          "woff2Sha256": "00e105fd7b4c492d1df60a54be944dfc81891629f3d0b900a4ba89f340fd8526",
+          "scope": "complete accepted file content, including all glyphs, metrics and layout tables"
+        }
+      },
+      "checks": "metadata, checksums, TTF/WOFF2 roundtrip, coverage, all glyph components, clipping, HarfBuzz shaping, tnum/pnum, digit provenance, refined letter outlines, measured zero/one stems, extended one entry, level three top bar, unchanged pnum geometry, actual numeral vertical bounds, complete files match accepted 0.600 SHA; source letter widths at 96%; no historical cross-version comparison"
+    }
+  ],
+  "designChecks": {
+    "outlineProvenance": {
+      "faces": 12,
+      "independentDigitsPerFace": 10,
+      "refinedOnestLettersPerFace": 5,
+      "checkedOutlines": 180,
+      "unchangedSourceMatchesInCheckedSet": 0,
+      "letterBase": "Licensed Onest-derived family; shared 0.96 horizontal scaling; selective a/e/l refinements"
+    },
+    "normalization": "decomposed contours, independent XY bounds, canonical start/direction/order, raw and deskewed comparisons",
+    "normalizedTolerance": 0.004,
+    "zeroContours": 2,
+    "numericAlternateGeometry": "translation only; tolerance 1.5 font units after deskew",
+    "digitStemConsistency": "zero left/right stems at y340/350/360 and one straight stem at y250/260/270 in every face",
+    "extendedOneEntry": {
+      "minimumLeftProjection": 125,
+      "minimumTerminalStrokeRatio": 0.85,
+      "comparison": "real vertical entry terminal against straight stem scanned at y250"
+    },
+    "threeLevelTopBar": {
+      "capHeight": 707,
+      "minimumTopEdgeWidthRatio": 0.5,
+      "horizontalStrokeRatio": 0.92
+    },
+    "regularApprovedInkWidths": {
+      "method": "actual quadratic outline X extrema; Regular upright only",
+      "acceptedVersion": "0.600",
+      "toleranceUnits": 1.5,
+      "scope": "current accepted widths; historical midpoint comparison is not performed",
+      "digits": {
+        "0": {
+          "actualInkWidth": 432,
+          "acceptedInkWidth": 432,
+          "deviationFromAccepted": 0
+        },
+        "1": {
+          "actualInkWidth": 418,
+          "acceptedInkWidth": 418,
+          "deviationFromAccepted": 0
+        },
+        "2": {
+          "actualInkWidth": 434,
+          "acceptedInkWidth": 434,
+          "deviationFromAccepted": 0
+        },
+        "3": {
+          "actualInkWidth": 430,
+          "acceptedInkWidth": 430,
+          "deviationFromAccepted": 0
+        },
+        "4": {
+          "actualInkWidth": 413,
+          "acceptedInkWidth": 413,
+          "deviationFromAccepted": 0
+        },
+        "5": {
+          "actualInkWidth": 430,
+          "acceptedInkWidth": 430,
+          "deviationFromAccepted": 0
+        },
+        "6": {
+          "actualInkWidth": 448.0,
+          "acceptedInkWidth": 448,
+          "deviationFromAccepted": 0.0
+        },
+        "7": {
+          "actualInkWidth": 423,
+          "acceptedInkWidth": 423,
+          "deviationFromAccepted": 0
+        },
+        "8": {
+          "actualInkWidth": 446,
+          "acceptedInkWidth": 446,
+          "deviationFromAccepted": 0
+        },
+        "9": {
+          "actualInkWidth": 448.0,
+          "acceptedInkWidth": 448,
+          "deviationFromAccepted": 0.0
+        }
+      }
+    },
+    "digitVerticalAlignment": {
+      "expectedBounds": {
+        "0": [
+          -8,
+          715
+        ],
+        "1": [
+          0,
+          707
+        ],
+        "2": [
+          0,
+          715
+        ],
+        "3": [
+          -8,
+          707
+        ],
+        "4": [
+          0,
+          707
+        ],
+        "5": [
+          -8,
+          707
+        ],
+        "6": [
+          -8,
+          707
+        ],
+        "7": [
+          0,
+          707
+        ],
+        "8": [
+          -8,
+          715
+        ],
+        "9": [
+          0,
+          715
+        ]
+      },
+      "toleranceUnits": 1.0
+    },
+    "sourceLetterScale": {
+      "horizontalScale": 0.96,
+      "probes": [
+        "H",
+        "n",
+        "o",
+        "Н",
+        "о"
+      ],
+      "toleranceUnits": 1.5
+    },
+    "approvedReleaseIntegrity": {
+      "acceptedVersion": "0.600",
+      "files": 24,
+      "method": "frozen accepted binary SHA256 independent of the mutable manifest"
+    },
+    "consistentScriptPairs": [
+      "o/о"
+    ],
+    "sharedRefinementPairs": [
+      "a/а",
+      "e/е"
+    ],
+    "scriptPairNote": "a/а and e/е retain subtle original Onest counter differences and matching advances; italic LSBs follow each outline"
+  },
+  "limitations": "Optical quality, hand-tuned italic spacing and native app rendering still need human review."
+}

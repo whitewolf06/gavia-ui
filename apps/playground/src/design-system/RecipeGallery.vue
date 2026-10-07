@@ -31,6 +31,8 @@ import "gavia-ui/themes/graphite.css";
 import "gavia-ui/themes/newspaper.css";
 import App from "./App.vue";
 
+document.documentElement.dataset.wlTheme = "white";
+
 // WlConfig merges application pt with defaults; local component pt is applied last.
 const pt = createWlPt({ button: { root: { "data-ui": "action" } } });
 createApp(App).use(WlConfig, { locale: wlLocaleRu, motion: true, pt })

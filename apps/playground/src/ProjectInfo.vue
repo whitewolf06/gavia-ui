@@ -25,51 +25,15 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <main ref="projectElement" class="project-main wl-container wl-stack" data-space="3xl" id="project-top" aria-labelledby="project-title">
+  <main ref="projectElement" class="project-main wl-container wl-stack" data-space="3xl" id="project-top" data-testid="changelog-page" aria-labelledby="project-title">
     <header class="project-hero wl-stack" data-space="lg">
-      <p class="project-eyebrow wl-text-small">Gavia UI / О проекте</p>
-      <h1 id="project-title" class="wl-text-display">Интерфейсы с ясным характером</h1>
-      <p class="project-lead wl-text-body wl-text-muted">Свободная библиотека компонентов и дизайн-система для Vue 3 и TypeScript. Три темы, общие правила и живые примеры помогают создавать последовательные интерфейсы.</p>
-      <nav class="wl-inline" data-space="lg" aria-label="Ссылки о проекте">
-        <a class="project-link" :href="project.repositoryUrl">Репозиторий</a>
-        <a class="project-link" :href="project.instructionsUrl">Подключение и инструкции</a>
+      <p class="project-eyebrow wl-text-small">Gavia UI / Changelog</p>
+      <h1 id="project-title" class="wl-text-display">Changelog</h1>
+      <p class="project-lead wl-text-body wl-text-muted">История выпусков Gavia UI, подготовленные изменения и заметки о переходе между версиями.</p>
+      <nav class="wl-inline" data-space="lg" aria-label="Навигация по истории изменений">
         <a class="project-link" href="#project-changelog">История изменений</a>
       </nav>
     </header>
-
-    <section aria-labelledby="project-details-title" class="wl-stack" data-space="lg">
-      <h2 id="project-details-title" class="wl-text-title">Кто создаёт Gavia UI</h2>
-      <dl class="project-facts wl-grid" data-space="lg">
-        <div class="wl-surface wl-stack" data-space="sm">
-          <dt class="wl-text-small wl-text-muted">Автор и сопровождающий</dt>
-          <dd class="wl-text-heading"><a class="project-link" :href="project.author.url">{{ project.author.name }}</a></dd>
-        </div>
-        <div class="wl-surface wl-stack" data-space="sm">
-          <dt class="wl-text-small wl-text-muted">Версия исходников</dt>
-          <dd class="wl-text-heading" data-testid="project-version">{{ project.version }}</dd>
-        </div>
-        <div class="wl-surface wl-stack" data-space="sm">
-          <dt class="wl-text-small wl-text-muted">Лицензия</dt>
-          <dd class="wl-text-heading"><a class="project-link" :href="project.licenseUrl">{{ project.license }}</a></dd>
-        </div>
-      </dl>
-      <p class="wl-text-body wl-text-muted">Gavia UI можно бесплатно использовать в личных и коммерческих проектах, изменять и распространять с сохранением текста MIT и уведомления об авторских правах.</p>
-      <p class="wl-text-body wl-text-muted">Идеи, сообщения об ошибках и улучшения принимаются в <a class="project-link" :href="`${project.repositoryUrl}/issues`">GitHub Issues</a>. Для участия есть <a class="project-link" :href="project.contributingUrl">руководство для участников</a>.</p>
-    </section>
-
-    <section aria-labelledby="project-setup-title" class="wl-surface wl-stack" data-space="lg">
-      <div class="wl-stack" data-space="sm">
-        <h2 id="project-setup-title" class="wl-text-heading">Подключение библиотеки</h2>
-        <p v-if="!project.npmPublished" class="wl-text-body" data-testid="project-npm-status">Первый выпуск <code class="project-inline-code wl-text-code">{{ project.packageName }}</code> в публичном npm ещё не опубликован. Сейчас библиотеку можно собрать и установить из исходников по инструкции.</p>
-        <p v-else class="wl-text-body" data-testid="project-npm-status">Пакет <a class="project-link" :href="project.packageUrl">{{ project.packageName }}@{{ project.publishedVersion }}</a> опубликован в публичном npm. Установка в Vue-приложении: <code class="project-inline-code wl-text-code">pnpm add {{ project.packageName }}@{{ project.publishedVersion }}</code>.</p>
-      </div>
-      <nav class="wl-inline" data-space="lg" aria-label="Документация подключения">
-        <a class="project-link" :href="project.instructionsUrl">Сборка и установка</a>
-        <a class="project-link" :href="`${project.documentationBaseUrl}docs/design-system.md`">Правила дизайн-системы</a>
-        <a class="project-link" :href="`${project.documentationBaseUrl}docs/migration-gavia.md`">Переход на Gavia UI</a>
-      </nav>
-      <p class="wl-text-small wl-text-muted">Vue — единственный обязательный peer. Стили и тема подключаются явно; приложение управляет данными и бизнес-логикой.</p>
-    </section>
 
     <section id="project-changelog" data-testid="project-changelog" aria-labelledby="project-changelog-title" class="wl-stack" data-space="xl">
       <header class="wl-stack" data-space="sm">
@@ -112,16 +76,12 @@ onBeforeUnmount(() => {
 .project-link { color: var(--wl-accent); text-decoration: underline; text-underline-offset: 0.18em; overflow-wrap: anywhere; }
 .project-link:hover { color: var(--wl-accent-hover); }
 .project-link:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 2px; border-radius: var(--wl-radius-sm); }
-.project-facts { margin: 0; }
-.project-facts dd { margin: 0; }
 .project-release { scroll-margin-block-start: var(--wl-space-4xl); overflow-wrap: anywhere; }
 .project-history-nav { line-height: var(--wl-type-body-line-height); }
 .project-list { list-style: disc; margin: 0; padding-inline-start: var(--wl-space-xl); }
 .project-list li + li { margin-top: var(--wl-space-sm); }
-.project-inline-code { color: var(--wl-text); background: var(--wl-bg-soft); padding: var(--wl-space-2xs) var(--wl-space-xs); border-radius: var(--wl-radius-sm); overflow-wrap: anywhere; }
 @media (max-width: 640px) {
   .project-main { padding-inline: var(--wl-space-md); padding-top: var(--wl-space-xl); }
-  .project-facts { grid-template-columns: minmax(0, 1fr); }
   .project-release { padding: var(--wl-space-lg); }
 }
 </style>

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { chooseDropdownOption, chooseShowcaseTheme } from "./select-helpers";
 import { resolveWlToken, wlDesignTokens, wlDesignThemes, wlContrastReport } from "../../../packages/ui-kit/src/design-system";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 
@@ -38,13 +39,13 @@ test.afterEach(async ({ page }, testInfo) => {
 });
 
 test("catalog filters all tokens and resolves the selected theme", async ({ page }) => {
-  await page.getByLabel("Слой", { exact: true }).selectOption("all");
+  await chooseDropdownOption(page, page.getByRole("combobox", { name: "Слой", exact: true }), "Все слои");
   await expect(page.getByTestId("ds-token-count")).toHaveText(String(wlDesignTokens.length));
   await page.getByRole("searchbox", { name: "Поиск токена" }).fill("--wl-action-primary-text");
   await expect(page.getByTestId("ds-token-count")).toHaveText("1");
   const row = page.locator('[data-token="--wl-action-primary-text"]');
   await expect(row).toContainText("#ffffff");
-  await page.locator(".pg-theme").getByText("Graphite", { exact: true }).click();
+  await chooseShowcaseTheme(page, "Graphite");
   await expect(row).toContainText("#17181c");
   await expect(row).toContainText("var(--wl-gray-950)");
   await page.getByRole("searchbox", { name: "Поиск токена" }).fill("does-not-exist");
@@ -59,9 +60,9 @@ test("contract catalog shows all components and links to the gallery", async ({ 
   await page.getByRole("listbox").getByRole("option", { name: "WlInput", exact: true }).click();
   await expect(page.getByTestId("ds-contract")).toContainText("v-model: string");
   await expect(page.getByTestId("ds-contract").getByRole("heading", { name: "WlInput", exact: true })).toBeVisible();
-  await page.getByRole("button", { name: "Открыть в витрине" }).click();
-  await expect(page.getByRole("heading", { name: "Компоненты", exact: true })).toBeVisible();
-  await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Компоненты");
+  await page.getByRole("button", { name: "Открыть руководство" }).click();
+  await expect(page.getByRole("heading", { name: "WlInput", exact: true })).toBeVisible();
+  await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Документация");
   await page.goBack();
   await expect(page.getByRole("heading", { name: "Единый язык интерфейсов" })).toBeVisible();
 });
@@ -127,7 +128,7 @@ test("drawer preserves page width, returns focus and can disable motion", async 
 
 test("themes, nested previews and responsive layout agree with the catalog", async ({ page }, testInfo) => {
   for (const theme of wlDesignThemes) {
-    await page.locator(".pg-theme").getByText(theme.label, { exact: true }).click();
+    await chooseShowcaseTheme(page, theme.label);
     await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme.name);
     const readableLabels = await page.locator(".wl-field__hint, .wl-table__th").evaluateAll((elements) => elements.map((element) => getComputedStyle(element).color));
     expect(readableLabels.length).toBeGreaterThan(0);
@@ -148,10 +149,10 @@ test("themes, nested previews and responsive layout agree with the catalog", asy
   }
   await page.emulateMedia({ reducedMotion: "reduce" });
   for (const theme of wlDesignThemes) {
-    await page.locator(".pg-theme").getByText(theme.label, { exact: true }).click();
+    await chooseShowcaseTheme(page, theme.label);
     const durations = await page.locator(".ds-theme-preview").evaluateAll((elements) => elements.map((element) => getComputedStyle(element).getPropertyValue("--wl-dur-5").trim()));
     // Production CSS may omit the leading zero; duration and units stay exact.
-    expect(durations.map((duration) => duration.replace(/^0(?=\.)/, ""))).toEqual([".01ms", ".01ms", ".01ms"]);
+    expect(durations.map((duration) => duration.replace(/^0(?=\.)/, ""))).toEqual(wlDesignThemes.map(() => ".01ms"));
   }
 });
 
@@ -159,7 +160,7 @@ test.describe("nested anchored portal interactions", () => {
   test.describe.configure({ retries: 0, timeout: 45_000 });
   for (const theme of wlDesignThemes) {
     test(`nested anchored portals: ${theme.label}`, async ({ page }) => {
-      await page.locator(".pg-theme").getByText(theme.label, { exact: true }).click();
+      await chooseShowcaseTheme(page, theme.label);
       await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme.name);
       await page.getByRole("combobox", { name: "Компонент", exact: true }).click();
       await page.getByRole("listbox").getByRole("option", { name: "WlPopover", exact: true }).click();

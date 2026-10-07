@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import source from "../tokens/source.json";
-import { contrastRatio, validateCatalog } from "../scripts/token-tools.mjs";
+import { contrastRatio, renderThemeCss, resolveToken, validateCatalog } from "../scripts/token-tools.mjs";
 
 const token = (catalog, name) => catalog.tokens.find((item) => item.name === name);
 
@@ -8,12 +8,30 @@ describe("design token source validation", () => {
   it("checks every theme and all approved contrast pairs", () => {
     expect(validateCatalog(source)).toHaveLength(source.themes.length * source.contrast.length);
   });
+  it("keeps Gavia links readable on page, raised, soft and selected surfaces", () => {
+    const foreground = resolveToken(source, "--wl-accent", "gavia");
+    for (const name of ["--wl-bg", "--wl-bg-raised", "--wl-bg-soft", "--wl-accent-soft", "--wl-accent-soft-hover"]) {
+      expect(contrastRatio(foreground, resolveToken(source, name, "gavia")), name).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+  it("scopes Gavia to its theme attribute and preserves reduced motion", () => {
+    const theme = source.themes.find((item) => item.name === "gavia");
+    const css = renderThemeCss(source, theme);
+    expect(css).toContain('@layer wl.tokens');
+    expect(css).toContain('[data-wl-theme="gavia"]');
+    expect(css).not.toContain(':root');
+    expect(css).toContain('color-scheme: light;');
+    expect(css).toContain('@media (prefers-reduced-motion: reduce)');
+    for (const duration of [1, 2, 3, 4, 5]) expect(css).toContain('--wl-dur-' + duration + ': 0.01ms;');
+  });
   it("calculates WCAG black/white and identical-color reference ratios", () => {
     expect(contrastRatio("#000000", "#ffffff")).toBe(21);
     expect(contrastRatio("#404040", "#404040")).toBe(1);
     expect(() => contrastRatio("rgba(0,0,0,.5)", "#ffffff")).toThrow("opaque hex");
   });
   it.each([
+    ["inaccessible Gavia accent", (catalog) => { token(catalog, "--wl-palette-accent").themes.gavia = "var(--wl-gray-50)"; }, /Contrast fails: gavia/],
+    ["duplicate theme", (catalog) => { catalog.themes.push({ ...catalog.themes[0] }); }, /Invalid theme catalog/],
     ["unknown dependency", (catalog) => { token(catalog, "--wl-bg").value = "var(--wl-missing)"; }, /Unknown reference/],
     ["circular aliases", (catalog) => { token(catalog, "--wl-bg").value = "var(--wl-bg-soft)"; token(catalog, "--wl-bg-soft").value = "var(--wl-bg)"; }, /Circular/],
     ["component bypassing semantic", (catalog) => { token(catalog, "--wl-btn-height").value = "var(--wl-gray-0)"; }, /reference semantic/],

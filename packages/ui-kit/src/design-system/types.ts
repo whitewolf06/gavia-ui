@@ -1,3 +1,5 @@
+import type { WlThemeName } from "../types";
+
 export type WlTokenLayer = "foundation" | "semantic" | "component";
 export type WlTokenType = "color" | "dimension" | "number" | "fontFamily" | "duration" | "shadow" | "string";
 export interface WlDesignTokenDefinition {
@@ -7,10 +9,10 @@ export interface WlDesignTokenDefinition {
   category: string;
   description: string;
   value: string;
-  themes?: Partial<Record<"white" | "graphite" | "newspaper", string>>;
+  themes?: Partial<Record<WlThemeName, string>>;
 }
 export interface WlDesignTheme {
-  name: "white" | "graphite" | "newspaper";
+  name: WlThemeName;
   label: string;
   description: string;
   colorScheme: "light" | "dark";

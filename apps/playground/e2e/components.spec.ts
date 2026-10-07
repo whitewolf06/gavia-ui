@@ -1,4 +1,6 @@
+import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import { expect, test, type Page } from "@playwright/test";
+import { chooseShowcaseTheme, chooseDropdownOption } from "./select-helpers";
 import { readFileSync } from "node:fs";
 import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
 
@@ -130,26 +132,31 @@ test("dialog and drawer keep a scrolling page at the same width", async ({ page 
   }
 });
 
-test("playground layout stays in place when its dialog and drawer open", async ({ page }) => {
-  await page.goto("/");
-  await expect(page.locator(".pg-main")).toBeVisible();
-  const measure = () => page.locator(".pg-main").evaluate((main) => {
-    const rect = main.getBoundingClientRect();
-    return { left: rect.left, right: rect.right };
-  });
-  const before = await measure();
-
-  for (const [button, name] of [
-    ["Открыть диалог", "Новая задача"],
-    ["Открыть drawer", "Детали задачи"]
+test("Docs layout stays in place when its dialog and drawer open", async ({ page }) => {
+  for (const [component, trigger, name] of [
+    ["WlDialog", "Открыть диалог", "Сведения о материале"],
+    ["WlDrawer", "Открыть Drawer", "Детали материала"]
   ] as const) {
-    await page.getByRole("button", { name: button }).click();
+    await page.goto("/?view=docs&component=" + component);
+    const guide = page.locator('[data-docs-component="' + component + '"]');
+    const preview = guide.getByTestId("ds-example-preview");
+    await expect(preview).toBeVisible();
+    const measure = () => page.locator(".docs-page").evaluate((main) => {
+      const rect = main.getBoundingClientRect();
+      return { left: rect.left, right: rect.right };
+    });
+    const before = await measure();
+    await preview.getByRole("button", { name: trigger, exact: true }).click();
     await expect(page.getByRole("dialog", { name })).toBeVisible();
     const locked = await measure();
     expect(locked.left).toBeCloseTo(before.left, 1);
     expect(locked.right).toBeCloseTo(before.right, 1);
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog", { name })).toHaveCount(0);
+    const restored = await measure();
+    expect(restored.left).toBeCloseTo(before.left, 1);
+    expect(restored.right).toBeCloseTo(before.right, 1);
+    await expect(preview.getByRole("button", { name: trigger, exact: true })).toBeFocused();
   }
 });
 
@@ -272,7 +279,7 @@ test("command palette search focus ring stays inside its panel in every theme", 
   await expect(input).toBeFocused();
   await expect(page.locator(".wl-command-palette")).toHaveCSS("opacity", "1");
 
-  for (const theme of ["white", "graphite", "newspaper"]) {
+  for (const theme of wlDesignThemes.map((theme) => theme.name)) {
     await page.evaluate((name) => document.documentElement.setAttribute("data-wl-theme", name), theme);
     const indicator = await search.evaluate((row) => {
       const panel = row.parentElement!;
@@ -354,7 +361,7 @@ test("all themes render without runtime errors", async ({ page, browserName }, t
   const errors: string[] = [];
   const backgrounds: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  for (const theme of ["white", "graphite", "newspaper"]) {
+  for (const theme of wlDesignThemes.map((theme) => theme.name)) {
     await page.evaluate((name) => document.documentElement.setAttribute("data-wl-theme", name), theme);
     await expect(page.locator(".wl-table__row")).toHaveCount(2);
     backgrounds.push(await page.locator("body").evaluate((element) => getComputedStyle(element).backgroundColor));
@@ -362,27 +369,28 @@ test("all themes render without runtime errors", async ({ page, browserName }, t
       await page.screenshot({ path: testInfo.outputPath(`fixture-${theme}.png`), fullPage: true });
     }
   }
-  expect(new Set(backgrounds).size).toBe(3);
+  expect(new Set(backgrounds).size).toBe(wlDesignThemes.length);
   expect(errors).toEqual([]);
 });
 
 test("the complete icon batch renders at three sizes in each theme", async ({ page, browserName }, testInfo) => {
-  await page.goto("/");
+  await page.goto("/?view=docs&section=icons");
   await expect(page.locator(".pg-brand .pg-kit-version")).toHaveText(`v${uiKitVersion}`);
-  const gallery = page.locator(".pg-sec").filter({ has: page.getByRole("heading", { name: "Иконки" }) });
-  await expect(gallery.locator(".pg-icon-cell")).toHaveCount(WL_ICON_NAMES.length);
-  await expect(gallery.locator('svg[data-wl="icon"]')).toHaveCount(WL_ICON_NAMES.length * 3);
-  for (const theme of ["white", "graphite", "newspaper"]) {
-    await page.locator(".pg-theme").getByText(theme === "white" ? "White" : theme === "graphite" ? "Graphite" : "Newspaper", { exact: true }).click();
+  const catalog = page.getByTestId("docs-icon-catalog");
+  await expect(catalog.locator("li")).toHaveCount(WL_ICON_NAMES.length);
+  for (const theme of wlDesignThemes.map((theme) => theme.name)) {
+    await chooseShowcaseTheme(page, wlDesignThemes.find((definition) => definition.name === theme)!.label);
     await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme);
-    await expect(gallery.locator(".pg-icon-cell").first()).toBeVisible();
-    if (browserName === "chromium") {
-      // A tall element screenshot scrolls beneath the sticky showcase header.
-      // Hide that header only while capturing the drawings it would obscure.
-      await gallery.locator(".pg-icon-grid").screenshot({
-        path: testInfo.outputPath(`icons-${theme}.png`),
-        style: ".pg-top { visibility: hidden; }"
-      });
+    for (const size of [16, 20, 24]) {
+      await chooseDropdownOption(page, page.getByRole("combobox", { name: "Размер иконки", exact: true }), String(size));
+      const drawings = catalog.locator('svg[data-wl="icon"]');
+      await expect(drawings).toHaveCount(WL_ICON_NAMES.length);
+      const bounds = await drawings.evaluateAll((elements) => elements.map((svg) => {
+        const rect = svg.getBoundingClientRect();
+        return { width: rect.width, height: rect.height, hasPath: Boolean(svg.querySelector("path, circle, rect, line, polyline, polygon, ellipse")) };
+      }));
+      expect(bounds.every((item) => item.width === size && item.height === size && item.hasPath)).toBe(true);
+      if (browserName === "chromium") await catalog.screenshot({ path: testInfo.outputPath(`icons-${theme}-${size}.png`), style: ".pg-top { visibility: hidden; }" });
     }
   }
 });

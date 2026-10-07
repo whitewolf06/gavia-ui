@@ -27,11 +27,14 @@
     "./themes/*.css": "./themes/*.css",
     "./manifest.json": "./dist/manifest.json",
     "./design-tokens.json": "./dist/design-tokens.json",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./styles/fonts/gavia.css": "./styles/fonts/gavia.css",
+    "./fonts/gavia/*": "./fonts/gavia/*"
   },
   "files": [
     "dist",
     "styles",
+    "fonts",
     "themes",
     "README.md",
     "LICENSE",

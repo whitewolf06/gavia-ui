@@ -5,9 +5,11 @@ import {
 import Fixture from "./Fixture.vue";
 import "gavia-ui/styles/reset.css";
 import "gavia-ui/styles/base.css";
+import "gavia-ui/styles/fonts/gavia.css";
 import "gavia-ui/themes/white.css";
 import "gavia-ui/themes/graphite.css";
 import "gavia-ui/themes/newspaper.css";
+import "gavia-ui/themes/gavia.css";
 
 const app = createApp(Fixture);
 app.use(WlConfig, {

@@ -2,10 +2,11 @@
 
 ## Что публикуется
 
-GitHub Pages размещает существующий playground: каталог 51 компонента, все
-47 иконок, три темы, правила дизайн-системы, живые примеры с копированием кода
-и шесть законченных сценариев. Страница «О проекте» содержит создателя,
-MIT, ссылки на подключение и историю изменений из корневого CHANGELOG.md.
+GitHub Pages размещает существующий playground: главную страницу, Docs,
+галерею 53 компонентов, 113 SVG-иконок, три темы, правила дизайн-системы,
+живые примеры с копированием кода и шесть законченных сценариев. Создатель,
+MIT и участие в проекте собраны на главной. Отдельная страница Changelog
+показывает историю из корневого CHANGELOG.md.
 Новые runtime-зависимости, роутер и отдельный генератор документации не нужны.
 
 Витрина опубликована в GitHub Pages: [Gavia UI](https://whitewolf06.github.io/gavia-ui/).
@@ -53,13 +54,19 @@ pnpm --filter gavia-ui-playground exec vite preview --base=/gavia-ui/ --host 127
 
 ## Навигация и история
 
-- Компоненты: `/gavia-ui/`.
+- Главная: `/gavia-ui/`.
+- Docs: `/gavia-ui/?view=docs`.
+- Основы: `/gavia-ui/?view=docs&section=typography`, `section=layout`, `section=content`.
+- Первая полная страница компонента: `/gavia-ui/?view=docs&component=WlButton`.
+- Галерея компонентов: `/gavia-ui/?view=components`.
 - Дизайн-система: `/gavia-ui/?view=system`.
-- Автор и changelog: `/gavia-ui/?view=project`.
-- История сразу: `/gavia-ui/?view=project#project-changelog`.
+- Changelog: `/gavia-ui/?view=changelog`.
+- История сразу: `/gavia-ui/?view=changelog#project-changelog`.
+- Прежний `/gavia-ui/?view=project` сохраняется как совместимый адрес истории.
 
 Query-навигация сохраняет подпуть; refresh и Back/Forward работают с одним
-index.html, без серверного fallback. Логотип, CSS и lazy-примеры проходят через
+index.html, без серверного fallback. Подпункты выбранного раздела Docs ведут
+к его h2-якорям и сохраняют query-маршрут. Логотип, CSS и lazy-примеры проходят через
 Vite, без абсолютных файловых путей. Ссылки из changelog на Markdown-документацию
 преобразуются в абсолютные GitHub URL.
 

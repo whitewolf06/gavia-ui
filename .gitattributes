@@ -1,0 +1,2 @@
+# Keep the authored font geometry source byte-for-byte for manifest SHA-256 provenance.
+scripts/fonts/draw_gavia.py -text

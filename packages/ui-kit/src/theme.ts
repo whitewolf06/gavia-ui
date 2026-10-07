@@ -5,6 +5,7 @@ export interface WlPtCallbackOptions {
     checked?: boolean;
     indeterminate?: boolean;
     selected?: boolean;
+    inRange?: boolean;
     focused?: boolean;
     disabled?: boolean;
     active?: boolean;
@@ -224,6 +225,10 @@ export function createWlPt(overrides: Record<string, unknown> = {}): WlPtConfig 
       loadingIcon: { class: "wl-table__loading" }
     },
     datepicker: {
+      startLabel: { class: "wl-dp__endpoint-label" },
+      endLabel: { class: "wl-dp__endpoint-label" },
+      endInput: { class: "wl-input wl-dp__input" },
+      rangeHint: { class: "wl-dp__range-hint" },
       dropdown: { class: "wl-dp__trigger" },
       dropdownIcon: { class: "wl-dp__trigger-icon" },
       panel: { class: "wl-overlay wl-dp__panel" },
@@ -253,6 +258,7 @@ export function createWlPt(overrides: Record<string, unknown> = {}): WlPtConfig 
         class: cx(
           "wl-dp__day",
           o.context.selected && "is-selected",
+          o.context.inRange && "is-in-range",
           o.context.today && "is-today",
           o.context.otherMonth && "is-muted",
           o.context.disabled && "is-disabled"

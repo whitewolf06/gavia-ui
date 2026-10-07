@@ -7,6 +7,9 @@ const count = ref(0);
 
 <template>
   <div class="wl-stack" data-space="md">
-    <WlButton v-bind="preview" @click="count++"><template #icon><WlIcon name="plus" /></template>Добавить</WlButton><p role="status" class="wl-text-small">Действий: {{ count }}</p>
+    <div>
+      <WlButton v-bind="preview" @click="count++"><template #icon><WlIcon name="plus" /></template>Добавить</WlButton>
+    </div>
+    <p role="status" class="wl-text-small">Действий: {{ count }}</p>
   </div>
 </template>

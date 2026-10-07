@@ -1,4 +1,6 @@
+import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import { expect, test, type Page, type Locator } from "@playwright/test";
+import { copyCodePanel, chooseDropdownOption, chooseShowcaseTheme } from "./select-helpers";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 
 async function selectComponent(page: Page, name: string): Promise<void> {
@@ -44,17 +46,17 @@ for (const category of [...new Set(wlManifest.map((entry) => entry.category))]) 
 test("state combinations change the real component and copied code; keyboard focus remains visible", async ({ page }) => {
   await selectComponent(page, "WlButton");
   const explorer = page.getByTestId("ds-explorer");
-  await explorer.getByLabel("Пример: variant", { exact: true }).selectOption("danger");
-  await explorer.getByLabel("Пример: size", { exact: true }).selectOption("lg");
-  await explorer.getByLabel("Пример: density", { exact: true }).selectOption("compact");
+  await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: variant", exact: true }), "danger");
+  await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: size", exact: true }), "lg");
+  await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: density", exact: true }), "compact");
   await explorer.getByRole("checkbox", { name: "disabled", exact: true }).check();
   const button = page.getByTestId("ds-example-preview").getByRole("button", { name: "Добавить" });
   await expect(button).toBeDisabled();
   await expect(button).toHaveAttribute("data-size", "lg");
   await expect(button).toHaveAttribute("data-variant", "danger");
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async (text: string) => { document.documentElement.dataset.copied = text; } } }));
-  await explorer.getByRole("button", { name: "Копировать код" }).click();
-  await expect(explorer.getByRole("status").last()).toHaveText("Vue-код скопирован.");
+  await copyCodePanel(explorer);
+  await expect(explorer.getByRole("status").last()).toHaveText("Код скопирован.");
   const copied = await page.locator("html").getAttribute("data-copied");
   expect(copied).toContain('"variant":"danger"');
   expect(copied).toContain('"size":"lg"');
@@ -86,7 +88,7 @@ test("state combinations change the real component and copied code; keyboard foc
 test("clipboard failure offers selectable manual source and reports no false success", async ({ page }) => {
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async () => { throw new Error("Denied"); } } }));
   const explorer = page.getByTestId("ds-explorer");
-  await explorer.getByRole("button", { name: "Копировать код" }).click();
+  await copyCodePanel(explorer);
   const manual = explorer.getByRole("textbox", { name: "Код для ручного копирования" });
   await expect(manual).toBeVisible();
   await manual.focus();
@@ -344,13 +346,9 @@ async function resolvedTokenColor(locator: Locator, token: string): Promise<stri
   }, token);
 }
 
-for (const theme of [
-  { name: "white", label: "White" },
-  { name: "graphite", label: "Graphite" },
-  { name: "newspaper", label: "Newspaper" }
-]) {
+for (const theme of wlDesignThemes) {
   test(`${theme.name}: checkbox marks stay centered and disabled binary controls ignore hover and activation`, async ({ page }) => {
-    await page.locator(".pg-theme").getByText(theme.label, { exact: true }).click();
+    await chooseShowcaseTheme(page, theme.label);
     await selectComponent(page, "WlCheckbox");
     await expect(page.locator(".wl-select-overlay")).toHaveCount(0);
     const explorer = page.getByTestId("ds-explorer");
@@ -466,21 +464,17 @@ for (const entry of [
     const control = preview.getByRole("combobox", { name: entry.label, exact: true });
     // Font metrics must not affect a decorative arrow or its control height.
     await page.addStyleTag({ content: ".ds-example-preview { font-size:24px; line-height:2.5; }" });
-    for (const theme of [
-      { name: "white", label: "White" },
-      { name: "graphite", label: "Graphite" },
-      { name: "newspaper", label: "Newspaper" }
-    ]) {
-      await page.locator(".pg-theme").getByText(theme.label, { exact: true }).click();
+    for (const theme of wlDesignThemes) {
+      await chooseShowcaseTheme(page, theme.label);
       for (const size of ["sm", "md", "lg"]) {
-        await explorer.getByLabel("Пример: size", { exact: true }).selectOption(size);
+        await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: size", exact: true }), size);
         await expect(root).toHaveAttribute("data-size", size);
         await expectCenteredDropdown(root, dropdown);
       }
-      await explorer.getByLabel("Пример: size", { exact: true }).selectOption("md");
-      await explorer.getByLabel("Пример: density", { exact: true }).selectOption("compact");
+      await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: size", exact: true }), "md");
+      await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: density", exact: true }), "compact");
       await expectCenteredDropdown(root, dropdown);
-      await explorer.getByLabel("Пример: density", { exact: true }).selectOption("default");
+      await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: density", exact: true }), "default");
 
       await control.press("ArrowDown");
       const listbox = page.getByRole("listbox");

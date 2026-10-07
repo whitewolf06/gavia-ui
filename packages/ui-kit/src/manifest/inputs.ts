@@ -313,22 +313,25 @@ export const inputsManifest = defineComponentManifest([
     name: "WlDatePicker",
     category: "inputs",
     description:
-      "Выбор даты; v-model — ISO-строка \"YYYY-MM-DD\" или null. Локаль задаёт WlConfig приложения.",
+      "Выбор даты или диапазона. single сохраняет ISO-строку/null; range использует [start, end|null]/null. Локаль задаёт WlConfig приложения.",
     props: [
       { name: "placeholder", type: "string", default: "дд.мм.гггг", description: "Плейсхолдер." },
       { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер поля." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает поле." },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
+      { name: "selectionMode", type: "enum", default: "single", values: ["single", "range"], description: "single: ISO-строка/null; range: [start, end|null]/null. Первый выбор задаёт начало, второй завершает и сортирует диапазон, следующий начинает новый." },
+      { name: "startLabel", type: "string", default: "От", description: "Видимая подпись начала диапазона." },
+      { name: "endLabel", type: "string", default: "До", description: "Видимая подпись конца диапазона." },
       { name: "showIcon", type: "boolean", default: false, description: "Кнопка-иконка календаря." },
-      { name: "minDate", type: "string", description: "Минимальная дата, ISO \"YYYY-MM-DD\"." },
-      { name: "maxDate", type: "string", description: "Максимальная дата, ISO \"YYYY-MM-DD\"." },
+      { name: "minDate", type: "string", description: "Минимальная дата, ISO \"YYYY-MM-DD\"; пустое/невалидное значение не ограничивает выбор." },
+      { name: "maxDate", type: "string", description: "Максимальная дата, ISO \"YYYY-MM-DD\"; пустое/невалидное значение не ограничивает выбор." },
       { name: "displayFormat", type: "enum", default: "dd.mm.yyyy", values: ["dd.mm.yyyy", "yyyy-mm-dd"], description: "Формат отображения и ручного ввода; модель остаётся ISO." },
       { name: "motion", type: "boolean", description: "Анимация календаря; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [],
     emits: [],
-    model: { name: "modelValue", type: "string | null", description: "Дата ISO \"YYYY-MM-DD\" (default null)." }
+    model: { name: "modelValue", type: "string | null", description: "По умолчанию string|null; selectionMode=range: WlDateRange|null ([start: ISO, end: ISO|null]). Завершённый диапазон отсортирован, границы включены. Очистка начала → null; очистка конца → [start,null]." }
   },
   {
     name: "WlCalendar",

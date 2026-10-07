@@ -1,4 +1,6 @@
+import { resolveWlToken, wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
 import { expect, test, type Page } from "@playwright/test";
+import { copyCodePanel, chooseShowcaseTheme, navigateDocumentationComponent, navigateMainView } from "./select-helpers";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, URL as NodeURL } from "node:url";
 
@@ -7,7 +9,7 @@ const packageUrl = "https://www.npmjs.com/package/gavia-ui";
 const publishedVersion = "0.8.1";
 
 const pagesPath = "/gavia-ui/";
-const projectTitle = "Интерфейсы с ясным характером";
+const projectTitle = "Changelog";
 const repositoryDocs = "https://github.com/whitewolf06/gavia-ui/blob/main/";
 
 interface PageResources {
@@ -24,10 +26,11 @@ async function expectNoPageOverflow(page: Page): Promise<void> {
   )).toBeLessThanOrEqual(1);
 }
 
-function expectPagesLocation(page: Page, view?: string): void {
+function expectPagesLocation(page: Page, view?: string, component?: string): void {
   const url = new URL(page.url());
   expect(url.pathname).toBe(pagesPath);
   expect(url.searchParams.get("view")).toBe(view ?? null);
+  expect(url.searchParams.get("component")).toBe(component ?? null);
 }
 
 test.beforeEach(async ({ page, baseURL }) => {
@@ -55,11 +58,23 @@ test.afterEach(async ({ page }) => {
   expect(resources.get(page)!.failures, "Production assets and scripts must load without errors").toEqual([]);
 });
 
-test("project query survives refresh and production assets use the Pages prefix", async ({ page }) => {
-  await page.goto(`${pagesPath}?view=project`);
-  await expect(page.getByRole("heading", { name: projectTitle, exact: true })).toBeVisible();
-  await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("О проекте");
-  expectPagesLocation(page, "project");
+test("Home metadata and the old project query survive refresh with production assets under the Pages prefix", async ({ page }) => {
+  await page.goto(pagesPath);
+  await expect(page.getByTestId("home-page").getByRole("heading", { level: 1 })).toHaveText("Gavia UI");
+  expectPagesLocation(page);
+  // Detect a named theme overridden by a later :root fallback stylesheet.
+  await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "gavia");
+  await expect.poll(() => page.evaluate(() => {
+    const style = getComputedStyle(document.documentElement);
+    return {
+      accent: style.getPropertyValue("--wl-accent").trim(),
+      background: style.getPropertyValue("--wl-bg").trim()
+    };
+  })).toEqual({ accent: resolveWlToken("--wl-accent", "gavia"), background: resolveWlToken("--wl-bg", "gavia") });
+  const heroArt = page.locator(".home-hero-art");
+  await expect(heroArt).toHaveAttribute("alt", "");
+  await expect.poll(() => heroArt.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
+  await expect(heroArt).toHaveAttribute("src", /^\/gavia-ui\/assets\/gavia-lake-hero/);
   await expect(page.getByTestId("project-version")).toHaveText(packageMetadata.version);
   await expect(page.locator(".pg-kit-version")).toHaveText(`v${packageMetadata.version}`);
   const packageStatus = page.getByTestId("project-npm-status");
@@ -69,14 +84,13 @@ test("project query survives refresh and production assets use the Pages prefix"
 
   const logo = page.locator(".pg-logo");
   await expect(logo).toBeVisible();
-  const image = await logo.evaluate((element: HTMLImageElement) => ({
-    complete: element.complete,
-    width: element.naturalWidth,
-    path: new URL(element.currentSrc).pathname
-  }));
-  expect(image.complete).toBe(true);
-  expect(image.width).toBeGreaterThan(0);
-  expect(image.path).toMatch(/^\/gavia-ui\/assets\//);
+  await expect(logo).toHaveClass(/pg-logo-mask/);
+  await expect(logo).toHaveCSS("mask-image", /\/gavia-ui\/assets\/.*\.png/);
+  const imagePath = await logo.evaluate((element) => {
+    const match = /url\(["']?(.*?)["']?\)/.exec(getComputedStyle(element).maskImage);
+    return match ? new URL(match[1]!, window.location.href).pathname : "";
+  });
+  expect(imagePath).toMatch(/^\/gavia-ui\/assets\//);
 
   const observed = resources.get(page)!;
   expect(observed.scripts.size).toBeGreaterThan(0);
@@ -85,6 +99,11 @@ test("project query survives refresh and production assets use the Pages prefix"
     expect(path).toMatch(/^\/gavia-ui\/assets\//);
   }
 
+  // Keep the historical query as a tested alias; new navigation uses changelog.
+  await page.goto(`${pagesPath}?view=project`);
+  await expect(page.getByRole("heading", { name: projectTitle, exact: true })).toBeVisible();
+  await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Changelog");
+  expectPagesLocation(page, "project");
   await page.reload();
   await expect(page.getByRole("heading", { name: projectTitle, exact: true })).toBeVisible();
   expectPagesLocation(page, "project");
@@ -93,7 +112,7 @@ test("project query survives refresh and production assets use the Pages prefix"
   const releaseHash = await releaseLink.getAttribute("href");
   expect(releaseHash).toMatch(/^#project-release-/);
   await releaseLink.click();
-  await page.getByRole("navigation", { name: "Режим витрины" }).getByRole("button", { name: "Дизайн-система", exact: true }).click();
+  await navigateMainView(page, "Дизайн-система");
   await expect(page.getByRole("heading", { name: "Единый язык интерфейсов", exact: true })).toBeVisible();
   await page.goBack();
   await expect(page.locator(`${releaseHash}-title`)).toBeInViewport();
@@ -101,40 +120,39 @@ test("project query survives refresh and production assets use the Pages prefix"
 });
 
 test("navigation, Back and Forward preserve the repository subpath", async ({ page }) => {
-  await page.goto(`${pagesPath}?view=project`);
+  await page.goto(`${pagesPath}?view=changelog`);
   await expect(page.getByRole("heading", { name: projectTitle, exact: true })).toBeVisible();
-  const navigation = page.getByRole("navigation", { name: "Режим витрины" });
 
-  await navigation.getByRole("button", { name: "Дизайн-система", exact: true }).click();
+  await navigateMainView(page, "Дизайн-система");
   await expect(page.getByRole("heading", { name: "Единый язык интерфейсов", exact: true })).toBeVisible();
   expectPagesLocation(page, "system");
 
-  await navigation.getByRole("button", { name: "Компоненты", exact: true }).click();
-  await expect(page.getByRole("heading", { name: "Компоненты", exact: true })).toBeVisible();
-  expectPagesLocation(page);
+  await navigateMainView(page, "Документация");
+  await expect(page.getByRole("heading", { name: "Документация", exact: true })).toBeVisible();
+  expectPagesLocation(page, "docs");
 
-  await navigation.getByRole("button", { name: "О проекте", exact: true }).click();
+  await navigateMainView(page, "Changelog");
   await expect(page.getByRole("heading", { name: projectTitle, exact: true })).toBeVisible();
-  expectPagesLocation(page, "project");
+  expectPagesLocation(page, "changelog");
 
   await page.goBack();
-  await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Компоненты");
-  expectPagesLocation(page);
+  await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Документация");
+  expectPagesLocation(page, "docs");
   await page.goBack();
   await expect(page.getByRole("heading", { name: "Единый язык интерфейсов", exact: true })).toBeVisible();
   expectPagesLocation(page, "system");
   await page.goForward();
-  await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Компоненты");
-  expectPagesLocation(page);
+  await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Документация");
+  expectPagesLocation(page, "docs");
 
   await page.reload();
-  await expect(page.getByRole("heading", { name: "Компоненты", exact: true })).toBeVisible();
-  expectPagesLocation(page);
+  await expect(page.getByRole("heading", { name: "Документация", exact: true })).toBeVisible();
+  expectPagesLocation(page, "docs");
   await expectNoPageOverflow(page);
 });
 
-test("project history links point to repository documents and all themes fit the viewport", async ({ page }) => {
-  await page.goto(`${pagesPath}?view=project`);
+test("Changelog history links point to repository documents and all themes fit the viewport", async ({ page }) => {
+  await page.goto(`${pagesPath}?view=changelog`);
   await expect(page.getByRole("heading", { name: projectTitle, exact: true })).toBeVisible();
   const historyHeading = page.getByRole("heading", { name: "История изменений", exact: true });
   await expect(historyHeading).toBeVisible();
@@ -148,18 +166,16 @@ test("project history links point to repository documents and all themes fit the
   expect(documents).toContain(`${repositoryDocs}docs/migration-gavia.md`);
 
   const backgroundColors: string[] = [];
-  for (const [label, theme] of [
-    ["White", "white"], ["Graphite", "graphite"], ["Newspaper", "newspaper"]
-  ] as const) {
-    await page.locator(".pg-theme").getByText(label, { exact: true }).click();
+  for (const { label, name: theme } of wlDesignThemes) {
+    await chooseShowcaseTheme(page, label);
     await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme);
     backgroundColors.push(await page.evaluate(() =>
       getComputedStyle(document.documentElement).getPropertyValue("--wl-bg").trim()
     ));
     await expectNoPageOverflow(page);
   }
-  expect(new Set(backgroundColors).size).toBe(3);
-  expectPagesLocation(page, "project");
+  expect(new Set(backgroundColors).size).toBe(wlDesignThemes.length);
+  expectPagesLocation(page, "changelog");
 });
 
 test("production lazy examples, recipes and copied source work beneath the Pages prefix", async ({ page, context }) => {
@@ -179,8 +195,8 @@ test("production lazy examples, recipes and copied source work beneath the Pages
   const source = await explorer.locator("pre code").innerText();
   expect(source).toContain('from "gavia-ui"');
   expect(source).not.toContain("packages/ui-kit");
-  await explorer.getByRole("button", { name: "Копировать код", exact: true }).click();
-  await expect(explorer.getByRole("status").last()).toHaveText("Vue-код скопирован.");
+  await copyCodePanel(explorer);
+  await expect(explorer.getByRole("status").last()).toHaveText("Код скопирован.");
   // Clipboard line endings follow the OS; preserve every source character otherwise.
   await expect.poll(async () => (await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n?/g, "\n"))
     .toBe(source.replace(/\r\n?/g, "\n"));
@@ -198,4 +214,145 @@ test("production lazy examples, recipes and copied source work beneath the Pages
   await expect(form.getByRole("alert")).toContainText("Профиль сохранён");
   await expectNoPageOverflow(page);
   expectPagesLocation(page, "system");
+});
+
+test("picker documentation examples work beneath the Pages prefix", async ({ page }) => {
+  await page.goto(pagesPath + "?view=docs");
+  const docs = page.getByTestId("docs-page");
+  await expect(docs.getByRole("heading", { level: 1 })).toHaveText("Документация");
+
+  const timeWorkspace = await navigateDocumentationComponent(page, "WlTimePicker");
+  await expect(docs.getByRole("heading", { level: 1, name: "WlTimePicker", exact: true })).toBeInViewport();
+  const timeCard = timeWorkspace.getByTestId("ds-explorer").getByTestId("ds-example-preview");
+  const timeInput = timeCard.getByLabel("Время встречи", { exact: true });
+  await expect(timeInput).toHaveValue("09:30");
+  await timeInput.fill("10:45");
+  await timeInput.press("Enter");
+  await expect(timeCard.getByRole("status")).toHaveText("Выбрано: 10:45");
+  await timeInput.fill("");
+  await timeInput.press("Enter");
+  await expect(timeCard.getByRole("status")).toHaveText("Выбрано: время не задано");
+  expectPagesLocation(page, "docs", "WlTimePicker");
+
+  const fileWorkspace = await navigateDocumentationComponent(page, "WlFilePicker");
+  await expect(docs.getByRole("heading", { level: 1, name: "WlFilePicker", exact: true })).toBeInViewport();
+  const fileCard = fileWorkspace.getByTestId("ds-explorer").getByTestId("ds-example-preview");
+  const opened = page.waitForEvent("filechooser");
+  await fileCard.getByRole("button", { name: "Выбрать файлы", exact: true }).click();
+  await (await opened).setFiles({ name: "pages-example.txt", mimeType: "text/plain", buffer: Buffer.from("Pages example") });
+  await expect(fileCard.getByRole("status")).toHaveText("Выбрано: pages-example.txt");
+  await fileCard.getByRole("button", { name: "Очистить список приложения", exact: true }).click();
+  await expect(fileCard.getByRole("status")).toHaveText("Можно выбрать файлы повторно.");
+  await expectNoPageOverflow(page);
+  expectPagesLocation(page, "docs", "WlFilePicker");
+});
+
+test("Theme builder scopes live colors, restores its draft and exports a working CSS theme", async ({ page, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.goto(`${pagesPath}?theme=gavia`);
+  const headerSearch = page.locator(".pg-search");
+  await expect(headerSearch).toHaveText("Поиск");
+  await expect(headerSearch).toHaveAttribute("title", "Поиск");
+  await expect(page.locator(".pg-logo")).toHaveCSS("width", page.viewportSize()!.width <= 400 ? "28px" : page.viewportSize()!.width <= 700 ? "32px" : "36px");
+  await navigateMainView(page, "Подбор темы");
+  expectPagesLocation(page, "theme-builder");
+  const builder = page.getByTestId("theme-builder-page");
+  const preview = page.getByTestId("theme-builder-preview");
+  await expect(builder.getByRole("heading", { name: "Подбор темы", exact: true })).toBeVisible();
+  const createAction = preview.getByRole("button", { name: "Создать проект", exact: true });
+  await expect(createAction).toHaveCSS("background-color", "rgb(113, 79, 181)");
+  await expect(createAction).toHaveCSS("color", "rgb(255, 255, 255)");
+  await expect(createAction).toHaveCSS("border-radius", "4px");
+  await expect(preview.getByRole("button", { name: "Primary", exact: true })).toHaveCSS("border-radius", "3px");
+  await createAction.focus();
+  await page.keyboard.down("Space");
+  await expect(createAction).toHaveCSS("background-color", "rgb(79, 55, 127)");
+  await page.keyboard.up("Space");
+  await expect(preview.getByRole("status")).toHaveText("Действий: 1");
+  const bg = builder.getByRole("textbox", { name: "Основной фон", exact: true });
+  await bg.fill("#f0");
+  await expect(bg).toHaveAttribute("aria-invalid", "true");
+  await expect(preview).toHaveCSS("background-color", "rgb(249, 247, 242)");
+  await expect(builder.getByRole("button", { name: "Копировать для агента", exact: true })).toBeDisabled();
+  await bg.fill("#eef5ff");
+  await builder.getByRole("textbox", { name: "Основное действие", exact: true }).fill("#0b6a53");
+  await builder.getByRole("textbox", { name: "Ссылки и фокус", exact: true }).fill("#0b6a53");
+  await expect(preview).toHaveCSS("background-color", "rgb(238, 245, 255)");
+  await expect(preview.getByRole("button", { name: "Создать проект", exact: true })).toHaveCSS("background-color", "rgb(11, 106, 83)");
+  await expect(page.locator(".pg-top")).toHaveCSS("background-color", "rgb(249, 247, 242)");
+  const priority = preview.getByRole("combobox", { name: "Приоритет", exact: true });
+  await priority.click();
+  const overlay = page.getByTestId("theme-builder-overlay");
+  await expect(overlay).toHaveCSS("background-color", "rgb(238, 245, 255)");
+  await expect(overlay).toHaveAttribute("data-wl-theme", "gavia");
+  await overlay.getByRole("option", { name: "Высокий", exact: true }).click();
+  await expect(priority).toHaveText("Высокий");
+  await preview.getByRole("button", { name: "Создать проект", exact: true }).click();
+  await expect(preview.getByRole("status")).toHaveText("Действий: 2");
+  await builder.getByRole("checkbox", { name: "Disabled", exact: true }).check();
+  await expect(preview.getByRole("button", { name: "Создать проект", exact: true })).toBeDisabled();
+  await page.reload();
+  await expect(bg).toHaveValue("#eef5ff");
+  await expect(preview).toHaveCSS("background-color", "rgb(238, 245, 255)");
+  await builder.getByRole("textbox", { name: "Ссылки и фокус", exact: true }).fill("#eeeeee");
+  await expect(builder.locator('[data-passes="false"]').first()).toBeVisible();
+  await builder.getByRole("textbox", { name: "Ссылки и фокус", exact: true }).fill("#0b6a53");
+  const formats = builder.getByRole("group", { name: "Формат экспорта", exact: true });
+  await formats.getByRole("button", { name: "JSON", exact: true }).click();
+  await builder.getByRole("button", { name: "Копировать JSON", exact: true }).click();
+  await expect(builder.getByRole("status").last()).toHaveText("Код скопирован.");
+  const spec = JSON.parse(await page.evaluate(() => navigator.clipboard.readText())) as {name:string; palette:Record<string,string>};
+  expect(spec.name).toBe("my-gavia");
+  expect(spec.palette).toMatchObject({ background: "#eef5ff", primary: "#0b6a53", link: "#0b6a53" });
+  await formats.getByRole("button", { name: "CSS", exact: true }).click();
+  await builder.getByRole("button", { name: "Копировать CSS", exact: true }).click();
+  await expect(builder.getByRole("status").last()).toHaveText("Код скопирован.");
+  const css = await page.evaluate(() => navigator.clipboard.readText());
+  expect(css).toContain('@layer wl.tokens');
+  expect(css).toContain('prefers-reduced-motion: reduce');
+  await page.addStyleTag({ content: css });
+  const exportedPreview = await preview.evaluate((element, themeName) => {
+    const clone = element.cloneNode(true) as HTMLElement;
+    clone.removeAttribute("style");
+    clone.dataset.wlTheme = themeName;
+    clone.dataset.testid = "exported-theme-proof";
+    document.body.append(clone);
+    const primary = clone.querySelector<HTMLElement>('[data-variant="primary"]')!;
+    const colors = { bg: getComputedStyle(clone).backgroundColor, action: getComputedStyle(primary).backgroundColor, text: getComputedStyle(primary).color };
+    clone.remove();
+    return colors;
+  }, spec.name);
+  expect(exportedPreview).toEqual({ bg: "rgb(238, 245, 255)", action: "rgb(11, 106, 83)", text: "rgb(255, 255, 255)" });
+  await builder.getByRole("button", { name: "Сбросить цвета", exact: true }).click();
+  await expect(bg).toHaveValue("#f9f7f2");
+  await expect(preview).toHaveCSS("background-color", "rgb(249, 247, 242)");
+  await expectNoPageOverflow(page);
+});
+
+test("font presentation preserves theme, faces and anchors under the Pages subpath", async ({ page }) => {
+  await page.goto(`${pagesPath}?view=font&theme=graphite#wl-type-proof`);
+  const fontPage = page.getByTestId("font-page");
+  const proof = fontPage.locator("#wl-type-proof-title");
+  await expect(fontPage).toBeVisible();
+  await expect(proof).toBeInViewport();
+  await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "graphite");
+  await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", /^"?Gavia"?,/);
+  const loaded = await page.evaluate(async () => (await document.fonts.load("italic 600 16px Gavia", "Гавиа Gavia 0123456789")).length);
+  expect(loaded).toBe(1);
+  expectPagesLocation(page, "font");
+  await expectNoPageOverflow(page);
+  await navigateMainView(page, "Документация");
+  await expect(page.getByTestId("docs-page")).toBeVisible();
+  expectPagesLocation(page, "docs");
+  expect(new URL(page.url()).searchParams.get("theme")).toBe("graphite");
+  await page.goBack();
+  await expect(fontPage).toBeVisible();
+  await expect(proof).toBeInViewport();
+  expectPagesLocation(page, "font");
+  await page.reload();
+  await expect(proof).toBeInViewport();
+  await chooseShowcaseTheme(page, "Gavia");
+  expectPagesLocation(page, "font");
+  expect(new URL(page.url()).searchParams.get("theme")).toBe("gavia");
+  await expectNoPageOverflow(page);
 });

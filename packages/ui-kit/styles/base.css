@@ -69,6 +69,7 @@
     --wl-font-heading: var(--wl-font);
     --wl-mono: "SF Mono", ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
     --wl-palette-bg: var(--wl-gray-0);
+    --wl-palette-bg-raised: var(--wl-palette-bg);
     --wl-palette-bg-soft: var(--wl-gray-50);
     --wl-palette-bg-hover: var(--wl-gray-100);
     --wl-palette-border: var(--wl-gray-200);
@@ -83,6 +84,9 @@
     --wl-palette-accent-soft-hover: var(--wl-blue-75);
     --wl-palette-accent-border-hover: var(--wl-blue-200);
     --wl-palette-on-accent: #ffffff;
+    --wl-palette-action-primary-bg: var(--wl-palette-accent);
+    --wl-palette-action-primary-hover: var(--wl-palette-accent-hover);
+    --wl-palette-action-primary-text: var(--wl-palette-on-accent);
     --wl-palette-success: var(--wl-green-500);
     --wl-palette-success-soft: var(--wl-green-50);
     --wl-palette-success-border: var(--wl-green-100);
@@ -196,8 +200,19 @@
     --wl-font-code-weight: 400;
     --wl-font-code-family: var(--wl-mono);
     --wl-size-page-max: 1240px;
+    --wl-size-reading-max: 72ch;
+    --wl-size-grid-min: 240px;
+    --wl-z-base: 0;
+    --wl-z-sticky: 50;
+    --wl-palette-action-primary-active: var(--wl-palette-action-primary-hover);
+    --wl-palette-accent-warm: var(--wl-palette-warn);
+    --wl-palette-accent-warm-soft: var(--wl-palette-warn-soft);
+    --wl-dimension-btn-radius: var(--wl-radius);
+    --wl-dimension-btn-radius-sm: var(--wl-radius-sm);
+    --wl-dimension-btn-radius-lg: var(--wl-radius-lg);
     /* semantic */
     --wl-bg: var(--wl-palette-bg);
+    --wl-bg-raised: var(--wl-palette-bg-raised);
     --wl-bg-soft: var(--wl-palette-bg-soft);
     --wl-bg-hover: var(--wl-palette-bg-hover);
     --wl-border: var(--wl-palette-border);
@@ -354,6 +369,16 @@
     --wl-motion-normal: var(--wl-dur-4);
     --wl-motion-slow: var(--wl-dur-5);
     --wl-motion-ease: var(--wl-ease);
+    --wl-layout-reading-max: var(--wl-size-reading-max);
+    --wl-layout-grid-min: var(--wl-size-grid-min);
+    --wl-layer-base: var(--wl-z-base);
+    --wl-layer-sticky: var(--wl-z-sticky);
+    --wl-action-primary-active: var(--wl-action-primary-hover);
+    --wl-accent-warm: var(--wl-palette-accent-warm);
+    --wl-accent-warm-soft: var(--wl-palette-accent-warm-soft);
+    --wl-corner-button: var(--wl-dimension-btn-radius);
+    --wl-corner-button-sm: var(--wl-dimension-btn-radius-sm);
+    --wl-corner-button-lg: var(--wl-dimension-btn-radius-lg);
     /* component */
     --wl-btn-height: var(--wl-control-height-md);
     --wl-btn-height-sm: var(--wl-control-height-sm);
@@ -423,6 +448,7 @@
     --wl-dp-panel-pad: var(--wl-metric-dp-panel-pad);
     --wl-upload-drop-pad-y: var(--wl-metric-upload-drop-pad-y);
     --wl-upload-drop-pad-x: var(--wl-metric-upload-drop-pad-x);
+    --wl-btn-radius-lg: var(--wl-corner-button-lg);
   }
 }
 /* @wl-tokens:end */
@@ -466,6 +492,10 @@
   .wl-btn--primary:hover {
     background: var(--wl-action-primary-hover);
     border-color: var(--wl-action-primary-hover);
+  }
+  .wl-btn--primary:where(:not(:disabled):not(.is-disabled):not(.is-loading)):active {
+    background: var(--wl-action-primary-active);
+    border-color: var(--wl-action-primary-active);
   }
   .wl-btn--ghost {
     border-color: transparent;
@@ -542,7 +572,7 @@
     height: var(--wl-btn-height-lg);
     padding: 0 18px;
     font-size: 14.5px;
-    border-radius: var(--wl-radius-lg);
+    border-radius: var(--wl-btn-radius-lg);
   }
   .wl-btn--block {
     width: 100%;
@@ -3145,14 +3175,81 @@
     display: inline-flex;
     align-items: stretch;
     width: 100%;
+    min-width: 0;
+    min-height: var(--wl-input-height);
+    border: 1px solid var(--wl-border);
+    border-radius: var(--wl-input-radius);
+    color: var(--wl-text);
+    background: var(--wl-bg);
+    transition: border-color var(--wl-dur-2), box-shadow var(--wl-dur-2);
   }
-  .wl-dp .wl-input {
+  .wl-dp:hover {
+    border-color: var(--wl-border-2);
+  }
+  .wl-dp:focus-within {
+    border-color: var(--wl-accent);
+    box-shadow: var(--wl-focus-ring);
+    outline: 2px solid var(--wl-focus-color);
+    outline-offset: 2px;
+  }
+  .wl-dp.is-invalid {
+    border-color: var(--wl-danger);
+  }
+  .wl-dp.is-invalid:focus-within {
+    box-shadow: var(--wl-focus-ring-danger);
+    outline-color: var(--wl-focus-invalid-color);
+  }
+  .wl-dp.is-disabled {
+    background: var(--wl-bg-soft);
+    color: var(--wl-text-3);
+    cursor: not-allowed;
+  }
+  .wl-dp[data-size="sm"] {
+    min-height: var(--wl-input-height-sm);
+    border-radius: var(--wl-radius-sm);
+  }
+  .wl-dp[data-size="lg"] {
+    min-height: var(--wl-input-height-lg);
+  }
+  .wl-dp__input {
     flex: 1;
     min-width: 0;
+    height: calc(var(--wl-input-height) - 2px);
+    border: 0;
+    border-radius: inherit;
+    background: transparent;
+  }
+  .wl-dp__input.wl-input--sm {
+    height: calc(var(--wl-input-height-sm) - 2px);
+  }
+  .wl-dp__input.wl-input--lg {
+    height: calc(var(--wl-input-height-lg) - 2px);
+  }
+  .wl-dp__input:focus,
+  .wl-dp__input.is-invalid:focus {
+    box-shadow: none;
+  }
+  .wl-dp__input:disabled {
+    background: transparent;
   }
   .wl-dp__input--btn {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+  }
+  .wl-dp__endpoint {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+  .wl-dp__endpoint + .wl-dp__endpoint {
+    border-left: 1px solid var(--wl-border);
+  }
+  .wl-dp__endpoint-label {
+    padding: 4px 12px 0;
+    font-size: 11px;
+    line-height: 1.2;
+    color: var(--wl-text-2);
   }
   .wl-dp__trigger {
     flex: none;
@@ -3162,28 +3259,25 @@
     align-items: center;
     justify-content: center;
     color: var(--wl-text-2);
-    background: var(--wl-bg);
-    border: 1px solid var(--wl-border);
-    border-left: none;
+    background: transparent;
+    border: 0;
+    border-left: 1px solid var(--wl-border);
     border-radius: 0 var(--wl-input-radius) var(--wl-input-radius) 0;
     cursor: pointer;
-    transition:
-      background var(--wl-dur-1) var(--wl-ease),
-      border-color var(--wl-dur-1) var(--wl-ease),
-      color var(--wl-dur-1) var(--wl-ease);
+    transition: background var(--wl-dur-1) var(--wl-ease), color var(--wl-dur-1) var(--wl-ease);
   }
   .wl-dp__trigger:hover {
     background: var(--wl-bg-soft);
-    border-color: var(--wl-border-2);
     color: var(--wl-text);
   }
   .wl-dp__trigger:disabled {
-    background: var(--wl-bg-soft);
     color: var(--wl-text-3);
-    cursor: default;
+    cursor: not-allowed;
   }
   .wl-dp[data-size="sm"] .wl-dp__trigger {
     width: var(--wl-input-height-sm);
+    border-top-right-radius: var(--wl-radius-sm);
+    border-bottom-right-radius: var(--wl-radius-sm);
   }
   .wl-dp[data-size="lg"] .wl-dp__trigger {
     width: var(--wl-input-height-lg);
@@ -3195,6 +3289,13 @@
   .wl-dp__panel {
     margin-top: 4px;
     padding: var(--wl-dp-panel-pad);
+  }
+  .wl-dp__range-hint {
+    max-width: 238px;
+    margin: 0 0 var(--wl-space-sm);
+    color: var(--wl-text-2);
+    font-size: 12px;
+    line-height: 1.4;
   }
   .wl-dp__header {
     display: flex;
@@ -3303,6 +3404,11 @@
   }
   .wl-dp__day.is-muted {
     color: var(--wl-text-3);
+  }
+  .wl-dp__day.is-in-range {
+    background: var(--wl-accent-soft);
+    color: var(--wl-accent);
+    border-radius: var(--wl-radius-sm);
   }
   .wl-dp__day.is-selected {
     background: var(--wl-accent-soft);
@@ -4205,5 +4311,13 @@
   }
   .wl-file-picker:where([hidden]) {
     display: none;
+  }
+}
+
+@layer wl.components {
+  /* The DatePicker composite owns the outline, including its calendar button. */
+  .wl-dp__input:focus-visible,
+  .wl-dp__trigger:focus-visible {
+    outline: none;
   }
 }

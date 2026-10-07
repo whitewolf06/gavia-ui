@@ -1,6 +1,6 @@
 import type { WlThemeName } from "../types";
 import type { WlDesignTokenDefinition } from "./types";
-import { wlDesignTokens, type WlDesignTokenName } from "./tokens.generated";
+import { wlDesignThemes, wlDesignTokens, type WlDesignTokenName } from "./tokens.generated";
 
 export * from "./types";
 export * from "./tokens.generated";
@@ -9,7 +9,7 @@ const definitions = new Map<string, WlDesignTokenDefinition>(wlDesignTokens.map(
 
 /** Resolves the shipped theme snapshot without reading DOM or consumer overrides. */
 export function resolveWlToken(name: WlDesignTokenName, theme: WlThemeName = "white"): string {
-  if (!["white", "graphite", "newspaper"].includes(theme)) throw new Error(`Unknown Gavia UI theme: ${theme}`);
+  if (!wlDesignThemes.some((item) => item.name === theme)) throw new Error(`Unknown Gavia UI theme: ${theme}`);
   function resolve(reference: string, trail: string[]): string {
     if (trail.includes(reference)) throw new Error(`Circular Gavia UI token: ${reference}`);
     const token = definitions.get(reference);

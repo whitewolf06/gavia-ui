@@ -1,0 +1,218 @@
+{
+  "family": "Gavia",
+  "version": "0.600",
+  "license": "OFL-1.1",
+  "fontTools": "4.66.1",
+  "metrics": {
+    "ascent": 970,
+    "descent": -305,
+    "lineGap": 0,
+    "winAscent": 1009,
+    "winDescent": 304
+  },
+  "sources": {
+    "JetBrainsMono-Italic-Variable.ttf": "c5c2a1d29297d2a40ec4a0114447c6b7a1477678ab2d9aa4b755356e1a02cead",
+    "JetBrainsMono-Variable.ttf": "3cfafa86e28b87184d592fef82846e8c10cb48653c62efcda34f082da225ec34",
+    "Onest-Variable.ttf": "966c5c29b4755da84b6854d5c21dd4eaa2420225d0e9874de602de176d4a9f31"
+  },
+  "authoredGeometry": {
+    "file": "scripts/fonts/draw_gavia.py",
+    "sha256": "14e86f0b46e9ba2a9ed667456dddc38e2ef449f66d2d4fad62eed29c1320c19d",
+    "characters": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "skeletons": 4,
+    "filledNumerals": [
+      "1",
+      "3",
+      "4",
+      "7"
+    ],
+    "compoundNumerals": [
+      "6",
+      "9"
+    ],
+    "refinedLetters": [
+      "a",
+      "а",
+      "e",
+      "е",
+      "l"
+    ]
+  },
+  "faces": [
+    {
+      "weight": 100,
+      "style": "normal",
+      "name": "Gavia-Thin",
+      "ttf": {
+        "file": "Gavia-Thin.ttf",
+        "sha256": "36e9ac3ed86418b3d8a9c7230135ca636552442f40db1ef9a68dbcaf898e9b7f"
+      },
+      "woff2": {
+        "file": "Gavia-Thin.woff2",
+        "sha256": "b023efaa8e41a16e2619a528d48dd92d216923d04c63dcd6076d1afc0e2b7957"
+      }
+    },
+    {
+      "weight": 100,
+      "style": "italic",
+      "name": "Gavia-ThinItalic",
+      "ttf": {
+        "file": "Gavia-ThinItalic.ttf",
+        "sha256": "90d24966dad25aa26ff6c3cd11cd02680052500e86697abb4e48976b96bb1de1"
+      },
+      "woff2": {
+        "file": "Gavia-ThinItalic.woff2",
+        "sha256": "404c539aed97c35abeedb2ce201fc39bdaa44b0d3cd10ca41e5222bb1b658482"
+      }
+    },
+    {
+      "weight": 300,
+      "style": "normal",
+      "name": "Gavia-Light",
+      "ttf": {
+        "file": "Gavia-Light.ttf",
+        "sha256": "53685ed8bfc9dea4463cd423f509388a3352784db40e6adf8d12a3640030a73f"
+      },
+      "woff2": {
+        "file": "Gavia-Light.woff2",
+        "sha256": "40fb548cd699d2235203d1f9b0f6d2ada227793b73d761fb7e61649727f3c844"
+      }
+    },
+    {
+      "weight": 300,
+      "style": "italic",
+      "name": "Gavia-LightItalic",
+      "ttf": {
+        "file": "Gavia-LightItalic.ttf",
+        "sha256": "f105bb175fd8c640aa666db7c399d8dd85415f5b5f6876d8f71274f376382e7e"
+      },
+      "woff2": {
+        "file": "Gavia-LightItalic.woff2",
+        "sha256": "d6d3644b74046f3fec5d98c2e2b5fd810080664845cee54d9aaba45f827feebd"
+      }
+    },
+    {
+      "weight": 400,
+      "style": "normal",
+      "name": "Gavia-Regular",
+      "ttf": {
+        "file": "Gavia-Regular.ttf",
+        "sha256": "c2d1f45a03fd59d81eaea27d28d654ed437de1b70bb8dceff23d9a6dc8aca32d"
+      },
+      "woff2": {
+        "file": "Gavia-Regular.woff2",
+        "sha256": "8dd3bf1a81fb269f8042c4f0e3373f01a0252c49ba72ad9040efc94f5d4fd528"
+      }
+    },
+    {
+      "weight": 400,
+      "style": "italic",
+      "name": "Gavia-RegularItalic",
+      "ttf": {
+        "file": "Gavia-RegularItalic.ttf",
+        "sha256": "b5221c831f85eb1b40a8925e72004f36005d4ffa2993f721c7af950c17c3a686"
+      },
+      "woff2": {
+        "file": "Gavia-RegularItalic.woff2",
+        "sha256": "683c881ca63ecd89f780fae02b5cbc6868f52ed0f9f1086857494ac60da3acfa"
+      }
+    },
+    {
+      "weight": 500,
+      "style": "normal",
+      "name": "Gavia-Medium",
+      "ttf": {
+        "file": "Gavia-Medium.ttf",
+        "sha256": "3c874da4658b1ea0b43ccb2833ca057661e8b8e7e9a8002bcb79870ee4d7e937"
+      },
+      "woff2": {
+        "file": "Gavia-Medium.woff2",
+        "sha256": "05cd0d5b0033a5d4cf5de6df4b18435d3c1c23a1d7ab9f721efec3b81ab0db56"
+      }
+    },
+    {
+      "weight": 500,
+      "style": "italic",
+      "name": "Gavia-MediumItalic",
+      "ttf": {
+        "file": "Gavia-MediumItalic.ttf",
+        "sha256": "320abe0dc51e6ef52be9798fc1abadebcac401560649018e2f24447eb21c81fb"
+      },
+      "woff2": {
+        "file": "Gavia-MediumItalic.woff2",
+        "sha256": "8fadd7b094ee2aeb1bd9ec392712b62d9e6f1a1febea8820589857dcf5ed0385"
+      }
+    },
+    {
+      "weight": 600,
+      "style": "normal",
+      "name": "Gavia-SemiBold",
+      "ttf": {
+        "file": "Gavia-SemiBold.ttf",
+        "sha256": "932504e72eb1c1644b497dee990c8318f2e1220d8a438c7d2636382a4adf6d48"
+      },
+      "woff2": {
+        "file": "Gavia-SemiBold.woff2",
+        "sha256": "fae4307cc7d4bf44c48e651569fde5dc124837a31b8d45e200713064624297f2"
+      }
+    },
+    {
+      "weight": 600,
+      "style": "italic",
+      "name": "Gavia-SemiBoldItalic",
+      "ttf": {
+        "file": "Gavia-SemiBoldItalic.ttf",
+        "sha256": "4a0ab5488d76a08f583e221e0458c8d10f2540371e5c4f7c6ca3c25475d74ea4"
+      },
+      "woff2": {
+        "file": "Gavia-SemiBoldItalic.woff2",
+        "sha256": "76a2c69289f9efc2613306f0d904264b3c1cde622a1bb2faf3e83812cdcfbf2e"
+      }
+    },
+    {
+      "weight": 700,
+      "style": "normal",
+      "name": "Gavia-Bold",
+      "ttf": {
+        "file": "Gavia-Bold.ttf",
+        "sha256": "9b85cdf1e578770ec0e1e3a301831263b31eb538616983aea423b17ccd4e1afb"
+      },
+      "woff2": {
+        "file": "Gavia-Bold.woff2",
+        "sha256": "01e2a8b4350ee9ad9c645fa5b4bfc0d5570bb166b993caf4c8dcdbfa2b199d52"
+      }
+    },
+    {
+      "weight": 700,
+      "style": "italic",
+      "name": "Gavia-BoldItalic",
+      "ttf": {
+        "file": "Gavia-BoldItalic.ttf",
+        "sha256": "d107280ad1453ba37d41adcf182ee38fd914f0d63d5598e9c66e42e14c0b2646"
+      },
+      "woff2": {
+        "file": "Gavia-BoldItalic.woff2",
+        "sha256": "00e105fd7b4c492d1df60a54be944dfc81891629f3d0b900a4ba89f340fd8526"
+      }
+    }
+  ],
+  "design": {
+    "base": "Onest-derived letter and extended glyph drawing",
+    "digits": "Independent numeral designs interpreting the first specimen: level wide-bar three with a gentler diagonal; long vertically cut one; short-stemmed open four; bracketed seven; compact six/nine loops with flat diagonal terminals. Actual Regular ink widths are 50% between 0.1 and 0.4; form details are optical interpretations, not a contour interpolation. Common optical limits; default/tnum 600-unit spacing; pnum spacing only",
+    "letters": "Uniform 96% Onest width, original vertical proportions, restrained a/e terminal and l foot refinements",
+    "italic": "7-degree geometric oblique; no JetBrains outline imports",
+    "kerning": "Complete source Onest kerning and mark positions retained, horizontally scaled with letters",
+    "hints": "Source bytecode stripped; native small-size rendering needs review"
+  }
+}

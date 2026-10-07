@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { chooseDropdownOption, chooseShowcaseTheme } from "./select-helpers";
 const themes = [{ name: "white", label: "White" }, { name: "graphite", label: "Graphite" }, { name: "newspaper", label: "Newspaper" }];
 // Keep a configured production subpath when comparing the same built showcase.
 const showcaseUrl = new URL("?view=system", process.env.GAVIA_E2E_BASE_URL ?? "http://127.0.0.1:4173/").href;
@@ -14,7 +15,7 @@ test.beforeEach(async ({ page }) => {
 });
 for (const theme of themes) {
   test(`${theme.name}: six complete screens`, async ({ page }, testInfo) => {
-    await page.locator(".pg-theme").getByText(theme.label, { exact: true }).click();
+    await chooseShowcaseTheme(page, theme.label);
     for (const id of ["MaterialList", "ProfileForm", "Preferences", "MaterialDetail", "ProjectWizard", "AttachmentUpload"]) {
       await page.locator(`[data-testid="ds-recipes"] [data-recipe="${id}"]`).first().click();
       const preview = page.getByTestId("ds-recipe-preview");
@@ -45,7 +46,7 @@ for (const theme of themes) {
     await expect(page.getByTestId("ds-stress")).toHaveScreenshot(`${theme.name}-long-content.png`);
   });
   test(`${theme.name}: interactive states and overlay focus`, async ({ page }) => {
-    await page.locator(".pg-theme").getByText(theme.label, { exact: true }).click();
+    await chooseShowcaseTheme(page, theme.label);
     const explorer = page.getByTestId("ds-explorer");
     const preview = page.getByTestId("ds-example-preview");
     async function select(name: string): Promise<void> {
@@ -57,7 +58,7 @@ for (const theme of themes) {
       await expect(page.locator(".wl-select-overlay")).toHaveCount(0);
     }
     await select("WlButton");
-    await explorer.getByLabel("Пример: variant", { exact: true }).selectOption("primary");
+    await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: variant", exact: true }), "primary");
     await explorer.getByRole("button", { name: "Проверить фокус" }).press("Enter");
     await expect(preview.getByRole("button", { name: "Добавить" })).toBeFocused();
     await expect(preview).toHaveScreenshot(`${theme.name}-button-focus.png`);
