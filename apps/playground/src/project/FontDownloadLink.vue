@@ -10,7 +10,7 @@ withDefaults(defineProps<{ variant?: "primary" | "secondary" }>(), { variant: "p
     class="wl-btn wl-btn--md pg-font-download" :class="'wl-btn--' + variant"
     data-wl="font-download" :data-variant="variant" data-size="md">
     <WlIcon name="download" :size="16" />
-    <span class="wl-btn__label"><slot>Скачать шрифт Gavia</slot></span>
+    <span class="wl-btn__label"><slot>Скачать шрифт Gavia Sans</slot></span>
   </a>
 </template>
 

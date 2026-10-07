@@ -84,15 +84,20 @@ createApp(App).mount("#app");`;
         <p class="home-tagline">Ясный язык для ваших интерфейсов.</p>
         <p class="home-lead wl-text-body wl-text-muted">Компоненты, общие токены и живые примеры для Vue-приложений. От первой кнопки до согласованного интерфейса в четырёх темах.</p>
         <nav class="wl-inline" data-space="md" aria-label="Начать работу с Gavia UI">
-          <a class="home-action home-action--primary" :href="themedHref('?view=docs')" @click.prevent="emit('navigate', 'docs')">Читать документацию <WlIcon name="arrow-right" :size="18" /></a>
-          <a class="home-action home-action--secondary" :href="themedHref('?view=docs#docs-components')" @click.prevent="emit('catalog')">Все компоненты</a>
+          <a class="home-action wl-btn wl-btn--primary wl-btn--md" data-wl="button" data-variant="primary" data-size="md" data-density="default" :href="themedHref('?view=docs')" @click.prevent="emit('navigate', 'docs')">Читать документацию <WlIcon name="arrow-right" :size="18" /></a>
+          <a class="home-action wl-btn wl-btn--secondary wl-btn--md" data-wl="button" data-variant="secondary" data-size="md" data-density="default" :href="themedHref('?view=docs#docs-components')" @click.prevent="emit('catalog')">Все компоненты</a>
         </nav>
         <div class="home-font-entry">
-          <WlButton size="sm" variant="soft" @click="emit('navigate', 'font')"><template #icon><WlIcon name="book" :size="16" /></template>Шрифт Gavia</WlButton>
+          <WlButton size="sm" variant="soft" @click="emit('navigate', 'font')"><template #icon><WlIcon name="book" :size="16" /></template>Шрифт Gavia Sans</WlButton>
           <span class="wl-text-small">6 весов · 12 начертаний</span>
         </div>
         <p class="home-credit wl-text-small wl-text-muted">Автор — <a class="home-text-link" :href="project.author.url">{{ project.author.name }}</a>. <a class="home-text-link" :href="project.licenseUrl">{{ project.license }}</a> · <a class="home-text-link" :href="project.repositoryUrl">GitHub <WlIcon name="external-link" :size="13" /></a></p>
       </div>
+      </div>
+    </header>
+
+    <div class="home-content wl-container wl-stack" data-space="3xl">
+    <div class="home-onboarding">
       <section class="home-install-card wl-stack" data-space="lg" aria-labelledby="home-install-title" data-testid="project-npm-status">
         <div class="home-install-brand">
           <span class="home-mark home-mark-mask" aria-hidden="true" :style="{ maskImage: 'url(' + gaviaMarkUrl + ')', WebkitMaskImage: 'url(' + gaviaMarkUrl + ')' }" />
@@ -107,10 +112,6 @@ createApp(App).mount("#app");`;
         <p class="home-copy-status wl-text-small wl-text-muted" role="status">{{ copied ? 'Команда установки скопирована.' : manual ? 'Буфер обмена недоступен. Скопируйте команду из поля ниже.' : 'Vue 3 должен быть установлен в вашем приложении.' }}</p>
         <textarea v-if="manual" class="home-manual-copy" readonly :value="installCommand" aria-label="Команда установки для ручного копирования" @focus="($event.target as HTMLTextAreaElement).select()" />
       </section>
-      </div>
-    </header>
-
-    <div class="home-content wl-container wl-stack" data-space="3xl">
     <dl class="home-metrics" aria-label="Состав библиотеки">
       <div v-for="metric in metrics" :key="metric.label" class="home-metric">
         <dt class="home-metric-label"><span class="home-metric-icon" aria-hidden="true"><WlIcon :name="metric.icon" :size="25" /></span>{{ metric.label }}</dt>
@@ -118,6 +119,7 @@ createApp(App).mount("#app");`;
         <dd class="home-metric-caption wl-text-small wl-text-muted">{{ metric.caption }}</dd>
       </div>
     </dl>
+    </div>
 
     <section class="wl-stack" data-space="lg" aria-labelledby="home-sections-title">
       <div class="home-section-heading"><h2 id="home-sections-title" class="wl-text-title">Найдите нужный раздел</h2><span class="wl-text-small wl-text-muted">Документы · примеры · правила</span></div>
@@ -172,60 +174,43 @@ createApp(App).mount("#app");`;
 
 <style>
 .home-page {
-  --wl-font: "Gavia", "Segoe UI", Arial, sans-serif;
-  --wl-font-heading: var(--wl-font);
-  --wl-type-display-family: var(--wl-font);
-  --wl-type-title-family: var(--wl-font);
-  --wl-type-heading-family: var(--wl-font);
-  --wl-type-subheading-family: var(--wl-font);
-  --wl-type-body-family: var(--wl-font);
-  --wl-type-small-family: var(--wl-font);
-  --wl-type-label-family: var(--wl-font);
-  --wl-corner-surface: 6px;
-  --wl-corner-control: 4px;
-  --wl-btn-radius: 4px;
   overflow-wrap: anywhere;
   font-family: var(--wl-font);
 }
 .home-hero { position: relative; isolation: isolate; min-height: 450px; padding-block: 40px; overflow: hidden; background: var(--wl-bg); border-bottom: 1px solid var(--wl-border); }
 .home-hero-art { position: absolute; inset: 0; z-index: -2; display: block; width: 100%; height: 100%; object-fit: cover; object-position: right center; }
-.home-hero-content { display: grid; grid-template-columns: minmax(0, 450px) minmax(0, 420px) minmax(0, 1fr); gap: 32px; align-items: center; }
-.home-content { padding-bottom: var(--wl-space-4xl); }
-.home-intro { position: relative; isolation: isolate; min-width: 0; gap: var(--wl-space-md); }
-.home-intro::before { content: ""; position: absolute; inset: -32px -40px; z-index: -1; pointer-events: none; background: radial-gradient(ellipse at 44% 50%, color-mix(in srgb, var(--wl-bg) 94%, transparent) 0%, color-mix(in srgb, var(--wl-bg) 88%, transparent) 65%, color-mix(in srgb, var(--wl-bg) 78%, transparent) 80%, transparent 100%); filter: blur(16px); }
+.home-hero-content { display: grid; grid-template-columns: minmax(0, 520px) minmax(0, 1fr); gap: var(--wl-space-2xl); align-items: center; }
+.home-content { padding-top: var(--wl-space-2xl); padding-bottom: var(--wl-space-4xl); }
+.home-intro { min-width: 0; padding: var(--wl-space-2xl); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg); box-shadow: var(--wl-elevation-surface); gap: var(--wl-space-md); }
+.home-onboarding { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: var(--wl-space-lg); }
 .home-font-entry { display: flex; flex-wrap: wrap; align-items: center; gap: var(--wl-space-md); color: var(--wl-text); }
 .home-chip { padding: var(--wl-space-xs) var(--wl-space-sm); border: 1px solid var(--wl-accent-border); border-radius: var(--wl-corner-control); background: var(--wl-accent-soft); color: var(--wl-text); font-size: var(--wl-type-small-size); }
 .home-title { margin: 0; font-family: var(--wl-type-display-family); font-size: clamp(var(--wl-type-display-size), 6.5vw, 80px); font-weight: var(--wl-type-display-weight); line-height: 1.06; letter-spacing: -0.045em; color: var(--wl-text); }
-.home-tagline { margin: 0; font-size: var(--wl-type-heading-size); line-height: var(--wl-type-heading-line-height); color: var(--wl-text); }
+.home-tagline { margin: 0; font-family: var(--wl-type-heading-family); font-size: var(--wl-type-heading-size); line-height: var(--wl-type-heading-line-height); color: var(--wl-text); }
 .home-lead { max-width: 56ch; color: var(--wl-text); }
-.home-action { display: inline-flex; justify-content: center; align-items: center; gap: var(--wl-space-sm); min-height: var(--wl-control-height-md); padding: var(--wl-space-sm) var(--wl-space-lg); border: 1px solid var(--wl-border); border-radius: var(--wl-btn-radius); text-decoration: none; font-size: var(--wl-type-body-size); font-weight: 600; transition: background-color 150ms ease, border-color 150ms ease; max-width: 100%; text-align: center; }
-.home-action--primary { background: var(--wl-action-primary-bg); border-color: var(--wl-action-primary-bg); color: var(--wl-action-primary-text); }
-.home-action--primary:hover { background: var(--wl-action-primary-hover); border-color: var(--wl-action-primary-hover); }
-.home-action--primary:active { background: var(--wl-action-primary-active); border-color: var(--wl-action-primary-active); }
-.home-action--secondary { background: var(--wl-bg); color: var(--wl-text); }
-.home-action--secondary:hover { background: var(--wl-bg-hover); border-color: var(--wl-border-2); }
+.home-action { max-width: 100%; text-decoration: none; }
 .home-text-link { display: inline; color: var(--wl-accent); text-decoration: underline; text-underline-offset: 0.18em; }
 .home-text-link:hover { color: var(--wl-accent-hover); }
 .home-text-link .wl-icon { display: inline-block; vertical-align: -0.15em; }
-.home-action:focus-visible, .home-text-link:focus-visible, .home-section-card:focus-visible, .home-manual-copy:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 4px; }
+.home-text-link:focus-visible, .home-section-card:focus-visible, .home-manual-copy:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 4px; }
 .home-credit { line-height: var(--wl-type-body-line-height); color: var(--wl-text); }
-.home-install-card { grid-column: 2; min-width: 0; border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); padding: var(--wl-space-xl); background: color-mix(in srgb, var(--wl-bg) 97%, transparent); box-shadow: var(--wl-elevation-surface); gap: var(--wl-space-md); }
+.home-install-card { min-width: 0; border: 1px solid var(--wl-accent-border); border-radius: var(--wl-corner-surface); padding: var(--wl-space-xl); background: var(--wl-accent-soft); gap: var(--wl-space-md); }
 .home-install-brand { display: flex; align-items: center; gap: var(--wl-space-md); min-width: 0; }
 .home-mark { flex: none; width: 80px; height: 80px; object-fit: contain; }
 .home-mark-mask { display: block; background: var(--wl-action-primary-bg); mask-size: contain; mask-position: center; mask-repeat: no-repeat; -webkit-mask-size: contain; -webkit-mask-position: center; -webkit-mask-repeat: no-repeat; }
-.home-install-command { display: block; padding: var(--wl-space-md); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-control); background: var(--wl-bg); color: var(--wl-text); font-size: 13px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+.home-install-command { display: block; padding: var(--wl-space-md); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-control); background: var(--wl-bg); color: var(--wl-text); font-size: var(--wl-type-code-size); line-height: var(--wl-type-code-line-height); white-space: pre-wrap; overflow-wrap: anywhere; }
 .home-copy-status { min-height: 1.6em; }
 .home-manual-copy { display: block; width: 100%; min-height: 80px; resize: vertical; border: 1px solid var(--wl-border); border-radius: var(--wl-corner-control); background: var(--wl-bg); color: var(--wl-text); padding: var(--wl-space-md); font: 13px/1.6 var(--wl-mono); }
-.home-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; padding-block: var(--wl-space-xl); border-bottom: 1px solid var(--wl-border); }
-.home-metric { position: relative; display: flex; flex-direction: column; gap: var(--wl-space-2xs); min-width: 0; padding-inline: 64px var(--wl-space-md); }
-.home-metric + .home-metric { border-inline-start: 1px solid var(--wl-border); padding-inline-start: 88px; }
-.home-metric-icon { position: absolute; inset-block-start: 0; inset-inline-start: 0; display: inline-flex; justify-content: center; align-items: center; width: 44px; height: 44px; border-radius: 50%; color: var(--wl-text); background: var(--wl-accent-soft); }
-.home-metric + .home-metric .home-metric-icon { inset-inline-start: var(--wl-space-xl); }
+.home-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: var(--wl-space-lg); margin: 0; }
+.home-metric { position: relative; display: flex; flex-direction: column; justify-content: start; gap: var(--wl-space-2xs); min-width: 0; padding: var(--wl-space-lg) var(--wl-space-lg) var(--wl-space-lg) 80px; border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg-raised); }
+
+.home-metric-icon { position: absolute; inset-block-start: var(--wl-space-lg); inset-inline-start: var(--wl-space-lg); display: inline-flex; justify-content: center; align-items: center; width: 44px; height: 44px; border-radius: 50%; color: var(--wl-text); background: var(--wl-accent-soft); }
+
 .home-metric-value { order: -1; margin: 0; color: var(--wl-text); font-family: var(--wl-type-display-family); font-size: clamp(34px, 3vw, 42px); font-weight: 500; line-height: 1.1; letter-spacing: -0.025em; font-variant-numeric: lining-nums tabular-nums; }
 .home-metric-label { color: var(--wl-text); font-size: var(--wl-type-body-size); line-height: var(--wl-type-body-line-height); }
 .home-metric-caption { margin: 0; }
 .home-section-heading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: var(--wl-space-md); }
-.home-sections { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--wl-space-md); }
+.home-sections { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--wl-space-lg); }
 .home-section-card { position: relative; min-width: 0; padding: var(--wl-space-md); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg); color: var(--wl-text); text-decoration: none; gap: var(--wl-space-sm); transition: background-color 150ms ease, border-color 150ms ease; }
 .home-section-card:hover { background: var(--wl-bg-soft); border-color: var(--wl-accent); }
 .home-card-top { display: flex; align-items: center; gap: var(--wl-space-lg); margin-bottom: var(--wl-space-2xs); }
@@ -247,18 +232,14 @@ createApp(App).mount("#app");`;
 .home-setup-panel, .home-button-panel { min-width: 0; padding: var(--wl-space-xl); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg); }
 .home-panel-label { color: var(--wl-text-muted); font-family: var(--wl-mono); }
 .home-button-preview { padding: var(--wl-space-lg); border-radius: var(--wl-corner-control); background: var(--wl-bg-soft); }
-@media (max-width: 1320px) { .home-hero-content { grid-template-columns: minmax(0, 420px) minmax(0, 360px) minmax(0, 1fr); gap: var(--wl-space-xl); } }
-@media (max-width: 1020px) {
+
+@media (max-width: 760px) {
   .home-hero { min-height: 0; padding-block: 0 var(--wl-space-2xl); }
   .home-hero-art { height: 240px; }
-  .home-hero-content { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--wl-space-xl); align-items: start; padding-block-start: calc(240px + var(--wl-space-2xl)); }
-  .home-intro { max-width: 660px; }
-  .home-install-card { grid-column: auto; }
-  .home-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--wl-space-xl); }
-  .home-metric:nth-child(3) { border-inline-start: 0; padding-inline-start: 64px; }
-  .home-metric:nth-child(3) .home-metric-icon { inset-inline-start: 0; }
+  .home-hero-content { grid-template-columns: minmax(0, 1fr); align-items: start; padding-block-start: calc(240px + var(--wl-space-xl)); }
+
 }
-@media (max-width: 1000px) { .home-hero-content { gap: var(--wl-space-xl); } }
+@media (max-width: 900px) { .home-onboarding { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 760px) {
   .home-hero-content, .home-quickstart-grid, .home-project-grid, .home-sections { grid-template-columns: minmax(0, 1fr); }
   .home-title { font-size: clamp(var(--wl-type-display-size), 10vw, 72px); }
@@ -267,11 +248,11 @@ createApp(App).mount("#app");`;
 @media (max-width: 480px) {
   .home-hero-content, .home-content { padding-inline: var(--wl-space-md); }
   .home-content { gap: var(--wl-space-xl); }
-  .home-install-card, .home-setup-panel, .home-button-panel, .home-project-panel { padding: var(--wl-space-lg); }
+  .home-intro, .home-install-card, .home-setup-panel, .home-button-panel, .home-project-panel { padding: var(--wl-space-lg); }
   .home-mark { width: 56px; height: 56px; }
-  .home-metrics { column-gap: var(--wl-space-md); }
-  .home-metric, .home-metric + .home-metric, .home-metric:nth-child(3) { padding-inline: 0; border-inline-start: 0; padding-block-start: 48px; }
-  .home-metric + .home-metric .home-metric-icon { inset-inline-start: 0; }
+  .home-metrics { gap: var(--wl-space-sm); }
+  .home-metric { justify-content: start; padding: 68px var(--wl-space-md) var(--wl-space-md); }
+  .home-metric-icon { inset-block-start: var(--wl-space-md); inset-inline-start: var(--wl-space-md); }
   .home-project-panel { grid-template-columns: 36px minmax(0, 1fr); gap: var(--wl-space-sm); }
   .home-project-icon { width: 36px; height: 36px; }
 }

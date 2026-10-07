@@ -1,5 +1,5 @@
 {
-  "family": "Gavia",
+  "family": "Gavia Sans",
   "version": "0.600",
   "license": "OFL-1.1",
   "fontTools": "4.66.1",
@@ -56,11 +56,11 @@
       "name": "Gavia-Thin",
       "ttf": {
         "file": "Gavia-Thin.ttf",
-        "sha256": "36e9ac3ed86418b3d8a9c7230135ca636552442f40db1ef9a68dbcaf898e9b7f"
+        "sha256": "8e412501d4dbd01e93a47313b521c3612317b8073aa57e827ad0fca2793d2652"
       },
       "woff2": {
         "file": "Gavia-Thin.woff2",
-        "sha256": "b023efaa8e41a16e2619a528d48dd92d216923d04c63dcd6076d1afc0e2b7957"
+        "sha256": "5d89e2b16440104a04897f8068871474621496018f82e9153c7fa17560f48a4d"
       }
     },
     {
@@ -69,11 +69,11 @@
       "name": "Gavia-ThinItalic",
       "ttf": {
         "file": "Gavia-ThinItalic.ttf",
-        "sha256": "90d24966dad25aa26ff6c3cd11cd02680052500e86697abb4e48976b96bb1de1"
+        "sha256": "ffba4465680b2d7f4882709cdbf1429eb9971615a6f92fa2f4154070f808a009"
       },
       "woff2": {
         "file": "Gavia-ThinItalic.woff2",
-        "sha256": "404c539aed97c35abeedb2ce201fc39bdaa44b0d3cd10ca41e5222bb1b658482"
+        "sha256": "cc4afdb9021e1a5488ca231a35e71bd9a6550eee1927bdeb0172f9ca139d5804"
       }
     },
     {
@@ -82,11 +82,11 @@
       "name": "Gavia-Light",
       "ttf": {
         "file": "Gavia-Light.ttf",
-        "sha256": "53685ed8bfc9dea4463cd423f509388a3352784db40e6adf8d12a3640030a73f"
+        "sha256": "110e2369f0f5ec4e19717e74d88b07ea0b44b63eaaaf4dec6f810674324da887"
       },
       "woff2": {
         "file": "Gavia-Light.woff2",
-        "sha256": "40fb548cd699d2235203d1f9b0f6d2ada227793b73d761fb7e61649727f3c844"
+        "sha256": "d6af7191ec25540c3e41568d5035cacfb56157419f03267e91df8063cf100215"
       }
     },
     {
@@ -95,11 +95,11 @@
       "name": "Gavia-LightItalic",
       "ttf": {
         "file": "Gavia-LightItalic.ttf",
-        "sha256": "f105bb175fd8c640aa666db7c399d8dd85415f5b5f6876d8f71274f376382e7e"
+        "sha256": "2446e7d306c20560736505062a20bb57824619b4bc098e675df3646d77e9e2de"
       },
       "woff2": {
         "file": "Gavia-LightItalic.woff2",
-        "sha256": "d6d3644b74046f3fec5d98c2e2b5fd810080664845cee54d9aaba45f827feebd"
+        "sha256": "3890cfacf09f839caeb67c3e75cf2a1c04f9761b612a4cd5c817faf678d82556"
       }
     },
     {
@@ -108,11 +108,11 @@
       "name": "Gavia-Regular",
       "ttf": {
         "file": "Gavia-Regular.ttf",
-        "sha256": "c2d1f45a03fd59d81eaea27d28d654ed437de1b70bb8dceff23d9a6dc8aca32d"
+        "sha256": "ed8946716ee773f3fff2947d11ede4bbf7610e1fb5c7cc14fc02fde43c573ace"
       },
       "woff2": {
         "file": "Gavia-Regular.woff2",
-        "sha256": "8dd3bf1a81fb269f8042c4f0e3373f01a0252c49ba72ad9040efc94f5d4fd528"
+        "sha256": "fba4aa68cf4336a1928c7e1026e6540b4cc9101ca1e8399a4131c7f614f86e8e"
       }
     },
     {
@@ -121,11 +121,11 @@
       "name": "Gavia-RegularItalic",
       "ttf": {
         "file": "Gavia-RegularItalic.ttf",
-        "sha256": "b5221c831f85eb1b40a8925e72004f36005d4ffa2993f721c7af950c17c3a686"
+        "sha256": "a42d5ec8cdd345c4214f0e1b3a56a0072d11dcd25801639950bf5b127e39e2a2"
       },
       "woff2": {
         "file": "Gavia-RegularItalic.woff2",
-        "sha256": "683c881ca63ecd89f780fae02b5cbc6868f52ed0f9f1086857494ac60da3acfa"
+        "sha256": "930e32fa3250bd286de8bb3c7a5d1c61acc0b86d27415680a60a54eb1f061a1a"
       }
     },
     {
@@ -134,11 +134,11 @@
       "name": "Gavia-Medium",
       "ttf": {
         "file": "Gavia-Medium.ttf",
-        "sha256": "3c874da4658b1ea0b43ccb2833ca057661e8b8e7e9a8002bcb79870ee4d7e937"
+        "sha256": "0a8d1c4f31e2ed69349c0aea136680b814f658a2a54e5be5758917ad1af09602"
       },
       "woff2": {
         "file": "Gavia-Medium.woff2",
-        "sha256": "05cd0d5b0033a5d4cf5de6df4b18435d3c1c23a1d7ab9f721efec3b81ab0db56"
+        "sha256": "8a050256e932b375f8a3cb87fe79ae488473f843268a49881d862497916aa751"
       }
     },
     {
@@ -147,11 +147,11 @@
       "name": "Gavia-MediumItalic",
       "ttf": {
         "file": "Gavia-MediumItalic.ttf",
-        "sha256": "320abe0dc51e6ef52be9798fc1abadebcac401560649018e2f24447eb21c81fb"
+        "sha256": "14d1c79b88735b6c819ac016da2328fa8ff4c531e304e7df520bffa8c9b763dc"
       },
       "woff2": {
         "file": "Gavia-MediumItalic.woff2",
-        "sha256": "8fadd7b094ee2aeb1bd9ec392712b62d9e6f1a1febea8820589857dcf5ed0385"
+        "sha256": "33546cf8329af22ff16649bc5063751e2034bd71c581fd8d4edbb8f74fd44c54"
       }
     },
     {
@@ -160,11 +160,11 @@
       "name": "Gavia-SemiBold",
       "ttf": {
         "file": "Gavia-SemiBold.ttf",
-        "sha256": "932504e72eb1c1644b497dee990c8318f2e1220d8a438c7d2636382a4adf6d48"
+        "sha256": "af28d8a3de2051eeaff6e3b86d633a1e11432e35862be210ee7d5cd23f5dccb4"
       },
       "woff2": {
         "file": "Gavia-SemiBold.woff2",
-        "sha256": "fae4307cc7d4bf44c48e651569fde5dc124837a31b8d45e200713064624297f2"
+        "sha256": "5af7916567395824713689c1b16e842b9fd2d130d18215f53b35c56fae46945c"
       }
     },
     {
@@ -173,11 +173,11 @@
       "name": "Gavia-SemiBoldItalic",
       "ttf": {
         "file": "Gavia-SemiBoldItalic.ttf",
-        "sha256": "4a0ab5488d76a08f583e221e0458c8d10f2540371e5c4f7c6ca3c25475d74ea4"
+        "sha256": "7a78a4c2ccbc27c4680d33152d459bc867e52bf25c05086aa4ceb3c4e3a100ea"
       },
       "woff2": {
         "file": "Gavia-SemiBoldItalic.woff2",
-        "sha256": "76a2c69289f9efc2613306f0d904264b3c1cde622a1bb2faf3e83812cdcfbf2e"
+        "sha256": "a9ad6c47ab97b8840640cff091479cdce1e307cef4c19c2120e16b49aefb5fc1"
       }
     },
     {
@@ -186,11 +186,11 @@
       "name": "Gavia-Bold",
       "ttf": {
         "file": "Gavia-Bold.ttf",
-        "sha256": "9b85cdf1e578770ec0e1e3a301831263b31eb538616983aea423b17ccd4e1afb"
+        "sha256": "27e58e2ec9afb2065c4b9c3c4b6847203a70f8210f4e8e7b8216e8e0dbf72d13"
       },
       "woff2": {
         "file": "Gavia-Bold.woff2",
-        "sha256": "01e2a8b4350ee9ad9c645fa5b4bfc0d5570bb166b993caf4c8dcdbfa2b199d52"
+        "sha256": "ba73170dfb0b1cf79afb8a0a28fc8e3d7226bc88e6be9ec209cf4b9cd9d8bfd8"
       }
     },
     {
@@ -199,11 +199,11 @@
       "name": "Gavia-BoldItalic",
       "ttf": {
         "file": "Gavia-BoldItalic.ttf",
-        "sha256": "d107280ad1453ba37d41adcf182ee38fd914f0d63d5598e9c66e42e14c0b2646"
+        "sha256": "b47ab340a0adcd57968c89e81d552505a5dcca92706a5a893ba4172157cc4682"
       },
       "woff2": {
         "file": "Gavia-BoldItalic.woff2",
-        "sha256": "00e105fd7b4c492d1df60a54be944dfc81891629f3d0b900a4ba89f340fd8526"
+        "sha256": "f2ade335523ef55593f62799ff6e2c0f1e3e5bce513b513df860dfa18ed4589a"
       }
     }
   ],
@@ -214,5 +214,12 @@
     "italic": "7-degree geometric oblique; no JetBrains outline imports",
     "kerning": "Complete source Onest kerning and mark positions retained, horizontally scaled with letters",
     "hints": "Source bytecode stripped; native small-size rendering needs review"
+  },
+  "legacyCssFamily": "Gavia",
+  "identityMigration": {
+    "from": "Gavia",
+    "to": "Gavia Sans",
+    "date": "2026-10-07",
+    "scope": "name table only; original filenames, outlines, metrics, kerning and all other tables preserved"
   }
 }

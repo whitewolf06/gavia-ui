@@ -9,6 +9,7 @@ import WlSlider from "../../../../packages/ui-kit/src/components/WlSlider.vue";
 import WlTextarea from "../../../../packages/ui-kit/src/components/WlTextarea.vue";
 import WlSegmented from "../../../../packages/ui-kit/src/components/WlSegmented.vue";
 import FontDownloadLink from "../project/FontDownloadLink.vue";
+import PlaygroundPageHeader from "../PlaygroundPageHeader.vue";
 import type { WlThemeName } from "../../../../packages/ui-kit/src/types";
 import type { PlaygroundView } from "../navigation";
 import { withPlaygroundTheme } from "../themes";
@@ -36,7 +37,7 @@ const copy = {
     edition: "6 весов, 12 начертаний",
     aboutLabel: "Типографика UI Kit",
     aboutTitle: "Один ритм для всего интерфейса",
-    aboutDescription: "Gavia — основная гарнитура темы Gavia в UI Kit. Стройная геометрия объединяет заголовки, абзацы, кнопки и короткие подписи, сохраняя спокойный ритм в плотном интерфейсе.",
+    aboutDescription: "Gavia Sans — гарнитура без засечек и основной шрифт темы Gavia в UI Kit. Стройная геометрия объединяет заголовки, абзацы, кнопки и короткие подписи, сохраняя спокойный ритм в плотном интерфейсе.",
     languageTitle: "Кириллица и латиница",
     languageDescription: "Русские и английские тексты, цифры, пунктуация и знаки валют — в одном семействе.",
     familyTitle: "Шесть весов, два стиля",
@@ -47,32 +48,32 @@ const copy = {
     numbersTitle: "Ровные колонки и свободный набор",
     numbersDescription: "Выбирайте ширину цифр под задачу. Формы знаков сохраняются, меняются их интервалы и ширина места в строке.",
     tabularTitle: "Табличные · tnum",
-    tabularDescription: "Каждая цифра занимает одинаковую ширину. Удобно для сумм, таблиц, дат и счётчиков. Это режим Gavia по умолчанию.",
+    tabularDescription: "Каждая цифра занимает одинаковую ширину. Удобно для сумм, таблиц, дат и счётчиков. Это режим Gavia Sans по умолчанию.",
     proportionalTitle: "Пропорциональные · pnum",
     proportionalDescription: "Ширина зависит от формы цифры. Подходит для заголовков и отдельных чисел в тексте.",
     numbersExample: "Одинаковые числа · Regular 400",
     proof: "Проба гарнитуры",
     proofTitle: "Проверьте свой текст",
-    proofDescription: "Выберите вес и размер, чтобы увидеть Gavia в своей строке.",
+    proofDescription: "Выберите вес и размер, чтобы увидеть Gavia Sans в своей строке.",
     proofWeight: "Вес",
     proofSize: "Размер",
     proofTextLabel: "Свой текст",
     proofPlaceholder: "Введите одну или несколько строк",
-    proofExample: "Ясные формы. Точные решения.\nГавиа / Gavia · 0123456789",
+    proofExample: "Ясные формы. Точные решения.\nГавиа / Gavia Sans · 0123456789",
     latin: "Латиница",
     cyrillic: "Кириллица",
     installation: "Подключить шрифт",
-    installationTitle: "Gavia в вашем приложении",
+    installationTitle: "Gavia Sans в вашем приложении",
     installationDescription: "Подключите CSS шрифта в приложении. Тема Gavia выбирает эту гарнитуру для текста и заголовков; семейство можно использовать и в собственных стилях.",
     installationImport: "Импорт из UI Kit",
     standaloneImport: "Без UI Kit — из ZIP",
-    download: "Скачать Gavia 0.6",
+    download: "Скачать Gavia Sans 0.6",
     downloadDetails: "ZIP · 12 начертаний · TTF + WOFF2 · CSS · лицензии",
     packageNote: "В опубликованном gavia-ui@0.8.1 шрифта ещё нет. Импорт из пакета доступен в релизной ветке и появится в следующем выпуске; ZIP можно использовать уже сейчас.",
-    provenance: "Буквенная основа — производная Onest, цифры разработаны для Gavia. Наклонные начертания имеют геометрический наклон 7°.",
+    provenance: "Буквенная основа — производная Onest, цифры разработаны для Gavia Sans. Наклонные начертания имеют геометрический наклон 7°.",
     demoNote: "Интерактивный пример типографики. Данные не сохраняются.",
     installationFamily: "Семейство в CSS",
-    installationNote: "Для самостоятельного использования достаточно файлов шрифта и CSS с font-family: Gavia. Vue и компоненты UI Kit не требуются. Шрифт распространяется по SIL Open Font License 1.1 (OFL); код UI Kit — по MIT.",
+    installationNote: "Для самостоятельного использования достаточно файлов шрифта и CSS с font-family: Gavia Sans. Vue и компоненты UI Kit не требуются. Шрифт распространяется по SIL Open Font License 1.1 (OFL); код UI Kit — по MIT.",
     formats: "TTF для приложений · WOFF2 для веба",
     weights: "100 · 300 · 400 · 500 · 600 · 700",
     top: "Наверх",
@@ -105,7 +106,7 @@ const copy = {
     edition: "6 weights, 12 faces",
     aboutLabel: "UI kit typography",
     aboutTitle: "A shared rhythm for the whole interface",
-    aboutDescription: "Gavia is the Gavia theme's primary typeface within the UI kit. Slender geometry connects headings, paragraphs, buttons and short labels, keeping a calm rhythm in dense interfaces.",
+    aboutDescription: "Gavia Sans is a sans-serif typeface and the Gavia theme's primary font within the UI kit. Slender geometry connects headings, paragraphs, buttons and short labels, keeping a calm rhythm in dense interfaces.",
     languageTitle: "Cyrillic and Latin",
     languageDescription: "Russian and English text, numerals, punctuation and currency symbols in one family.",
     familyTitle: "Six weights, two styles",
@@ -116,32 +117,32 @@ const copy = {
     numbersTitle: "Aligned columns and natural spacing",
     numbersDescription: "Choose numeral spacing for the task. The character shapes stay the same; their spacing and advances change.",
     tabularTitle: "Tabular · tnum",
-    tabularDescription: "Every numeral takes the same width. Useful for amounts, tables, dates and counters. This is Gavia's default mode.",
+    tabularDescription: "Every numeral takes the same width. Useful for amounts, tables, dates and counters. This is Gavia Sans's default mode.",
     proportionalTitle: "Proportional · pnum",
     proportionalDescription: "Widths follow the numeral shapes. Useful for headings and individual numbers within text.",
     numbersExample: "The same numbers · Regular 400",
     proof: "Try the typeface",
     proofTitle: "Try your own text",
-    proofDescription: "Choose a weight and size to see Gavia in your own words.",
+    proofDescription: "Choose a weight and size to see Gavia Sans in your own words.",
     proofWeight: "Weight",
     proofSize: "Size",
     proofTextLabel: "Your text",
     proofPlaceholder: "Enter one or several lines",
-    proofExample: "Clear forms. Precise decisions.\nGavia / Гавиа · 0123456789",
+    proofExample: "Clear forms. Precise decisions.\nGavia Sans / Гавиа · 0123456789",
     latin: "Latin",
     cyrillic: "Cyrillic",
     installation: "Use the typeface",
-    installationTitle: "Gavia in your application",
+    installationTitle: "Gavia Sans in your application",
     installationDescription: "Import the font CSS in your application. The Gavia theme uses the typeface for text and headings; you can also use the family in your own styles.",
     installationImport: "Import from the UI kit",
     standaloneImport: "Without the UI kit — from the ZIP",
-    download: "Download Gavia 0.6",
+    download: "Download Gavia Sans 0.6",
     downloadDetails: "ZIP · 12 faces · TTF + WOFF2 · CSS · licenses",
     packageNote: "The published gavia-ui@0.8.1 does not include this font yet. Package imports are available on the release branch and will ship in the next release; the ZIP is ready to use now.",
-    provenance: "Letterforms are derived from Onest; numerals were authored for Gavia. Oblique faces use a geometric 7° slope.",
+    provenance: "Letterforms are derived from Onest; numerals were authored for Gavia Sans. Oblique faces use a geometric 7° slope.",
     demoNote: "Interactive typography example. No data is saved.",
     installationFamily: "CSS family",
-    installationNote: "Standalone use only requires the font files and CSS with font-family: Gavia. Vue and UI kit components are not required. The font is distributed under SIL Open Font License 1.1 (OFL); the UI kit code uses MIT.",
+    installationNote: "Standalone use only requires the font files and CSS with font-family: Gavia Sans. Vue and UI kit components are not required. The font is distributed under SIL Open Font License 1.1 (OFL); the UI kit code uses MIT.",
     formats: "TTF for applications · WOFF2 for the web",
     weights: "100 · 300 · 400 · 500 · 600 · 700",
     top: "Back to top",
@@ -179,14 +180,14 @@ const weightOptions = computed(() => gaviaWeights.map(weight => ({ value: weight
 function chooseLanguage(value: string | null): void { if (value === "ru" || value === "en") language.value = value; }
 function chooseStyle(value: string | null): void { if (value === "normal" || value === "italic") fontStyle.value = value; }
 function chooseWeight(value: unknown): void { if (gaviaWeights.some(weight => weight.value === value)) proofWeight.value = value as GaviaFontWeight; }
-const standaloneCode = '<link rel="stylesheet" href="./gavia.css">\n<style>body { font-family: "Gavia", sans-serif; }</style>';
+const standaloneCode = '<link rel="stylesheet" href="./gavia.css">\n<style>body { font-family: "Gavia Sans", sans-serif; }</style>';
 const paragraphs = computed(() => samples[language.value].body.split("\n\n"));
 const proofSample = computed(() => proofText.value.trim() ? proofText.value : content.value.proofExample);
 const exampleBalance = computed(() => language.value === "ru" ? "12 480 ₽" : "€128.40");
 const playgroundUrl = computed(() => withPlaygroundTheme("?view=docs", props.theme));
 const numeralRows = computed(() => language.value === "ru" ? ["11 111,00", "88 888,00", "10 240,50"] : ["11,111.00", "88,888.00", "10,240.50"]);
 const fontImportCode = 'import "gavia-ui/styles/fonts/gavia.css";';
-const fontFamilyCode = ".app {\n  font-family: \"Gavia\", \"Segoe UI\", sans-serif;\n}";
+const fontFamilyCode = ".app {\n  font-family: \"Gavia Sans\", \"Segoe UI\", sans-serif;\n}";
 
 function saveProject(): void {
   saved.value = true;
@@ -196,7 +197,8 @@ function saveProject(): void {
 
 <template>
   <div ref="pageElement" class="wl-type-page" data-testid="font-page" :lang="language" :data-font-style="fontStyle" :style="{ '--wl-type-sample-style': fontStyle }" data-wl="gavia-type-study">
-    <main class="wl-type-shell">
+    <main class="wl-type-shell wl-container">
+      <PlaygroundPageHeader title="Gavia Sans" :description="language === 'ru' ? 'Шрифт Gavia UI: шесть весов, двенадцать начертаний, кириллица и латиница.' : 'Gavia UI typeface: six weights, twelve faces, Cyrillic and Latin.'" :breadcrumbs="[{ label: 'Gavia Sans' }]" />
       <section id="type-settings" class="wl-type-controls wl-type-controls-with-weights" :aria-label="language === 'ru' ? 'Настройки типографического примера' : 'Typography example settings'">
         <WlSegmented class="wl-type-languages" :model-value="language" :options="languageOptions" :aria-label="language === 'ru' ? 'Язык образцов' : 'Sample language'" @update:model-value="chooseLanguage" />
         <WlSegmented class="wl-type-style-controls" :model-value="fontStyle" :options="styleOptions" :aria-label="language === 'ru' ? 'Начертание образцов' : 'Sample style'" @update:model-value="chooseStyle" />
@@ -208,14 +210,14 @@ function saveProject(): void {
 
       <section id="type-top" class="wl-type-hero" aria-labelledby="wl-type-hero-title">
         <div class="wl-type-hero-main">
-          <p class="wl-type-section-label wl-type-detail">Gavia {{ gaviaRelease }} · 01 / {{ content.typeLabel }}</p>
-          <h1 id="wl-type-hero-title" class="wl-type-display">{{ content.headline }}</h1>
+          <p class="wl-type-section-label wl-type-detail">Gavia Sans {{ gaviaRelease }} · 01 / {{ content.typeLabel }}</p>
+          <h2 id="wl-type-hero-title" class="wl-type-display">{{ content.headline }}</h2>
           <p class="wl-type-direction">{{ content.direction }}</p>
           <FontDownloadLink class="wl-type-hero-download">{{ content.download }}</FontDownloadLink>
         </div>
         <aside class="wl-type-side-note">
           <div class="wl-type-letterform" aria-hidden="true">Gg<span class="wl-type-letterform-dot">.</span></div>
-          <span class="wl-type-specification wl-type-detail">GAVIA / 500</span>
+          <span class="wl-type-specification wl-type-detail">GAVIA SANS / 500</span>
           <p class="wl-type-proportional">{{ content.proportional }}</p>
           <p class="wl-type-alphabets wl-type-detail">{{ content.alphabets }}</p>
         </aside>
@@ -247,7 +249,7 @@ function saveProject(): void {
         <div class="wl-type-reading-heading">
           <p class="wl-type-section-label wl-type-detail">02 / {{ content.readingLabel }}</p>
           <h2 id="wl-type-reading-title" class="wl-type-heading">{{ content.readingHeadline }}</h2>
-          <p class="wl-type-reading-spec wl-type-detail">GAVIA / 400<br />17 px · 1.75</p>
+          <p class="wl-type-reading-spec wl-type-detail">GAVIA SANS / 400<br />17 px · 1.75</p>
         </div>
         <div class="wl-type-body-copy">
           <p v-for="paragraph in paragraphs" :key="paragraph" class="wl-type-paragraph">{{ paragraph }}</p>
@@ -386,7 +388,7 @@ function saveProject(): void {
       </section>
 
       <footer class="wl-type-footer">
-        <p class="wl-type-footer-note">Gavia {{ gaviaRelease }} · {{ content.edition }} · {{ content.alphabets }}</p>
+        <p class="wl-type-footer-note">Gavia Sans {{ gaviaRelease }} · {{ content.edition }} · {{ content.alphabets }}</p>
         <div class="wl-type-footer-links">
           <a class="wl-type-link" :href="playgroundUrl" @click.prevent="emit('navigate', 'docs')">{{ content.back }} <span aria-hidden="true">↗</span></a>
           <a class="wl-type-link" href="#type-top">{{ content.top }} <span aria-hidden="true">↑</span></a>

@@ -77,7 +77,6 @@ const layers = [
 <template>
   <ResponsiveDocumentation v-if="section === 'responsive'" @component="emit('component', $event)" @navigate="emit('navigate', $event)" />
   <article v-else class="docs-foundation-page wl-stack" data-space="2xl" data-testid="docs-foundation-page" :data-docs-section="section">
-    <header class="wl-stack" data-space="md"><p class="docs-eyebrow">Документация / Основы</p><h1 class="wl-text-title">{{ metadata.label }}</h1><p class="wl-text-body wl-text-muted">{{ metadata.description }}</p></header>
     <section class="wl-stack" data-space="md" :aria-labelledby="metadata.rulesHeading.id">
       <h2 :id="metadata.rulesHeading.id" class="docs-foundation-anchor wl-text-heading">{{ metadata.rulesHeading.title }}</h2>
       <ul class="docs-foundation-rules"><li v-for="rule in metadata.rules" :key="rule">{{ rule }}</li></ul>

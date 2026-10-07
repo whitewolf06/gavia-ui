@@ -1,7 +1,7 @@
 export type GaviaFontStyle = "normal" | "italic";
 export type GaviaFontWeight = 100 | 300 | 400 | 500 | 600 | 700;
 
-export const gaviaFontFamily = '"Gavia", "Segoe UI", Arial, sans-serif';
+export const gaviaFontFamily = '"Gavia Sans", "Segoe UI", Arial, sans-serif';
 export const gaviaRelease = "0.6";
 export const gaviaWeights = [
   { value: 100, name: "Thin", ru: "Тонкий" },

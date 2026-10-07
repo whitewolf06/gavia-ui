@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } from "vue";
 import { createPlaygroundUrl, isDocumentationSection, parsePlaygroundRoute, type DocumentationSection, type PlaygroundRoute, type PlaygroundView } from "./navigation";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import type { WlCommandPaletteGroup, WlCommandPaletteItem, WlThemeName } from "../../../packages/ui-kit/src";
 import PlaygroundHeader from "./PlaygroundHeader.vue";
 import FontDownloadLink from "./project/FontDownloadLink.vue";
+import { playgroundNavigationKey } from "./playground-navigation";
 import { createPlaygroundThemeUrl, isPlaygroundTheme, parsePlaygroundTheme, playgroundThemeOptions } from "./themes";
 import gaviaMarkUrl from "../../../docs/brand/gavia-ui-mark-v2.png";
 import { gaviaProjectInfo as project } from "./project/project-info";
@@ -82,11 +83,21 @@ onMounted(() => {
   window.addEventListener("popstate", readView);
   const rootStyle = document.documentElement.style;
   const previous = rootStyle.scrollPaddingTop;
-  const update = () => { rootStyle.scrollPaddingTop = String((headerElement.value?.offsetHeight ?? 60) + 16) + "px"; };
+  const previousHeaderOffset = rootStyle.getPropertyValue("--wl-playground-header-offset");
+  const update = () => {
+    const offset = String((headerElement.value?.offsetHeight ?? 60) + 16) + "px";
+    rootStyle.scrollPaddingTop = offset;
+    rootStyle.setProperty("--wl-playground-header-offset", offset);
+  };
   const observer = new ResizeObserver(update);
   if (headerElement.value) observer.observe(headerElement.value);
   update();
-  restoreScrollPadding = () => { observer.disconnect(); rootStyle.scrollPaddingTop = previous; };
+  restoreScrollPadding = () => {
+    observer.disconnect();
+    rootStyle.scrollPaddingTop = previous;
+    if (previousHeaderOffset) rootStyle.setProperty("--wl-playground-header-offset", previousHeaderOffset);
+    else rootStyle.removeProperty("--wl-playground-header-offset");
+  };
 });
 onBeforeUnmount(() => { appMounted = false; cancelHistoryAnchor(); window.removeEventListener("popstate", readView); restoreScrollPadding?.(); });
 const commandPaletteVisible = ref(false);
@@ -123,7 +134,7 @@ const commandPaletteGroups: WlCommandPaletteGroup[] = [
       },
       {
         id: "page-font",
-        label: "Шрифт Gavia",
+        label: "Шрифт Gavia Sans",
         description: "Гарнитура 0.6: шесть весов, курсив, кириллица и латиница",
         icon: "book",
         keywords: ["font", "шрифт", "цифры", "начертания", "типографика"],
@@ -194,6 +205,7 @@ async function onCommandPaletteSelect(item: WlCommandPaletteItem): Promise<void>
   else if (data?.view) await showView(data.view);
 }
 const theme = ref<WlThemeName>(parsePlaygroundTheme(typeof window === "undefined" ? "" : window.location.search));
+provide(playgroundNavigationKey, { navigate, theme });
 const themeOptions = playgroundThemeOptions;
 function chooseTheme(value: unknown): void {
   if (!isPlaygroundTheme(value)) return;
@@ -224,7 +236,7 @@ watch(theme, (value) => { document.documentElement.dataset.wlTheme = value; }, {
     <span>Gavia UI · v{{ project.version }} · <a :href="project.licenseUrl">MIT</a></span>
     <span>Автор: <a :href="project.author.url">{{ project.author.name }}</a></span>
     <a :href="project.repositoryUrl">GitHub</a>
-    <FontDownloadLink variant="secondary">Скачать шрифт Gavia</FontDownloadLink>
+    <FontDownloadLink variant="secondary">Скачать шрифт Gavia Sans</FontDownloadLink>
   </footer>
   <WlToast />
   <WlConfirmDialog />

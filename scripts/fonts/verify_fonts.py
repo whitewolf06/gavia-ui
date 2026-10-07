@@ -1,4 +1,4 @@
-"""Validate the usable Gavia font family with FontTools and HarfBuzz."""
+"""Validate the usable Gavia Sans font family with FontTools and HarfBuzz."""
 from pathlib import Path
 import hashlib
 import json
@@ -73,6 +73,35 @@ APPROVED_0600_SHA256 = {
     'Gavia-BoldItalic.ttf': 'd107280ad1453ba37d41adcf182ee38fd914f0d63d5598e9c66e42e14c0b2646',
     'Gavia-BoldItalic.woff2': '00e105fd7b4c492d1df60a54be944dfc81891629f3d0b900a4ba89f340fd8526',
 }
+# The user-requested family rename on 2026-10-07 changes name records only.
+# Keep the original accepted binary identities above; do not replace their hashes.
+APPROVED_SANS_0600_SHA256 = {
+    'Gavia-Thin.ttf': '8e412501d4dbd01e93a47313b521c3612317b8073aa57e827ad0fca2793d2652',
+    'Gavia-Thin.woff2': '5d89e2b16440104a04897f8068871474621496018f82e9153c7fa17560f48a4d',
+    'Gavia-ThinItalic.ttf': 'ffba4465680b2d7f4882709cdbf1429eb9971615a6f92fa2f4154070f808a009',
+    'Gavia-ThinItalic.woff2': 'cc4afdb9021e1a5488ca231a35e71bd9a6550eee1927bdeb0172f9ca139d5804',
+    'Gavia-Light.ttf': '110e2369f0f5ec4e19717e74d88b07ea0b44b63eaaaf4dec6f810674324da887',
+    'Gavia-Light.woff2': 'd6af7191ec25540c3e41568d5035cacfb56157419f03267e91df8063cf100215',
+    'Gavia-LightItalic.ttf': '2446e7d306c20560736505062a20bb57824619b4bc098e675df3646d77e9e2de',
+    'Gavia-LightItalic.woff2': '3890cfacf09f839caeb67c3e75cf2a1c04f9761b612a4cd5c817faf678d82556',
+    'Gavia-Regular.ttf': 'ed8946716ee773f3fff2947d11ede4bbf7610e1fb5c7cc14fc02fde43c573ace',
+    'Gavia-Regular.woff2': 'fba4aa68cf4336a1928c7e1026e6540b4cc9101ca1e8399a4131c7f614f86e8e',
+    'Gavia-RegularItalic.ttf': 'a42d5ec8cdd345c4214f0e1b3a56a0072d11dcd25801639950bf5b127e39e2a2',
+    'Gavia-RegularItalic.woff2': '930e32fa3250bd286de8bb3c7a5d1c61acc0b86d27415680a60a54eb1f061a1a',
+    'Gavia-Medium.ttf': '0a8d1c4f31e2ed69349c0aea136680b814f658a2a54e5be5758917ad1af09602',
+    'Gavia-Medium.woff2': '8a050256e932b375f8a3cb87fe79ae488473f843268a49881d862497916aa751',
+    'Gavia-MediumItalic.ttf': '14d1c79b88735b6c819ac016da2328fa8ff4c531e304e7df520bffa8c9b763dc',
+    'Gavia-MediumItalic.woff2': '33546cf8329af22ff16649bc5063751e2034bd71c581fd8d4edbb8f74fd44c54',
+    'Gavia-SemiBold.ttf': 'af28d8a3de2051eeaff6e3b86d633a1e11432e35862be210ee7d5cd23f5dccb4',
+    'Gavia-SemiBold.woff2': '5af7916567395824713689c1b16e842b9fd2d130d18215f53b35c56fae46945c',
+    'Gavia-SemiBoldItalic.ttf': '7a78a4c2ccbc27c4680d33152d459bc867e52bf25c05086aa4ceb3c4e3a100ea',
+    'Gavia-SemiBoldItalic.woff2': 'a9ad6c47ab97b8840640cff091479cdce1e307cef4c19c2120e16b49aefb5fc1',
+    'Gavia-Bold.ttf': '27e58e2ec9afb2065c4b9c3c4b6847203a70f8210f4e8e7b8216e8e0dbf72d13',
+    'Gavia-Bold.woff2': 'ba73170dfb0b1cf79afb8a0a28fc8e3d7226bc88e6be9ec209cf4b9cd9d8bfd8',
+    'Gavia-BoldItalic.ttf': 'b47ab340a0adcd57968c89e81d552505a5dcca92706a5a893ba4172157cc4682',
+    'Gavia-BoldItalic.woff2': 'f2ade335523ef55593f62799ff6e2c0f1e3e5bce513b513df860dfa18ed4589a',
+}
+APPROVED_TABLES_SHA256 = '5fd2b3d810a112220a34fee628fda9590acce347fe97c627fcca7b322e2ea997'
 APPROVED_REGULAR_INK_WIDTHS = dict(zip(DIGITS,(432,418,434,430,413,430,448,423,446,448)))
 LETTER_SCALE = .96
 LETTER_SCALE_PROBES = 'Hno\u041d\u043e'
@@ -459,12 +488,29 @@ def letter_scale_checks(font,record,baseline):
             'probes':measurements}
 
 
+def content_table_hashes(path):
+    """Freeze complete glyph, metric and layout data independently of family names."""
+    with TTFont(path,recalcTimestamp=False,recalcBBoxes=False) as face:
+        result={}
+        for tag in face.reader.keys():
+            if tag=='name': continue
+            data=face.getTableData(tag)
+            if tag=='head': data=data[:8]+bytes(4)+data[12:]
+            result[tag]=hashlib.sha256(data).hexdigest()
+        return dict(sorted(result.items()))
+
+
 def main():
     manifest=json.loads((FONTS/'manifest.json').read_text(encoding='utf-8'))
     assert manifest['version']=='0.600', ('unexpected design version',manifest['version'])
     assert len(manifest['faces']) == 12
     recorded_files={r[k]['file']:r[k]['sha256'] for r in manifest['faces'] for k in ('ttf','woff2')}
-    assert recorded_files==APPROVED_0600_SHA256, 'manifest differs from the frozen accepted 0.600 binaries'
+    assert manifest['family']=='Gavia Sans'
+    assert recorded_files==APPROVED_SANS_0600_SHA256, 'manifest differs from the accepted metadata-only Gavia Sans rename'
+    baseline_path=ROOT/'scripts/fonts/accepted-0600-tables.json'
+    assert hashlib.sha256(baseline_path.read_bytes()).hexdigest()==APPROVED_TABLES_SHA256, 'accepted table fingerprint was changed'
+    baseline=json.loads(baseline_path.read_text(encoding='utf-8'))
+    assert {name:record['sha256'] for name,record in baseline['files'].items()}==APPROVED_0600_SHA256
     geometry=manifest['authoredGeometry']
     assert hashlib.sha256((ROOT/geometry['file']).read_bytes()).hexdigest()==geometry['sha256'], 'authored geometry source hash mismatch'
     assert {(r['weight'],r['style']) for r in manifest['faces']} == {
@@ -483,8 +529,8 @@ def main():
         font=TTFont(path, checkChecksums=2); web=TTFont(web_path)
         cmap=font.getBestCmap()
         assert not set(REQUIRED)-set(map(chr,cmap)), (path.name,'missing characters',set(REQUIRED)-set(map(chr,cmap)))
-        assert font['name'].getDebugName(16) == 'Gavia'
-        assert web['name'].getDebugName(16) == 'Gavia'
+        assert font['name'].getDebugName(16) == 'Gavia Sans'
+        assert web['name'].getDebugName(16) == 'Gavia Sans'
         assert font['name'].getDebugName(5)=='Version 0.600'
         assert web['name'].getDebugName(5)=='Version 0.600'
         assert font['OS/2'].usWeightClass == record['weight']
@@ -497,8 +543,19 @@ def main():
         assert checksum(path) == 0xB1B0AFBA, (path.name,'invalid checksum')
         assert hashlib.sha256(path.read_bytes()).hexdigest() == record['ttf']['sha256']
         assert hashlib.sha256(web_path.read_bytes()).hexdigest() == record['woff2']['sha256']
-        assert hashlib.sha256(path.read_bytes()).hexdigest()==APPROVED_0600_SHA256[path.name]
-        assert hashlib.sha256(web_path.read_bytes()).hexdigest()==APPROVED_0600_SHA256[web_path.name]
+        assert hashlib.sha256(path.read_bytes()).hexdigest()==APPROVED_SANS_0600_SHA256[path.name]
+        assert hashlib.sha256(web_path.read_bytes()).hexdigest()==APPROVED_SANS_0600_SHA256[web_path.name]
+        for asset in (path,web_path):
+            assert content_table_hashes(asset)==baseline['files'][asset.name]['tables'], (asset.name,'non-name table changed during family rename')
+        label=record['name'].removeprefix('Gavia-').removesuffix('Italic')
+        style=label+(' Italic' if italic else '')
+        for asset_font in (font,web):
+            names=asset_font['name']
+            assert names.getDebugName(1)==('Gavia Sans' if record['weight'] in (400,700) else 'Gavia Sans '+label)
+            assert names.getDebugName(3)=='GaviaSans-0.600-'+label+('Italic' if italic else '')
+            assert names.getDebugName(4)=='Gavia Sans '+style
+            assert names.getDebugName(6)=='GaviaSans-'+label+('Italic' if italic else '')
+            assert names.getDebugName(21)=='Gavia Sans'
         ps=font['name'].getDebugName(6); assert ps not in ps_names; ps_names.add(ps)
         current_metrics=(font['hhea'].ascent,font['hhea'].descent,font['hhea'].lineGap,font['OS/2'].usWinAscent,font['OS/2'].usWinDescent)
         if line_metrics is None: line_metrics=current_metrics
@@ -552,9 +609,9 @@ def main():
             design_checks['regularApprovedInkWidths']=regular_widths
         design_checks['sourceLetterScale']=letter_scale_checks(font,record,letter_baselines[record['weight']])
         design_checks['approvedReleaseIntegrity']={'acceptedVersion':'0.600',
-            'ttfSha256':APPROVED_0600_SHA256[path.name],
-            'woff2Sha256':APPROVED_0600_SHA256[web_path.name],
-            'scope':'complete accepted file content, including all glyphs, metrics and layout tables'}
+            'ttfSha256':APPROVED_SANS_0600_SHA256[path.name],
+            'woff2Sha256':APPROVED_SANS_0600_SHA256[web_path.name],
+            'scope':'current family metadata plus all original non-name tables; original accepted outlines, metrics and layout are preserved'}
         glyph=font['glyf'][cmap[ord('H')]]
         coordinates=glyph.getCoordinates(font['glyf'])[0]
         outline_hashes[(record['weight'],record['style'])]=hashlib.sha256(repr(list(coordinates)).encode()).hexdigest()
@@ -562,13 +619,13 @@ def main():
                        'ttfBytes':path.stat().st_size,'woff2Bytes':web_path.stat().st_size,
                        'defaultDigits':[p.x_advance for p in defaults], 'proportionalDigits':[p.x_advance for p in props],
                        'designChecks':design_checks,
-                       'checks':'metadata, checksums, TTF/WOFF2 roundtrip, coverage, all glyph components, clipping, HarfBuzz shaping, tnum/pnum, digit provenance, refined letter outlines, measured zero/one stems, extended one entry, level three top bar, unchanged pnum geometry, actual numeral vertical bounds, complete files match accepted 0.600 SHA; source letter widths at 96%; no historical cross-version comparison'})
-        print('PASS',record['name'],len(cmap),'characters',len(font.getGlyphOrder()),'glyphs; 10 independent numerals, 5 refined letters, consistent zero/one stems, extended one entry, level three top bar, aligned numeral bounds, accepted 0.600 binaries preserved; source letter scale verified',flush=True)
+                       'checks':'metadata, checksums, TTF/WOFF2 roundtrip, coverage, all glyph components, clipping, HarfBuzz shaping, tnum/pnum, digit provenance, refined letter outlines, measured zero/one stems, extended one entry, level three top bar, unchanged pnum geometry, actual numeral vertical bounds, complete files match Gavia Sans 0.600 SHA and original non-name table fingerprints; source letter widths at 96%; no historical cross-version comparison'})
+        print('PASS',record['name'],len(cmap),'characters',len(font.getGlyphOrder()),'glyphs; 10 independent numerals, 5 refined letters, consistent zero/one stems, extended one entry, level three top bar, aligned numeral bounds, accepted 0.600 drawing and non-name tables preserved; source letter scale verified',flush=True)
         font.close(); web.close()
     for source in source_fonts.values(): source.close()
     for style in ('normal','italic'):
         assert len({v for (w,s),v in outline_hashes.items() if s==style}) == 6
-    result={'status':'passed','version':manifest['version'],'verificationMode':'standalone accepted Gavia 0.600','historicalCrossVersionComparisons':{'performed':False,'reason':'Only current accepted files and licensed source fonts are loaded; earlier Gavia specimens are not required.'},'faces':12,'commonLineMetrics':line_metrics,'requiredCharacters':len(set(REQUIRED)),
+    result={'status':'passed','version':manifest['version'],'verificationMode':'accepted Gavia Sans 0.600 with metadata-only family rename','historicalCrossVersionComparisons':{'performed':False,'reason':'Only current accepted files and licensed source fonts are loaded; earlier Gavia specimens are not required.'},'faces':12,'commonLineMetrics':line_metrics,'requiredCharacters':len(set(REQUIRED)),
             'fontToolsRoundtrip':True,'harfBuzzShaping':True,'facesDetailed':report,
             'designChecks':{'outlineProvenance':{'faces':12,'independentDigitsPerFace':len(DIGITS),
                                                'refinedOnestLettersPerFace':len(REFINED_LETTERS),
@@ -584,12 +641,14 @@ def main():
                             'regularApprovedInkWidths':regular_widths,
                             'digitVerticalAlignment':{'expectedBounds':DIGIT_VERTICAL_BOUNDS,'toleranceUnits':VERTICAL_TOLERANCE},
                             'sourceLetterScale':{'horizontalScale':LETTER_SCALE,'probes':list(LETTER_SCALE_PROBES),'toleranceUnits':LETTER_SCALE_TOLERANCE},
-                            'approvedReleaseIntegrity':{'acceptedVersion':'0.600','files':24,'method':'frozen accepted binary SHA256 independent of the mutable manifest'},
+                            'approvedReleaseIntegrity':{'acceptedVersion':'0.600','files':24,'method':'frozen original and renamed binary SHA256 plus immutable original non-name table fingerprints',
+                                                        'familyRename':'Gavia to Gavia Sans; name table only',
+                                                        'originalNonNameTablesPreserved':True},
                             'consistentScriptPairs':[a+'/'+b for a,b in SCRIPT_PAIRS],
                             'sharedRefinementPairs':[a+'/'+b for a,b in REFINEMENT_PAIRS],
                             'scriptPairNote':'a/а and e/е retain subtle original Onest counter differences and matching advances; italic LSBs follow each outline'},
             'limitations':'Optical quality, hand-tuned italic spacing and native app rendering still need human review.'}
     (FONTS/'qa-report.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-    print('All 12 faces passed font QA: 120 independent numerals, 60 refined letters, measured stem consistency, extended one entry, level three top bar and vertical alignment; accepted 0.600 binaries preserved; source letter scale verified.',flush=True)
+    print('All 12 faces passed font QA: 120 independent numerals, 60 refined letters, measured stem consistency, extended one entry, level three top bar and vertical alignment; accepted 0.600 drawing and non-name tables preserved; source letter scale verified.',flush=True)
 
 if __name__=='__main__': main()

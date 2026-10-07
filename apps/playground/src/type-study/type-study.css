@@ -10,7 +10,7 @@
     --wl-type-surface: var(--wl-bg);
     --wl-type-subtle: var(--wl-bg-soft);
     --wl-type-font-sans: var(--wl-font);
-    --wl-type-font-sample: "Gavia", "Segoe UI", Arial, sans-serif;
+    --wl-type-font-sample: "Gavia Sans", "Segoe UI", Arial, sans-serif;
     --wl-type-font-mono: var(--wl-mono);
     --wl-type-page-background: var(--wl-type-background);
     --wl-type-button-background: var(--wl-accent);
@@ -41,7 +41,9 @@
   }
 
   .wl-type-detail { font-family: var(--wl-type-detail-font); font-weight: 400; font-variant-numeric: tabular-nums; }
-  .wl-type-shell { width: min(calc(100% - 48px), 1180px); margin-inline: auto; }
+  .wl-type-shell { padding-top: 32px; }
+
+  .wl-type-shell > .pg-page-header { margin-bottom: 24px; }
 
   .wl-type-link { color: var(--wl-type-accent); text-decoration: none; text-underline-offset: 4px; }
   .wl-type-link:hover { text-decoration: underline; }
@@ -150,13 +152,16 @@
   .wl-type-link:focus-visible, .wl-type-secondary:focus-visible { outline: 2px solid var(--wl-type-accent); outline-offset: 4px; }
 
   @media (max-width: 1000px) {
-    .wl-type-shell { width: calc(100% - 48px); }
     .wl-type-hero { grid-template-columns: minmax(0, 1fr) 160px; column-gap: 30px; }
     .wl-type-display { font-size: clamp(58px, 7.8vw, 82px); }
     .wl-type-letterform { font-size: 85px; letter-spacing: -6px; }
     .wl-type-reading { grid-template-columns: 285px minmax(0, 1fr); gap: 40px; }
     .wl-type-heading { font-size: 33px; }
     .wl-type-project-stats { gap: 28px; }
+  }
+
+  @media (max-width: 760px) {
+    .wl-type-shell { padding-top: 24px; }
   }
 
   @media (max-width: 700px) {
@@ -187,7 +192,6 @@
     .wl-type-install-code { padding: 15px 16px; font-size: 11px; }
     .wl-type-install-link { font-size: 11px; }
 
-    .wl-type-shell { width: calc(100% - 36px); }
     .wl-type-controls { align-items: start; gap: 12px; padding-block: 20px; }
     .wl-type-hero { grid-template-columns: 1fr; padding-block: 21px 30px; row-gap: 28px; }
     .wl-type-section-label { margin-bottom: 18px; font-size: 10px; }
@@ -224,7 +228,7 @@
   }
 }
 
-/* Font specimens always show Gavia, while page controls follow the active theme. */
+/* Font specimens always show Gavia Sans, while page controls follow the active theme. */
 @layer wl.components {
   .wl-type-display, .wl-type-letterform, .wl-type-heading, .wl-type-paragraph,
   .wl-type-interface-heading, .wl-type-project-name, .wl-type-stat-value,

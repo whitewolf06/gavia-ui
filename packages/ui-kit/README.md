@@ -40,9 +40,9 @@ Runtime-зависимостей нет; Vue 3 — единственный об
 [История изменений](CHANGELOG.md) и
 [переход с прежнего имени](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-gavia.md).
 
-## Шрифт Gavia
+## Шрифт Gavia Sans
 
-В релизной ветке гарнитура Gavia 0.6 включена в пакет: 6 весов × 2 стиля,
+В релизной ветке гарнитура Gavia Sans 0.6 включена в пакет: 6 весов × 2 стиля,
 кириллица и латиница, WOFF2 и TTF. Тема Gavia использует её как основной шрифт.
 Подключение остаётся явным: `import "gavia-ui/styles/fonts/gavia.css";`.
 Файлы доступны через `gavia-ui/fonts/gavia/<file>` и применимы без Vue.

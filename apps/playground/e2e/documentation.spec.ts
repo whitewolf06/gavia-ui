@@ -471,7 +471,8 @@ test("foundations navigation preserves live examples and highlighted copy across
     await openDocumentationMenu(page);
     await navigation.getByRole("button", { name: section.label, exact: true }).click();
     await expect(foundation).toHaveAttribute("data-docs-section", section.name);
-    await expect(foundation.getByRole("heading", { level: 1 })).toHaveText(section.label);
+    await expect(docs.getByRole("heading", { level: 1 })).toHaveCount(1);
+    await expect(docs.getByRole("heading", { level: 1 })).toHaveText(section.label);
     await expectRoute(page, baseURL, "docs", null, section.name);
     await expect(foundation.locator("[data-docs-example]")).toHaveCount(section.examples.length);
     await openDocumentationMenu(page);
@@ -597,17 +598,26 @@ test("documentation scrollspy follows real Layout and icon scrolling without rew
     const anchoredUrl = page.url();
     expect(new URL(anchoredUrl).hash).toBe("#" + route.anchor);
 
-    // Wheel over the content gutter rather than the independently scrollable TOC/code.
+    // Wheel over the page padding, outside the independently scrollable TOC/code.
     // The distance reaches the next real heading, regardless of the live example's height.
     const bounds = await content.boundingBox();
     const header = await page.locator(".pg-top").boundingBox();
     expect(bounds).not.toBeNull();
     expect(header).not.toBeNull();
     const headerBottom = header!.y + header!.height;
-    await page.mouse.move(bounds!.x + 4, headerBottom + 120);
-    const nextTop = await content.locator("#" + route.next).evaluate((heading) => heading.getBoundingClientRect().top);
+    await page.mouse.move(bounds!.x - 8, headerBottom + 120);
+    const nextHeading = content.locator("#" + route.next);
     const scrollBefore = await page.evaluate(() => window.scrollY);
-    await page.mouse.wheel(0, Math.max(80, nextTop - headerBottom + 24));
+    // Firefox caps one large wheel event at roughly a viewport. Use normal wheel steps.
+    for (let step = 0; step < 8; step++) {
+      const nextTop = await nextHeading.evaluate((heading) => heading.getBoundingClientRect().top);
+      const remaining = nextTop - headerBottom + 24;
+      if (remaining <= 1) break;
+      const distance = Math.min(400, remaining);
+      const beforeStep = await page.evaluate(() => window.scrollY);
+      await page.mouse.wheel(0, distance);
+      await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThanOrEqual(Math.floor(beforeStep + distance) - 1);
+    }
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(scrollBefore);
     const next = toc.locator('a[href="#' + route.next + '"]');
     await expect(next).toHaveAttribute("aria-current", "location");

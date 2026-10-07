@@ -44,7 +44,8 @@ test("icons expose the complete registry, real selection, sizes, accessibility a
   await page.goto(docsUrl(baseURL, "icons"), { waitUntil: "domcontentloaded" });
   const assets = page.getByTestId("docs-assets-page");
   await expect(assets).toHaveAttribute("data-docs-section", "icons");
-  await expect(assets.getByRole("heading", { level: 1 })).toHaveText("Иконки");
+  await expect(page.getByTestId("docs-page").getByRole("heading", { level: 1 })).toHaveCount(1);
+  await expect(page.getByTestId("docs-page").getByRole("heading", { level: 1 })).toHaveText("Иконки");
   const catalog = assets.getByTestId("docs-icon-catalog");
   await expect(catalog.getByRole("button")).toHaveCount(WL_ICON_NAMES.length);
   expect(await catalog.getByRole("button").evaluateAll((buttons) => buttons.map((button) => button.getAttribute("data-icon-name")))).toEqual([...WL_ICON_NAMES]);
@@ -89,7 +90,8 @@ test("colors resolve shipped themes, preserve alpha, copy exact CSS values and e
   await page.goto(docsUrl(baseURL, "colors"), { waitUntil: "domcontentloaded" });
   const assets = page.getByTestId("docs-assets-page");
   await expect(assets).toHaveAttribute("data-docs-section", "colors");
-  await expect(assets.getByRole("heading", { level: 1 })).toHaveText("Цвета и темы");
+  await expect(page.getByTestId("docs-page").getByRole("heading", { level: 1 })).toHaveCount(1);
+  await expect(page.getByTestId("docs-page").getByRole("heading", { level: 1 })).toHaveText("Цвета и темы");
   await expect(assets.locator("[data-asset-theme]")).toHaveCount(wlDesignThemes.length);
   await expect(assets.locator("[data-color-group]")).toHaveCount(5);
   const background = assets.locator('[data-color-token="--wl-bg"]');

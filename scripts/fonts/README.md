@@ -1,6 +1,6 @@
-# Gavia 0.6 font sources and build
+# Gavia Sans 0.6 font sources and build
 
-Gavia 0.6 is an experimental OFL derivative of Onest with independently authored numerals. The current family contains six weights (100, 300, 400, 500, 600, 700), each with an upright and italic file, and preserves the base's coverage of 780 mapped characters. The repository and public specimen keep only the accepted current Gavia family; earlier development editions are available through Git history.
+Gavia Sans 0.6 is an experimental OFL derivative of Onest with independently authored numerals. The current family contains six weights (100, 300, 400, 500, 600, 700), each with an upright and italic file, and preserves the base's coverage of 780 mapped characters. The repository and public specimen keep only the accepted current Gavia Sans family; earlier development editions are available through Git history.
 
 ## Drawing and provenance
 
@@ -10,7 +10,7 @@ All ten numerals are independently authored in `draw_gavia.py`. Zero, two, five 
 
 The builder calibrates centre-line widths and heights before stroke expansion with bounded iterative searches. Flat forms occupy the 0–707 vertical range; curved forms allow optical overshoot to approximately -8 and 715. Six spans -8–707 and nine spans 0–715. This aligns the optical numeral height and baseline while preserving curved overshoot. The shared stroke calibration for weights 100/300/400/500/600/700 is 40/69/84/102/120/137 units; horizontal strokes use 92% of that thickness. Centre-line proportions are calibrated before expansion, so fitting a narrow or wide digit does not stretch its finished stroke. Skia expands the authored centre-line drawings and resolves contour overlaps; FontTools converts cubic Beziers to quadratic curves for TrueType output. These values are an optical starting point, not a claim that every numeral has identical perceived darkness at every size.
 
-The accepted 0.600 drawing is frozen by an independent set of 24 SHA256 values in the verifier. Those hashes cover complete TTF/WOFF2 content, including every outline, metric and layout table. The verifier does not load earlier Gavia editions or report historical cross-version comparisons.
+The accepted 0.600 drawing retains its original set of 24 binary SHA256 values in the verifier. The user-requested 2026-10-07 rename changes only name records to Gavia Sans. A separate frozen set of renamed binary hashes and accepted-0600-tables.json proves that every original table except name is unchanged; only head.checkSumAdjustment is normalized because the file checksum follows name changes. The fingerprint file has its own fixed SHA256. The verifier does not load earlier Gavia Sans editions or report historical cross-version comparisons.
 
 The letters remain proportional. Default and `tnum` numerals have 600-unit advances. `pnum` changes advances and placement only: the same numeral drawing is retained, without an extra width or stroke transformation. Letter outlines, advance widths, source GPOS kerning and mark positions follow the same horizontal scaling. Full source kerning is retained.
 
@@ -39,7 +39,7 @@ The current workstation can use the Python binary returned by Codex `load_worksp
 
 Network access is only needed to install the tooling. The builder reads the committed Onest binary and authored geometry; the three retained source binaries and their notices are in `sources/`. Applications consuming the resulting fonts do not need Python or these packages.
 
-`build_font.py` writes 12 TTF + 12 WOFF2 files, OFL notices, FONTLOG and a hash manifest to `packages/ui-kit/fonts/gavia/`, and copies current assets to `apps/playground/public/type-study/gavia/`. Font names, timestamps and glyph order are deterministic. The manifest records drawing-module and source hashes. `verify_fonts.py` checks the accepted binary SHA values independently of the manifest, source/drawing hashes, checksums, style metadata, TTF/WOFF2 round trips, coverage, composite references, line metrics, clipping, HarfBuzz shaping and tabular/proportional numerals. Actual geometry checks include the one's broad vertical-cut entry, the three's level cap-height top bar and horizontal thickness, numeral vertical bounds, measured zero/one stems, accepted Regular ink widths, and unrefined Latin/Cyrillic letter probes against independently instantiated Onest at 96% width and original height. Refined letters and numerals are also checked against unchanged source outlines. The generated report explicitly records that historical Gavia comparisons are not performed. These checks do not replace visual optical review.
+`build_font.py` writes 12 TTF + 12 WOFF2 files, OFL notices, FONTLOG and a hash manifest to `packages/ui-kit/fonts/gavia/`, and copies current assets to `apps/playground/public/type-study/gavia/`. Font names, timestamps and glyph order are deterministic. The manifest records drawing-module and source hashes. `verify_fonts.py` checks the accepted binary SHA values independently of the manifest, source/drawing hashes, checksums, style metadata, TTF/WOFF2 round trips, coverage, composite references, line metrics, clipping, HarfBuzz shaping and tabular/proportional numerals. Actual geometry checks include the one's broad vertical-cut entry, the three's level cap-height top bar and horizontal thickness, numeral vertical bounds, measured zero/one stems, accepted Regular ink widths, and unrefined Latin/Cyrillic letter probes against independently instantiated Onest at 96% width and original height. Refined letters and numerals are also checked against unchanged source outlines. The generated report explicitly records that historical Gavia Sans comparisons are not performed. These checks do not replace visual optical review.
 
 ## Source files
 
@@ -47,11 +47,11 @@ Network access is only needed to install the tooling. The builder reads the comm
 - Provenance and QA reference only: [JetBrains Mono upright](https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/fonts/variable/JetBrainsMono%5Bwght%5D.ttf).
 - Provenance and QA reference only: [JetBrains Mono italic](https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/fonts/variable/JetBrainsMono-Italic%5Bwght%5D.ttf).
 
-Exact source SHA256 values are recorded in the family manifest. Original source copyright notices and licenses are preserved. Current Gavia 0.6 font software stays under SIL OFL 1.1 as an Onest derivative with refined letter endings and Gavia's authored numerals; the surrounding UI-kit and build code keep their existing license. Retained historical JetBrains files keep their original OFL notices.
+Exact source SHA256 values are recorded in the family manifest. Original source copyright notices and licenses are preserved. Current Gavia Sans 0.6 font software stays under SIL OFL 1.1 as an Onest derivative with refined letter endings and Gavia Sans's authored numerals; the surrounding UI-kit and build code keep their existing license. Retained historical JetBrains files keep their original OFL notices.
 
 ## Use and review
 
-Gavia is the default proportional typeface of the Gavia theme. The canonical
+Gavia Sans is the default proportional typeface of the Gavia theme. The canonical
 `packages/ui-kit/tokens/source.json` defines the `--wl-font` override for `gavia`;
 `pnpm tokens:sync` generates the theme stylesheet, catalog and TypeScript values.
 Headings inherit `--wl-font-heading`. White, Graphite and Newspaper retain their
@@ -65,7 +65,7 @@ the Gavia theme uses its system fallback. See [font documentation](../../docs/fo
 The WOFF2/TTF files remain usable independently of Vue and components: register WOFF2 with ordinary `@font-face` on any site, or install TTF manually for native applications. The build does not install fonts into Windows.
 
 The live specimen is the integrated playground page `?view=font` and presents
-only accepted Gavia 0.6: Russian and English text, upright/oblique samples,
+only accepted Gavia Sans 0.6: Russian and English text, upright/oblique samples,
 six weights and editable text. Its menu and theme selector are shared with the
 current playground; `?theme=...` survives navigation on local and Pages URLs.
 Font software and notices are shipped in `packages/ui-kit/fonts/gavia/`.

@@ -1,4 +1,6 @@
-Gavia 0.600 — 2026-10-06
+Gavia Sans 0.600 — 2026-10-07
+
+Family renamed from Gavia to Gavia Sans on 2026-10-07. Name records only; accepted drawing, metrics, kerning and other tables unchanged.
 
 OFL derivative based on the Onest letter and extended-glyph drawing.
 Letters uniformly narrowed to 96%; source vertical proportions and full kerning retained.

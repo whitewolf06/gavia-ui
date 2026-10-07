@@ -4,7 +4,7 @@ import { chooseDropdownOption, chooseShowcaseTheme, navigateMainView } from "./s
 
 const weights = [100, 300, 400, 500, 600, 700] as const;
 
-test("font page keeps theme-aware navigation, real Gavia faces and editable samples", async ({ page, baseURL }) => {
+test("font page keeps theme-aware navigation, real Gavia Sans faces and editable samples", async ({ page, baseURL }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("response", (response) => {
@@ -15,10 +15,13 @@ test("font page keeps theme-aware navigation, real Gavia faces and editable samp
   await page.goto(url.href);
   const fontPage = page.getByTestId("font-page");
   await expect(fontPage).toBeVisible();
+  await expect(fontPage.getByRole("heading", { level: 1, name: "Gavia Sans", exact: true })).toBeVisible();
+  await expect(fontPage.locator("h1")).toHaveCount(1);
+  await expect(fontPage.locator("#wl-type-hero-title")).toHaveJSProperty("tagName", "H2");
   await expect(page.locator(".pg-top")).toHaveCount(1);
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "gavia");
   await expect(fontPage.locator(".wl-weights-row")).toHaveCount(6);
-  await expect(fontPage.locator(".wl-type-footer-note")).toContainText("Gavia 0.6");
+  await expect(fontPage.locator(".wl-type-footer-note")).toContainText("Gavia Sans 0.6");
   await expect(fontPage.getByText('import "gavia-ui/styles/fonts/gavia.css";', { exact: true })).toHaveCount(1);
   await expect(fontPage.locator(".pg-site-header")).toHaveCount(0);
   for (const weight of weights) {
@@ -27,12 +30,13 @@ test("font page keeps theme-aware navigation, real Gavia faces and editable samp
   const faces = await page.evaluate(async (fontWeights) => {
     const loaded = [];
     for (const weight of fontWeights) for (const style of ["normal", "italic"]) {
-      const fonts = await document.fonts.load(`${style} ${weight} 16px Gavia`, "Гавиа Gavia 0123456789");
+      const fonts = await document.fonts.load(`${style} ${weight} 16px 'Gavia Sans'`, "Гавиа Gavia 0123456789");
       loaded.push({ weight, style, faces: fonts.length });
     }
     return loaded;
   }, weights);
   expect(faces).toHaveLength(12);
+  expect(await page.evaluate(async () => (await document.fonts.load("normal 400 16px Gavia", "Гавиа 0123456789")).length)).toBe(1);
   for (const face of faces) expect(face.faces, `${face.weight} ${face.style} loads a real font face`).toBe(1);
 
   await fontPage.getByRole("textbox", { name: "Свой текст", exact: true }).fill("Гагара / Loon 0123456789");
@@ -56,9 +60,9 @@ test("font page keeps theme-aware navigation, real Gavia faces and editable samp
   for (const theme of ["White", "Graphite", "Newspaper", "Gavia"]) {
     await chooseShowcaseTheme(page, theme);
     expect(new URL(page.url()).searchParams.get("view")).toBe("font");
-    await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", /^"?Gavia"?,/);
-    await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Gavia"?,/);
-    await expect(fontPage.locator(".wl-weights-digits").first()).toHaveCSS("font-family", /^"?Gavia"?,/);
+    await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
+    await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
+    await expect(fontPage.locator(".wl-weights-digits").first()).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
   }
 
@@ -78,7 +82,7 @@ test("font page keeps theme-aware navigation, real Gavia faces and editable samp
   await page.locator(".pg-top").getByRole("button", { name: "Поиск", exact: true }).click();
   const palette = page.getByRole("dialog", { name: "Командная палитра", exact: true });
   await palette.getByRole("combobox", { name: "Командная палитра", exact: true }).fill("шрифт");
-  await expect(palette.getByText("Шрифт Gavia", { exact: true })).toBeVisible();
+  await expect(palette.getByText("Шрифт Gavia Sans", { exact: true })).toBeVisible();
   await page.keyboard.press("Escape");
   expect(errors).toEqual([]);
 });
@@ -89,7 +93,7 @@ test("tabular and proportional numbers use different spacing without changing th
   await page.goto(url.href);
   const fontPage = page.getByTestId("font-page");
   await expect(fontPage).toBeVisible();
-  await page.evaluate(() => document.fonts.load("normal 400 38px Gavia", "11 111,00 88 888,00"));
+  await page.evaluate(() => document.fonts.load("normal 400 38px 'Gavia Sans'", "11 111,00 88 888,00"));
   const widths = await fontPage.locator(".wl-type-number-sample").evaluateAll((cards) => cards.map((card) =>
     Array.from(card.querySelectorAll(".wl-type-number-line")).slice(0, 2).map((line) => {
       const range = document.createRange();
@@ -120,7 +124,7 @@ test("font download contains the approved family, standalone CSS and OFL license
   await expect(font.locator("[data-wl=textarea]")).toHaveCount(1);
   await expect(font.locator("[data-wl=input]")).toHaveCount(1);
   await expect(font.locator("kbd")).toHaveCount(0);
-  await expectGaviaFontDownload(page, font.getByRole("link", { name: "Скачать Gavia 0.6", exact: true }).first());
-  const footer = page.locator(".pg-footer").getByRole("link", { name: "Скачать шрифт Gavia", exact: true });
-  await expect(footer).toHaveAttribute("href", url.pathname + "downloads/Gavia-0.6.zip");
+  await expectGaviaFontDownload(page, font.getByRole("link", { name: "Скачать Gavia Sans 0.6", exact: true }).first());
+  const footer = page.locator(".pg-footer").getByRole("link", { name: "Скачать шрифт Gavia Sans", exact: true });
+  await expect(footer).toHaveAttribute("href", url.pathname + "downloads/Gavia-Sans-0.6.zip");
 });

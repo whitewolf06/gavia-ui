@@ -4,6 +4,7 @@ import changelogSource from "../../../CHANGELOG.md?raw";
 import { gaviaProjectInfo as project } from "./project/project-info";
 import { parseChangelog } from "./project/changelog";
 import ChangelogInline from "./project/ChangelogInline.vue";
+import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
 
 const changelog = parseChangelog(changelogSource, project.documentationBaseUrl);
 const projectElement = ref<HTMLElement | null>(null);
@@ -25,15 +26,16 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <main ref="projectElement" class="project-main wl-container wl-stack" data-space="3xl" id="project-top" data-testid="changelog-page" aria-labelledby="project-title">
-    <header class="project-hero wl-stack" data-space="lg">
-      <p class="project-eyebrow wl-text-small">Gavia UI / Changelog</p>
-      <h1 id="project-title" class="wl-text-display">Changelog</h1>
-      <p class="project-lead wl-text-body wl-text-muted">История выпусков Gavia UI, подготовленные изменения и заметки о переходе между версиями.</p>
-      <nav class="wl-inline" data-space="lg" aria-label="Навигация по истории изменений">
-        <a class="project-link" href="#project-changelog">История изменений</a>
-      </nav>
-    </header>
+  <main ref="projectElement" class="project-main wl-container wl-stack" data-space="2xl" id="project-top" data-testid="changelog-page" aria-labelledby="project-title">
+    <PlaygroundPageHeader title="Changelog" title-id="project-title"
+      description="История выпусков Gavia UI, подготовленные изменения и заметки о переходе между версиями."
+      :breadcrumbs="[{ label: 'Changelog' }]">
+      <template #navigation>
+        <nav class="wl-inline" data-space="lg" aria-label="Навигация по истории изменений">
+          <a class="project-link" href="#project-changelog">История изменений</a>
+        </nav>
+      </template>
+    </PlaygroundPageHeader>
 
     <section id="project-changelog" data-testid="project-changelog" aria-labelledby="project-changelog-title" class="wl-stack" data-space="xl">
       <header class="wl-stack" data-space="sm">
@@ -69,9 +71,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style>
-.project-main { padding-block: var(--wl-space-3xl) var(--wl-space-4xl); }
-.project-hero { padding-bottom: var(--wl-space-xl); border-bottom: 1px solid var(--wl-border); }
-.project-lead { max-width: 72ch; }
+.project-main { padding-block: var(--wl-space-2xl) var(--wl-space-4xl); }
 .project-eyebrow { color: var(--wl-text-muted); letter-spacing: 0.08em; text-transform: uppercase; }
 .project-link { color: var(--wl-accent); text-decoration: underline; text-underline-offset: 0.18em; overflow-wrap: anywhere; }
 .project-link:hover { color: var(--wl-accent-hover); }
@@ -81,7 +81,7 @@ onBeforeUnmount(() => {
 .project-list { list-style: disc; margin: 0; padding-inline-start: var(--wl-space-xl); }
 .project-list li + li { margin-top: var(--wl-space-sm); }
 @media (max-width: 640px) {
-  .project-main { padding-inline: var(--wl-space-md); padding-top: var(--wl-space-xl); }
   .project-release { padding: var(--wl-space-lg); }
 }
+@media (max-width: 760px) { .project-main { padding-top: var(--wl-space-xl); } }
 </style>

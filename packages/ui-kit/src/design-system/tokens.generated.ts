@@ -569,7 +569,7 @@ export const wlDesignTokens = [
     "value": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif",
     "themes": {
       "newspaper": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif",
-      "gavia": "\"Gavia\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif"
+      "gavia": "\"Gavia Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif"
     }
   },
   {
@@ -1763,7 +1763,8 @@ export const wlDesignTokens = [
     "themes": {
       "white": "var(--wl-red-500)",
       "graphite": "var(--wl-red-400)",
-      "newspaper": "#b33a35"
+      "newspaper": "#b33a35",
+      "gavia": "#ab4448"
     }
   },
   {
@@ -1776,7 +1777,8 @@ export const wlDesignTokens = [
     "themes": {
       "white": "var(--wl-red-600)",
       "graphite": "#ef7c81",
-      "newspaper": "#942e2a"
+      "newspaper": "#942e2a",
+      "gavia": "#963c3f"
     }
   },
   {
@@ -1789,7 +1791,8 @@ export const wlDesignTokens = [
     "themes": {
       "white": "var(--wl-red-50)",
       "graphite": "#311d1f",
-      "newspaper": "#f9e9e5"
+      "newspaper": "#f9e9e5",
+      "gavia": "#f7eeed"
     }
   },
   {
@@ -1802,7 +1805,8 @@ export const wlDesignTokens = [
     "themes": {
       "white": "var(--wl-red-75)",
       "graphite": "#3a2225",
-      "newspaper": "#f3ded9"
+      "newspaper": "#f3ded9",
+      "gavia": "#f3e5e4"
     }
   },
   {
@@ -1815,7 +1819,8 @@ export const wlDesignTokens = [
     "themes": {
       "white": "var(--wl-red-100)",
       "graphite": "#4e2a2d",
-      "newspaper": "#e7c5bd"
+      "newspaper": "#e7c5bd",
+      "gavia": "#e5c6c5"
     }
   },
   {
@@ -1867,7 +1872,8 @@ export const wlDesignTokens = [
     "themes": {
       "white": "var(--wl-red-700)",
       "graphite": "#f08a8f",
-      "newspaper": "#8b2d29"
+      "newspaper": "#8b2d29",
+      "gavia": "#ab4448"
     }
   },
   {
@@ -2526,7 +2532,10 @@ export const wlDesignTokens = [
     "layer": "semantic",
     "type": "color",
     "category": "component",
-    "description": "Роль toast-icon-err."
+    "description": "Роль toast-icon-err.",
+    "themes": {
+      "gavia": "var(--wl-palette-danger)"
+    }
   },
   {
     "name": "--wl-metric-stepper-input-width",
@@ -3579,7 +3588,8 @@ export const wlDesignTokens = [
     "description": "Поверхность опасного действия.",
     "themes": {
       "graphite": "var(--wl-danger)",
-      "newspaper": "var(--wl-danger)"
+      "newspaper": "var(--wl-danger)",
+      "gavia": "var(--wl-palette-danger)"
     }
   },
   {
@@ -3591,7 +3601,8 @@ export const wlDesignTokens = [
     "description": "Опасное действие при наведении.",
     "themes": {
       "graphite": "var(--wl-danger-hover)",
-      "newspaper": "var(--wl-danger-hover)"
+      "newspaper": "var(--wl-danger-hover)",
+      "gavia": "var(--wl-palette-danger-hover)"
     }
   },
   {
@@ -4193,7 +4204,7 @@ export const wlContrastReport = [
     "background": "--wl-action-danger-bg",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 5.36
+    "ratio": 5.75
   },
   {
     "name": "danger-hover",
@@ -4202,7 +4213,7 @@ export const wlContrastReport = [
     "background": "--wl-action-danger-hover",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 8
+    "ratio": 6.97
   },
   {
     "name": "tooltip",
@@ -4247,7 +4258,7 @@ export const wlContrastReport = [
     "background": "--wl-danger-soft",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 7.1
+    "ratio": 5.04
   },
   {
     "name": "focus",

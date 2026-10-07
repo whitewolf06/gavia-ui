@@ -11,8 +11,9 @@ import FoundationPage from "./documentation/foundations/FoundationPage.vue";
 import { createPlaygroundUrl, isDocumentationAssetSection, isDocumentationFoundationSection, type DocumentationSection } from "./navigation";
 import { withPlaygroundTheme } from "./themes";
 import DocumentationAssetsPage from "./documentation/assets/DocumentationAssetsPage.vue";
-import { documentationAssets } from "./documentation/assets/assets";
-import { documentationCategories, documentationFoundations, documentationOverviewHeadings, foundationHeadings, installationCommand, installationSource, type DocumentationHeading } from "./documentation/catalog";
+import { documentationAssets, documentationAssetPages } from "./documentation/assets/assets";
+import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
+import { documentationCategories, documentationFoundations, documentationFoundationPages, documentationOverviewHeadings, foundationHeadings, installationCommand, installationSource, type DocumentationHeading } from "./documentation/catalog";
 
 const props = withDefaults(defineProps<{ component?: string; section?: DocumentationSection; theme?: WlThemeName }>(), { theme: "gavia" });
 const foundationSection = computed(() => isDocumentationFoundationSection(props.section) ? props.section : undefined);
@@ -34,6 +35,16 @@ const emit = defineEmits<{
 }>();
 const entry = computed(() => props.section ? undefined : wlManifest.find((item) => item.name === props.component));
 const categoryLabel = computed(() => documentationCategories.find((category) => category.key === entry.value?.category)?.label);
+const pageIntroduction = computed(() => {
+  const metadata = assetSection.value ? documentationAssetPages[assetSection.value]
+    : foundationSection.value ? documentationFoundationPages[foundationSection.value] : undefined;
+  const title = metadata?.label ?? entry.value?.name ?? "Документация";
+  const description = metadata?.description ?? entry.value?.description
+    ?? "Подключение библиотеки, основы интерфейса, иконки, цвета и публичные контракты. Начните с WlButton: сравните варианты, настройте живой пример и скопируйте код для приложения.";
+  return { title, description, breadcrumbs: metadata || entry.value
+    ? [{ label: "Документация", route: { view: "docs" as const } }, { label: title }]
+    : [{ label: "Документация" }] };
+});
 const groups = documentationCategories.map((category) => ({
   ...category,
   entries: wlManifest.filter((item) => item.category === category.key)
@@ -82,6 +93,13 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 <template>
   <main ref="pageElement" class="docs-page" data-testid="docs-page" aria-label="Документация Gavia UI">
     <div class="docs-layout">
+      <PlaygroundPageHeader class="docs-page-header" :title="pageIntroduction.title" :description="pageIntroduction.description" :breadcrumbs="pageIntroduction.breadcrumbs">
+        <template v-if="entry" #meta><span>Компоненты / {{ categoryLabel }}</span><span class="docs-version">С версии {{ entry.introducedIn }}</span></template>
+        <template v-if="entry" #actions>
+          <WlButton v-if="entry.name === 'WlIcon'" size="sm" @click="emit('section', 'icons')">Каталог иконок</WlButton>
+          <WlButton class="docs-design-rules" size="sm" variant="secondary" @click="emit('navigate', 'system')">Правила дизайн-системы</WlButton>
+        </template>
+      </PlaygroundPageHeader>
       <aside class="docs-sidebar" aria-label="Навигация документации">
         <details ref="menuElement" class="docs-menu" :open="!isMobile || mobileMenuOpen" @toggle="toggleMenu">
           <summary class="docs-menu-summary">Навигация документации</summary>
@@ -128,15 +146,7 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
         <DocumentationAssetsPage v-if="assetSection" :key="assetSection" :section="assetSection" :theme="theme" />
         <FoundationPage v-else-if="foundationSection" :key="foundationSection" :section="foundationSection" @component="emit('component', $event)" @navigate="emit('navigate', $event)" />
         <template v-else-if="entry">
-          <header class="wl-stack" data-space="md">
-            <div class="wl-inline" data-space="sm"><p class="docs-eyebrow">Компоненты / {{ categoryLabel }}</p><span class="docs-version">С версии {{ entry.introducedIn }}</span></div>
-            <h1 class="wl-text-title">{{ entry.name }}</h1>
-            <p class="wl-text-body wl-text-muted">{{ entry.description }}</p>
-            <div class="docs-component-header-actions wl-inline" data-space="sm">
-              <WlButton v-if="entry.name === 'WlIcon'" size="sm" @click="emit('section', 'icons')">Каталог иконок</WlButton>
-              <WlButton class="docs-design-rules" size="sm" variant="secondary" @click="emit('navigate', 'system')">Правила дизайн-системы</WlButton>
-            </div>
-          </header>
+
           <component :is="entry.name === 'WlButton' ? ButtonDocumentation : ComponentDocumentation" :key="entry.name" :entry="entry">
             <template #outline>
               <nav v-if="currentHeadings.length" class="docs-section-links docs-component-outline" aria-label="На этой странице"><a v-for="heading in currentHeadings" :key="heading.id" class="docs-anchor-link" :href="'#' + heading.id" @click="navigateAnchor(heading)">{{ heading.title }}</a></nav>
@@ -145,12 +155,7 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
         </template>
 
         <template v-else>
-          <header class="wl-stack" data-space="md">
-            <p class="docs-eyebrow">Gavia UI / Docs</p>
-            <h1 class="wl-text-title">Документация</h1>
-            <p class="docs-lead wl-text-body wl-text-muted">Подключение библиотеки, основы интерфейса, иконки, цвета и публичные контракты. Начните с WlButton: сравните варианты, настройте живой пример и скопируйте код для приложения.</p>
-            <p v-if="component" class="docs-notice wl-text-small" role="alert">Компонент «{{ component }}» не найден в публичном манифесте. Выберите компонент в каталоге.</p>
-          </header>
+          <p v-if="component" class="docs-notice wl-text-small" role="alert">Компонент «{{ component }}» не найден в публичном манифесте. Выберите компонент в каталоге.</p>
           <nav class="docs-section-links" aria-label="Разделы документации"><a v-for="section in overviewSections" :key="section.id" class="docs-anchor-link" :href="'#' + section.id">{{ section.title }}</a></nav>
           <section class="docs-overview-section wl-stack" data-space="lg">
             <div class="wl-stack" data-space="sm"><p class="docs-eyebrow">01 / Начало</p><h2 :id="installHeading.id" class="wl-text-heading">{{ installHeading.title }}</h2><p class="wl-text-body wl-text-muted">Vue 3 — единственный обязательный peer. Установите пакет, явно подключите стили и выберите тему. WlConfig нужен только для глобальных pt, локали и анимаций.</p></div>
@@ -202,12 +207,13 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 </template>
 <style>
 .docs-page { width: 100%; max-width: var(--wl-layout-page-max); margin-inline: auto; padding: var(--wl-space-2xl) var(--wl-layout-page-gutter); color: var(--wl-text); }
+.docs-page-header { grid-column: 1; grid-row: 1; }
 .docs-layout { display: grid; grid-template-columns: minmax(0, 1fr) 244px; gap: var(--wl-space-2xl); align-items: start; }
-.docs-sidebar { grid-column: 2; grid-row: 1; min-width: 0; position: sticky; top: 80px; max-height: calc(100dvh - 112px); overflow: auto; padding: var(--wl-space-xs) var(--wl-space-xs) var(--wl-space-xs) var(--wl-space-lg); border-inline-start: 1px solid var(--wl-border); }
+.docs-sidebar { grid-column: 2; grid-row: 1 / span 2; min-width: 0; position: sticky; top: var(--wl-playground-header-offset, 80px); max-height: calc(100dvh - var(--wl-playground-header-offset, 80px) - var(--wl-space-xl)); overflow: auto; padding: var(--wl-space-xs) var(--wl-space-xs) var(--wl-space-xs) var(--wl-space-lg); border-inline-start: 1px solid var(--wl-border); }
 .docs-sidebar-heading { display: flex; align-items: center; gap: var(--wl-space-sm); margin: 0; color: var(--wl-text); font-size: var(--wl-type-small-size); font-weight: var(--wl-type-label-weight); }
 .docs-sidebar-icon { flex: none; color: var(--wl-text-muted); }
-.docs-sidebar-book { display: inline-flex; align-items: center; justify-content: center; flex: none; padding: var(--wl-space-xs); border-radius: var(--wl-corner-control); background: var(--wl-blue-50); }
-.docs-sidebar-icon--book { color: var(--wl-blue-500); }
+.docs-sidebar-book { display: inline-flex; align-items: center; justify-content: center; flex: none; padding: var(--wl-space-xs); border-radius: var(--wl-corner-control); background: var(--wl-accent-soft); }
+.docs-sidebar-icon--book { color: var(--wl-accent); }
 .docs-menu { min-width: 0; }
 .docs-menu-summary { display: none; padding: var(--wl-space-md); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-control); color: var(--wl-text); background: var(--wl-bg-soft); font: inherit; cursor: pointer; }
 .docs-menu-summary:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 2px; }
@@ -234,10 +240,9 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 .docs-component-link:hover { background: var(--wl-bg-soft); }
 .docs-component-link[aria-current="page"] { color: var(--wl-accent); background: var(--wl-accent-soft); }
 .docs-pilot-mark { padding: 2px var(--wl-space-xs); border-radius: var(--wl-corner-control); color: var(--wl-text-muted); font-size: 10px; }
-.docs-content { grid-column: 1; grid-row: 1; min-width: 0; overflow-wrap: anywhere; }
+.docs-content { grid-column: 1; grid-row: 2; min-width: 0; overflow-wrap: anywhere; }
 .docs-eyebrow { font-size: var(--wl-type-small-size); color: var(--wl-text-muted); }
 .docs-version { font-size: var(--wl-type-small-size); padding: var(--wl-space-xs) var(--wl-space-sm); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-control); color: var(--wl-text-muted); }
-.docs-lead { max-width: 70ch; }
 .docs-section-links { display: flex; flex-wrap: wrap; gap: var(--wl-space-sm) var(--wl-space-lg); padding-block: var(--wl-space-sm); }
 .docs-section-links a, .docs-text-link { color: var(--wl-accent); text-underline-offset: 3px; }
 .docs-component-link:focus-visible, .docs-section-links a:focus-visible, .docs-text-link:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 2px; }
@@ -246,7 +251,6 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 .docs-notice { padding: var(--wl-space-lg); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg-soft); }
 .docs-migration-links { display: grid; gap: var(--wl-space-sm); margin: 0; padding-left: var(--wl-space-lg); font-size: var(--wl-type-small-size); }
 @media (prefers-reduced-motion: reduce) { .docs-toc-list a { transition: none; } .docs-toc-list .docs-anchor-link[aria-current="location"] { transform: none; } }
-@media (max-width: 1200px) { .docs-sidebar { position: static; max-height: none; overflow: visible; } .docs-catalog { max-height: 320px; overflow: auto; } }
 @media (max-width: 1100px) { .docs-layout { grid-template-columns: minmax(0, 1fr) 224px; gap: var(--wl-space-xl); } }
-@media (max-width: 760px) { .docs-page { padding-block: var(--wl-space-lg); } .docs-layout { grid-template-columns: minmax(0, 1fr); gap: var(--wl-space-xl); } .docs-sidebar, .docs-content { grid-column: 1; grid-row: auto; } .docs-sidebar { padding: 0; border-inline-start: 0; } .docs-menu-summary { display: list-item; list-style-position: inside; } .docs-menu-content { max-height: 65dvh; overflow: auto; padding: var(--wl-space-lg) var(--wl-space-xs) var(--wl-space-xs); } .docs-catalog { max-height: none; min-height: 0; } }
+@media (max-width: 760px) { .docs-page { padding-block: var(--wl-space-xl); } .docs-layout { grid-template-columns: minmax(0, 1fr); gap: var(--wl-space-xl); } .docs-sidebar { grid-column: 1; grid-row: 2; position: static; max-height: none; overflow: visible; padding: 0; border-inline-start: 0; } .docs-content { grid-column: 1; grid-row: 3; } .docs-menu-summary { display: list-item; list-style-position: inside; } .docs-menu-content { max-height: 65dvh; overflow: auto; padding: var(--wl-space-lg) var(--wl-space-xs) var(--wl-space-xs); } .docs-catalog { max-height: none; min-height: 0; } }
 </style>

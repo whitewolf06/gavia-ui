@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import manifest from "../fonts/gavia/manifest.json";
 import packageManifest from "../package.json";
+import acceptedTables from "../../../scripts/fonts/accepted-0600-tables.json";
 import baseline from "./fixtures/tokens-0.5.json";
 import { getWlThemeTokens, resolveWlToken } from "../src/design-system";
 
@@ -14,7 +15,7 @@ const repositoryRoot = resolve(kitRoot, "../..");
 const fontRoot = resolve(kitRoot, "fonts/gavia");
 const cssPath = resolve(kitRoot, "styles/fonts/gavia.css");
 const hash = (content: Buffer) => createHash("sha256").update(content).digest("hex");
-const acceptedBlock = /APPROVED_0600_SHA256 = \{([\s\S]*?)\r?\n\}/
+const acceptedBlock = /APPROVED_SANS_0600_SHA256 = \{([\s\S]*?)\r?\n\}/
   .exec(readFileSync(resolve(repositoryRoot, "scripts/fonts/verify_fonts.py"), "utf8"))?.[1];
 const acceptedHashes: Record<string, string> = Object.fromEntries(
   [...(acceptedBlock ?? "").matchAll(/'(Gavia-[^']+\.(?:ttf|woff2))': '([a-f0-9]{64})'/g)]
@@ -49,9 +50,9 @@ function windowsName(font: Buffer, id: number): string {
   throw new Error("Missing Windows font name: " + id);
 }
 
-describe("Gavia font distribution", () => {
+describe("Gavia Sans font distribution", () => {
   it("ships only the accepted current family with every weight/style pair", () => {
-    expect(manifest.family).toBe("Gavia");
+    expect(manifest.family).toBe("Gavia Sans");
     expect(manifest.version).toBe("0.600");
     expect(manifest.license).toBe("OFL-1.1");
     expect(Object.keys(acceptedHashes)).toHaveLength(24);
@@ -77,13 +78,22 @@ describe("Gavia font distribution", () => {
     expect(web.toString("ascii", 0, 4)).toBe("wOF2");
     expect(web.readUInt32BE(4)).toBe(0x00010000);
     expect(web.readUInt32BE(8)).toBe(web.length);
+    const original = acceptedTables.files[face.ttf.file as keyof typeof acceptedTables.files];
+    for (const [tag, expected] of Object.entries(original.tables)) {
+      const content = Buffer.from(table(ttf, tag));
+      if (tag === "head") content.fill(0, 8, 12);
+      expect(hash(content), face.ttf.file + " unchanged " + tag).toBe(expected);
+    }
     const head = table(ttf, "head");
     expect(head.readUInt32BE(12)).toBe(0x5f0f3cf5);
     expect(head.readUInt16BE(18)).toBe(1000);
     const os2 = table(ttf, "OS/2");
     expect(os2.readUInt16BE(4)).toBe(face.weight);
     expect(Boolean(os2.readUInt16BE(62) & 1)).toBe(face.style === "italic");
-    expect(windowsName(ttf, 16)).toBe("Gavia");
+    expect(windowsName(ttf, 16)).toBe("Gavia Sans");
+    expect(windowsName(ttf, 21)).toBe("Gavia Sans");
+    expect(windowsName(ttf, 4)).toMatch(/^Gavia Sans /);
+    expect(windowsName(ttf, 6)).toMatch(/^GaviaSans-/);
     expect(windowsName(ttf, 5)).toBe("Version 0.600");
     const hhea = table(ttf, "hhea");
     expect([hhea.readInt16BE(4), hhea.readInt16BE(6), hhea.readInt16BE(8)])
@@ -94,17 +104,21 @@ describe("Gavia font distribution", () => {
   it("maps each CSS face to its matching real WOFF2 file", () => {
     const css = readFileSync(cssPath, "utf8");
     const faces = [...css.matchAll(/@font-face\s*\{([^}]+)\}/g)].map((match) => match[1]!);
-    expect(faces).toHaveLength(12);
-    for (const face of manifest.faces) {
-      const candidates = faces.filter((block) => Number(block.match(/font-weight:\s*(\d+)\s*;/)?.[1]) === face.weight
-        && block.match(/font-style:\s*(normal|italic)\s*;/)?.[1] === face.style);
-      expect(candidates, face.name).toHaveLength(1);
-      const block = candidates[0]!;
-      expect(block).toMatch(/font-family:\s*"Gavia"\s*;/);
-      expect(block).toMatch(/font-display:\s*swap\s*;/);
-      const url = block.match(/url\("([^"]+)"\)/)?.[1];
-      expect(url).toBe("../../fonts/gavia/" + face.woff2.file);
-      expect(hash(readFileSync(resolve(dirname(cssPath), url!)))).toBe(face.woff2.sha256);
+    expect(faces).toHaveLength(24);
+    for (const family of ["Gavia Sans", "Gavia"]) {
+      const familyFaces = faces.filter((block) => block.match(/font-family:\s*"([^"]+)"\s*;/)?.[1] === family);
+      expect(familyFaces).toHaveLength(12);
+      for (const face of manifest.faces) {
+        const candidates = familyFaces.filter((block) => Number(block.match(/font-weight:\s*(\d+)\s*;/)?.[1]) === face.weight
+          && block.match(/font-style:\s*(normal|italic)\s*;/)?.[1] === face.style);
+        expect(candidates, face.name).toHaveLength(1);
+        const block = candidates[0]!;
+        expect(block).toContain('font-family: "' + family + '";');
+        expect(block).toMatch(/font-display:\s*swap\s*;/);
+        const url = block.match(/url\("([^"]+)"\)/)?.[1];
+        expect(url).toBe("../../fonts/gavia/" + face.woff2.file);
+        expect(hash(readFileSync(resolve(dirname(cssPath), url!)))).toBe(face.woff2.sha256);
+      }
     }
   });
 
@@ -123,9 +137,9 @@ describe("Gavia font distribution", () => {
     expect(packageManifest.license).toBe("MIT");
   });
 
-  it("uses Gavia for the branded theme and preserves legacy typography and code", () => {
+  it("uses Gavia Sans for the branded theme and preserves legacy typography and code", () => {
     const gavia = getWlThemeTokens("gavia");
-    expect(gavia["--wl-font"]).toMatch(/^"Gavia", .+sans-serif$/);
+    expect(gavia["--wl-font"]).toMatch(/^"Gavia Sans", .+sans-serif$/);
     expect(gavia["--wl-font-heading"]).toBe(gavia["--wl-font"]);
     for (const theme of ["white", "graphite", "newspaper"] as const) {
       for (const name of ["--wl-font", "--wl-font-heading", "--wl-mono"] as const) {

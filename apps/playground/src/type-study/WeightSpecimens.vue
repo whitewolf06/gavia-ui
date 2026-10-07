@@ -23,7 +23,7 @@ const weights = gaviaWeights;
 
 const copy = {
   ru: {
-    eyebrow: "05 / Семейство Gavia",
+    eyebrow: "05 / Семейство Gavia Sans",
     title: "Шесть весов",
     description: "Одинаковые слова, разная плотность. От тонкой линии до уверенного акцента — сравните все шесть весов на заголовках, тексте и цифрах.",
     normal: "Прямое",
@@ -32,12 +32,12 @@ const copy = {
     customTextLabel: "Своя строка",
     sampleHeading: "Ясные формы. Точные решения.",
     sampleParagraph: "Спокойный ритм помогает читать и замечать главное. Буквы оставляют достаточно воздуха, заголовки задают порядок, а цифры сохраняют ясность в датах, суммах и коротких подписях.",
-    numeralLabel: "Цифры / Gavia",
+    numeralLabel: "Цифры / Gavia Sans",
     refinement: "Кириллица и латиница — во всех шести весах.",
     collection: "6 весов × 2 стиля / 12 начертаний"
   },
   en: {
-    eyebrow: "05 / Gavia family",
+    eyebrow: "05 / Gavia Sans family",
     title: "Six weights",
     description: "The same words, a different texture. From a fine line to a confident accent, compare all six weights in headings, paragraphs and numbers.",
     normal: "Upright",
@@ -46,7 +46,7 @@ const copy = {
     customTextLabel: "Your text",
     sampleHeading: "Clear forms. Precise decisions.",
     sampleParagraph: "A calm rhythm makes reading easier and brings the essentials into focus. Letters have room to breathe, headings establish order, and numbers remain clear in dates, amounts and short labels.",
-    numeralLabel: "Numbers / Gavia",
+    numeralLabel: "Numbers / Gavia Sans",
     refinement: "Cyrillic and Latin across all six weights.",
     collection: "6 weights × 2 styles / 12 faces"
   }
@@ -75,7 +75,7 @@ const styleName = computed(() => fontStyle.value === "normal" ? content.value.no
 
     <div class="wl-weights-custom-text">
       <label class="wl-weights-custom-label" for="wl-weights-custom-heading">{{ content.customTextLabel }}</label>
-      <WlInput id="wl-weights-custom-heading" v-model="customHeading" class="wl-weights-custom-input" placeholder="Gavia · I l 1 O 0 · Ёё Йй Жж Дд Лл · 12 480 ₽" autocomplete="off" :spellcheck="false" />
+      <WlInput id="wl-weights-custom-heading" v-model="customHeading" class="wl-weights-custom-input" placeholder="Gavia Sans · I l 1 O 0 · Ёё Йй Жж Дд Лл · 12 480 ₽" autocomplete="off" :spellcheck="false" />
     </div>
 
     <div class="wl-weights-list" :aria-label="`${content.title}: ${styleName}`">

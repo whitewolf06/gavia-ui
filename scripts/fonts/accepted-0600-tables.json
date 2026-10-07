@@ -1,0 +1,415 @@
+{
+  "version": "0.600",
+  "family": "Gavia",
+  "normalization": "All sfnt tables except name; head checkSumAdjustment bytes 8..11 zeroed. WOFF2 tables are decoded before hashing.",
+  "files": {
+    "Gavia-Thin.ttf": {
+      "sha256": "36e9ac3ed86418b3d8a9c7230135ca636552442f40db1ef9a68dbcaf898e9b7f",
+      "tables": {
+        "GDEF": "f6fb65289bfe7570f605aad0e3ab6616c3442bdecdf1667247a0eb6dad03c018",
+        "GPOS": "9b96814f502aafaf7e42c33924e6bc10b7fb019f416d222fbb6a4cc6120be032",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "2c2176ceb5fd97e51e209196702a8544a8392b4de8757f88f16a9725c06dcd13",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "2577bbaf9b2d958123a9d86c821936c9daa642a30cc44d15cb6454132a008c66",
+        "head": "ae7926f43330fa45dca9471d77c988187662c7ea826bdd337e0386d5e49c60ac",
+        "hhea": "a44e45cb1f8092605f075f35619bba15392a76dcbd6e16ffe820b759e322ded7",
+        "hmtx": "a14ad5e8b0b8f153430a9f772fda64ba89e82ac9eab6f4373d9ea57c6a2585a0",
+        "loca": "f1d8988c944324f6ac09a6f3293a49403ad584343fb7e5da0c269f5f56d32ec0",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "4d60aba5019372052e56ec4ad3f2e7db631275d8f296c85ac09e3d0bd6ccadfa"
+      }
+    },
+    "Gavia-Thin.woff2": {
+      "sha256": "b023efaa8e41a16e2619a528d48dd92d216923d04c63dcd6076d1afc0e2b7957",
+      "tables": {
+        "GDEF": "f6fb65289bfe7570f605aad0e3ab6616c3442bdecdf1667247a0eb6dad03c018",
+        "GPOS": "9b96814f502aafaf7e42c33924e6bc10b7fb019f416d222fbb6a4cc6120be032",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "2c2176ceb5fd97e51e209196702a8544a8392b4de8757f88f16a9725c06dcd13",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "2577bbaf9b2d958123a9d86c821936c9daa642a30cc44d15cb6454132a008c66",
+        "head": "65522732e6edbc032560c4af3318a2d91afa1d68e9a3447397f4c96b0fbead4b",
+        "hhea": "a44e45cb1f8092605f075f35619bba15392a76dcbd6e16ffe820b759e322ded7",
+        "hmtx": "a14ad5e8b0b8f153430a9f772fda64ba89e82ac9eab6f4373d9ea57c6a2585a0",
+        "loca": "f1d8988c944324f6ac09a6f3293a49403ad584343fb7e5da0c269f5f56d32ec0",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "4d60aba5019372052e56ec4ad3f2e7db631275d8f296c85ac09e3d0bd6ccadfa"
+      }
+    },
+    "Gavia-ThinItalic.ttf": {
+      "sha256": "90d24966dad25aa26ff6c3cd11cd02680052500e86697abb4e48976b96bb1de1",
+      "tables": {
+        "GDEF": "f6fb65289bfe7570f605aad0e3ab6616c3442bdecdf1667247a0eb6dad03c018",
+        "GPOS": "69d735881366d1801fee162d22c76c0fd42bf691dca9daa5d895716e65a73d4f",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "b03e5f1e2a8aa16f078631bf8114f1124fe4e04c0271eec98680292c1a2d6a79",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "c03eafc84a28afd72de1c7ea744414e0840217d5bc840687a70ddcab7fbaf7e7",
+        "head": "0fdec1b9cc87bc140ed72ee75d042b97b62310b1f24b5d8f239f6ad4d333b4cb",
+        "hhea": "a4225bdfe570a92fa80d953f20dc5c44d59b51db8e9475ed3ca00add1efb5341",
+        "hmtx": "b7e8673d6727f50456a9cea3edded5394b30f18192577f18dda99191328f181d",
+        "loca": "ecb6e019f95da8a9b06f6079084334bb4643e2bf0ce7a29970f161cc2d84b7a8",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "ebe6f63f92ab0051cad1c38b95e3fc727bb7f583663e467731a62ac877ba100a"
+      }
+    },
+    "Gavia-ThinItalic.woff2": {
+      "sha256": "404c539aed97c35abeedb2ce201fc39bdaa44b0d3cd10ca41e5222bb1b658482",
+      "tables": {
+        "GDEF": "f6fb65289bfe7570f605aad0e3ab6616c3442bdecdf1667247a0eb6dad03c018",
+        "GPOS": "69d735881366d1801fee162d22c76c0fd42bf691dca9daa5d895716e65a73d4f",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "b03e5f1e2a8aa16f078631bf8114f1124fe4e04c0271eec98680292c1a2d6a79",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "c03eafc84a28afd72de1c7ea744414e0840217d5bc840687a70ddcab7fbaf7e7",
+        "head": "250621f626a8418c1afda0e652841f8a9f59b08bdbb15af4aea0ed7e7f872521",
+        "hhea": "a4225bdfe570a92fa80d953f20dc5c44d59b51db8e9475ed3ca00add1efb5341",
+        "hmtx": "b7e8673d6727f50456a9cea3edded5394b30f18192577f18dda99191328f181d",
+        "loca": "ecb6e019f95da8a9b06f6079084334bb4643e2bf0ce7a29970f161cc2d84b7a8",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "ebe6f63f92ab0051cad1c38b95e3fc727bb7f583663e467731a62ac877ba100a"
+      }
+    },
+    "Gavia-Light.ttf": {
+      "sha256": "53685ed8bfc9dea4463cd423f509388a3352784db40e6adf8d12a3640030a73f",
+      "tables": {
+        "GDEF": "951587f3d219078b51dc03a5705838b9762b7d8d68ee30aff321132f440f9a57",
+        "GPOS": "e8b57d59189db8647ef7c1eade26637c7609695d7a045fc2a7c50be3ddb7a19e",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "24c6ba7de0f2b0f74bb25ae0e6b0ece68c67658080a1350b66c03cb6d8d4c98a",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "b5c268e5d013ae2a0829f7a26d7337a0c9449348ed29f61f596476b19e0eb82f",
+        "head": "dcf95e868b00d3ef62fa6bdfb0e9df419482837f7f1b7a95acef4ccbcc2e63a0",
+        "hhea": "74592d9999485e66f2a294ab3fcaf8e5b533e104ce70de5ed44464ce0fe498ed",
+        "hmtx": "7fc8d07cd49368b47b2cbb7d2666762a60f1c6fe45367ba48ca7f2fe7ad5f931",
+        "loca": "a25c6893e0fe9482900437876af93b69cc9db236200b23c87305dd59e20b1c95",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "4d60aba5019372052e56ec4ad3f2e7db631275d8f296c85ac09e3d0bd6ccadfa"
+      }
+    },
+    "Gavia-Light.woff2": {
+      "sha256": "40fb548cd699d2235203d1f9b0f6d2ada227793b73d761fb7e61649727f3c844",
+      "tables": {
+        "GDEF": "951587f3d219078b51dc03a5705838b9762b7d8d68ee30aff321132f440f9a57",
+        "GPOS": "e8b57d59189db8647ef7c1eade26637c7609695d7a045fc2a7c50be3ddb7a19e",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "24c6ba7de0f2b0f74bb25ae0e6b0ece68c67658080a1350b66c03cb6d8d4c98a",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "b5c268e5d013ae2a0829f7a26d7337a0c9449348ed29f61f596476b19e0eb82f",
+        "head": "ed954933143c1d68dda126b21a3529b0a199e831bebf687f017cb1390c047015",
+        "hhea": "74592d9999485e66f2a294ab3fcaf8e5b533e104ce70de5ed44464ce0fe498ed",
+        "hmtx": "7fc8d07cd49368b47b2cbb7d2666762a60f1c6fe45367ba48ca7f2fe7ad5f931",
+        "loca": "a25c6893e0fe9482900437876af93b69cc9db236200b23c87305dd59e20b1c95",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "4d60aba5019372052e56ec4ad3f2e7db631275d8f296c85ac09e3d0bd6ccadfa"
+      }
+    },
+    "Gavia-LightItalic.ttf": {
+      "sha256": "f105bb175fd8c640aa666db7c399d8dd85415f5b5f6876d8f71274f376382e7e",
+      "tables": {
+        "GDEF": "951587f3d219078b51dc03a5705838b9762b7d8d68ee30aff321132f440f9a57",
+        "GPOS": "4d0c1d69be3ad1d74d0e24abba38be7d7b3846da32f7e99617cfbe41275d2d1b",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "c660c2dd38e6b4a0c73215ea0706d379edc981123cd718e0f381d6111259ece9",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "1a85b7f0f332f8b3447a7249050803f6c52ec33f14b916a585400c04c5718c4f",
+        "head": "6e6a5e8e93078863005c4cc2ef44a380f415ebe379f62740f84656513ececcf3",
+        "hhea": "d4be67758df682ffd39ddfed058497364617dcc09626b5fd4384643bd00d8bdd",
+        "hmtx": "88fa35bdf0abe5c733f809f15a690ae0d78bc7aa8a977c81100ab63a8cb7ae29",
+        "loca": "271b23d6342b8d9279cf4311eda5257b3e58d8db59395cfbdd3048ab299fac54",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "ebe6f63f92ab0051cad1c38b95e3fc727bb7f583663e467731a62ac877ba100a"
+      }
+    },
+    "Gavia-LightItalic.woff2": {
+      "sha256": "d6d3644b74046f3fec5d98c2e2b5fd810080664845cee54d9aaba45f827feebd",
+      "tables": {
+        "GDEF": "951587f3d219078b51dc03a5705838b9762b7d8d68ee30aff321132f440f9a57",
+        "GPOS": "4d0c1d69be3ad1d74d0e24abba38be7d7b3846da32f7e99617cfbe41275d2d1b",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "c660c2dd38e6b4a0c73215ea0706d379edc981123cd718e0f381d6111259ece9",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "1a85b7f0f332f8b3447a7249050803f6c52ec33f14b916a585400c04c5718c4f",
+        "head": "063d3b46780fff13f67a373a53af71b6dcedca7b91e0007579f8b77100602d79",
+        "hhea": "d4be67758df682ffd39ddfed058497364617dcc09626b5fd4384643bd00d8bdd",
+        "hmtx": "88fa35bdf0abe5c733f809f15a690ae0d78bc7aa8a977c81100ab63a8cb7ae29",
+        "loca": "271b23d6342b8d9279cf4311eda5257b3e58d8db59395cfbdd3048ab299fac54",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "ebe6f63f92ab0051cad1c38b95e3fc727bb7f583663e467731a62ac877ba100a"
+      }
+    },
+    "Gavia-Regular.ttf": {
+      "sha256": "c2d1f45a03fd59d81eaea27d28d654ed437de1b70bb8dceff23d9a6dc8aca32d",
+      "tables": {
+        "GDEF": "a98fda2436a982a4184fb4c6b994e2e316b6756269adab26572b5514c7d437c1",
+        "GPOS": "d56a99f163a71416b9a7f33029d4a917649a2d29483c0774449b315760fbaf39",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "61223ab41bc98543da74255c2f97c1194f94d8b8ee04f8b8fd963fad7be13421",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "841044db3bed7361a5fabe3de8adbdf7e714e7a5e93e9190ee57cc9d26f12d16",
+        "head": "33c8e30cd151d99c60852ffdbf3cb57f98cd29db0f7477c27992d30d5442c4c8",
+        "hhea": "09e2618777d96429420523c54ec6f3e392dadba3a9e8972fd62b7bd46ce3d0c0",
+        "hmtx": "8eb376f43de2dada29aa04eef64c33aa0e749376030cce2ac166a120556f5cb3",
+        "loca": "60d285e476153157f329f54dc716e5f28e699a61733e3955623c98a7d064120d",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "4d60aba5019372052e56ec4ad3f2e7db631275d8f296c85ac09e3d0bd6ccadfa"
+      }
+    },
+    "Gavia-Regular.woff2": {
+      "sha256": "8dd3bf1a81fb269f8042c4f0e3373f01a0252c49ba72ad9040efc94f5d4fd528",
+      "tables": {
+        "GDEF": "a98fda2436a982a4184fb4c6b994e2e316b6756269adab26572b5514c7d437c1",
+        "GPOS": "d56a99f163a71416b9a7f33029d4a917649a2d29483c0774449b315760fbaf39",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "61223ab41bc98543da74255c2f97c1194f94d8b8ee04f8b8fd963fad7be13421",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "841044db3bed7361a5fabe3de8adbdf7e714e7a5e93e9190ee57cc9d26f12d16",
+        "head": "ad1ccf1bf7292cfb0eba3167eb2ca855434340946c0f89f08fe3a946200d92b1",
+        "hhea": "09e2618777d96429420523c54ec6f3e392dadba3a9e8972fd62b7bd46ce3d0c0",
+        "hmtx": "8eb376f43de2dada29aa04eef64c33aa0e749376030cce2ac166a120556f5cb3",
+        "loca": "60d285e476153157f329f54dc716e5f28e699a61733e3955623c98a7d064120d",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "4d60aba5019372052e56ec4ad3f2e7db631275d8f296c85ac09e3d0bd6ccadfa"
+      }
+    },
+    "Gavia-RegularItalic.ttf": {
+      "sha256": "b5221c831f85eb1b40a8925e72004f36005d4ffa2993f721c7af950c17c3a686",
+      "tables": {
+        "GDEF": "a98fda2436a982a4184fb4c6b994e2e316b6756269adab26572b5514c7d437c1",
+        "GPOS": "adffce5337669f2c073ab62837870574f7aebef5e6a324711fcb28dbe985a731",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "4008fee6271c059c74addd72a7dbfecb16ff9c23c8fbe75925c27b837c5be258",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "ffc1cde1d8db5ae540a7bb31df7b11ae681da43552bab4b583226f74edc52120",
+        "head": "f04b6f4fd97062e5521cad39bc4636cd6363556904e59f12d8df281d713f8c3f",
+        "hhea": "5a3ae66ba64cc756ae435184a653ca22538d16557fd06aaca0b9ef55a8bc999f",
+        "hmtx": "4d47111e59da8eba6cf001be58efb8cba2cd23911728db4c442e0ad83d4a81db",
+        "loca": "6f0bf7d12625102a55007af6224e1dd513ee15180102383982a500852b312341",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "ebe6f63f92ab0051cad1c38b95e3fc727bb7f583663e467731a62ac877ba100a"
+      }
+    },
+    "Gavia-RegularItalic.woff2": {
+      "sha256": "683c881ca63ecd89f780fae02b5cbc6868f52ed0f9f1086857494ac60da3acfa",
+      "tables": {
+        "GDEF": "a98fda2436a982a4184fb4c6b994e2e316b6756269adab26572b5514c7d437c1",
+        "GPOS": "adffce5337669f2c073ab62837870574f7aebef5e6a324711fcb28dbe985a731",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "4008fee6271c059c74addd72a7dbfecb16ff9c23c8fbe75925c27b837c5be258",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "ffc1cde1d8db5ae540a7bb31df7b11ae681da43552bab4b583226f74edc52120",
+        "head": "558656ca27441e1b2f43a2899f9c6fd947110411566b55f03f98436726bc0d56",
+        "hhea": "5a3ae66ba64cc756ae435184a653ca22538d16557fd06aaca0b9ef55a8bc999f",
+        "hmtx": "4d47111e59da8eba6cf001be58efb8cba2cd23911728db4c442e0ad83d4a81db",
+        "loca": "6f0bf7d12625102a55007af6224e1dd513ee15180102383982a500852b312341",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "ebe6f63f92ab0051cad1c38b95e3fc727bb7f583663e467731a62ac877ba100a"
+      }
+    },
+    "Gavia-Medium.ttf": {
+      "sha256": "3c874da4658b1ea0b43ccb2833ca057661e8b8e7e9a8002bcb79870ee4d7e937",
+      "tables": {
+        "GDEF": "2f924f36a505e1bacd4f75aa8d798c25f80022fa23a81f92abfb718abe143f97",
+        "GPOS": "e35cf3c02a27faa33dff87c4f87c94ed03d94de477846663b439113b80b32227",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "69f6e9f819a673b4855c885ef6f4eaae75bc308026d2fa5080c41c058eebce0a",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "d15af8b8857b631e397dd2c0db1b4782ca422fc7a7b0100c571f894097820a12",
+        "head": "3fec082937bb64c2f35279206479cfb125ce6314adab201c31ddc3f2609a3432",
+        "hhea": "7af1bb2b4f656847257f44a295e4715ef5d14bfe3f2557ab4df52fb192dc3d0b",
+        "hmtx": "ab52ee3e79744696c0d7357cab81a898387a2b9f88bc76746972088c2679283a",
+        "loca": "b61373689511f12f09a1e21fd90a652b11841144a3a106a3e1fa928832f61da8",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "4d60aba5019372052e56ec4ad3f2e7db631275d8f296c85ac09e3d0bd6ccadfa"
+      }
+    },
+    "Gavia-Medium.woff2": {
+      "sha256": "05cd0d5b0033a5d4cf5de6df4b18435d3c1c23a1d7ab9f721efec3b81ab0db56",
+      "tables": {
+        "GDEF": "2f924f36a505e1bacd4f75aa8d798c25f80022fa23a81f92abfb718abe143f97",
+        "GPOS": "e35cf3c02a27faa33dff87c4f87c94ed03d94de477846663b439113b80b32227",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "69f6e9f819a673b4855c885ef6f4eaae75bc308026d2fa5080c41c058eebce0a",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "d15af8b8857b631e397dd2c0db1b4782ca422fc7a7b0100c571f894097820a12",
+        "head": "5c70d2a13a17db617038aadfa383874dc5d2f6bab86dd821f6c94658e422ff81",
+        "hhea": "7af1bb2b4f656847257f44a295e4715ef5d14bfe3f2557ab4df52fb192dc3d0b",
+        "hmtx": "ab52ee3e79744696c0d7357cab81a898387a2b9f88bc76746972088c2679283a",
+        "loca": "b61373689511f12f09a1e21fd90a652b11841144a3a106a3e1fa928832f61da8",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "4d60aba5019372052e56ec4ad3f2e7db631275d8f296c85ac09e3d0bd6ccadfa"
+      }
+    },
+    "Gavia-MediumItalic.ttf": {
+      "sha256": "320abe0dc51e6ef52be9798fc1abadebcac401560649018e2f24447eb21c81fb",
+      "tables": {
+        "GDEF": "2f924f36a505e1bacd4f75aa8d798c25f80022fa23a81f92abfb718abe143f97",
+        "GPOS": "4aa54865c4779a323efa10f3ddc2781cf974e001f60b090985f9a041e036b1d8",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "8d450bb68ac6892f5120ebab1d9b53e6e7eb547a90bef429ec50609d6cf0bb35",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "e2c5f7ddc7adc34d483b5135bf78d1894000579d8da6d1a8ea1dbcc555beb1e4",
+        "head": "a3336a36728f77e15b913db08c3d4b566d5af277974cf91e469c6a1a5133df29",
+        "hhea": "1a395518512e717127227200aff6e8d649d5c4724768f2be898a551f20bda13e",
+        "hmtx": "2a0d51f7f7e6cdefe1f09ea66cfc5eaab69a8b5790d2c4a11ba359ccdf09c57c",
+        "loca": "8e93a609f05cb91e6f4af2cfce61ca694ddaf55d087a1ff58c9a34cb7dea3475",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "ebe6f63f92ab0051cad1c38b95e3fc727bb7f583663e467731a62ac877ba100a"
+      }
+    },
+    "Gavia-MediumItalic.woff2": {
+      "sha256": "8fadd7b094ee2aeb1bd9ec392712b62d9e6f1a1febea8820589857dcf5ed0385",
+      "tables": {
+        "GDEF": "2f924f36a505e1bacd4f75aa8d798c25f80022fa23a81f92abfb718abe143f97",
+        "GPOS": "4aa54865c4779a323efa10f3ddc2781cf974e001f60b090985f9a041e036b1d8",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "8d450bb68ac6892f5120ebab1d9b53e6e7eb547a90bef429ec50609d6cf0bb35",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "e2c5f7ddc7adc34d483b5135bf78d1894000579d8da6d1a8ea1dbcc555beb1e4",
+        "head": "e5ee4974bc5f27507104e6ad49b1d9cd720c0321999b9ae2c48a72912d0b0907",
+        "hhea": "1a395518512e717127227200aff6e8d649d5c4724768f2be898a551f20bda13e",
+        "hmtx": "2a0d51f7f7e6cdefe1f09ea66cfc5eaab69a8b5790d2c4a11ba359ccdf09c57c",
+        "loca": "8e93a609f05cb91e6f4af2cfce61ca694ddaf55d087a1ff58c9a34cb7dea3475",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "ebe6f63f92ab0051cad1c38b95e3fc727bb7f583663e467731a62ac877ba100a"
+      }
+    },
+    "Gavia-SemiBold.ttf": {
+      "sha256": "932504e72eb1c1644b497dee990c8318f2e1220d8a438c7d2636382a4adf6d48",
+      "tables": {
+        "GDEF": "57a91737d45c4884b62e601d1bbe5c86226ab22188824d9199a782200b6f5620",
+        "GPOS": "af49074962067cd8e5b860b6eee9cd19fd0b1f7f18de6d3897df3b9c3530f6da",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "b19927de0407702aa3b8a8f327a14713a35429f41bd5ff32e2d6904e4e2538db",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "98c7ee76d331582b66a27dd01626341f63bc1bde0e0683661a6e7e26a34fb7b5",
+        "head": "b09bfbdb7135401cac100f46c4a727d95663f61906e9a8c2629183db451840b4",
+        "hhea": "120f28d64d61111999a1bbd984a645daa20d7c70fbf7cf4f9c524efcc915fd55",
+        "hmtx": "0f732a81eef03d1dbb7c4693de12960b5f9ed1140fd4525dd16b42add8d008f7",
+        "loca": "40a341cf16f4993f954ef9bea84fba4699391f63337e0c1ab6920d2f97d97230",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "4d60aba5019372052e56ec4ad3f2e7db631275d8f296c85ac09e3d0bd6ccadfa"
+      }
+    },
+    "Gavia-SemiBold.woff2": {
+      "sha256": "fae4307cc7d4bf44c48e651569fde5dc124837a31b8d45e200713064624297f2",
+      "tables": {
+        "GDEF": "57a91737d45c4884b62e601d1bbe5c86226ab22188824d9199a782200b6f5620",
+        "GPOS": "af49074962067cd8e5b860b6eee9cd19fd0b1f7f18de6d3897df3b9c3530f6da",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "b19927de0407702aa3b8a8f327a14713a35429f41bd5ff32e2d6904e4e2538db",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "98c7ee76d331582b66a27dd01626341f63bc1bde0e0683661a6e7e26a34fb7b5",
+        "head": "1fffe2da93da678f4fae698c1816c584b9e03fe0404796632cb49b5c4bc820e9",
+        "hhea": "120f28d64d61111999a1bbd984a645daa20d7c70fbf7cf4f9c524efcc915fd55",
+        "hmtx": "0f732a81eef03d1dbb7c4693de12960b5f9ed1140fd4525dd16b42add8d008f7",
+        "loca": "40a341cf16f4993f954ef9bea84fba4699391f63337e0c1ab6920d2f97d97230",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "4d60aba5019372052e56ec4ad3f2e7db631275d8f296c85ac09e3d0bd6ccadfa"
+      }
+    },
+    "Gavia-SemiBoldItalic.ttf": {
+      "sha256": "4a0ab5488d76a08f583e221e0458c8d10f2540371e5c4f7c6ca3c25475d74ea4",
+      "tables": {
+        "GDEF": "57a91737d45c4884b62e601d1bbe5c86226ab22188824d9199a782200b6f5620",
+        "GPOS": "01e1f945e0e40f98a6dac7c3ad8360aae7c0f404830a461f8955d3188f682d19",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "8f8202d92952f6dcdc96afcfbd9116e6a6e2cc1f651aaed90fc4b2a2eb5c87a6",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "4163948917faee960083798b5c354884e4488551eb01f384a5d7d22c151b0972",
+        "head": "87e8228a95e45108361b0462c67a4f11828c028a7eaf7c1aad0d2829985b7fb1",
+        "hhea": "92595a23ee8170e5fd82b61bce5e9f2d1cee6e6c528b4bd604dc8baa037ed33c",
+        "hmtx": "997c3efdcc03fad1022298fcc05887213f0d108551dbcef8c430cc644ba75617",
+        "loca": "163a53fb73ea1d34c6722839578d147ef6861d12b229289f9d44fa2c59e457d5",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "ebe6f63f92ab0051cad1c38b95e3fc727bb7f583663e467731a62ac877ba100a"
+      }
+    },
+    "Gavia-SemiBoldItalic.woff2": {
+      "sha256": "76a2c69289f9efc2613306f0d904264b3c1cde622a1bb2faf3e83812cdcfbf2e",
+      "tables": {
+        "GDEF": "57a91737d45c4884b62e601d1bbe5c86226ab22188824d9199a782200b6f5620",
+        "GPOS": "01e1f945e0e40f98a6dac7c3ad8360aae7c0f404830a461f8955d3188f682d19",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "8f8202d92952f6dcdc96afcfbd9116e6a6e2cc1f651aaed90fc4b2a2eb5c87a6",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "4163948917faee960083798b5c354884e4488551eb01f384a5d7d22c151b0972",
+        "head": "84a11d3d033187f0c82bed64a8b9d29ae6f72b27ad6533de5b5fa6bdbbb42ed4",
+        "hhea": "92595a23ee8170e5fd82b61bce5e9f2d1cee6e6c528b4bd604dc8baa037ed33c",
+        "hmtx": "997c3efdcc03fad1022298fcc05887213f0d108551dbcef8c430cc644ba75617",
+        "loca": "163a53fb73ea1d34c6722839578d147ef6861d12b229289f9d44fa2c59e457d5",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "ebe6f63f92ab0051cad1c38b95e3fc727bb7f583663e467731a62ac877ba100a"
+      }
+    },
+    "Gavia-Bold.ttf": {
+      "sha256": "9b85cdf1e578770ec0e1e3a301831263b31eb538616983aea423b17ccd4e1afb",
+      "tables": {
+        "GDEF": "cb4644b0fa67aff97965e1a93071307999b1a757690f22ba6908cbc040bc77d2",
+        "GPOS": "a433f760e909905aa9995d8b230dfb9cba6abccb81788ea81cf50b4e9264afb3",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "bdd478c33a3616cd6e97e4ba81c24aad058959082f6a9c055d30677417e82fb1",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "ee084a439dc77af0557d959ee240bee2db7f615591cb1c42754b824e5e7da2a2",
+        "head": "060e47d3129dcb1434c2c97563435bcb70bc2902a8e74894177620c2875d1f77",
+        "hhea": "4f577b6212cf757bc64b7170ae871fa6c54ba9077e608f6f356bff6360c74eea",
+        "hmtx": "b9ac1e50ba8b724f47b7d050eef86f43cffeec21674d8f994565775ec91a2e56",
+        "loca": "ca92af91e6124241aba50a355ff08a9158a9be1674d78f67b3833f93bc9dbec5",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "4d60aba5019372052e56ec4ad3f2e7db631275d8f296c85ac09e3d0bd6ccadfa"
+      }
+    },
+    "Gavia-Bold.woff2": {
+      "sha256": "01e2a8b4350ee9ad9c645fa5b4bfc0d5570bb166b993caf4c8dcdbfa2b199d52",
+      "tables": {
+        "GDEF": "cb4644b0fa67aff97965e1a93071307999b1a757690f22ba6908cbc040bc77d2",
+        "GPOS": "a433f760e909905aa9995d8b230dfb9cba6abccb81788ea81cf50b4e9264afb3",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "bdd478c33a3616cd6e97e4ba81c24aad058959082f6a9c055d30677417e82fb1",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "ee084a439dc77af0557d959ee240bee2db7f615591cb1c42754b824e5e7da2a2",
+        "head": "0243eea880b1a14d69fba00ec960667c0bf211176bbfc4e9473ac315d1c2934d",
+        "hhea": "4f577b6212cf757bc64b7170ae871fa6c54ba9077e608f6f356bff6360c74eea",
+        "hmtx": "b9ac1e50ba8b724f47b7d050eef86f43cffeec21674d8f994565775ec91a2e56",
+        "loca": "ca92af91e6124241aba50a355ff08a9158a9be1674d78f67b3833f93bc9dbec5",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "4d60aba5019372052e56ec4ad3f2e7db631275d8f296c85ac09e3d0bd6ccadfa"
+      }
+    },
+    "Gavia-BoldItalic.ttf": {
+      "sha256": "d107280ad1453ba37d41adcf182ee38fd914f0d63d5598e9c66e42e14c0b2646",
+      "tables": {
+        "GDEF": "cb4644b0fa67aff97965e1a93071307999b1a757690f22ba6908cbc040bc77d2",
+        "GPOS": "6fc46cda220780e48dcdb1e1f9a5a837069266f84c0bee7bff0089ca0699ccc0",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "1c7f3b2dbabe61d7a9c81c764706147aa5709ae1f6d9daeffdefe3ac0f889fd3",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "4b3a2373c582ca20dba4261600fa9953d936f70c3ba8c3fc65bce109a44cba19",
+        "head": "8dfeeb831d1b86b16fce87988eb4739aaa7b59865af19d7694d751bc202855d8",
+        "hhea": "400393d669df4d56a6219254f558ef9fd61f032950a96b2925e4819b1d680991",
+        "hmtx": "da7536c3f4f9c09b506094665eb17a3121ade2833eeaeaa9d17051fbd87d9f68",
+        "loca": "61de0029caf892111563b89973a1a8fb2a07c290e61afb8eed3de8a6b83b7dc2",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "ebe6f63f92ab0051cad1c38b95e3fc727bb7f583663e467731a62ac877ba100a"
+      }
+    },
+    "Gavia-BoldItalic.woff2": {
+      "sha256": "00e105fd7b4c492d1df60a54be944dfc81891629f3d0b900a4ba89f340fd8526",
+      "tables": {
+        "GDEF": "cb4644b0fa67aff97965e1a93071307999b1a757690f22ba6908cbc040bc77d2",
+        "GPOS": "6fc46cda220780e48dcdb1e1f9a5a837069266f84c0bee7bff0089ca0699ccc0",
+        "GSUB": "64be28397efe2909080074ecf5e6dd57888241419f2a6b7dbea2354e717b3504",
+        "OS/2": "1c7f3b2dbabe61d7a9c81c764706147aa5709ae1f6d9daeffdefe3ac0f889fd3",
+        "cmap": "d49d7ea6cdee33d51530804a5180b569ea751b894b3af1ea98dbc6d6b32594d2",
+        "glyf": "4b3a2373c582ca20dba4261600fa9953d936f70c3ba8c3fc65bce109a44cba19",
+        "head": "0363322587c61d0e850eb7f3306d6c4c5f697f1d7f42f7d7dcf7c3b434276bae",
+        "hhea": "400393d669df4d56a6219254f558ef9fd61f032950a96b2925e4819b1d680991",
+        "hmtx": "da7536c3f4f9c09b506094665eb17a3121ade2833eeaeaa9d17051fbd87d9f68",
+        "loca": "61de0029caf892111563b89973a1a8fb2a07c290e61afb8eed3de8a6b83b7dc2",
+        "maxp": "2055fb6a804b3a5cee110244911c23cf9f60dd047027c30b6cf267de9787ca5f",
+        "post": "ebe6f63f92ab0051cad1c38b95e3fc727bb7f583663e467731a62ac877ba100a"
+      }
+    }
+  }
+}

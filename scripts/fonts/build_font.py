@@ -1,4 +1,4 @@
-"""Build Gavia 0.6: unchanged accepted drawing with a classic flat-headed three.
+"""Build Gavia Sans 0.6: unchanged accepted drawing with a classic flat-headed three.
 
 Run from repository root. Install pinned requirements into .tools/font-build.
 Outputs are real, static TrueType and WOFF2 faces; no browser synthesis.
@@ -76,21 +76,21 @@ def apply_shear_anchors(table, shear: float, visited=None):
 
 def replace_names(font: TTFont, weight: int, label: str, italic: bool):
     style = label + (' Italic' if italic else '')
-    legacy_family = 'Gavia' if weight in (400, 700) else 'Gavia ' + label
+    legacy_family = 'Gavia Sans' if weight in (400, 700) else 'Gavia Sans ' + label
     legacy_style = ('Bold' if weight == 700 else '') + (' Italic' if italic else '')
     legacy_style = legacy_style.strip() or 'Regular'
-    full_name = 'Gavia ' + style
-    ps_name = 'Gavia-' + label + ('Italic' if italic else '')
+    full_name = 'Gavia Sans ' + style
+    ps_name = 'GaviaSans-' + label + ('Italic' if italic else '')
     names = {
         0: COPYRIGHT, 1: legacy_family, 2: legacy_style,
-        3: 'Gavia-0.600-' + label + ('Italic' if italic else ''),
+        3: 'GaviaSans-0.600-' + label + ('Italic' if italic else ''),
         4: full_name, 5: 'Version 0.600', 6: ps_name,
         8: 'Gavia Font Project', 9: 'Gavia contributors; refined Onest-derived letters and independent numeral outlines',
         10: ('OFL derivative: Onest-derived letters narrowed uniformly with restrained terminal refinements; '
              'independent even-stroke numerals; 7-degree oblique. '
              'Engineering preview; optical refinement and hinting remain.'),
         13: 'SIL Open Font License 1.1. Retain the original notices and accompanying OFL.txt.',
-        14: 'https://openfontlicense.org', 16: 'Gavia', 17: style, 21: 'Gavia', 22: style,
+        14: 'https://openfontlicense.org', 16: 'Gavia Sans', 17: style, 21: 'Gavia Sans', 22: style,
     }
     replaced = set(names) | {7, 11, 12, 18, 20, 25}
     font['name'].names = [record for record in font['name'].names if record.nameID not in replaced]
@@ -235,7 +235,10 @@ def main():
                         'ttf':{'file':ttf.name,'sha256':sha256(ttf)},
                         'woff2':{'file':web.name,'sha256':sha256(web)}})
         print('Saved:',filename,flush=True)
-    manifest={'family':'Gavia','version':'0.600','license':'OFL-1.1','fontTools':FONTTOOLS_VERSION,
+    manifest={'family':'Gavia Sans','legacyCssFamily':'Gavia',
+              'identityMigration':{'from':'Gavia','to':'Gavia Sans','date':'2026-10-07',
+                  'scope':'name table only; original filenames, outlines, metrics, kerning and all other tables preserved'},
+              'version':'0.600','license':'OFL-1.1','fontTools':FONTTOOLS_VERSION,
               'metrics':metrics,'sources':{p.name:sha256(p) for p in sorted(SOURCE.glob('*.ttf'))},
               'authoredGeometry':{'file':'scripts/fonts/draw_gavia.py','sha256':sha256(ROOT/'scripts/fonts/draw_gavia.py'),
                                   'characters':list(DESIGNS),'skeletons':4,'filledNumerals':['1','3','4','7'],'compoundNumerals':['6','9'],'refinedLetters':list(REFINED_LETTERS)},
@@ -251,7 +254,8 @@ def main():
     (OUTPUT/'OFL.txt').write_text(copyright_line+'\nCopyright 2026 The Gavia Font Project Contributors\n\n'+body,encoding='utf-8')
     shutil.copy2(SOURCE/'Onest-OFL.txt',OUTPUT/'Onest-OFL.txt')
     (OUTPUT/'FONTLOG.txt').write_text(
-        'Gavia 0.600 — 2026-10-06\n\n'
+        'Gavia Sans 0.600 — 2026-10-07\n\n'
+        'Family renamed from Gavia to Gavia Sans on 2026-10-07. Name records only; accepted drawing, metrics, kerning and other tables unchanged.\n\n'
         'OFL derivative based on the Onest letter and extended-glyph drawing.\n'
         'Letters uniformly narrowed to 96%; source vertical proportions and full kerning retained.\n'
         'Restrained non-affine terminal refinements in a/а, e/е and a small straight foot on l.\n'

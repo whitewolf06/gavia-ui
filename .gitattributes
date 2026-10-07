@@ -1,2 +1,5 @@
 # Keep the authored font geometry source byte-for-byte for manifest SHA-256 provenance.
 scripts/fonts/draw_gavia.py -text
+
+# Immutable approved non-name font table fingerprints.
+scripts/fonts/accepted-0600-tables.json -text

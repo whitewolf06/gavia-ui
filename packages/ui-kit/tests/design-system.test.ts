@@ -89,11 +89,17 @@ describe("design system public contract", () => {
       expect(resolveWlToken("--wl-btn-radius-lg", theme)).toBe(resolveWlToken("--wl-radius-lg", theme));
     }
   });
-  it("keeps status colors independent from the Gavia brand", () => {
-    for (const name of ["--wl-blue-500", "--wl-success", "--wl-danger", "--wl-warn"] as const) {
+  it("keeps status colors independent from the Gavia brand with its approved danger palette", () => {
+    for (const name of ["--wl-blue-500", "--wl-success", "--wl-warn"] as const) {
       expect(resolveWlToken(name, "gavia")).toBe(resolveWlToken(name, "white"));
       expect(resolveWlToken(name, "gavia")).not.toBe(resolveWlToken("--wl-accent", "gavia"));
     }
+    expect(resolveWlToken("--wl-danger", "gavia")).toBe("#ab4448");
+    expect(resolveWlToken("--wl-danger", "gavia")).not.toBe(resolveWlToken("--wl-accent", "gavia"));
+    for (const name of ["--wl-action-danger-bg", "--wl-text-danger", "--wl-toast-icon-err"] as const) {
+      expect(resolveWlToken(name, "gavia"), name).toBe(resolveWlToken("--wl-danger", "gavia"));
+    }
+    expect(resolveWlToken("--wl-action-danger-hover", "gavia")).toBe(resolveWlToken("--wl-danger-hover", "gavia"));
   });
   it("rejects unknown runtime names and themes", () => {
     expect(() => resolveWlToken("--wl-missing" as WlDesignTokenName)).toThrow("Unknown Gavia UI token");

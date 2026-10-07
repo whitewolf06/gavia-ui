@@ -12,6 +12,7 @@ import ComponentExplorer from "./design-system/ComponentExplorer.vue";
 import CodePanel from "./design-system/CodePanel.vue";
 import RecipeGallery from "./design-system/RecipeGallery.vue";
 import ContentStress from "./design-system/ContentStress.vue";
+import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
 
 const WlButton = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlButton.vue"));
 const WlInput = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlInput.vue"));
@@ -99,17 +100,16 @@ const tokenCode = `.page {
 
 <template>
   <main class="ds-main wl-container" id="ds-top">
-    <header class="ds-hero wl-stack" data-space="lg">
-      <p class="ds-eyebrow">Gavia UI / Design system</p>
-      <h1 class="wl-text-display">Единый язык интерфейсов</h1>
-      <p class="ds-lead wl-text-body wl-text-muted">Спокойные поверхности, ясная иерархия и предсказуемое поведение. От значения токена до готового сценария — одна система в четырёх темах.</p>
-      <div class="ds-metrics wl-inline" data-space="xl">
+    <PlaygroundPageHeader class="ds-hero" title="Единый язык интерфейсов"
+      description="Спокойные поверхности, ясная иерархия и предсказуемое поведение. От значения токена до готового сценария — одна система в четырёх темах."
+      :breadcrumbs="[{ label: 'Дизайн-система' }]">
+      <template #meta><div class="ds-metrics wl-inline" data-space="xl">
         <span><strong>{{ wlManifest.length }}</strong> компонентов</span>
         <span><strong>{{ wlDesignTokens.length }}</strong> токенов</span>
         <span><strong>{{ WL_ICON_NAMES.length }}</strong> иконок</span>
-        <span><strong>3</strong> темы</span>
-      </div>
-    </header>
+        <span><strong>{{ wlDesignThemes.length }}</strong> темы</span>
+      </div></template>
+    </PlaygroundPageHeader>
     <div class="ds-shell">
       <nav class="ds-nav" aria-label="Разделы дизайн-системы">
         <a v-for="[id, label] in sections" :key="id" :href="`#ds-${id}`">{{ label }}</a>
@@ -259,10 +259,9 @@ const tokenCode = `.page {
 </template>
 
 <style>
-.ds-main { padding-block: var(--wl-space-3xl) var(--wl-space-4xl); }
-.ds-hero { padding-bottom: var(--wl-space-3xl); border-bottom: 1px solid var(--wl-border); margin-bottom: var(--wl-space-2xl); }
+.ds-main { padding-block: var(--wl-space-2xl) var(--wl-space-4xl); }
+.ds-hero { margin-bottom: var(--wl-space-2xl); }
 .ds-eyebrow { font-family: var(--wl-mono); font-size: 11px; line-height: 18px; letter-spacing: .08em; text-transform: uppercase; color: var(--wl-text-muted); }
-.ds-lead { max-width: 68ch; }
 .ds-metrics { color: var(--wl-text-muted); font-size: 12px; }
 .ds-metrics strong { color: var(--wl-text); font-size: 18px; margin-right: 4px; }
 .ds-shell { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: var(--wl-space-2xl); }
@@ -313,10 +312,9 @@ const tokenCode = `.page {
   .ds-nav { position: static; flex-direction: row; flex-wrap: wrap; border-left: 0; padding-left: 0; border-bottom: 1px solid var(--wl-border); padding-bottom: var(--wl-space-md); }
 }
 @media (max-width: 640px) {
-  .ds-main { padding-inline: var(--wl-space-md); padding-top: var(--wl-space-xl); }
-  .ds-hero h1 { font-size: var(--wl-type-title-size); line-height: var(--wl-type-title-line-height); }
   .ds-theme-grid, .ds-token-filters { grid-template-columns: minmax(0, 1fr); }
   .ds-type-row { grid-template-columns: minmax(0, 1fr); gap: var(--wl-space-sm); }
   .ds-section { scroll-margin-top: 145px; }
 }
+@media (max-width: 760px) { .ds-main { padding-top: var(--wl-space-xl); } }
 </style>

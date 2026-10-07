@@ -1,8 +1,105 @@
 /*
- * Optional Gavia font faces. Import explicitly before selecting the family.
+ * Optional Gavia Sans font faces. Import explicitly before selecting the family.
  * Font software is licensed under SIL OFL 1.1; see ../../fonts/gavia/OFL.txt.
  */
 
+@font-face {
+  font-family: "Gavia Sans";
+  src: url("../../fonts/gavia/Gavia-Thin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gavia Sans";
+  src: url("../../fonts/gavia/Gavia-Light.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gavia Sans";
+  src: url("../../fonts/gavia/Gavia-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gavia Sans";
+  src: url("../../fonts/gavia/Gavia-Medium.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gavia Sans";
+  src: url("../../fonts/gavia/Gavia-SemiBold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gavia Sans";
+  src: url("../../fonts/gavia/Gavia-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gavia Sans";
+  src: url("../../fonts/gavia/Gavia-ThinItalic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 100;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gavia Sans";
+  src: url("../../fonts/gavia/Gavia-LightItalic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gavia Sans";
+  src: url("../../fonts/gavia/Gavia-RegularItalic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gavia Sans";
+  src: url("../../fonts/gavia/Gavia-MediumItalic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gavia Sans";
+  src: url("../../fonts/gavia/Gavia-SemiBoldItalic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gavia Sans";
+  src: url("../../fonts/gavia/Gavia-BoldItalic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* Compatibility alias: existing font-family: "Gavia" declarations keep working. */
 @font-face {
   font-family: "Gavia";
   src: url("../../fonts/gavia/Gavia-Thin.woff2") format("woff2");

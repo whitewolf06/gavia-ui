@@ -9,7 +9,6 @@ defineProps<{ section: DocumentationAssetSection; theme: WlThemeName }>();
 
 <template>
   <article class="docs-assets-page wl-stack" data-space="2xl" data-testid="docs-assets-page" :data-docs-section="section" :data-docs-theme="theme">
-    <header class="wl-stack" data-space="md"><p class="docs-eyebrow">Документация / Оформление</p><h1 class="wl-text-title">{{ documentationAssetPages[section].label }}</h1><p class="wl-text-body wl-text-muted">{{ documentationAssetPages[section].description }}</p></header>
     <IconsDocumentation v-if="section === 'icons'" />
     <ColorsDocumentation v-else :theme="theme" />
   </article>

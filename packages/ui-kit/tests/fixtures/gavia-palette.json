@@ -35,12 +35,21 @@
     "--wl-palette-accent-border-hover": "#9eb7c2",
     "--wl-palette-action-primary-active": "#182a33",
     "--wl-palette-accent-warm": "#948775",
-    "--wl-palette-accent-warm-soft": "#efebe3"
+    "--wl-palette-accent-warm-soft": "#efebe3",
+    "--wl-palette-danger": "#ab4448",
+    "--wl-palette-danger-hover": "#963c3f",
+    "--wl-palette-danger-soft": "#f7eeed",
+    "--wl-palette-danger-soft-hover": "#f3e5e4",
+    "--wl-palette-danger-border": "#e5c6c5",
+    "--wl-palette-err-text": "#ab4448"
   },
   "semanticBindings": {
     "--wl-action-primary-bg": "var(--wl-palette-action-primary-bg)",
     "--wl-action-primary-hover": "var(--wl-palette-action-primary-hover)",
     "--wl-action-primary-text": "var(--wl-palette-action-primary-text)",
-    "--wl-action-primary-active": "var(--wl-palette-action-primary-active)"
+    "--wl-action-primary-active": "var(--wl-palette-action-primary-active)",
+    "--wl-action-danger-bg": "var(--wl-palette-danger)",
+    "--wl-action-danger-hover": "var(--wl-palette-danger-hover)",
+    "--wl-status-danger-icon": "var(--wl-palette-danger)"
   }
 }

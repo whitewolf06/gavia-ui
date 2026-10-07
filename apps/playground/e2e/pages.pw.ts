@@ -337,8 +337,8 @@ test("font presentation preserves theme, faces and anchors under the Pages subpa
   await expect(fontPage).toBeVisible();
   await expect(proof).toBeInViewport();
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "graphite");
-  await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", /^"?Gavia"?,/);
-  const loaded = await page.evaluate(async () => (await document.fonts.load("italic 600 16px Gavia", "Гавиа Gavia 0123456789")).length);
+  await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
+  const loaded = await page.evaluate(async () => (await document.fonts.load("italic 600 16px 'Gavia Sans'", "Гавиа Gavia 0123456789")).length);
   expect(loaded).toBe(1);
   expectPagesLocation(page, "font");
   await expectNoPageOverflow(page);
@@ -363,9 +363,9 @@ test("standalone font ZIP downloads from the Pages subpath and footer", async ({
   await page.goto(pagesPath + "?view=font&theme=gavia");
   const font = page.getByTestId("font-page");
   await expect(font).toBeVisible();
-  const link = font.getByRole("link", { name: "Скачать Gavia 0.6", exact: true }).first();
-  await expect(link).toHaveAttribute("href", pagesPath + "downloads/Gavia-0.6.zip");
+  const link = font.getByRole("link", { name: "Скачать Gavia Sans 0.6", exact: true }).first();
+  await expect(link).toHaveAttribute("href", pagesPath + "downloads/Gavia-Sans-0.6.zip");
   await expectGaviaFontDownload(page, link);
-  const footer = page.locator(".pg-footer").getByRole("link", { name: "Скачать шрифт Gavia", exact: true });
-  await expect(footer).toHaveAttribute("href", pagesPath + "downloads/Gavia-0.6.zip");
+  const footer = page.locator(".pg-footer").getByRole("link", { name: "Скачать шрифт Gavia Sans", exact: true });
+  await expect(footer).toHaveAttribute("href", pagesPath + "downloads/Gavia-Sans-0.6.zip");
 });

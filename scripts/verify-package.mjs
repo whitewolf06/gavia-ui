@@ -138,7 +138,7 @@ const token: WlDesignTokenName = "--wl-space-lg";
 if (wlManifest.length !== packageManifest.length) throw new Error("Runtime and JSON manifests differ");
 if (wlDesignTokens.length !== designCatalog.tokens.length || resolveWlToken(token) !== "16px") throw new Error("Design token exports differ");
 if (getWlThemeTokens("graphite")[token] !== "16px" || spacing !== "lg") throw new Error("Theme snapshot differs");
-if (!resolveWlToken("--wl-font", "gavia").startsWith('"Gavia",')) throw new Error("Gavia typography was not packaged");
+if (!resolveWlToken("--wl-font", "gavia").startsWith('"Gavia Sans",')) throw new Error("Gavia typography was not packaged");
 createApp(App).use(WlConfig, { pt: createWlPt(), locale: wlLocaleRu })
   .use(WlToastService).use(WlConfirmationService).mount("#app");
 `
@@ -219,13 +219,13 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   const canonicalFontDirectory = join(uiKitDir, "fonts", "gavia");
   const packedFontManifest = JSON.parse(readFileSync(join(packedFontDirectory, "manifest.json"), "utf8"));
   const verifier = readFileSync(join(repoRoot, "scripts", "fonts", "verify_fonts.py"), "utf8");
-  const acceptedBlock = /APPROVED_0600_SHA256 = \{([\s\S]*?)\r?\n\}/.exec(verifier)?.[1];
+  const acceptedBlock = /APPROVED_SANS_0600_SHA256 = \{([\s\S]*?)\r?\n\}/.exec(verifier)?.[1];
   const acceptedHashes = Object.fromEntries([...(acceptedBlock ?? "").matchAll(/'(Gavia-[^']+\.(?:ttf|woff2))': '([a-f0-9]{64})'/g)]
     .map((match) => [match[1], match[2]]));
-  if (Object.keys(acceptedHashes).length !== 24 || packedFontManifest.family !== "Gavia"
+  if (Object.keys(acceptedHashes).length !== 24 || packedFontManifest.family !== "Gavia Sans"
     || packedFontManifest.version !== "0.600" || packedFontManifest.license !== "OFL-1.1"
     || packedFontManifest.faces.length !== 12) {
-    throw new Error("Packed font family differs from the accepted Gavia 0.600 release");
+    throw new Error("Packed font family differs from the accepted Gavia Sans 0.600 release");
   }
   const packedFontFiles = readdirSync(packedFontDirectory).filter((file) => /\.(?:ttf|woff2)$/.test(file)).sort();
   if (JSON.stringify(packedFontFiles) !== JSON.stringify(Object.keys(acceptedHashes).sort())) {
@@ -255,13 +255,14 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   const fontStylesheetPath = join(installedPackageDir, "styles", "fonts", "gavia.css");
   const fontStylesheet = readFileSync(fontStylesheetPath, "utf8");
   const fontFaces = [...fontStylesheet.matchAll(/@font-face\s*\{([^}]+)\}/g)];
-  if (fontFaces.length !== 12) throw new Error("Packed font stylesheet must register all 12 faces");
-  for (const face of packedFontManifest.faces) {
+  if (fontFaces.length !== 24) throw new Error("Packed font stylesheet must register 12 canonical faces and 12 legacy aliases");
+  for (const family of ["Gavia Sans", "Gavia"]) for (const face of packedFontManifest.faces) {
     const matches = fontFaces.filter(([, block]) => block.match(/font-weight:\s*(\d+)\s*;/)?.[1] === String(face.weight)
-      && block.match(/font-style:\s*(normal|italic)\s*;/)?.[1] === face.style);
+      && block.match(/font-style:\s*(normal|italic)\s*;/)?.[1] === face.style
+      && block.match(/font-family:\s*["']([^"']+)["']\s*;/)?.[1] === family);
     const block = matches[0]?.[1];
     const url = block?.match(/url\(["']([^"']+)["']\)/)?.[1];
-    if (matches.length !== 1 || !block?.match(/font-family:\s*["']Gavia["']\s*;/)
+    if (matches.length !== 1 || !block?.includes('font-family: "' + family + '";')
       || url !== "../../fonts/gavia/" + face.woff2.file
       || !existsSync(resolve(dirname(fontStylesheetPath), url))) {
       throw new Error("Packed font CSS has a broken face or URL: " + face.name);
@@ -277,14 +278,14 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   const builtCss = readdirSync(builtAssets).filter((file) => file.endsWith(".css"))
     .map((file) => readFileSync(join(builtAssets, file), "utf8")).join("\n");
   const builtFontFaces = [...builtCss.matchAll(/@font-face\s*\{([^}]+)\}/g)]
-    .filter(([, block]) => /font-family:["']?Gavia(?:["']|;)/.test(block));
-  if (builtFontFaces.length !== 12) throw new Error("Consumer CSS did not preserve the 12 Gavia font faces");
+    .filter(([, block]) => /font-family:["']?Gavia(?: Sans)?(?:["']|;)/.test(block));
+  if (builtFontFaces.length !== 24) throw new Error("Consumer CSS did not preserve the 12 Gavia Sans faces and legacy aliases");
   for (const [, block] of builtFontFaces) {
     const fontUrl = block.match(/url\(["']?([^"')]+)["']?\)/)?.[1];
     const emittedPath = fontUrl?.startsWith("/") ? join(consumerDir, "dist", fontUrl.slice(1)) : resolve(builtAssets, fontUrl ?? "");
     if (!fontUrl || !existsSync(emittedPath)) throw new Error("Consumer font CSS has an unresolved emitted URL: " + fontUrl);
   }
-  console.log("Packed font smoke passed: 24 accepted binaries, OFL notices, 12 CSS faces and emitted WOFF2 assets");
+  console.log("Packed font smoke passed: 24 accepted binaries, OFL notices, 12 canonical CSS faces plus legacy aliases and emitted WOFF2 assets");
 
   // Git checkouts may use CRLF on Windows and LF on the publishing runner.
   const packedLicense = readFileSync(join(installedPackageDir, "LICENSE"), "utf8").replaceAll("\r\n", "\n");

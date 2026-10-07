@@ -4,6 +4,7 @@ import { WlAlert, WlButton, WlCheckbox, WlIcon, WlInput, WlSelect, WlSwitch, WlT
 import type { WlThemeName } from "../../../packages/ui-kit/src/types";
 import { isPlaygroundTheme, playgroundThemeOptions } from "./themes";
 import CodePanel from "./design-system/CodePanel.vue";
+import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
 import { createThemeExport, createThemeOverrides, createThemePalette, getThemeContrast, normalizeHex, parseThemeDraft, isThemeNameValid, THEME_DRAFT_SCHEMA_VERSION, themePaletteFields, type ThemePalette } from "./theme-builder/palette";
 
 const props = defineProps<{ theme: WlThemeName }>();
@@ -76,11 +77,9 @@ const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.
 
 <template>
   <main class="tb-page wl-container wl-stack" data-space="2xl" data-testid="theme-builder-page" aria-labelledby="tb-title">
-    <header class="wl-stack" data-space="md">
-      <span class="tb-kicker wl-text-small"><WlIcon name="sliders-h" :size="16" /> Палитра вашего интерфейса</span>
-      <h1 id="tb-title" class="wl-text-display">Подбор темы</h1>
-      <p class="tb-lead wl-text-body wl-text-muted">Выберите основу, измените ключевые цвета и попробуйте настоящие компоненты. Когда палитра готова, скопируйте настройки для агента или CSS для проекта.</p>
-    </header>
+    <PlaygroundPageHeader title="Подбор темы" title-id="tb-title"
+      description="Выберите основу, измените ключевые цвета и попробуйте настоящие компоненты. Когда палитра готова, скопируйте настройки для агента или CSS для проекта."
+      :breadcrumbs="[{ label: 'Подбор темы' }]" />
 
     <div class="tb-workspace">
       <section class="tb-controls wl-stack" data-space="lg" aria-labelledby="tb-settings-title">
@@ -156,9 +155,7 @@ const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.
 </template>
 
 <style scoped>
-.tb-page { padding-block: var(--wl-space-3xl) var(--wl-space-4xl); overflow-wrap: anywhere; }
-.tb-kicker { display: inline-flex; align-items: center; gap: var(--wl-space-sm); color: var(--wl-accent); }
-.tb-lead { max-width: 76ch; }
+.tb-page { padding-block: var(--wl-space-2xl) var(--wl-space-4xl); overflow-wrap: anywhere; }
 .tb-workspace { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 1fr); gap: var(--wl-space-2xl); align-items: start; }
 .tb-controls { padding: var(--wl-space-lg); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg-soft); }
 .tb-section-header { display: flex; align-items: center; justify-content: space-between; gap: var(--wl-space-md); flex-wrap: wrap; }

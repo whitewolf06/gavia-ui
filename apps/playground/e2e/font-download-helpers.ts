@@ -34,11 +34,11 @@ export async function expectGaviaFontDownload(page: Page, link: Locator): Promis
   const pending = page.waitForEvent("download");
   await link.click();
   const download = await pending;
-  expect(download.suggestedFilename()).toBe("Gavia-0.6.zip");
+  expect(download.suggestedFilename()).toBe("Gavia-Sans-0.6.zip");
   const path = await download.path();
   expect(path).not.toBeNull();
   const files = unzip(readFileSync(path!));
-  const prefix = "Gavia-0.6/";
+  const prefix = "Gavia-Sans-0.6/";
   const manifest = JSON.parse(readFileSync(new URL("manifest.json", fontRoot), "utf8")) as {
     faces: { ttf: { file: string; sha256: string }; woff2: { file: string; sha256: string } }[];
   };
@@ -52,7 +52,8 @@ export async function expectGaviaFontDownload(page: Page, link: Locator): Promis
     expect(files.get(prefix + name)?.equals(readFileSync(new URL(name, fontRoot))), name).toBe(true);
   }
   const css = files.get(prefix + "gavia.css")!.toString("utf8");
-  expect(css.match(/@font-face/g)).toHaveLength(12);
+  expect(css.match(/@font-face/g)).toHaveLength(24);
+  for (const family of ["Gavia Sans", "Gavia"]) expect(Array.from(css.matchAll(/font-family:\s*"([^"]+)"\s*;/g)).filter((match) => match[1] === family)).toHaveLength(12);
   for (const match of css.matchAll(/url\("([^"]+)"\)/g)) expect(files.has(prefix + match[1]!.replace("./", ""))).toBe(true);
   expect(files.get(prefix + "README.txt")!.toString("utf8")).toContain("SIL Open Font License 1.1");
 }

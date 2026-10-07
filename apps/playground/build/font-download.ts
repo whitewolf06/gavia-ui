@@ -4,7 +4,7 @@ import { deflateRawSync } from "node:zlib";
 import type { Plugin } from "vite";
 import { gaviaRelease } from "../src/type-study/font";
 
-export const gaviaDownloadName = "Gavia-" + gaviaRelease + ".zip";
+export const gaviaDownloadName = "Gavia-Sans-" + gaviaRelease + ".zip";
 const archivePath = "downloads/" + gaviaDownloadName;
 const fontRoot = new URL("../../../packages/ui-kit/fonts/gavia/", import.meta.url);
 
@@ -21,8 +21,10 @@ function crc32(bytes: Buffer): number {
 export function createGaviaFontArchive(): Buffer {
   const manifest = JSON.parse(readFileSync(new URL("manifest.json", fontRoot), "utf8")) as {
     version: string;
+    family: string;
     faces: { ttf: { file: string; sha256: string }; woff2: { file: string; sha256: string } }[];
   };
+  if (manifest.family !== "Gavia Sans") throw new Error("Unexpected font family");
   if (Number(manifest.version) !== Number(gaviaRelease)) throw new Error("Font download version does not match its manifest");
   const entries: { name: string; bytes: Buffer }[] = [];
   for (const face of manifest.faces) for (const format of [face.ttf, face.woff2]) {
@@ -35,13 +37,13 @@ export function createGaviaFontArchive(): Buffer {
     .split("../../fonts/gavia/").join("./");
   entries.push({ name: "gavia.css", bytes: Buffer.from(css) });
   entries.push({ name: "README.txt", bytes: Buffer.from([
-    "Gavia " + gaviaRelease,
+    "Gavia Sans " + gaviaRelease,
     "6 weights (100, 300, 400, 500, 600, 700), upright and oblique, Cyrillic and Latin.",
     "TTF: install the files on your computer. WOFF2: use gavia.css on the web.",
-    'Web: <link rel="stylesheet" href="./gavia.css"> then font-family: "Gavia", sans-serif;',
+    'Web: <link rel="stylesheet" href="./gavia.css"> then font-family: "Gavia Sans", sans-serif;',
     "Keep gavia.css and the WOFF2 files in the same directory.",
     "Font software: SIL Open Font License 1.1. Keep both OFL files and copyright notices when redistributing.",
-    "Derived from Onest. Gavia numerals are authored separately; oblique faces use a 7 degree slope.",
+    "Derived from Onest. Gavia Sans numerals are authored separately; oblique faces use a 7 degree slope.",
     "",
     "TTF: установите файлы на компьютере. WOFF2: подключите gavia.css на сайте.",
     "Разместите gavia.css и WOFF2 в одной папке. Vue и компоненты UI Kit не требуются.",
@@ -54,7 +56,7 @@ export function createGaviaFontArchive(): Buffer {
   let offset = 0;
   const date = ((2026 - 1980) << 9) | (10 << 5) | 6;
   for (const entry of entries) {
-    const name = Buffer.from("Gavia-" + gaviaRelease + "/" + entry.name);
+    const name = Buffer.from("Gavia-Sans-" + gaviaRelease + "/" + entry.name);
     const compressed = deflateRawSync(entry.bytes, { level: 9 });
     const checksum = crc32(entry.bytes);
     const local = Buffer.alloc(30);
