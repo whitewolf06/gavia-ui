@@ -20,6 +20,8 @@ test("quality summary, footer and documentation preserve themes and show the mea
     const summary = page.getByTestId("home-quality");
     await expect(summary).toContainText(percent.format(report.coverage.lines) + "%");
     await expect(summary).toContainText(report.version);
+    await expect(summary.getByRole("progressbar", { name: "Покрытие строк unit-тестами", exact: true })).toHaveAttribute("aria-valuenow", String(report.coverage.lines));
+    await expect(summary.getByRole("progressbar", { name: "Пройденные unit-тесты в измеренном прогоне", exact: true })).toHaveAttribute("aria-valuenow", String(report.tests.passed / report.tests.total * 100));
     await expect(summary.locator("time")).toHaveAttribute("datetime", report.measuredAt);
     const link = summary.getByRole("link", { name: "Все проверки", exact: true });
     const href = new URL((await link.getAttribute("href"))!, page.url());
@@ -31,7 +33,10 @@ test("quality summary, footer and documentation preserve themes and show the mea
     await expect(docs.getByRole("heading", { level: 1 })).toHaveText("Качество и совместимость");
     await expect(page.getByTestId("quality-unit-count")).toHaveText(report.tests.passed + " / " + report.tests.total);
     for (const metric of ["lines", "statements", "branches", "functions"] as const) {
-      await expect(quality.locator('[data-coverage-metric="' + metric + '"]')).toContainText(percent.format(report.coverage[metric]) + "%");
+      const card = quality.locator('[data-coverage-metric="' + metric + '"]');
+      await expect(card).toContainText(percent.format(report.coverage[metric]) + "%");
+      await expect(card.getByRole("progressbar")).toHaveAttribute("aria-valuenow", String(report.coverage[metric]));
+      await expect(card.getByRole("progressbar")).toHaveAttribute("aria-valuetext", percent.format(report.coverage[metric]) + "%");
     }
     await expect(quality.locator("time")).toHaveAttribute("datetime", report.measuredAt);
     await expect(quality).toContainText(report.source.environment === "ci" ? "Отчёт CI" : "Локальный отчёт");

@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { WlIcon, WlStatCard } from "../../../../packages/ui-kit/src";
+import QualityMeter from "./QualityMeter.vue";
 import report from "./quality-report.generated.json";
 
 defineProps<{ href: string }>();
 const emit = defineEmits<{ navigate: [] }>();
 const formatNumber = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 2 });
 const testResult = `${formatNumber.format(report.tests.passed)} / ${formatNumber.format(report.tests.total)}`;
+const unitPassRate = report.tests.passed / report.tests.total * 100;
 const lineCoverage = `${formatNumber.format(report.coverage.lines)}%`;
 const measuredDate = new Intl.DateTimeFormat("ru-RU", {
   day: "numeric", month: "long", year: "numeric", timeZone: "UTC"
@@ -33,8 +35,12 @@ function navigate(event: MouseEvent): void {
       </a>
     </div>
     <div class="pg-quality-summary-metrics">
-      <WlStatCard icon="check" label="Unit-тесты" :value="testResult" description="Пройдено / всего в измеренном прогоне" />
-      <WlStatCard icon="chart-bar" label="Покрытие строк" :value="lineCoverage" description="Vitest / V8 · код библиотеки" />
+      <WlStatCard icon="check" label="Unit-тесты" :value="testResult" description="Пройдено / всего в измеренном прогоне">
+        <template #footer><QualityMeter :value="unitPassRate" label="Пройденные unit-тесты в измеренном прогоне" /></template>
+      </WlStatCard>
+      <WlStatCard icon="chart-bar" label="Покрытие строк" :value="lineCoverage" description="Vitest / V8 · код библиотеки">
+        <template #footer><QualityMeter :value="report.coverage.lines" label="Покрытие строк unit-тестами" /></template>
+      </WlStatCard>
     </div>
     <p class="wl-text-small wl-text-muted">
       Снимок unit-проверок: <time :datetime="report.measuredAt" :title="report.measuredAt">{{ measuredDate }} (UTC)</time>

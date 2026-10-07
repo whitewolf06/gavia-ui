@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { WlCard, WlStatCard, WlTable } from "../../../../../packages/ui-kit/src";
+import QualityMeter from "../../project/QualityMeter.vue";
 import qualityReport from "../../project/quality-report.generated.json";
 import { gaviaProjectInfo } from "../../project/project-info";
 import {
@@ -13,10 +14,10 @@ function formatRevision(revision: string | null): string {
 }
 const percentages = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 2 });
 const metrics = [
-  { key: "lines", label: "Строки", description: "Выполненные строки кода" },
-  { key: "statements", label: "Инструкции", description: "Выполненные инструкции" },
-  { key: "branches", label: "Ветвления", description: "Проверенные исходы условий" },
-  { key: "functions", label: "Функции", description: "Вызванные функции" }
+  { key: "lines", icon: "file", label: "Строки", description: "Выполненные строки кода" },
+  { key: "statements", icon: "code", label: "Инструкции", description: "Выполненные инструкции" },
+  { key: "branches", icon: "sliders-h", label: "Ветвления", description: "Проверенные исходы условий" },
+  { key: "functions", icon: "task", label: "Функции", description: "Вызванные функции" }
 ] as const;
 const measuredAt = new Date(report.measuredAt);
 const measuredLabel = new Intl.DateTimeFormat("ru-RU", {
@@ -35,7 +36,9 @@ const workflowUrl = gaviaProjectInfo.repositoryUrl + "/actions/workflows/publish
         <p class="wl-text-body wl-text-muted">Покрытие показывает, какая часть кода выполнена unit-тестами в измеренном прогоне.</p>
       </div>
       <div class="quality-metrics" role="group" aria-label="Покрытие unit-тестами" data-testid="quality-coverage">
-        <WlStatCard v-for="metric in metrics" :key="metric.key" :label="metric.label" :value="percentages.format(report.coverage[metric.key]) + '%'" :description="metric.description" :data-coverage-metric="metric.key" />
+        <WlStatCard v-for="metric in metrics" :key="metric.key" :icon="metric.icon" :label="metric.label" :value="percentages.format(report.coverage[metric.key]) + '%'" :description="metric.description" :data-coverage-metric="metric.key">
+          <template #footer><QualityMeter :value="report.coverage[metric.key]" :label="'Покрытие unit-тестами: ' + metric.label" /></template>
+        </WlStatCard>
       </div>
       <WlCard>
         <div class="wl-stack" data-space="sm">
@@ -98,6 +101,9 @@ const workflowUrl = gaviaProjectInfo.repositoryUrl + "/actions/workflows/publish
 .docs-quality-page { min-width: 0; }
 .quality-anchor { scroll-margin-top: calc(var(--wl-playground-header-offset, 80px) + var(--wl-space-lg)); }
 .quality-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--wl-space-md); }
+.quality-metrics :deep(.wl-card__body), .quality-metrics :deep(.wl-card__content) { height: 100%; }
+.quality-metrics :deep(.wl-card__content) { display: flex; flex-direction: column; }
+.quality-metrics :deep(.wl-stat-card__footer) { margin-top: auto; padding-top: var(--wl-space-md); }
 .quality-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--wl-layout-grid-min)), 1fr)); gap: var(--wl-space-lg); }
 .quality-table :deep(.wl-table__th), .quality-table :deep(.wl-table__td) { white-space: normal; overflow-wrap: anywhere; }
 .quality-link { color: var(--wl-text-accent); text-underline-offset: 3px; }
