@@ -30,7 +30,7 @@
     color: var(--wl-text, #22252b);
     background: var(--wl-bg, #ffffff);
     -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+    text-rendering: var(--wl-type-text-rendering, optimizeLegibility);
   }
 
   button {

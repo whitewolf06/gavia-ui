@@ -2,6 +2,7 @@
 @layer wl.tokens {
 [data-wl-theme="gavia"] {
   color-scheme: light;
+  text-rendering: var(--wl-type-text-rendering);
   --wl-gray-0: #fefdfb;
   --wl-gray-50: #faf9f6;
   --wl-gray-100: #eef2f3;
@@ -63,8 +64,10 @@
   --wl-dur-5: 0.2s;
   --wl-ease: ease;
   --wl-font: "Gavia Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --wl-font-text-rendering: geometricPrecision;
   --wl-font-heading: var(--wl-font);
   --wl-mono: "SF Mono", ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+  --wl-type-text-rendering: var(--wl-font-text-rendering);
   --wl-bg: var(--wl-palette-bg);
   --wl-bg-raised: var(--wl-palette-bg-raised);
   --wl-bg-soft: var(--wl-palette-bg-soft);

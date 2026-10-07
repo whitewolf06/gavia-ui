@@ -5,7 +5,7 @@
 # Gavia UI
 
 Бесплатная библиотека компонентов и дизайн-система для **Vue 3 + TypeScript**.
-В составе: **53 компонента, 113 SVG-иконок, 442 дизайн-токена, четыре темы
+В составе: **53 компонента, 113 SVG-иконок, 444 дизайн-токена, четыре темы
 и гарнитура Gavia Sans 0.6**. Runtime-зависимостей нет; Vue 3 — единственный
 обязательный peer. Стили подключаются явно.
 
@@ -16,7 +16,7 @@
   · <a href="https://github.com/whitewolf06/gavia-ui">GitHub</a>
 </p>
 
-Версия **0.9.0**. [История изменений](CHANGELOG.md) ·
+Версия **0.9.1**. [История изменений](CHANGELOG.md) ·
 [Миграция 0.9](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.9.md) ·
 [История ребрендинга](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-gavia.md).
 Код UI Kit — [MIT](LICENSE), файлы шрифта —
@@ -25,7 +25,7 @@
 ## Быстрый старт
 
 ```bash
-pnpm add gavia-ui@0.9.0 vue
+pnpm add gavia-ui@0.9.1 vue
 ```
 
 ```ts
@@ -75,7 +75,7 @@ Gavia Sans 0.6 входит в пакет: кириллица и латиниц�
 
 Общие роли типографики, шкала расстояний, поверхности, состояния и UI-паттерны
 описаны в [руководстве](https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md). Playground `?view=system`
-показывает 442 токена, четыре темы и контракты 53 компонентов.
+показывает 444 токена, четыре темы и контракты 53 компонентов.
 
 Опциональная компоновка и типографика: явный импорт
 `gavia-ui/styles/primitives.css`. Экспорты `wlDesignTokens`,

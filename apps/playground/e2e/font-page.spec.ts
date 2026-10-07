@@ -63,6 +63,10 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
     await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
     await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
     await expect(fontPage.locator(".wl-weights-digits").first()).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
+    await expect(page.locator("body")).toHaveCSS("text-rendering", theme === "Gavia" ? "geometricprecision" : "optimizelegibility");
+    for (const sample of [".wl-type-display", ".wl-type-number-sample", ".wl-weights-digits"]) {
+      await expect(fontPage.locator(sample).first()).toHaveCSS("text-rendering", "geometricprecision");
+    }
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
   }
 
@@ -112,7 +116,7 @@ test("tabular and proportional numbers use different spacing without changing th
         faces: faces.map((face) => ({ family: face.family.replace(/["']/g, ""), weight: face.weight, status: face.status })),
         text: lines.map((line) => line.textContent),
         widths: lines.map((line) => {
-          // Compare layout advances; Range rectangles can include renderer-dependent text ink extents.
+          // Measure rendered advances under the page's inherited font settings.
           const probe = document.createElement("span");
           probe.textContent = line.textContent;
           probe.style.cssText = "position:absolute;display:inline-block;inline-size:max-content;white-space:pre";
@@ -135,6 +139,52 @@ test("tabular and proportional numbers use different spacing without changing th
   expect(samples[1]!.text).toEqual(samples[0]!.text);
   expect(samples[0]!.widths[0]).toBeCloseTo(samples[0]!.widths[1]!, 1);
   expect(Math.abs(samples[1]!.widths[0]! - samples[1]!.widths[1]!)).toBeGreaterThan(1);
+  const matrix = await fontPage.locator(".wl-type-number-tabular").evaluate(async (card, fontWeights) => {
+    const family = getComputedStyle(card).fontFamily.split(",")[0]!.trim();
+    const rows = [];
+    for (const weight of fontWeights) for (const fontStyle of ["normal", "italic"]) {
+      const faces = await document.fonts.load(`${fontStyle} ${weight} 38px ${family}`, "0123456789");
+      for (const size of [13, 16, 25, 34, 38, 42]) {
+        const probe = document.createElement("span");
+        probe.style.cssText = `position:absolute;display:inline-block;inline-size:max-content;white-space:pre;font-weight:${weight};font-style:${fontStyle};font-size:${size}px`;
+        card.append(probe);
+        try {
+          const style = getComputedStyle(probe);
+          const widths = Array.from("0123456789", (digit) => {
+            probe.textContent = digit.repeat(5);
+            return probe.getBoundingClientRect().width;
+          });
+          rows.push({ weight, fontStyle, size, numeric: style.fontVariantNumeric, rendering: style.textRendering, widths,
+            faces: faces.map((face) => ({ family: face.family.replace(/["']/g, ""), weight: face.weight, style: face.style, status: face.status })) });
+        } finally { probe.remove(); }
+      }
+    }
+    return rows;
+  }, weights);
+  expect(matrix).toHaveLength(72);
+  for (const row of matrix) {
+    const label = `${row.weight} ${row.fontStyle} ${row.size}px`;
+    expect(row.faces, `${label} uses its actual loaded face`).toEqual([
+      { family: "Gavia Sans", weight: String(row.weight), style: row.fontStyle, status: "loaded" }
+    ]);
+    expect(row.numeric).toBe("tabular-nums");
+    expect(row.rendering).toBe("geometricprecision");
+    expect(row.widths).toHaveLength(10);
+    for (const width of row.widths) expect(width, `${label}: all ten tabular digits have equal advances`).toBeCloseTo(row.widths[0]!, 1);
+  }
+
+  const nestedRendering = await page.evaluate(() => {
+    const theme = document.createElement("div");
+    theme.dataset.wlTheme = "gavia";
+    const inherited = document.createElement("span");
+    const nestedWhite = document.createElement("span");
+    nestedWhite.dataset.wlTheme = "white";
+    theme.append(inherited, nestedWhite);
+    document.body.append(theme);
+    try { return { gavia: getComputedStyle(inherited).textRendering, white: getComputedStyle(nestedWhite).textRendering }; }
+    finally { theme.remove(); }
+  });
+  expect(nestedRendering).toEqual({ gavia: "geometricprecision", white: "optimizelegibility" });
   await expect(fontPage.getByRole("link", { name: "К документации UI Kit", exact: false })).toHaveAttribute("href", "?view=docs&theme=white");
   await fontPage.getByRole("link", { name: "К документации UI Kit", exact: false }).click();
   await expect(page.getByTestId("docs-page")).toBeVisible();

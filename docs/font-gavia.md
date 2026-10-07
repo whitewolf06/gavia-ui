@@ -20,7 +20,7 @@ import "gavia-ui/themes/gavia.css";
 Без шрифтового CSS работает системный fallback. White, Graphite и Newspaper
 сохраняют прежнюю типографику. Имена токенов и `--wl-mono` не меняются.
 
-Шрифт и тема входят в Gavia UI начиная с 0.9.0. Для самостоятельного
+Шрифт и тема входят в Gavia UI начиная с 0.9.1. Для самостоятельного
 использования скачайте ZIP со страницы шрифта.
 
 ## Примеры и самостоятельное использование
@@ -49,12 +49,18 @@ TTF можно установить в настольном приложении
   font-style: normal;
   font-display: swap;
 }
-body { font-family: "Gavia Sans", "Segoe UI", sans-serif; }
+body {
+  font-family: "Gavia Sans", "Segoe UI", sans-serif;
+  text-rendering: geometricPrecision;
+}
 ```
 
 Для остальных начертаний укажите соответствующие веса и `font-style`.
 Цифры по умолчанию табличные; `font-variant-numeric: proportional-nums`
-переключает их пропорциональную ширину.
+переключает их пропорциональную ширину. `text-rendering: geometricPrecision`
+сохраняет равные интервалы табличных цифр в браузерах с пиксельным округлением
+шрифтов. Тема Gavia задаёт этот режим через `--wl-type-text-rendering`;
+остальные темы сохраняют `optimizeLegibility`.
 
 ## Основа и лицензия
 

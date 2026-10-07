@@ -36,6 +36,8 @@
   .wl-weights-name-english { color: var(--wl-type-muted); font-family: var(--wl-type-font-sans); font-size: 10px; font-weight: 400; }
   .wl-weights-sample-heading { margin: 0 0 15px; font-family: var(--wl-weights-sample-family), var(--wl-type-font-sans); font-size: 28px; font-style: var(--wl-weights-sample-style); font-weight: var(--wl-weights-sample-weight); line-height: 1.22; letter-spacing: -0.035em; overflow-wrap: anywhere; font-synthesis: none; }
   .wl-weights-sample-paragraph { max-width: 60ch; margin: 0; font-family: var(--wl-weights-sample-family), var(--wl-type-font-sans); font-size: 15px; font-style: var(--wl-weights-sample-style); font-weight: var(--wl-weights-sample-weight); line-height: 1.72; font-synthesis: none; }
+  .wl-weights-sample-heading, .wl-weights-sample-paragraph, .wl-weights-digits,
+  .wl-weights-amount, .wl-weights-date { text-rendering: geometricPrecision; }
   .wl-weights-numeral-samples { padding-top: 5px; }
   .wl-weights-numeral-label { color: var(--wl-type-muted); font-family: var(--wl-type-font-sans); font-size: 10px; font-weight: 400; }
   .wl-weights-digits { margin: 9px 0 12px; font-family: var(--wl-weights-sample-family), var(--wl-type-font-sans); font-size: 25px; font-style: var(--wl-weights-sample-style); font-weight: var(--wl-weights-sample-weight); line-height: 1.35; letter-spacing: 0.025em; font-variant-numeric: tabular-nums; font-synthesis: none; }

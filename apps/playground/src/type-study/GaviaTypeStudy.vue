@@ -69,7 +69,7 @@ const copy = {
     standaloneImport: "Без UI Kit — из ZIP",
     download: "Скачать Gavia Sans 0.6",
     downloadDetails: "ZIP · 12 начертаний · TTF + WOFF2 · CSS · лицензии",
-    packageNote: "Шрифт и тема входят в Gavia UI начиная с 0.9.0. ZIP позволяет использовать Gavia Sans отдельно от UI Kit.",
+    packageNote: "Шрифт и тема входят в Gavia UI начиная с 0.9.1. ZIP позволяет использовать Gavia Sans отдельно от UI Kit.",
     provenance: "Буквенная основа — производная Onest, цифры разработаны для Gavia Sans. Наклонные начертания имеют геометрический наклон 7°.",
     demoNote: "Интерактивный пример типографики. Данные не сохраняются.",
     installationFamily: "Семейство в CSS",
@@ -138,7 +138,7 @@ const copy = {
     standaloneImport: "Without the UI kit — from the ZIP",
     download: "Download Gavia Sans 0.6",
     downloadDetails: "ZIP · 12 faces · TTF + WOFF2 · CSS · licenses",
-    packageNote: "The font and theme are included in Gavia UI starting with 0.9.0. Use the ZIP to add Gavia Sans independently of the UI kit.",
+    packageNote: "The font and theme are included in Gavia UI starting with 0.9.1. Use the ZIP to add Gavia Sans independently of the UI kit.",
     provenance: "Letterforms are derived from Onest; numerals were authored for Gavia Sans. Oblique faces use a geometric 7° slope.",
     demoNote: "Interactive typography example. No data is saved.",
     installationFamily: "CSS family",
@@ -180,14 +180,14 @@ const weightOptions = computed(() => gaviaWeights.map(weight => ({ value: weight
 function chooseLanguage(value: string | null): void { if (value === "ru" || value === "en") language.value = value; }
 function chooseStyle(value: string | null): void { if (value === "normal" || value === "italic") fontStyle.value = value; }
 function chooseWeight(value: unknown): void { if (gaviaWeights.some(weight => weight.value === value)) proofWeight.value = value as GaviaFontWeight; }
-const standaloneCode = '<link rel="stylesheet" href="./gavia.css">\n<style>body { font-family: "Gavia Sans", sans-serif; }</style>';
+const standaloneCode = '<link rel="stylesheet" href="./gavia.css">\n<style>body { font-family: "Gavia Sans", sans-serif; text-rendering: geometricPrecision; }</style>';
 const paragraphs = computed(() => samples[language.value].body.split("\n\n"));
 const proofSample = computed(() => proofText.value.trim() ? proofText.value : content.value.proofExample);
 const exampleBalance = computed(() => language.value === "ru" ? "12 480 ₽" : "€128.40");
 const playgroundUrl = computed(() => withPlaygroundTheme("?view=docs", props.theme));
 const numeralRows = computed(() => language.value === "ru" ? ["11 111,00", "88 888,00", "10 240,50"] : ["11,111.00", "88,888.00", "10,240.50"]);
 const fontImportCode = 'import "gavia-ui/styles/fonts/gavia.css";';
-const fontFamilyCode = ".app {\n  font-family: \"Gavia Sans\", \"Segoe UI\", sans-serif;\n}";
+const fontFamilyCode = ".app {\n  font-family: \"Gavia Sans\", \"Segoe UI\", sans-serif;\n  text-rendering: geometricPrecision;\n}";
 
 function saveProject(): void {
   saved.value = true;

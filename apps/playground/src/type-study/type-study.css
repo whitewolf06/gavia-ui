@@ -236,5 +236,6 @@
   .wl-type-glyphs,
   .wl-type-proof-sample, .wl-type-alphabet-sample, .wl-type-number-sample {
     font-family: var(--wl-type-font-sample);
+    text-rendering: geometricPrecision;
   }
 }

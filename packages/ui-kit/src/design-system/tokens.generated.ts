@@ -573,6 +573,17 @@ export const wlDesignTokens = [
     }
   },
   {
+    "name": "--wl-font-text-rendering",
+    "layer": "foundation",
+    "type": "string",
+    "category": "typography",
+    "description": "Режим рендеринга гарнитуры; Gavia сохраняет точные ширины табличных цифр.",
+    "value": "optimizeLegibility",
+    "themes": {
+      "gavia": "geometricPrecision"
+    }
+  },
+  {
     "name": "--wl-font-heading",
     "layer": "foundation",
     "type": "fontFamily",
@@ -590,6 +601,14 @@ export const wlDesignTokens = [
     "category": "typography",
     "description": "Базовое значение mono.",
     "value": "\"SF Mono\", ui-monospace, \"Cascadia Mono\", Menlo, Consolas, monospace"
+  },
+  {
+    "name": "--wl-type-text-rendering",
+    "layer": "semantic",
+    "type": "string",
+    "category": "typography",
+    "description": "Режим рендеринга текста выбранной темы.",
+    "value": "var(--wl-font-text-rendering)"
   },
   {
     "name": "--wl-bg",

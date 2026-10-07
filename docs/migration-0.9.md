@@ -22,7 +22,9 @@ document.documentElement.dataset.wlTheme = "gavia";
 
 Gavia Sans меняет типографику только темы Gavia. Для White, Graphite или
 Newspaper сохраните соответствующий импорт темы и data-wl-theme.
-Шрифтовой CSS не импортируется автоматически из JavaScript.
+Шрифтовой CSS не импортируется автоматически из JavaScript. Тема Gavia
+также выбирает точный рендеринг через новый `--wl-type-text-rendering`
+(основан на `--wl-font-text-rendering`); настройки остальных тем сохранены.
 Прежнее имя CSS-семейства Gavia остаётся alias для Gavia Sans; файловые
 пути gavia-ui/styles/fonts/gavia.css и gavia-ui/fonts/gavia/* сохранены.
 Файлы шрифта лицензированы отдельно под SIL OFL 1.1; код UI-кита — MIT.

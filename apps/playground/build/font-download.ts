@@ -40,13 +40,14 @@ export function createGaviaFontArchive(): Buffer {
     "Gavia Sans " + gaviaRelease,
     "6 weights (100, 300, 400, 500, 600, 700), upright and oblique, Cyrillic and Latin.",
     "TTF: install the files on your computer. WOFF2: use gavia.css on the web.",
-    'Web: <link rel="stylesheet" href="./gavia.css"> then font-family: "Gavia Sans", sans-serif;',
+    'Web: <link rel="stylesheet" href="./gavia.css"> then font-family: "Gavia Sans", sans-serif; text-rendering: geometricPrecision;',
     "Keep gavia.css and the WOFF2 files in the same directory.",
     "Font software: SIL Open Font License 1.1. Keep both OFL files and copyright notices when redistributing.",
     "Derived from Onest. Gavia Sans numerals are authored separately; oblique faces use a 7 degree slope.",
     "",
     "TTF: установите файлы на компьютере. WOFF2: подключите gavia.css на сайте.",
-    "Разместите gavia.css и WOFF2 в одной папке. Vue и компоненты UI Kit не требуются.",
+    "Разместите gavia.css и WOFF2 в одной папке. Для точной ширины цифр в web задайте text-rendering: geometricPrecision.",
+    "Vue и компоненты UI Kit не требуются.",
     "Лицензия шрифта: SIL OFL 1.1; сохраняйте обе лицензии и уведомления об авторских правах.",
     ""
   ].join("\n")) });
