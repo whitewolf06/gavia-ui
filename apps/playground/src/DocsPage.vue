@@ -105,25 +105,25 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
           <summary class="docs-menu-summary">Навигация документации</summary>
           <div class="docs-menu-content wl-stack" data-space="lg">
             <section class="docs-nav-section wl-stack" data-space="sm" aria-label="Начало работы">
-              <h2 class="docs-sidebar-heading"><span class="docs-sidebar-book"><WlIcon class="docs-sidebar-icon docs-sidebar-icon--book" name="book" :size="16" /></span>Начало работы</h2>
+              <h2 class="docs-sidebar-heading"><span class="docs-sidebar-mark docs-sidebar-book"><WlIcon class="docs-sidebar-icon docs-sidebar-icon--book" name="book" :size="16" /></span>Начало работы</h2>
               <nav class="docs-subnav" aria-label="Разделы начала работы"><ul class="docs-toc-list"><li v-for="heading in overviewSections" :key="heading.id"><a class="docs-anchor-link" :href="overviewHref(heading)" :aria-current="!component && !section && activeId === heading.id ? 'location' : undefined" @click="navigateOverview($event, heading)">{{ heading.title }}</a></li></ul></nav>
             </section>
             <nav class="docs-nav-section wl-stack" data-space="xs" aria-label="Основы">
-              <h2 class="docs-sidebar-heading"><WlIcon class="docs-sidebar-icon" name="grid" :size="16" />Основы</h2>
+              <h2 class="docs-sidebar-heading"><span class="docs-sidebar-mark"><WlIcon class="docs-sidebar-icon" name="grid" :size="16" /></span>Основы</h2>
               <div v-for="foundation in documentationFoundations" :key="foundation.key" class="docs-foundation-nav">
                 <button type="button" class="docs-component-link" :aria-current="section === foundation.key ? 'page' : undefined" @click="emit('section', foundation.key)">{{ foundation.label }}</button>
                 <nav v-if="section === foundation.key" class="docs-subnav" aria-label="На этой странице"><ul class="docs-toc-list"><li v-for="heading in foundationHeadings(foundation.key)" :key="heading.id"><a class="docs-anchor-link" :href="'#' + heading.id" :aria-current="activeId === heading.id ? 'location' : undefined" @click="navigateAnchor(heading)">{{ heading.title }}</a></li></ul></nav>
               </div>
             </nav>
             <nav class="docs-nav-section wl-stack" data-space="xs" aria-label="Оформление">
-              <h2 class="docs-sidebar-heading"><WlIcon class="docs-sidebar-icon" name="image" :size="16" />Оформление</h2>
+              <h2 class="docs-sidebar-heading"><span class="docs-sidebar-mark"><WlIcon class="docs-sidebar-icon" name="image" :size="16" /></span>Оформление</h2>
               <div v-for="asset in documentationAssets" :key="asset.key" class="docs-foundation-nav">
                 <button type="button" class="docs-component-link" :aria-current="section === asset.key ? 'page' : undefined" @click="emit('section', asset.key)">{{ asset.label }}</button>
                 <nav v-if="section === asset.key" class="docs-subnav" aria-label="На этой странице"><ul class="docs-toc-list"><li v-for="heading in asset.headings" :key="heading.id"><a class="docs-anchor-link" :href="'#' + heading.id" :aria-current="activeId === heading.id ? 'location' : undefined" @click="navigateAnchor(heading)">{{ heading.title }}</a></li></ul></nav>
               </div>
             </nav>
             <section class="docs-nav-section wl-stack" data-space="md" aria-label="Компоненты">
-              <h2 class="docs-sidebar-heading"><WlIcon class="docs-sidebar-icon" name="box" :size="16" />Компоненты</h2>
+              <h2 class="docs-sidebar-heading"><span class="docs-sidebar-mark"><WlIcon class="docs-sidebar-icon" name="box" :size="16" /></span>Компоненты</h2>
               <nav class="docs-catalog" aria-label="Каталог компонентов">
                 <section v-for="group in groups" :key="group.key" class="docs-catalog-group">
                   <h3 class="docs-category-label">{{ group.label }}</h3>
@@ -210,9 +210,10 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 .docs-page-header { grid-column: 1; grid-row: 1; }
 .docs-layout { display: grid; grid-template-columns: minmax(0, 1fr) 244px; grid-template-rows: auto minmax(0, 1fr); gap: var(--wl-space-2xl); align-items: start; }
 .docs-sidebar { grid-column: 2; grid-row: 1 / span 2; min-width: 0; position: sticky; top: var(--wl-playground-header-offset, 80px); max-height: calc(100dvh - var(--wl-playground-header-offset, 80px) - var(--wl-space-xl)); overflow: auto; padding: var(--wl-space-xs) var(--wl-space-xs) var(--wl-space-xs) var(--wl-space-lg); border-inline-start: 1px solid var(--wl-border); }
-.docs-sidebar-heading { display: flex; align-items: center; gap: var(--wl-space-sm); margin: 0; color: var(--wl-text); font-size: var(--wl-type-small-size); font-weight: var(--wl-type-label-weight); }
+.docs-sidebar-heading { display: flex; align-items: center; min-height: var(--wl-space-xl); gap: var(--wl-space-sm); margin: 0; color: var(--wl-text); font-size: var(--wl-type-small-size); line-height: var(--wl-type-small-line-height); font-weight: var(--wl-type-label-weight); }
 .docs-sidebar-icon { flex: none; color: var(--wl-text-muted); }
-.docs-sidebar-book { display: inline-flex; align-items: center; justify-content: center; flex: none; padding: var(--wl-space-xs); border-radius: var(--wl-corner-control); background: var(--wl-accent-soft); }
+.docs-sidebar-mark { display: inline-flex; align-items: center; justify-content: center; flex: none; inline-size: var(--wl-space-xl); block-size: var(--wl-space-xl); }
+.docs-sidebar-book { padding: var(--wl-space-xs); border-radius: var(--wl-corner-control); background: var(--wl-accent-soft); }
 .docs-sidebar-icon--book { color: var(--wl-accent); }
 .docs-menu { min-width: 0; }
 .docs-menu-summary { display: none; padding: var(--wl-space-md); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-control); color: var(--wl-text); background: var(--wl-bg-soft); font: inherit; cursor: pointer; }
@@ -220,8 +221,8 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 .docs-nav-section { min-width: 0; }
 .docs-nav-section + .docs-nav-section { border-block-start: 1px solid var(--wl-border); padding-block-start: var(--wl-space-lg); }
 .docs-toc-list { margin: var(--wl-space-xs) 0 var(--wl-space-sm); padding: 0; list-style: none; }
-.docs-toc-list a { display: block; margin-inline-end: var(--wl-space-xs); padding: var(--wl-space-xs) var(--wl-space-sm); border-radius: var(--wl-corner-control); color: var(--wl-text-muted); font: var(--wl-type-small-size)/1.5 var(--wl-font); text-decoration: none; overflow-wrap: anywhere; transform: translateX(0); transition: transform var(--wl-motion-fast) var(--wl-motion-ease), color var(--wl-motion-fast) var(--wl-motion-ease), background-color var(--wl-motion-fast) var(--wl-motion-ease); }
-.docs-toc-list .docs-anchor-link[aria-current="location"] { color: var(--wl-accent); font-weight: var(--wl-type-label-weight); background: var(--wl-accent-soft); transform: translateX(3px); }
+.docs-toc-list a { display: block; padding: var(--wl-space-xs) var(--wl-space-sm); border-radius: var(--wl-corner-control); color: var(--wl-text-muted); font: var(--wl-type-small-size)/1.5 var(--wl-font); text-decoration: none; overflow-wrap: anywhere; transition: color var(--wl-motion-fast) var(--wl-motion-ease), background-color var(--wl-motion-fast) var(--wl-motion-ease); }
+.docs-toc-list .docs-anchor-link[aria-current="location"] { color: var(--wl-accent); font-weight: var(--wl-type-label-weight); background: var(--wl-accent-soft); }
 .docs-component-outline { margin-block: var(--wl-space-sm); }
 .docs-component-header-actions { padding-block-start: var(--wl-space-xs); }
 .docs-design-rules { background: var(--wl-bg-soft); }
@@ -233,10 +234,11 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 .docs-category-label { margin: 0 0 var(--wl-space-sm); padding-inline: var(--wl-space-sm); color: var(--wl-text); font-size: var(--wl-type-body-size); line-height: var(--wl-type-body-line-height); font-weight: 600; }
 .docs-catalog-list { margin: 0; padding: 0; list-style: none; }
 .docs-component-link { display: flex; align-items: center; justify-content: space-between; gap: var(--wl-space-sm); width: 100%; min-height: 36px; padding: var(--wl-space-sm); border: 0; border-radius: var(--wl-corner-control); background: transparent; color: var(--wl-text); font: var(--wl-type-small-size)/1.4 var(--wl-font); text-align: left; cursor: pointer; }
+.docs-foundation-nav .docs-component-link { min-height: var(--wl-space-2xl); padding-block: calc(var(--wl-space-sm) - var(--wl-space-2xs)); }
 .docs-catalog-list .docs-component-link { min-height: 30px; padding: 6px var(--wl-space-sm); line-height: 1.25; }
 .docs-component-name { min-width: 0; overflow-wrap: anywhere; }
 .docs-component-version { flex: none; color: inherit; font-size: 11px; font-weight: 400; font-variant-numeric: tabular-nums; white-space: nowrap; }
-@media (pointer: coarse) { .docs-catalog-list .docs-component-link { min-height: 36px; } }
+@media (pointer: coarse) { .docs-foundation-nav .docs-component-link, .docs-catalog-list .docs-component-link { min-height: 36px; } }
 .docs-component-link:hover { background: var(--wl-bg-soft); }
 .docs-component-link[aria-current="page"] { color: var(--wl-accent); background: var(--wl-accent-soft); }
 .docs-pilot-mark { padding: 2px var(--wl-space-xs); border-radius: var(--wl-corner-control); color: var(--wl-text-muted); font-size: 10px; }
@@ -250,7 +252,7 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 .docs-pilot-card { padding: var(--wl-space-xl); background: var(--wl-bg-soft); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); }
 .docs-notice { padding: var(--wl-space-lg); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg-soft); }
 .docs-migration-links { display: grid; gap: var(--wl-space-sm); margin: 0; padding-left: var(--wl-space-lg); font-size: var(--wl-type-small-size); }
-@media (prefers-reduced-motion: reduce) { .docs-toc-list a { transition: none; } .docs-toc-list .docs-anchor-link[aria-current="location"] { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .docs-toc-list a { transition: none; } }
 @media (max-width: 1100px) { .docs-layout { grid-template-columns: minmax(0, 1fr) 224px; gap: var(--wl-space-xl); } }
 @media (max-width: 760px) { .docs-page { padding-block: var(--wl-space-xl); } .docs-layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; gap: var(--wl-space-xl); } .docs-sidebar { grid-column: 1; grid-row: 2; position: static; max-height: none; overflow: visible; padding: 0; border-inline-start: 0; } .docs-content { grid-column: 1; grid-row: 3; } .docs-menu-summary { display: list-item; list-style-position: inside; } .docs-menu-content { max-height: 65dvh; overflow: auto; padding: var(--wl-space-lg) var(--wl-space-xs) var(--wl-space-xs); } .docs-catalog { max-height: none; min-height: 0; } }
 </style>
