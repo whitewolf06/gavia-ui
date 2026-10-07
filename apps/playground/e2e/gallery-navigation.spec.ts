@@ -13,6 +13,21 @@ function pickerPreview(page: Page, name: PickerName): Locator {
     .getByTestId("ds-explorer").getByTestId("ds-example-preview");
 }
 
+async function setDocumentationViewport(page: Page, viewport: { width: number; height: number }): Promise<void> {
+  const menu = page.getByTestId("docs-page").locator(".docs-menu");
+  const summary = menu.locator(".docs-menu-summary");
+  const wasCompact = await summary.isVisible();
+  await page.setViewportSize(viewport);
+  // CSS responds before Vue applies the matchMedia-driven details.open binding.
+  if (viewport.width <= 760) {
+    await expect(summary).toBeVisible();
+    if (!wasCompact) await expect(menu).toHaveJSProperty("open", false);
+  } else {
+    await expect(summary).toBeHidden();
+    await expect(menu).toHaveJSProperty("open", true);
+  }
+}
+
 async function expectPickerDestination(page: Page, name: PickerName): Promise<Locator> {
   await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Документация");
   const docs = page.getByTestId("docs-page");
@@ -154,7 +169,7 @@ for (const theme of themes) {
     await expectNoOverflow(page, card);
 
     // Check the actual unbroken filename at narrow width, not merely its clipped border.
-    await page.setViewportSize({ width: 320, height: originalViewport.height });
+    await setDocumentationViewport(page, { width: 320, height: originalViewport.height });
     await navigateDocumentationComponent(page, "WlFilePicker");
     await expectPickerDestination(page, "WlFilePicker");
     await expectNoOverflow(page, card);
@@ -162,7 +177,7 @@ for (const theme of themes) {
       element.scrollWidth - element.clientWidth
     )).toBeLessThanOrEqual(1);
 
-    await page.setViewportSize(originalViewport);
+    await setDocumentationViewport(page, originalViewport);
     await navigateDocumentationComponent(page, "WlFilePicker");
     await expectPickerDestination(page, "WlFilePicker");
     await card.getByRole("button", { name: "Очистить список приложения", exact: true }).click();
