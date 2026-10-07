@@ -33,10 +33,10 @@
   }
 
 
-  .wl-type-style-controls { display: flex; gap: 3px; padding: 4px; border: 1px solid var(--wl-type-border); border-radius: var(--wl-radius); }
+  .wl-type-style-controls, .wl-type-languages { flex-shrink: 0; }
   .wl-type-language, .wl-type-style-controls, .wl-weights-style-button { font-style: normal; }
 
-  .wl-type-display, .wl-type-letterform, .wl-type-heading, .wl-type-paragraph, .wl-type-interface-heading, .wl-type-project-name, .wl-type-stat-value, .wl-type-stat-date, .wl-type-primary, .wl-type-secondary, .wl-type-ui-digits, .wl-type-custom-preview, .wl-type-glyphs {
+  .wl-type-display, .wl-type-letterform, .wl-type-heading, .wl-type-paragraph, .wl-type-interface-heading, .wl-type-project-name, .wl-type-stat-value, .wl-type-stat-date, .wl-type-secondary, .wl-type-ui-digits, .wl-type-glyphs {
     font-style: var(--wl-type-sample-style, normal);
   }
 
@@ -47,9 +47,6 @@
   .wl-type-link:hover { text-decoration: underline; }
 
   .wl-type-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--wl-page-header-gap); padding-block: 24px; scroll-margin-top: 144px; }
-  .wl-type-languages { display: flex; gap: 3px; padding: 4px; border: 1px solid var(--wl-type-border); border-radius: var(--wl-radius); }
-  .wl-type-language { min-height: var(--wl-btn-height-sm); padding: 7px var(--wl-btn-pad-x); border: 0; border-radius: var(--wl-radius-sm); color: var(--wl-type-muted); background: transparent; font-family: var(--wl-type-font-sans); font-size: 12px; cursor: pointer; }
-  .wl-type-language-selected { color: var(--wl-type-text); background: var(--wl-type-surface); box-shadow: var(--wl-segmented-shadow); }
 
   .wl-type-hero { display: grid; grid-template-columns: minmax(0, 1fr) 205px; column-gap: 60px; row-gap: 28px; padding-block: 40px 38px; scroll-margin-top: 90px; }
   .wl-type-section-label { margin: 0 0 22px; color: var(--wl-type-accent); font-size: 11px; }
@@ -80,19 +77,10 @@
   .wl-type-stat-value { font-size: 19px; line-height: 1.4; }
   .wl-type-stat-date { font-size: 13px; line-height: 2; }
   .wl-type-ui-line { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; padding-block: 22px; border-top: 1px solid var(--wl-type-border); border-bottom: 1px solid var(--wl-type-border); }
-  .wl-type-primary { display: inline-flex; align-items: center; justify-content: center; gap: 25px; min-height: var(--wl-btn-height); padding: 10px var(--wl-btn-pad-x); border: 1px solid var(--wl-accent); border-radius: var(--wl-btn-radius); color: var(--wl-on-accent); background: var(--wl-type-button-background); font-family: var(--wl-type-font-sans); font-size: 13px; font-weight: 500; line-height: 1.4; cursor: pointer; }
-  .wl-type-primary:hover { background: var(--wl-accent-hover); }
-  .wl-type-primary:disabled { cursor: default; opacity: 0.8; }
-  .wl-type-hotkey { border: 0; opacity: 0.72; font-size: 10px; line-height: 1.4; white-space: nowrap; }
   .wl-type-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: var(--wl-btn-height); padding: 0; border: 0; color: var(--wl-type-text); background: transparent; font-family: var(--wl-type-font-sans); font-size: 13px; text-decoration: none; cursor: pointer; }
   .wl-type-secondary:hover { color: var(--wl-type-accent); text-decoration: underline; text-underline-offset: 4px; }
-  .wl-type-search-icon { width: 17px; height: 17px; }
   .wl-type-ui-digits { margin-left: auto; color: var(--wl-type-muted); font-size: 11px; }
   .wl-type-save-status { margin-left: auto; color: var(--wl-type-accent); font-size: 12px; }
-  .wl-type-custom-sample { padding-block: 22px; border-bottom: 1px solid var(--wl-type-border); }
-  .wl-type-custom-label { display: block; margin-bottom: 10px; color: var(--wl-type-muted); font-size: 12px; }
-  .wl-type-custom-input { box-sizing: border-box; width: 100%; min-height: var(--wl-input-height-lg); padding: 10px var(--wl-btn-pad-x); border: 1px solid var(--wl-type-border); border-radius: var(--wl-radius); color: var(--wl-type-text); background: var(--wl-type-surface); font-family: var(--wl-type-font-sans); font-size: 16px; }
-  .wl-type-custom-preview { margin: 25px 0 5px; font-size: 35px; font-weight: 500; line-height: 1.25; letter-spacing: -0.04em; overflow-wrap: anywhere; }
   .wl-type-glyph-row { display: flex; align-items: center; gap: 25px; padding-top: 23px; }
   .wl-type-glyph-label { margin-right: auto; color: var(--wl-type-muted); font-size: 10px; }
   .wl-type-glyphs { font-size: 23px; font-weight: 400; line-height: 1.5; letter-spacing: 0.045em; white-space: nowrap; }
@@ -106,10 +94,9 @@
   .wl-type-proof-controls { display: grid; grid-template-columns: minmax(170px, 250px) minmax(180px, 1fr); gap: 20px; align-items: end; margin-bottom: 18px; font-style: normal; }
   .wl-type-proof-control, .wl-type-proof-size-control, .wl-type-proof-text-control { display: grid; gap: 8px; min-width: 0; font-style: normal; }
   .wl-type-proof-label { display: flex; justify-content: space-between; gap: 10px; color: var(--wl-type-muted); font-size: 11px; font-weight: 400; line-height: 1.5; }
-  .wl-type-proof-select { box-sizing: border-box; width: 100%; min-height: var(--wl-input-height); padding: 9px var(--wl-btn-pad-x); border: 1px solid var(--wl-type-border); border-radius: var(--wl-radius); color: var(--wl-type-text); background: var(--wl-type-page-background); font-family: var(--wl-type-font-sans); font-size: 13px; font-style: normal; font-weight: 400; }
-  .wl-type-proof-range { box-sizing: border-box; width: 100%; min-height: 44px; margin: 0; accent-color: var(--wl-type-accent); }
-  .wl-type-proof-textarea { box-sizing: border-box; width: 100%; min-height: 90px; padding: 11px 13px; border: 1px solid var(--wl-type-border); border-radius: var(--wl-radius); color: var(--wl-type-text); background: var(--wl-type-surface); font-family: var(--wl-type-font-sans); font-size: 16px; font-style: normal; font-weight: 400; line-height: 1.5; resize: vertical; }
-  .wl-type-proof-select:focus-visible, .wl-type-proof-range:focus-visible, .wl-type-proof-textarea:focus-visible { outline: 2px solid var(--wl-type-accent); outline-offset: 3px; }
+  .wl-type-proof-select { width: 100%; min-width: 0; }
+  .wl-type-proof-range { width: 100%; max-width: none; height: 44px; margin: 0; background-size: 100% var(--wl-slider-height); background-position: center; background-repeat: no-repeat; }
+  .wl-type-proof-textarea { width: 100%; min-height: 90px; font-size: 16px; }
   .wl-type-proof-sample { min-width: 0; min-height: 110px; margin: 25px 0 0; padding-block: 16px 26px; font-family: var(--wl-type-font-sans); font-style: var(--wl-type-sample-style); font-synthesis: none; line-height: 1.3; white-space: pre-wrap; overflow-wrap: anywhere; }
   .wl-type-alphabet-list { display: grid; gap: 21px; padding-top: 23px; border-top: 1px solid var(--wl-type-border); }
   .wl-type-alphabet-row { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 24px; align-items: start; }
@@ -145,6 +132,11 @@
   .wl-type-install-description { margin: 0; color: var(--wl-type-muted); font-size: 15px; line-height: 1.7; }
   .wl-type-install-specifications { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 26px; padding: 0; list-style: none; }
   .wl-type-install-specification { padding: 7px 10px; border: 1px solid var(--wl-type-border); border-radius: var(--wl-radius); color: var(--wl-type-muted); font-size: 11px; line-height: 1.5; }
+  .wl-type-hero-download { margin-top: 24px; }
+  .wl-type-demo-note { margin: 12px 0 0; color: var(--wl-type-muted); font-size: 12px; }
+  .wl-type-download-block { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 24px; }
+  .wl-type-download-details { color: var(--wl-type-muted); font-size: 12px; }
+  .wl-type-standalone-example { margin-bottom: 20px; }
   .wl-type-install-code-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
   .wl-type-install-example { min-width: 0; }
   .wl-type-install-caption { margin: 0 0 9px; color: var(--wl-type-muted); font-size: 11px; }
@@ -155,7 +147,7 @@
   .wl-type-footer-note { margin: 0; }
   .wl-type-footer-links { display: flex; flex-wrap: wrap; gap: 18px; }
 
-  .wl-type-link:focus-visible, .wl-type-language:focus-visible, .wl-type-primary:focus-visible, .wl-type-secondary:focus-visible, .wl-type-custom-input:focus-visible { outline: 2px solid var(--wl-type-accent); outline-offset: 4px; }
+  .wl-type-link:focus-visible, .wl-type-secondary:focus-visible { outline: 2px solid var(--wl-type-accent); outline-offset: 4px; }
 
   @media (max-width: 1000px) {
     .wl-type-shell { width: calc(100% - 48px); }
@@ -197,7 +189,6 @@
 
     .wl-type-shell { width: calc(100% - 36px); }
     .wl-type-controls { align-items: start; gap: 12px; padding-block: 20px; }
-    .wl-type-language { min-height: 37px; padding-inline: 12px; font-size: 11px; }
     .wl-type-hero { grid-template-columns: 1fr; padding-block: 21px 30px; row-gap: 28px; }
     .wl-type-section-label { margin-bottom: 18px; font-size: 10px; }
     .wl-type-display { font-size: clamp(44px, 10.8vw, 70px); letter-spacing: -0.05em; }
@@ -219,8 +210,8 @@
     .wl-type-project-stats { width: 100%; justify-content: space-between; gap: 20px; }
     .wl-type-stat-value { font-size: 18px; }
     .wl-type-stat-date { font-size: 12px; }
+    .wl-type-demo-action { width: 100%; }
     .wl-type-ui-line { gap: 10px 20px; padding-block: 18px; }
-    .wl-type-primary { width: 100%; justify-content: space-between; min-height: 48px; padding-inline: 16px; font-size: 14px; }
     .wl-type-ui-digits { font-size: 10px; }
     .wl-type-save-status { font-size: 10px; }
     .wl-type-glyph-row { flex-wrap: wrap; gap: 12px 20px; padding-top: 19px; }
@@ -228,7 +219,6 @@
     .wl-type-glyphs { font-size: 22px; }
     .wl-type-glyph-divider { font-size: 20px; }
     .wl-type-font-note { font-size: 11px; }
-    .wl-type-custom-preview { font-size: 29px; }
     .wl-type-footer { gap: 15px; padding-block: 23px 26px; line-height: 1.7; }
     .wl-type-footer-links { gap: 12px 20px; }
   }
@@ -238,8 +228,8 @@
 @layer wl.components {
   .wl-type-display, .wl-type-letterform, .wl-type-heading, .wl-type-paragraph,
   .wl-type-interface-heading, .wl-type-project-name, .wl-type-stat-value,
-  .wl-type-stat-date, .wl-type-primary, .wl-type-secondary, .wl-type-ui-digits,
-  .wl-type-custom-input, .wl-type-custom-preview, .wl-type-glyphs,
+  .wl-type-stat-date, .wl-type-secondary, .wl-type-ui-digits,
+  .wl-type-glyphs,
   .wl-type-proof-sample, .wl-type-alphabet-sample, .wl-type-number-sample {
     font-family: var(--wl-type-font-sample);
   }

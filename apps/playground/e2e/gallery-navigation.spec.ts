@@ -67,6 +67,13 @@ test("every manifest component has a populated live and source destination in Do
   const docs = await openDocumentationMenu(page);
   const catalog = docs.getByRole("navigation", { name: "Каталог компонентов", exact: true });
   await expect(catalog.getByRole("button")).toHaveCount(wlManifest.length);
+  await expect(catalog.locator(".docs-component-version")).toHaveCount(wlManifest.length);
+  for (const entry of wlManifest) {
+    const item = catalog.getByRole("button", { name: entry.name, exact: true });
+    await expect(item.locator(".docs-component-version")).toBeVisible();
+    await expect(item.locator(".docs-component-version"), entry.name + " first available version").toHaveText("С " + entry.introducedIn);
+    await expect(item).toHaveAccessibleDescription("С " + entry.introducedIn);
+  }
 
   for (const entry of wlManifest) {
     const workspace = await navigateDocumentationComponent(page, entry.name);

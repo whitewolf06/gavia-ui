@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
-import { chooseShowcaseTheme, navigateMainView } from "./select-helpers";
+import { expectGaviaFontDownload } from "./font-download-helpers";
+import { chooseDropdownOption, chooseShowcaseTheme, navigateMainView } from "./select-helpers";
 
 const weights = [100, 300, 400, 500, 600, 700] as const;
 
@@ -35,7 +36,7 @@ test("font page keeps theme-aware navigation, real Gavia faces and editable samp
   for (const face of faces) expect(face.faces, `${face.weight} ${face.style} loads a real font face`).toBe(1);
 
   await fontPage.getByRole("textbox", { name: "Свой текст", exact: true }).fill("Гагара / Loon 0123456789");
-  await fontPage.getByRole("combobox", { name: "Вес", exact: true }).selectOption("600");
+  await chooseDropdownOption(page, fontPage.getByRole("combobox", { name: "Вес", exact: true }), "600 — Полужирный");
   const size = fontPage.getByRole("slider", { name: "Размер", exact: true });
   await size.focus();
   await size.press("End");
@@ -104,4 +105,22 @@ test("tabular and proportional numbers use different spacing without changing th
   await expect(page.getByTestId("docs-page")).toBeVisible();
   expect(new URL(page.url()).pathname).toBe(url.pathname);
   expect(new URL(page.url()).searchParams.get("theme")).toBe("white");
+});
+
+
+test("font download contains the approved family, standalone CSS and OFL licenses", async ({ page, baseURL }) => {
+  const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
+  url.search = "?view=font&theme=gavia";
+  await page.goto(url.href);
+  const font = page.getByTestId("font-page");
+  await expect(font).toBeVisible();
+  await expect(font.locator("[data-wl=segmented]")).toHaveCount(3);
+  await expect(font.locator("[data-wl=select]")).toHaveCount(1);
+  await expect(font.locator("[data-wl=slider]")).toHaveCount(1);
+  await expect(font.locator("[data-wl=textarea]")).toHaveCount(1);
+  await expect(font.locator("[data-wl=input]")).toHaveCount(1);
+  await expect(font.locator("kbd")).toHaveCount(0);
+  await expectGaviaFontDownload(page, font.getByRole("link", { name: "Скачать Gavia 0.6", exact: true }).first());
+  const footer = page.locator(".pg-footer").getByRole("link", { name: "Скачать шрифт Gavia", exact: true });
+  await expect(footer).toHaveAttribute("href", url.pathname + "downloads/Gavia-0.6.zip");
 });

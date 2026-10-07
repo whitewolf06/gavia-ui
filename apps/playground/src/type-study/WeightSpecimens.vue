@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import WlSegmented from "../../../../packages/ui-kit/src/components/WlSegmented.vue";
+import WlInput from "../../../../packages/ui-kit/src/components/WlInput.vue";
 import type { SpecimenLanguage } from "./samples";
 import { gaviaFontFamily, gaviaWeights } from "./font";
 import type { GaviaFontStyle } from "./font";
@@ -22,7 +24,7 @@ const weights = gaviaWeights;
 const copy = {
   ru: {
     eyebrow: "05 / Семейство Gavia",
-    title: "Шесть начертаний",
+    title: "Шесть весов",
     description: "Одинаковые слова, разная плотность. От тонкой линии до уверенного акцента — сравните все шесть весов на заголовках, тексте и цифрах.",
     normal: "Прямое",
     italic: "Курсив",
@@ -51,6 +53,8 @@ const copy = {
 } as const;
 
 const content = computed(() => copy[props.language]);
+const styleOptions = computed(() => [{ label: content.value.normal, value: "normal" }, { label: content.value.italic, value: "italic" }]);
+function chooseStyle(value: string | null): void { if (value === "normal" || value === "italic") emit("update:fontStyle", value); }
 const sampleHeading = computed(() => customHeading.value.trim() ? customHeading.value : content.value.sampleHeading);
 const styleName = computed(() => fontStyle.value === "normal" ? content.value.normal : content.value.italic);
 </script>
@@ -64,17 +68,14 @@ const styleName = computed(() => fontStyle.value === "normal" ? content.value.no
         <p class="wl-weights-introduction">{{ content.description }}</p>
       </div>
       <div class="wl-weights-style-group">
-        <div class="wl-weights-style-controls" role="group" :aria-label="content.styleLabel">
-          <button class="wl-weights-style-button" :class="{ 'wl-weights-style-selected': fontStyle === 'normal' }" type="button" :aria-pressed="fontStyle === 'normal'" @click="emit('update:fontStyle', 'normal')">{{ content.normal }}</button>
-          <button class="wl-weights-style-button" :class="{ 'wl-weights-style-selected': fontStyle === 'italic' }" type="button" :aria-pressed="fontStyle === 'italic'" @click="emit('update:fontStyle', 'italic')">{{ content.italic }}</button>
-        </div>
+        <WlSegmented class="wl-weights-style-controls" :model-value="fontStyle" :options="styleOptions" :aria-label="content.styleLabel" @update:model-value="chooseStyle" />
         <p class="wl-weights-collection">{{ content.collection }}</p>
       </div>
     </header>
 
     <div class="wl-weights-custom-text">
       <label class="wl-weights-custom-label" for="wl-weights-custom-heading">{{ content.customTextLabel }}</label>
-      <input id="wl-weights-custom-heading" v-model="customHeading" class="wl-weights-custom-input" type="text" placeholder="Gavia · I l 1 O 0 · Ёё Йй Жж Дд Лл · 12 480 ₽" autocomplete="off" :spellcheck="false" />
+      <WlInput id="wl-weights-custom-heading" v-model="customHeading" class="wl-weights-custom-input" placeholder="Gavia · I l 1 O 0 · Ёё Йй Жж Дд Лл · 12 480 ₽" autocomplete="off" :spellcheck="false" />
     </div>
 
     <div class="wl-weights-list" :aria-label="`${content.title}: ${styleName}`">

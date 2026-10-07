@@ -1,8 +1,14 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import { samples } from "./samples";
 import type { SpecimenLanguage } from "./samples";
 import WeightSpecimens from "./WeightSpecimens.vue";
+import WlButton from "../../../../packages/ui-kit/src/components/WlButton.vue";
+import WlSelect from "../../../../packages/ui-kit/src/components/WlSelect.vue";
+import WlSlider from "../../../../packages/ui-kit/src/components/WlSlider.vue";
+import WlTextarea from "../../../../packages/ui-kit/src/components/WlTextarea.vue";
+import WlSegmented from "../../../../packages/ui-kit/src/components/WlSegmented.vue";
+import FontDownloadLink from "../project/FontDownloadLink.vue";
 import type { WlThemeName } from "../../../../packages/ui-kit/src/types";
 import type { PlaygroundView } from "../navigation";
 import { withPlaygroundTheme } from "../themes";
@@ -58,7 +64,13 @@ const copy = {
     installation: "Подключить шрифт",
     installationTitle: "Gavia в вашем приложении",
     installationDescription: "Подключите CSS шрифта в приложении. Тема Gavia выбирает эту гарнитуру для текста и заголовков; семейство можно использовать и в собственных стилях.",
-    installationImport: "Импорт шрифта",
+    installationImport: "Импорт из UI Kit",
+    standaloneImport: "Без UI Kit — из ZIP",
+    download: "Скачать Gavia 0.6",
+    downloadDetails: "ZIP · 12 начертаний · TTF + WOFF2 · CSS · лицензии",
+    packageNote: "В опубликованном gavia-ui@0.8.1 шрифта ещё нет. Импорт из пакета доступен в релизной ветке и появится в следующем выпуске; ZIP можно использовать уже сейчас.",
+    provenance: "Буквенная основа — производная Onest, цифры разработаны для Gavia. Наклонные начертания имеют геометрический наклон 7°.",
+    demoNote: "Интерактивный пример типографики. Данные не сохраняются.",
     installationFamily: "Семейство в CSS",
     installationNote: "Для самостоятельного использования достаточно файлов шрифта и CSS с font-family: Gavia. Vue и компоненты UI Kit не требуются. Шрифт распространяется по SIL Open Font License 1.1 (OFL); код UI Kit — по MIT.",
     formats: "TTF для приложений · WOFF2 для веба",
@@ -121,7 +133,13 @@ const copy = {
     installation: "Use the typeface",
     installationTitle: "Gavia in your application",
     installationDescription: "Import the font CSS in your application. The Gavia theme uses the typeface for text and headings; you can also use the family in your own styles.",
-    installationImport: "Font import",
+    installationImport: "Import from the UI kit",
+    standaloneImport: "Without the UI kit — from the ZIP",
+    download: "Download Gavia 0.6",
+    downloadDetails: "ZIP · 12 faces · TTF + WOFF2 · CSS · licenses",
+    packageNote: "The published gavia-ui@0.8.1 does not include this font yet. Package imports are available on the release branch and will ship in the next release; the ZIP is ready to use now.",
+    provenance: "Letterforms are derived from Onest; numerals were authored for Gavia. Oblique faces use a geometric 7° slope.",
+    demoNote: "Interactive typography example. No data is saved.",
     installationFamily: "CSS family",
     installationNote: "Standalone use only requires the font files and CSS with font-family: Gavia. Vue and UI kit components are not required. The font is distributed under SIL Open Font License 1.1 (OFL); the UI kit code uses MIT.",
     formats: "TTF for applications · WOFF2 for the web",
@@ -155,10 +173,15 @@ const copy = {
 } as const;
 
 const content = computed(() => copy[language.value]);
+const languageOptions = [{ label: "Русский", value: "ru" }, { label: "English", value: "en" }];
+const styleOptions = computed(() => [{ label: language.value === "ru" ? "Прямое" : "Upright", value: "normal" }, { label: language.value === "ru" ? "Курсив" : "Italic", value: "italic" }]);
+const weightOptions = computed(() => gaviaWeights.map(weight => ({ value: weight.value, label: weight.value + " — " + (language.value === "ru" ? weight.ru : weight.name) })));
+function chooseLanguage(value: string | null): void { if (value === "ru" || value === "en") language.value = value; }
+function chooseStyle(value: string | null): void { if (value === "normal" || value === "italic") fontStyle.value = value; }
+function chooseWeight(value: unknown): void { if (gaviaWeights.some(weight => weight.value === value)) proofWeight.value = value as GaviaFontWeight; }
+const standaloneCode = '<link rel="stylesheet" href="./gavia.css">\n<style>body { font-family: "Gavia", sans-serif; }</style>';
 const paragraphs = computed(() => samples[language.value].body.split("\n\n"));
 const proofSample = computed(() => proofText.value.trim() ? proofText.value : content.value.proofExample);
-const searchOpen = ref(false);
-const customText = ref("");
 const exampleBalance = computed(() => language.value === "ru" ? "12 480 ₽" : "€128.40");
 const playgroundUrl = computed(() => withPlaygroundTheme("?view=docs", props.theme));
 const numeralRows = computed(() => language.value === "ru" ? ["11 111,00", "88 888,00", "10 240,50"] : ["11,111.00", "88,888.00", "10,240.50"]);
@@ -169,34 +192,15 @@ function saveProject(): void {
   saved.value = true;
 }
 
-function handleSaveShortcut(event: KeyboardEvent): void {
-  if ((event.ctrlKey || event.metaKey) && event.code === "KeyS") {
-    event.preventDefault();
-    saveProject();
-  }
-}
-
-onMounted(() => {
-  window.addEventListener("keydown", handleSaveShortcut);
-});
-onBeforeUnmount(() => {
-  window.removeEventListener("keydown", handleSaveShortcut);
-});
 </script>
 
 <template>
   <div ref="pageElement" class="wl-type-page" data-testid="font-page" :lang="language" :data-font-style="fontStyle" :style="{ '--wl-type-sample-style': fontStyle }" data-wl="gavia-type-study">
     <main class="wl-type-shell">
       <section id="type-settings" class="wl-type-controls wl-type-controls-with-weights" :aria-label="language === 'ru' ? 'Настройки типографического примера' : 'Typography example settings'">
-        <div class="wl-type-languages" role="group" :aria-label="language === 'ru' ? 'Язык образцов' : 'Sample language'">
-          <button class="wl-type-language" :class="{ 'wl-type-language-selected': language === 'ru' }" type="button" :aria-pressed="language === 'ru'" @click="language = 'ru'">Русский</button>
-          <button class="wl-type-language" :class="{ 'wl-type-language-selected': language === 'en' }" type="button" :aria-pressed="language === 'en'" @click="language = 'en'">English</button>
-        </div>
-        <div class="wl-type-style-controls" role="group" :aria-label="language === 'ru' ? 'Начертание образцов' : 'Sample style'">
-          <button class="wl-type-language" :class="{ 'wl-type-language-selected': fontStyle === 'normal' }" type="button" :aria-pressed="fontStyle === 'normal'" @click="fontStyle = 'normal'">{{ language === "ru" ? "Прямое" : "Upright" }}</button>
-          <button class="wl-type-language" :class="{ 'wl-type-language-selected': fontStyle === 'italic' }" type="button" :aria-pressed="fontStyle === 'italic'" @click="fontStyle = 'italic'">{{ language === "ru" ? "Курсив" : "Italic" }}</button>
-        </div>
-        <a class="wl-type-link wl-weights-jump-link" href="#wl-type-weights">{{ language === "ru" ? "Шесть начертаний" : "Six weights" }} <span aria-hidden="true">↓</span></a>
+        <WlSegmented class="wl-type-languages" :model-value="language" :options="languageOptions" :aria-label="language === 'ru' ? 'Язык образцов' : 'Sample language'" @update:model-value="chooseLanguage" />
+        <WlSegmented class="wl-type-style-controls" :model-value="fontStyle" :options="styleOptions" :aria-label="language === 'ru' ? 'Начертание образцов' : 'Sample style'" @update:model-value="chooseStyle" />
+        <a class="wl-type-link wl-weights-jump-link" href="#wl-type-weights">{{ language === "ru" ? "Шесть весов" : "Six weights" }} <span aria-hidden="true">↓</span></a>
         <a class="wl-type-link wl-type-proof-link" href="#wl-type-proof">{{ content.proof }} <span aria-hidden="true">↓</span></a>
         <a class="wl-type-link wl-type-numbers-link" href="#wl-type-numbers">{{ content.numbers }} <span aria-hidden="true">↓</span></a>
         <a class="wl-type-link wl-type-install-link" href="#wl-type-install">{{ content.installation }} <span aria-hidden="true">↓</span></a>
@@ -207,6 +211,7 @@ onBeforeUnmount(() => {
           <p class="wl-type-section-label wl-type-detail">Gavia {{ gaviaRelease }} · 01 / {{ content.typeLabel }}</p>
           <h1 id="wl-type-hero-title" class="wl-type-display">{{ content.headline }}</h1>
           <p class="wl-type-direction">{{ content.direction }}</p>
+          <FontDownloadLink class="wl-type-hero-download">{{ content.download }}</FontDownloadLink>
         </div>
         <aside class="wl-type-side-note">
           <div class="wl-type-letterform" aria-hidden="true">Gg<span class="wl-type-letterform-dot">.</span></div>
@@ -269,17 +274,12 @@ onBeforeUnmount(() => {
           </div>
         </div>
         <div class="wl-type-ui-line">
-          <button class="wl-type-primary" type="button" :disabled="saved" @click="saveProject">{{ saved ? content.saved : content.save }}<kbd class="wl-type-hotkey wl-type-detail">Ctrl S</kbd></button>
+          <WlButton class="wl-type-demo-action" variant="primary" :disabled="saved" @click="saveProject">{{ saved ? content.saved : content.save }}</WlButton>
           <a class="wl-type-secondary" href="#type-settings">{{ content.settings }}</a>
-          <button class="wl-type-secondary wl-type-search-button" type="button" :aria-expanded="searchOpen" aria-controls="wl-type-custom-input" @click="searchOpen = !searchOpen"><svg class="wl-type-search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5" stroke="currentColor" stroke-width="1.4" /><path d="m12.5 12.5 4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" /></svg>{{ content.search }}</button>
           <span v-if="saved" class="wl-type-save-status" role="status">{{ content.saveStatus }}</span>
           <span v-else class="wl-type-ui-digits wl-type-detail">0123456789</span>
         </div>
-        <div v-if="searchOpen" id="wl-type-custom-input" class="wl-type-custom-sample">
-          <label class="wl-type-custom-label" for="wl-type-text-input">{{ content.searchLabel }}</label>
-          <input id="wl-type-text-input" v-model="customText" class="wl-type-custom-input" type="text" :placeholder="content.searchPlaceholder" />
-          <p v-if="customText" class="wl-type-custom-preview">{{ customText }}</p>
-        </div>
+        <p class="wl-type-demo-note">{{ content.demoNote }}</p>
         <div class="wl-type-glyph-row">
           <span class="wl-type-glyph-label wl-type-detail">{{ content.glyphLabel }}</span>
           <span class="wl-type-glyphs" lang="en">I l 1 O 0</span>
@@ -296,20 +296,18 @@ onBeforeUnmount(() => {
           <p class="wl-type-proof-description">{{ content.proofDescription }}</p>
         </header>
         <div class="wl-type-proof-controls">
-          <label class="wl-type-proof-control">
-            <span class="wl-type-proof-label">{{ content.proofWeight }}</span>
-            <select v-model="proofWeight" class="wl-type-proof-select">
-              <option v-for="weight in gaviaWeights" :key="weight.value" :value="weight.value">{{ weight.value }} — {{ language === "ru" ? weight.ru : weight.name }}</option>
-            </select>
-          </label>
+          <div class="wl-type-proof-control">
+            <label class="wl-type-proof-label" for="wl-type-proof-weight">{{ content.proofWeight }}</label>
+            <WlSelect id="wl-type-proof-weight" class="wl-type-proof-select" :model-value="proofWeight" :options="weightOptions" option-label="label" option-value="value" :aria-label="content.proofWeight" @update:model-value="chooseWeight" />
+          </div>
           <label class="wl-type-proof-size-control">
             <span class="wl-type-proof-label">{{ content.proofSize }} <output>{{ proofSize }} px</output></span>
-            <input v-model.number="proofSize" class="wl-type-proof-range" type="range" min="12" max="72" step="1" :aria-label="content.proofSize" />
+            <WlSlider v-model="proofSize" class="wl-type-proof-range" :min="12" :max="72" :step="1" :aria-label="content.proofSize" />
           </label>
         </div>
         <label class="wl-type-proof-text-control">
           <span class="wl-type-proof-label">{{ content.proofTextLabel }}</span>
-          <textarea v-model="proofText" class="wl-type-proof-textarea" rows="2" :placeholder="content.proofPlaceholder" :spellcheck="false"></textarea>
+          <WlTextarea v-model="proofText" class="wl-type-proof-textarea" :rows="2" :placeholder="content.proofPlaceholder" :spellcheck="false" />
         </label>
         <p class="wl-type-proof-sample" :data-weight="proofWeight" :data-size="proofSize" :data-font-style="fontStyle" :style="{ fontWeight: proofWeight, fontSize: proofSize + 'px' }">{{ proofSample }}</p>
         <div class="wl-type-alphabet-list" :style="{ '--wl-type-alphabet-weight': proofWeight }">
@@ -358,12 +356,21 @@ onBeforeUnmount(() => {
           <h2 id="wl-type-install-title" class="wl-type-install-title">{{ content.installationTitle }}</h2>
           <p class="wl-type-install-description">{{ content.installationDescription }}</p>
         </header>
+        <div class="wl-type-download-block">
+          <FontDownloadLink>{{ content.download }}</FontDownloadLink>
+          <span class="wl-type-download-details">{{ content.downloadDetails }}</span>
+        </div>
+        <p class="wl-type-install-note">{{ content.packageNote }}</p>
         <ul class="wl-type-install-specifications">
           <li class="wl-type-install-specification">{{ content.edition }}</li>
           <li class="wl-type-install-specification">{{ content.alphabets }}</li>
           <li class="wl-type-install-specification">{{ content.formats }}</li>
           <li class="wl-type-install-specification">{{ content.weights }}</li>
         </ul>
+        <div class="wl-type-install-example wl-type-standalone-example">
+          <p class="wl-type-install-caption">{{ content.standaloneImport }}</p>
+          <pre class="wl-type-install-code"><code>{{ standaloneCode }}</code></pre>
+        </div>
         <div class="wl-type-install-code-group">
           <div class="wl-type-install-example">
             <p class="wl-type-install-caption">{{ content.installationImport }}</p>
@@ -375,6 +382,7 @@ onBeforeUnmount(() => {
           </div>
         </div>
         <p class="wl-type-install-note">{{ content.installationNote }}</p>
+        <p class="wl-type-install-note">{{ content.provenance }}</p>
       </section>
 
       <footer class="wl-type-footer">

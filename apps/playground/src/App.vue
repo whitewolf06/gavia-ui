@@ -4,6 +4,7 @@ import { createPlaygroundUrl, isDocumentationSection, parsePlaygroundRoute, type
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import type { WlCommandPaletteGroup, WlCommandPaletteItem, WlThemeName } from "../../../packages/ui-kit/src";
 import PlaygroundHeader from "./PlaygroundHeader.vue";
+import FontDownloadLink from "./project/FontDownloadLink.vue";
 import { createPlaygroundThemeUrl, isPlaygroundTheme, parsePlaygroundTheme, playgroundThemeOptions } from "./themes";
 import gaviaMarkUrl from "../../../docs/brand/gavia-ui-mark-v2.png";
 import { gaviaProjectInfo as project } from "./project/project-info";
@@ -223,13 +224,14 @@ watch(theme, (value) => { document.documentElement.dataset.wlTheme = value; }, {
     <span>Gavia UI · v{{ project.version }} · <a :href="project.licenseUrl">MIT</a></span>
     <span>Автор: <a :href="project.author.url">{{ project.author.name }}</a></span>
     <a :href="project.repositoryUrl">GitHub</a>
+    <FontDownloadLink variant="secondary">Скачать шрифт Gavia</FontDownloadLink>
   </footer>
   <WlToast />
   <WlConfirmDialog />
 </template>
 <style>
 .pg-top { border-bottom: 1px solid var(--wl-border); position: sticky; top: 0; background: var(--wl-bg); z-index: var(--wl-layer-sticky); }
-.pg-footer { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; padding: 24px; border-top: 1px solid var(--wl-border); color: var(--wl-text-2); font-size: var(--wl-type-small-size); }
+.pg-footer { display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 12px 24px; padding: 24px; border-top: 1px solid var(--wl-border); color: var(--wl-text-2); font-size: var(--wl-type-small-size); }
 .pg-footer a { color: var(--wl-accent); text-underline-offset: 3px; }
 .pg-footer a:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 3px; }
 </style>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="230" height="44" viewBox="0 0 230 44" role="img" aria-labelledby="title">
+  <title id="title">Открыть Playground</title>
+  <rect width="230" height="44" rx="6" fill="#294451"/>
+  <path d="M18 14.5 30 22 18 29.5Z" fill="#fff"/>
+  <text x="43" y="22" fill="#fff" font-family="Arial, sans-serif" font-size="18" font-weight="400" dominant-baseline="central">Открыть Playground</text>
+</svg>

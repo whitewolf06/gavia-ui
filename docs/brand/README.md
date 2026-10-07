@@ -1,7 +1,9 @@
 # Gavia UI: исходники бренда
 
-Актуальный знак — [gavia-ui-mark-v2.png](gavia-ui-mark-v2.png): гагара в форме G,
-с круглым прозрачным глазом. Он используется в README и заголовке playground.
+Актуальный знак — [gavia-ui-mark-lake.svg](gavia-ui-mark-lake.svg): гагара в форме G,
+с круглым прозрачным глазом и основным озёрным цветом #294451.
+SVG сохраняет силуэт [gavia-ui-mark-v2.png](gavia-ui-mark-v2.png); форма не изменена.
+В шапке playground цвет знака берётся из темы, favicon использует основной цвет Gavia.
 Логотип с названием — [gavia-ui-logo-v2-eye.png](gavia-ui-logo-v2-eye.png).
 
 Изображения подготовлены через встроенный imagegen. Прозрачный фон и отверстия
@@ -55,3 +57,6 @@ hero остаётся HTML. Размер блоков определяется �
 контраст текста и мобильную обрезку во всех темах.
 
 Цветовая схема и контраст: [тема Gavia](../theme-gavia.md).
+
+Кнопка в GitHub README — [playground-button.svg](playground-button.svg):
+самостоятельный SVG с основным цветом Gavia и текстом «Открыть Playground».

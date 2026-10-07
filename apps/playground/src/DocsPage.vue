@@ -111,7 +111,10 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
                   <h3 class="docs-category-label">{{ group.label }}</h3>
                   <ul class="docs-catalog-list">
                     <li v-for="item in group.entries" :key="item.name">
-                      <button type="button" class="docs-component-link" :aria-label="item.name" :aria-current="component === item.name ? 'page' : undefined" @click="emit('component', item.name)"><span>{{ item.name }}</span></button>
+                      <button type="button" class="docs-component-link" :aria-label="item.name" :aria-describedby="'docs-catalog-version-' + item.name" :aria-current="component === item.name ? 'page' : undefined" @click="emit('component', item.name)">
+                        <span class="docs-component-name">{{ item.name }}</span>
+                        <span :id="'docs-catalog-version-' + item.name" class="docs-component-version" :title="'С версии ' + item.introducedIn">С {{ item.introducedIn }}</span>
+                      </button>
                     </li>
                   </ul>
                 </section>
@@ -225,6 +228,8 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 .docs-catalog-list { margin: 0; padding: 0; list-style: none; }
 .docs-component-link { display: flex; align-items: center; justify-content: space-between; gap: var(--wl-space-sm); width: 100%; min-height: 36px; padding: var(--wl-space-sm); border: 0; border-radius: var(--wl-corner-control); background: transparent; color: var(--wl-text); font: var(--wl-type-small-size)/1.4 var(--wl-font); text-align: left; cursor: pointer; }
 .docs-catalog-list .docs-component-link { min-height: 30px; padding: 6px var(--wl-space-sm); line-height: 1.25; }
+.docs-component-name { min-width: 0; overflow-wrap: anywhere; }
+.docs-component-version { flex: none; color: inherit; font-size: 11px; font-weight: 400; font-variant-numeric: tabular-nums; white-space: nowrap; }
 @media (pointer: coarse) { .docs-catalog-list .docs-component-link { min-height: 36px; } }
 .docs-component-link:hover { background: var(--wl-bg-soft); }
 .docs-component-link[aria-current="page"] { color: var(--wl-accent); background: var(--wl-accent-soft); }

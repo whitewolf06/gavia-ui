@@ -25,7 +25,7 @@ const sections = [
   { view: "home", label: "Главная", icon: "home" },
   { view: "docs", label: "Документация", icon: "book" },
   { view: "font", label: "Шрифт", icon: "book" },
-  { view: "system", label: "Дизайн-система", icon: "sliders-h" },
+  { view: "system", label: "Дизайн-система", icon: "grid" },
   { view: "theme-builder", label: "Подбор темы", icon: "sliders-h" },
   { view: "project", label: "Changelog", icon: "history" }
 ] as const satisfies ReadonlyArray<{ view: PlaygroundView; label: string; icon: WlIconName }>;
@@ -76,8 +76,7 @@ onBeforeUnmount(() => { cancelMenuFocus(); compactViewport?.removeEventListener(
 <template>
   <div class="pg-header-inner wl-container">
     <a class="pg-brand" :href="withPlaygroundTheme('?', theme)" aria-label="Gavia UI — главная" @click.prevent="navigate('home')">
-      <span v-if="theme === 'gavia'" class="pg-logo pg-logo-mask" aria-hidden="true" :style="{ maskImage: 'url(' + logo + ')', WebkitMaskImage: 'url(' + logo + ')' }" />
-      <img v-else class="pg-logo" :src="logo" alt="" width="36" height="36" />
+      <span class="pg-logo pg-logo-mask" aria-hidden="true" :style="{ maskImage: 'url(' + logo + ')', WebkitMaskImage: 'url(' + logo + ')' }" />
       <b class="pg-title">Gavia UI</b>
       <span class="pg-kit-version" :aria-label="'Версия UI Kit ' + version">v{{ version }}</span>
     </a>
@@ -124,8 +123,8 @@ onBeforeUnmount(() => { cancelMenuFocus(); compactViewport?.removeEventListener(
 .pg-brand:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 4px; }
 .pg-logo { width: 36px; height: 36px; display: block; object-fit: contain; flex: none; }
 .pg-logo-mask { background-color: var(--wl-action-primary-bg); mask-size: contain; mask-repeat: no-repeat; mask-position: center; }
-.pg-title { font-family: var(--wl-font-heading); font-size: 14.5px; }
-.pg-kit-version { padding: 3px 6px; border: 1px solid var(--wl-border); border-radius: var(--wl-radius-sm); color: var(--wl-text-2); font-family: var(--wl-mono); font-size: 11px; line-height: 1; }
+.pg-title { display: block; font-family: var(--wl-font-heading); font-size: 20px; font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.pg-kit-version { display: block; flex: none; padding: 3px 6px; border: 1px solid var(--wl-border); border-radius: var(--wl-radius-sm); color: var(--wl-text-2); font-family: var(--wl-mono); font-size: 11px; line-height: 1; }
 .pg-views { display: flex; flex-wrap: nowrap; justify-content: center; gap: 4px; min-width: 0; }
 .pg-views [aria-current="page"] { background: var(--wl-accent-soft); color: var(--wl-text); }
 .pg-actions { display: flex; justify-content: flex-end; align-items: center; gap: var(--wl-space-md); min-width: 0; }
@@ -158,7 +157,12 @@ onBeforeUnmount(() => { cancelMenuFocus(); compactViewport?.removeEventListener(
 @media (max-width: 400px) {
   .pg-brand { gap: 4px; }
   .pg-logo { width: 28px; height: 28px; }
-  .pg-title { font-size: 13px; }
   .pg-kit-version { font-size: 10px; padding-inline: 4px; }
+}
+@media (max-width: 370px) {
+  .pg-brand { display: grid; grid-template-columns: 28px auto; column-gap: 6px; row-gap: 2px; }
+  .pg-logo { grid-column: 1; grid-row: 1 / 3; }
+  .pg-title { grid-column: 2; grid-row: 1; }
+  .pg-kit-version { grid-column: 2; grid-row: 2; justify-self: start; }
 }
 </style>

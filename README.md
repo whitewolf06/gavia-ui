@@ -1,356 +1,127 @@
-<p><img src="docs/brand/gavia-ui-mark-v2.png" alt="Gavia UI" width="72" height="72"></p>
+<p align="center">
+  <img src="docs/brand/gavia-ui-mark-lake.svg" alt="Гагара — знак Gavia UI" width="80" height="80">
+</p>
 
 # Gavia UI
 
-A free, open source Vue 3 component library and design system.
+Ясный язык для ваших интерфейсов. Бесплатная библиотека компонентов и дизайн-система
+для Vue 3 + TypeScript: формы, данные, навигация и оверлеи с общими токенами,
+доступными состояниями и живыми примерами.
 
-[![Смотреть демо Gavia UI](https://img.shields.io/badge/LIVE_DEMO-2563EB?style=for-the-badge)](https://whitewolf06.github.io/gavia-ui/ "Смотреть демо Gavia UI")
+<p align="center">
+  <a href="https://whitewolf06.github.io/gavia-ui/"><img src="docs/brand/playground-button.svg" alt="Открыть Playground" width="230" height="44"></a><br>
+  · <a href="https://whitewolf06.github.io/gavia-ui/?view=docs">Документация</a>
+  · <a href="https://www.npmjs.com/package/gavia-ui">Пакет npm</a>
+</p>
 
-Независимая библиотека компонентов Vue 3 + TypeScript: 53 компонента,
-встроенные SVG-иконки, 442 дизайн-токена и четыре темы — Gavia, White, Graphite,
-Newspaper. В репозитории есть изолированный playground с живыми примерами и
-готовыми сценариями для форм, таблиц, навигации и оверлеев.
+<a href="https://whitewolf06.github.io/gavia-ui/">
+  <img src="docs/brand/gavia-lake-hero-v2.webp" alt="Тихое озеро на рассвете, туманный хвойный берег и гагара — оформление темы Gavia" width="1200">
+</a>
 
-**MIT:** бесплатно для личных и коммерческих проектов. Можно использовать,
-изменять и распространять при сохранении текста лицензии и уведомления
-об авторских правах. Полные условия — [LICENSE](LICENSE).
+В текущей ветке репозитория — **53 компонента, 113 SVG-иконок, 442 дизайн-токена
+и четыре темы:** Gavia, White, Graphite и Newspaper. Playground объединяет
+руководства по каждому компоненту, интерактивные настройки, копируемый Vue-код,
+готовые сценарии и подбор собственной палитры. В каталоге компонентов указана
+версия первой поставки каждого компонента.
 
-Runtime-зависимостей нет. **Vue 3 — единственный обязательный peer**.
-Стили подключаются явно. PrimeVue, PrimeIcons, роутер, хранилище состояния
-и API-клиенты для работы библиотеки не нужны.
+**Vue 3 — единственный обязательный peer.** Runtime-зависимостей нет;
+стили подключаются явно. Библиотека работает без дополнительных UI-пакетов,
+роутера, хранилища состояния и API-клиента.
 
-Пакет [gavia-ui](https://www.npmjs.com/package/gavia-ui) опубликован в публичном npm.
-Первый выпуск `0.7.0` — 2026-10-05 (Москва). Публичные `Wl*`, классы и токены сохраняются;
-[переход на Gavia UI](docs/migration-gavia.md).
+Новая озёрная тема Gavia и гарнитура **Gavia 0.6** готовятся в исходниках
+следующего выпуска; опубликованный npm-пакет `gavia-ui@0.8.1` их пока не содержит.
+В гарнитуре — кириллица и латиница, шесть весов с прямым и наклонным начертанием,
+TTF и WOFF2. [Тема и подключение](docs/theme-gavia.md) · [Шрифт и образцы](docs/font-gavia.md).
 
-[gavia-ui@0.7.1](https://www.npmjs.com/package/gavia-ui) опубликован в публичном npm
-2026-10-05 (Москва) через GitHub Actions и OIDC.
-[Изменения 0.7.1](CHANGELOG.md) · [Подтверждённый выпуск и правила релиза](docs/releases.md).
+## Быстрый старт
 
-Версия `0.7.0`: [изменения и переход](docs/migration-0.7.md).
-Текущая опубликованная версия — `0.8.1`; установка в Vue-приложении: `pnpm add gavia-ui@0.8.1`.
-Версия 0.8.1 опубликована 2026-10-06 (Москва): [переход потребителя](docs/migration-0.8.md)
-и [проверенный выпуск](docs/releases.md#выпуск-081). Версия 0.8.0 не публиковалась в npm.
-История дизайн-системы 0.6.0 — [миграция 0.6](docs/migration-0.6.md).
-[Дизайн-система](docs/design-system.md) · [Changelog](CHANGELOG.md)
-· [Правила участия](CONTRIBUTING.md)
-
-## Создатель и публичная витрина
-
-Создатель и сопровождающий — [Gorbach Dmitry](https://github.com/whitewolf06).
-Участие в развитии проекта описано в [CONTRIBUTING.md](CONTRIBUTING.md).
-
-Playground открывается с главной страницы: установка, версия, основные разделы
-и автор. Docs (`?view=docs`) содержит типографику, layout/сетку, адаптивность, content/тексты,
-иконки, цвета и руководства по всем 53 компонентам. Каждая страница компонента
-объединяет интерактивные настройки, живой пример, расширенные сценарии с кодом,
-API и правила доступности. Подпункты текущего раздела выделяются при прокрутке.
-Дизайн-система доступна по `?view=system`, история — по `?view=changelog`.
-Старые адреса `?view=components` и якоря компонентов открывают соответствующую
-страницу Docs; `?view=project` продолжает открывать историю. Автор, лицензия
-и участие в проекте собраны на главной. Changelog на сайте читается напрямую
-из корневого `CHANGELOG.md`. [Архитектура и правила Docs](docs/playground.md).
-[Базовые CSS-примитивы](docs/primitives.md): варианты контейнеров, компоновка,
-локальная прокрутка и правила слоёв. Стили подключаются из `gavia-ui/styles/primitives.css`.
-[Адаптивность](docs/responsiveness.md): брейкпоинты, media/container queries,
-локальная настройка сетки и согласование CSS с поведением компонентов.
-
-Публичная витрина опубликована в GitHub Pages: [Gavia UI](https://whitewolf06.github.io/gavia-ui/).
-[Changelog](https://whitewolf06.github.io/gavia-ui/?view=changelog) доступен на сайте.
-[Настройка и проверка публикации](docs/hosting.md).
-
-## Структура
-
-```
-packages/ui-kit   — публикуемый пакет gavia-ui
-apps/playground   — изолированное приложение для разработки и проверки
-```
-
-Требования: Node.js >= 18, pnpm 10 (единственный package manager в репозитории).
-
-```bash
-pnpm install            # установка всех зависимостей workspace
-pnpm build              # сборка библиотеки (ESM + TypeScript declarations)
-pnpm test               # тесты библиотеки (Vitest + Vue Test Utils)
-pnpm dev                # playground в dev-режиме
-pnpm build:playground   # сборка playground
-pnpm build:pages        # production-сборка для /gavia-ui/
-pnpm test:pages         # desktop/mobile smoke production-сборки Pages
-pnpm typecheck          # проверка типов библиотеки и playground
-pnpm test:e2e           # Chromium, Firefox, WebKit и мобильный Chromium
-pnpm test:visual        # сравнение desktop/mobile с эталонами трёх тем (Windows)
-pnpm icons:check        # проверка SVG-каталога и сгенерированного реестра
-pnpm tokens:sync        # обновление CSS, тем и каталогов из source.json
-pnpm tokens:check       # слои, ссылки, контраст и актуальность дизайн-токенов
-pnpm run pack          # tar-архив пакета (без публикации); важно: именно `run pack`, см. ниже
-pnpm verify:package     # изолированный потребитель архива с одним Vue
-pnpm verify:dependencies # отсутствие PrimeVue/PrimeIcons в коде и зависимостях
-```
-
-После установки в чистом checkout сначала выполните `pnpm build`: playground
-использует публичные типы пакета из `dist`. Сборка требуется перед `typecheck`,
-запуском витрины и браузерными тестами; CI выполняет её в каждом таком job.
-
-> **Примечание.** pnpm выполняет одноимённую builtin-команду вместо script'а:
-> голый `pnpm pack` в корне упакует корневой проект, а не библиотеку.
-> Для архива `gavia-ui` используйте `pnpm run pack`.
-
----
-
-## Пакет gavia-ui
-
-### Установка
-
-Пакет [gavia-ui@0.8.1](https://www.npmjs.com/package/gavia-ui) доступен в публичном **npm**:
+Установите опубликованную версию в Vue-приложение:
 
 ```bash
 pnpm add gavia-ui@0.8.1 vue
 ```
 
-GitHub PAT и специальный scope registry для нового пакета не требуются.
-Архив также можно собрать из исходников:
-
-```bash
-git clone https://github.com/whitewolf06/gavia-ui.git
-cd gavia-ui
-pnpm install
-pnpm build
-pnpm run pack
-# В приложении-потребителе:
-pnpm add /absolute/path/to/gavia-ui/packages/ui-kit/gavia-ui-0.8.1.tgz vue
-```
-
-Текущая версия кода — `0.8.1`; имя архива определяется версией в манифесте.
-История и действия при обновлении — [CHANGELOG.md](CHANGELOG.md).
-Порядок следующих выпусков — [docs/releases.md](docs/releases.md).
-
-### Peer dependencies
-
-Пакет не тащит за собой фреймворк — приложение-потребитель предоставляет его само,
-поэтому дублирующего экземпляра Vue не возникает:
-
-| Пакет        | Версия | Обязательность            |
-| ------------ | ------ | ------------------------- |
-| `vue`        | ^3.4   | обязательный peer         |
-
-## Подключение (минимальная интеграция)
-
-Библиотека использует Vue 3 и не требует установки других UI-пакетов:
+Подключите стили в точке входа и выберите тему:
 
 ```ts
 // main.ts
 import { createApp } from "vue";
-import { WlConfig, WlToastService, WlConfirmationService, wlLocaleRu } from "gavia-ui";
-
-// Стили подключаются явно: reset → base → тема
 import "gavia-ui/styles/reset.css";
 import "gavia-ui/styles/base.css";
+import "gavia-ui/styles/primitives.css";
 import "gavia-ui/themes/white.css";
-
 import App from "./App.vue";
 
-const app = createApp(App);
-app.use(WlConfig, { locale: wlLocaleRu });
-app.use(WlToastService);
-app.use(WlConfirmationService);
-app.mount("#app");
+createApp(App).mount("#app");
 ```
 
 ```vue
-<!-- Именованный импорт компонентов -->
 <script setup lang="ts">
-import { ref } from "vue";
-import { WlButton, WlInput, WlTag } from "gavia-ui";
-
-const text = ref("");
+import { WlButton } from "gavia-ui";
 </script>
 
 <template>
-  <WlButton variant="primary" size="md">Создать</WlButton>
-  <WlInput v-model="text" placeholder="Название задачи" />
-  <WlTag variant="blue">Релиз 2.0</WlTag>
+  <WlButton>Создать проект</WlButton>
 </template>
 ```
 
-`WlConfig` необязателен: без него используются стандартные `pt` и русская локаль.
-Сервисы уведомлений и подтверждений устанавливаются отдельно, если используются.
-Их состояние принадлежит каждому экземпляру Vue-приложения. Переход с версии 0.3
-описан в [руководстве по миграции](docs/migration-0.5.md).
+White включена в опубликованную версию; для Graphite или Newspaper импортируйте
+соответствующий CSS и установите `data-wl-theme` на корневом элементе.
+[Подробное подключение, API и доступность](https://whitewolf06.github.io/gavia-ui/?view=docs).
 
-Анимация всплывающих элементов включена по умолчанию. Отключить её во всём
-приложении можно через `app.use(WlConfig, { motion: false })`, а для отдельного
-компонента — через `:motion="false"`. Поддерживаются системные настройки
-уменьшения движения. Подробности — в [документации пакета](packages/ui-kit/README.md#анимация-оверлеев).
+## Документация и участие
 
-## Subpath exports
+- [Руководства компонентов](https://whitewolf06.github.io/gavia-ui/?view=docs) — примеры, настройки, API и клавиатурные состояния.
+- [Дизайн-система](docs/design-system.md) — токены, типографика, состояния и готовые сценарии.
+- [CSS-примитивы](docs/primitives.md) и [адаптивность](docs/responsiveness.md) — компоновка и правила размеров.
+- [Тема Gavia](docs/theme-gavia.md) и [шрифт Gavia](docs/font-gavia.md) — оформление следующего выпуска.
+- [Changelog](CHANGELOG.md), [миграция 0.8](docs/migration-0.8.md) и [проверенные выпуски](docs/releases.md) — история и обновление приложения.
+- [Архитектура playground](docs/playground.md) и [публикация Pages](docs/hosting.md).
 
-```jsonc
-{
-  "gavia-ui":                 "ESM + .d.ts (компоненты, типы, createWlPt)",
-  "gavia-ui/styles/base.css": "токены + стили компонентов (CSS Layers)",
-  "gavia-ui/styles/reset.css":"минимальный reset (отдельный слой)",
-  "gavia-ui/styles/fonts/gavia.css": "явная регистрация 12 начертаний Gavia",
-  "gavia-ui/fonts/gavia/<file>": "WOFF2, TTF и OFL notices",
-  "gavia-ui/themes/<theme>.css": "тема: gavia | white | graphite | newspaper"
-}
+Создатель и сопровождающий — [Gorbach Dmitry](https://github.com/whitewolf06).
+Идеи, ошибки и улучшения принимаются в [GitHub Issues](https://github.com/whitewolf06/gavia-ui/issues);
+порядок участия — [CONTRIBUTING.md](CONTRIBUTING.md).
+
+**Код UI Kit — MIT:** бесплатно для личных и коммерческих проектов, с сохранением
+текста лицензии и уведомления об авторских правах. Полные условия — [LICENSE](LICENSE).
+**Файлы шрифта — SIL OFL 1.1:** [лицензия гарнитуры](packages/ui-kit/fonts/gavia/OFL.txt).
+
+## Разработка
+
+`packages/ui-kit` — публикуемая библиотека; `apps/playground` — приложение для
+разработки и проверки. Требуются Node.js ≥ 18 и pnpm 10.
+
+```bash
+pnpm install
+pnpm build              # ESM + TypeScript declarations
+pnpm dev                # playground
+pnpm test               # Vitest + Vue Test Utils
+pnpm typecheck
+pnpm build:playground
+pnpm run pack           # архив библиотеки без публикации
+pnpm verify:package     # проверка архива в изолированном Vue-приложении
 ```
 
-## Система стилизации
+В чистом checkout сначала выполните `pnpm build`: playground использует типы
+из `dist`. Для архива библиотеки нужен именно `pnpm run pack`; голый `pnpm pack`
+в корне упакует workspace. Проверки браузеров, токенов, иконок и Pages описаны в
+[правилах участия](CONTRIBUTING.md), [playground](docs/playground.md)
+и [руководстве публикации](docs/hosting.md). Публикация пакета — отдельный шаг:
+[правила релизов](docs/releases.md).
 
-### Шрифт Gavia
+## Контракты и темизация
 
-В релизной ветке гарнитура Gavia 0.6 включена в пакет: 6 весов × 2 стиля,
-кириллица и латиница, WOFF2 и TTF. Тема Gavia использует её как основной шрифт.
-Подключение остаётся явным: `import "gavia-ui/styles/fonts/gavia.css";`.
-Файлы доступны через `gavia-ui/fonts/gavia/<file>` и применимы без Vue.
-Шрифты лицензированы отдельно под SIL OFL 1.1; код UI-кита — MIT.
-[Подключение, образцы и лицензия](docs/font-gavia.md).
-Playground показывает гарнитуру в отдельном разделе «Шрифт» (`?view=font`).
+Компоненты используют общий контракт: `variant`, `size`, `density`, явные
+состояния, `class`/`style`, слоты и `data-wl`/`data-variant`/`data-size`.
+`WlConfig` необязателен; сервисы уведомлений и подтверждений подключаются
+отдельно и принадлежат конкретному Vue-приложению. Настройки `pt` объединяются
+в порядке default → `WlConfig.pt` → `pt` экземпляра; `class` и `style` мержатся.
+[API и интеграция](packages/ui-kit/README.md) · [Публичный DOM и pt](docs/architecture.md#pt-и-публичный-dom).
 
-### Дизайн-система
-
-В playground выберите **Дизайн-система** (или откройте `?view=system`): основы,
-типографика, отступы, каталог токенов, контракты всех компонентов, рабочие
-паттерны и отчёт контраста Gavia / White / Graphite / Newspaper. Для каждого компонента
-есть живой Vue-пример, применимые состояния и код с копированием. Шесть рецептов
-показывают список с CRUD, форму, настройки, деталь, пошаговую форму и вложения.
-Отдельно доступны сложный контент и вложенные оверлеи. Правила и интеграция —
-[docs/design-system.md](docs/design-system.md).
-
-`tokens/source.json` — единый источник для CSS, тем, типизированного API
-`wlDesignTokens` / `resolveWlToken` и экспорта `gavia-ui/design-tokens.json`.
-Примитивы `wl-stack`, `wl-inline`, `wl-grid`, `wl-surface`, `wl-text-*` доступны
-через явный импорт `gavia-ui/styles/primitives.css`.
-
-### Токены `--wl-*`
-
-Все переменные живут в namespace `--wl-*` и разделены на три уровня:
-
-1. **Foundation** — сырые значения: палитра (`--wl-gray-*`, `--wl-blue-*`), радиусы,
-   тени, длительности, шрифты. Меняются редко.
-2. **Semantic** — смысловые роли: `--wl-bg`, `--wl-text`, `--wl-accent`,
-   `--wl-success`, … Ссылаются на foundation. Именно их переопределяют темы.
-3. **Component** — токены уровня компонента: `--wl-btn-height`, `--wl-input-radius`, …
-   Ссылаются на semantic. Позволяют точечно настраивать компонент.
-
-### Темы
-
-Тема — это набор semantic/foundation токенов, поставляемый отдельным CSS-файлом.
-Gavia — новое основное оформление playground: тёплые нейтральные поверхности
-и серо-синее основное действие. White, Graphite и Newspaper сохранены; базовые стили
-по-прежнему используют White для обратной совместимости.
-
-Тема Gavia пока в разделе «Не выпущено»; npm `0.8.1` её не содержит.
-[Цветовая схема и подключение Gavia](docs/theme-gavia.md).
-Переключение двумя способами:
-
-```html
-<!-- 1. Атрибут (темы должны быть импортированы заранее) -->
-<html data-wl-theme="graphite">
-```
-
-```ts
-// 2. Явный импорт только одной темы
-import "gavia-ui/themes/graphite.css";
-```
-
-Газетная тема из комплекта:
-
-```ts
-import "gavia-ui/themes/newspaper.css";
-```
-
-```html
-<html data-wl-theme="newspaper">
-```
-
-Она сочетает почти белый бумажный фон, почти чёрные «чернила», антиквенные
-заголовки с нейтральным sans-serif интерфейсным текстом, тонкие границы и
-сдержанную геометрию. Компоненты и их DOM-контракт при этом не меняются.
-
-### Своя тема без форка
-
-Новый проект создаёт свою тему **заменой токенов** — без форка компонентов
-и без изменения исходников библиотеки:
-
-```css
-/* my-theme.css */
-[data-wl-theme="my-brand"] {
-  --wl-accent: #7c3aed;
-  --wl-accent-hover: #6d28d9;
-  --wl-accent-soft: #f3effd;
-  --wl-accent-border: #ddd0f8;
-  --wl-radius: 10px;
-}
-```
-
-### Переопределение токенов
-
-```css
-/* глобально */
-:root {
-  --wl-btn-height: 36px;
-}
-
-/* локально, на поддереве */
-.compact-panel {
-  --wl-btn-height: 30px;
-  --wl-input-height: 30px;
-}
-```
-
-### CSS Layers
-
-Стили разложены по слоям: `@layer wl.reset, wl.tokens, wl.components;`
-Стили проекта-потребителя (вне слоёв или в слоях ниже) предсказуемо
-переопределяют стили kit — военные действия специфичности не нужны.
-
-## Единый контракт компонентов
-
-Каждый компонент поддерживает одинаковый набор входов:
-
-| Вход              | Описание                                                        |
-| ----------------- | --------------------------------------------------------------- |
-| `variant`         | внешний вид: `primary`, `secondary`, `ghost`, `soft`, `danger`, … |
-| `size`            | размер: `xs`, `sm`, `md`, `lg`                                  |
-| `density`         | плотность: `default`, `compact`                                 |
-| states            | `disabled`, `loading`, `invalid` — явные props                  |
-| `class` / `style` | пробрасываются на корневой элемент (fallthrough)                |
-| slots             | контентные слоты (`default`, `icon`, `prefix`, `suffix`, …)     |
-| data-attributes   | `data-wl="<name>"`, `data-variant`, `data-size` на корне        |
-
-CSS-классы стабильны, namespaced и с низкой специфичностью:
-`wl-btn`, `wl-btn--primary`, `wl-btn--sm`, состояния — `is-loading`, `is-disabled`.
-
-## Pass-through (`pt`)
-
-`pt` — открытая, расширяемая настройка, а не закрытая внутри библиотеки:
-
-```ts
-import { WlConfig } from "gavia-ui";
-
-app.use(WlConfig, {
-  pt: {
-    button: { root: { "data-test": "app-button" } },
-  },
-});
-```
-
-```vue
-<!-- точечно, на одном экземпляре -->
-<WlButton :pt="{ root: { 'aria-label': 'Создать задачу' } }">Создать</WlButton>
-```
-
-`createWlPt()` возвращает дефолтную карту и принимает переопределения для
-совместимости. Порядок применения к каждому DOM-разделу: дефолт → `WlConfig.pt`
-→ `pt` экземпляра. `class` и `style` объединяются; прочие атрибуты последнего
-уровня перекрывают предыдущие. Разделы перечислены в
-[архитектурном руководстве](docs/architecture.md#pt-и-публичный-dom).
-
-## Правила потребления
-
-- Reset и стили **не** импортируются автоматически — подключайте явно.
-- Типографика, цвета и поведение меняются токенами, а не форком компонентов.
-- В библиотеке нет Pinia, роутера, API-клиентов и бизнес-логики — и не будет.
-- Исходные SVG и пакетное добавление иконок: [docs/icons.md](docs/icons.md).
-- Архитектурные правила и практическое применение SOLID: [docs/architecture.md](docs/architecture.md).
+Темы и локальные настройки используют CSS-переменные `--wl-*`:
+foundation → semantic → component. Слои `wl.reset`, `wl.tokens`,
+`wl.components` позволяют переопределять оформление в проекте.
+Источник токенов — `packages/ui-kit/tokens/source.json`; CSS и каталоги
+обновляются через `pnpm tokens:sync`. Для своей темы переопределите токены
+и выберите `data-wl-theme`, сохраняя компоненты и их DOM-контракт.
+[Токены, темы и готовые сценарии](docs/design-system.md).

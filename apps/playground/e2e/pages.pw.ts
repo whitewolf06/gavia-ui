@@ -2,6 +2,7 @@ import { resolveWlToken, wlDesignThemes } from "../../../packages/ui-kit/src/des
 import { expect, test, type Page } from "@playwright/test";
 import { copyCodePanel, chooseShowcaseTheme, navigateDocumentationComponent, navigateMainView } from "./select-helpers";
 import { readFileSync } from "node:fs";
+import { expectGaviaFontDownload } from "./font-download-helpers";
 import { fileURLToPath, URL as NodeURL } from "node:url";
 
 const packageMetadata = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../../../packages/ui-kit/package.json", import.meta.url)), "utf8")) as { name: string; version: string };
@@ -355,4 +356,16 @@ test("font presentation preserves theme, faces and anchors under the Pages subpa
   expectPagesLocation(page, "font");
   expect(new URL(page.url()).searchParams.get("theme")).toBe("gavia");
   await expectNoPageOverflow(page);
+});
+
+
+test("standalone font ZIP downloads from the Pages subpath and footer", async ({ page }) => {
+  await page.goto(pagesPath + "?view=font&theme=gavia");
+  const font = page.getByTestId("font-page");
+  await expect(font).toBeVisible();
+  const link = font.getByRole("link", { name: "Скачать Gavia 0.6", exact: true }).first();
+  await expect(link).toHaveAttribute("href", pagesPath + "downloads/Gavia-0.6.zip");
+  await expectGaviaFontDownload(page, link);
+  const footer = page.locator(".pg-footer").getByRole("link", { name: "Скачать шрифт Gavia", exact: true });
+  await expect(footer).toHaveAttribute("href", pagesPath + "downloads/Gavia-0.6.zip");
 });

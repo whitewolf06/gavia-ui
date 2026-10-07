@@ -7,7 +7,6 @@ import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
 import { wlDesignThemes, wlDesignTokens } from "../../../packages/ui-kit/src/design-system";
 import gaviaMarkUrl from "../../../docs/brand/gavia-ui-mark-v2.png";
-import gaviaHeroPreviousUrl from "../../../docs/brand/gavia-lake-hero-v1.png";
 import gaviaHeroUrl from "../../../docs/brand/gavia-lake-hero-v2.webp";
 import gaviaForestUrl from "../../../docs/brand/gavia-forest-card-v1.webp";
 import gaviaReedsUrl from "../../../docs/brand/gavia-reeds-card-v1.webp";
@@ -24,7 +23,7 @@ const pageElement = ref<HTMLElement | null>(null);
 usePageAnchor(pageElement);
 
 const emit = defineEmits<{
-  navigate: [view: "docs" | "system" | "project" | "theme-builder"];
+  navigate: [view: "docs" | "font" | "system" | "project" | "theme-builder"];
   catalog: [];
   component: [name: string];
 }>();
@@ -72,9 +71,9 @@ createApp(App).mount("#app");`;
 </script>
 
 <template>
-  <main ref="pageElement" class="home-page" :class="{ 'home-page--gavia': theme === 'gavia' }" data-testid="home-page" aria-labelledby="home-title">
+  <main ref="pageElement" class="home-page" data-testid="home-page" aria-labelledby="home-title">
     <header class="home-hero">
-      <img class="home-hero-art" :src="theme === 'gavia' ? gaviaHeroUrl : gaviaHeroPreviousUrl" alt="" aria-hidden="true" :width="theme === 'gavia' ? 2172 : 1774" :height="theme === 'gavia' ? 724 : 887" fetchpriority="high" decoding="async" />
+      <img class="home-hero-art" :src="gaviaHeroUrl" alt="" aria-hidden="true" width="2172" height="724" fetchpriority="high" decoding="async" />
       <div class="home-hero-content wl-container">
       <div class="home-intro wl-stack" data-space="lg">
         <div class="home-kicker wl-inline" data-space="sm">
@@ -88,12 +87,15 @@ createApp(App).mount("#app");`;
           <a class="home-action home-action--primary" :href="themedHref('?view=docs')" @click.prevent="emit('navigate', 'docs')">Читать документацию <WlIcon name="arrow-right" :size="18" /></a>
           <a class="home-action home-action--secondary" :href="themedHref('?view=docs#docs-components')" @click.prevent="emit('catalog')">Все компоненты</a>
         </nav>
+        <div class="home-font-entry">
+          <WlButton size="sm" variant="soft" @click="emit('navigate', 'font')"><template #icon><WlIcon name="book" :size="16" /></template>Шрифт Gavia</WlButton>
+          <span class="wl-text-small">6 весов · 12 начертаний</span>
+        </div>
         <p class="home-credit wl-text-small wl-text-muted">Автор — <a class="home-text-link" :href="project.author.url">{{ project.author.name }}</a>. <a class="home-text-link" :href="project.licenseUrl">{{ project.license }}</a> · <a class="home-text-link" :href="project.repositoryUrl">GitHub <WlIcon name="external-link" :size="13" /></a></p>
       </div>
       <section class="home-install-card wl-stack" data-space="lg" aria-labelledby="home-install-title" data-testid="project-npm-status">
         <div class="home-install-brand">
-          <span v-if="theme === 'gavia'" class="home-mark home-mark-mask" aria-hidden="true" :style="{ maskImage: 'url(' + gaviaMarkUrl + ')', WebkitMaskImage: 'url(' + gaviaMarkUrl + ')' }" />
-          <img v-else class="home-mark" :src="gaviaMarkUrl" alt="" width="80" height="80" />
+          <span class="home-mark home-mark-mask" aria-hidden="true" :style="{ maskImage: 'url(' + gaviaMarkUrl + ')', WebkitMaskImage: 'url(' + gaviaMarkUrl + ')' }" />
           <div class="wl-stack" data-space="xs"><p class="wl-text-subheading">Начните с установки</p><p v-if="project.npmPublished" class="wl-text-small wl-text-muted">Пакет <a class="home-text-link" :href="project.packageUrl">{{ project.packageName }}@{{ project.publishedVersion }}</a> опубликован в публичном npm.</p><p v-else class="wl-text-small wl-text-muted">Первый выпуск {{ project.packageName }} в публичном npm ещё не опубликован. Установка из исходников описана в инструкции ниже.</p></div>
         </div>
         <h2 id="home-install-title" class="wl-text-heading">Добавьте Gavia UI в проект</h2>
@@ -133,7 +135,7 @@ createApp(App).mount("#app");`;
       <h2 id="home-project-title" class="wl-text-title">Свободно для ваших проектов</h2>
       <div class="home-project-grid">
         <article class="home-project-panel home-project-panel--forest">
-          <img v-if="theme === 'gavia'" class="home-project-art" :src="gaviaForestUrl" alt="" aria-hidden="true" width="2172" height="724" loading="lazy" decoding="async" />
+          <img class="home-project-art" :src="gaviaForestUrl" alt="" aria-hidden="true" width="2172" height="724" loading="lazy" decoding="async" />
           <span class="home-project-icon" aria-hidden="true"><WlIcon name="heart" :size="25" /></span>
           <div class="home-project-copy wl-stack" data-space="md">
             <h3 class="wl-text-heading">Бесплатно, включая коммерческое использование</h3>
@@ -146,7 +148,7 @@ createApp(App).mount("#app");`;
           </div>
         </article>
         <article class="home-project-panel home-project-panel--reeds">
-          <img v-if="theme === 'gavia'" class="home-project-art" :src="gaviaReedsUrl" alt="" aria-hidden="true" width="2172" height="724" loading="lazy" decoding="async" />
+          <img class="home-project-art" :src="gaviaReedsUrl" alt="" aria-hidden="true" width="2172" height="724" loading="lazy" decoding="async" />
           <span class="home-project-icon" aria-hidden="true"><WlIcon name="users" :size="25" /></span>
           <div class="home-project-copy wl-stack" data-space="md">
             <h3 class="wl-text-heading">Участвуйте в развитии</h3>
@@ -169,17 +171,33 @@ createApp(App).mount("#app");`;
 </template>
 
 <style>
-.home-page { overflow-wrap: anywhere; }
-.home-hero { position: relative; isolation: isolate; padding-block: var(--wl-space-3xl); overflow: hidden; }
+.home-page {
+  --wl-font: "Gavia", "Segoe UI", Arial, sans-serif;
+  --wl-font-heading: var(--wl-font);
+  --wl-type-display-family: var(--wl-font);
+  --wl-type-title-family: var(--wl-font);
+  --wl-type-heading-family: var(--wl-font);
+  --wl-type-subheading-family: var(--wl-font);
+  --wl-type-body-family: var(--wl-font);
+  --wl-type-small-family: var(--wl-font);
+  --wl-type-label-family: var(--wl-font);
+  --wl-corner-surface: 6px;
+  --wl-corner-control: 4px;
+  --wl-btn-radius: 4px;
+  overflow-wrap: anywhere;
+  font-family: var(--wl-font);
+}
+.home-hero { position: relative; isolation: isolate; min-height: 450px; padding-block: 40px; overflow: hidden; background: var(--wl-bg); border-bottom: 1px solid var(--wl-border); }
 .home-hero-art { position: absolute; inset: 0; z-index: -2; display: block; width: 100%; height: 100%; object-fit: cover; object-position: right center; }
-.home-hero::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(90deg, color-mix(in srgb, var(--wl-bg) 96%, transparent) 0%, color-mix(in srgb, var(--wl-bg) 92%, transparent) 44%, color-mix(in srgb, var(--wl-bg) 25%, transparent) 100%); }
-.home-hero-content { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: var(--wl-space-3xl); align-items: center; }
+.home-hero-content { display: grid; grid-template-columns: minmax(0, 450px) minmax(0, 420px) minmax(0, 1fr); gap: 32px; align-items: center; }
 .home-content { padding-bottom: var(--wl-space-4xl); }
-.home-intro { min-width: 0; gap: var(--wl-space-md); }
+.home-intro { position: relative; isolation: isolate; min-width: 0; gap: var(--wl-space-md); }
+.home-intro::before { content: ""; position: absolute; inset: -32px -40px; z-index: -1; pointer-events: none; background: radial-gradient(ellipse at 44% 50%, color-mix(in srgb, var(--wl-bg) 94%, transparent) 0%, color-mix(in srgb, var(--wl-bg) 88%, transparent) 65%, color-mix(in srgb, var(--wl-bg) 78%, transparent) 80%, transparent 100%); filter: blur(16px); }
+.home-font-entry { display: flex; flex-wrap: wrap; align-items: center; gap: var(--wl-space-md); color: var(--wl-text); }
 .home-chip { padding: var(--wl-space-xs) var(--wl-space-sm); border: 1px solid var(--wl-accent-border); border-radius: var(--wl-corner-control); background: var(--wl-accent-soft); color: var(--wl-text); font-size: var(--wl-type-small-size); }
 .home-title { margin: 0; font-family: var(--wl-type-display-family); font-size: clamp(var(--wl-type-display-size), 6.5vw, 80px); font-weight: var(--wl-type-display-weight); line-height: 1.06; letter-spacing: -0.045em; color: var(--wl-text); }
 .home-tagline { margin: 0; font-size: var(--wl-type-heading-size); line-height: var(--wl-type-heading-line-height); color: var(--wl-text); }
-.home-lead { max-width: 56ch; }
+.home-lead { max-width: 56ch; color: var(--wl-text); }
 .home-action { display: inline-flex; justify-content: center; align-items: center; gap: var(--wl-space-sm); min-height: var(--wl-control-height-md); padding: var(--wl-space-sm) var(--wl-space-lg); border: 1px solid var(--wl-border); border-radius: var(--wl-btn-radius); text-decoration: none; font-size: var(--wl-type-body-size); font-weight: 600; transition: background-color 150ms ease, border-color 150ms ease; max-width: 100%; text-align: center; }
 .home-action--primary { background: var(--wl-action-primary-bg); border-color: var(--wl-action-primary-bg); color: var(--wl-action-primary-text); }
 .home-action--primary:hover { background: var(--wl-action-primary-hover); border-color: var(--wl-action-primary-hover); }
@@ -190,8 +208,8 @@ createApp(App).mount("#app");`;
 .home-text-link:hover { color: var(--wl-accent-hover); }
 .home-text-link .wl-icon { display: inline-block; vertical-align: -0.15em; }
 .home-action:focus-visible, .home-text-link:focus-visible, .home-section-card:focus-visible, .home-manual-copy:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 4px; }
-.home-credit { line-height: var(--wl-type-body-line-height); }
-.home-install-card { min-width: 0; border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); padding: var(--wl-space-xl); background: linear-gradient(140deg, var(--wl-accent-soft), var(--wl-bg-soft) 65%); box-shadow: var(--wl-elevation-surface); }
+.home-credit { line-height: var(--wl-type-body-line-height); color: var(--wl-text); }
+.home-install-card { grid-column: 2; min-width: 0; border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); padding: var(--wl-space-xl); background: color-mix(in srgb, var(--wl-bg) 97%, transparent); box-shadow: var(--wl-elevation-surface); gap: var(--wl-space-md); }
 .home-install-brand { display: flex; align-items: center; gap: var(--wl-space-md); min-width: 0; }
 .home-mark { flex: none; width: 80px; height: 80px; object-fit: contain; }
 .home-mark-mask { display: block; background: var(--wl-action-primary-bg); mask-size: contain; mask-position: center; mask-repeat: no-repeat; -webkit-mask-size: contain; -webkit-mask-position: center; -webkit-mask-repeat: no-repeat; }
@@ -219,46 +237,34 @@ createApp(App).mount("#app");`;
 .home-project { scroll-margin-block-start: var(--wl-space-4xl); }
 .home-project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--wl-space-lg); }
 .home-project-panel { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: 48px minmax(0, 1fr); align-items: start; gap: var(--wl-space-lg); min-width: 0; padding: var(--wl-space-xl); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg); }
-.home-project-art { position: absolute; inset: 0; z-index: -1; display: block; width: 100%; height: 100%; object-fit: cover; object-position: right bottom; opacity: 0.68; }
+.home-project-art { position: absolute; inset: 0; z-index: -1; display: block; width: 100%; height: 100%; object-fit: cover; object-position: right bottom; opacity: 0.5; mix-blend-mode: multiply; }
 .home-project-icon { display: inline-flex; justify-content: center; align-items: center; width: 48px; height: 48px; border-radius: 50%; color: var(--wl-text); background: color-mix(in srgb, var(--wl-text) 9%, transparent); }
 .home-project-copy { min-width: 0; }
+:where(.home-project-copy) .wl-text-muted, :where(.home-project-copy) .home-text-link { color: var(--wl-text); }
 .home-project-copy h3 { font-size: 18px; font-weight: 600; }
 .home-quickstart { scroll-margin-block-start: var(--wl-space-4xl); }
 .home-quickstart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--wl-space-lg); }
 .home-setup-panel, .home-button-panel { min-width: 0; padding: var(--wl-space-xl); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg); }
 .home-panel-label { color: var(--wl-text-muted); font-family: var(--wl-mono); }
 .home-button-preview { padding: var(--wl-space-lg); border-radius: var(--wl-corner-control); background: var(--wl-bg-soft); }
-:where(.home-page--gavia) .home-hero { min-height: 450px; padding-block: 40px; background: var(--wl-bg); border-bottom: 1px solid var(--wl-border); }
-:where(.home-page--gavia) .home-hero::after { content: none; }
-:where(.home-page--gavia) .home-hero-content { grid-template-columns: minmax(0, 450px) minmax(0, 420px) minmax(0, 1fr); gap: 32px; }
-:where(.home-page--gavia) .home-intro { position: relative; isolation: isolate; }
-:where(.home-page--gavia) .home-intro::before { content: ""; position: absolute; inset: -24px -40px; z-index: -1; pointer-events: none; background: radial-gradient(ellipse at 44% 50%, color-mix(in srgb, var(--wl-bg) 86%, transparent) 0%, color-mix(in srgb, var(--wl-bg) 68%, transparent) 43%, transparent 75%); filter: blur(12px); }
-:where(.home-page--gavia) .home-install-card { grid-column: 2; background: color-mix(in srgb, var(--wl-bg) 96%, transparent); gap: var(--wl-space-md); }
-:where(.home-page--gavia) .home-lead,
-:where(.home-page--gavia) .home-credit,
-:where(.home-page--gavia .home-project-copy) .wl-text-muted,
-:where(.home-page--gavia .home-project-copy) .home-text-link { color: var(--wl-text); }
-:where(.home-page--gavia) .home-project-art { opacity: 0.5; }
-@media (max-width: 1320px) { :where(.home-page--gavia) .home-hero-content { grid-template-columns: minmax(0, 420px) minmax(0, 360px) minmax(0, 1fr); gap: var(--wl-space-xl); } }
+@media (max-width: 1320px) { .home-hero-content { grid-template-columns: minmax(0, 420px) minmax(0, 360px) minmax(0, 1fr); gap: var(--wl-space-xl); } }
 @media (max-width: 1020px) {
-  :where(.home-page--gavia) .home-hero { min-height: 0; padding-block: var(--wl-space-xl); }
-  :where(.home-page--gavia) .home-hero-art { height: 240px; }
-  :where(.home-page--gavia) .home-hero-content { grid-template-columns: minmax(0, 1fr); gap: var(--wl-space-xl); padding-block-start: calc(240px - var(--wl-space-xl)); }
-  :where(.home-page--gavia) .home-intro { max-width: 660px; }
-  :where(.home-page--gavia) .home-install-card { grid-column: auto; }
+  .home-hero { min-height: 0; padding-block: 0 var(--wl-space-2xl); }
+  .home-hero-art { height: 240px; }
+  .home-hero-content { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--wl-space-xl); align-items: start; padding-block-start: calc(240px + var(--wl-space-2xl)); }
+  .home-intro { max-width: 660px; }
+  .home-install-card { grid-column: auto; }
   .home-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--wl-space-xl); }
   .home-metric:nth-child(3) { border-inline-start: 0; padding-inline-start: 64px; }
   .home-metric:nth-child(3) .home-metric-icon { inset-inline-start: 0; }
 }
 @media (max-width: 1000px) { .home-hero-content { gap: var(--wl-space-xl); } }
 @media (max-width: 760px) {
-  .home-hero::after { background: color-mix(in srgb, var(--wl-bg) 92%, transparent); }
   .home-hero-content, .home-quickstart-grid, .home-project-grid, .home-sections { grid-template-columns: minmax(0, 1fr); }
   .home-title { font-size: clamp(var(--wl-type-display-size), 10vw, 72px); }
   .home-project-panel { gap: var(--wl-space-md); }
 }
 @media (max-width: 480px) {
-  .home-hero { padding-block: var(--wl-space-xl); }
   .home-hero-content, .home-content { padding-inline: var(--wl-space-md); }
   .home-content { gap: var(--wl-space-xl); }
   .home-install-card, .home-setup-panel, .home-button-panel, .home-project-panel { padding: var(--wl-space-lg); }

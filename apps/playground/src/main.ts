@@ -9,18 +9,10 @@ import "gavia-ui/themes/graphite.css";
 import "gavia-ui/themes/newspaper.css";
 // White also declares :root; explicit branded themes follow its fallback.
 import "gavia-ui/themes/gavia.css";
-import gaviaMarkUrl from "../../../docs/brand/gavia-ui-mark-v2.png";
 import { parsePlaygroundTheme } from "./themes";
 
 // Apply explicit URL themes before the asynchronous application mounts.
 document.documentElement.dataset.wlTheme = parsePlaygroundTheme(window.location.search);
-
-// Reuse the showcase mark before load so browsers do not request a missing favicon.ico.
-const favicon = document.createElement("link");
-favicon.rel = "icon";
-favicon.type = "image/png";
-favicon.href = gaviaMarkUrl;
-document.head.append(favicon);
 
 /** The component gallery is deliberately excluded from the initial entry. */
 void import("./bootstrap");
