@@ -30,6 +30,14 @@ async function expectNoHorizontalOverflow(page: Page, element: Locator): Promise
   )).toBeLessThanOrEqual(1);
 }
 
+async function enterCompactDocumentation(page: Page): Promise<void> {
+  await page.setViewportSize({ width: 320, height: 740 });
+  const menu = page.getByTestId("docs-page").locator(".docs-menu");
+  // CSS responds before Vue applies the matchMedia-driven details.open binding.
+  await expect(menu.locator(".docs-menu-summary")).toBeVisible();
+  await expect(menu).toHaveJSProperty("open", false);
+}
+
 const buttonExampleLinks = [
   "Живой пример", "Все варианты", "Размеры и плотность", "Disabled и loading",
   "Иконки и содержимое слотов", "Ширина кнопки и отправка формы", "Когда использовать"
@@ -306,7 +314,7 @@ test("getting-started links persist across Docs pages and preserve native links,
   ] as const;
 
   for (const [index, destination] of destinations.entries()) {
-    if (index === 2) await page.setViewportSize({ width: 320, height: 740 });
+    if (index === 2) await enterCompactDocumentation(page);
     if (destination.section) {
       await openDocumentationMenu(page);
       await docs.getByRole("navigation", { name: destination.group, exact: true })
@@ -549,7 +557,7 @@ test("foundations navigation preserves live examples and highlighted copy across
     await testInfo.attach("foundation-syntax-" + label.toLowerCase(), { path: screenshotPath, contentType: "image/png" });
   }
 
-  await page.setViewportSize({ width: 320, height: 740 });
+  await enterCompactDocumentation(page);
   for (const section of sections) {
     await openDocumentationMenu(page);
     await navigation.getByRole("button", { name: section.label, exact: true }).click();
