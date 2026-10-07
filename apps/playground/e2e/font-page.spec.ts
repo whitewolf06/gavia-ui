@@ -93,17 +93,48 @@ test("tabular and proportional numbers use different spacing without changing th
   await page.goto(url.href);
   const fontPage = page.getByTestId("font-page");
   await expect(fontPage).toBeVisible();
-  await page.evaluate(() => document.fonts.load("normal 400 38px 'Gavia Sans'", "11 111,00 88 888,00"));
-  const widths = await fontPage.locator(".wl-type-number-sample").evaluateAll((cards) => cards.map((card) =>
-    Array.from(card.querySelectorAll(".wl-type-number-line")).slice(0, 2).map((line) => {
-      const range = document.createRange();
-      range.selectNodeContents(line);
-      return range.getBoundingClientRect().width;
-    })
-  ));
-  expect(widths).toHaveLength(2);
-  expect(widths[0]![0]).toBeCloseTo(widths[0]![1]!, 1);
-  expect(Math.abs(widths[1]![0]! - widths[1]![1]!)).toBeGreaterThan(1);
+  const samples = await fontPage.locator(".wl-type-number-sample").evaluateAll(async (cards) => {
+    const loaded = await Promise.all(cards.map(async (card) => {
+      const style = getComputedStyle(card);
+      const family = style.fontFamily.split(",")[0]!.trim();
+      const faces = await document.fonts.load(`${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${family}`, card.textContent ?? "");
+      return { card, faces };
+    }));
+    await document.fonts.ready;
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+    return loaded.map(({ card, faces }) => {
+      const style = getComputedStyle(card);
+      const lines = Array.from(card.querySelectorAll(".wl-type-number-line")).slice(0, 2);
+      return {
+        family: style.fontFamily.split(",")[0]!.trim().replace(/["']/g, ""),
+        weight: style.fontWeight,
+        numeric: style.fontVariantNumeric,
+        faces: faces.map((face) => ({ family: face.family.replace(/["']/g, ""), weight: face.weight, status: face.status })),
+        text: lines.map((line) => line.textContent),
+        widths: lines.map((line) => {
+          // Compare layout advances; Range rectangles can include renderer-dependent text ink extents.
+          const probe = document.createElement("span");
+          probe.textContent = line.textContent;
+          probe.style.cssText = "position:absolute;display:inline-block;inline-size:max-content;white-space:pre";
+          line.append(probe);
+          try { return probe.getBoundingClientRect().width; }
+          finally { probe.remove(); }
+        })
+      };
+    });
+  });
+  expect(samples).toHaveLength(2);
+  for (const sample of samples) {
+    expect(sample.family).toBe("Gavia Sans");
+    expect(sample.weight).toBe("400");
+    expect(sample.faces).toEqual([{ family: "Gavia Sans", weight: "400", status: "loaded" }]);
+    expect(sample.widths).toHaveLength(2);
+  }
+  expect(samples[0]!.numeric).toBe("tabular-nums");
+  expect(samples[1]!.numeric).toBe("proportional-nums");
+  expect(samples[1]!.text).toEqual(samples[0]!.text);
+  expect(samples[0]!.widths[0]).toBeCloseTo(samples[0]!.widths[1]!, 1);
+  expect(Math.abs(samples[1]!.widths[0]! - samples[1]!.widths[1]!)).toBeGreaterThan(1);
   await expect(fontPage.getByRole("link", { name: "К документации UI Kit", exact: false })).toHaveAttribute("href", "?view=docs&theme=white");
   await fontPage.getByRole("link", { name: "К документации UI Kit", exact: false }).click();
   await expect(page.getByTestId("docs-page")).toBeVisible();

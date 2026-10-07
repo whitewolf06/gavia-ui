@@ -13,8 +13,9 @@ export default defineConfig({
   // Individual assertions retain Playwright's default five-second timeout.
   timeout: 60_000,
   retries: process.env.CI ? 1 : 0,
-  workers: 1,
-  use: { baseURL: existingStand ?? "http://127.0.0.1:4173", trace: "retain-on-failure" },
+  workers: process.env.CI ? 2 : 1,
+  reporter: process.env.CI ? [["line"], ["json", { outputFile: fileURLToPath(new URL("./test-results/e2e-results.json", import.meta.url)) }]] : undefined,
+  use: { baseURL: existingStand ?? "http://127.0.0.1:4173", trace: "on-first-retry" },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"], channel: chromiumChannel } },
     { name: "mobile-chromium", use: { ...devices["Pixel 7"], channel: chromiumChannel } },

@@ -454,17 +454,17 @@ for (const entry of [
   { name: "WlMultiSelect", root: ".wl-multiselect", dropdown: ".wl-multiselect__dropdown", label: "Направления" },
   { name: "WlAutocomplete", root: ".wl-autocomplete", dropdown: ".wl-autocomplete__dropdown", label: "Участник" }
 ]) {
-  test(`${entry.name}: SVG dropdown stays centered across themes, sizes and keyboard or disabled interaction`, async ({ page }) => {
-    await selectComponent(page, entry.name);
-    await expect(page.locator(".wl-select-overlay")).toHaveCount(0);
-    const explorer = page.getByTestId("ds-explorer");
-    const preview = page.getByTestId("ds-example-preview");
-    const root = preview.locator(entry.root);
-    const dropdown = preview.locator(entry.dropdown);
-    const control = preview.getByRole("combobox", { name: entry.label, exact: true });
-    // Font metrics must not affect a decorative arrow or its control height.
-    await page.addStyleTag({ content: ".ds-example-preview { font-size:24px; line-height:2.5; }" });
-    for (const theme of wlDesignThemes) {
+  for (const theme of wlDesignThemes) {
+    test(`${entry.name}: SVG dropdown stays centered across sizes and keyboard or disabled interaction (${theme.label})`, async ({ page }) => {
+      await selectComponent(page, entry.name);
+      await expect(page.locator(".wl-select-overlay")).toHaveCount(0);
+      const explorer = page.getByTestId("ds-explorer");
+      const preview = page.getByTestId("ds-example-preview");
+      const root = preview.locator(entry.root);
+      const dropdown = preview.locator(entry.dropdown);
+      const control = preview.getByRole("combobox", { name: entry.label, exact: true });
+      // Font metrics must not affect a decorative arrow or its control height.
+      await page.addStyleTag({ content: ".ds-example-preview { font-size:24px; line-height:2.5; }" });
       await chooseShowcaseTheme(page, theme.label);
       for (const size of ["sm", "md", "lg"]) {
         await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: size", exact: true }), size);
@@ -508,6 +508,6 @@ for (const entry of [
       expect(await control.evaluate((element) => element instanceof HTMLInputElement ? element.value : element.textContent)).toBe(valueBefore);
       await disabled.uncheck();
       await expect(control).toBeEnabled();
-    }
-  });
+    });
+  }
 }
