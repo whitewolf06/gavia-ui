@@ -31,11 +31,13 @@ async function expectNoHorizontalOverflow(page: Page, element: Locator): Promise
 }
 
 async function enterCompactDocumentation(page: Page): Promise<void> {
-  await page.setViewportSize({ width: 320, height: 740 });
   const menu = page.getByTestId("docs-page").locator(".docs-menu");
-  // CSS responds before Vue applies the matchMedia-driven details.open binding.
-  await expect(menu.locator(".docs-menu-summary")).toBeVisible();
-  await expect(menu).toHaveJSProperty("open", false);
+  const summary = menu.locator(".docs-menu-summary");
+  const wasCompact = await summary.isVisible();
+  await page.setViewportSize({ width: 320, height: 740 });
+  await expect(summary).toBeVisible();
+  // Only desktop-to-compact transitions reset details.open through Vue's matchMedia listener.
+  if (!wasCompact) await expect(menu).toHaveJSProperty("open", false);
 }
 
 const buttonExampleLinks = [

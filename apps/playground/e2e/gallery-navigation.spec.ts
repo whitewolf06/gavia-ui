@@ -131,50 +131,59 @@ test("Docs catalog reaches the time picker and its model clears to null in all t
   await expect(pickerPreview(page, "WlTimePicker").getByLabel("Время встречи", { exact: true })).toHaveValue("09:30");
 });
 
-test("Docs catalog reaches the file picker and can clear and reselect a long filename in all themes", async ({ page }) => {
-  const originalViewport = page.viewportSize()!;
-  const file = { name: "gallery-" + "x".repeat(120) + ".txt", mimeType: "text/plain", buffer: Buffer.from("gallery file") };
-  try {
-    for (const theme of themes) {
-      await chooseShowcaseTheme(page, theme.label);
-      await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme.name);
-      await navigateDocumentationComponent(page, "WlFilePicker");
-      const card = await expectPickerDestination(page, "WlFilePicker");
-      const button = card.getByRole("button", { name: "Выбрать файлы", exact: true });
-      const input = card.locator('input[type="file"]');
-      const status = card.getByRole("status");
-      await expect(input).toBeHidden();
-      await expect(input).toHaveAttribute("accept", ".pdf,.txt");
-      const opened = page.waitForEvent("filechooser");
-      await button.click();
-      const chooser = await opened;
-      expect(chooser.isMultiple()).toBe(true);
-      await chooser.setFiles(file);
-      await expect(status).toHaveText("Выбрано: " + file.name);
-      await expect(input).toHaveValue("");
-      await expectNoOverflow(page, card);
+for (const theme of themes) {
+  test("Docs catalog reaches the file picker and can clear and reselect a long filename (" + theme.label + ")", async ({ page }) => {
+    const originalViewport = page.viewportSize()!;
+    const file = { name: "gallery-" + "x".repeat(120) + ".txt", mimeType: "text/plain", buffer: Buffer.from("gallery file") };
+    await chooseShowcaseTheme(page, theme.label);
+    await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme.name);
+    await navigateDocumentationComponent(page, "WlFilePicker");
+    const card = await expectPickerDestination(page, "WlFilePicker");
+    const button = card.getByRole("button", { name: "Выбрать файлы", exact: true });
+    const input = card.locator('input[type="file"]');
+    const status = card.getByRole("status");
+    await expect(input).toBeHidden();
+    await expect(input).toHaveAttribute("accept", ".pdf,.txt");
+    const opened = page.waitForEvent("filechooser");
+    await button.click();
+    const chooser = await opened;
+    expect(chooser.isMultiple()).toBe(true);
+    await chooser.setFiles(file);
+    await expect(status).toHaveText("Выбрано: " + file.name);
+    await expect(input).toHaveValue("");
+    await expectNoOverflow(page, card);
 
-      // Check the actual unbroken filename at narrow width, not merely its clipped border.
-      await page.setViewportSize({ width: 320, height: originalViewport.height });
-      await navigateDocumentationComponent(page, "WlFilePicker");
-      await expectPickerDestination(page, "WlFilePicker");
-      await expectNoOverflow(page, card);
-      await expect.poll(() => status.evaluate((element) =>
-        element.scrollWidth - element.clientWidth
-      )).toBeLessThanOrEqual(1);
+    // Check the actual unbroken filename at narrow width, not merely its clipped border.
+    await page.setViewportSize({ width: 320, height: originalViewport.height });
+    await navigateDocumentationComponent(page, "WlFilePicker");
+    await expectPickerDestination(page, "WlFilePicker");
+    await expectNoOverflow(page, card);
+    await expect.poll(() => status.evaluate((element) =>
+      element.scrollWidth - element.clientWidth
+    )).toBeLessThanOrEqual(1);
 
-      await page.setViewportSize(originalViewport);
-      await navigateDocumentationComponent(page, "WlFilePicker");
-      await expectPickerDestination(page, "WlFilePicker");
-      await card.getByRole("button", { name: "Очистить список приложения", exact: true }).click();
-      await expect(status).toHaveText("Можно выбрать файлы повторно.");
-      await expect(card.getByRole("button", { name: "Очистить список приложения", exact: true })).toHaveCount(0);
-      await expectNoOverflow(page, card);
-    }
-  } finally {
     await page.setViewportSize(originalViewport);
-  }
-});
+    await navigateDocumentationComponent(page, "WlFilePicker");
+    await expectPickerDestination(page, "WlFilePicker");
+    await card.getByRole("button", { name: "Очистить список приложения", exact: true }).click();
+    await expect(status).toHaveText("Можно выбрать файлы повторно.");
+    await expect(card.getByRole("button", { name: "Очистить список приложения", exact: true })).toHaveCount(0);
+    await expectNoOverflow(page, card);
+
+    // Each theme owns a fresh page, so reselect the same raw file on this mounted picker.
+    const reopened = page.waitForEvent("filechooser");
+    await button.click();
+    const sameFileChooser = await reopened;
+    expect(sameFileChooser.isMultiple()).toBe(true);
+    await sameFileChooser.setFiles(file);
+    await expect(status).toHaveText("Выбрано: " + file.name);
+    await expect(input).toHaveValue("");
+    await card.getByRole("button", { name: "Очистить список приложения", exact: true }).click();
+    await expect(status).toHaveText("Можно выбрать файлы повторно.");
+    await expect(card.getByRole("button", { name: "Очистить список приложения", exact: true })).toHaveCount(0);
+    await expectNoOverflow(page, card);
+  });
+}
 
 for (const name of pickerNames) {
   test("DesignSystem opens the live " + name + " documentation", async ({ page }) => {

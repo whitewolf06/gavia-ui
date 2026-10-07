@@ -23,7 +23,28 @@ export async function chooseShowcaseTheme(page: Page, label: string): Promise<vo
 /** Reveal the code-frame action through the public hover interaction before copying. */
 export async function copyCodePanel(panel: Locator): Promise<void> {
   await panel.locator(".ds-source-frame").hover();
-  await panel.getByRole("button", { name: "Копировать код", exact: true }).click();
+  const button = panel.getByRole("button", { name: "Копировать код", exact: true });
+  await button.scrollIntoViewIfNeeded();
+  await button.focus();
+  await expect(button).toBeFocused();
+  // A route or focus can still be scrolling after Playwright's two stable frames.
+  // Wait for the real target and scroll position to settle before one pointer click.
+  await expect.poll(() => button.evaluate(async (element) => {
+    const snapshot = () => {
+      const rect = element.getBoundingClientRect();
+      return [rect.x, rect.y, rect.width, rect.height, window.scrollX, window.scrollY];
+    };
+    let previous = snapshot();
+    for (let frame = 0; frame < 8; frame += 1) {
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      const current = snapshot();
+      if (current.some((value, index) => Math.abs(value - previous[index]!) > 0.5)) return false;
+      previous = current;
+    }
+    const rect = element.getBoundingClientRect();
+    return element.contains(document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2));
+  }), { message: "Code copy target settles after navigation and focus scrolling" }).toBe(true);
+  await button.click();
 }
 
 /** Navigate through the visible desktop links or the compact drawer. */
