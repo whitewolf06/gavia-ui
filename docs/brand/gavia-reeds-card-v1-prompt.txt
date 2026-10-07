@@ -1,0 +1,13 @@
+Built-in imagegen, 2026-10-07.
+Use case: photorealistic-natural.
+Asset type: very subtle decorative wide 3:1 website information-card background, paired with a pale misty forest card and northern lake photographic hero.
+Primary request: an original quiet composition of beige lakeside reeds and delicate oat-grass seed heads at the far right against almost-white warm morning mist.
+Scene/backdrop: smooth creamy off-white natural mist, a barely visible low soft distant lakeshore following only the bottom edge.
+Subject: several slender natural beige reed and oat-grass stalks rising from the far bottom-right, with delicate curved stems and small fine seed heads, lightly bending toward the left. Plant stems remain subtle and elegant, not a dense harvest wheat field.
+Composition/framing: panoramic approximately3:1 rectangle. Keep the left75% empty, nearly uniform luminous warm-white fog with very slight natural tonal variation, suitable for separately overlaid dark text. Place all visible stems in the last22–25% on the right; seed heads may curve just into the last30%, remain low contrast and do not cover the left two thirds. A very faint soft beige ridge form may touch only the lowest8% near the corners. No dark vertical shapes.
+Lighting/mood: very diffuse misty morning, restrained and calm, airy.
+Color palette: creamy warm-white#faf9f6 and#fefdfb dominate; extremely pale warm-grey, soft grey-beige and desaturated straw-colored stems. Almost monochrome low contrast with photographic details. No orange-yellow saturation, purple, teal or vivid green.
+Style/medium: polished soft natural plant photography, shallow depth of field, delicate real seed heads, no illustration, painting texture or cartoon.
+Constraints: no words, letters, logo, UI, people, birds, buildings, borders, frame, watermark or central object. This is a complete full-bleed card background, do not draw the website card itself.
+
+Final PNG: 2172 x 724. WebP is a same-size quality86 encoding for delivery, with no compositional changes.

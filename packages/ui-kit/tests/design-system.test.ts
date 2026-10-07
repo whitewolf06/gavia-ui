@@ -46,22 +46,22 @@ describe("design system public contract", () => {
   it("exposes Gavia without changing the default White snapshot", () => {
     expect(wlDesignThemes.map((theme) => theme.name)).toEqual(["gavia", "white", "graphite", "newspaper"]);
     expect(resolveWlToken("--wl-bg")).toBe("#ffffff");
-    expect(resolveWlToken("--wl-bg", "gavia")).toBe("#f9f7f2");
-    expect(resolveWlToken("--wl-bg-raised", "gavia")).toBe("#fcfbf8");
-    expect(resolveWlToken("--wl-bg-soft", "gavia")).toBe("#f1efe8");
-    expect(resolveWlToken("--wl-action-primary-bg", "gavia")).toBe("#714fb5");
-    expect(resolveWlToken("--wl-action-primary-hover", "gavia")).toBe("#60439a");
+    expect(resolveWlToken("--wl-bg", "gavia")).toBe("#faf9f6");
+    expect(resolveWlToken("--wl-bg-raised", "gavia")).toBe("#fefdfb");
+    expect(resolveWlToken("--wl-bg-soft", "gavia")).toBe("#eef2f3");
+    expect(resolveWlToken("--wl-action-primary-bg", "gavia")).toBe("#294451");
+    expect(resolveWlToken("--wl-action-primary-hover", "gavia")).toBe("#203641");
     expect(resolveWlToken("--wl-action-primary-text", "gavia")).toBe("#ffffff");
-    expect(resolveWlToken("--wl-action-primary-active", "gavia")).toBe("#4f377f");
-    expect(resolveWlToken("--wl-accent-soft", "gavia")).toBe("#ebe6f0");
-    expect(resolveWlToken("--wl-accent-soft-hover", "gavia")).toBe("#e3dcec");
-    expect(resolveWlToken("--wl-accent-warm", "gavia")).toBe("#c98c63");
-    expect(resolveWlToken("--wl-accent-warm-soft", "gavia")).toBe("#f2e5db");
-    expect(resolveWlToken("--wl-accent", "gavia")).toBe("#714fb5");
-    expect(resolveWlToken("--wl-accent-hover", "gavia")).toBe("#60439a");
+    expect(resolveWlToken("--wl-action-primary-active", "gavia")).toBe("#182a33");
+    expect(resolveWlToken("--wl-accent-soft", "gavia")).toBe("#dfe8eb");
+    expect(resolveWlToken("--wl-accent-soft-hover", "gavia")).toBe("#d3dfe4");
+    expect(resolveWlToken("--wl-accent-warm", "gavia")).toBe("#948775");
+    expect(resolveWlToken("--wl-accent-warm-soft", "gavia")).toBe("#efebe3");
+    expect(resolveWlToken("--wl-accent", "gavia")).toBe("#294451");
+    expect(resolveWlToken("--wl-accent-hover", "gavia")).toBe("#203641");
     expect(resolveWlToken("--wl-on-accent", "gavia")).toBe("#ffffff");
-    expect(resolveWlToken("--wl-text", "gavia")).toBe("#211f1a");
-    expect(resolveWlToken("--wl-text-muted", "gavia")).toBe("#69665e");
+    expect(resolveWlToken("--wl-text", "gavia")).toBe("#0f1a23");
+    expect(resolveWlToken("--wl-text-muted", "gavia")).toBe("#5b6470");
     for (const [name, expected] of Object.entries(gaviaPalette.overrides)) {
       expect(resolveWlToken(name as WlDesignTokenName, "gavia"), name).toBe(expected);
       expect(source.tokens.find((token) => token.name === name)?.themes?.gavia, name).toBe(expected);

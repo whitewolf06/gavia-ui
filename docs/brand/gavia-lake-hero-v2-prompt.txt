@@ -1,0 +1,24 @@
+Built-in imagegen, 2026-10-07.
+Use case: photorealistic-natural; final placement edit: precise-object-edit.
+
+ORIGINAL GENERATION
+Use case: photorealistic-natural.
+Asset type: decorative panoramic website hero background for Gavia UI.
+Primary request: create an original editorial wildlife photograph of a quiet northern lake at dawn, with a beautiful anatomically believable loon/diver swimming in the far right foreground, photographed low near the water. Very wide landscape banner, approximately 3:1 aspect ratio.
+Scene/backdrop: softly misty lake, layered spruce and pine forest along the distant shoreline, muted wooded hills, calm horizontal water reflections, understated pale peach dawn on a clouded blue-grey sky. A few natural reed stems at the far right edge.
+Subject: one grey-headed black-throated diver/loon, slim pointed dark bill pointing left, small deep red eye, graceful upright grey neck, white vertical neck stripes and intricate black-and-white checkered back, natural low swimming posture. The bird occupies the far right quarter, with its head near 83% of width, its body above the lower edge, full head, bill and natural reflection visible. Respect real bird proportions.
+Composition/framing: 3:1 panoramic photograph. Horizon near the upper middle. The left 38% should remain quiet, softly luminous mist and open blue-grey water, with subtle authentic reflections and distant soft shore; it will carry dark text. Do not put the bird or detailed foreground objects in the left half. Natural softly changing exposure across the entire scene, with slightly brighter diffused dawn mist at the left. Detailed but restrained forest on the right, shallow atmospheric depth. No vertical divisions.
+Lighting/mood: soft cool dawn daylight with a very faint warm peach tint near the clouds, tranquil, refined, natural. Not a golden-orange sunset.
+Color palette: cool desaturated lake blue-grey, slate blue and charcoal forest, creamy off-white mist, faint warm grey-beige and peach light. No purple, no emerald or vivid teal, no oversaturated colors.
+Style/medium: polished real wildlife landscape photography, natural feather detail, subtle depth of field, no illustration or painting texture.
+Constraints: no words, handwriting, typography, slogans, logos, watermark, UI cards, buttons or screenshot. No unnatural large white gradient panel or flat white wash across the left; its brightness must come from real mist and soft morning light. No second bird, people or buildings. Keep the loon at the far right so a text block at the left and an installation panel in the middle can be placed separately by the site.
+
+PLACEMENT EDIT
+Use case: precise-object-edit.
+Asset type: decorative panoramic website hero background.
+Edit target: the supplied original generated lake photograph.
+Primary request: change only the foreground loon's placement and scale to leave more usable space for the central website panel. Preserve the image canvas, 3:1 panoramic composition, lake, sky, mist, forest, subtle dawn palette, photographic style, lighting and all landscape details unchanged.
+Move the one loon with its natural water reflection farther right. Its bill tip should begin around76% of image width; its eye and head should sit around83% of width; its body should extend from82% to97% of width. Keep the entire bird including bill and back visible; naturally make its body a little more compact to fit. Its head should remain near43% of image height, waterline near67%. Preserve natural anatomical proportions, grey neck and head, white neck stripes, black-and-white checkered back, small dark red eye, pointed bill facing left. Keep matching calm ripples and reflection below. Remove the old loon from its former spot and fill only that spot with matching calm water.
+Constraints: keep the soft grey-blue and slate lake colors and faint peach dawn, no purple, no strong teal, no new objects, no second bird, no text, typography, handwriting, logos, UI or watermark. Do not add a flat white wash or left panel.
+
+The first generated photograph was the edit target. The supplied website sketch was used only as a colour and composition reference; no screenshot, text, UI or image pixels from it were copied. Final PNG: 2172 x 724. WebP is a same-size quality86 encoding for delivery, with no compositional changes.

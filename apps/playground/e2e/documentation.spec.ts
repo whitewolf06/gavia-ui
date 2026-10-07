@@ -85,6 +85,14 @@ test("home opens WlButton documentation and controls update the live button, con
   await expect(home.getByRole("heading", { level: 1 })).toHaveText("Gavia UI");
   await expect(home.getByTestId("home-install")).toContainText("pnpm add gavia-ui@");
   await expectRoute(page, baseURL, null);
+  // Reveal below-fold decoration before checking the complete-page capture.
+  for (const image of await home.locator('img[loading="lazy"]').all()) {
+    await image.scrollIntoViewIfNeeded();
+    await expect.poll(() => image.evaluate((element: HTMLImageElement) =>
+      element.complete && element.naturalWidth > 0
+    )).toBe(true);
+  }
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   await expect.poll(() => home.locator("img").evaluateAll((images: HTMLImageElement[]) =>
     images.every((image) => image.complete && image.naturalWidth > 0)
   )).toBe(true);

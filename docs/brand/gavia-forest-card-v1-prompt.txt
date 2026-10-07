@@ -1,0 +1,12 @@
+Built-in imagegen, 2026-10-07.
+Use case: photorealistic-natural.
+Asset type: very subtle decorative wide 3:1 website information-card background, paired with a northern lake photographic hero.
+Primary request: an original pale misty conifer forest panorama with almost-white warm natural fog and a softly visible forest grove only along the far right and lower edges.
+Scene/backdrop: a quiet northern lakeside spruce/pine forest dissolving into morning fog, with a barely visible soft distant shoreline along the bottom.
+Composition/framing: panoramic approximately3:1 rectangle. Keep the left70% and upper two thirds of the picture nearly empty, luminous warm off-white fog, smooth understated tonal variation, suitable for dark text laid over separately. Forest trees should be largest but still low contrast at the bottom-right corner, extend slightly upwards near the far right edge, then gently fade into mist by the center. Small distant ridge forms may follow only the lowest8% of the canvas. Forest must not cover the text area or become a conventional centered landscape.
+Lighting/mood: very diffuse misty morning, calm, understated, refined. Nature seen through bright mist, no dramatic sun or dark silhouettes.
+Color palette: creamy warm-white#faf9f6 and#fefdfb dominate; very pale soft warm-grey and subdued grey-beige tree shapes with a faint cool slate cast. Restrained photographic details. Very low natural contrast. No purple, green saturation, teal or orange.
+Style/medium: soft natural photographic forest atmosphere, real trees with fine blurred detail, no painting paper texture or cartoon.
+Constraints: no words, letters, logo, UI, people, animals, houses, borders, frame, watermark or isolated central object. This is the complete full-bleed background asset; do not draw the website card itself.
+
+Final PNG: 2172 x 724. WebP is a same-size quality86 encoding for delivery, with no compositional changes.

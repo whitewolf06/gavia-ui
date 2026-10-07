@@ -54,8 +54,8 @@ describe("playground theme palette model", () => {
       }
     });
   }
-  it("preserves the approved warm Gavia background and purple action", () => {
-    expect(createThemePalette("gavia")).toMatchObject({ background: "#f9f7f2", primary: "#714fb5", link: "#714fb5" });
+  it("preserves the approved lake Gavia palette in the theme builder", () => {
+    expect(createThemePalette("gavia")).toMatchObject({ background: "#faf9f6", primary: "#294451", link: "#294451" });
   });
   it("allows primary and link to differ in every base, with readable primary text", () => {
     for (const theme of wlDesignThemes) {

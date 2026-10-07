@@ -11,7 +11,7 @@ export const wlDesignTokens = [
     "value": "#ffffff",
     "themes": {
       "newspaper": "#fffefb",
-      "gavia": "#fcfbf8"
+      "gavia": "#fefdfb"
     }
   },
   {
@@ -23,7 +23,7 @@ export const wlDesignTokens = [
     "value": "#f7f7f8",
     "themes": {
       "newspaper": "#fbfbfa",
-      "gavia": "#f9f7f2"
+      "gavia": "#faf9f6"
     }
   },
   {
@@ -35,7 +35,7 @@ export const wlDesignTokens = [
     "value": "#f1f1f3",
     "themes": {
       "newspaper": "#f5f5f3",
-      "gavia": "#f1efe8"
+      "gavia": "#eef2f3"
     }
   },
   {
@@ -47,7 +47,7 @@ export const wlDesignTokens = [
     "value": "#e7e7ea",
     "themes": {
       "newspaper": "#e9e8e4",
-      "gavia": "#d8d5cd"
+      "gavia": "#d5dfe3"
     }
   },
   {
@@ -59,7 +59,7 @@ export const wlDesignTokens = [
     "value": "#dcdce1",
     "themes": {
       "newspaper": "#d8d6d1",
-      "gavia": "#beb9ad"
+      "gavia": "#b8c7ce"
     }
   },
   {
@@ -71,7 +71,7 @@ export const wlDesignTokens = [
     "value": "#b9bdc6",
     "themes": {
       "newspaper": "#b8b5ae",
-      "gavia": "#a7a194"
+      "gavia": "#94a3ae"
     }
   },
   {
@@ -83,7 +83,7 @@ export const wlDesignTokens = [
     "value": "#9aa0aa",
     "themes": {
       "newspaper": "#85817a",
-      "gavia": "#8d887c"
+      "gavia": "#75818c"
     }
   },
   {
@@ -95,7 +95,7 @@ export const wlDesignTokens = [
     "value": "#5d626c",
     "themes": {
       "newspaper": "#625f59",
-      "gavia": "#69665e"
+      "gavia": "#5b6470"
     }
   },
   {
@@ -107,7 +107,7 @@ export const wlDesignTokens = [
     "value": "#43474f",
     "themes": {
       "newspaper": "#46433f",
-      "gavia": "#514e46"
+      "gavia": "#3e4d59"
     }
   },
   {
@@ -119,7 +119,7 @@ export const wlDesignTokens = [
     "value": "#2c2f36",
     "themes": {
       "newspaper": "#2e2c29",
-      "gavia": "#39362f"
+      "gavia": "#253540"
     }
   },
   {
@@ -131,7 +131,7 @@ export const wlDesignTokens = [
     "value": "#22252b",
     "themes": {
       "newspaper": "#1f1e1c",
-      "gavia": "#211f1a"
+      "gavia": "#0f1a23"
     }
   },
   {
@@ -143,7 +143,7 @@ export const wlDesignTokens = [
     "value": "#17181c",
     "themes": {
       "newspaper": "#141311",
-      "gavia": "#191712"
+      "gavia": "#091219"
     }
   },
   {
@@ -481,7 +481,7 @@ export const wlDesignTokens = [
       "white": "0 1px 2px rgba(20, 22, 28, 0.04)",
       "graphite": "0 1px 2px rgba(0, 0, 0, 0.25)",
       "newspaper": "none",
-      "gavia": "0 1px 3px rgba(29, 26, 22, 0.05)"
+      "gavia": "0 1px 3px rgba(15, 26, 35, 0.05)"
     }
   },
   {
@@ -495,7 +495,7 @@ export const wlDesignTokens = [
       "white": "0 4px 14px rgba(20, 22, 28, 0.07), 0 16px 44px rgba(20, 22, 28, 0.11)",
       "graphite": "0 4px 14px rgba(0, 0, 0, 0.35), 0 16px 44px rgba(0, 0, 0, 0.45)",
       "newspaper": "0 14px 36px rgba(48, 41, 32, 0.13)",
-      "gavia": "0 4px 14px rgba(29, 26, 22, 0.08), 0 16px 44px rgba(29, 26, 22, 0.12)"
+      "gavia": "0 4px 14px rgba(15, 26, 35, 0.08), 0 16px 44px rgba(15, 26, 35, 0.12)"
     }
   },
   {
@@ -509,7 +509,7 @@ export const wlDesignTokens = [
       "white": "0 1px 3px rgba(0, 0, 0, 0.2)",
       "graphite": "0 1px 3px rgba(0, 0, 0, 0.5)",
       "newspaper": "0 1px 2px rgba(48, 41, 32, 0.22)",
-      "gavia": "0 1px 3px rgba(29, 26, 22, 0.2)"
+      "gavia": "0 1px 3px rgba(15, 26, 35, 0.2)"
     }
   },
   {
@@ -1432,7 +1432,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-gray-0)",
       "graphite": "#17181c",
       "newspaper": "var(--wl-gray-0)",
-      "gavia": "#f9f7f2"
+      "gavia": "#faf9f6"
     }
   },
   {
@@ -1443,7 +1443,7 @@ export const wlDesignTokens = [
     "category": "palette",
     "description": "Поднятая поверхность для карточек и локальных панелей.",
     "themes": {
-      "gavia": "#fcfbf8"
+      "gavia": "#fefdfb"
     }
   },
   {
@@ -1457,7 +1457,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-gray-50)",
       "graphite": "#1e2025",
       "newspaper": "var(--wl-gray-50)",
-      "gavia": "#f1efe8"
+      "gavia": "#eef2f3"
     }
   },
   {
@@ -1471,7 +1471,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-gray-100)",
       "graphite": "#26292f",
       "newspaper": "var(--wl-gray-100)",
-      "gavia": "#e9e6dd"
+      "gavia": "#e5ecef"
     }
   },
   {
@@ -1485,7 +1485,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-gray-200)",
       "graphite": "#2e3138",
       "newspaper": "var(--wl-gray-200)",
-      "gavia": "#d8d5cd"
+      "gavia": "#d5dfe3"
     }
   },
   {
@@ -1499,7 +1499,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-gray-300)",
       "graphite": "#3a3e46",
       "newspaper": "var(--wl-gray-300)",
-      "gavia": "#beb9ad"
+      "gavia": "#b8c7ce"
     }
   },
   {
@@ -1513,7 +1513,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-gray-900)",
       "graphite": "#e8eaee",
       "newspaper": "var(--wl-gray-950)",
-      "gavia": "#211f1a"
+      "gavia": "#0f1a23"
     }
   },
   {
@@ -1527,7 +1527,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-gray-600)",
       "graphite": "#a8adb8",
       "newspaper": "var(--wl-gray-600)",
-      "gavia": "#69665e"
+      "gavia": "#5b6470"
     }
   },
   {
@@ -1541,7 +1541,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-gray-500)",
       "graphite": "#6f7580",
       "newspaper": "var(--wl-gray-500)",
-      "gavia": "#8d887c"
+      "gavia": "#75818c"
     }
   },
   {
@@ -1555,7 +1555,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-blue-500)",
       "graphite": "var(--wl-blue-400)",
       "newspaper": "#25211d",
-      "gavia": "#714fb5"
+      "gavia": "#294451"
     }
   },
   {
@@ -1569,7 +1569,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-blue-600)",
       "graphite": "#729df2",
       "newspaper": "#3a342e",
-      "gavia": "#60439a"
+      "gavia": "#203641"
     }
   },
   {
@@ -1583,7 +1583,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-blue-50)",
       "graphite": "#202c46",
       "newspaper": "#f4f3f1",
-      "gavia": "#ebe6f0"
+      "gavia": "#dfe8eb"
     }
   },
   {
@@ -1597,7 +1597,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-blue-100)",
       "graphite": "#2c3d63",
       "newspaper": "#dedbd5",
-      "gavia": "#cdc1e1"
+      "gavia": "#b8cbd3"
     }
   },
   {
@@ -1611,7 +1611,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-blue-75)",
       "graphite": "#263757",
       "newspaper": "#eceae6",
-      "gavia": "#e3dcec"
+      "gavia": "#d3dfe4"
     }
   },
   {
@@ -1625,7 +1625,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-blue-200)",
       "graphite": "#3a4f7d",
       "newspaper": "#cec9c0",
-      "gavia": "#bcacd9"
+      "gavia": "#9eb7c2"
     }
   },
   {
@@ -1650,7 +1650,7 @@ export const wlDesignTokens = [
     "category": "color",
     "description": "Базовая поверхность основного действия, независимая от цвета ссылок.",
     "themes": {
-      "gavia": "#714fb5"
+      "gavia": "#294451"
     }
   },
   {
@@ -1661,7 +1661,7 @@ export const wlDesignTokens = [
     "category": "color",
     "description": "Базовая поверхность основного действия при наведении.",
     "themes": {
-      "gavia": "#60439a"
+      "gavia": "#203641"
     }
   },
   {
@@ -1881,7 +1881,7 @@ export const wlDesignTokens = [
       "white": "rgba(24, 26, 32, 0.24)",
       "graphite": "rgba(8, 9, 12, 0.5)",
       "newspaper": "rgba(32, 29, 26, 0.32)",
-      "gavia": "rgba(29, 26, 22, 0.28)"
+      "gavia": "rgba(15, 26, 35, 0.28)"
     }
   },
   {
@@ -3757,7 +3757,7 @@ export const wlDesignTokens = [
     "category": "color",
     "description": "Базовая поверхность основного действия при нажатии.",
     "themes": {
-      "gavia": "#4f377f"
+      "gavia": "#182a33"
     }
   },
   {
@@ -3768,7 +3768,7 @@ export const wlDesignTokens = [
     "category": "color",
     "description": "Дополнительный тёплый цвет декоративных деталей; не цвет основного действия.",
     "themes": {
-      "gavia": "#c98c63"
+      "gavia": "#948775"
     }
   },
   {
@@ -3779,7 +3779,7 @@ export const wlDesignTokens = [
     "category": "color",
     "description": "Мягкая поверхность тёплых декоративных деталей.",
     "themes": {
-      "gavia": "#f2e5db"
+      "gavia": "#efebe3"
     }
   },
   {
@@ -3881,7 +3881,7 @@ export const wlDesignThemes = [
   {
     "name": "gavia",
     "label": "Gavia",
-    "description": "Тёплые нейтральные поверхности, фиолетовый основной акцент и дозированные терракотовые детали.",
+    "description": "Светлые поверхности, глубокий озёрный акцент и мягкие серо-голубые выбранные состояния.",
     "colorScheme": "light"
   },
   {
@@ -4139,7 +4139,7 @@ export const wlContrastReport = [
     "background": "--wl-bg",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 15.38
+    "ratio": 16.73
   },
   {
     "name": "muted",
@@ -4148,7 +4148,7 @@ export const wlContrastReport = [
     "background": "--wl-bg",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 5.35
+    "ratio": 5.7
   },
   {
     "name": "text-soft",
@@ -4157,7 +4157,7 @@ export const wlContrastReport = [
     "background": "--wl-bg-soft",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 14.31
+    "ratio": 15.63
   },
   {
     "name": "primary",
@@ -4166,7 +4166,7 @@ export const wlContrastReport = [
     "background": "--wl-action-primary-bg",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 6.02
+    "ratio": 10.29
   },
   {
     "name": "primary-hover",
@@ -4175,7 +4175,7 @@ export const wlContrastReport = [
     "background": "--wl-action-primary-hover",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 7.59
+    "ratio": 12.61
   },
   {
     "name": "primary-active",
@@ -4184,7 +4184,7 @@ export const wlContrastReport = [
     "background": "--wl-action-primary-active",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 9.61
+    "ratio": 14.81
   },
   {
     "name": "danger",
@@ -4211,7 +4211,7 @@ export const wlContrastReport = [
     "background": "--wl-tooltip-bg",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 16.46
+    "ratio": 17.61
   },
   {
     "name": "info",
@@ -4220,7 +4220,7 @@ export const wlContrastReport = [
     "background": "--wl-accent-soft",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 7.91
+    "ratio": 7.8
   },
   {
     "name": "success",
@@ -4256,7 +4256,7 @@ export const wlContrastReport = [
     "background": "--wl-bg",
     "minimum": 3,
     "theme": "gavia",
-    "ratio": 5.62
+    "ratio": 9.78
   },
   {
     "name": "link",
@@ -4265,7 +4265,7 @@ export const wlContrastReport = [
     "background": "--wl-bg",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 5.62
+    "ratio": 9.78
   },
   {
     "name": "focus-soft",
@@ -4274,7 +4274,7 @@ export const wlContrastReport = [
     "background": "--wl-bg-soft",
     "minimum": 3,
     "theme": "gavia",
-    "ratio": 5.23
+    "ratio": 9.13
   },
   {
     "name": "text-raised",
@@ -4283,7 +4283,7 @@ export const wlContrastReport = [
     "background": "--wl-bg-raised",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 15.91
+    "ratio": 17.33
   },
   {
     "name": "muted-raised",
@@ -4292,7 +4292,7 @@ export const wlContrastReport = [
     "background": "--wl-bg-raised",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 5.54
+    "ratio": 5.9
   },
   {
     "name": "focus-raised",
@@ -4301,7 +4301,7 @@ export const wlContrastReport = [
     "background": "--wl-bg-raised",
     "minimum": 3,
     "theme": "gavia",
-    "ratio": 5.82
+    "ratio": 10.13
   },
   {
     "name": "text",
