@@ -26,12 +26,15 @@
     "test:pages": "pnpm exec playwright test -c apps/playground/playwright.pages.config.ts",
     "verify:compatibility": "node scripts/check-compatibility.mjs",
     "verify:package:browser": "node scripts/verify-package.mjs --browser",
-    "test:coverage": "pnpm --filter gavia-ui exec vitest run --coverage",
+    "test:coverage": "pnpm --filter gavia-ui exec vitest run --coverage --reporter=default --reporter=json --outputFile=coverage/tests.json",
     "test:release-tools": "node --test scripts/release-tools.test.mjs",
     "changeset": "changeset",
     "changeset:status": "changeset status",
     "release:version": "node scripts/version-release.mjs",
-    "release:preview": "node scripts/archive-playground.mjs"
+    "release:preview": "node scripts/archive-playground.mjs",
+    "quality:update": "node scripts/update-quality-report.mjs",
+    "quality:restore": "node scripts/update-quality-report.mjs --restore",
+    "test:quality-report": "node --test scripts/update-quality-report.test.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

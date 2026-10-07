@@ -4,6 +4,8 @@
 
 # Gavia UI
 
+[![Покрытие строк unit-тестами — снимок репозитория](docs/quality-coverage.svg)](apps/playground/src/project/quality-report.generated.json)
+
 Ясный язык для ваших интерфейсов. Бесплатная библиотека компонентов и дизайн-система
 для Vue 3 + TypeScript: формы, данные, навигация и оверлеи с общими токенами,
 доступными состояниями и живыми примерами.
@@ -14,6 +16,13 @@
   · <a href="https://whitewolf06.github.io/gavia-ui/?view=font">Gavia Sans</a>
   · <a href="https://www.npmjs.com/package/gavia-ui">Пакет npm</a>
 </p>
+
+[Качество и совместимость](https://whitewolf06.github.io/gavia-ui/?view=docs&section=quality):
+unit-тесты, покрытие Vitest/V8, браузеры, доступность, SSR и проверка установленного пакета.
+Бейдж — сохранённый снимок покрытия строк в репозитории. Его дата, версия и источник —
+[в JSON-отчёте](apps/playground/src/project/quality-report.generated.json). Страница качества показывает измерение
+из CI последней опубликованной сборки Playground; оно может отличаться от снимка.
+[Текущие запуски CI](https://github.com/whitewolf06/gavia-ui/actions).
 
 <a href="https://whitewolf06.github.io/gavia-ui/">
   <img src="docs/brand/gavia-lake-hero-v2.webp" alt="Тихое озеро на рассвете, туманный хвойный берег и гагара — оформление темы Gavia" width="1200">

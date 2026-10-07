@@ -2921,7 +2921,7 @@
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--wl-text-3);
+    color: var(--wl-text-muted);
     display: flex;
     align-items: center;
     gap: 7px;

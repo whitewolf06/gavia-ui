@@ -47,4 +47,6 @@ function followBreadcrumb(event: MouseEvent): void {
 
 <style scoped>
 .pg-page-header { padding-block: 0; overflow-wrap: anywhere; }
+.pg-page-header :deep(.wl-breadcrumbs__list) { flex-wrap: wrap; }
+.pg-page-header :deep(.wl-breadcrumbs__item) { flex: none; max-width: 100%; }
 </style>

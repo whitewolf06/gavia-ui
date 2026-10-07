@@ -72,6 +72,15 @@ async function navigate(route: PlaygroundRoute, anchor?: string): Promise<void> 
 function showView(view: PlaygroundView): Promise<void> { return navigate({ view }); }
 function openDocs(component?: string): Promise<void> { return navigate({ view: "docs", component }); }
 function openDocsSection(section?: DocumentationSection): Promise<void> { return navigate({ view: "docs", section }); }
+function openQualityLink(event: MouseEvent): void {
+  if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  void openDocsSection("quality");
+}
+function qualityRouteHref(): string {
+  const current = new URL(typeof window === "undefined" ? "https://whitewolf06.github.io/gavia-ui/" : window.location.href);
+  return createPlaygroundThemeUrl(createPlaygroundUrl(current, { view: "docs", section: "quality" }), theme.value).href;
+}
 function openDocsCatalog(): Promise<void> { return navigate({ view: "docs" }, "docs-components"); }
 function openDocsOverview(anchor: string): Promise<void> { return navigate({ view: "docs" }, anchor); }
 onMounted(() => {
@@ -131,6 +140,14 @@ const commandPaletteGroups: WlCommandPaletteGroup[] = [
         icon: "file",
         keywords: ["страницы", "каталог"],
         data: { catalog: true }
+      },
+      {
+        id: "page-quality",
+        label: "Качество и совместимость",
+        description: "Тесты, покрытие, браузеры и поддержка Vue",
+        icon: "check",
+        keywords: ["quality", "coverage", "тесты", "проверки", "доступность", "ssr", "совместимость"],
+        data: { view: "docs", section: "quality" }
       },
       {
         id: "page-font",
@@ -225,7 +242,7 @@ watch(theme, (value) => { document.documentElement.dataset.wlTheme = value; }, {
     :groups="commandPaletteGroups" :shortcut="globalSearchShortcut" @select="onCommandPaletteSelect">
     <template #footer>Быстрые переходы и компоненты ищутся одной строкой</template>
   </WlCommandPalette>
-  <HomePage v-if="activeView === 'home'" :theme="theme" @navigate="showView" @component="openDocs" @catalog="openDocsCatalog" />
+  <HomePage v-if="activeView === 'home'" :theme="theme" @navigate="showView" @component="openDocs" @catalog="openDocsCatalog" @quality="openDocsSection('quality')" />
   <DocsPage v-else-if="activeView === 'docs'" :component="activeRoute.component" :section="activeRoute.section" :theme="theme"
     @section="openDocsSection" @component="openDocs" @overview="openDocsOverview" @navigate="showView" />
   <FontPage v-else-if="activeView === 'font'" :theme="theme" @navigate="showView" />
@@ -236,6 +253,7 @@ watch(theme, (value) => { document.documentElement.dataset.wlTheme = value; }, {
     <span>Gavia UI · v{{ project.version }} · <a :href="project.licenseUrl">MIT</a></span>
     <span>Автор: <a :href="project.author.url">{{ project.author.name }}</a></span>
     <a :href="project.repositoryUrl">GitHub</a>
+    <a :href="qualityRouteHref()" @click="openQualityLink">Качество и совместимость</a>
     <FontDownloadLink variant="secondary">Скачать шрифт Gavia Sans</FontDownloadLink>
   </footer>
   <WlToast />

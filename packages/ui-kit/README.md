@@ -4,6 +4,8 @@
 
 # Gavia UI
 
+[![Покрытие строк unit-тестами — снимок репозитория](https://raw.githubusercontent.com/whitewolf06/gavia-ui/main/docs/quality-coverage.svg)](https://github.com/whitewolf06/gavia-ui/blob/main/apps/playground/src/project/quality-report.generated.json)
+
 Бесплатная библиотека компонентов и дизайн-система для **Vue 3 + TypeScript**.
 В составе: **53 компонента, 113 SVG-иконок, 447 дизайн-токенов, четыре темы
 и гарнитура Gavia Sans 0.6**. Runtime-зависимостей нет; Vue 3 — единственный
@@ -15,6 +17,13 @@
   · <a href="https://whitewolf06.github.io/gavia-ui/?view=font">Gavia Sans</a>
   · <a href="https://github.com/whitewolf06/gavia-ui">GitHub</a>
 </p>
+
+[Качество и совместимость](https://whitewolf06.github.io/gavia-ui/?view=docs&section=quality):
+unit-тесты, покрытие Vitest/V8, браузеры, доступность, SSR и проверка установленного пакета.
+Бейдж — сохранённый снимок покрытия строк в репозитории. Его дата, версия и источник —
+[в JSON-отчёте](https://github.com/whitewolf06/gavia-ui/blob/main/apps/playground/src/project/quality-report.generated.json). Страница качества показывает измерение
+из CI последней опубликованной сборки Playground; оно может отличаться от снимка.
+[Текущие запуски CI](https://github.com/whitewolf06/gavia-ui/actions).
 
 Версия **0.9.1**. [История изменений](CHANGELOG.md) ·
 [Миграция 0.9](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.9.md) ·

@@ -2,7 +2,8 @@
 export type PlaygroundView = "home" | "docs" | "components" | "system" | "project" | "theme-builder" | "font";
 export type DocumentationFoundationSection = "typography" | "layout" | "responsive" | "content";
 export type DocumentationAssetSection = "icons" | "colors";
-export type DocumentationSection = DocumentationFoundationSection | DocumentationAssetSection;
+export type DocumentationQualitySection = "quality";
+export type DocumentationSection = DocumentationFoundationSection | DocumentationAssetSection | DocumentationQualitySection;
 export interface PlaygroundRoute {
   view: PlaygroundView;
   component?: string;
@@ -18,8 +19,12 @@ export function isDocumentationAssetSection(value: unknown): value is Documentat
   return value === "icons" || value === "colors";
 }
 
+export function isDocumentationQualitySection(value: unknown): value is DocumentationQualitySection {
+  return value === "quality";
+}
+
 export function isDocumentationSection(value: unknown): value is DocumentationSection {
-  return isDocumentationFoundationSection(value) || isDocumentationAssetSection(value);
+  return isDocumentationFoundationSection(value) || isDocumentationAssetSection(value) || isDocumentationQualitySection(value);
 }
 
 /** The former gallery URL stays usable after its examples move into Docs. */

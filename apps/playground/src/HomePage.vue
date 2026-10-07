@@ -13,6 +13,7 @@ import gaviaReedsUrl from "../../../docs/brand/gavia-reeds-card-v1.webp";
 import { gaviaProjectInfo as project } from "./project/project-info";
 import { installationManagers, getInstallCommand, type PackageManager } from "./project/installation";
 import CodePanel from "./design-system/CodePanel.vue";
+import QualitySummary from "./project/QualitySummary.vue";
 import { usePageAnchor } from "./usePageAnchor";
 import ButtonExample from "./design-system/examples/WlButton.vue";
 import buttonExampleSource from "./design-system/examples/WlButton.vue?raw";
@@ -27,6 +28,7 @@ const emit = defineEmits<{
   navigate: [view: "docs" | "font" | "system" | "project" | "theme-builder"];
   catalog: [];
   component: [name: string];
+  quality: [];
 }>();
 const installManager = ref<string | null>("pnpm");
 const installCommand = computed(() => getInstallCommand((installManager.value ?? "pnpm") as PackageManager));
@@ -173,6 +175,7 @@ createApp(App).mount("#app");`;
         <article class="home-button-panel wl-stack" data-space="lg" aria-labelledby="home-button-title"><div class="wl-stack" data-space="sm"><p class="home-panel-label wl-text-small">02 / App.vue</p><h3 id="home-button-title" class="wl-text-subheading">Попробуйте компонент</h3></div><div class="home-button-preview"><ButtonExample :preview="buttonPreview" /></div><CodePanel :source="buttonSource" title="Показать App.vue" /></article>
       </div>
     </section>
+    <QualitySummary :href="themedHref('?view=docs&section=quality')" @navigate="emit('quality')" />
     </div>
   </main>
 </template>

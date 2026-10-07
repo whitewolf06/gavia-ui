@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
-import { createPlaygroundUrl, isDocumentationAssetSection, isDocumentationFoundationSection, isDocumentationSection, parsePlaygroundRoute } from "../../../apps/playground/src/navigation";
+import { createPlaygroundUrl, isDocumentationAssetSection, isDocumentationFoundationSection, isDocumentationQualitySection, isDocumentationSection, parsePlaygroundRoute } from "../../../apps/playground/src/navigation";
 
 describe("playground query navigation", () => {
   it("opens the font page under Pages while preserving theme and clearing Docs selectors", () => {
@@ -56,7 +56,7 @@ describe("playground query navigation", () => {
     expect(current.hash).toBe("#project-changelog");
   });
   it("accepts known docs sections and normalizes conflicting component fields", () => {
-    for (const section of ["typography", "layout", "responsive", "content", "icons", "colors"] as const) {
+    for (const section of ["typography", "layout", "responsive", "content", "icons", "colors", "quality"] as const) {
       expect(parsePlaygroundRoute("?view=docs&section=" + section)).toEqual({ view: "docs", section });
       expect(parsePlaygroundRoute("?view=docs&section=" + section + "&component=WlButton")).toEqual({ view: "docs", section });
       for (const view of ["home", "system", "project"]) {
@@ -130,4 +130,20 @@ describe("playground query navigation", () => {
     expect(current.hash).toBe("#component-WlTimePicker");
     expect(createPlaygroundUrl(current, { view: "components", component: "WlSelect" }).searchParams.get("view")).toBe("docs");
   });
+  it("keeps quality deep links distinct from examples and preserves the selected theme", () => {
+    expect(isDocumentationQualitySection("quality")).toBe(true);
+    expect(isDocumentationSection("quality")).toBe(true);
+    expect(isDocumentationFoundationSection("quality")).toBe(false);
+    expect(isDocumentationAssetSection("quality")).toBe(false);
+    expect(isDocumentationQualitySection("layout")).toBe(false);
+    const current = new URL("https://example.test/gavia-ui/?view=docs&theme=newspaper&component=WlInput#old");
+    const quality = createPlaygroundUrl(current, { view: "docs", section: "quality" });
+    expect(quality.href).toBe("https://example.test/gavia-ui/?view=docs&theme=newspaper&section=quality");
+    expect(parsePlaygroundRoute(quality.search)).toEqual({ view: "docs", section: "quality" });
+    expect(parsePlaygroundRoute(quality.search + "&component=WlInput")).toEqual({ view: "docs", section: "quality" });
+    expect(createPlaygroundUrl(quality, { view: "docs" }).searchParams.has("section")).toBe(false);
+    expect(current.hash).toBe("#old");
+    expect(current.searchParams.get("component")).toBe("WlInput");
+  });
+
 });

@@ -74,8 +74,16 @@ Axe проверяет видимый DOM, включая открытые сп�
 
 ## Покрытие и размер
 
-`pnpm test:coverage` создаёт HTML, LCOV и JSON summary. В текущем измерении
-612 тестов: statements/lines 98.28%, branches 87.05%, functions 82.73%.
+`pnpm test:coverage` создаёт HTML, LCOV, JSON summary и результаты Vitest в
+`packages/ui-kit/coverage/tests.json`. Команда `pnpm quality:update` получает
+проценты и количество успешных тестов из этих файлов, записывает версию и время
+запуска и обновляет данные playground и SVG-бейдж README.
+[Сохранённое измерение](../apps/playground/src/project/quality-report.generated.json) — источник бейджа README.
+[Раздел playground](https://whitewolf06.github.io/gavia-ui/?view=docs&section=quality) показывает отчёт
+своей сборки; после публикации из CI он может отличаться от сохранённого снимка.
+Дата относится к измерению, а не к публикации пакета. Генератор отклоняет
+неуспешный или неполный прогон; в CI данные передаются в Pages и архив
+playground из того же запуска workflow с проверкой версии и Git revision.
 В CI минимум 97/97/85/81% соответственно, критическое восстановление атрибутов
 при отмене закрытия оверлея — 100%. Из расчёта исключены декларации типов,
 сгенерированные каталоги и метаданные manifest, точки реэкспорта; компоненты,

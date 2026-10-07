@@ -48,6 +48,9 @@ jobs:
       - name: Verify release tooling
         run: pnpm test:release-tools
 
+      - name: Verify quality report generation
+        run: pnpm test:quality-report
+
       - name: Verify compatibility checker catches breaking changes
         if: matrix.node-version == 24
         run: node --test scripts/check-compatibility.test.mjs
@@ -71,6 +74,19 @@ jobs:
       - name: Test with coverage thresholds
         if: matrix.node-version == 24
         run: pnpm test:coverage
+
+      - name: Generate measured playground quality data
+        if: matrix.node-version == 24
+        run: pnpm quality:update
+
+      # Only numeric metrics, synthetic test totals, timestamp and Git revision.
+      - name: Save measured playground quality data
+        if: matrix.node-version == 24
+        uses: actions/upload-artifact@v4
+        with:
+          name: gavia-ui-quality
+          path: apps/playground/src/project/quality-report.generated.json
+          if-no-files-found: error
 
       - name: Save coverage report
         if: always() && matrix.node-version == 24
@@ -209,6 +225,13 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Build library CSS and public API
         run: pnpm build
+      - name: Download quality metrics measured in this workflow
+        uses: actions/download-artifact@v4
+        with:
+          name: gavia-ui-quality
+          path: .tmp/quality-report
+      - name: Restore validated quality metrics for this revision
+        run: pnpm quality:restore .tmp/quality-report
       - name: Build public documentation for its repository path
         run: pnpm build:pages
       - name: Prefer Ubuntu archive for browser dependencies
@@ -378,6 +401,13 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
+      - name: Download quality metrics measured in this workflow
+        uses: actions/download-artifact@v4
+        with:
+          name: gavia-ui-quality
+          path: .tmp/quality-report
+      - name: Restore validated quality metrics for this revision
+        run: pnpm quality:restore .tmp/quality-report
       - name: Build portable release playground
         run: pnpm --filter gavia-ui-playground build --base=./
       - run: pnpm release:preview

@@ -8,11 +8,13 @@ import ButtonDocumentation from "./documentation/ButtonDocumentation.vue";
 import ComponentDocumentation from "./documentation/ComponentDocumentation.vue";
 import { useDocumentationScrollspy } from "./documentation/useDocumentationScrollspy";
 import FoundationPage from "./documentation/foundations/FoundationPage.vue";
-import { createPlaygroundUrl, isDocumentationAssetSection, isDocumentationFoundationSection, type DocumentationSection } from "./navigation";
+import { createPlaygroundUrl, isDocumentationAssetSection, isDocumentationFoundationSection, isDocumentationQualitySection, type DocumentationSection } from "./navigation";
 import { withPlaygroundTheme } from "./themes";
 import DocumentationAssetsPage from "./documentation/assets/DocumentationAssetsPage.vue";
 import { documentationAssets, documentationAssetPages } from "./documentation/assets/assets";
 import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
+import DocumentationQualityPage from "./documentation/quality/DocumentationQualityPage.vue";
+import { documentationQualityPage } from "./documentation/quality/quality";
 import { documentationCategories, documentationFoundations, documentationFoundationPages, documentationOverviewHeadings, foundationHeadings, installationSource, type DocumentationHeading } from "./documentation/catalog";
 
 import { installationManagers, getInstallCommand, type PackageManager } from "./project/installation";
@@ -22,9 +24,11 @@ const installationCommand = computed(() => getInstallCommand((installManager.val
 const props = withDefaults(defineProps<{ component?: string; section?: DocumentationSection; theme?: WlThemeName }>(), { theme: "gavia" });
 const foundationSection = computed(() => isDocumentationFoundationSection(props.section) ? props.section : undefined);
 const assetSection = computed(() => isDocumentationAssetSection(props.section) ? props.section : undefined);
+const qualitySection = computed(() => isDocumentationQualitySection(props.section) ? props.section : undefined);
 const pageElement = ref<HTMLElement | null>(null);
 const contentElement = ref<HTMLElement | null>(null);
-const headingIds = computed(() => foundationSection.value ? foundationHeadings(foundationSection.value).map((heading) => heading.id)
+const headingIds = computed(() => qualitySection.value ? documentationQualityPage.headings.map((heading) => heading.id)
+  : foundationSection.value ? foundationHeadings(foundationSection.value).map((heading) => heading.id)
   : assetSection.value ? documentationAssets.find((asset) => asset.key === assetSection.value)?.headings.map((heading) => heading.id)
   : props.component === "WlButton" ? ["docs-button-preview-title", "docs-button-usage", "docs-button-variants", "docs-button-sizes", "docs-button-states", "docs-button-slot-layout", "docs-button-form", "docs-button-props", "docs-button-events", "docs-button-slots", "docs-button-pt", "docs-button-accessibility"]
   : props.component ? ["preview", "examples", "service", "props", "events", "slots", "pt", "accessibility"].map((key) => "docs-" + props.component!.toLowerCase() + "-" + key) : documentationOverviewHeadings.map((heading) => heading.id));
@@ -40,7 +44,8 @@ const emit = defineEmits<{
 const entry = computed(() => props.section ? undefined : wlManifest.find((item) => item.name === props.component));
 const categoryLabel = computed(() => documentationCategories.find((category) => category.key === entry.value?.category)?.label);
 const pageIntroduction = computed(() => {
-  const metadata = assetSection.value ? documentationAssetPages[assetSection.value]
+  const metadata = qualitySection.value ? documentationQualityPage
+    : assetSection.value ? documentationAssetPages[assetSection.value]
     : foundationSection.value ? documentationFoundationPages[foundationSection.value] : undefined;
   const title = metadata?.label ?? entry.value?.name ?? "Документация";
   const description = metadata?.description ?? entry.value?.description
@@ -72,6 +77,17 @@ function overviewHref(heading: DocumentationHeading): string {
   const target = createPlaygroundUrl(current, { view: "docs" });
   target.hash = heading.id;
   return withPlaygroundTheme(target.pathname + target.search + target.hash, props.theme);
+}
+const qualityHref = computed(() => {
+  const current = new URL(typeof window === "undefined" ? "http://localhost/" : window.location.href);
+  const target = createPlaygroundUrl(current, { view: "docs", section: "quality" });
+  return withPlaygroundTheme(target.pathname + target.search, props.theme);
+});
+function navigateQuality(event: MouseEvent): void {
+  if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  closeMobileMenu();
+  emit("section", "quality");
 }
 function navigateOverview(event: MouseEvent, heading: DocumentationHeading): void {
   // Preserve the native new-tab/window and context-menu behavior of a real link.
@@ -111,6 +127,10 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
             <section class="docs-nav-section wl-stack" data-space="sm" aria-label="Начало работы">
               <h2 class="docs-sidebar-heading"><span class="docs-sidebar-mark docs-sidebar-book"><WlIcon class="docs-sidebar-icon docs-sidebar-icon--book" name="book" :size="16" /></span>Начало работы</h2>
               <nav class="docs-subnav" aria-label="Разделы начала работы"><ul class="docs-toc-list"><li v-for="heading in overviewSections" :key="heading.id"><a class="docs-anchor-link" :href="overviewHref(heading)" :aria-current="!component && !section && activeId === heading.id ? 'location' : undefined" @click="navigateOverview($event, heading)"><span class="docs-toc-indicator" aria-hidden="true"><WlIcon name="chevron-right" :size="10" /></span>{{ heading.title }}</a></li></ul></nav>
+              <div class="docs-foundation-nav">
+                <a class="docs-component-link docs-quality-link" :href="qualityHref" :aria-current="qualitySection ? 'page' : undefined" @click="navigateQuality">{{ documentationQualityPage.label }}</a>
+                <nav v-if="qualitySection" class="docs-subnav" aria-label="На этой странице"><ul class="docs-toc-list"><li v-for="heading in documentationQualityPage.headings" :key="heading.id"><a class="docs-anchor-link" :href="'#' + heading.id" :aria-current="activeId === heading.id ? 'location' : undefined" @click="navigateAnchor(heading)"><span class="docs-toc-indicator" aria-hidden="true"><WlIcon name="chevron-right" :size="10" /></span>{{ heading.title }}</a></li></ul></nav>
+              </div>
             </section>
             <nav class="docs-nav-section wl-stack" data-space="xs" aria-label="Основы">
               <h2 class="docs-sidebar-heading"><span class="docs-sidebar-mark"><WlIcon class="docs-sidebar-icon" name="grid" :size="16" /></span>Основы</h2>
@@ -147,7 +167,8 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
       </aside>
 
       <div ref="contentElement" class="docs-content wl-stack" data-space="2xl">
-        <DocumentationAssetsPage v-if="assetSection" :key="assetSection" :section="assetSection" :theme="theme" />
+        <DocumentationQualityPage v-if="qualitySection" />
+        <DocumentationAssetsPage v-else-if="assetSection" :key="assetSection" :section="assetSection" :theme="theme" />
         <FoundationPage v-else-if="foundationSection" :key="foundationSection" :section="foundationSection" @component="emit('component', $event)" @navigate="emit('navigate', $event)" />
         <template v-else-if="entry">
 
@@ -246,6 +267,7 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 .docs-component-name { min-width: 0; overflow-wrap: anywhere; }
 .docs-component-version { flex: none; color: inherit; font-size: 11px; font-weight: 400; font-variant-numeric: tabular-nums; white-space: nowrap; }
 @media (pointer: coarse) { .docs-foundation-nav .docs-component-link, .docs-catalog-list .docs-component-link { min-height: 36px; } }
+.docs-quality-link { text-decoration: none; }
 .docs-component-link:hover { background: var(--wl-bg-soft); }
 .docs-component-link[aria-current="page"] { color: var(--wl-text-accent); background: var(--wl-accent-soft); }
 .docs-pilot-mark { padding: 2px var(--wl-space-xs); border-radius: var(--wl-corner-control); color: var(--wl-text-muted); font-size: 10px; }

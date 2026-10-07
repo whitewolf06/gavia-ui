@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "version": "0.9.1",
+  "measuredAt": "2026-10-07T22:50:01.595Z",
+  "source": {
+    "revision": "5ac8b642312ac304f04cb4eaebce9b27904f8035",
+    "dirty": true,
+    "environment": "local"
+  },
+  "tests": {
+    "passed": 613,
+    "total": 613
+  },
+  "coverage": {
+    "lines": 98.28,
+    "statements": 98.28,
+    "branches": 87.04,
+    "functions": 82.73
+  }
+}
