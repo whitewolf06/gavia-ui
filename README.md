@@ -11,6 +11,7 @@
 <p align="center">
   <a href="https://whitewolf06.github.io/gavia-ui/"><img src="docs/brand/playground-button.svg" alt="Открыть Playground" width="230" height="44"></a><br>
   · <a href="https://whitewolf06.github.io/gavia-ui/?view=docs">Документация</a>
+  · <a href="https://whitewolf06.github.io/gavia-ui/?view=font">Gavia Sans</a>
   · <a href="https://www.npmjs.com/package/gavia-ui">Пакет npm</a>
 </p>
 
@@ -18,40 +19,42 @@
   <img src="docs/brand/gavia-lake-hero-v2.webp" alt="Тихое озеро на рассвете, туманный хвойный берег и гагара — оформление темы Gavia" width="1200">
 </a>
 
-В текущей ветке репозитория — **53 компонента, 113 SVG-иконок, 442 дизайн-токена
+В составе **Gavia UI 0.9.0 — 53 компонента, 113 SVG-иконок, 442 дизайн-токена
 и четыре темы:** Gavia, White, Graphite и Newspaper. Playground объединяет
 руководства по каждому компоненту, интерактивные настройки, копируемый Vue-код,
 готовые сценарии и подбор собственной палитры. В каталоге компонентов указана
 версия первой поставки каждого компонента.
 
+**Gavia Sans 0.6** входит в UI Kit и служит основным шрифтом темы Gavia:
+кириллица и латиница, шесть весов с прямым и наклонным начертанием, TTF и WOFF2.
+White, Graphite и Newspaper сохраняют свою типографику.
+[Подключение темы](docs/theme-gavia.md) · [Образцы и скачивание шрифта](https://whitewolf06.github.io/gavia-ui/?view=font).
+
 **Vue 3 — единственный обязательный peer.** Runtime-зависимостей нет;
 стили подключаются явно. Библиотека работает без дополнительных UI-пакетов,
 роутера, хранилища состояния и API-клиента.
 
-Новая озёрная тема Gavia и гарнитура **Gavia Sans 0.6** готовятся в исходниках
-следующего выпуска; опубликованный npm-пакет `gavia-ui@0.8.1` их пока не содержит.
-В гарнитуре — кириллица и латиница, шесть весов с прямым и наклонным начертанием,
-TTF и WOFF2. [Тема и подключение](docs/theme-gavia.md) · [Шрифт и образцы](docs/font-gavia.md).
-
 ## Быстрый старт
 
-Установите опубликованную версию в Vue-приложение:
+Установите библиотеку в Vue-приложение:
 
 ```bash
-pnpm add gavia-ui@0.8.1 vue
+pnpm add gavia-ui@0.9.0 vue
 ```
 
-Подключите стили в точке входа и выберите тему:
+Подключите стили и шрифт в точке входа, затем выберите тему Gavia:
 
 ```ts
 // main.ts
 import { createApp } from "vue";
 import "gavia-ui/styles/reset.css";
+import "gavia-ui/styles/fonts/gavia.css";
 import "gavia-ui/styles/base.css";
-import "gavia-ui/styles/primitives.css";
-import "gavia-ui/themes/white.css";
+import "gavia-ui/styles/primitives.css"; // необязательные классы компоновки и типографики
+import "gavia-ui/themes/gavia.css";
 import App from "./App.vue";
 
+document.documentElement.dataset.wlTheme = "gavia";
 createApp(App).mount("#app");
 ```
 
@@ -65,8 +68,11 @@ import { WlButton } from "gavia-ui";
 </template>
 ```
 
-White включена в опубликованную версию; для Graphite или Newspaper импортируйте
-соответствующий CSS и установите `data-wl-theme` на корневом элементе.
+Вместо строки `dataset.wlTheme` можно указать `<html data-wl-theme="gavia">`
+в `index.html`. Для White, Graphite или Newspaper импортируйте соответствующий
+CSS и выберите `data-wl-theme="white"`, `"graphite"` или `"newspaper"`.
+Без шрифтового CSS Gavia использует системный fallback; без выбора темы библиотека
+сохраняет White. `WlConfig` для базового подключения не требуется.
 [Подробное подключение, API и доступность](https://whitewolf06.github.io/gavia-ui/?view=docs).
 
 ## Документация и участие
@@ -74,8 +80,8 @@ White включена в опубликованную версию; для Grap
 - [Руководства компонентов](https://whitewolf06.github.io/gavia-ui/?view=docs) — примеры, настройки, API и клавиатурные состояния.
 - [Дизайн-система](docs/design-system.md) — токены, типографика, состояния и готовые сценарии.
 - [CSS-примитивы](docs/primitives.md) и [адаптивность](docs/responsiveness.md) — компоновка и правила размеров.
-- [Тема Gavia](docs/theme-gavia.md) и [шрифт Gavia Sans](docs/font-gavia.md) — оформление следующего выпуска.
-- [Changelog](CHANGELOG.md), [миграция 0.8](docs/migration-0.8.md) и [проверенные выпуски](docs/releases.md) — история и обновление приложения.
+- [Тема Gavia](docs/theme-gavia.md) и [шрифт Gavia Sans](docs/font-gavia.md) — палитра, подключение, образцы и лицензия.
+- [Changelog](CHANGELOG.md), [миграция 0.9](docs/migration-0.9.md), [история ребрендинга](docs/migration-gavia.md) и [проверенные выпуски](docs/releases.md) — история и обновление приложения.
 - [Архитектура playground](docs/playground.md) и [публикация Pages](docs/hosting.md).
 
 Создатель и сопровождающий — [Gorbach Dmitry](https://github.com/whitewolf06).

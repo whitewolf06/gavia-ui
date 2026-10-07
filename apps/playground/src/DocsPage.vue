@@ -161,7 +161,7 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
             <div class="wl-stack" data-space="sm"><p class="docs-eyebrow">01 / Начало</p><h2 :id="installHeading.id" class="wl-text-heading">{{ installHeading.title }}</h2><p class="wl-text-body wl-text-muted">Vue 3 — единственный обязательный peer. Установите пакет, явно подключите стили и выберите тему. WlConfig нужен только для глобальных pt, локали и анимаций.</p></div>
             <CodePanel :source="installationCommand" title="Установка через pnpm" :expanded="true" />
             <CodePanel :source="installationSource" title="main.ts · подключение приложения" :expanded="true" />
-            <p class="wl-text-small wl-text-muted">В примере подключена White из опубликованной версии. Для Graphite и Newspaper импортируйте соответствующий CSS из <code>gavia-ui/themes/</code> и установите <code>data-wl-theme</code> на корневом элементе. Новая Gavia пока доступна в рабочей ветке и будет включена в следующий выпуск.</p>
+            <p class="wl-text-small wl-text-muted">В примере подключена White. Для Graphite, Newspaper или Gavia импортируйте соответствующий CSS из <code>gavia-ui/themes/</code> и установите <code>data-wl-theme</code> на корневом элементе. Gavia и её шрифт доступны начиная с 0.9.0; дополнительно подключите <code>gavia-ui/styles/fonts/gavia.css</code>.</p>
           </section>
 
           <section class="docs-overview-section wl-stack" data-space="lg">

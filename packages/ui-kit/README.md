@@ -1,60 +1,81 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/whitewolf06/gavia-ui/main/docs/brand/gavia-ui-mark-lake.svg" alt="Гагара — знак Gavia UI" width="64" height="64">
+</p>
+
 # Gavia UI
 
-[![Смотреть демо Gavia UI](https://img.shields.io/badge/LIVE_DEMO-2563EB?style=for-the-badge)](https://whitewolf06.github.io/gavia-ui/ "Смотреть демо Gavia UI")
+Бесплатная библиотека компонентов и дизайн-система для **Vue 3 + TypeScript**.
+В составе: **53 компонента, 113 SVG-иконок, 442 дизайн-токена, четыре темы
+и гарнитура Gavia Sans 0.6**. Runtime-зависимостей нет; Vue 3 — единственный
+обязательный peer. Стили подключаются явно.
 
-Версия `0.8.1` опубликована в публичном npm 2026-10-06 (Москва). [История изменений](CHANGELOG.md).
-[Переход на Gavia UI](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.7.md).
+<p align="center">
+  <a href="https://whitewolf06.github.io/gavia-ui/"><img src="https://raw.githubusercontent.com/whitewolf06/gavia-ui/main/docs/brand/playground-button.svg" alt="Открыть Playground" width="230" height="44"></a><br>
+  · <a href="https://whitewolf06.github.io/gavia-ui/?view=docs">Документация</a>
+  · <a href="https://whitewolf06.github.io/gavia-ui/?view=font">Gavia Sans</a>
+  · <a href="https://github.com/whitewolf06/gavia-ui">GitHub</a>
+</p>
 
-[Новые компоненты и переход 0.8](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.8.md).
+Версия **0.9.0**. [История изменений](CHANGELOG.md) ·
+[Миграция 0.9](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.9.md) ·
+[История ребрендинга](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-gavia.md).
+Код UI Kit — [MIT](LICENSE), файлы шрифта —
+[SIL OFL 1.1](https://github.com/whitewolf06/gavia-ui/blob/main/packages/ui-kit/fonts/gavia/OFL.txt).
 
-Создатель и сопровождающий — [Gorbach Dmitry](https://github.com/whitewolf06).
-Витрина в репозитории включает живые примеры, страницу об авторе и полный changelog;
-[публикация документации](https://github.com/whitewolf06/gavia-ui/blob/main/docs/hosting.md).
-
-## Лицензия и установка
-
-MIT — бесплатно для личного и коммерческого использования. Можно использовать,
-изменять и распространять при сохранении уведомления об авторских правах и
-текста лицензии. Полный текст включён в [LICENSE](LICENSE).
-
-Установка из публичного npm:
-
-```bash
-pnpm add gavia-ui@0.8.1 vue
-```
-
-GitHub-токен не нужен. Актуальное состояние публикации пакета и витрины —
-в [каноническом README](https://github.com/whitewolf06/gavia-ui/blob/main/README.md).
-Архив текущих исходников `0.8.1` также можно собрать из
-[репозитория](https://github.com/whitewolf06/gavia-ui):
+## Быстрый старт
 
 ```bash
-# Из корня репозитория:
-pnpm build
-pnpm run pack
-# В приложении-потребителе:
-pnpm add /absolute/path/to/gavia-ui/packages/ui-kit/gavia-ui-0.8.1.tgz vue
+pnpm add gavia-ui@0.9.0 vue
 ```
 
-Runtime-зависимостей нет; Vue 3 — единственный обязательный peer.
-[История изменений](CHANGELOG.md) и
-[переход с прежнего имени](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-gavia.md).
+```ts
+// main.ts
+import { createApp } from "vue";
+import "gavia-ui/styles/reset.css";
+import "gavia-ui/styles/fonts/gavia.css";
+import "gavia-ui/styles/base.css";
+import "gavia-ui/styles/primitives.css"; // необязательные классы компоновки и типографики
+import "gavia-ui/themes/gavia.css";
+import App from "./App.vue";
+
+document.documentElement.dataset.wlTheme = "gavia";
+createApp(App).mount("#app");
+```
+
+```vue
+<script setup lang="ts">
+import { WlButton } from "gavia-ui";
+</script>
+
+<template>
+  <WlButton>Создать проект</WlButton>
+</template>
+```
+
+Вместо строки `dataset.wlTheme` можно указать `<html data-wl-theme="gavia">`
+в `index.html`. Gavia использует Gavia Sans; без шрифтового CSS доступен системный
+fallback. Без выбора темы библиотека сохраняет White. Для White, Graphite или
+Newspaper импортируйте соответствующий CSS и выберите одноимённый `data-wl-theme`.
+`WlConfig` для базового подключения не требуется.
 
 ## Шрифт Gavia Sans
 
-В релизной ветке гарнитура Gavia Sans 0.6 включена в пакет: 6 весов × 2 стиля,
-кириллица и латиница, WOFF2 и TTF. Тема Gavia использует её как основной шрифт.
-Подключение остаётся явным: `import "gavia-ui/styles/fonts/gavia.css";`.
+Gavia Sans 0.6 входит в пакет: кириллица и латиница, шесть весов
+100 / 300 / 400 / 500 / 600 / 700 с прямым и наклонным начертанием, WOFF2 и TTF.
+Она служит основным шрифтом **только темы Gavia**; White, Graphite и Newspaper
+сохраняют свою типографику. Подключение явное: `import "gavia-ui/styles/fonts/gavia.css";`.
+
 Файлы доступны через `gavia-ui/fonts/gavia/<file>` и применимы без Vue.
-Шрифты лицензированы отдельно под SIL OFL 1.1; код UI-кита — MIT.
-[Подключение, образцы и лицензия](../../docs/font-gavia.md).
-Playground показывает гарнитуру в отдельном разделе «Шрифт» (`?view=font`).
+[Образцы и скачивание Gavia-Sans-0.6.zip](https://whitewolf06.github.io/gavia-ui/?view=font) ·
+[Подключение и лицензия](https://github.com/whitewolf06/gavia-ui/blob/main/docs/font-gavia.md).
+Старое CSS-имя `Gavia` зарегистрировано как совместимый алиас; пути импорта
+и имена файлов `Gavia-*.ttf` / `Gavia-*.woff2` сохранены.
 
 ## Дизайн-система
 
 Общие роли типографики, шкала расстояний, поверхности, состояния и UI-паттерны
 описаны в [руководстве](https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md). Playground `?view=system`
-показывает каталог токенов, три темы и контракты 53 компонентов.
+показывает 442 токена, четыре темы и контракты 53 компонентов.
 
 Опциональная компоновка и типографика: явный импорт
 `gavia-ui/styles/primitives.css`. Экспорты `wlDesignTokens`,
@@ -79,20 +100,25 @@ primary/danger используют новые роли `--wl-action-primary-*` 
 | ------------ | ------ | -------------------------- |
 | `vue`        | ^3.4   | обязательный peer          |
 
-## Подключение
+## Необязательная конфигурация
+
+WlConfig задаёт глобальные pt, локаль и анимацию. Сервисы подключайте, если
+используете уведомления или диалог подтверждения:
 
 ```ts
 // main.ts
 import { createApp } from "vue";
 import { WlConfig, WlToastService, WlConfirmationService, wlLocaleRu } from "gavia-ui";
 
-// Стили подключаются явно: reset → base → тема
+// Стили подключаются явно: reset → шрифт → base → тема
 import "gavia-ui/styles/reset.css";
+import "gavia-ui/styles/fonts/gavia.css";
 import "gavia-ui/styles/base.css";
-import "gavia-ui/themes/white.css";
+import "gavia-ui/themes/gavia.css";
 
 import App from "./App.vue";
 
+document.documentElement.dataset.wlTheme = "gavia";
 const app = createApp(App);
 app.use(WlConfig, { locale: wlLocaleRu });
 app.use(WlToastService);
@@ -121,12 +147,18 @@ const text = ref("");
 
 ## Exports
 
-| Subpath                               | Содержимое                                   |
-| ------------------------------------- | -------------------------------------------- |
-| `gavia-ui`                   | ESM + `.d.ts`: компоненты, типы, `createWlPt`, `WlTooltip` |
-| `gavia-ui/styles/reset.css`  | минимальный reset (слой `wl.reset`)          |
-| `gavia-ui/styles/base.css`   | токены + стили компонентов (`wl.tokens`, `wl.components`) |
-| `gavia-ui/themes/<theme>.css`| тема: `white`, `graphite` или `newspaper`    |
+| Subpath | Содержимое |
+| --- | --- |
+| `gavia-ui` | ESM + `.d.ts`: компоненты, типы, `createWlPt`, `WlTooltip`, manifest и токены |
+| `gavia-ui/styles/reset.css` | минимальный reset (слой `wl.reset`) |
+| `gavia-ui/styles/base.css` | токены + стили компонентов (`wl.tokens`, `wl.components`) |
+| `gavia-ui/styles/primitives.css` | необязательные классы компоновки и типографики |
+| `gavia-ui/styles/fonts/gavia.css` | явное подключение Gavia Sans и совместимого CSS-алиаса `Gavia` |
+| `gavia-ui/fonts/gavia/<file>` | WOFF2, TTF и лицензии шрифта |
+| `gavia-ui/themes/<theme>.css` | `gavia`, `white`, `graphite` или `newspaper` |
+| `gavia-ui/manifest.json` | JSON-контракты всех 53 компонентов |
+| `gavia-ui/design-tokens.json` | JSON-каталог токенов, тем, типографики и шкал |
+| `gavia-ui/package.json` | метаданные пакета |
 
 ## Токены и темы
 
@@ -146,7 +178,7 @@ const text = ref("");
 <html data-wl-theme="graphite">
 ```
 
-или явным импортом одной темы. Своя тема создаётся заменой токенов, без форка:
+Если используете одну тему, импортируйте её CSS и установите соответствующий атрибут:
 
 ```ts
 import "gavia-ui/themes/newspaper.css";
@@ -256,11 +288,20 @@ app.use(WlConfig, {
 
 ## Компоненты
 
-`WlButton`, `WlIcon`, `WlInput`, `WlTextarea`, `WlSelect`, `WlMultiSelect`,
-`WlAutocomplete`, `WlCheckbox`, `WlRadio`, `WlSwitch`, `WlTag`, `WlChip`,
-`WlBadge`, `WlAvatar`, `WlCard`, `WlTabs`, `WlAlert`, `WlSpinner`,
-`WlSkeleton`, `WlProgress`, `WlDialog`, `WlConfirmDialog`, `WlDrawer`,
-`WlDivider` — плюс директива `WlTooltip`, `createWlPt` и типы
+| Группа | Компоненты |
+| --- | --- |
+| Действия | `WlButton`, `WlIconButton`, `WlButtonGroup`, `WlSegmented`, `WlMenu`, `WlNavItem` |
+| Ввод данных | `WlTimePicker`, `WlFilePicker`, `WlInput`, `WlPasswordInput`, `WlNumberInput`, `WlTextarea`, `WlSelect`, `WlMultiSelect`, `WlAutocomplete`, `WlCheckbox`, `WlRadio`, `WlSwitch`, `WlSlider`, `WlDatePicker`, `WlCalendar`, `WlColorPicker`, `WlFileUpload` |
+| Данные | `WlTable`, `WlPagination`, `WlBadge`, `WlTag`, `WlChip`, `WlPill`, `WlAvatar`, `WlStatCard`, `WlProgress`, `WlSkeleton`, `WlEmpty` |
+| Контейнеры | `WlCard`, `WlAccordion`, `WlTabs`, `WlDialog`, `WlDrawer`, `WlPopover`, `WlDivider` |
+| Составные элементы | `WlPageHeader`, `WlFilterBar`, `WlSidebar`, `WlCommandPalette` |
+| Навигация | `WlBreadcrumbs`, `WlSteps` |
+| Обратная связь | `WlAlert`, `WlToast`, `WlConfirmDialog`, `WlSpinner` |
+| Дополнительно | `WlField`, `WlIcon` |
+
+У каждого компонента есть [руководство в playground](https://whitewolf06.github.io/gavia-ui/?view=docs):
+живой пример, настройки, копируемый Vue-код, API, доступность и версия первой поставки.
+Дополнительно экспортируются директива `WlTooltip`, `createWlPt` и типы
 (`WlSize`, `WlDensity`, `WlButtonVariant`, `WlTabItem`, …).
 
 ### Подтверждения: WlConfirmDialog + useWlConfirm
@@ -322,7 +363,7 @@ import manifest from "gavia-ui/manifest.json";
 
 Типы: `WlComponentManifest`, `WlPropManifest`, `WlSlotManifest`, `WlEmitManifest`,
 `WlModelManifest`, `WlManifestCategory`, `WlManifestPropType`. Категории:
-`actions`, `inputs`, `data`, `containers`, `navigation`, `feedback`, `misc`.
+`actions`, `inputs`, `data`, `containers`, `composites`, `navigation`, `feedback`, `misc`.
 Пропсы типа `icon` принимают значения из `WlIconName`, тип `object` — это
 pass-through (`pt`) или сложные объекты вроде `locale`.
 
