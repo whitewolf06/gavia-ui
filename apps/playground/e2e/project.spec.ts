@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { chooseShowcaseTheme, navigateMainView } from "./select-helpers";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, URL as NodeURL } from "node:url";
-const publishedVersion = "0.8.1";
+const publishedVersion = "0.9.1";
 const packageMetadata = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../../../packages/ui-kit/package.json", import.meta.url)), "utf8")) as {
   name: string;
   version: string;

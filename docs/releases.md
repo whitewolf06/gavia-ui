@@ -7,6 +7,40 @@
 Витрина уже опубликована: [Gavia UI в GitHub Pages](https://whitewolf06.github.io/gavia-ui/).
 Первый npm-выпуск опубликован: [gavia-ui@0.7.0](https://www.npmjs.com/package/gavia-ui).
 
+## Выпуск 0.9.1
+
+[gavia-ui@0.9.1](https://www.npmjs.com/package/gavia-ui/v/0.9.1) опубликован
+2026-10-07 (Москва) через OIDC по новому аннотированному тегу `v0.9.1`.
+Тег указывает на `ccb4634b3b74995e4e0a2776ab81dbc4bf874064`;
+[CI и публикация](https://github.com/whitewolf06/gavia-ui/actions/runs/37666981278)
+завершились успешно: Node 18/24, 591 unit-тест, 416 браузерных сценариев
+и 12 визуальных сценариев desktop/mobile для White, Graphite и Newspaper.
+
+Реестр подтвердил точную версию 0.9.1 и latest=0.9.1. Integrity скачанного
+npm-архива совпадает с архивом, проверенным publish job:
+
+```text
+sha512-2EjRy64x9eKcxXJPupR3TKFDxQ/9NmNNz/HaPNIFaFThJzRdpTZ50fvplC//D8/f7QIY3ERWFuI/MPoK+GnvrQ==
+```
+
+SHA256 npm-архива — `9aa5f3ace3b4bb893a85660c007cb136bfb9a4b74508d20f05c18f25d654733e`.
+Опубликованный архив отдельно прошёл typecheck и build в чистом Vue-потребителе,
+включая 59 SFC-примеров и 24 принятых файла Gavia Sans 0.6. Vue остаётся
+единственным обязательным peer; runtime-зависимостей и встроенного Vue/PrimeVue нет.
+В архиве сохранены MIT для UI-кита и SIL OFL 1.1 с copyright notices шрифта.
+
+```bash
+pnpm add gavia-ui@0.9.1 vue
+```
+
+[Миграция 0.9](migration-0.9.md) · [Шрифт](font-gavia.md) ·
+[Изменения](../CHANGELOG.md).
+Статус npm и команда установки в playground обновлены только после проверки
+реестра и consumer smoke; документы опубликованного архива не изменяются.
+Успех npm-выпуска не заменяет отдельную проверку GitHub Pages.
+Перед выпуском проверены документация и изображения: явно устаревших
+бесхозных артефактов не обнаружено; исходники бренда, лицензии и история сохранены.
+
 ## Выпуск 0.8.1
 
 [gavia-ui@0.8.1](https://www.npmjs.com/package/gavia-ui) опубликован 2026-10-06
