@@ -753,3 +753,85 @@ test("generic documentation keeps controls beside live code, preserves tab state
   await expect(outline.locator("[aria-current]")).toHaveCount(0);
   await expectNoHorizontalOverflow(page, docs);
 });
+
+test("documentation tabs keep header spacing stable and preserve sidebar placement on desktop and mobile", async ({ page, baseURL }, testInfo) => {
+  const measurements: Array<Record<string, string | number>> = [];
+  for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
+    await page.setViewportSize(viewport);
+    const mobile = viewport.width <= 760;
+    for (const component of ["WlTimePicker", "WlButton"]) {
+      await page.goto(pageUrl(baseURL, "?view=docs&component=" + component), { waitUntil: "domcontentloaded" });
+      const docs = page.getByTestId("docs-page");
+      const workspace = docs.locator('[data-docs-component="' + component + '"]');
+      const tabs = workspace.getByRole("tablist", { name: component === "WlButton" ? "Разделы WlButton" : "Руководство " + component, exact: true });
+      await expect(workspace).toBeVisible();
+      await expect(tabs).toBeVisible();
+      await expectRoute(page, baseURL, "docs", component);
+      await page.evaluate(() => document.fonts.ready);
+      const route = page.url();
+      const measureSpacing = () => docs.evaluate((root) => {
+        const layout = root.querySelector<HTMLElement>(".docs-layout")!;
+        const header = root.querySelector<HTMLElement>(".docs-page-header")!.getBoundingClientRect();
+        const sidebarElement = root.querySelector<HTMLElement>(".docs-sidebar")!;
+        const sidebar = sidebarElement.getBoundingClientRect();
+        const content = root.querySelector<HTMLElement>(".docs-content")!.getBoundingClientRect();
+        const tablist = root.querySelector<HTMLElement>('[data-testid="docs-component-tabs"]')!.getBoundingClientRect();
+        return {
+          rowGap: Number.parseFloat(getComputedStyle(layout).rowGap),
+          headerToContent: content.top - header.bottom,
+          headerToSidebar: sidebar.top - header.bottom,
+          sidebarToContent: content.top - sidebar.bottom,
+          sidebarToHeaderTop: sidebar.top - header.top,
+          tabsToContent: tablist.top - content.top,
+          sidebarPosition: getComputedStyle(sidebarElement).position,
+          menuOpen: root.querySelector<HTMLDetailsElement>(".docs-menu")!.open
+        };
+      });
+
+      // Both a generic guide and the dedicated Button guide must survive long/short tab changes.
+      for (const name of ["Примеры", "API", "Доступность", "Примеры"]) {
+        await test.step(viewport.width + "px " + component + " " + name, async () => {
+          const tab = tabs.getByRole("tab", { name, exact: true });
+          await tab.click();
+          await expect(tab).toHaveAttribute("aria-selected", "true");
+          await expect(tabs.locator('[aria-selected="true"]')).toHaveCount(1);
+          const panelId = await tab.getAttribute("aria-controls");
+          expect(panelId).toBeTruthy();
+          await expect(workspace.locator('[id="' + panelId + '"]')).toBeVisible();
+          await expect(workspace.getByRole("tabpanel")).toHaveCount(1);
+          await expect(docs.getByRole("heading", { level: 1 })).toHaveText(component);
+          expect(page.url(), "Local tabs preserve the component route").toBe(route);
+          await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+          await expect.poll(async () => {
+            const spacing = await measureSpacing();
+            // Mobile navigation occupies its own row between the introduction and tabs.
+            const gapErrors = mobile
+              ? [spacing.headerToSidebar - spacing.rowGap, spacing.sidebarToContent - spacing.rowGap]
+              : [spacing.headerToContent - spacing.rowGap, spacing.sidebarToHeaderTop];
+            return Math.max(...gapErrors.map(Math.abs), Math.abs(spacing.tabsToContent));
+          }, "Tabs follow the introduction with normal grid spacing, including the short accessibility panel").toBeLessThanOrEqual(1);
+          const spacing = await measureSpacing();
+          expect(spacing.rowGap).toBeGreaterThan(0);
+          expect(spacing.sidebarPosition).toBe(mobile ? "static" : "sticky");
+          expect(spacing.menuOpen).toBe(!mobile);
+          measurements.push({ width: viewport.width, component, tab: name, ...spacing, menuOpen: String(spacing.menuOpen) });
+          await expectNoHorizontalOverflow(page, docs);
+          await expectNoHorizontalOverflow(page, workspace);
+        });
+      }
+
+      if (!mobile) {
+        // Long examples let the sidebar stick without reaching the end of its grid container.
+        await page.evaluate(() => window.scrollTo({ top: 400, behavior: "instant" }));
+        await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(300);
+        await expect.poll(() => docs.locator(".docs-sidebar").evaluate((sidebar) => {
+          const globalHeader = document.querySelector<HTMLElement>(".pg-top")!;
+          return Math.abs(sidebar.getBoundingClientRect().top - globalHeader.getBoundingClientRect().bottom - 16);
+        }), "The desktop sidebar remains just below the global header while scrolling").toBeLessThanOrEqual(1);
+      }
+    }
+  }
+  const path = testInfo.outputPath("docs-tab-header-spacing.json");
+  await writeFile(path, JSON.stringify(measurements, null, 2));
+  await testInfo.attach("docs-tab-header-spacing", { path, contentType: "application/json" });
+});
