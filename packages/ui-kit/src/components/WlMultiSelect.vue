@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { useWlId } from "../utils/useWlId";
 import { computed, nextTick, ref, useAttrs } from "vue";
 import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
 import type { WlDensity, WlMultiSelectDisplay, WlSizeSm } from "../types";
-import { splitInputAttrs } from "../utils/inputAttrs";
+import { getWlControlProps, splitInputAttrs } from "../utils/inputAttrs";
 import { useAnchoredOverlay } from "../utils/anchoredOverlay";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import { optionLabel as resolveOptionLabel, optionValue as resolveOptionValue, useListNavigation } from "../utils/options";
@@ -35,6 +36,11 @@ const filterInput = ref<HTMLInputElement | null>(null);
 const query = ref("");
 const section = useWlPt("multiselect", computed(() => props.pt));
 const motion = useWlMotion(computed(() => props.motion));
+const generatedListId = `wl-multiselect-list-${useWlId()}`;
+const listAttrs = computed(() => {
+  const control = getWlControlProps(mergeWlAttrs(attrGroups.value.inputAttrs, section("hiddenInput")));
+  return mergeWlAttrs({ id: generatedListId, "aria-label": control.ariaLabel ?? props.placeholder ?? "Варианты", "aria-labelledby": control.ariaLabelledby }, section("list"));
+});
 const { visible, panel, style, show, hide } = useAnchoredOverlay();
 const selectedOptions = computed(() => props.options.filter((option) => model.value.some((value) => Object.is(resolveOptionValue(option, props.optionValue), value))));
 const filtered = computed(() => props.options.filter((option) => !query.value || resolveOptionLabel(option, props.optionLabel).toLocaleLowerCase().includes(query.value.toLocaleLowerCase())));
@@ -89,7 +95,7 @@ function onKeydown(event: KeyboardEvent): void {
       <span v-else v-bind="section('label')" class="wl-multiselect__label" :data-placeholder="!labels.length || undefined">{{ label }}</span>
       <input ref="control" v-bind="mergeWlAttrs(attrGroups.inputAttrs, section('hiddenInput'))"
         class="wl-multiselect__focus" type="text" readonly role="combobox"
-        :aria-expanded="visible" aria-haspopup="listbox" :aria-invalid="invalid || undefined"
+        :aria-expanded="visible" aria-haspopup="listbox" :aria-invalid="invalid || undefined" :aria-controls="visible ? String(listAttrs.id) : undefined"
         :disabled="disabled" :value="label" @keydown="onKeydown" />
     </div>
     <span v-bind="section('dropdown')" class="wl-multiselect__dropdown" aria-hidden="true">
@@ -108,7 +114,7 @@ function onKeydown(event: KeyboardEvent): void {
           @keydown="navigate" />
       </div>
       <div v-bind="section('listContainer')" class="wl-select__list-container">
-        <div v-bind="section('list')" class="wl-select__list" role="listbox" aria-multiselectable="true">
+        <div v-bind="listAttrs" class="wl-select__list" role="listbox" aria-multiselectable="true">
           <div v-for="(option, index) in filtered" :key="index" v-bind="section('option', { focused: active === index, selected: model.some((value) => Object.is(value, resolveOptionValue(option, props.optionValue))) })"
             class="wl-select__option" role="option" :data-active="active === index"
             :aria-selected="model.some((value) => Object.is(value, resolveOptionValue(option, props.optionValue)))"

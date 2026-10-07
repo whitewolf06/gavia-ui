@@ -172,7 +172,7 @@ const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.
 .tb-demo-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--wl-space-md); padding-bottom: var(--wl-space-lg); border-bottom: 1px solid var(--wl-border); }
 .tb-demo-brand { display: inline-flex; gap: var(--wl-space-sm); align-items: center; font-weight: 600; }
 .tb-demo-brand :deep(svg) { color: var(--wl-action-primary-bg); }
-.tb-demo-bar a { display: inline-flex; align-items: center; gap: 6px; color: var(--wl-accent); text-underline-offset: 3px; }
+.tb-demo-bar a { display: inline-flex; align-items: center; gap: 6px; color: var(--wl-text-accent); text-underline-offset: 3px; }
 .tb-demo-bar a:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 3px; }
 .tb-demo-card { padding: var(--wl-space-lg); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg-raised); }
 .tb-demo-eyebrow { color: var(--wl-text-muted); }

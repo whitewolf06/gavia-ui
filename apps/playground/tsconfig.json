@@ -1,7 +1,26 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["vite/client", "node"]
+    "types": [
+      "vite/client",
+      "node"
+    ],
+    "paths": {
+      "vue": [
+        "./node_modules/vue"
+      ],
+      "vue/*": [
+        "./node_modules/vue/*"
+      ]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.vue", "e2e/**/*.ts", "e2e/**/*.vue", "playwright*.config.ts", "vite.config.ts", "build/**/*.ts"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "e2e/**/*.ts",
+    "e2e/**/*.vue",
+    "playwright*.config.ts",
+    "vite.config.ts",
+    "build/**/*.ts"
+  ]
 }

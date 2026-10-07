@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, useId } from "vue";
+import { useWlId } from "../utils/useWlId";
+import { computed } from "vue";
 import WlIcon from "./WlIcon.vue";
 
 const props = withDefaults(
@@ -15,7 +16,7 @@ const props = withDefaults(
   }
 );
 
-const uid = useId();
+const uid = useWlId();
 const controlId = computed(() => props.id ?? `wl-field-${uid}`);
 const descId = computed(() => `${controlId.value}-desc`);
 const hasDesc = computed(() => Boolean(props.error || props.hint));

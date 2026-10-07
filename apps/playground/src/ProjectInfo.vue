@@ -73,7 +73,7 @@ onBeforeUnmount(() => {
 <style>
 .project-main { padding-block: var(--wl-space-2xl) var(--wl-space-4xl); }
 .project-eyebrow { color: var(--wl-text-muted); letter-spacing: 0.08em; text-transform: uppercase; }
-.project-link { color: var(--wl-accent); text-decoration: underline; text-underline-offset: 0.18em; overflow-wrap: anywhere; }
+.project-link { color: var(--wl-text-accent); text-decoration: underline; text-underline-offset: 0.18em; overflow-wrap: anywhere; }
 .project-link:hover { color: var(--wl-accent-hover); }
 .project-link:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 2px; border-radius: var(--wl-radius-sm); }
 .project-release { scroll-margin-block-start: var(--wl-space-4xl); overflow-wrap: anywhere; }

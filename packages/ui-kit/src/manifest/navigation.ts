@@ -1,6 +1,6 @@
 import { defineComponentManifest } from "./types";
 
-export const navigationManifest = defineComponentManifest([
+export const navigationManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlBreadcrumbs",
     category: "navigation",

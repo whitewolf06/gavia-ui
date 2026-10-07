@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { useWlId } from "../utils/useWlId";
 import {
   computed,
   nextTick,
   onBeforeUnmount,
   onMounted,
   ref,
-  useId,
   useAttrs,
   watch
 } from "vue";
@@ -65,7 +65,7 @@ const query = defineModel<string>("query", { default: "" });
 const inputRef = ref<HTMLInputElement | null>(null);
 const panelRef = ref<HTMLElement | null>(null);
 const activeIndex = ref(0);
-const listboxId = `wl-command-palette-list-${useId()}`;
+const listboxId = `wl-command-palette-list-${useWlId()}`;
 
 interface VisibleGroup {
   group: WlCommandPaletteGroup;
@@ -117,7 +117,7 @@ function activeDescendant(): string | undefined {
   return active ? optionId(active.item) : undefined;
 }
 
-watch(query, (value) => {
+watch(() => query.value, (value) => {
   activeIndex.value = 0;
   emit("search", value);
 });

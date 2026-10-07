@@ -7,7 +7,7 @@ import {
   WL_SIZES
 } from "./values";
 
-export const actionsManifest = defineComponentManifest([
+export const actionsManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlButton",
     category: "actions",

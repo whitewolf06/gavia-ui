@@ -32,7 +32,7 @@ function allowed(value: string): boolean {
   if (lower && upper && lower > upper) return value >= lower || value <= upper;
   return (!lower || value >= lower) && (!upper || value <= upper);
 }
-watch(model, (value) => { draft.value = value && isTime(value) ? value : ""; }, { immediate: true });
+watch(() => model.value, (value) => { draft.value = value && isTime(value) ? value : ""; }, { immediate: true });
 function onInput(event: Event): void {
   const target = event.target as HTMLInputElement;
   if (props.disabled || target.readOnly) return;

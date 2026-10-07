@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { WlButton, WlIcon, type WlThemeName } from "../../../packages/ui-kit/src";
+import { WlButton, WlIcon, WlSegmented, type WlThemeName } from "../../../packages/ui-kit/src";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import CodePanel from "./design-system/CodePanel.vue";
 import { usePageAnchor } from "./usePageAnchor";
@@ -13,7 +13,11 @@ import { withPlaygroundTheme } from "./themes";
 import DocumentationAssetsPage from "./documentation/assets/DocumentationAssetsPage.vue";
 import { documentationAssets, documentationAssetPages } from "./documentation/assets/assets";
 import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
-import { documentationCategories, documentationFoundations, documentationFoundationPages, documentationOverviewHeadings, foundationHeadings, installationCommand, installationSource, type DocumentationHeading } from "./documentation/catalog";
+import { documentationCategories, documentationFoundations, documentationFoundationPages, documentationOverviewHeadings, foundationHeadings, installationSource, type DocumentationHeading } from "./documentation/catalog";
+
+import { installationManagers, getInstallCommand, type PackageManager } from "./project/installation";
+const installManager = ref<string | null>("pnpm");
+const installationCommand = computed(() => getInstallCommand((installManager.value ?? "pnpm") as PackageManager, true));
 
 const props = withDefaults(defineProps<{ component?: string; section?: DocumentationSection; theme?: WlThemeName }>(), { theme: "gavia" });
 const foundationSection = computed(() => isDocumentationFoundationSection(props.section) ? props.section : undefined);
@@ -159,7 +163,8 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
           <nav class="docs-section-links" aria-label="Разделы документации"><a v-for="section in overviewSections" :key="section.id" class="docs-anchor-link" :href="'#' + section.id">{{ section.title }}</a></nav>
           <section class="docs-overview-section wl-stack" data-space="lg">
             <div class="wl-stack" data-space="sm"><p class="docs-eyebrow">01 / Начало</p><h2 :id="installHeading.id" class="wl-text-heading">{{ installHeading.title }}</h2><p class="wl-text-body wl-text-muted">Vue 3 — единственный обязательный peer. Установите пакет, явно подключите стили и выберите тему. WlConfig нужен только для глобальных pt, локали и анимаций.</p></div>
-            <CodePanel :source="installationCommand" title="Установка через pnpm" :expanded="true" />
+            <WlSegmented v-model="installManager" :options="installationManagers" aria-label="Менеджер пакетов для установки" />
+            <CodePanel :source="installationCommand" :title="`Установка через ${installManager}`" :expanded="true" />
             <CodePanel :source="installationSource" title="main.ts · подключение приложения" :expanded="true" />
             <p class="wl-text-small wl-text-muted">В примере подключена White. Для Graphite, Newspaper или Gavia импортируйте соответствующий CSS из <code>gavia-ui/themes/</code> и установите <code>data-wl-theme</code> на корневом элементе. Gavia и её шрифт доступны начиная с 0.9.1; дополнительно подключите <code>gavia-ui/styles/fonts/gavia.css</code>.</p>
           </section>
@@ -214,7 +219,7 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 .docs-sidebar-icon { flex: none; color: var(--wl-text-muted); }
 .docs-sidebar-mark { display: inline-flex; align-items: center; justify-content: center; flex: none; inline-size: var(--wl-space-xl); block-size: var(--wl-space-xl); }
 .docs-sidebar-book { padding: var(--wl-space-xs); border-radius: var(--wl-corner-control); background: var(--wl-accent-soft); }
-.docs-sidebar-icon--book { color: var(--wl-accent); }
+.docs-sidebar-icon--book { color: var(--wl-text-accent); }
 .docs-menu { min-width: 0; }
 .docs-menu-summary { display: none; padding: var(--wl-space-md); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-control); color: var(--wl-text); background: var(--wl-bg-soft); font: inherit; cursor: pointer; }
 .docs-menu-summary:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 2px; }
@@ -223,12 +228,12 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 .docs-toc-list { margin: var(--wl-space-xs) 0 var(--wl-space-sm); padding: 0; list-style: none; }
 .docs-toc-list a { position: relative; display: block; padding: var(--wl-space-xs) var(--wl-space-sm); border-radius: var(--wl-corner-control); color: var(--wl-text-muted); font: var(--wl-type-small-size)/1.5 var(--wl-font); text-decoration: none; overflow-wrap: anywhere; transition: padding-inline-start var(--wl-motion-normal) var(--wl-motion-ease), color var(--wl-motion-fast) var(--wl-motion-ease), background-color var(--wl-motion-fast) var(--wl-motion-ease); }
 .docs-toc-indicator { position: absolute; inset-inline-start: var(--wl-space-sm); inset-block-start: var(--wl-space-xs); display: inline-flex; align-items: center; justify-content: center; inline-size: var(--wl-space-sm); block-size: 1.5em; opacity: 0; transform: translateX(calc(-1 * var(--wl-space-2xs))); pointer-events: none; transition: opacity var(--wl-motion-normal) var(--wl-motion-ease), transform var(--wl-motion-normal) var(--wl-motion-ease); }
-.docs-toc-list .docs-anchor-link[aria-current="location"] { padding-inline-start: calc(var(--wl-space-sm) * 2); color: var(--wl-accent); font-weight: var(--wl-type-label-weight); background: transparent; }
+.docs-toc-list .docs-anchor-link[aria-current="location"] { padding-inline-start: calc(var(--wl-space-sm) * 2); color: var(--wl-text-accent); font-weight: var(--wl-type-label-weight); background: transparent; }
 .docs-anchor-link[aria-current="location"] .docs-toc-indicator { opacity: 1; transform: translateX(0); }
 .docs-component-outline { margin-block: var(--wl-space-sm); }
 .docs-component-header-actions { padding-block-start: var(--wl-space-xs); }
 .docs-design-rules { background: var(--wl-bg-soft); }
-.docs-toc-list a:hover { color: var(--wl-accent); background: var(--wl-bg-soft); }
+.docs-toc-list a:hover { color: var(--wl-text-accent); background: var(--wl-bg-soft); }
 .docs-toc-list a:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 2px; border-radius: var(--wl-corner-control); }
 .docs-catalog { min-width: 0; padding: var(--wl-space-xs); margin-inline: calc(-1 * var(--wl-space-xs)); }
 .docs-catalog-group { margin-bottom: var(--wl-space-md); }
@@ -242,13 +247,13 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 .docs-component-version { flex: none; color: inherit; font-size: 11px; font-weight: 400; font-variant-numeric: tabular-nums; white-space: nowrap; }
 @media (pointer: coarse) { .docs-foundation-nav .docs-component-link, .docs-catalog-list .docs-component-link { min-height: 36px; } }
 .docs-component-link:hover { background: var(--wl-bg-soft); }
-.docs-component-link[aria-current="page"] { color: var(--wl-accent); background: var(--wl-accent-soft); }
+.docs-component-link[aria-current="page"] { color: var(--wl-text-accent); background: var(--wl-accent-soft); }
 .docs-pilot-mark { padding: 2px var(--wl-space-xs); border-radius: var(--wl-corner-control); color: var(--wl-text-muted); font-size: 10px; }
 .docs-content { grid-column: 1; grid-row: 2; min-width: 0; overflow-wrap: anywhere; }
 .docs-eyebrow { font-size: var(--wl-type-small-size); color: var(--wl-text-muted); }
 .docs-version { font-size: var(--wl-type-small-size); padding: var(--wl-space-xs) var(--wl-space-sm); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-control); color: var(--wl-text-muted); }
 .docs-section-links { display: flex; flex-wrap: wrap; gap: var(--wl-space-sm) var(--wl-space-lg); padding-block: var(--wl-space-sm); }
-.docs-section-links a, .docs-text-link { color: var(--wl-accent); text-underline-offset: 3px; }
+.docs-section-links a, .docs-text-link { color: var(--wl-text-accent); text-underline-offset: 3px; }
 .docs-component-link:focus-visible, .docs-section-links a:focus-visible, .docs-text-link:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 2px; }
 .docs-overview-section { scroll-margin-top: 90px; min-width: 0; padding-top: var(--wl-space-lg); border-top: 1px solid var(--wl-border); }
 .docs-pilot-card { padding: var(--wl-space-xl); background: var(--wl-bg-soft); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); }

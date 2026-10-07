@@ -18,6 +18,7 @@ permissions:
 
 jobs:
   verify:
+    timeout-minutes: 15
     name: Verify on Node ${{ matrix.node-version }}
     runs-on: ubuntu-latest
     strategy:
@@ -41,6 +42,16 @@ jobs:
       - name: Build library
         run: pnpm build
 
+      - name: Verify backward compatibility
+        run: pnpm verify:compatibility
+
+      - name: Verify release tooling
+        run: pnpm test:release-tools
+
+      - name: Verify compatibility checker catches breaking changes
+        if: matrix.node-version == 24
+        run: node --test scripts/check-compatibility.test.mjs
+
       - name: Typecheck
         run: pnpm typecheck
 
@@ -54,7 +65,20 @@ jobs:
         run: pnpm tokens:check
 
       - name: Test
+        if: matrix.node-version == 18
         run: pnpm test
+
+      - name: Test with coverage thresholds
+        if: matrix.node-version == 24
+        run: pnpm test:coverage
+
+      - name: Save coverage report
+        if: always() && matrix.node-version == 24
+        uses: actions/upload-artifact@v4
+        with:
+          name: gavia-ui-coverage
+          path: packages/ui-kit/coverage/
+          if-no-files-found: ignore
 
       - name: Build playground
         run: pnpm build:playground
@@ -76,6 +100,7 @@ jobs:
         run: pnpm verify:package --archive "packages/ui-kit/${{ steps.package.outputs.archive }}"
 
   browser:
+    timeout-minutes: 20
     name: Browser regression tests (${{ matrix.project }})
     runs-on: ubuntu-latest
     strategy:
@@ -113,6 +138,10 @@ jobs:
         timeout-minutes: 6
         run: pnpm exec playwright install --with-deps "${{ matrix.engine }}"
 
+      - name: Verify packed browser consumer and hydration
+        if: matrix.project == 'chromium'
+        run: pnpm verify:package:browser
+
       - name: Run browser tests
         run: pnpm test:e2e --project="${{ matrix.project }}"
 
@@ -121,11 +150,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gavia-ui-browser-results-${{ matrix.project }}
-          path: apps/playground/test-results/
+          path: |
+            apps/playground/test-results/
+            .tmp/package-verification/pnpm-vue-3.4.38-browser.json
           if-no-files-found: ignore
 
   visual:
-    name: Reviewed visual regression (desktop/mobile, three themes)
+    timeout-minutes: 15
+    name: Reviewed visual regression (desktop/mobile, four themes)
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v6
@@ -151,8 +183,9 @@ jobs:
           if-no-files-found: ignore
 
   pages:
+    timeout-minutes: 20
     name: Publish documentation to GitHub Pages
-    needs: [verify, browser, visual]
+    needs: [verify, browser, visual, consumer]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'whitewolf06/gavia-ui'
     runs-on: ubuntu-latest
     permissions:
@@ -206,7 +239,8 @@ jobs:
         id: deployment
 
   publish:
-    needs: [verify, browser, visual]
+    timeout-minutes: 20
+    needs: [verify, browser, visual, consumer]
     # Bootstrap 0.7.0 is published manually; its new tag records history only.
     # See docs/releases.md for the first release and trusted-publisher setup.
     if: github.ref_type == 'tag' && github.repository == 'whitewolf06/gavia-ui' && github.ref_name != 'v0.7.0'
@@ -231,8 +265,15 @@ jobs:
       - name: Build library
         run: pnpm build
 
-      - name: Check release tag
-        run: node -e "const p=require('./packages/ui-kit/package.json'); if(process.env.GITHUB_REF_NAME !== 'v'+p.version) throw new Error('Tag and package version differ');"
+      - name: Check release tag and select npm channel
+        id: channel
+        shell: bash
+        run: |
+          tag="$(node scripts/release-channel.mjs)"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Check reviewed release notes and migration
+        run: node scripts/release-notes.mjs --check
 
       - name: Pack checked library
         id: package
@@ -240,8 +281,25 @@ jobs:
           pnpm run pack
           node -e "const fs=require('node:fs'), crypto=require('node:crypto'); const p=require('./packages/ui-kit/package.json'); const archive='gavia-ui-'+p.version+'.tgz'; const bytes=fs.readFileSync('packages/ui-kit/'+archive); console.log('archive='+archive); console.log('version='+p.version); console.log('integrity=sha512-'+crypto.createHash('sha512').update(bytes).digest('base64'));" >> "$GITHUB_OUTPUT"
 
+      - name: Prefer Ubuntu archive for browser dependencies
+        run: bash .github/scripts/prepare-browser-dependencies.sh
+
+      - name: Install Chromium for exact archive verification
+        timeout-minutes: 6
+        run: pnpm exec playwright install --with-deps chromium
+
       - name: Verify exact release archive in consumer app
-        run: pnpm verify:package --archive "packages/ui-kit/${{ steps.package.outputs.archive }}"
+        run: pnpm verify:package:browser --archive "packages/ui-kit/${{ steps.package.outputs.archive }}"
+
+      # This allowlisted report contains only synthetic fixture IDs, versions,
+      # archive hashes, bundle sizes and successful boolean checks; no HTML/logs.
+      - name: Save exact release consumer summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gavia-ui-release-consumer
+          path: .tmp/package-verification/pnpm-vue-3.4.38-browser.json
+          if-no-files-found: ignore
 
       - name: Record checked release integrity
         run: echo "Checked release archive integrity ${{ steps.package.outputs.integrity }}"
@@ -257,4 +315,89 @@ jobs:
       # npm CLI is used only for OIDC publication, never for dependency installation.
       - name: Publish checked archive to public npm
         working-directory: packages/ui-kit
-        run: npm publish "./${{ steps.package.outputs.archive }}" --access public --provenance
+        run: npm publish "./${{ steps.package.outputs.archive }}" --access public --provenance --tag "${{ steps.channel.outputs.tag }}"
+
+  consumer:
+    timeout-minutes: 15
+    name: Packed consumer (${{ matrix.manager }}, Vue ${{ matrix.vue }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - manager: npm
+            vue: "3.4.0"
+          - manager: bun
+            vue: "3.5.40"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: oven-sh/setup-bun@v2
+        if: matrix.manager == 'bun'
+        with:
+          bun-version: "1.4.0"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Prefer Ubuntu archive for browser dependencies
+        run: bash .github/scripts/prepare-browser-dependencies.sh
+      - name: Install pinned Chromium
+        timeout-minutes: 6
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Verify minimum Vue with npm
+        if: matrix.manager == 'npm'
+        run: pnpm verify:package:browser --manager npm --vue 3.4.0
+      - name: Verify Bun consumer
+        if: matrix.manager == 'bun'
+        run: pnpm verify:package:browser --manager bun --vue 3.5.40
+      - name: Save consumer evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gavia-ui-consumer-${{ matrix.manager }}
+          path: .tmp/package-verification/
+          if-no-files-found: ignore
+
+  release-preview:
+    timeout-minutes: 10
+    name: Archive versioned playground
+    needs: [publish]
+    if: github.ref_type == 'tag' && github.repository == 'whitewolf06/gavia-ui' && github.ref_name != 'v0.7.0'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Build portable release playground
+        run: pnpm --filter gavia-ui-playground build --base=./
+      - run: pnpm release:preview
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gavia-ui-playground-${{ github.ref_name }}
+          path: .tmp/release-previews/
+          if-no-files-found: error
+          retention-days: 90
+      - name: Attach preview to GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          node scripts/release-notes.mjs > .tmp/release-notes.md
+          channel="$(node scripts/release-channel.mjs)"
+          prerelease=()
+          if [ "$channel" = "next" ]; then prerelease=(--prerelease); fi
+          if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" --verify-tag --title "Gavia UI $RELEASE_TAG" --notes-file .tmp/release-notes.md "${prerelease[@]}"
+          fi
+          gh release upload "$RELEASE_TAG" .tmp/release-previews/* --clobber

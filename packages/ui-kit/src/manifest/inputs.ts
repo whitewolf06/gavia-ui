@@ -7,7 +7,7 @@ import {
   WL_SWITCH_SIZES
 } from "./values";
 
-export const inputsManifest = defineComponentManifest([
+export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlTimePicker",
     category: "inputs",

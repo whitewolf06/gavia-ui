@@ -107,9 +107,8 @@ pnpm, она упакует корневой проект; для архива �
 `pnpm run pack`.
 
 Взаимодействия проверяются в четырёх темах: Gavia, White, Graphite и Newspaper.
-Визуальные эталоны — Windows/Chromium, desktop/mobile, три утверждённые темы
-White / Graphite / Newspaper; Gavia пока проверяется вручную, её эталоны нужно
-утвердить отдельно. CI сравнивает PNG на windows-2022; взаимодействия
+Визуальные эталоны — Windows/Chromium, desktop/mobile, четыре темы
+White / Graphite / Newspaper / Gavia. Для Gavia используется настоящий Gavia Sans. CI сравнивает PNG на windows-2022; взаимодействия
 проверяются на Linux во всех браузерах. Не обновлять PNG автоматически при падении: сначала изучить
 expected/actual/diff и проверить намеренность изменения. Порядок обновления —
 `docs/design-system.md`.
@@ -145,3 +144,6 @@ Pages публикуется из main после verify/browser/visual того
   `node .tools/node_modules/pnpm/bin/pnpm.cjs <args>` (директория `.tools/`
   в .gitignore).
 - Store pnpm локальный: `.pnpm-store/` (настроено в `.npmrc`).
+
+Дополнительно: `pnpm verify:compatibility`, `pnpm test:coverage`,
+`pnpm verify:package:browser` и `pnpm test:release-tools`; политика — docs/quality.md.

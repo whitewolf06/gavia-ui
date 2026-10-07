@@ -130,6 +130,8 @@ test("themes, nested previews and responsive layout agree with the catalog", asy
   for (const theme of wlDesignThemes) {
     await chooseShowcaseTheme(page, theme.label);
     await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme.name);
+    // evaluateAll does not retry when a lazy view is still mounting after navigation.
+    await expect(page.getByRole("form", { name: "Пример формы" })).toBeVisible();
     const readableLabels = await page.locator(".wl-field__hint, .wl-table__th").evaluateAll((elements) => elements.map((element) => getComputedStyle(element).color));
     expect(readableLabels.length).toBeGreaterThan(0);
     expect(readableLabels.every((color) => color === rgb(resolveWlToken("--wl-text-muted", theme.name)))).toBe(true);

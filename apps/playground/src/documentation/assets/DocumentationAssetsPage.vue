@@ -17,6 +17,6 @@ defineProps<{ section: DocumentationAssetSection; theme: WlThemeName }>();
 <style>
 .docs-assets-page { min-width: 0; }
 .docs-assets-anchor { scroll-margin-top: var(--wl-space-lg); }
-.docs-assets-link { color: var(--wl-accent); text-underline-offset: 3px; }
+.docs-assets-link { color: var(--wl-text-accent); text-underline-offset: 3px; }
 .docs-assets-link:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 2px; }
 </style>

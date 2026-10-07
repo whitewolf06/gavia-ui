@@ -30,7 +30,7 @@ async function navigate(event: KeyboardEvent, index: number): Promise<void> {
 <style>
 .docs-tabs { display: flex; flex-wrap: wrap; gap: var(--wl-space-xs); }
 .docs-tab { min-height: 44px; padding: var(--wl-space-sm) var(--wl-space-md); border: 0; border-radius: var(--wl-corner-control); background: transparent; color: var(--wl-text-muted); font: inherit; cursor: pointer; }
-.docs-tab[aria-selected="true"] { background: var(--wl-accent-soft); color: var(--wl-accent); }
+.docs-tab[aria-selected="true"] { background: var(--wl-accent-soft); color: var(--wl-text-accent); }
 .docs-tab:not([aria-selected="true"]):hover { color: var(--wl-text); background: var(--wl-bg-soft); }
 .docs-tab:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 2px; }
 </style>

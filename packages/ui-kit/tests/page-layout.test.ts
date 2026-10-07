@@ -1,6 +1,7 @@
+import type { GlobalMountOptions } from "./mounting-types";
 import { describe, expect, it } from "vitest";
 import { nextTick } from "vue";
-import { mount, type GlobalMountOptions, type VueWrapper } from "@vue/test-utils";
+import { mount, type VueWrapper } from "@vue/test-utils";
 import { WlConfig } from "../src";
 import { WlFilterBar, WlPageHeader, createWlPt } from "../src";
 

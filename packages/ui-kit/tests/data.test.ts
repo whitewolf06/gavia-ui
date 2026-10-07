@@ -1,5 +1,6 @@
+import type { GlobalMountOptions } from "./mounting-types";
 import { describe, it, expect } from "vitest";
-import { mount, type GlobalMountOptions } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import { WlConfig } from "../src";
 import { WlInput, WlNumberInput, WlPasswordInput, WlStatCard, WlTable, WlTextarea, createWlPt } from "../src";
 import type { WlTableColumn, WlTableRow } from "../src";

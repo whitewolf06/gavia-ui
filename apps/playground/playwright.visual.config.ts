@@ -3,7 +3,7 @@ import base from "./playwright.config";
 /** Reviewed Windows/Chromium baselines; interaction tests keep all four browser projects. */
 export default defineConfig({
   ...base,
-  testMatch: "visual-regression.pw.ts",
+  testMatch: ["visual-regression.pw.ts", "gavia-visual-regression.pw.ts"],
   // Each case compares a full batch of recipe screens or interactive states.
   timeout: 60_000,
   snapshotPathTemplate: "{testDir}/visual-baselines/{projectName}/{arg}{ext}",

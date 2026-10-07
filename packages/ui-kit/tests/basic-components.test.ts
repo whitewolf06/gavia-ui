@@ -1,6 +1,7 @@
+import type { GlobalMountOptions } from "./mounting-types";
 import { afterAll, describe, expect, it } from "vitest";
 import { nextTick } from "vue";
-import { flushPromises, mount, type GlobalMountOptions } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
 import { WlConfig } from "../src";
 import {
   WlAvatar,

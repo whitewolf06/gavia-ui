@@ -282,7 +282,7 @@ const tokenCode = `.page {
 .ds-type-row { display: grid; grid-template-columns: 145px minmax(0, 1fr); gap: var(--wl-space-lg); padding-block: var(--wl-space-lg); align-items: baseline; }
 .ds-type-row + .ds-type-row { border-top: 1px solid var(--wl-border); }
 .ds-type-row p { overflow-wrap: anywhere; }
-.ds-type-row code { color: var(--wl-accent); }
+.ds-type-row code { color: var(--wl-text-accent); }
 .ds-spacing { display: grid; gap: var(--wl-space-md); }
 .ds-space-row { display: grid; grid-template-columns: 42px 80px 1fr; gap: var(--wl-space-lg); align-items: center; }
 .ds-space-bar { height: 14px; background: var(--wl-accent); border-radius: 2px; }

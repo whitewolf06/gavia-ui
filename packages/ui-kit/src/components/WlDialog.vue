@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, useAttrs, useId } from "vue";
+import { useWlId } from "../utils/useWlId";
+import { computed, ref, useAttrs } from "vue";
 import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
@@ -25,7 +26,7 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits<{ open: []; close: []; afterLeave: [] }>();
 const visible = defineModel<boolean>("visible", { default: false });
 const dialog = ref<HTMLElement | null>(null);
-const titleId = useId();
+const titleId = useWlId();
 const attrs = useAttrs();
 const section = useWlPt("dialog", computed(() => props.pt));
 const motion = useWlMotion(computed(() => props.motion));

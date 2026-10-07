@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref, watch } from "vue";
 import type { WlThemeName } from "../../../packages/ui-kit/src/types";
 import { withPlaygroundTheme } from "./themes";
-import { WlButton, WlIcon } from "../../../packages/ui-kit/src";
+import { WlButton, WlIcon, WlSegmented } from "../../../packages/ui-kit/src";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
 import { wlDesignThemes, wlDesignTokens } from "../../../packages/ui-kit/src/design-system";
@@ -11,6 +11,7 @@ import gaviaHeroUrl from "../../../docs/brand/gavia-lake-hero-v2.webp";
 import gaviaForestUrl from "../../../docs/brand/gavia-forest-card-v1.webp";
 import gaviaReedsUrl from "../../../docs/brand/gavia-reeds-card-v1.webp";
 import { gaviaProjectInfo as project } from "./project/project-info";
+import { installationManagers, getInstallCommand, type PackageManager } from "./project/installation";
 import CodePanel from "./design-system/CodePanel.vue";
 import { usePageAnchor } from "./usePageAnchor";
 import ButtonExample from "./design-system/examples/WlButton.vue";
@@ -27,19 +28,22 @@ const emit = defineEmits<{
   catalog: [];
   component: [name: string];
 }>();
-const installCommand = `pnpm add ${project.packageName}@${project.publishedVersion}`;
+const installManager = ref<string | null>("pnpm");
+const installCommand = computed(() => getInstallCommand((installManager.value ?? "pnpm") as PackageManager));
 const copied = ref(false);
 const pending = ref(false);
 const manual = ref(false);
+watch(installManager, () => { copied.value = false; manual.value = false; });
 async function copyInstall(): Promise<void> {
   copied.value = false;
   manual.value = false;
   pending.value = true;
+  const command = installCommand.value;
   try {
-    await navigator.clipboard.writeText(installCommand);
-    copied.value = true;
+    await navigator.clipboard.writeText(command);
+    copied.value = command === installCommand.value;
   } catch {
-    manual.value = true;
+    manual.value = command === installCommand.value;
   } finally {
     pending.value = false;
   }
@@ -104,6 +108,7 @@ createApp(App).mount("#app");`;
           <div class="wl-stack" data-space="xs"><p class="wl-text-subheading">Начните с установки</p><p v-if="project.npmPublished" class="wl-text-small wl-text-muted">Пакет <a class="home-text-link" :href="project.packageUrl">{{ project.packageName }}@{{ project.publishedVersion }}</a> опубликован в публичном npm.</p><p v-else class="wl-text-small wl-text-muted">Первый выпуск {{ project.packageName }} в публичном npm ещё не опубликован. Установка из исходников описана в инструкции ниже.</p></div>
         </div>
         <h2 id="home-install-title" class="wl-text-heading">Добавьте Gavia UI в проект</h2>
+        <WlSegmented v-if="project.npmPublished" v-model="installManager" :options="installationManagers" aria-label="Менеджер пакетов для установки" />
         <code v-if="project.npmPublished" class="home-install-command wl-text-code" data-testid="home-install">{{ installCommand }}</code>
         <div class="wl-inline" data-space="md">
           <WlButton v-if="project.npmPublished" size="sm" variant="secondary" :loading="pending" @click="copyInstall"><template #icon><WlIcon :name="copied ? 'check' : 'copy'" :size="16" /></template>{{ copied ? 'Скопировано' : 'Копировать команду' }}</WlButton>
@@ -189,8 +194,8 @@ createApp(App).mount("#app");`;
 .home-tagline { margin: 0; font-family: var(--wl-type-heading-family); font-size: var(--wl-type-heading-size); line-height: var(--wl-type-heading-line-height); color: var(--wl-text); }
 .home-lead { max-width: 56ch; color: var(--wl-text); }
 .home-action { max-width: 100%; text-decoration: none; }
-.home-text-link { display: inline; color: var(--wl-accent); text-decoration: underline; text-underline-offset: 0.18em; }
-.home-text-link:hover { color: var(--wl-accent-hover); }
+.home-text-link { display: inline; color: var(--wl-text-accent); text-decoration: underline; text-underline-offset: 0.18em; }
+.home-text-link:hover { color: var(--wl-text-accent-hover); }
 .home-text-link .wl-icon { display: inline-block; vertical-align: -0.15em; }
 .home-text-link:focus-visible, .home-section-card:focus-visible, .home-manual-copy:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 4px; }
 .home-credit { line-height: var(--wl-type-body-line-height); color: var(--wl-text); }

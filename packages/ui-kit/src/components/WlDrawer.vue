@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, useId } from "vue";
+import { useWlId } from "../utils/useWlId";
+import { computed, ref } from "vue";
 import { useWlMotion, useWlPt } from "../config";
 import type { WlDrawerPosition } from "../types";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
@@ -24,7 +25,7 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits<{ open: []; close: [] }>();
 const visible = defineModel<boolean>("visible", { default: false });
 const drawer = ref<HTMLElement | null>(null);
-const titleId = useId();
+const titleId = useWlId();
 const section = useWlPt("drawer", computed(() => props.pt));
 const motion = useWlMotion(computed(() => props.motion));
 useOverlayLifecycle({

@@ -1,7 +1,7 @@
 import { defineComponentManifest } from "./types";
 import { WL_ICON_NAMES } from "./values";
 
-export const miscManifest = defineComponentManifest([
+export const miscManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlField",
     category: "misc",

@@ -23,9 +23,19 @@
     "tokens:sync": "pnpm --filter gavia-ui tokens:sync",
     "tokens:check": "pnpm --filter gavia-ui tokens:check",
     "build:pages": "pnpm --filter gavia-ui-playground build --base=/gavia-ui/",
-    "test:pages": "pnpm exec playwright test -c apps/playground/playwright.pages.config.ts"
+    "test:pages": "pnpm exec playwright test -c apps/playground/playwright.pages.config.ts",
+    "verify:compatibility": "node scripts/check-compatibility.mjs",
+    "verify:package:browser": "node scripts/verify-package.mjs --browser",
+    "test:coverage": "pnpm --filter gavia-ui exec vitest run --coverage",
+    "test:release-tools": "node --test scripts/release-tools.test.mjs",
+    "changeset": "changeset",
+    "changeset:status": "changeset status",
+    "release:version": "node scripts/version-release.mjs",
+    "release:preview": "node scripts/archive-playground.mjs"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@changesets/cli": "2.31.1",
     "@playwright/test": "1.58.2"
   },
   "license": "MIT"

@@ -5,14 +5,19 @@ import { wlDesignThemes, wlDesignTokens, type WlDesignTokenName } from "./tokens
 export * from "./types";
 export * from "./tokens.generated";
 
-const definitions = new Map<string, WlDesignTokenDefinition>(wlDesignTokens.map((token) => [token.name, token]));
+// Build the lookup only when a consumer requests token resolution. Eager map
+// construction keeps the full editor catalog in otherwise button-only bundles.
+let definitions: Map<string, WlDesignTokenDefinition> | undefined;
+function tokenDefinitions(): Map<string, WlDesignTokenDefinition> {
+  return definitions ??= new Map(wlDesignTokens.map((token) => [token.name, token]));
+}
 
 /** Resolves the shipped theme snapshot without reading DOM or consumer overrides. */
 export function resolveWlToken(name: WlDesignTokenName, theme: WlThemeName = "white"): string {
   if (!wlDesignThemes.some((item) => item.name === theme)) throw new Error(`Unknown Gavia UI theme: ${theme}`);
   function resolve(reference: string, trail: string[]): string {
     if (trail.includes(reference)) throw new Error(`Circular Gavia UI token: ${reference}`);
-    const token = definitions.get(reference);
+    const token = tokenDefinitions().get(reference);
     if (!token) throw new Error(`Unknown Gavia UI token: ${reference}`);
     return (token.themes?.[theme] ?? token.value).replace(
       /var\((--wl-[a-z0-9-]+)\)/g,

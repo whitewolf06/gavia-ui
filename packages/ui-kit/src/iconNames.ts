@@ -3,8 +3,8 @@ import { WL_ICON_NAMES, type WlIconName } from "./icons.generated";
 /** A canonical name or a persisted icon identifier from a consumer. */
 export type WlIconInput = WlIconName | (string & {});
 
-const names = new Set<string>(WL_ICON_NAMES);
-const aliases: Readonly<Record<string, WlIconName>> = Object.freeze({
+const names = /* @__PURE__ */ new Set<string>(WL_ICON_NAMES);
+const aliases: Readonly<Record<string, WlIconName>> = /* @__PURE__ */ Object.freeze({
   "angle-left": "chevron-left",
   "angle-right": "chevron-right",
   bolt: "lightning",

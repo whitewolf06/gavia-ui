@@ -4,6 +4,9 @@ import { gaviaFontDownload } from "./build/font-download";
 
 export default defineConfig({
   plugins: [vue(), gaviaFontDownload()],
+  // Kit declarations target the minimum Vue line; the playground runs one Vue instance.
+  resolve: { dedupe: ["vue"] },
+  build: { target: "es2020" },
   server: {
     watch: {
       // Playwright traces contain HTML; saving them must not reload the tested page.

@@ -1,5 +1,6 @@
+import type { GlobalMountOptions } from "./mounting-types";
 import { describe, it, expect, afterEach, vi } from "vitest";
-import { mount, flushPromises, type GlobalMountOptions } from "@vue/test-utils";
+import { mount, flushPromises } from "@vue/test-utils";
 import { WlConfig } from "../src";
 import { WlDatePicker, WlFileUpload, createWlPt, wlLocaleRu } from "../src";
 

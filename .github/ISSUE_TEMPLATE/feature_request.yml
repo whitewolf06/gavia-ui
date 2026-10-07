@@ -1,0 +1,21 @@
+name: Предложение
+description: Предложить улучшение Gavia UI
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Какую задачу нужно решить?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Предлагаемое поведение и пример использования
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Совместимость и рассмотренные альтернативы
+

@@ -88,6 +88,36 @@ describe("playground theme palette model", () => {
       }
     }
   });
+  it("uses an edited Graphite link for accent text, hover and portable exports", () => {
+    const palette = edited("graphite", { link: "#a6c7ff" });
+    const overrides = createThemeOverrides(palette, "graphite");
+    for (const token of ["--wl-accent", "--wl-text-accent", "--wl-text-accent-hover"] as const) {
+      expect(resolve(token, "graphite", overrides), token).toBe(palette.link);
+    }
+    const exported = createThemeExport("custom-graphite", "graphite", palette);
+    expect(exported.spec.overrides["--wl-palette-text-accent"]).toBe(palette.link);
+    expect(exported.css).toContain("--wl-palette-text-accent: #a6c7ff;");
+    const link = getThemeContrast(palette, "graphite").find((row) => row.key === "link")!;
+    expect(link.foreground).toBe(palette.link);
+    expect(link.ratio).toBe(getContrastRatio(palette.link, palette.background));
+    expect(link.passes).toBe(true);
+  });
+  it("reports the chosen Graphite accent text even when its contrast fails", () => {
+    const baseline = createThemePalette("graphite");
+    const palette = Object.freeze(edited("graphite", { link: baseline.background }));
+    const report = getThemeContrast(palette, "graphite");
+    for (const key of ["link", "accent-text-raised", "accent-text-soft", "accent-text-selected", "accent-text-hover"]) {
+      const row = report.find((item) => item.key === key)!;
+      expect(row.foreground, key).toBe(palette.link);
+      expect(row.ratio, key).toBe(getContrastRatio(palette.link, row.background));
+      expect(row.passes, key).toBe(false);
+    }
+    expect(report.find((row) => row.key === "link")!.ratio).toBe(1);
+    const exported = createThemeExport("low-contrast", "graphite", palette);
+    expect(exported.spec.palette.link).toBe(baseline.background);
+    expect(exported.spec.overrides["--wl-palette-text-accent"]).toBe(baseline.background);
+    expect(palette.link).toBe(baseline.background);
+  });
   it("reports failed contrast without substituting the chosen link", () => {
     const palette = edited("gavia", { link: "#ffffff", mutedText: "#ffffff" });
     const overrides = createThemeOverrides(palette, "gavia");

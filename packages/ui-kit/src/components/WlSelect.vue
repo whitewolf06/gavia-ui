@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { useWlId } from "../utils/useWlId";
 import { computed, nextTick, ref, useAttrs } from "vue";
 import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
 import type { WlDensity, WlSizeSm } from "../types";
-import { splitInputAttrs } from "../utils/inputAttrs";
+import { getWlControlProps, splitInputAttrs } from "../utils/inputAttrs";
 import { useAnchoredOverlay } from "../utils/anchoredOverlay";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import { optionLabel as resolveOptionLabel, optionValue as resolveOptionValue, useListNavigation } from "../utils/options";
@@ -28,6 +29,11 @@ const attrGroups = computed(() => splitInputAttrs(attrs));
 const root = ref<HTMLElement | null>(null);
 const section = useWlPt("select", computed(() => props.pt));
 const motion = useWlMotion(computed(() => props.motion));
+const generatedListId = `wl-select-list-${useWlId()}`;
+const listAttrs = computed(() => {
+  const control = getWlControlProps(mergeWlAttrs(attrGroups.value.inputAttrs, section("root")));
+  return mergeWlAttrs({ id: generatedListId, "aria-label": control.ariaLabel ?? props.placeholder ?? "Варианты", "aria-labelledby": control.ariaLabelledby }, section("list"));
+});
 const { visible, panel, style, show, hide } = useAnchoredOverlay();
 const selected = computed(() => props.options.find((option) => Object.is(resolveOptionValue(option, props.optionValue), model.value)));
 const display = computed(() => selected.value === undefined ? props.placeholder ?? "" : resolveOptionLabel(selected.value, props.optionLabel));
@@ -58,7 +64,7 @@ function onKeydown(event: KeyboardEvent): void {
   <div ref="root" v-bind="mergeWlAttrs(attrGroups.rootAttrs, attrGroups.inputAttrs, section('root'))"
     class="wl-select" :class="[`wl-select--${size}`, { 'is-invalid': invalid, 'is-disabled': disabled, 'is-compact': density === 'compact' }]"
     role="combobox" :tabindex="disabled ? -1 : 0" :aria-expanded="visible" aria-haspopup="listbox"
-    :aria-invalid="invalid || undefined" :aria-disabled="disabled || undefined"
+    :aria-invalid="invalid || undefined" :aria-disabled="disabled || undefined" :aria-controls="visible ? String(listAttrs.id) : undefined"
     data-wl="select" :data-size="size" :data-density="density"
     @click="open" @keydown="onKeydown">
     <span v-bind="section('label')" class="wl-select__label" :data-placeholder="selected === undefined || undefined">{{ display }}</span>
@@ -73,7 +79,7 @@ function onKeydown(event: KeyboardEvent): void {
       @leave-cancelled="restoreOverlayEntering">
     <div v-if="visible" ref="panel" v-bind="section('overlay')" class="wl-overlay wl-select-overlay" :style="style">
       <div v-bind="section('listContainer')" class="wl-select__list-container">
-        <div v-bind="section('list')" class="wl-select__list" role="listbox">
+        <div v-bind="listAttrs" class="wl-select__list" role="listbox">
           <div v-for="(option, index) in options" :key="index" v-bind="section('option', { focused: active === index, selected: Object.is(resolveOptionValue(option, props.optionValue), model) })"
             class="wl-select__option" role="option" :aria-selected="Object.is(resolveOptionValue(option, props.optionValue), model)"
             :data-active="active === index" :data-selected="Object.is(resolveOptionValue(option, props.optionValue), model)"

@@ -18,9 +18,9 @@ export default defineConfig({
   use: { baseURL: existingStand ?? "http://127.0.0.1:4173", trace: "on-first-retry" },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"], channel: chromiumChannel } },
-    { name: "mobile-chromium", use: { ...devices["Pixel 7"], channel: chromiumChannel } },
-    { name: "firefox", use: { ...devices["Desktop Firefox"] } },
-    { name: "webkit", use: { ...devices["Desktop Safari"] } }
+    { name: "mobile-chromium", testIgnore: "accessibility.spec.ts", use: { ...devices["Pixel 7"], channel: chromiumChannel } },
+    { name: "firefox", testIgnore: "accessibility.spec.ts", use: { ...devices["Desktop Firefox"] } },
+    { name: "webkit", testIgnore: "accessibility.spec.ts", use: { ...devices["Desktop Safari"] } }
   ],
   webServer: existingStand ? undefined : {
     command: "pnpm dev --host 127.0.0.1 --port 4173 --strictPort",

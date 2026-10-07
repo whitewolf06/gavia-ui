@@ -1,0 +1,18 @@
+import { WlComponentManifest } from './types';
+import { actionsManifest } from './actions';
+import { inputsManifest } from './inputs';
+import { dataManifest } from './data';
+import { containersManifest } from './containers';
+import { compositesManifest } from './composites';
+import { navigationManifest } from './navigation';
+import { feedbackManifest } from './feedback';
+import { miscManifest } from './misc';
+export * from './types';
+export { actionsManifest, inputsManifest, dataManifest, containersManifest, compositesManifest, navigationManifest, feedbackManifest, miscManifest };
+/**
+ * Машиночитаемый манифест всех компонентов библиотеки:
+ * пропсы (типы, дефолты, enum-значения), слоты, события, v-model и версию
+ * первой публичной поставки компонента.
+ * Потребители — визуальные редакторы и AI-агенты. Tree-shakeable const export.
+ */
+export declare const wlManifest: WlComponentManifest[];

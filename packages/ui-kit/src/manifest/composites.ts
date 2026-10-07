@@ -1,6 +1,6 @@
 import { defineComponentManifest } from "./types";
 
-export const compositesManifest = defineComponentManifest([
+export const compositesManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlPageHeader",
     category: "composites",

@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { useWlId } from "../utils/useWlId";
 import { computed, nextTick, onBeforeUnmount, ref, useAttrs, watch } from "vue";
 import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
 import type { WlDensity, WlSizeSm } from "../types";
-import { splitInputAttrs } from "../utils/inputAttrs";
+import { getWlControlProps, splitInputAttrs } from "../utils/inputAttrs";
 import { useAnchoredOverlay } from "../utils/anchoredOverlay";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import { optionLabel as resolveOptionLabel, useListNavigation } from "../utils/options";
@@ -39,6 +40,14 @@ const attrs = useAttrs();
 const attrGroups = computed(() => splitInputAttrs(attrs));
 const section = useWlPt("autocomplete", computed(() => props.pt));
 const motion = useWlMotion(computed(() => props.motion));
+const generatedListId = `wl-autocomplete-list-${useWlId()}`;
+const listAttrs = computed(() => {
+  const inputAttrs = props.multiple
+    ? mergeWlAttrs(attrGroups.value.inputAttrs, section("input"), section("inputChip"))
+    : mergeWlAttrs(attrGroups.value.inputAttrs, section("pcInputText.root"));
+  const control = getWlControlProps(inputAttrs);
+  return mergeWlAttrs({ id: generatedListId, "aria-label": control.ariaLabel ?? props.placeholder ?? "Варианты", "aria-labelledby": control.ariaLabelledby }, section("list"));
+});
 const control = ref<HTMLInputElement | null>(null);
 const query = ref("");
 let timer: ReturnType<typeof setTimeout> | undefined;
@@ -94,12 +103,12 @@ onBeforeUnmount(() => { if (timer) clearTimeout(timer); });
       </span>
       <input ref="control" v-bind="mergeWlAttrs(attrGroups.inputAttrs, section('input'), section('inputChip'))" v-model="query"
         class="wl-autocomplete__inner-input" :placeholder="placeholder" :disabled="disabled"
-        :aria-invalid="invalid || undefined" role="combobox" :aria-expanded="visible"
+        :aria-invalid="invalid || undefined" role="combobox" :aria-expanded="visible" :aria-controls="visible ? String(listAttrs.id) : undefined"
         @input="complete($event)" @keydown="onKeydown" />
     </div>
     <input v-else ref="control" v-bind="mergeWlAttrs(attrGroups.inputAttrs, section('pcInputText.root'))" v-model="query"
       class="wl-input" :class="[`wl-input--${size}`, { 'is-invalid': invalid }]" :placeholder="placeholder" :disabled="disabled"
-      :aria-invalid="invalid || undefined" role="combobox" :aria-expanded="visible"
+      :aria-invalid="invalid || undefined" role="combobox" :aria-expanded="visible" :aria-controls="visible ? String(listAttrs.id) : undefined"
       @input="model = query; complete($event)" @keydown="onKeydown" />
     <button v-if="dropdown" v-bind="section('dropdown')" type="button"
       class="wl-autocomplete__dropdown" :aria-label="dropdownLabel" :disabled="disabled" @click="open">
@@ -112,7 +121,7 @@ onBeforeUnmount(() => { if (timer) clearTimeout(timer); });
       @leave-cancelled="restoreOverlayEntering">
     <div v-if="visible" ref="panel" v-bind="section('overlay')" class="wl-overlay wl-autocomplete-overlay" :style="style">
       <div v-bind="section('listContainer')" class="wl-select__list-container">
-        <div v-bind="section('list')" class="wl-select__list" role="listbox">
+        <div v-bind="listAttrs" class="wl-select__list" role="listbox">
           <div v-for="(option, index) in suggestions" :key="index" v-bind="section('option', { focused: active === index })"
             class="wl-select__option" :data-active="active === index" role="option" @pointerdown.prevent @click="choose(index)">
             {{ resolveOptionLabel(option, props.optionLabel) }}

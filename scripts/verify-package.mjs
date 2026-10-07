@@ -1,18 +1,28 @@
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, realpathSync, rmSync, statSync, symlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { consumerSource } from "./example-source.mjs";
+import { consumerManager } from "./consumer-manager.mjs";
+import { preparePackedRuntimeFixtures, checkPackedNode, checkPackedButtonBundle, checkPackedBrowser } from "./package-consumer-checks.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, "..");
 const uiKitDir = join(repoRoot, "packages", "ui-kit");
 const args = process.argv.slice(2);
-if (args.length !== 0 && (args.length !== 2 || args[0] !== "--archive" || !args[1].trim())) {
-  throw new Error("Usage: pnpm verify:package [--archive <path>]");
+let requestedArchive;
+let browserRequested = false;
+let selectedManager = "pnpm";
+let requestedVue;
+for (let index = 0; index < args.length; index += 1) {
+  if (args[index] === "--browser" && !browserRequested) browserRequested = true;
+  else if (args[index] === "--archive" && !requestedArchive && args[index + 1]?.trim()) requestedArchive = resolve(args[++index]);
+  else if (args[index] === "--manager" && ["pnpm", "npm", "bun"].includes(args[index + 1])) selectedManager = args[++index];
+  else if (/^--manager=(pnpm|npm|bun)$/.test(args[index])) selectedManager = args[index].split("=")[1];
+  else if (args[index] === "--vue" && /^\d+\.\d+\.\d+$/.test(args[index + 1] ?? "")) requestedVue = args[++index];
+  else throw new Error("Usage: pnpm verify:package [--archive <path>] [--browser] [--manager=pnpm|npm|bun] [--vue <exact-version>]");
 }
-const requestedArchive = args.length === 2 ? resolve(args[1]) : undefined;
 if (requestedArchive && (!existsSync(requestedArchive) || !statSync(requestedArchive).isFile())) {
   throw new Error(`Archive must be an existing file: ${requestedArchive}`);
 }
@@ -22,7 +32,11 @@ if (!packageManager) {
   throw new Error("verify:package must be started through pnpm so npm_execpath is available");
 }
 
+const consumerTool = selectedManager === "pnpm" ? undefined : consumerManager(selectedManager);
+
 const packageJson = JSON.parse(readFileSync(join(uiKitDir, "package.json"), "utf8"));
+const workspaceVueVersion = JSON.parse(readFileSync(join(uiKitDir, "node_modules", "vue", "package.json"), "utf8")).version;
+const registryVueVersion = requestedVue ?? (selectedManager === "bun" ? workspaceVueVersion : undefined);
 const temporaryBase = join(repoRoot, ".tmp");
 mkdirSync(temporaryBase, { recursive: true });
 const temporaryRoot = mkdtempSync(join(temporaryBase, "gavia-ui-consumer-"));
@@ -34,7 +48,7 @@ function localPackage(packageName) {
   if (!existsSync(join(packagePath, "package.json"))) {
     throw new Error(`Workspace dependency ${packageName} is not installed`);
   }
-  return `link:${packagePath.replaceAll("\\", "/")}`;
+  return `${selectedManager === "pnpm" ? "link" : "file"}:${realpathSync(packagePath).replaceAll("\\", "/")}`;
 }
 
 function runPnpm(args, cwd) {
@@ -45,7 +59,8 @@ function runPnpm(args, cwd) {
   execFileSync(executable, executableArgs, {
     cwd,
     env: process.env,
-    stdio: "inherit"
+    stdio: "inherit",
+    timeout: 120_000
   });
 }
 
@@ -73,14 +88,14 @@ try {
     private: true,
     type: "module",
     scripts: {
-      build: "vite build",
-      typecheck: "vue-tsc --noEmit -p tsconfig.json"
+      build: "node tool-build.mjs",
+      typecheck: "node tool-typecheck.mjs"
     },
     dependencies: {
       "gavia-ui": `file:${archivePath.replaceAll("\\", "/")}`,
-      vue: localPackage("vue")
+      vue: registryVueVersion ?? localPackage("vue")
     },
-    devDependencies: {
+    devDependencies: selectedManager === "bun" ? undefined : {
       "@vitejs/plugin-vue": localPackage("@vitejs/plugin-vue"),
       typescript: localPackage("typescript"),
       vite: localPackage("vite"),
@@ -89,6 +104,8 @@ try {
   };
 
   write("package.json", `${JSON.stringify(consumerPackage, null, 2)}\n`);
+  write("tool-build.mjs", 'import { build } from "vite";\nawait build();\n');
+  write("tool-typecheck.mjs", 'import { execFileSync } from "node:child_process";\nimport { resolve } from "node:path";\nexecFileSync(process.execPath, [resolve("node_modules/vue-tsc/bin/vue-tsc.js"), "--noEmit", "-p", "tsconfig.json"], { stdio: "inherit" });\n');
   write(
     "tsconfig.json",
     `${JSON.stringify(
@@ -100,6 +117,7 @@ try {
           strict: true,
           noEmit: true,
           skipLibCheck: false,
+          allowJs: true,
           lib: ["ESNext", "DOM", "DOM.Iterable"],
           types: ["vite/client"]
         },
@@ -111,9 +129,10 @@ try {
   );
   write(
     "vite.config.ts",
-    `import { defineConfig } from "vite";\nimport vue from "@vitejs/plugin-vue";\n\nexport default defineConfig({ plugins: [vue()] });\n`
+    `import { defineConfig } from "vite";\nimport vue from "@vitejs/plugin-vue";\nimport { resolve } from "node:path";\n\nexport default defineConfig({ plugins: [vue()], resolve: { dedupe: ["vue"] }, build: { rollupOptions: { input: { consumer: resolve("index.html"), hydration: resolve("ssr.html") } } } });\n`
   );
-  write("index.html", '<!doctype html><html><body><div id="app"></div><script type="module" src="/src/main.ts"></script></body></html>\n');
+  write("index.html", '<!doctype html><html lang="ru"><head><meta charset="utf-8"><link rel="icon" href="data:,"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Packed Gavia consumer</title></head><body><div id="app"></div><script type="module" src="/src/main.ts"></script></body></html>\n');
+  preparePackedRuntimeFixtures(write);
   write(
     "src/main.ts",
     `import { createApp } from "vue";
@@ -156,14 +175,37 @@ createApp(App).use(WlConfig, { pt: createWlPt(), locale: wlLocaleRu })
   write("src/App.vue", `<script setup lang="ts">
 ${exampleImports}
 import { WlToast, WlConfirmDialog } from "gavia-ui";
+import PackedSmoke from "./PackedSmoke.vue";
 const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", ")}];
 </script>
-<template><component :is="examples[0]" /><WlToast /><WlConfirmDialog /></template>
+<template><PackedSmoke /><component :is="examples[0]" /><WlToast /><WlConfirmDialog /></template>
 `);
 
-  runPnpm(["--ignore-workspace", "install", "--offline", "--ignore-scripts"], consumerDir);
-  runPnpm(["--ignore-workspace", "run", "typecheck"], consumerDir);
-  runPnpm(["--ignore-workspace", "run", "build"], consumerDir);
+  // npm and Bun are used only in the throwaway consumer; the repository stays pnpm-only.
+  const offline = registryVueVersion ? [] : ["--offline"];
+  if (selectedManager === "pnpm") {
+    runPnpm(["--ignore-workspace", "install", ...offline, "--ignore-scripts"], consumerDir);
+  } else if (selectedManager === "npm") {
+    consumerTool.run(["install", ...offline, "--ignore-scripts", "--install-links=false", "--workspaces=false", "--no-audit", "--no-fund"], consumerDir);
+  } else {
+    consumerTool.run(["install", ...offline, "--ignore-scripts", "--no-progress"], consumerDir);
+    // Bun treats file: build tools as local projects and resolves their development
+    // graphs. Reuse the existing pinned toolchain after the actual archive install.
+    for (const name of ["@vitejs/plugin-vue", "typescript", "vite", "vue-tsc"]) {
+      const destination = join(consumerDir, "node_modules", ...name.split("/"));
+      mkdirSync(dirname(destination), { recursive: true });
+      symlinkSync(join(uiKitDir, "node_modules", ...name.split("/")), destination,
+        process.platform === "win32" ? "junction" : "dir");
+    }
+  }
+  function runConsumerScript(name) {
+    if (selectedManager === "pnpm") runPnpm(["--ignore-workspace", "run", name], consumerDir);
+    else consumerTool.run(["run", name], consumerDir);
+  }
+  runConsumerScript("typecheck");
+  const nativeAndSSR = checkPackedNode(consumerDir);
+  runConsumerScript("build");
+  const buttonBundle = checkPackedButtonBundle(consumerDir);
 
   const installedPackageDir = join(consumerDir, "node_modules", ...packageJson.name.split("/"));
   const requiredFiles = [
@@ -306,8 +348,23 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     throw new Error("Consumer fixture did not produce dist/index.html");
   }
 
+  const browser = browserRequested ? await checkPackedBrowser(consumerDir, selectedManager + "-vue-" + (registryVueVersion ?? workspaceVueVersion)) : undefined;
+  const evidenceDir = join(temporaryBase, "package-verification");
+  mkdirSync(evidenceDir, { recursive: true });
+  const installedVue = JSON.parse(readFileSync(join(consumerDir, "node_modules", "vue", "package.json"), "utf8"));
+  const evidencePath = join(evidenceDir, selectedManager + "-vue-" + installedVue.version + "-" + (browserRequested ? "browser" : "node") + ".json");
+  writeFileSync(evidencePath, JSON.stringify({
+    package: packageJson.name, version: packageJson.version,
+    toolchain: "Existing pinned workspace Vue/Vite tooling; package itself installed from the archive",
+    manager: selectedManager, managerVersion: consumerTool?.version ?? process.env.npm_config_user_agent?.split(" ")[0], vueVersion: installedVue.version,
+    archiveSha256: createHash("sha256").update(readFileSync(archivePath)).digest("hex"),
+    copiedExamples: copiedExamples.length, nativeAndSSR, buttonBundle,
+    browser: browser ?? { skipped: true, command: "pnpm verify:package:browser" }
+  }, null, 2) + "\n");
+  console.log("Package verification evidence: " + evidencePath);
   console.log(`Consumer smoke passed for ${packageJson.name}@${packageJson.version}`);
   console.log(`Copied showcase sources passed typecheck and build: ${copiedExamples.length}`);
 } finally {
+  if (dirname(temporaryRoot) !== temporaryBase) throw new Error("Refusing to remove a consumer outside the task temporary directory");
   rmSync(temporaryRoot, { recursive: true, force: true });
 }

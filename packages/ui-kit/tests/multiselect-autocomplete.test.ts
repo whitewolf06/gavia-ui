@@ -1,6 +1,7 @@
+import type { GlobalMountOptions } from "./mounting-types";
 import { afterAll, describe, it, expect, vi } from "vitest";
 import { defineComponent, nextTick, ref } from "vue";
-import { mount, type GlobalMountOptions } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import { WlConfig } from "../src";
 import {
   WlAutocomplete,

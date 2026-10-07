@@ -22,7 +22,7 @@ const widthOptions = ["280px", "420px", "640px"];
 .container-card-control { max-width: 240px; }
 .container-card-host { container-type: inline-size; container-name: gavia-card; max-width: 100%; }
 .container-card-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--wl-space-lg); }
-.container-card-illustration { display: grid; place-items: center; min-height: 96px; border-radius: var(--wl-corner-surface); color: var(--wl-accent); background: var(--wl-accent-soft); }
+.container-card-illustration { display: grid; place-items: center; min-height: 96px; border-radius: var(--wl-corner-surface); color: var(--wl-text-accent); background: var(--wl-accent-soft); }
 @container gavia-card (min-width: 420px) {
   .container-card-body { grid-template-columns: 96px minmax(0, 1fr); align-items: center; }
 }

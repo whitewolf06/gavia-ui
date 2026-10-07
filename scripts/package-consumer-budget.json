@@ -1,0 +1,16 @@
+{
+  "description": "WlButton-only production JS, including Vue. CSS/fonts excluded. Raise limits only after inspecting the Rollup evidence; unused components and editor metadata must stay removed.",
+  "baseline": {
+    "vueVersion": "3.5.40",
+    "viteVersion": "6.4.3",
+    "jsGzipBytes": 27629,
+    "kitRenderedBytes": 11597,
+    "retainedKitExports": [
+      "WlButton",
+      "createWlPt"
+    ]
+  },
+  "maxJsGzipBytes": 30500,
+  "maxKitRenderedBytes": 13500
+}
+

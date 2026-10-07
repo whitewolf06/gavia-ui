@@ -26,13 +26,15 @@ export {
  * первой публичной поставки компонента.
  * Потребители — визуальные редакторы и AI-агенты. Tree-shakeable const export.
  */
-export const wlManifest: WlComponentManifest[] = [
-  ...actionsManifest,
-  ...inputsManifest,
-  ...dataManifest,
-  ...containersManifest,
-  ...compositesManifest,
-  ...navigationManifest,
-  ...feedbackManifest,
-  ...miscManifest
-];
+// Pure construction lets component-only imports omit editor metadata. The build
+// manifest plugin and contract tests still evaluate and validate every category.
+export const wlManifest: WlComponentManifest[] = /* @__PURE__ */ ([] as WlComponentManifest[]).concat(
+  actionsManifest,
+  inputsManifest,
+  dataManifest,
+  containersManifest,
+  compositesManifest,
+  navigationManifest,
+  feedbackManifest,
+  miscManifest
+);

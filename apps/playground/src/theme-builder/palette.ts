@@ -168,6 +168,7 @@ export function createThemeOverrides(input: ThemePalette, baseTheme: WlThemeName
     overrides["--wl-palette-text-3"] = mix(palette.mutedText, palette.background, 0.25);
   }
   if (changed("link")) {
+    overrides["--wl-palette-text-accent"] = palette.link;
     overrides["--wl-palette-accent-hover"] = mix(palette.link, palette.text, 0.1);
     overrides["--wl-palette-on-accent"] = readableForeground(palette.link);
   }

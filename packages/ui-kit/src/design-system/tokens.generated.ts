@@ -667,6 +667,25 @@ export const wlDesignTokens = [
     "value": "var(--wl-palette-text)"
   },
   {
+    "name": "--wl-text-accent",
+    "layer": "semantic",
+    "type": "color",
+    "category": "color",
+    "description": "Акцентный текст ссылок, мягких действий и выбранных пунктов на стандартных и мягких поверхностях.",
+    "value": "var(--wl-palette-text-accent)"
+  },
+  {
+    "name": "--wl-text-accent-hover",
+    "layer": "semantic",
+    "type": "color",
+    "category": "color",
+    "description": "Акцентный текст при наведении на ссылки и мягкие действия.",
+    "value": "var(--wl-palette-accent-hover)",
+    "themes": {
+      "graphite": "var(--wl-palette-text-accent)"
+    }
+  },
+  {
     "name": "--wl-text-2",
     "layer": "semantic",
     "type": "color",
@@ -1575,6 +1594,17 @@ export const wlDesignTokens = [
       "graphite": "var(--wl-blue-400)",
       "newspaper": "#25211d",
       "gavia": "#294451"
+    }
+  },
+  {
+    "name": "--wl-palette-text-accent",
+    "layer": "foundation",
+    "type": "color",
+    "category": "color",
+    "description": "Акцентный цвет текста: сохраняет контраст на выбранных и мягких поверхностях, независимо от заливки основного действия.",
+    "value": "var(--wl-palette-accent)",
+    "themes": {
+      "graphite": "#79a3f4"
     }
   },
   {
@@ -4128,7 +4158,7 @@ export const wlContrastPairs = [
   {
     "name": "link",
     "label": "Ссылка на странице",
-    "foreground": "--wl-accent",
+    "foreground": "--wl-text-accent",
     "background": "--wl-bg",
     "minimum": 4.5
   },
@@ -4159,6 +4189,34 @@ export const wlContrastPairs = [
     "foreground": "--wl-focus-color",
     "background": "--wl-bg-raised",
     "minimum": 3
+  },
+  {
+    "name": "accent-text-raised",
+    "label": "Акцентный текст на поднятой поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg-raised",
+    "minimum": 4.5
+  },
+  {
+    "name": "accent-text-soft",
+    "label": "Акцентный текст на вторичной поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg-soft",
+    "minimum": 4.5
+  },
+  {
+    "name": "accent-text-selected",
+    "label": "Акцентный текст на выбранной поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-accent-soft",
+    "minimum": 4.5
+  },
+  {
+    "name": "accent-text-hover",
+    "label": "Акцентный текст на мягкой поверхности при наведении",
+    "foreground": "--wl-text-accent-hover",
+    "background": "--wl-accent-soft-hover",
+    "minimum": 4.5
   }
 ] as const satisfies readonly WlContrastPair[];
 export const wlContrastReport = [
@@ -4291,7 +4349,7 @@ export const wlContrastReport = [
   {
     "name": "link",
     "label": "Ссылка на странице",
-    "foreground": "--wl-accent",
+    "foreground": "--wl-text-accent",
     "background": "--wl-bg",
     "minimum": 4.5,
     "theme": "gavia",
@@ -4332,6 +4390,42 @@ export const wlContrastReport = [
     "minimum": 3,
     "theme": "gavia",
     "ratio": 10.13
+  },
+  {
+    "name": "accent-text-raised",
+    "label": "Акцентный текст на поднятой поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg-raised",
+    "minimum": 4.5,
+    "theme": "gavia",
+    "ratio": 10.13
+  },
+  {
+    "name": "accent-text-soft",
+    "label": "Акцентный текст на вторичной поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg-soft",
+    "minimum": 4.5,
+    "theme": "gavia",
+    "ratio": 9.13
+  },
+  {
+    "name": "accent-text-selected",
+    "label": "Акцентный текст на выбранной поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-accent-soft",
+    "minimum": 4.5,
+    "theme": "gavia",
+    "ratio": 8.27
+  },
+  {
+    "name": "accent-text-hover",
+    "label": "Акцентный текст на мягкой поверхности при наведении",
+    "foreground": "--wl-text-accent-hover",
+    "background": "--wl-accent-soft-hover",
+    "minimum": 4.5,
+    "theme": "gavia",
+    "ratio": 9.27
   },
   {
     "name": "text",
@@ -4462,7 +4556,7 @@ export const wlContrastReport = [
   {
     "name": "link",
     "label": "Ссылка на странице",
-    "foreground": "--wl-accent",
+    "foreground": "--wl-text-accent",
     "background": "--wl-bg",
     "minimum": 4.5,
     "theme": "white",
@@ -4503,6 +4597,42 @@ export const wlContrastReport = [
     "minimum": 3,
     "theme": "white",
     "ratio": 5.17
+  },
+  {
+    "name": "accent-text-raised",
+    "label": "Акцентный текст на поднятой поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg-raised",
+    "minimum": 4.5,
+    "theme": "white",
+    "ratio": 5.17
+  },
+  {
+    "name": "accent-text-soft",
+    "label": "Акцентный текст на вторичной поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg-soft",
+    "minimum": 4.5,
+    "theme": "white",
+    "ratio": 4.83
+  },
+  {
+    "name": "accent-text-selected",
+    "label": "Акцентный текст на выбранной поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-accent-soft",
+    "minimum": 4.5,
+    "theme": "white",
+    "ratio": 4.65
+  },
+  {
+    "name": "accent-text-hover",
+    "label": "Акцентный текст на мягкой поверхности при наведении",
+    "foreground": "--wl-text-accent-hover",
+    "background": "--wl-accent-soft-hover",
+    "minimum": 4.5,
+    "theme": "white",
+    "ratio": 5.68
   },
   {
     "name": "text",
@@ -4633,11 +4763,11 @@ export const wlContrastReport = [
   {
     "name": "link",
     "label": "Ссылка на странице",
-    "foreground": "--wl-accent",
+    "foreground": "--wl-text-accent",
     "background": "--wl-bg",
     "minimum": 4.5,
     "theme": "graphite",
-    "ratio": 5.49
+    "ratio": 7.06
   },
   {
     "name": "focus-soft",
@@ -4674,6 +4804,42 @@ export const wlContrastReport = [
     "minimum": 3,
     "theme": "graphite",
     "ratio": 5.49
+  },
+  {
+    "name": "accent-text-raised",
+    "label": "Акцентный текст на поднятой поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg-raised",
+    "minimum": 4.5,
+    "theme": "graphite",
+    "ratio": 7.06
+  },
+  {
+    "name": "accent-text-soft",
+    "label": "Акцентный текст на вторичной поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg-soft",
+    "minimum": 4.5,
+    "theme": "graphite",
+    "ratio": 6.49
+  },
+  {
+    "name": "accent-text-selected",
+    "label": "Акцентный текст на выбранной поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-accent-soft",
+    "minimum": 4.5,
+    "theme": "graphite",
+    "ratio": 5.53
+  },
+  {
+    "name": "accent-text-hover",
+    "label": "Акцентный текст на мягкой поверхности при наведении",
+    "foreground": "--wl-text-accent-hover",
+    "background": "--wl-accent-soft-hover",
+    "minimum": 4.5,
+    "theme": "graphite",
+    "ratio": 4.73
   },
   {
     "name": "text",
@@ -4804,7 +4970,7 @@ export const wlContrastReport = [
   {
     "name": "link",
     "label": "Ссылка на странице",
-    "foreground": "--wl-accent",
+    "foreground": "--wl-text-accent",
     "background": "--wl-bg",
     "minimum": 4.5,
     "theme": "newspaper",
@@ -4845,5 +5011,41 @@ export const wlContrastReport = [
     "minimum": 3,
     "theme": "newspaper",
     "ratio": 15.85
+  },
+  {
+    "name": "accent-text-raised",
+    "label": "Акцентный текст на поднятой поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg-raised",
+    "minimum": 4.5,
+    "theme": "newspaper",
+    "ratio": 15.85
+  },
+  {
+    "name": "accent-text-soft",
+    "label": "Акцентный текст на вторичной поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg-soft",
+    "minimum": 4.5,
+    "theme": "newspaper",
+    "ratio": 15.44
+  },
+  {
+    "name": "accent-text-selected",
+    "label": "Акцентный текст на выбранной поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-accent-soft",
+    "minimum": 4.5,
+    "theme": "newspaper",
+    "ratio": 14.41
+  },
+  {
+    "name": "accent-text-hover",
+    "label": "Акцентный текст на мягкой поверхности при наведении",
+    "foreground": "--wl-text-accent-hover",
+    "background": "--wl-accent-soft-hover",
+    "minimum": 4.5,
+    "theme": "newspaper",
+    "ratio": 10.22
   }
 ] as const;

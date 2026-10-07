@@ -1,5 +1,8 @@
 <script setup lang="ts" generic="Mode extends WlDatePickerSelectionMode = 'single'">
-import { computed, nextTick, ref, useAttrs, useId, watch } from "vue";
+import { useWlId } from "../utils/useWlId";
+import { computed, nextTick, ref, useAttrs, watch } from "vue";
+import Teleport from "../utils/templateTeleport.vue";
+import Transition from "../utils/templateTransition.vue";
 import { mergeWlAttrs, useWlLocale, useWlMotion, useWlPt } from "../config";
 import type { WlDatePickerModel, WlDatePickerSelectionMode, WlDateRange, WlSizeSm } from "../types";
 import { splitInputAttrs } from "../utils/inputAttrs";
@@ -38,7 +41,7 @@ const range = computed<WlDateRange | null>(() => Array.isArray(model.value) ? mo
 const single = computed(() => typeof model.value === "string" ? model.value : null);
 const start = computed(() => isRange.value ? range.value?.[0] ?? null : single.value);
 const end = computed(() => isRange.value ? range.value?.[1] ?? null : null);
-const uid = useId();
+const uid = useWlId();
 const startId = computed(() => String(attrGroups.value.inputAttrs.id ?? `wl-datepicker-${uid}`));
 const endId = computed(() => `${startId.value}-end`);
 const panelId = `wl-datepicker-panel-${uid}`;
@@ -237,35 +240,35 @@ function onDayKeydown(event: KeyboardEvent, iso: string): void {
 
 <template>
   <div v-bind="mergeWlAttrs(attrGroups.rootAttrs, section('root'))" class="wl-dp"
-    :class="{ 'is-invalid': invalid, 'is-disabled': disabled, 'wl-dp--range': isRange }"
-    :data-size="size" :data-selection-mode="selectionMode" data-wl="date-picker"
+    :class="{ 'is-invalid': props.invalid, 'is-disabled': props.disabled, 'wl-dp--range': isRange }"
+    :data-size="props.size" :data-selection-mode="props.selectionMode" data-wl="date-picker"
     :role="isRange ? 'group' : undefined" :aria-label="isRange ? attrGroups.inputAttrs['aria-label'] as string : undefined"
     @click="open" @keydown="onKeydown">
     <template v-if="isRange">
       <label class="wl-dp__endpoint" :for="startId">
-        <span :id="`${startId}-label`" v-bind="section('startLabel')" class="wl-dp__endpoint-label">{{ startLabel }}</span>
+        <span :id="`${startId}-label`" v-bind="section('startLabel')" class="wl-dp__endpoint-label">{{ props.startLabel }}</span>
         <input ref="control" v-bind="mergeWlAttrs(endpointAttrs(0), section('pcInputText.root'))"
-          v-model="text" class="wl-input wl-dp__input" :class="[`wl-input--${size}`, { 'is-invalid': invalid }]"
-          type="text" :placeholder="placeholder" :disabled="disabled" :aria-invalid="invalid || undefined"
+          v-model="text" class="wl-input wl-dp__input" :class="[`wl-input--${props.size}`, { 'is-invalid': props.invalid }]"
+          type="text" :placeholder="props.placeholder" :disabled="props.disabled" :aria-invalid="props.invalid || undefined"
           :aria-expanded="visible" :aria-controls="visible ? panelId : undefined" aria-haspopup="dialog"
           autocomplete="off" @blur="commit(0)" />
       </label>
       <label class="wl-dp__endpoint" :for="endId">
-        <span :id="`${endId}-label`" v-bind="section('endLabel')" class="wl-dp__endpoint-label">{{ endLabel }}</span>
+        <span :id="`${endId}-label`" v-bind="section('endLabel')" class="wl-dp__endpoint-label">{{ props.endLabel }}</span>
         <input ref="endControl" v-bind="mergeWlAttrs(endpointAttrs(1), section('endInput'))"
-          v-model="endText" class="wl-input wl-dp__input" :class="[`wl-input--${size}`, { 'is-invalid': invalid }]"
-          type="text" :placeholder="placeholder" :disabled="disabled" :aria-invalid="invalid || undefined"
+          v-model="endText" class="wl-input wl-dp__input" :class="[`wl-input--${props.size}`, { 'is-invalid': props.invalid }]"
+          type="text" :placeholder="props.placeholder" :disabled="props.disabled" :aria-invalid="props.invalid || undefined"
           :aria-expanded="visible" :aria-controls="visible ? panelId : undefined" aria-haspopup="dialog"
           autocomplete="off" @blur="commit(1)" />
       </label>
     </template>
     <input v-else ref="control" v-bind="mergeWlAttrs(attrGroups.inputAttrs, section('pcInputText.root'))"
-      v-model="text" class="wl-input wl-dp__input" :class="[`wl-input--${size}`, { 'is-invalid': invalid, 'wl-dp__input--btn': showIcon }]"
-      type="text" :placeholder="placeholder" :disabled="disabled" :aria-invalid="invalid || undefined"
+      v-model="text" class="wl-input wl-dp__input" :class="[`wl-input--${props.size}`, { 'is-invalid': props.invalid, 'wl-dp__input--btn': props.showIcon }]"
+      type="text" :placeholder="props.placeholder" :disabled="props.disabled" :aria-invalid="props.invalid || undefined"
       :aria-expanded="visible" :aria-controls="visible ? panelId : undefined" aria-haspopup="dialog"
       autocomplete="off" @blur="commit(0)" />
-    <button v-if="showIcon" v-bind="section('dropdown')" type="button" class="wl-dp__trigger"
-      :disabled="disabled" :aria-label="locale.chooseDate" :aria-expanded="visible"
+    <button v-if="props.showIcon" v-bind="section('dropdown')" type="button" class="wl-dp__trigger"
+      :disabled="props.disabled" :aria-label="locale.chooseDate" :aria-expanded="visible"
       :aria-controls="visible ? panelId : undefined" aria-haspopup="dialog">
       <WlIcon name="calendar" :size="18" v-bind="section('dropdownIcon')" class="wl-dp__trigger-icon" />
     </button>

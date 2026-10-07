@@ -1,5 +1,6 @@
+import type { GlobalMountOptions } from "./mounting-types";
 import { describe, it, expect, afterAll } from "vitest";
-import { mount, type GlobalMountOptions } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import { WlConfig } from "../src";
 import { WlTabs } from "../src";
 import type { WlTabItem } from "../src";

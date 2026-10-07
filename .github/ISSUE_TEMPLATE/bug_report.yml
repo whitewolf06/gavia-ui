@@ -1,0 +1,47 @@
+name: Ошибка
+description: Сообщить о воспроизводимой проблеме Gavia UI
+title: "[Bug]: "
+body:
+  - type: input
+    id: gavia
+    attributes:
+      label: Версия Gavia UI
+      placeholder: "0.9.1"
+    validations:
+      required: true
+  - type: input
+    id: vue
+    attributes:
+      label: Версия Vue
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Браузер, версия и ОС
+    validations:
+      required: true
+  - type: dropdown
+    id: theme
+    attributes:
+      label: Тема
+      options:
+        - Gavia
+        - White
+        - Graphite
+        - Newspaper
+        - Собственная
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Минимальный пример и шаги воспроизведения
+      description: Ссылка на пример или минимальный Vue SFC; не прикладывайте секреты и данные пользователей.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Ожидаемый и фактический результат
+    validations:
+      required: true
+

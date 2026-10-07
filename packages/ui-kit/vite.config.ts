@@ -36,6 +36,7 @@ export default defineConfig({
     wlManifestPlugin()
   ],
   build: {
+    target: "es2020",
     lib: {
       entry: "src/index.ts",
       formats: ["es"],
@@ -51,6 +52,17 @@ export default defineConfig({
     minWorkers: 1,
     include: ["tests/**/*.test.{ts,mjs}"],
     setupFiles: ["tests/setup.ts"],
+    coverage: {
+      provider: "v8",
+      include: ["src/**/*.{ts,vue}"],
+      exclude: ["src/**/*.generated.ts", "src/manifest/**", "src/**/types.ts", "src/index.ts", "src/components/index.ts"],
+      reporter: ["text-summary", "json-summary", "html", "lcov"],
+      reportsDirectory: "coverage",
+      thresholds: {
+        lines: 97, statements: 97, branches: 85, functions: 81,
+        "src/utils/overlayTransition.ts": { lines: 100, branches: 100, functions: 100, statements: 100 }
+      }
+    },
     testTimeout: 20000
   }
 });

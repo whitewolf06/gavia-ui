@@ -5,7 +5,7 @@
     --wl-type-background: var(--wl-bg);
     --wl-type-text: var(--wl-text);
     --wl-type-muted: var(--wl-text-2);
-    --wl-type-accent: var(--wl-accent);
+    --wl-type-accent: var(--wl-text-accent);
     --wl-type-border: var(--wl-border);
     --wl-type-surface: var(--wl-bg);
     --wl-type-subtle: var(--wl-bg-soft);

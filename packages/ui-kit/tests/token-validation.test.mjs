@@ -14,6 +14,18 @@ describe("design token source validation", () => {
       expect(contrastRatio(foreground, resolveToken(source, name, "gavia")), name).toBeGreaterThanOrEqual(4.5);
     }
   });
+  it.each(source.themes.map((theme) => theme.name))("keeps %s accent text readable without changing primary action colors", (theme) => {
+    const foreground = resolveToken(source, "--wl-text-accent", theme);
+    for (const name of ["--wl-bg", "--wl-bg-raised", "--wl-bg-soft", "--wl-accent-soft"]) {
+      expect(contrastRatio(foreground, resolveToken(source, name, theme)), name).toBeGreaterThanOrEqual(4.5);
+    }
+    expect(contrastRatio(resolveToken(source, "--wl-text-accent-hover", theme), resolveToken(source, "--wl-accent-soft-hover", theme))).toBeGreaterThanOrEqual(4.5);
+    if (theme !== "graphite") expect(foreground).toBe(resolveToken(source, "--wl-accent", theme));
+    else {
+      expect(resolveToken(source, "--wl-accent", theme)).toBe("#5b8def");
+      expect(foreground).toBe("#79a3f4");
+    }
+  });
   it("scopes Gavia to its theme attribute and preserves reduced motion", () => {
     const theme = source.themes.find((item) => item.name === "gavia");
     const css = renderThemeCss(source, theme);

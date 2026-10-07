@@ -75,6 +75,8 @@
   --wl-border: var(--wl-palette-border);
   --wl-border-2: var(--wl-palette-border-2);
   --wl-text: var(--wl-palette-text);
+  --wl-text-accent: var(--wl-palette-text-accent);
+  --wl-text-accent-hover: var(--wl-palette-accent-hover);
   --wl-text-2: var(--wl-palette-text-2);
   --wl-text-3: var(--wl-palette-text-3);
   --wl-accent: var(--wl-palette-accent);
@@ -181,6 +183,7 @@
   --wl-palette-text-2: var(--wl-gray-600);
   --wl-palette-text-3: var(--wl-gray-500);
   --wl-palette-accent: #25211d;
+  --wl-palette-text-accent: var(--wl-palette-accent);
   --wl-palette-accent-hover: #3a342e;
   --wl-palette-accent-soft: #f4f3f1;
   --wl-palette-accent-border: #dedbd5;

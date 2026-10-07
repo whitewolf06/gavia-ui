@@ -1,7 +1,7 @@
 import { defineComponentManifest } from "./types";
 import { WL_DRAWER_POSITIONS } from "./values";
 
-export const containersManifest = defineComponentManifest([
+export const containersManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlCard",
     category: "containers",

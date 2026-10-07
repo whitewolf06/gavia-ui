@@ -10,7 +10,7 @@ import {
   WL_TAG_VARIANTS
 } from "./values";
 
-export const dataManifest = defineComponentManifest([
+export const dataManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlTable",
     category: "data",

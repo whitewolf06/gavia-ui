@@ -32,7 +32,7 @@ function chooseSize(value: unknown): void {
 
 <style scoped>
 .icon-playground { min-width: 0; }
-.icon-playground-selected { min-height: 80px; padding: var(--wl-space-lg); background: var(--wl-bg-soft); border-radius: var(--wl-corner-control); color: var(--wl-accent); }
+.icon-playground-selected { min-height: 80px; padding: var(--wl-space-lg); background: var(--wl-bg-soft); border-radius: var(--wl-corner-control); color: var(--wl-text-accent); }
 .icon-playground-selected p { color: var(--wl-text); }
 .icon-playground-comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 80px), 1fr)); gap: var(--wl-space-sm); }
 .icon-playground-sample { margin: 0; min-width: 0; min-height: 110px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--wl-space-md); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-control); color: var(--wl-text); }
