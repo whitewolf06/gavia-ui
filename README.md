@@ -56,7 +56,7 @@ Classic, Classic Dark и Newspaper сохраняют свою типограф�
 | **Gavia** | Светлая | `gavia` | `gavia-ui/themes/gavia.css` |
 | **Gavia Dark** | Тёмная | `gavia-dark` | `gavia-ui/themes/gavia-dark.css` |
 
-Gavia Dark добавлена в исходники для следующего выпуска; npm 0.9.1 её ещё не содержит.
+Gavia Dark добавлена в 0.10.0.
 
 ### Дополнительные
 
@@ -78,11 +78,11 @@ Gavia Dark добавлена в исходники для следующего 
 Установите библиотеку в Vue-приложение:
 
 ```bash
-pnpm add gavia-ui@0.9.1 vue
+pnpm add gavia-ui@0.10.0 vue
 # либо
-npm install gavia-ui@0.9.1 vue
+npm install gavia-ui@0.10.0 vue
 # либо
-bun add gavia-ui@0.9.1 vue
+bun add gavia-ui@0.10.0 vue
 ```
 
 Подключите стили и шрифт в точке входа, затем выберите тему Gavia:
@@ -127,7 +127,7 @@ import { WlButton } from "gavia-ui";
 - [Дизайн-система](docs/design-system.md) — токены, типографика, состояния и готовые сценарии.
 - [CSS-примитивы](docs/primitives.md) и [адаптивность](docs/responsiveness.md) — компоновка и правила размеров.
 - [Темы Gavia / Gavia Dark](docs/theme-gavia.md) и [шрифт Gavia Sans](docs/font-gavia.md) — палитра, подключение, образцы и лицензия.
-- [Changelog](CHANGELOG.md), [миграция 0.9](docs/migration-0.9.md), [история ребрендинга](docs/migration-gavia.md) и [проверенные выпуски](docs/releases.md) — история и обновление приложения.
+- [Changelog](CHANGELOG.md), [миграция 0.10](docs/migration-0.10.0.md), [история ребрендинга](docs/migration-gavia.md) и [проверенные выпуски](docs/releases.md) — история и обновление приложения.
 - [Архитектура playground](docs/playground.md) и [публикация Pages](docs/hosting.md).
 
 Создатель и сопровождающий — [Gorbach Dmitry](https://github.com/whitewolf06).

@@ -87,10 +87,16 @@ createApp(App).mount("#app");`;
       <img class="home-hero-layer" :class="{ 'home-hero-art': !isDarkTheme }" :src="gaviaHeroUrl" alt="" aria-hidden="true" width="2172" height="724" :fetchpriority="isDarkTheme ? 'auto' : 'high'" decoding="async" />
       <img class="home-hero-layer home-hero-layer--night" :class="{ 'home-hero-art': isDarkTheme, 'home-hero-layer--visible': isDarkTheme && nightArtReady }" :src="gaviaNightHeroUrl" alt="" aria-hidden="true" width="2172" height="724" :fetchpriority="isDarkTheme ? 'high' : 'auto'" decoding="async" @load="nightArtReady = true" />
       <div class="home-hero-tools wl-container">
-        <WlIconButton class="home-theme-toggle" variant="secondary" :aria-label="themeToggleLabel" :title="themeToggleLabel" @click="emit('toggle-theme')">
-          <svg class="home-theme-symbol" :class="isDarkTheme ? 'home-theme-symbol--dark' : 'home-theme-symbol--light'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <g class="home-theme-sun"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></g>
-            <path class="home-theme-moon" d="M20.4 14.3A8.8 8.8 0 0 1 9.7 3.6a8.8 8.8 0 1 0 10.7 10.7Z" />
+        <WlIconButton class="home-theme-toggle" :class="{ 'home-theme-toggle--light': !isDarkTheme }" variant="ghost" :aria-label="themeToggleLabel" :title="themeToggleLabel" @click="emit('toggle-theme')">
+          <svg class="home-theme-symbol" :class="isDarkTheme ? 'home-theme-symbol--dark' : 'home-theme-symbol--light'" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <g class="home-theme-sun">
+              <g class="home-theme-outline"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></g>
+              <circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+            </g>
+            <g class="home-theme-moon">
+              <path class="home-theme-outline" d="M20.4 14.3A8.8 8.8 0 0 1 9.7 3.6a8.8 8.8 0 1 0 10.7 10.7Z" />
+              <path d="M20.4 14.3A8.8 8.8 0 0 1 9.7 3.6a8.8 8.8 0 1 0 10.7 10.7Z" />
+            </g>
           </svg>
         </WlIconButton>
       </div>
@@ -204,8 +210,12 @@ createApp(App).mount("#app");`;
 .home-hero-layer--night { z-index: -1; opacity: 0; transition: opacity calc(var(--wl-motion-slow) * 2.5) var(--wl-ease); }
 .home-hero-layer--visible { opacity: 1; }
 .home-hero-tools { position: absolute; inset-block-start: var(--wl-space-lg); inset-inline: 0; z-index: 1; display: flex; justify-content: flex-end; pointer-events: none; }
-.home-theme-toggle { min-width: 44px; min-height: 44px; pointer-events: auto; box-shadow: var(--wl-elevation-surface); }
+.home-theme-toggle { min-width: 44px; min-height: 44px; pointer-events: auto; background: transparent; border-color: transparent; color: var(--wl-accent); }
+.home-theme-toggle--light { color: color-mix(in srgb, var(--wl-accent) 60%, white); }
+.home-theme-toggle:hover { background: transparent; color: color-mix(in srgb, var(--wl-accent) 60%, white); }
 .home-theme-symbol { display: block; }
+.home-theme-outline { stroke: var(--wl-gray-950); stroke-width: 3.4; opacity: 0; }
+.home-theme-toggle--light .home-theme-outline { opacity: 1; }
 .home-theme-sun, .home-theme-moon { transform-origin: center; transform-box: view-box; transition: opacity calc(var(--wl-motion-slow) * 2.5) var(--wl-ease), transform calc(var(--wl-motion-slow) * 2.5) var(--wl-ease); }
 .home-theme-symbol--light .home-theme-sun { opacity: 0; transform: rotate(-45deg) scale(0.6); }
 .home-theme-symbol--dark .home-theme-moon { opacity: 0; transform: rotate(35deg) scale(0.6); }

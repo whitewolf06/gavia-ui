@@ -1,6 +1,6 @@
 {
   "name": "gavia-ui",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "Gavia UI — a free, open source Vue 3 and TypeScript component library and design system",
   "type": "module",
   "license": "MIT",

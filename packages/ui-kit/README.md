@@ -27,8 +27,8 @@ unit-тесты, покрытие Vitest/V8, браузеры, доступно�
 из CI последней опубликованной сборки Playground; оно может отличаться от снимка.
 [Текущие запуски CI](https://github.com/whitewolf06/gavia-ui/actions).
 
-Версия **0.9.1**. [История изменений](CHANGELOG.md) ·
-[Миграция 0.9](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.9.md) ·
+Версия **0.10.0**. [История изменений](CHANGELOG.md) ·
+[Миграция 0.10](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.10.0.md) ·
 [История ребрендинга](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-gavia.md).
 Код UI Kit — [MIT](LICENSE), файлы шрифта —
 [SIL OFL 1.1](https://github.com/whitewolf06/gavia-ui/blob/main/packages/ui-kit/fonts/gavia/OFL.txt).
@@ -45,7 +45,7 @@ unit-тесты, покрытие Vitest/V8, браузеры, доступно�
 | **Gavia** | Светлая | `gavia` | `gavia-ui/themes/gavia.css` |
 | **Gavia Dark** | Тёмная | `gavia-dark` | `gavia-ui/themes/gavia-dark.css` |
 
-Gavia Dark добавлена в исходники для следующего выпуска; npm 0.9.1 её ещё не содержит.
+Gavia Dark добавлена в 0.10.0.
 
 ### Дополнительные
 
@@ -65,11 +65,11 @@ Gavia Dark добавлена в исходники для следующего 
 ## Быстрый старт
 
 ```bash
-pnpm add gavia-ui@0.9.1 vue
+pnpm add gavia-ui@0.10.0 vue
 # либо
-npm install gavia-ui@0.9.1 vue
+npm install gavia-ui@0.10.0 vue
 # либо
-bun add gavia-ui@0.9.1 vue
+bun add gavia-ui@0.10.0 vue
 ```
 
 ```ts

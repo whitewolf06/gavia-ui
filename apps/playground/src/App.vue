@@ -7,6 +7,7 @@ import PlaygroundHeader from "./PlaygroundHeader.vue";
 import FontDownloadLink from "./project/FontDownloadLink.vue";
 import { playgroundNavigationKey } from "./playground-navigation";
 import { createPlaygroundThemeUrl, getPlaygroundThemeToggleTarget, isPlaygroundTheme, parsePlaygroundTheme, playgroundThemeOptions } from "./themes";
+import { createPlaygroundThemeTransition } from "./theme-transition";
 import gaviaMarkUrl from "../../../docs/brand/gavia-ui-mark-v2.png";
 import { gaviaProjectInfo as project } from "./project/project-info";
 const WlCommandPalette = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlCommandPalette.vue"));
@@ -22,7 +23,7 @@ const headerElement = ref<HTMLElement | null>(null);
 let restoreScrollPadding: (() => void) | undefined;
 let historyAnchorFrame: number | undefined;
 let appMounted = false;
-let themeColorTransitionTimer: number | undefined;
+const themeTransition = createPlaygroundThemeTransition();
 function cancelHistoryAnchor(): void {
   if (historyAnchorFrame !== undefined) window.cancelAnimationFrame(historyAnchorFrame);
   historyAnchorFrame = undefined;
@@ -35,9 +36,14 @@ const activeView = computed(() => activeRoute.value.view);
 // The shortcut demonstration owns Ctrl K; the header search still opens by click.
 const globalSearchShortcut = computed(() => !(activeRoute.value.view === "docs" && activeRoute.value.component === "WlCommandPalette"));
 function readView(): void {
+  cancelPendingThemeChange();
   cancelHistoryAnchor();
   activeRoute.value = routeFromLocation();
-  theme.value = parsePlaygroundTheme(window.location.search);
+  const locationTheme = parsePlaygroundTheme(window.location.search);
+  classicLightTheme = rememberClassicLightTheme(locationTheme, theme.value, classicLightTheme);
+  requestedTheme = locationTheme;
+  requestedClassicLightTheme = classicLightTheme;
+  theme.value = locationTheme;
   // Back/Forward can change an asynchronous page before restoring its anchor.
   if (activeRoute.value.view !== "docs" && activeRoute.value.view !== "font") return;
   const route = activeRoute.value;
@@ -58,6 +64,7 @@ function readView(): void {
   });
 }
 async function navigate(route: PlaygroundRoute, anchor?: string): Promise<void> {
+  cancelPendingThemeChange();
   cancelHistoryAnchor();
   const url = createPlaygroundUrl(new URL(window.location.href), route);
   if (anchor) url.hash = anchor;
@@ -112,7 +119,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   appMounted = false;
   cancelHistoryAnchor();
-  stopThemeColorTransition();
+  themeTransition.dispose();
   window.removeEventListener("popstate", readView);
   restoreScrollPadding?.();
 });
@@ -232,43 +239,45 @@ const theme = ref<WlThemeName>(parsePlaygroundTheme(typeof window === "undefined
 provide(playgroundNavigationKey, { navigate, theme });
 const themeOptions = playgroundThemeOptions;
 let classicLightTheme: "white" | "newspaper" = "white";
-function stopThemeColorTransition(): void {
-  if (themeColorTransitionTimer !== undefined) window.clearTimeout(themeColorTransitionTimer);
-  themeColorTransitionTimer = undefined;
-  delete document.documentElement.dataset.wlPlaygroundThemeTransition;
+let requestedTheme = theme.value;
+let requestedClassicLightTheme: "white" | "newspaper" = classicLightTheme;
+
+function rememberClassicLightTheme(value: WlThemeName, previous: WlThemeName, remembered: "white" | "newspaper"): "white" | "newspaper" {
+  if (value === "newspaper") return "newspaper";
+  if (value === previous) return remembered;
+  return value === "graphite" && previous === "newspaper" ? remembered : "white";
 }
-function startThemeColorTransition(): void {
-  if (themeColorTransitionTimer !== undefined) window.clearTimeout(themeColorTransitionTimer);
-  themeColorTransitionTimer = undefined;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    stopThemeColorTransition();
-    return;
-  }
-  const root = document.documentElement;
-  const token = window.getComputedStyle(root).getPropertyValue("--wl-motion-slow").trim();
-  const tokenDuration = Number.parseFloat(token) * (token.endsWith("ms") ? 1 : 1000) * 2.5;
-  const duration = Number.isFinite(tokenDuration) ? Math.max(0, tokenDuration) : 500;
-  if (duration === 0) {
-    stopThemeColorTransition();
-    return;
-  }
-  root.dataset.wlPlaygroundThemeTransition = "";
-  // Keep the marker through the first rendering frame; reset it after rapid toggles.
-  themeColorTransitionTimer = window.setTimeout(stopThemeColorTransition, duration + 50);
+function cancelPendingThemeChange(): void {
+  themeTransition.cancel();
+  requestedTheme = theme.value;
+  requestedClassicLightTheme = classicLightTheme;
 }
 function toggleThemeVariant(): void {
-  chooseTheme(getPlaygroundThemeToggleTarget(theme.value, classicLightTheme));
+  chooseTheme(getPlaygroundThemeToggleTarget(requestedTheme, requestedClassicLightTheme));
 }
-function chooseTheme(value: unknown): void {
-  if (!isPlaygroundTheme(value)) return;
-  if (theme.value !== value) startThemeColorTransition();
-  theme.value = value;
+function updateThemeUrl(value: WlThemeName): void {
   const url = createPlaygroundThemeUrl(new URL(window.location.href), value);
   if (url.href !== window.location.href) window.history.replaceState(null, "", url);
 }
-watch(theme, (value, previous) => {
-  if (value === "newspaper") classicLightTheme = "newspaper";
-  else if (value !== "graphite" || previous !== "newspaper") classicLightTheme = "white";
+function chooseTheme(value: unknown): void {
+  if (!isPlaygroundTheme(value)) return;
+  if (requestedTheme === value) {
+    // Do not write a pending theme into the URL before its guarded DOM update.
+    if (theme.value === value) updateThemeUrl(value);
+    return;
+  }
+  requestedClassicLightTheme = rememberClassicLightTheme(value, requestedTheme, requestedClassicLightTheme);
+  requestedTheme = value;
+  const nextClassicLightTheme = requestedClassicLightTheme;
+  themeTransition.run(async () => {
+    classicLightTheme = nextClassicLightTheme;
+    theme.value = value;
+    updateThemeUrl(value);
+    // Native capture must see Vue's updated hero layers, icon and header selector.
+    await nextTick();
+  });
+}
+watch(theme, (value) => {
   document.documentElement.dataset.wlTheme = value;
 }, { immediate: true, flush: "sync" });
 </script>
@@ -304,15 +313,47 @@ watch(theme, (value, previous) => {
 .pg-footer { display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 12px 24px; padding: 24px; border-top: 1px solid var(--wl-border); color: var(--wl-text-2); font-size: var(--wl-type-small-size); }
 .pg-footer a { color: var(--wl-text-accent); text-underline-offset: 3px; }
 .pg-footer a:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 3px; }
-@media (prefers-reduced-motion: no-preference) {
-  html[data-wl-playground-theme-transition] :where(
-    body, .pg-top, .pg-top :not(img), .pg-footer, .pg-footer :not(img),
-    .home-page, .home-page :not(img, .home-theme-sun, .home-theme-moon)
-  ) {
-    transition-property: background-color, border-color, color, outline-color, fill, stroke;
-    transition-duration: calc(var(--wl-motion-slow) * 2.5);
-    transition-timing-function: ease-in-out;
-    transition-delay: 0s;
+/* Temporary suppression prevents component transitions leaking into the snapshot. */
+html[data-wl-playground-theme-transition="native"] :where(body, body *),
+html[data-wl-playground-theme-transition="native"] :where(body, body *)::before,
+html[data-wl-playground-theme-transition="native"] :where(body, body *)::after {
+  transition: none;
+}
+/* Older browsers retain only the hero image/symbol crossfade during the update. */
+html[data-wl-playground-theme-transition="instant"] :where(body, body *):not(.home-hero-layer--night, .home-theme-sun, .home-theme-moon),
+html[data-wl-playground-theme-transition="instant"] :where(body, body *)::before,
+html[data-wl-playground-theme-transition="instant"] :where(body, body *)::after {
+  transition: none;
+}
+html[data-wl-playground-theme-transition="native"]::view-transition,
+html[data-wl-playground-theme-transition="native"]::view-transition-group(*),
+html[data-wl-playground-theme-transition="native"]::view-transition-image-pair(*),
+html[data-wl-playground-theme-transition="native"]::view-transition-old(*),
+html[data-wl-playground-theme-transition="native"]::view-transition-new(*) {
+  pointer-events: none;
+}
+html[data-wl-playground-theme-transition="native"]::view-transition-group(root) {
+  animation: none;
+}
+html[data-wl-playground-theme-transition="native"]::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+html[data-wl-playground-theme-transition="native"]::view-transition-old(root) {
+  animation: none;
+  opacity: 1;
+  mix-blend-mode: normal;
+}
+html[data-wl-playground-theme-transition="native"]::view-transition-new(root) {
+  animation: wl-playground-theme-in calc(var(--wl-motion-slow) * 2.5) ease-in-out both;
+  mix-blend-mode: normal;
+}
+@keyframes wl-playground-theme-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-wl-playground-theme-transition="native"]::view-transition-new(root) {
+    animation: none;
   }
 }
 </style>

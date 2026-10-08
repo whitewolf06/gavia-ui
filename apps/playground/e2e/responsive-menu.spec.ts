@@ -217,6 +217,8 @@ test("Gavia is the initial theme and explicit theme links survive refresh and na
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "white");
   await selector.click();
   await page.getByRole("listbox").getByRole("option", { name: "Gavia", exact: true }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "gavia");
+  await expect.poll(() => new URL(page.url()).searchParams.get("theme")).toBe("gavia");
   const selected = new URL(page.url());
   expect(selected.pathname).toBe(url.pathname);
   expect(selected.searchParams.get("theme")).toBe("gavia");

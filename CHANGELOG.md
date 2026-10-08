@@ -6,11 +6,13 @@
 
 ## Не выпущено
 
+## 0.10.0 — 2026-10-08
+
 ### Темы
 
 - README выделяет Gavia / Gavia Dark как основные темы и Classic / Classic Dark / Newspaper как дополнительные; для каждой указаны идентификатор и явный CSS-импорт.
-- В правом верхнем углу hero добавлена кнопка солнца/луны на WlIconButton: Gavia ↔ Gavia Dark, Classic ↔ Classic Dark; Newspaper переключается в Classic Dark и возвращается при повторном нажатии.
-- Дневной и ночной фон hero загружаются заранее и остаются двумя слоями одной композиции: светлые темы используют дневной, обе тёмные — ночной. Цвета меняются плавно, загруженный ночной слой проявляется через crossfade; prefers-reduced-motion отключает переходы.
+- В правом верхнем углу hero добавлена компактная ghost-кнопка солнца/луны на WlIconButton: цветная иконка 32 px, активная область 44 × 44 px, без фоновой коробки в обычном состоянии; клавиатурный фокус выделяет обводка. Gavia ↔ Gavia Dark, Classic ↔ Classic Dark; Newspaper переключается в Classic Dark и возвращается при повторном нажатии.
+- Дневной и ночной фон hero загружаются заранее и остаются двумя слоями одной композиции: светлые темы используют дневной, обе тёмные — ночной. При поддержке View Transitions API смена темы использует один временный переход всей страницы; в остальных браузерах сохраняется crossfade hero. Ночной слой появляется после загрузки; prefers-reduced-motion отключает переходы.
 - Лес и колоски в информационных карточках главной различимы в тёмных темах; карточки сохраняют тёмный фон. Ссылки на документы, Issues и руководство GitHub в этих карточках открываются в новой вкладке и отмечены иконкой внешнего перехода.
 - Gavia Dark получила ночной фон hero с луной на месте исходного солнца, лёгким голубоватым светом и той же гагарой; поверхности получили мягкий холодно-серый, слегка синеватый подтон, основной бирюзовый акцент стал насыщеннее и чуть ближе к голубому; блок установки сохраняет цветную границу и использует тёмный бирюзовый акцентный фон.
 - Холодный подтон уточнён только в шести фоновых заливках Gavia Dark: фон страницы, поднятая и вторичная поверхности, hover и два мягких акцентных фона.
@@ -36,6 +38,30 @@
 - Подготовка версий выполняется Changesets, prerelease использует npm next; витрины теговых выпусков сохраняются отдельно.
 - Установка через pnpm, npm и Bun доступна в playground и README; добавлены шаблоны Issues и политика браузеров/версий.
 
+### Changesets
+
+Add Gavia Dark with Gavia Sans, matching Gavia geometry, an accessible dark lake palette, and explicit themes/gavia-dark.css import. Rename display labels White and Graphite to Classic and Classic Dark while preserving the white/graphite identifiers, CSS paths and original catalogue positions. The public theme catalogue now contains five entries; see docs/migration-themes.md for literal tuple and label consumers.
+
+Use a subtly blue moonlit night version of the original lake hero in both Gavia Dark and Classic Dark, keeping the moon at the original sun position. In Gavia Dark, use cool-gray dark backgrounds at comparable luminance, with a soft, slightly blue undertone for neutral surfaces. Strengthen the turquoise brand accent and shift it slightly toward blue for primary actions, links, the logo and focus while preserving status colors. Give the installation card a muted dark turquoise accent fill with a distinct turquoise border, matching the role of the light Gavia accent surface.
+
+Refine only six Gavia Dark background fills: `--wl-bg` #18191b, `--wl-bg-raised` #222325, `--wl-bg-soft` #2c2d30, `--wl-bg-hover` #3c3d41, `--wl-accent-soft` #293c3f and `--wl-accent-soft-hover` #33484c.
+
+Keep the home forest and reeds illustrations visible on dark surfaces using theme-aware image blending. Mark the project-card GitHub documentation and contribution links as external and open them in a new tab.
+
+Keep narrow WlAlert messages readable by wrapping actions when an icon, action and close control share the available width.
+
+Add a ghost sun/moon WlIconButton in the hero’s upper right corner, with a tinted 32 px icon, a 44 × 44 px interaction area and no boxed background in its normal state, for Gavia ↔ Gavia Dark and Classic ↔ Classic Dark; Newspaper switches to Classic Dark and back to Newspaper. Keep both day/night images mounted and preloaded with the same composition: all light themes use day and both dark themes use night. Use one temporary full-page transition when View Transitions API is available, with hero crossfade as the fallback. Show the night layer once loaded; prefers-reduced-motion disables the transitions.
+
+Проверки совместимости API 0.9.1, визуальные эталоны Gavia Sans, доступность WCAG 2.2 AA,
+браузерный запуск установленного архива, SSR/hydration, контроль размера и покрытия.
+Публичные имена и схема подключения сохранены.
+
+
+Исправлена поддержка Vue 3.4: declarations и SSR-идентификаторы совместимы
+с минимальным peer. Списки получили доступные имена и связи ARIA. В Graphite
+акцентный текст стал контрастнее; цвет primary-кнопок сохранён. Сборка
+приложения с одной кнопкой больше не удерживает неиспользуемые каталоги.
+Установка через npm и Bun добавлена в playground и проверяется из архива.
 
 ## 0.9.1 — 2026-10-07
 

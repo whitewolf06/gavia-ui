@@ -341,7 +341,9 @@ test("getting-started links persist across Docs pages and preserve native links,
         overview.getByRole("link", { name: "Установка", exact: true }).click({ modifiers: ["ControlOrMeta"] })
       ]);
       try {
-        // A native background tab starts the lazy Vue application asynchronously.
+        // Bring the native tab forward so Firefox runs its lazy application without background throttling.
+        await newTab.bringToFront();
+        await newTab.waitForLoadState("domcontentloaded");
         await newTab.getByTestId("docs-page").waitFor({ state: "visible" });
         await expect(newTab.getByTestId("docs-page").locator("#docs-install")).toBeInViewport();
         await expectRoute(newTab, baseURL, "docs");
