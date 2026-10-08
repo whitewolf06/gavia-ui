@@ -173,10 +173,10 @@
   --wl-dp-panel-pad: var(--wl-metric-dp-panel-pad);
   --wl-upload-drop-pad-y: var(--wl-metric-upload-drop-pad-y);
   --wl-upload-drop-pad-x: var(--wl-metric-upload-drop-pad-x);
-  --wl-palette-bg: #1a1917;
-  --wl-palette-bg-raised: #242321;
-  --wl-palette-bg-soft: #2e2d2a;
-  --wl-palette-bg-hover: #3e3d39;
+  --wl-palette-bg: #18191b;
+  --wl-palette-bg-raised: #222325;
+  --wl-palette-bg-soft: #2c2d30;
+  --wl-palette-bg-hover: #3c3d41;
   --wl-palette-border: #4b4a46;
   --wl-palette-border-2: #686761;
   --wl-palette-text: #eceee8;
@@ -185,9 +185,9 @@
   --wl-palette-accent: #67bbbc;
   --wl-palette-text-accent: var(--wl-palette-accent);
   --wl-palette-accent-hover: #7acdcd;
-  --wl-palette-accent-soft: #273d3c;
+  --wl-palette-accent-soft: #293c3f;
   --wl-palette-accent-border: #528787;
-  --wl-palette-accent-soft-hover: #304949;
+  --wl-palette-accent-soft-hover: #33484c;
   --wl-palette-accent-border-hover: #63a4a4;
   --wl-palette-on-accent: #102027;
   --wl-palette-action-primary-bg: #5faaab;

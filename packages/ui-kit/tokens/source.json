@@ -28,7 +28,7 @@
     {
       "name": "gavia-dark",
       "label": "Gavia Dark",
-      "description": "Почти серые тёмные поверхности с лёгким тёплым подтоном, выразительный бирюзовый акцент, тёмные бирюзовые заливки и типографика Gavia Sans.",
+      "description": "Почти серые тёмные поверхности с лёгким синеватым подтоном, выразительный бирюзовый акцент, тёмные бирюзово-голубые заливки и типографика Gavia Sans.",
       "colorScheme": "dark"
     }
   ],
@@ -1623,7 +1623,7 @@
         "graphite": "#17181c",
         "newspaper": "var(--wl-gray-0)",
         "gavia": "#faf9f6",
-        "gavia-dark": "#1a1917"
+        "gavia-dark": "#18191b"
       }
     },
     {
@@ -1635,7 +1635,7 @@
       "description": "Поднятая поверхность для карточек и локальных панелей.",
       "themes": {
         "gavia": "#fefdfb",
-        "gavia-dark": "#242321"
+        "gavia-dark": "#222325"
       }
     },
     {
@@ -1650,7 +1650,7 @@
         "graphite": "#1e2025",
         "newspaper": "var(--wl-gray-50)",
         "gavia": "#eef2f3",
-        "gavia-dark": "#2e2d2a"
+        "gavia-dark": "#2c2d30"
       }
     },
     {
@@ -1665,7 +1665,7 @@
         "graphite": "#26292f",
         "newspaper": "var(--wl-gray-100)",
         "gavia": "#e5ecef",
-        "gavia-dark": "#3e3d39"
+        "gavia-dark": "#3c3d41"
       }
     },
     {
@@ -1797,7 +1797,7 @@
         "graphite": "#202c46",
         "newspaper": "#f4f3f1",
         "gavia": "#dfe8eb",
-        "gavia-dark": "#273d3c"
+        "gavia-dark": "#293c3f"
       }
     },
     {
@@ -1827,7 +1827,7 @@
         "graphite": "#263757",
         "newspaper": "#eceae6",
         "gavia": "#d3dfe4",
-        "gavia-dark": "#304949"
+        "gavia-dark": "#33484c"
       }
     },
     {

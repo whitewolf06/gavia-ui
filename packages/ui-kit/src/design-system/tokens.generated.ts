@@ -1592,7 +1592,7 @@ export const wlDesignTokens = [
       "graphite": "#17181c",
       "newspaper": "var(--wl-gray-0)",
       "gavia": "#faf9f6",
-      "gavia-dark": "#1a1917"
+      "gavia-dark": "#18191b"
     }
   },
   {
@@ -1604,7 +1604,7 @@ export const wlDesignTokens = [
     "description": "Поднятая поверхность для карточек и локальных панелей.",
     "themes": {
       "gavia": "#fefdfb",
-      "gavia-dark": "#242321"
+      "gavia-dark": "#222325"
     }
   },
   {
@@ -1619,7 +1619,7 @@ export const wlDesignTokens = [
       "graphite": "#1e2025",
       "newspaper": "var(--wl-gray-50)",
       "gavia": "#eef2f3",
-      "gavia-dark": "#2e2d2a"
+      "gavia-dark": "#2c2d30"
     }
   },
   {
@@ -1634,7 +1634,7 @@ export const wlDesignTokens = [
       "graphite": "#26292f",
       "newspaper": "var(--wl-gray-100)",
       "gavia": "#e5ecef",
-      "gavia-dark": "#3e3d39"
+      "gavia-dark": "#3c3d41"
     }
   },
   {
@@ -1766,7 +1766,7 @@ export const wlDesignTokens = [
       "graphite": "#202c46",
       "newspaper": "#f4f3f1",
       "gavia": "#dfe8eb",
-      "gavia-dark": "#273d3c"
+      "gavia-dark": "#293c3f"
     }
   },
   {
@@ -1796,7 +1796,7 @@ export const wlDesignTokens = [
       "graphite": "#263757",
       "newspaper": "#eceae6",
       "gavia": "#d3dfe4",
-      "gavia-dark": "#304949"
+      "gavia-dark": "#33484c"
     }
   },
   {
@@ -4140,7 +4140,7 @@ export const wlDesignThemes = [
   {
     "name": "gavia-dark",
     "label": "Gavia Dark",
-    "description": "Почти серые тёмные поверхности с лёгким тёплым подтоном, выразительный бирюзовый акцент, тёмные бирюзовые заливки и типографика Gavia Sans.",
+    "description": "Почти серые тёмные поверхности с лёгким синеватым подтоном, выразительный бирюзовый акцент, тёмные бирюзово-голубые заливки и типографика Gavia Sans.",
     "colorScheme": "dark"
   }
 ] as const satisfies readonly WlDesignTheme[];
@@ -5236,7 +5236,7 @@ export const wlContrastReport = [
     "background": "--wl-bg",
     "minimum": 4.5,
     "theme": "gavia-dark",
-    "ratio": 15.03
+    "ratio": 15.05
   },
   {
     "name": "muted",
@@ -5245,7 +5245,7 @@ export const wlContrastReport = [
     "background": "--wl-bg",
     "minimum": 4.5,
     "theme": "gavia-dark",
-    "ratio": 9.4
+    "ratio": 9.41
   },
   {
     "name": "text-soft",
@@ -5317,7 +5317,7 @@ export const wlContrastReport = [
     "background": "--wl-accent-soft",
     "minimum": 4.5,
     "theme": "gavia-dark",
-    "ratio": 7.34
+    "ratio": 7.37
   },
   {
     "name": "success",
@@ -5353,7 +5353,7 @@ export const wlContrastReport = [
     "background": "--wl-bg",
     "minimum": 3,
     "theme": "gavia-dark",
-    "ratio": 7.87
+    "ratio": 7.88
   },
   {
     "name": "link",
@@ -5362,7 +5362,7 @@ export const wlContrastReport = [
     "background": "--wl-bg",
     "minimum": 4.5,
     "theme": "gavia-dark",
-    "ratio": 7.87
+    "ratio": 7.88
   },
   {
     "name": "focus-soft",
@@ -5380,7 +5380,7 @@ export const wlContrastReport = [
     "background": "--wl-bg-raised",
     "minimum": 4.5,
     "theme": "gavia-dark",
-    "ratio": 13.43
+    "ratio": 13.45
   },
   {
     "name": "muted-raised",
@@ -5389,7 +5389,7 @@ export const wlContrastReport = [
     "background": "--wl-bg-raised",
     "minimum": 4.5,
     "theme": "gavia-dark",
-    "ratio": 8.4
+    "ratio": 8.42
   },
   {
     "name": "focus-raised",
@@ -5398,7 +5398,7 @@ export const wlContrastReport = [
     "background": "--wl-bg-raised",
     "minimum": 3,
     "theme": "gavia-dark",
-    "ratio": 7.04
+    "ratio": 7.05
   },
   {
     "name": "accent-text-raised",
@@ -5407,7 +5407,7 @@ export const wlContrastReport = [
     "background": "--wl-bg-raised",
     "minimum": 4.5,
     "theme": "gavia-dark",
-    "ratio": 7.04
+    "ratio": 7.05
   },
   {
     "name": "accent-text-soft",
@@ -5425,7 +5425,7 @@ export const wlContrastReport = [
     "background": "--wl-accent-soft",
     "minimum": 4.5,
     "theme": "gavia-dark",
-    "ratio": 5.17
+    "ratio": 5.19
   },
   {
     "name": "accent-text-hover",
@@ -5434,6 +5434,6 @@ export const wlContrastReport = [
     "background": "--wl-accent-soft-hover",
     "minimum": 4.5,
     "theme": "gavia-dark",
-    "ratio": 5.26
+    "ratio": 5.27
   }
 ] as const;
