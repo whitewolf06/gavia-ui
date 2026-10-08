@@ -8,7 +8,7 @@ import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
 import { wlDesignThemes, wlDesignTokens } from "../../../packages/ui-kit/src/design-system";
 import gaviaMarkUrl from "../../../docs/brand/gavia-ui-mark-v2.png";
 import gaviaHeroUrl from "../../../docs/brand/gavia-lake-hero-v2.webp";
-import gaviaNightHeroUrl from "../../../docs/brand/gavia-lake-night-v1.webp";
+import gaviaNightHeroUrl from "../../../docs/brand/gavia-lake-night-v2.webp";
 import gaviaForestUrl from "../../../docs/brand/gavia-forest-card-v1.webp";
 import gaviaReedsUrl from "../../../docs/brand/gavia-reeds-card-v1.webp";
 import { gaviaProjectInfo as project } from "./project/project-info";
