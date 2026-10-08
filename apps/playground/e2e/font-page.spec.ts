@@ -60,11 +60,13 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
   for (const theme of ["Classic", "Classic Dark", "Newspaper", "Gavia Dark", "Gavia"]) {
     await chooseShowcaseTheme(page, theme);
     expect(new URL(page.url()).searchParams.get("view")).toBe("font");
-    await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
+    const headingFamily = await fontPage.locator(".wl-page-header__title").evaluate((element) => getComputedStyle(element).fontFamily);
+    await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", headingFamily);
+    await expect(fontPage.locator(".wl-type-display")).toHaveCSS("text-rendering", theme.startsWith("Gavia") ? "geometricprecision" : "optimizelegibility");
     await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
     await expect(fontPage.locator(".wl-weights-digits").first()).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
     await expect(page.locator("body")).toHaveCSS("text-rendering", theme.startsWith("Gavia") ? "geometricprecision" : "optimizelegibility");
-    for (const sample of [".wl-type-display", ".wl-type-number-sample", ".wl-weights-digits"]) {
+    for (const sample of [".wl-type-number-sample", ".wl-weights-digits"]) {
       await expect(fontPage.locator(sample).first()).toHaveCSS("text-rendering", "geometricprecision");
     }
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);

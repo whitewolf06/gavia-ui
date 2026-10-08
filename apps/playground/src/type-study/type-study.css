@@ -52,7 +52,7 @@
 
   .wl-type-hero { display: grid; grid-template-columns: minmax(0, 1fr) 205px; column-gap: 60px; row-gap: 28px; padding-block: 40px 38px; scroll-margin-top: 90px; }
   .wl-type-section-label { margin: 0 0 22px; color: var(--wl-type-accent); font-size: 11px; }
-  .wl-type-display { margin: 0; font-size: clamp(62px, 7.2vw, 94px); font-weight: 500; line-height: 1.015; letter-spacing: -0.052em; white-space: pre-line; }
+  .wl-type-display { margin: 0; font-family: var(--wl-type-display-family); text-rendering: var(--wl-type-text-rendering); font-size: clamp(62px, 7.2vw, 94px); font-weight: 500; line-height: 1.015; letter-spacing: -0.052em; white-space: pre-line; }
   .wl-type-direction { max-width: 550px; margin: 27px 0 0; color: var(--wl-type-muted); font-size: 17px; line-height: 1.65; }
   .wl-type-side-note { align-self: center; padding-top: 12px; }
   .wl-type-letterform { margin: 0 0 15px; font-size: 106px; font-weight: 500; line-height: 1.05; letter-spacing: -7px; }
@@ -228,9 +228,9 @@
   }
 }
 
-/* Font specimens always show Gavia Sans, while page controls follow the active theme. */
+/* The hero heading follows the theme; font specimens always show Gavia Sans. */
 @layer wl.components {
-  .wl-type-display, .wl-type-letterform, .wl-type-heading, .wl-type-paragraph,
+  .wl-type-letterform, .wl-type-heading, .wl-type-paragraph,
   .wl-type-interface-heading, .wl-type-project-name, .wl-type-stat-value,
   .wl-type-stat-date, .wl-type-secondary, .wl-type-ui-digits,
   .wl-type-glyphs,

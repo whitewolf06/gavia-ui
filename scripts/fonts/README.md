@@ -68,6 +68,8 @@ The live specimen is the integrated playground page `?view=font` and presents
 only accepted Gavia Sans 0.6: Russian and English text, upright/oblique samples,
 six weights and editable text. Its menu and theme selector are shared with the
 current playground; `?theme=...` survives navigation on local and Pages URLs.
+The hero heading uses the selected theme's display font; the letterforms,
+reading samples, numerals, weights and editable text retain Gavia Sans.
 Font software and notices are shipped in `packages/ui-kit/fonts/gavia/`.
 Source fonts and their OFL notices stay in `sources/`, outside the npm archive.
 The font development history is retained on `codex/gavia-type-final` at `32ec879`;
