@@ -1,9 +1,12 @@
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import type { WlThemeName } from "../../../packages/ui-kit/src/types";
 
-/** The showcase has a branded default; the library keeps its White fallback. */
+/** The showcase has a branded default; the library keeps its Classic fallback. */
 export const playgroundDefaultTheme: WlThemeName = "gavia";
-export const playgroundThemeOptions = wlDesignThemes.map(({ name, label }) => ({ value: name, label }));
+const themeOrder: readonly WlThemeName[] = ["gavia", "gavia-dark", "white", "graphite", "newspaper"];
+export const playgroundThemeOptions = [...wlDesignThemes]
+  .sort((a, b) => themeOrder.indexOf(a.name) - themeOrder.indexOf(b.name))
+  .map(({ name, label }) => ({ value: name, label }));
 
 export function isPlaygroundTheme(value: unknown): value is WlThemeName {
   return typeof value === "string" && wlDesignThemes.some((theme) => theme.name === value);

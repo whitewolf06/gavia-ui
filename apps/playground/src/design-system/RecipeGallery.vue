@@ -29,6 +29,9 @@ import "gavia-ui/styles/primitives.css";
 import "gavia-ui/themes/white.css";
 import "gavia-ui/themes/graphite.css";
 import "gavia-ui/themes/newspaper.css";
+import "gavia-ui/styles/fonts/gavia.css";
+import "gavia-ui/themes/gavia.css";
+import "gavia-ui/themes/gavia-dark.css";
 import App from "./App.vue";
 
 document.documentElement.dataset.wlTheme = "white";

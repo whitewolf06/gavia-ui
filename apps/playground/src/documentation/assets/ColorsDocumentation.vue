@@ -27,6 +27,7 @@ const setupCode = computed(() => [
   'import "gavia-ui/styles/reset.css";',
   'import "gavia-ui/styles/base.css";',
   'import "gavia-ui/styles/primitives.css";',
+  ...((props.theme === "gavia" || props.theme === "gavia-dark") ? ['import "gavia-ui/styles/fonts/gavia.css";'] : []),
   'import "gavia-ui/themes/' + props.theme + '.css";',
   'import App from "./App.vue";',
   "",

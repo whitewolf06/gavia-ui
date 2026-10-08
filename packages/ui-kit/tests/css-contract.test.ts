@@ -10,7 +10,9 @@ const cssSources: Record<string, string> = Object.fromEntries(
     "../styles/reset.css",
     "../themes/white.css",
     "../themes/graphite.css",
-    "../themes/newspaper.css"
+    "../themes/newspaper.css",
+    "../themes/gavia.css",
+    "../themes/gavia-dark.css"
   ].map((file) => [file, readFileSync(fileURLToPath(new NodeURL(file, import.meta.url)), "utf8")])
 );
 

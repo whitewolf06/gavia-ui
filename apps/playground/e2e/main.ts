@@ -10,6 +10,7 @@ import "gavia-ui/themes/white.css";
 import "gavia-ui/themes/graphite.css";
 import "gavia-ui/themes/newspaper.css";
 import "gavia-ui/themes/gavia.css";
+import "gavia-ui/themes/gavia-dark.css";
 
 const app = createApp(Fixture);
 app.use(WlConfig, {

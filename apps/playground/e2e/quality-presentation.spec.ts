@@ -11,7 +11,7 @@ const report = JSON.parse(readFileSync(fileURLToPath(new URL("../src/project/qua
   source: { environment: "ci" | "local" };
 };
 
-const themes = ["gavia", "white", "graphite", "newspaper"];
+const themes = ["gavia", "white", "graphite", "newspaper", "gavia-dark"];
 const percent = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 2 });
 
 test("quality summary, footer and documentation preserve themes and show the measured unit report", async ({ page }) => {
@@ -51,7 +51,7 @@ test("quality summary, footer and documentation preserve themes and show the mea
   }
 });
 
-test("quality home summary and documentation pass automated WCAG checks in four themes", async ({ page }, testInfo) => {
+test("quality home summary and documentation pass automated WCAG checks in five themes", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "chromium", "Axe runs once; routing and layout use all browser projects.");
   for (const theme of themes) {
     for (const view of ["home", "docs"]) {

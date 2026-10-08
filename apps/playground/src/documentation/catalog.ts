@@ -99,7 +99,7 @@ export const documentationFoundationPages: Record<DocumentationFoundationSection
       "Body — основной текст; small + text-muted — пояснения. Обязательная инструкция должна оставаться читаемой на своей поверхности.",
       "Ограничивайте длинную строку примерно 60–75 символами. На небольшом экране переносите текст и выбирайте title вместо display при необходимости.",
       "Label подписывает действие или поле; code показывает идентификатор или фрагмент кода. Не заменяйте подпись placeholder.",
-      "Используйте шрифты темы. Gavia, White, Graphite и Newspaper меняют токены без копирования компонентов."
+      "Используйте шрифты темы. Gavia, Gavia Dark, Classic, Classic Dark и Newspaper меняют токены без копирования компонентов."
     ],
     examples: [
       { name: "typography-scale", id: "docs-typography-scale", title: "Роли текста", description: "Все восемь ролей используют реальные классы wl-text-* и текущую тему." },

@@ -5,7 +5,7 @@ const single = ref(false);
 const open = ref(["guide"]);
 const action = ref("");
 watch(single, enabled => { if (enabled) open.value = open.value.slice(0, 1); });
-const items: WlAccordionItem[] = [{ key: "guide", title: "Подключение", content: "Подключите CSS явно и импортируйте компоненты из gavia-ui." }, { key: "theme", title: "Темы", content: "Gavia, White, Graphite и Newspaper переключаются токенами." }, { key: "later", title: "Закрытый раздел", content: "Этот раздел недоступен.", disabled: true }];
+const items: WlAccordionItem[] = [{ key: "guide", title: "Подключение", content: "Подключите CSS явно и импортируйте компоненты из gavia-ui." }, { key: "theme", title: "Темы", content: "Gavia, Gavia Dark, Classic, Classic Dark и Newspaper переключаются токенами." }, { key: "later", title: "Закрытый раздел", content: "Этот раздел недоступен.", disabled: true }];
 </script>
 <template>
   <div class="wl-stack" data-space="lg">

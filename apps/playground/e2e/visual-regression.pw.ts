@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { chooseDropdownOption, chooseShowcaseTheme } from "./select-helpers";
-const themes = [{ name: "white", label: "White" }, { name: "graphite", label: "Graphite" }, { name: "newspaper", label: "Newspaper" }];
+const themes = [{ name: "white", label: "Classic" }, { name: "graphite", label: "Classic Dark" }, { name: "newspaper", label: "Newspaper" }];
 // Keep a configured production subpath when comparing the same built showcase.
 const showcaseUrl = new URL("?view=system", process.env.GAVIA_E2E_BASE_URL ?? "http://127.0.0.1:4173/").href;
 test.beforeEach(async ({ page }) => {

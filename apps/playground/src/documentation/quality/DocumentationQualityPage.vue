@@ -70,7 +70,7 @@ const workflowUrl = gaviaProjectInfo.repositoryUrl + "/actions/workflows/publish
         <WlCard>
           <template #title><h3 class="wl-text-subheading">Доступность в приложении</h3></template>
           <div class="wl-stack" data-space="sm">
-            <p class="wl-text-body">Целевой уровень — WCAG 2.2 AA. Axe проверяет имена и связи ARIA, контраст и видимый DOM, включая открытые списки и диалоги в четырёх темах.</p>
+            <p class="wl-text-body">Целевой уровень — WCAG 2.2 AA. Axe проверяет имена и связи ARIA, контраст и видимый DOM, включая открытые списки и диалоги в пяти темах.</p>
             <p class="wl-text-small wl-text-muted">Автоматический скан не подтверждает полное соответствие WCAG. При интеграции нужны ручные проверки клавиатуры, масштабирования, NVDA и VoiceOver. Эти прогоны не входят в приведённое unit-покрытие.</p>
           </div>
         </WlCard>

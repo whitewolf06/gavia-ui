@@ -9,7 +9,7 @@ describe("playground theme routes", () => {
     expect(isPlaygroundTheme({ toString: () => "white" })).toBe(false);
   });
   it("honours each shipped theme from a deep link", () => {
-    for (const theme of ["gavia", "white", "graphite", "newspaper"] as const) {
+    for (const theme of ["gavia", "white", "graphite", "newspaper", "gavia-dark"] as const) {
       expect(isPlaygroundTheme(theme)).toBe(true);
       expect(parsePlaygroundTheme("?view=docs&section=colors&theme=" + theme)).toBe(theme);
     }
@@ -21,10 +21,11 @@ describe("playground theme routes", () => {
     expect(current.searchParams.get("theme")).toBe("white");
     expect(parsePlaygroundTheme(target.search)).toBe("gavia");
   });
-  it("offers all four named themes without losing existing choices", () => {
+  it("offers all five named themes without losing existing choices", () => {
     expect(playgroundThemeOptions).toEqual([
-      { value: "gavia", label: "Gavia" }, { value: "white", label: "White" },
-      { value: "graphite", label: "Graphite" }, { value: "newspaper", label: "Newspaper" }
+      { value: "gavia", label: "Gavia" }, { value: "gavia-dark", label: "Gavia Dark" },
+      { value: "white", label: "Classic" },
+      { value: "graphite", label: "Classic Dark" }, { value: "newspaper", label: "Newspaper" }
     ]);
   });
   it("keeps the chosen theme in native query links with routes and anchors", () => {

@@ -578,7 +578,7 @@ test("foundations navigation preserves live examples and highlighted copy across
   await page.reload();
   await expect(foundation.locator("#docs-content-states")).toBeInViewport();
   await expectRoute(page, baseURL, "docs", null, "content");
-  await chooseShowcaseTheme(page, "White");
+  await chooseShowcaseTheme(page, "Classic");
   await expectNoHorizontalOverflow(page, docs);
   await page.screenshot({ path: testInfo.outputPath("docs-foundations-mobile-320.png"), fullPage: true });
 });

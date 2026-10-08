@@ -327,7 +327,7 @@ test("Theme builder scopes live colors, restores its draft and exports a working
   await builder.getByRole("button", { name: "Сбросить цвета", exact: true }).click();
   await expect(bg).toHaveValue("#faf9f6");
   await expect(preview).toHaveCSS("background-color", "rgb(250, 249, 246)");
-  await chooseDropdownOption(page, builder.getByRole("combobox", { name: "Взять за основу", exact: true }), "Graphite");
+  await chooseDropdownOption(page, builder.getByRole("combobox", { name: "Взять за основу", exact: true }), "Classic Dark");
   const previewLink = preview.getByRole("link", { name: "Настройки темы", exact: true });
   await expect(previewLink).toHaveCSS("color", "rgb(121, 163, 244)");
   await builder.getByRole("textbox", { name: "Ссылки и фокус", exact: true }).fill("#a6c7ff");

@@ -52,7 +52,7 @@ async function copyInstall(): Promise<void> {
 }
 const sections = [
   { view: "docs", number: "01", icon: "book", title: "Документация", description: "Подключение, основы и руководства по всем компонентам: настройки, примеры, API и доступность." },
-  { view: "system", number: "02", icon: "image", title: "Дизайн-система", description: "Токены, типографика, состояния и готовые сценарии. Единые правила в четырёх темах." },
+  { view: "system", number: "02", icon: "image", title: "Дизайн-система", description: "Токены, типографика, состояния и готовые сценарии. Единые правила в пяти темах." },
   { view: "project", number: "03", icon: "file", title: "Changelog", description: "История выпусков, подготовленные изменения и заметки о переходе между версиями." }
 ] as const;
 const metrics = [
@@ -88,7 +88,7 @@ createApp(App).mount("#app");`;
         </div>
         <h1 id="home-title" class="home-title">Gavia UI</h1>
         <p class="home-tagline">Ясный язык для ваших интерфейсов.</p>
-        <p class="home-lead wl-text-body wl-text-muted">Компоненты, общие токены и живые примеры для Vue-приложений. От первой кнопки до согласованного интерфейса в четырёх темах.</p>
+        <p class="home-lead wl-text-body wl-text-muted">Компоненты, общие токены и живые примеры для Vue-приложений. От первой кнопки до согласованного интерфейса в пяти темах.</p>
         <nav class="wl-inline" data-space="md" aria-label="Начать работу с Gavia UI">
           <a class="home-action wl-btn wl-btn--primary wl-btn--md" data-wl="button" data-variant="primary" data-size="md" data-density="default" :href="themedHref('?view=docs')" @click.prevent="emit('navigate', 'docs')">Читать документацию <WlIcon name="arrow-right" :size="18" /></a>
           <a class="home-action wl-btn wl-btn--secondary wl-btn--md" data-wl="button" data-variant="secondary" data-size="md" data-density="default" :href="themedHref('?view=docs#docs-components')" @click.prevent="emit('catalog')">Все компоненты</a>
@@ -169,7 +169,7 @@ createApp(App).mount("#app");`;
     </section>
 
     <section id="home-quickstart" class="home-quickstart wl-stack" data-space="lg" aria-labelledby="home-quickstart-title">
-      <div class="home-section-heading"><div class="wl-stack" data-space="xs"><h2 id="home-quickstart-title" class="wl-text-title">Первая кнопка — без лишних настроек</h2><p class="wl-text-small wl-text-muted">Подключите стили и тему явно, затем импортируйте компонент. В примере используется White. Для Gavia начиная с 0.9.1 дополнительно подключите шрифтовой CSS и выберите тему gavia.</p></div><a class="home-text-link wl-text-small" :href="themedHref('?view=docs&component=WlButton')" @click.prevent="emit('component', 'WlButton')">Документация WlButton <WlIcon name="arrow-right" :size="16" /></a></div>
+      <div class="home-section-heading"><div class="wl-stack" data-space="xs"><h2 id="home-quickstart-title" class="wl-text-title">Первая кнопка — без лишних настроек</h2><p class="wl-text-small wl-text-muted">Подключите стили и тему явно, затем импортируйте компонент. В примере используется Classic. Для Gavia и Gavia Dark дополнительно подключите шрифтовой CSS и выберите тему gavia или gavia-dark. Gavia Dark подготовлена для следующего выпуска.</p></div><a class="home-text-link wl-text-small" :href="themedHref('?view=docs&component=WlButton')" @click.prevent="emit('component', 'WlButton')">Документация WlButton <WlIcon name="arrow-right" :size="16" /></a></div>
       <div class="home-quickstart-grid">
         <article class="home-setup-panel wl-stack" data-space="lg" aria-labelledby="home-setup-title"><div class="wl-stack" data-space="sm"><p class="home-panel-label wl-text-small">01 / main.ts</p><h3 id="home-setup-title" class="wl-text-subheading">Стили и тема</h3><p class="wl-text-small wl-text-muted">Для базовых компонентов установка плагина не требуется.</p></div><CodePanel :source="setupSource" title="Показать main.ts" /></article>
         <article class="home-button-panel wl-stack" data-space="lg" aria-labelledby="home-button-title"><div class="wl-stack" data-space="sm"><p class="home-panel-label wl-text-small">02 / App.vue</p><h3 id="home-button-title" class="wl-text-subheading">Попробуйте компонент</h3></div><div class="home-button-preview"><ButtonExample :preview="buttonPreview" /></div><CodePanel :source="buttonSource" title="Показать App.vue" /></article>

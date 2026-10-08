@@ -168,7 +168,7 @@ const commandPaletteGroups: WlCommandPaletteGroup[] = [
       {
         id: "page-colors",
         label: "Цвета и токены",
-        description: "Семантические цвета и подключение четырёх тем",
+        description: "Семантические цвета и подключение пяти тем",
         icon: "image",
         keywords: ["страницы", "тема", "палитра"],
         data: { view: "docs", section: "colors" }

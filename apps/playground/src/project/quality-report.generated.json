@@ -1,20 +1,20 @@
 {
   "schemaVersion": 1,
   "version": "0.9.1",
-  "measuredAt": "2026-10-07T22:50:01.595Z",
+  "measuredAt": "2026-10-07T23:38:15.766Z",
   "source": {
-    "revision": "5ac8b642312ac304f04cb4eaebce9b27904f8035",
+    "revision": "1b0141cf3120d5f4f3eb52f565f00f1c3543e8bc",
     "dirty": true,
     "environment": "local"
   },
   "tests": {
-    "passed": 613,
-    "total": 613
+    "passed": 617,
+    "total": 617
   },
   "coverage": {
     "lines": 98.28,
     "statements": 98.28,
-    "branches": 87.04,
+    "branches": 87.05,
     "functions": 82.73
   }
 }

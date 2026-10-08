@@ -51,16 +51,16 @@ Exact source SHA256 values are recorded in the family manifest. Original source 
 
 ## Use and review
 
-Gavia Sans is the default proportional typeface of the Gavia theme. The canonical
-`packages/ui-kit/tokens/source.json` defines the `--wl-font` override for `gavia`;
+Gavia Sans is the default proportional typeface of the Gavia and Gavia Dark themes. The canonical
+`packages/ui-kit/tokens/source.json` defines the `--wl-font` override for `gavia` and `gavia-dark`;
 `pnpm tokens:sync` generates the theme stylesheet, catalog and TypeScript values.
-Headings inherit `--wl-font-heading`. White, Graphite and Newspaper retain their
+Headings inherit `--wl-font-heading`. Classic, Classic Dark and Newspaper retain their
 existing stacks, and `--wl-mono` remains monospace for code.
 
 Consumers explicitly import `gavia-ui/styles/fonts/gavia.css` alongside reset,
-base and `themes/gavia.css`. The playground already registers the faces.
+base and `themes/gavia.css` or `themes/gavia-dark.css`. The playground already registers the faces.
 The library never imports CSS from JavaScript. Without the font stylesheet,
-the Gavia theme uses its system fallback. See [font documentation](../../docs/font-gavia.md).
+the Gavia themes use their system fallback. See [font documentation](../../docs/font-gavia.md).
 
 The WOFF2/TTF files remain usable independently of Vue and components: register WOFF2 with ordinary `@font-face` on any site, or install TTF manually for native applications. The build does not install fonts into Windows.
 

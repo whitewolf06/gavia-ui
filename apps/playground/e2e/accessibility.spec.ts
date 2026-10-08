@@ -2,7 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 import { chooseDropdownOption } from "./select-helpers";
 
-const themes = ["gavia", "white", "graphite", "newspaper"] as const;
+const themes = ["gavia", "white", "graphite", "newspaper", "gavia-dark"] as const;
 // axe executes in Chromium once; behavior remains covered by all browser projects.
 const wcagTags = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 

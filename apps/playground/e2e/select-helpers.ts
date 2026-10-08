@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
+import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
 
 /** Exercise the same dropdown interaction a playground user performs. */
 export async function chooseDropdownOption(page: Page, control: Locator, label: string): Promise<void> {
@@ -16,7 +17,9 @@ export async function chooseDropdownOption(page: Page, control: Locator, label: 
 
 export async function chooseShowcaseTheme(page: Page, label: string): Promise<void> {
   await chooseDropdownOption(page, page.getByRole("combobox", { name: "Тема оформления", exact: true }), label);
-  await expect(page.locator("html")).toHaveAttribute("data-wl-theme", label.toLowerCase());
+  const theme = wlDesignThemes.find((item) => item.label === label);
+  if (!theme) throw new Error("Unknown showcase theme: " + label);
+  await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme.name);
 }
 
 

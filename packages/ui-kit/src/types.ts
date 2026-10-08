@@ -168,4 +168,4 @@ export interface WlFileReject {
   reason: WlFileRejectReason;
 }
 
-export type WlThemeName = "gavia" | "white" | "graphite" | "newspaper";
+export type WlThemeName = "gavia" | "white" | "graphite" | "newspaper" | "gavia-dark";

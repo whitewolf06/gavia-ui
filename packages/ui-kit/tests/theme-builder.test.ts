@@ -156,7 +156,7 @@ describe("playground theme palette model", () => {
   it("rejects unknown themes, invalid colors, CSS selector injection and shipped names", () => {
     expect(() => createThemePalette("missing" as WlThemeName)).toThrow();
     expect(() => createThemeOverrides(edited("gavia", { primary: "red" }), "gavia")).toThrow();
-    for (const name of ["", "gavia", "white", "graphite", "newspaper", "Theme", 'theme"] {}', "a".repeat(33)]) {
+    for (const name of ["", "gavia", "gavia-dark", "white", "graphite", "newspaper", "Theme", 'theme"] {}', "a".repeat(33)]) {
       expect(isThemeNameValid(name)).toBe(false);
       expect(() => createThemeExport(name, "gavia", createThemePalette("gavia"))).toThrow();
     }

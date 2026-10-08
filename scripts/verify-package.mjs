@@ -147,6 +147,7 @@ import "gavia-ui/themes/white.css";
 import "gavia-ui/themes/graphite.css";
 import "gavia-ui/themes/newspaper.css";
 import "gavia-ui/themes/gavia.css";
+import "gavia-ui/themes/gavia-dark.css";
 import regularFontUrl from "gavia-ui/fonts/gavia/Gavia-Regular.woff2?url";
 import App from "./App.vue";
 
@@ -222,6 +223,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     "themes/graphite.css",
     "themes/newspaper.css",
     "themes/gavia.css",
+    "themes/gavia-dark.css",
     "styles/fonts/gavia.css",
     "fonts/gavia/manifest.json",
     "fonts/gavia/qa-report.json",

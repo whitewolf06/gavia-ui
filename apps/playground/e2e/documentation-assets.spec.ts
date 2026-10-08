@@ -146,7 +146,7 @@ test("asset routes and TOC remain usable at 320px with light and dark themes", a
   await docs.getByRole("navigation", { name: "Оформление", exact: true }).getByRole("button", { name: "Цвета и темы", exact: true }).click();
   await expect(assets).toHaveAttribute("data-docs-section", "colors");
   expect(new URL(page.url()).searchParams.get("section")).toBe("colors");
-  for (const theme of wlDesignThemes.filter((theme) => theme.name === "gavia" || theme.name === "white" || theme.name === "graphite")) {
+  for (const theme of wlDesignThemes.filter((theme) => theme.name === "gavia" || theme.name === "gavia-dark" || theme.name === "white" || theme.name === "graphite")) {
     await chooseShowcaseTheme(page, theme.label);
     await expect(assets).toHaveAttribute("data-docs-theme", theme.name);
     await noOverflow(page, docs);

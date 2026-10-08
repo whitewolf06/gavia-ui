@@ -1,15 +1,15 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { chooseDropdownOption } from "./select-helpers";
 
-function gaviaUrl(baseURL: string | undefined, view: string): string {
+function gaviaUrl(baseURL: string | undefined, view: string, theme: string): string {
   const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
-  url.search = new URLSearchParams({ view, theme: "gavia" }).toString();
+  url.search = new URLSearchParams({ view, theme }).toString();
   return url.href;
 }
 
-async function readyForDrawing(page: Page): Promise<void> {
+async function readyForDrawing(page: Page, theme: string): Promise<void> {
   // Unlike the classic geometry baselines, this suite must use the shipped font.
-  await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "gavia");
+  await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme);
   await expect(page.locator("body")).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
   const faces = await page.evaluate(async () => {
     const loaded = [];
@@ -61,7 +61,7 @@ async function capture(target: Locator, name: string): Promise<void> {
       await target.screenshot({ path: test.info().outputPath(`review-${name}`), animations: "disabled", caret: "hide", scale: "css" });
     }
     // Compare every image in the batch, even when an earlier image differs.
-    await expect.soft(target).toHaveScreenshot(name, { maxDiffPixelRatio: name.startsWith("gavia-font-") ? 0.0002 : 0.002 });
+    await expect.soft(target).toHaveScreenshot(name, { maxDiffPixelRatio: name.includes("-font-") ? 0.0002 : 0.002 });
   } finally {
     if (viewport) await page.setViewportSize(viewport);
   }
@@ -71,42 +71,44 @@ test.beforeEach(async ({ page }) => {
   await page.clock.setFixedTime(new Date("2026-10-01T12:00:00Z"));
 });
 
-test("gavia: home hero, installation grid and project panels", async ({ page, baseURL }) => {
-  await page.goto(gaviaUrl(baseURL, "home"), { waitUntil: "domcontentloaded" });
+for (const theme of ["gavia", "gavia-dark"]) {
+
+test(`${theme}: home hero, installation grid and project panels`, async ({ page, baseURL }) => {
+  await page.goto(gaviaUrl(baseURL, "home", theme), { waitUntil: "domcontentloaded" });
   const home = page.getByTestId("home-page");
   await expect(home).toBeVisible();
-  await readyForDrawing(page);
-  await capture(page.locator(".pg-top"), "gavia-header.png");
+  await readyForDrawing(page, theme);
+  await capture(page.locator(".pg-top"), `${theme}-header.png`);
   await prepareSectionCrops(page);
   // Preserve page spacing and fonts; crops cover the responsive layout.
-  await capture(home.locator(".home-hero"), "gavia-home-hero.png");
-  await capture(home.locator(".home-onboarding"), "gavia-home-onboarding.png");
-  await capture(home.locator(".home-project-grid"), "gavia-home-projects.png");
+  await capture(home.locator(".home-hero"), `${theme}-home-hero.png`);
+  await capture(home.locator(".home-onboarding"), `${theme}-home-onboarding.png`);
+  await capture(home.locator(".home-project-grid"), `${theme}-home-projects.png`);
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
 });
 
-test("gavia: Cyrillic, Latin, numeral spacing and all six weights", async ({ page, baseURL }) => {
-  await page.goto(gaviaUrl(baseURL, "font"), { waitUntil: "domcontentloaded" });
+test(`${theme}: Cyrillic, Latin, numeral spacing and all six weights`, async ({ page, baseURL }) => {
+  await page.goto(gaviaUrl(baseURL, "font", theme), { waitUntil: "domcontentloaded" });
   const font = page.getByTestId("font-page");
   await expect(font).toBeVisible();
-  await readyForDrawing(page);
+  await readyForDrawing(page, theme);
   await prepareSectionCrops(page);
-  await capture(font.locator(".wl-type-hero"), "gavia-font-hero.png");
-  await capture(font.locator("#wl-type-proof"), "gavia-font-alphabets.png");
-  await capture(font.locator("#wl-type-weights"), "gavia-font-weights.png");
-  await capture(font.locator("#wl-type-numbers"), "gavia-font-numerals.png");
+  await capture(font.locator(".wl-type-hero"), `${theme}-font-hero.png`);
+  await capture(font.locator("#wl-type-proof"), `${theme}-font-alphabets.png`);
+  await capture(font.locator("#wl-type-weights"), `${theme}-font-weights.png`);
+  await capture(font.locator("#wl-type-numbers"), `${theme}-font-numerals.png`);
 });
 
-test("gavia: form, selected control and dialog with actual font", async ({ page, baseURL }) => {
-  await page.goto(gaviaUrl(baseURL, "system"), { waitUntil: "domcontentloaded" });
+test(`${theme}: form, selected control and dialog with actual font`, async ({ page, baseURL }) => {
+  await page.goto(gaviaUrl(baseURL, "system", theme), { waitUntil: "domcontentloaded" });
   await expect(page.getByRole("heading", { name: "Единый язык интерфейсов" })).toBeVisible();
-  await readyForDrawing(page);
+  await readyForDrawing(page, theme);
   await prepareSectionCrops(page);
   await page.locator('[data-testid="ds-recipes"] [data-recipe="ProfileForm"]').first().click();
   const recipe = page.getByTestId("ds-recipe-preview");
   await expect(recipe).toHaveAttribute("data-recipe", "ProfileForm");
   await expect(recipe.locator(":scope > :first-child")).toBeVisible();
-  await capture(recipe, "gavia-profile-form.png");
+  await capture(recipe, `${theme}-profile-form.png`);
 
   const explorer = page.getByTestId("ds-explorer");
   const preview = page.getByTestId("ds-example-preview");
@@ -119,12 +121,14 @@ test("gavia: form, selected control and dialog with actual font", async ({ page,
       const overlay = page.locator(".wl-select-overlay");
       await expect(overlay).not.toHaveClass(/wl-pop-motion-enter-/);
       await expect(overlay).toHaveCSS("transform", "none");
-      await capture(page.getByRole("listbox"), "gavia-select-open.png");
+      await capture(page.getByRole("listbox"), `${theme}-select-open.png`);
     } else {
       await preview.getByRole("button", { name: "Открыть диалог" }).press("Enter");
-      await capture(page.getByRole("dialog", { name: "Сведения о материале" }), "gavia-dialog.png");
+      await capture(page.getByRole("dialog", { name: "Сведения о материале" }), `${theme}-dialog.png`);
     }
     await page.keyboard.press("Escape");
     await expect(page.locator(".wl-select-overlay, .wl-dialog")).toHaveCount(0);
   }
 });
+
+}

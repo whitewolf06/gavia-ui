@@ -173,7 +173,7 @@ jobs:
 
   visual:
     timeout-minutes: 15
-    name: Reviewed visual regression (desktop/mobile, four themes)
+    name: Reviewed visual regression (desktop/mobile, five themes)
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v6

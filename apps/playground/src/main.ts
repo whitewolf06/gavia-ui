@@ -9,6 +9,7 @@ import "gavia-ui/themes/graphite.css";
 import "gavia-ui/themes/newspaper.css";
 // White also declares :root; explicit branded themes follow its fallback.
 import "gavia-ui/themes/gavia.css";
+import "gavia-ui/themes/gavia-dark.css";
 import { parsePlaygroundTheme } from "./themes";
 
 // Apply explicit URL themes before the asynchronous application mounts.

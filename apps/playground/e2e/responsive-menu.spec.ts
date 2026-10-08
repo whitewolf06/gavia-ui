@@ -1,5 +1,6 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { navigateMainView } from "./select-helpers";
+import { playgroundThemeOptions } from "../src/themes";
 
 const sectionNames = ["Главная", "Документация", "Шрифт", "Дизайн-система", "Подбор темы", "Changelog"] as const;
 
@@ -138,7 +139,7 @@ test("responsive header keeps one visible navigation and restores focus after me
   await expect(palette).toHaveCount(0);
   await expect(search).toBeFocused();
 
-  const themeLabels: Record<string, string> = { gavia: "Gavia", white: "White", graphite: "Graphite", newspaper: "Newspaper" };
+  const themeLabels: Record<string, string> = { gavia: "Gavia", "gavia-dark": "Gavia Dark", white: "Classic", graphite: "Classic Dark", newspaper: "Newspaper" };
   const initialTheme = await page.locator("html").getAttribute("data-wl-theme");
   expect(Object.keys(themeLabels)).toContain(initialTheme);
   await theme.click();
@@ -160,8 +161,9 @@ test("responsive header keeps one visible navigation and restores focus after me
   await theme.press("ArrowDown");
   await expect(themeOptions).toBeVisible();
   await theme.press("Home");
-  await theme.press("ArrowDown");
-  await theme.press("ArrowDown");
+  const darkThemeIndex = playgroundThemeOptions.findIndex((option) => option.value === "graphite");
+  expect(darkThemeIndex).toBeGreaterThanOrEqual(0);
+  for (let index = 0; index < darkThemeIndex; index++) await theme.press("ArrowDown");
   await theme.press("Enter");
   await expect(theme).toHaveAttribute("aria-expanded", "false");
   await expect(themeOptions).toHaveCount(0);
@@ -169,7 +171,7 @@ test("responsive header keeps one visible navigation and restores focus after me
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "graphite");
   await theme.click();
   await expect(themeOptions.getByRole("option", { selected: true })).toHaveCount(1);
-  await expect(themeOptions.getByRole("option", { selected: true })).toHaveText("Graphite");
+  await expect(themeOptions.getByRole("option", { selected: true })).toHaveText("Classic Dark");
   await theme.press("Escape");
   await expect(themeOptions).toHaveCount(0);
   await expect(theme).toBeFocused();
@@ -210,7 +212,7 @@ test("Gavia is the initial theme and explicit theme links survive refresh and na
   url.search = "?view=docs&section=colors&theme=white&example=palette";
   await page.goto(url.href);
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "white");
-  await expect(selector).toContainText("White");
+  await expect(selector).toContainText("Classic");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "white");
   await selector.click();

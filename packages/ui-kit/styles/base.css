@@ -1631,6 +1631,7 @@
   /* ---------- Alert ---------- */
   .wl-alert {
     display: flex;
+    flex-wrap: wrap;
     gap: 11px;
     padding: 12px 14px;
     border-radius: var(--wl-radius);
@@ -1643,7 +1644,7 @@
     margin-top: 1px;
   }
   .wl-alert__body {
-    flex: 1;
+    flex: 1 1 12ch;
     min-width: 0;
   }
   .wl-alert__title {

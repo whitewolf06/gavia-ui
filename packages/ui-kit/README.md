@@ -7,8 +7,9 @@
 [![Покрытие строк unit-тестами — снимок репозитория](https://raw.githubusercontent.com/whitewolf06/gavia-ui/main/docs/quality-coverage.svg)](https://github.com/whitewolf06/gavia-ui/blob/main/apps/playground/src/project/quality-report.generated.json)
 
 Бесплатная библиотека компонентов и дизайн-система для **Vue 3 + TypeScript**.
-В составе: **53 компонента, 113 SVG-иконок, 447 дизайн-токенов, четыре темы
-и гарнитура Gavia Sans 0.6**. Runtime-зависимостей нет; Vue 3 — единственный
+В составе: **53 компонента, 113 SVG-иконок, 447 дизайн-токенов, пять тем:
+Gavia, Gavia Dark, Classic, Classic Dark, Newspaper и гарнитура Gavia Sans 0.6**.
+Runtime-зависимостей нет; Vue 3 — единственный
 обязательный peer. Стили подключаются явно.
 
 <p align="center">
@@ -20,6 +21,7 @@
 
 [Качество и совместимость](https://whitewolf06.github.io/gavia-ui/?view=docs&section=quality):
 unit-тесты, покрытие Vitest/V8, браузеры, доступность, SSR и проверка установленного пакета.
+Доля успешных unit-тестов и покрытие показаны процентными шкалами 0–100%; это измерение, а не статус CI.
 Бейдж — сохранённый снимок покрытия строк в репозитории. Его дата, версия и источник —
 [в JSON-отчёте](https://github.com/whitewolf06/gavia-ui/blob/main/apps/playground/src/project/quality-report.generated.json). Страница качества показывает измерение
 из CI последней опубликованной сборки Playground; оно может отличаться от снимка.
@@ -66,16 +68,20 @@ import { WlButton } from "gavia-ui";
 ```
 
 Вместо строки `dataset.wlTheme` можно указать `<html data-wl-theme="gavia">`
-в `index.html`. Gavia использует Gavia Sans; без шрифтового CSS доступен системный
-fallback. Без выбора темы библиотека сохраняет White. Для White, Graphite или
-Newspaper импортируйте соответствующий CSS и выберите одноимённый `data-wl-theme`.
+в `index.html`. Обе Gavia используют Gavia Sans; без шрифтового CSS доступен
+системный fallback. Gavia Dark подключается через `gavia-ui/themes/gavia-dark.css`
+и `data-wl-theme="gavia-dark"`. Без выбора темы библиотека сохраняет Classic (`white`).
+Classic / Classic Dark / Newspaper используют `themes/white.css` / `themes/graphite.css` /
+`themes/newspaper.css` и идентификаторы `white` / `graphite` / `newspaper`.
+Gavia Dark добавлена в исходники для следующего выпуска; npm 0.9.1 её ещё не содержит.
+[Названия тем и совместимость](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-themes.md).
 `WlConfig` для базового подключения не требуется.
 
 ## Шрифт Gavia Sans
 
 Gavia Sans 0.6 входит в пакет: кириллица и латиница, шесть весов
 100 / 300 / 400 / 500 / 600 / 700 с прямым и наклонным начертанием, WOFF2 и TTF.
-Она служит основным шрифтом **только темы Gavia**; White, Graphite и Newspaper
+Она служит основным шрифтом **тем Gavia и Gavia Dark**; Classic, Classic Dark и Newspaper
 сохраняют свою типографику. Подключение явное: `import "gavia-ui/styles/fonts/gavia.css";`.
 
 Файлы доступны через `gavia-ui/fonts/gavia/<file>` и применимы без Vue.
@@ -88,7 +94,7 @@ Gavia Sans 0.6 входит в пакет: кириллица и латиниц�
 
 Общие роли типографики, шкала расстояний, поверхности, состояния и UI-паттерны
 описаны в [руководстве](https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md). Playground `?view=system`
-показывает 447 токенов, четыре темы и контракты 53 компонентов.
+показывает 447 токенов, пять тем и контракты 53 компонентов.
 
 Опциональная компоновка и типографика: явный импорт
 `gavia-ui/styles/primitives.css`. Экспорты `wlDesignTokens`,

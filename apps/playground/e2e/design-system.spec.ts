@@ -45,7 +45,7 @@ test("catalog filters all tokens and resolves the selected theme", async ({ page
   await expect(page.getByTestId("ds-token-count")).toHaveText("1");
   const row = page.locator('[data-token="--wl-action-primary-text"]');
   await expect(row).toContainText("#ffffff");
-  await chooseShowcaseTheme(page, "Graphite");
+  await chooseShowcaseTheme(page, "Classic Dark");
   await expect(row).toContainText("#17181c");
   await expect(row).toContainText("var(--wl-gray-950)");
   await page.getByRole("searchbox", { name: "Поиск токена" }).fill("does-not-exist");

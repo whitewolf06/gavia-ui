@@ -1,6 +1,6 @@
 # Гарнитура Gavia Sans
 
-Gavia Sans 0.6 входит в Gavia UI и служит основным шрифтом темы Gavia.
+Gavia Sans 0.6 входит в Gavia UI и служит основным шрифтом тем Gavia и Gavia Dark.
 Семейство содержит кириллицу и латиницу, 780 символов и шесть весов:
 Thin 100, Light 300, Regular 400, Medium 500, SemiBold 600, Bold 700.
 Для каждого веса есть отдельные прямой и наклонный файлы.
@@ -14,13 +14,16 @@ import "gavia-ui/styles/base.css";
 import "gavia-ui/themes/gavia.css";
 ```
 
-Выберите `<html data-wl-theme="gavia">`. Тема ставит Gavia Sans первым в
-`--wl-font`, заголовки наследуют его через `--wl-font-heading`.
+Выберите `<html data-wl-theme="gavia">`; для Gavia Dark импортируйте
+`gavia-ui/themes/gavia-dark.css` и выберите `data-wl-theme="gavia-dark"`.
+Обе темы ставят Gavia Sans первым в `--wl-font`;
+заголовки наследуют его через `--wl-font-heading`.
 Подключение CSS остаётся явным: библиотека не загружает стили из JS.
-Без шрифтового CSS работает системный fallback. White, Graphite и Newspaper
+Без шрифтового CSS работает системный fallback. Classic, Classic Dark и Newspaper
 сохраняют прежнюю типографику. Имена токенов и `--wl-mono` не меняются.
 
-Шрифт и тема входят в Gavia UI начиная с 0.9.1. Для самостоятельного
+Шрифт и светлая тема входят в Gavia UI начиная с 0.9.1; Gavia Dark добавлена
+в исходники для следующего выпуска. [Совместимость тем](migration-themes.md). Для самостоятельного
 использования скачайте ZIP со страницы шрифта.
 
 ## Примеры и самостоятельное использование

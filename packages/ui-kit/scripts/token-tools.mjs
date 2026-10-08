@@ -25,7 +25,7 @@ export function contrastRatio(foreground, background) {
 export function validateCatalog(catalog) {
   if (catalog.schemaVersion !== 1) throw new Error("Unsupported token schemaVersion");
   const themes = catalog.themes.map((theme) => theme.name);
-  if (themes.slice().sort().join(",") !== "gavia,graphite,newspaper,white"
+  if (themes.slice().sort().join(",") !== "gavia,gavia-dark,graphite,newspaper,white"
     || catalog.themes.some((theme) => !theme.label || !theme.description || !["light", "dark"].includes(theme.colorScheme))) {
     throw new Error("Invalid theme catalog");
   }

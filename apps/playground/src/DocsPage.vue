@@ -187,7 +187,7 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
             <WlSegmented v-model="installManager" :options="installationManagers" aria-label="Менеджер пакетов для установки" />
             <CodePanel :source="installationCommand" :title="`Установка через ${installManager}`" :expanded="true" />
             <CodePanel :source="installationSource" title="main.ts · подключение приложения" :expanded="true" />
-            <p class="wl-text-small wl-text-muted">В примере подключена White. Для Graphite, Newspaper или Gavia импортируйте соответствующий CSS из <code>gavia-ui/themes/</code> и установите <code>data-wl-theme</code> на корневом элементе. Gavia и её шрифт доступны начиная с 0.9.1; дополнительно подключите <code>gavia-ui/styles/fonts/gavia.css</code>.</p>
+            <p class="wl-text-small wl-text-muted">В примере подключена Classic. Для Classic Dark, Newspaper, Gavia или Gavia Dark импортируйте соответствующий CSS из <code>gavia-ui/themes/</code> и установите <code>data-wl-theme</code> на корневом элементе. Gavia и её шрифт доступны начиная с 0.9.1; Gavia Dark подготовлена для следующего выпуска. Для обеих тем Gavia дополнительно подключите <code>gavia-ui/styles/fonts/gavia.css</code>.</p>
           </section>
 
           <section class="docs-overview-section wl-stack" data-space="lg">
@@ -210,7 +210,7 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 
           <section class="docs-overview-section wl-stack" data-space="md">
             <p class="docs-eyebrow">03 / Оформление</p><h2 :id="tokensHeading.id" class="wl-text-heading">{{ tokensHeading.title }}</h2>
-            <p class="wl-text-body wl-text-muted">Foundation → semantic → component. Namespace <code>--wl-*</code>, четыре темы через <code>data-wl-theme</code>, явный импорт CSS. Компоненты сохраняют DOM и поведение при смене темы.</p>
+            <p class="wl-text-body wl-text-muted">Foundation → semantic → component. Namespace <code>--wl-*</code>, пять тем через <code>data-wl-theme</code>, явный импорт CSS. Компоненты сохраняют DOM и поведение при смене темы.</p>
             <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="emit('section', 'colors')">Цвета и темы</WlButton><WlButton size="sm" variant="ghost" @click="emit('navigate', 'system')">Каталог токенов и правила</WlButton><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md">Документ дизайн-системы</a></div>
           </section>
 

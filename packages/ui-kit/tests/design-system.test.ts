@@ -44,7 +44,7 @@ describe("design system public contract", () => {
     for (const pair of wlContrastReport) expect(pair.ratio).toBeGreaterThanOrEqual(pair.minimum);
   });
   it("exposes Gavia without changing the default White snapshot", () => {
-    expect(wlDesignThemes.map((theme) => theme.name)).toEqual(["gavia", "white", "graphite", "newspaper"]);
+    expect(wlDesignThemes.map((theme) => theme.name)).toEqual(["gavia", "white", "graphite", "newspaper", "gavia-dark"]);
     expect(resolveWlToken("--wl-bg")).toBe("#ffffff");
     expect(resolveWlToken("--wl-bg", "gavia")).toBe("#faf9f6");
     expect(resolveWlToken("--wl-bg-raised", "gavia")).toBe("#fefdfb");
@@ -100,6 +100,25 @@ describe("design system public contract", () => {
       expect(resolveWlToken(name, "gavia"), name).toBe(resolveWlToken("--wl-danger", "gavia"));
     }
     expect(resolveWlToken("--wl-action-danger-hover", "gavia")).toBe(resolveWlToken("--wl-danger-hover", "gavia"));
+  });
+  it("adds Gavia Dark while preserving old theme IDs, positions and geometry", () => {
+    expect(wlDesignThemes.map(({ name, label }) => [name, label])).toEqual([
+      ["gavia", "Gavia"], ["white", "Classic"], ["graphite", "Classic Dark"],
+      ["newspaper", "Newspaper"], ["gavia-dark", "Gavia Dark"]
+    ]);
+    expect(wlDesignThemes.find((theme) => theme.name === "gavia-dark")?.colorScheme).toBe("dark");
+    const light = getWlThemeTokens("gavia");
+    const dark = getWlThemeTokens("gavia-dark");
+    for (const token of wlDesignTokens) {
+      if (token.type !== "color" && token.type !== "shadow") {
+        expect(dark[token.name], token.name).toBe(light[token.name]);
+      }
+    }
+    expect(dark["--wl-font"]).toMatch(/^"Gavia Sans",/);
+    expect(dark["--wl-bg"]).not.toBe(light["--wl-bg"]);
+    expect(dark["--wl-bg"]).not.toBe(resolveWlToken("--wl-bg", "graphite"));
+    expect(dark["--wl-action-danger-bg"]).toBe("#ab4448");
+    expect(wlContrastReport.filter((pair) => pair.theme === "gavia-dark")).toHaveLength(wlContrastPairs.length);
   });
   it("rejects unknown runtime names and themes", () => {
     expect(() => resolveWlToken("--wl-missing" as WlDesignTokenName)).toThrow("Unknown Gavia UI token");

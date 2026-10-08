@@ -57,13 +57,13 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
   await expect(proof).toHaveText("Гагара / Loon 0123456789");
   await expect(fontPage.locator('.wl-weights-row[data-font-style="italic"]')).toHaveCount(6);
 
-  for (const theme of ["White", "Graphite", "Newspaper", "Gavia"]) {
+  for (const theme of ["Classic", "Classic Dark", "Newspaper", "Gavia Dark", "Gavia"]) {
     await chooseShowcaseTheme(page, theme);
     expect(new URL(page.url()).searchParams.get("view")).toBe("font");
     await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
     await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
     await expect(fontPage.locator(".wl-weights-digits").first()).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
-    await expect(page.locator("body")).toHaveCSS("text-rendering", theme === "Gavia" ? "geometricprecision" : "optimizelegibility");
+    await expect(page.locator("body")).toHaveCSS("text-rendering", theme.startsWith("Gavia") ? "geometricprecision" : "optimizelegibility");
     for (const sample of [".wl-type-display", ".wl-type-number-sample", ".wl-weights-digits"]) {
       await expect(fontPage.locator(sample).first()).toHaveCSS("text-rendering", "geometricprecision");
     }

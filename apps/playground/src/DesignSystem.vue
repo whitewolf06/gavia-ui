@@ -101,7 +101,7 @@ const tokenCode = `.page {
 <template>
   <main class="ds-main wl-container" id="ds-top">
     <PlaygroundPageHeader class="ds-hero" title="Единый язык интерфейсов"
-      description="Спокойные поверхности, ясная иерархия и предсказуемое поведение. От значения токена до готового сценария — одна система в четырёх темах."
+      description="Спокойные поверхности, ясная иерархия и предсказуемое поведение. От значения токена до готового сценария — одна система в пяти темах."
       :breadcrumbs="[{ label: 'Дизайн-система' }]">
       <template #meta><div class="ds-metrics wl-inline" data-space="xl">
         <span><strong>{{ wlManifest.length }}</strong> компонентов</span>
