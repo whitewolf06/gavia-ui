@@ -1,9 +1,10 @@
+import { publishedVersion } from "./project-version";
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import { expect, test } from "@playwright/test";
 import { chooseShowcaseTheme, navigateMainView } from "./select-helpers";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, URL as NodeURL } from "node:url";
-const publishedVersion = "0.10.0";
+
 const packageMetadata = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../../../packages/ui-kit/package.json", import.meta.url)), "utf8")) as {
   name: string;
   version: string;
