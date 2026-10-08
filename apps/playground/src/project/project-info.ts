@@ -14,6 +14,6 @@ export const gaviaProjectInfo = {
   changelogUrl: "https://github.com/whitewolf06/gavia-ui/blob/main/CHANGELOG.md",
   packageName: "gavia-ui",
   packageUrl: "https://www.npmjs.com/package/gavia-ui",
-  publishedVersion: "0.9.1",
+  publishedVersion: "0.10.0",
   npmPublished: true
 } as const;

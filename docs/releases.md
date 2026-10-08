@@ -7,6 +7,53 @@
 Витрина уже опубликована: [Gavia UI в GitHub Pages](https://whitewolf06.github.io/gavia-ui/).
 Первый npm-выпуск опубликован: [gavia-ui@0.7.0](https://www.npmjs.com/package/gavia-ui).
 
+## Выпуск 0.10.0
+
+[gavia-ui@0.10.0](https://www.npmjs.com/package/gavia-ui/v/0.10.0) опубликован
+2026-10-08 (Москва) через OIDC по новому аннотированному тегу `v0.10.0`.
+Тег указывает на `0a51fdd6c6c061c4c4184355f2f71d0cb2401794`;
+[CI и публикация](https://github.com/whitewolf06/gavia-ui/actions/runs/37760199005)
+завершились успешно: Node 18/24, 617 unit-тестов, 515 браузерных сценариев
+и 24 визуальных сценария desktop/mobile для пяти тем. Три браузерных
+проверки axe намеренно пропущены вне Chromium; повторных падений нет.
+Покрытие строк в CI — 98,28%; это измерение unit-тестов, отдельно от browser/visual.
+
+Основные темы — Gavia и новая Gavia Dark с Gavia Sans. Дополнительные —
+Classic, Classic Dark и Newspaper; прежние идентификаторы `white` / `graphite`
+и пути CSS сохранены. Изменения публичного каталога тем и подключение описаны
+в [миграции 0.10](migration-0.10.0.md).
+
+Реестр подтвердил точную версию 0.10.0 и latest=0.10.0. Integrity скачанного
+npm-архива совпадает с архивом, проверенным publish job:
+
+```text
+sha512-pUIS8m9NyksMtVfwT+1R1a4n4aMMQ+S4s/EgCXhsIWS34r3xgJiT7HsT/HhlSPase81eGq9zm+93lXGCizhO4w==
+```
+
+SHA256 npm-архива — `11e0c7fbe80ba84526590a81f9dfee5e45b6ddaec34f8813da3fcbc326cc05cf`.
+Опубликованный архив отдельно прошёл typecheck и build в чистом Vue-потребителе,
+включая 59 SFC-примеров, Node import, SSR/hydration и Chromium desktop/mobile.
+Проверены 24 файла Gavia Sans 0.6 и лицензии MIT / SIL OFL 1.1.
+Vue остаётся единственным обязательным peer; runtime-зависимостей и встроенного
+Vue/PrimeVue нет. Сценарий WlButton — 24 685 байт gzip с Vue, в пределах бюджета.
+
+```bash
+pnpm add gavia-ui@0.10.0 vue
+# либо
+npm install gavia-ui@0.10.0 vue
+# либо
+bun add gavia-ui@0.10.0 vue
+```
+
+[GitHub Release](https://github.com/whitewolf06/gavia-ui/releases/tag/v0.10.0)
+содержит архив витрины `gavia-ui-playground-0.10.0.tgz` и контрольную сумму.
+SHA256 архива витрины — `61465f239e809d31c47c9e736aadfd6756e96585d3ccc3e78375edfa380e1500`.
+Тег и опубликованный пакет не изменяются. Статус npm и команда установки в
+Playground обновлены отдельным commit после подтверждения публичного реестра
+и проверки скачанного архива. Публичная витрина проверена в пяти темах на
+ширинах 1280 и 390 px: шрифты, фон, переключатель, отсутствие переполнения и
+ошибок браузера. Её последующее обновление проходит отдельный Pages job.
+
 ## Выпуск 0.9.1
 
 [gavia-ui@0.9.1](https://www.npmjs.com/package/gavia-ui/v/0.9.1) опубликован
