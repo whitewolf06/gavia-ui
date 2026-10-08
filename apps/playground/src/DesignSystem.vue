@@ -33,6 +33,10 @@ const sections = [
   ["tokens", "Токены"], ["components", "Контракты"], ["patterns", "Паттерны"],
   ["recipes", "Рецепты"], ["stress", "Сложный контент"], ["accessibility", "Доступность"]
 ] as const;
+const themePreviewGroups = [
+  { id: "gavia", themes: wlDesignThemes.filter((item) => item.name === "gavia" || item.name === "gavia-dark") },
+  { id: "classic", themes: wlDesignThemes.filter((item) => item.name !== "gavia" && item.name !== "gavia-dark") }
+];
 const semanticColors = ["bg", "bg-soft", "text", "text-muted", "accent", "success", "warn", "danger"] as const;
 const query = ref("");
 const layer = ref("semantic");
@@ -126,15 +130,17 @@ const tokenCode = `.page {
             <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">Последовательность</h3><p class="wl-text-body wl-text-muted">Размеры, отступы и интерактивность следуют общему контракту.</p></article>
             <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">Доступность</h3><p class="wl-text-body wl-text-muted">Клавиатура, видимый фокус, подписи полей и достаточный контраст.</p></article>
           </div>
-          <div class="wl-grid ds-theme-grid" data-space="lg">
-            <article v-for="item in wlDesignThemes" :key="item.name" :data-wl-theme="item.name" class="wl-surface wl-stack ds-theme-preview" data-space="md">
-              <h3 class="wl-text-heading">{{ item.label }}</h3>
-              <p class="wl-text-small wl-text-muted">{{ item.description }}</p>
-              <div class="ds-palette">
-                <span v-for="color in semanticColors" :key="color" class="ds-color" :title="`--wl-${color}: ${resolved(`--wl-${color}`, item.name)}`" :style="{ background: `var(--wl-${color})` }" />
-              </div>
-              <WlButton variant="primary" size="sm">Основное действие</WlButton>
-            </article>
+          <div class="wl-stack ds-theme-groups" data-space="2xl">
+            <div v-for="group in themePreviewGroups" :key="group.id" class="wl-grid ds-theme-grid" :class="{ 'ds-theme-grid--gavia': group.id === 'gavia' }" :data-theme-group="group.id" data-space="lg">
+              <article v-for="item in group.themes" :key="item.name" :data-wl-theme="item.name" class="wl-surface wl-stack ds-theme-preview" data-space="md">
+                <h3 class="wl-text-heading">{{ item.label }}</h3>
+                <p class="wl-text-small wl-text-muted">{{ item.description }}</p>
+                <div class="ds-palette">
+                  <span v-for="color in semanticColors" :key="color" class="ds-color" :title="`--wl-${color}: ${resolved(`--wl-${color}`, item.name)}`" :style="{ background: `var(--wl-${color})` }" />
+                </div>
+                <WlButton variant="primary" size="sm">Основное действие</WlButton>
+              </article>
+            </div>
           </div>
           <div class="wl-grid" data-space="lg">
             <article class="wl-surface ds-elevation" :style="{ boxShadow: 'var(--wl-elevation-surface)' }"><h3 class="wl-text-subheading">Поверхность</h3><p class="wl-text-small wl-text-muted">Карточки и разделы / elevation-surface</p></article>
@@ -273,6 +279,7 @@ const tokenCode = `.page {
 .ds-section { scroll-margin-top: 90px; }
 .ds-section > div:first-child > p:last-child { max-width: 72ch; }
 .ds-theme-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ds-theme-grid--gavia { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .ds-theme-preview { padding: var(--wl-space-lg); }
 .ds-palette { display: flex; flex-wrap: wrap; gap: 4px; }
 .ds-color { width: 21px; height: 21px; border: 1px solid var(--wl-border); border-radius: 50%; }
@@ -312,7 +319,7 @@ const tokenCode = `.page {
   .ds-nav { position: static; flex-direction: row; flex-wrap: wrap; border-left: 0; padding-left: 0; border-bottom: 1px solid var(--wl-border); padding-bottom: var(--wl-space-md); }
 }
 @media (max-width: 640px) {
-  .ds-theme-grid, .ds-token-filters { grid-template-columns: minmax(0, 1fr); }
+  .ds-theme-grid, .ds-theme-grid--gavia, .ds-token-filters { grid-template-columns: minmax(0, 1fr); }
   .ds-type-row { grid-template-columns: minmax(0, 1fr); gap: var(--wl-space-sm); }
   .ds-section { scroll-margin-top: 145px; }
 }
