@@ -134,7 +134,7 @@
       "themes": {
         "newspaper": "#625f59",
         "gavia": "#5b6470",
-        "gavia-dark": "#4c6470"
+        "gavia-dark": "#54636a"
       }
     },
     {
@@ -147,7 +147,7 @@
       "themes": {
         "newspaper": "#46433f",
         "gavia": "#3e4d59",
-        "gavia-dark": "#2b4551"
+        "gavia-dark": "#34444b"
       }
     },
     {
@@ -160,7 +160,7 @@
       "themes": {
         "newspaper": "#2e2c29",
         "gavia": "#253540",
-        "gavia-dark": "#152831"
+        "gavia-dark": "#1c272c"
       }
     },
     {
@@ -173,7 +173,7 @@
       "themes": {
         "newspaper": "#1f1e1c",
         "gavia": "#0f1a23",
-        "gavia-dark": "#0c171d"
+        "gavia-dark": "#10161a"
       }
     },
     {
@@ -186,7 +186,7 @@
       "themes": {
         "newspaper": "#141311",
         "gavia": "#091219",
-        "gavia-dark": "#081116"
+        "gavia-dark": "#0b1114"
       }
     },
     {
@@ -1623,7 +1623,7 @@
         "graphite": "#17181c",
         "newspaper": "var(--wl-gray-0)",
         "gavia": "#faf9f6",
-        "gavia-dark": "#0f1b22"
+        "gavia-dark": "#131a1f"
       }
     },
     {
@@ -1635,7 +1635,7 @@
       "description": "Поднятая поверхность для карточек и локальных панелей.",
       "themes": {
         "gavia": "#fefdfb",
-        "gavia-dark": "#16262f"
+        "gavia-dark": "#1c252b"
       }
     },
     {
@@ -1650,7 +1650,7 @@
         "graphite": "#1e2025",
         "newspaper": "var(--wl-gray-50)",
         "gavia": "#eef2f3",
-        "gavia-dark": "#1c303a"
+        "gavia-dark": "#232f35"
       }
     },
     {
@@ -1665,7 +1665,7 @@
         "graphite": "#26292f",
         "newspaper": "var(--wl-gray-100)",
         "gavia": "#e5ecef",
-        "gavia-dark": "#28414b"
+        "gavia-dark": "#314046"
       }
     },
     {
@@ -1680,7 +1680,7 @@
         "graphite": "#2e3138",
         "newspaper": "var(--wl-gray-200)",
         "gavia": "#d5dfe3",
-        "gavia-dark": "#344d59"
+        "gavia-dark": "#3d4c53"
       }
     },
     {
@@ -1695,7 +1695,7 @@
         "graphite": "#3a3e46",
         "newspaper": "var(--wl-gray-300)",
         "gavia": "#b8c7ce",
-        "gavia-dark": "#506b77"
+        "gavia-dark": "#596971"
       }
     },
     {
@@ -1797,7 +1797,7 @@
         "graphite": "#202c46",
         "newspaper": "#f4f3f1",
         "gavia": "#dfe8eb",
-        "gavia-dark": "#254248"
+        "gavia-dark": "#2f4044"
       }
     },
     {
@@ -1812,7 +1812,7 @@
         "graphite": "#2c3d63",
         "newspaper": "#dedbd5",
         "gavia": "#b8cbd3",
-        "gavia-dark": "#56877f"
+        "gavia-dark": "#66837f"
       }
     },
     {
@@ -1827,7 +1827,7 @@
         "graphite": "#263757",
         "newspaper": "#eceae6",
         "gavia": "#d3dfe4",
-        "gavia-dark": "#2d4d50"
+        "gavia-dark": "#384b4d"
       }
     },
     {
@@ -1842,7 +1842,7 @@
         "graphite": "#3a4f7d",
         "newspaper": "#cec9c0",
         "gavia": "#9eb7c2",
-        "gavia-dark": "#6a9f92"
+        "gavia-dark": "#7b9b93"
       }
     },
     {

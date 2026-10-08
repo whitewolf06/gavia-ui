@@ -8,6 +8,7 @@ import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
 import { wlDesignThemes, wlDesignTokens } from "../../../packages/ui-kit/src/design-system";
 import gaviaMarkUrl from "../../../docs/brand/gavia-ui-mark-v2.png";
 import gaviaHeroUrl from "../../../docs/brand/gavia-lake-hero-v2.webp";
+import gaviaNightHeroUrl from "../../../docs/brand/gavia-lake-night-v1.webp";
 import gaviaForestUrl from "../../../docs/brand/gavia-forest-card-v1.webp";
 import gaviaReedsUrl from "../../../docs/brand/gavia-reeds-card-v1.webp";
 import { gaviaProjectInfo as project } from "./project/project-info";
@@ -20,6 +21,7 @@ import buttonExampleSource from "./design-system/examples/WlButton.vue?raw";
 import { consumerSource } from "./design-system/code";
 
 const props = defineProps<{ theme: WlThemeName }>();
+const heroArtUrl = computed(() => props.theme === "gavia-dark" ? gaviaNightHeroUrl : gaviaHeroUrl);
 const themedHref = (href: string): string => withPlaygroundTheme(href, props.theme);
 const pageElement = ref<HTMLElement | null>(null);
 usePageAnchor(pageElement);
@@ -79,7 +81,7 @@ createApp(App).mount("#app");`;
 <template>
   <main ref="pageElement" class="home-page" data-testid="home-page" aria-labelledby="home-title">
     <header class="home-hero">
-      <img class="home-hero-art" :src="gaviaHeroUrl" alt="" aria-hidden="true" width="2172" height="724" fetchpriority="high" decoding="async" />
+      <img class="home-hero-art" :src="heroArtUrl" alt="" aria-hidden="true" width="2172" height="724" fetchpriority="high" decoding="async" />
       <div class="home-hero-content wl-container">
       <div class="home-intro wl-stack" data-space="lg">
         <div class="home-kicker wl-inline" data-space="sm">
