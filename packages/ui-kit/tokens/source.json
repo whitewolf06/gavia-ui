@@ -28,7 +28,7 @@
     {
       "name": "gavia-dark",
       "label": "Gavia Dark",
-      "description": "Почти серые тёмные поверхности с едва заметным тёплым подтоном, бирюзовый акцент и типографика Gavia Sans.",
+      "description": "Почти серые тёмные поверхности с лёгким тёплым подтоном, выразительный бирюзовый акцент и типографика Gavia Sans.",
       "colorScheme": "dark"
     }
   ],
@@ -1755,7 +1755,7 @@
         "graphite": "var(--wl-blue-400)",
         "newspaper": "#25211d",
         "gavia": "#294451",
-        "gavia-dark": "#93c5bc"
+        "gavia-dark": "#67bcac"
       }
     },
     {
@@ -1782,7 +1782,7 @@
         "graphite": "#729df2",
         "newspaper": "#3a342e",
         "gavia": "#203641",
-        "gavia-dark": "#b1d9cd"
+        "gavia-dark": "#7acdbd"
       }
     },
     {
@@ -1797,7 +1797,7 @@
         "graphite": "#202c46",
         "newspaper": "#f4f3f1",
         "gavia": "#dfe8eb",
-        "gavia-dark": "#34332f"
+        "gavia-dark": "#343432"
       }
     },
     {
@@ -1812,7 +1812,7 @@
         "graphite": "#2c3d63",
         "newspaper": "#dedbd5",
         "gavia": "#b8cbd3",
-        "gavia-dark": "#66837f"
+        "gavia-dark": "#52877d"
       }
     },
     {
@@ -1827,7 +1827,7 @@
         "graphite": "#263757",
         "newspaper": "#eceae6",
         "gavia": "#d3dfe4",
-        "gavia-dark": "#3d3c37"
+        "gavia-dark": "#3d3d39"
       }
     },
     {
@@ -1842,7 +1842,7 @@
         "graphite": "#3a4f7d",
         "newspaper": "#cec9c0",
         "gavia": "#9eb7c2",
-        "gavia-dark": "#7b9b93"
+        "gavia-dark": "#63a497"
       }
     },
     {
@@ -1869,7 +1869,7 @@
       "description": "Базовая поверхность основного действия, независимая от цвета ссылок.",
       "themes": {
         "gavia": "#294451",
-        "gavia-dark": "var(--wl-palette-accent)"
+        "gavia-dark": "#5fab9d"
       }
     },
     {
@@ -1881,7 +1881,7 @@
       "description": "Базовая поверхность основного действия при наведении.",
       "themes": {
         "gavia": "#203641",
-        "gavia-dark": "var(--wl-palette-accent-hover)"
+        "gavia-dark": "#70bcad"
       }
     },
     {
@@ -4017,7 +4017,7 @@
       "description": "Базовая поверхность основного действия при нажатии.",
       "themes": {
         "gavia": "#182a33",
-        "gavia-dark": "#7eafa7"
+        "gavia-dark": "#4d988a"
       }
     },
     {
@@ -4041,7 +4041,7 @@
       "description": "Мягкая поверхность тёплых декоративных деталей.",
       "themes": {
         "gavia": "#efebe3",
-        "gavia-dark": "#34332f"
+        "gavia-dark": "#343432"
       }
     },
     {

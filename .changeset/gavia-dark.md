@@ -4,6 +4,6 @@
 
 Add Gavia Dark with Gavia Sans, matching Gavia geometry, an accessible dark lake palette, and explicit themes/gavia-dark.css import. Rename display labels White and Graphite to Classic and Classic Dark while preserving the white/graphite identifiers, CSS paths and original catalogue positions. The public theme catalogue now contains five entries; see docs/migration-themes.md for literal tuple and label consumers.
 
-Use a subtly blue moonlit night version of the original lake hero in Gavia Dark, keeping the moon at the original sun position. Make dark backgrounds nearly neutral gray at comparable luminance, with a barely warm undertone confined to surfaces. Preserve the turquoise brand accent for primary actions, links, the logo and focus, as well as the existing status colors.
+Use a subtly blue moonlit night version of the original lake hero in Gavia Dark, keeping the moon at the original sun position. Make dark backgrounds nearly neutral gray at comparable luminance, with a barely warm undertone confined to surfaces. Strengthen the turquoise brand accent for primary actions, links, the logo and focus while preserving status colors. Keep the installation card slightly lighter and nearly gray with a distinct turquoise border.
 
 Keep narrow WlAlert messages readable by wrapping actions when an icon, action and close control share the available width.
