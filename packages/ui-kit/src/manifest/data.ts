@@ -17,12 +17,12 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
     description:
       "Таблица: декларативные columns и scoped-слоты cell-*; без columns default-слот для собственной таблицы.",
     props: [
-      { name: "value", type: "array", default: [], description: "Строки WlTableRow[] (Record<string, unknown>)." },
+      { name: "value", type: "array", default: [], description: "Readonly-список Row extends object; поддерживаются интерфейсы без index signature." },
       {
         name: "columns",
         type: "array",
         description:
-          "WlTableColumn[]: { key, label, numeric?, width? }. Если не заданы — рендерится default-слот."
+          "readonly WlTableColumn<Row>[] проверяет ключи полей строки. Для виртуальной колонки (actions) явно укажите kind: \"virtual\". Без columns используется default-слот."
       },
       { name: "loading", type: "boolean", default: false, description: "Состояние загрузки." },
       { name: "emptyMessage", type: "string", default: "Нет данных", description: "Текст пустого состояния." },
@@ -33,7 +33,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "empty", description: "Кастомное пустое состояние." },
       {
         name: "cell-<key>",
-        description: "Ячейка колонки key; scope: { row, value }."
+        description: "Scope { row: Row, value: Row[key] }; у виртуальной колонки value: unknown."
       }
     ],
     emits: []

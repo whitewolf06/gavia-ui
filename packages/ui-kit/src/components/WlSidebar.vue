@@ -1,6 +1,8 @@
-<script setup lang="ts">
-import { computed, ref, useAttrs } from "vue";
-import type { WlDensity, WlSidebarGroup, WlSidebarItem } from "../types";
+<script setup lang="ts" generic="Item extends WlSidebarItem = WlSidebarItem, Group extends WlSidebarGroup<Item> = WlSidebarGroup<Item>">
+import { computed, ref, useAttrs, type PropType, type Ref } from "vue";
+import type { WlDensity } from "../types";
+import type { WlSidebarGroup, WlSidebarItem, WlSidebarExpose } from "../navigation-types";
+import type { WlNoModelModifiers } from "../model-types";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
 import WlNavItem from "./WlNavItem.vue";
 
@@ -8,8 +10,11 @@ defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(
   defineProps<{
-    groups?: WlSidebarGroup[];
-    footerItems?: WlSidebarItem[];
+    groups?: readonly (WlSidebarGroup<Item> & Group)[];
+    modelModifiers?: WlNoModelModifiers;
+    pinnedModifiers?: WlNoModelModifiers;
+    mobileOpenModifiers?: WlNoModelModifiers;
+    footerItems?: readonly Item[];
     brand?: string;
     brandMark?: string;
     ariaLabel?: string;
@@ -36,12 +41,21 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-  select: [item: WlSidebarItem, group?: WlSidebarGroup];
+  select: [item: Item, group?: Group];
 }>();
 
-const activeKey = defineModel<string>();
-const pinned = defineModel<boolean>("pinned", { default: false });
-const mobileOpen = defineModel<boolean>("mobileOpen", { default: false });
+defineSlots<{
+  brand?(props: {}): unknown;
+  "brand-mark"?(props: {}): unknown;
+  item?(props: { key: Item["key"]; item: Item; group: Group; active: boolean; expanded: boolean; select: () => void }): unknown;
+  "footer-item"?(props: { key: Item["key"]; item: Item; active: boolean; expanded: boolean; select: () => void }): unknown;
+  footer?(props: { expanded: boolean }): unknown;
+}>();
+
+// The empty default stabilizes generated emits; never bridges Vue 3.4/3.5 default typing.
+const activeKey: Ref<Item["key"] | undefined> = defineModel<NoInfer<Item["key"]>, never>({ type: String as PropType<Item["key"]>, default: undefined as never });
+const pinned = defineModel<boolean, never>("pinned", { default: false });
+const mobileOpen = defineModel<boolean, never>("mobileOpen", { default: false });
 const hovered = ref(false);
 const asideRef = ref<HTMLElement | null>(null);
 const attrs = useAttrs();
@@ -50,7 +64,7 @@ const expanded = computed(
   () => !props.collapsible || pinned.value || hovered.value || mobileOpen.value
 );
 
-function select(item: WlSidebarItem, group?: WlSidebarGroup): void {
+function select(item: Item, group?: Group): void {
   if (item.disabled) return;
   activeKey.value = item.key;
   emit("select", item, group);
@@ -73,7 +87,7 @@ defineExpose({
   },
   closeMobile,
   togglePinned
-});
+} satisfies WlSidebarExpose);
 </script>
 
 <template>

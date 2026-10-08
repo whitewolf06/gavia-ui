@@ -39,6 +39,106 @@ SSR-импорт. Для нового компонента сначала опр
 манифесте, затем написать реализацию и тесты по категориям: props/модель,
 события/слоты, клавиатура/фокус, мобильный экран, SSR при необходимости.
 
+## Контракты типов данных
+
+Эти уточнения подготовлены после 0.10.0 и пока не опубликованы. Локально проверены исходники и playground, установленный архив с Vue 3.4.0 / TypeScript 5.4.5 и Vue 3.5.40 / TypeScript 5.8.3, а также unit-тесты, SSR и браузерный потребитель. Историческая совместимость проверяется отдельно от корректности нового API.
+
+### Выбор значений и подсказки
+
+`WlSelect` / `WlMultiSelect` выводят тип из `options` и `optionValue`: без резолвера модель хранит `TOption`, с ключом — тип поля, с функцией — тип результата. `NoInfer` не позволяет неверной модели расширить тип вариантов. Readonly-списки допустимы; kit их не изменяет.
+
+`WlSelectModel<Option, Resolver>` включает `null` для очищенного выбора; `WlMultiSelectModel<Option, Resolver>` — массив значений. Непереданная модель Select допустима, MultiSelect сохраняет default `[]`.
+
+`WlAutocompleteModel<Option>` — `Option | string | null`: свободный ввод возвращает строку, выбор — подсказку. В `multiple` используется `WlAutocompleteModel<Option, true>` — `Option[] | null`. Динамический boolean-режим требует модели обоих вариантов. Функция `optionLabel` в single обрабатывает и строку; ключ поля применяется к объектным подсказкам, свободный текст отображается напрямую. В single внешний `null` / `undefined` очищает текст; в multiple `[]` / `null` очищает выбор. `forceSelection` и пользовательские option-слоты не реализованы.
+
+```ts
+import { ref } from "vue";
+import type { WlAutocompleteModel, WlSelectModel } from "gavia-ui";
+interface Material { id: number; label: string; }
+const options: readonly Material[] = [{ id: 1, label: "Дерево" }];
+const selected = ref<WlSelectModel<Material, "id">>(null);
+const suggested = ref<WlAutocompleteModel<Material>>(null);
+const label = (item: Material | string) => typeof item === "string" ? item : item.label;
+```
+
+```vue
+<WlSelect v-model="selected" :options="options" option-label="label" option-value="id" />
+<WlAutocomplete v-model="suggested" :suggestions="options" :option-label="label" />
+```
+
+Явный generic не задаёт runtime-режим. Публичные экспорты требуют `optionValue` при явном типе резолвера, `multiple` при режиме, отличном от default false, и `selectionMode` для DatePicker range. Типовой facade ссылается на тот же компонент, без обёртки рендера; сохраняет контекст Vue, события, слоты и expose. Обычные шаблоны выводят generics из props.
+
+### Таблица
+
+`WlTable<Row>` принимает readonly-массив объектов, включая интерфейсы без index signature. `cell-<field>` получает `row: Row` и `value: Row[field]`. У виртуальной колонки значение остаётся `unknown`: нужна проверка либо работа через известные поля `row`.
+
+```ts
+import type { WlTableColumn } from "gavia-ui";
+interface Material { id: number; label: string; }
+const columns = [
+  { key: "label", label: "Название" },
+  { key: "actions", label: "Действия", kind: "virtual" }
+] as const satisfies readonly WlTableColumn<Material, "actions">[];
+```
+
+WlTableColumn<Row> — поле строки либо явно помеченная виртуальная колонка. Второй generic ограничивает имена виртуальных колонок; обычные поля всегда проверяются по keyof Row. Компонент выводит Row из value, а колонки не расширяют его: опечатка не становится виртуальным полем. При типизированных строках замените широкий WlTableColumn[] на readonly WlTableColumn<MyRow>[] или satisfies. Для старых словарей WlTableRow ключи остаются широкими.
+
+### Секции pt
+
+`WlPt<"select">` и соответствующие типы остальных компонентов добавляют подсказки известных секций, сохраняя динамические расширения. Для проверки опечаток в именах и вложенных узлах используйте `WlPtStrict` / `WlPtConfigStrict` через `satisfies`.
+
+```ts
+import type { WlPtStrict } from "gavia-ui";
+const selectPt = {
+  root: { "aria-describedby": "material-help" },
+  option: ({ context }) => ({ class: { selected: context.selected } })
+} satisfies WlPtStrict<"select">;
+```
+
+`WlPtConfig` сохраняет открытые динамические записи и произвольные extension-значения; известные секции получают точные типы. Результат `createWlPt()` больше не обещает, что любой неизвестный ключ содержит дерево DOM-атрибутов: пользовательские расширения остаются unknown и требуют проверки при чтении.
+
+Leaf-секция принимает атрибуты или функцию, возвращающую атрибуты. Вложенные `pcChip`, `pcInputText` и подобные узлы — объекты секций, не функции. Колбэк получает только `{ context }` с фактически переданными флагами; props и внутреннее состояние не предоставляются. `class` / `style` и порядок слияния не меняются. У tooltip директива применяет class/style и примитивные атрибуты; DOM-события и vnode hooks в её pt не подключаются, в отличие от секций Vue-компонентов.
+
+### Связанные модели и навигация
+
+`WlRadio<Value>` выводит домен из модели группы, а `value` должен ему соответствовать. Непереданная модель сохраняет `undefined`; update передаёт Value, не добавляя undefined к домену. `null` / `undefined` допустимы в update, если явно включены в Value. `WlSegmented<Value>` выводит домен из options и сохраняет `null` default; `WlTabs<Item>` выводит ключи из items и сохраняет пустой default `""`. Узкие модели учитывают эти исходные состояния.
+
+`WlSidebarItem<Data>` / `WlCommandPaletteItem<Data>` и generics компонентов сохраняют данные и дополнительные поля item в select-событиях и слотах. Группы принимают readonly items, `keywords` также readonly. Sidebar связывает active key с Item["key"]; optional вход не добавляет undefined к update-событию ключа. Второй generic Sidebar/CommandPalette сохраняет дополнительные поля группы в событиях и слотах; обычное использование выводит их из groups. Старые поля key в Sidebar item/footer-item слотах сохранены. Бизнес-данные `unknown` проверяйте на входе приложения.
+
+WlAccordion<Item> сохраняет дополнительные поля item в слоте, а openKeys принимает ключи items. WlMenu<Item> передаёт полный item в command. Для строгого callback используйте интерфейс, расширяющий WlMenuItem<MyItem>. Описания Menu, Accordion, Breadcrumbs, Steps, Calendar и палитры цветов принимают readonly-массивы.
+
+Для refs используйте WlMenuExpose, WlPopoverExpose, WlFilePickerExpose, WlFilterBarExpose, WlSidebarExpose / WlCommandPaletteExpose с документированными методами. Generic SFC — callable-контракт; прежний `InstanceType<typeof Component>` может перестать подходить. Имена компонентов, DOM, CSS и runtime-сервисы остаются прежними.
+
+### Нативные атрибуты, события и модели
+
+Публичные type-only представления сохраняют исходные props, slots, events и методы ref. Они не создают runtime-обёртки и не превращают DOM-атрибуты в props. Текстовые поля принимают name/form/required/maxlength, textarea — также rows/cols/wrap. События ввода и клавиатуры получают Event/KeyboardEvent, а не значение модели. Kit size, value и checked остаются под контролем компонента. Class/style/data-атрибуты полей идут на оболочку, id/ARIA и listeners — на контрол. `WlFieldSlotProps` описывает связь подписи, подсказки и ошибки: связывайте inputId с id и ariaDescribedby с aria-describedby явно.
+
+Select/MultiSelect — proxy-контролы: их атрибуты не обещают native required/readonly/text validation. name сохраняет существующую сериализацию: Select — строковое значение hidden input, MultiSelect — текст отображаемого выбора. Для отправки типизированных значений используйте v-model приложения. Атрибуты target/rel/download у NavItem допустимы вместе с href, когда он рендерит ссылку. FilePicker не обещает autofocus скрытого input; choose() вызывается из пользовательского действия. TimePicker сохраняет точность до минуты, поэтому native step не переопределяет 60 секунд.
+
+Input/PasswordInput/Textarea поддерживают строковый `.trim`; query CommandPalette также допускает `.trim`. `.number` нарушает их string-контракт, а `.lazy` не реализован. Модели дат, выбора, массивов, чисел, файлов, boolean и ключей не поддерживают встроенные модификаторы. Используйте `WlTextModelModifiers` / `WlNoModelModifiers`, а преобразование доменных значений выполняйте в приложении. Неподдерживаемые варианты проверяются compile-only fixtures, включая реальные v-model в Vue.
+
+### Локаль, сервисы и оверлеи
+
+`WlLocaleInput` принимает частичную локаль с readonly names. Известные подписи имеют тип string, расширения приложения остаются unknown. `normalizeWlLocale()` игнорирует undefined и неверные известные значения, проверяет семь названий дней, двенадцать месяцев и firstDayOfWeek 0–6. Результат `WlResolvedLocale` содержит все известные поля; прежний минимальный `WlLocale` остаётся допустимым.
+
+`useWlToast({ group: "editor" })` адресует сообщения соответствующему WlToast; clear() очищает только эту группу. Confirm принимает group в options; closeGroup(group) закрывает только соответствующий запрос. Прежний close() остаётся глобальным. У Drawer/Popover/Menu/Toast consumer class/style/data/ARIA явно передаются на существующий DOM-root внутри Teleport. FilterBar использует общий SSR-совместимый генератор id.
+
+### Защита значений во время выполнения
+
+Отключённые Select/MultiSelect/Autocomplete не меняют модель через открытый список, chip или отложенный complete. NumberInput/Pagination блокируют отложенный commit после отключения. FileUpload в single принимает один файл и отклоняет остальные с reason=count; недопустимая замена сохраняет прежний выбор. Компонент не удаляет файлы с диска и не загружает их в сеть.
+
+Pagination нормализует номера/количество страниц до целых, окно siblings ограничено 100. NumberInput сохраняет ±Infinity как отсутствие границы, заменяет NaN и неверное направление бесконечной границы, а step ≤ 0 / nonfinite — на 1. Обратный диапазон схлопывается к minimum. Slider, Progress, StatCard и счётчик FilterBar не выводят NaN/Infinity в CSS/ARIA. TimePicker игнорирует неверные HH:mm bounds и сохраняет диапазон через полночь. Тип number сам по себе этих ограничений не гарантирует.
+
+### Совместимость и миграция
+
+Сужение unknown-моделей, callback label с поддержкой свободной строки, явные virtual columns, домены ключей, модификаторы и callable generics — изменения TypeScript-контракта. Они требуют отдельного minor в 0.x и отметки Breaking changes; включать их в patch как «только типы» нельзя.
+
+Новые декларации используют встроенный NoInfer и требуют TypeScript 5.4 или новее ([официальные release notes](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-4.html#the-noinfer-utility-type)). Архив локально прошёл строгую компиляцию с Vue 3.4.0 + TypeScript 5.4.5 и Vue 3.5.40 + TypeScript 5.8.3: strictTemplates и TSX включены, skipLibCheck отключён. На Vue 3.5.40 проверены desktop/mobile и SSR-гидратация.
+
+Замените `ref<unknown>(null)` на домен поля, например `ref<number | null>(null)`; MultiSelect — на `ref<number[]>([])`. Для изменения коллекций храните mutable-массив приложения отдельно от readonly-описания компонента. Не скрывайте ошибки приведением к `any`.
+
+Снимок 0.9.1 и его потребитель сохраняются неизменными. Для перехода на 0.11 согласован отдельный контракт миграции: модель multiple Autocomplete, конкретные readonly-поля select-payload навигации, unknown-тип произвольных расширений createWlPt, обязательный selectionMode для range DatePicker и единственная замена Select ref<unknown> на ref<number | null> в копии примера. Gate сравнивает полный адаптированный контракт; исходные расхождения остаются в отчёте. Остальные props/events/slots/expose и весь CSS/exports/tokens/pt inventory проверяются без исключений. Generic-режимы сравниваются по соответствующим веткам, Table — в прежнем словарном домене WlTableRow. Разрешение ограничено baseline и версией 0.11, не распространяется на будущие выпуски. [Практические действия потребителя](migration-0.11.0.md).
+
 ## Темы и публичный DOM
 
 Дизайн-система описана в [design-system.md](design-system.md). Её источник —
@@ -101,7 +201,7 @@ Foundation → semantic → component — направление ссылок CS
 | `datepicker` | `pcInputText.root`, `startLabel`, `endLabel`, `endInput`, `rangeHint`, `dropdown`, `dropdownIcon`, `panel`, `calendarContainer`, `calendar`, `header`, `title`, `selectMonth`, `selectYear`, `pcPrevButton.root`, `pcPrevButton.icon`, `pcNextButton.root`, `pcNextButton.icon`, `dayView`, `monthView`, `month`, `yearView`, `year`, `tableHeaderCell`, `weekDay`, `dayCell`, `day` |
 
 Разделы применяются там, где соответствующий DOM существует. Например,
-`footer` диалога появляется при наличии слота `footer`.
+`footer` диалога появляется при наличии слота `footer`. Исторические default-записи `clearIcon` у Select/MultiSelect сохранены для совместимости конфигурации, но эти DOM-секции компонентами сейчас не разрешаются и не входят в строгий тип секций.
 
 ## Проверка изменения
 

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
 import { computed, shallowRef, watch } from "vue";
 import { useWlPt } from "../config";
 import { useConfirmationStore, type WlConfirmation } from "../services/confirmation";
@@ -6,7 +7,8 @@ import WlButton from "./WlButton.vue";
 import WlDialog from "./WlDialog.vue";
 import WlIcon from "./WlIcon.vue";
 
-const props = withDefaults(defineProps<{ group?: string; motion?: boolean; pt?: Record<string, unknown> }>(), {
+defineSlots<{}>();
+const props = withDefaults(defineProps<{ group?: string; motion?: boolean; pt?: WlPt<"confirmdialog"> }>(), {
   motion: undefined
 });
 const store = useConfirmationStore();
@@ -27,13 +29,14 @@ const visible = computed({
   set: (value: boolean) => {
     if (value || !entry.value) return;
     const reject = entry.value.reject;
-    store.close();
+    store.closeGroup(props.group);
     reject?.();
   }
 });
 function accept(): void {
-  const callback = entry.value?.accept;
-  store.close();
+  if (!entry.value) return;
+  const callback = entry.value.accept;
+  store.closeGroup(props.group);
   callback?.();
 }
 </script>

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { WlCard, WlButton } from "../../../../../packages/ui-kit/src";
-defineProps<{ preview?: Record<string, unknown> }>();
+type PreviewProps = Partial<InstanceType<typeof WlCard>["$props"]>;
+defineProps<{ preview?: PreviewProps }>();
 const saved = ref(false);
 </script>
 

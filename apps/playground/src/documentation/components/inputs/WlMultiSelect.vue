@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { WlButton, WlField, WlMultiSelect } from "../../../../../../packages/ui-kit/src";
-const selected = ref<unknown[]>(["design", "code"]);
+const selected = ref<string[]>(["design", "code"]);
 const options = [{ id: "design", label: "Дизайн" }, { id: "code", label: "Разработка" }, { id: "docs", label: "Документация" }, { id: "qa", label: "Проверки" }];
 </script>
 

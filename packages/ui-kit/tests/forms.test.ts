@@ -311,7 +311,7 @@ describe("WlField", () => {
 
 describe("WlSelect dropdown", () => {
   it("keeps decorative SVG attributes and merges documented dropdownIcon pt", () => {
-    const wrapper = mount(WlSelect, {
+    const wrapper = mount(WlSelect<string>, {
       global: { plugins: [[WlConfig, { pt: createWlPt({
         select: { dropdownIcon: { class: "app-arrow", "data-app": "kept", "data-source": "app" } }
       }) }]] },
@@ -333,7 +333,7 @@ describe("WlSelect dropdown", () => {
   });
 
   it.each([false, true])("preserves dropdown activation and keyboard selection when disabled=%s", async (disabled) => {
-    const wrapper = mount(WlSelect, {
+    const wrapper = mount(WlSelect<string>, {
       attachTo: document.body,
       props: { options: ["One", "Two"], modelValue: "One", disabled, motion: false }
     });

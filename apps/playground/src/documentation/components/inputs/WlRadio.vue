@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { WlButton, WlRadio } from "../../../../../../packages/ui-kit/src";
-const visibility = ref<unknown>("team");
-const format = ref<unknown>(null);
+const visibility = ref<string>("team");
+const format = ref<string | null>(null);
 </script>
 
 <template>

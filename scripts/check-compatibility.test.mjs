@@ -20,7 +20,9 @@ function diagnosticsFor(change) {
   try {
     cpSync(join(fixture, "declarations"), join(temporary, "current"), { recursive: true });
     if (change) change(join(temporary, "current"));
-    const source = typeSource(baseline)
+    // Both sides here are immutable 0.9.1 declarations, whose data controls
+    // predate the generic candidate API. The production gate specializes it.
+    const source = typeSource(baseline, null, { currentHasGenericDataContracts: false })
       .replace('"./previous/index"', JSON.stringify(join(fixture, "declarations/index").replaceAll("\\", "/")));
     const path = join(temporary, "contract.ts");
     writeFileSync(path, source);

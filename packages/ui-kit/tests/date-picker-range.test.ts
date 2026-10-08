@@ -4,7 +4,7 @@ import { WlConfig, WlDatePicker, createWlPt, type WlDateRange } from "../src";
 
 const mounted: VueWrapper[] = [];
 function rangePicker(value: WlDateRange | null = ["2026-10-15", "2026-10-20"], extra: Record<string, unknown> = {}) {
-  const wrapper = mount(WlDatePicker, {
+  const wrapper = mount(WlDatePicker<"range">, {
     attachTo: document.body,
     props: { selectionMode: "range", modelValue: value, showIcon: true, motion: false, ...extra }
   });
@@ -49,7 +49,7 @@ describe("DatePicker additive range contract", () => {
   });
 
   it("forwards native attributes without duplicate ids or duplicate form names", () => {
-    const wrapper = mount(WlDatePicker, {
+    const wrapper = mount(WlDatePicker<"range">, {
       props: { selectionMode: "range", modelValue: ["2026-10-15", null], invalid: true },
       attrs: { id: "trip", name: "dates", required: true, "aria-label": "Поездка", "aria-describedby": "trip-error", "aria-labelledby": "trip-title" }
     });
@@ -187,7 +187,7 @@ describe("DatePicker additive range contract", () => {
       startLabel: { class: "wl-dp__endpoint-label" }, endLabel: { class: "wl-dp__endpoint-label" },
       endInput: { class: "wl-input wl-dp__input" }, rangeHint: { class: "wl-dp__range-hint" }
     });
-    const wrapper = mount(WlDatePicker, {
+    const wrapper = mount(WlDatePicker<"range">, {
       attachTo: document.body,
       global: { plugins: [[WlConfig, { pt: { datepicker: { endInput: { class: "app-end", "data-app": "end" } } } }]] },
       props: {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { WlPopover, WlButton, WlCheckbox, WlTag } from "../../../../../../packages/ui-kit/src";
-const panel = ref<InstanceType<typeof WlPopover> | null>(null);
+import { WlPopover, WlButton, WlCheckbox, WlTag, type WlPopoverExpose } from "../../../../../../packages/ui-kit/src";
+const panel = ref<WlPopoverExpose | null>(null);
 const motion = ref(true);
 const message = ref("Поповер закрыт.");
 </script>

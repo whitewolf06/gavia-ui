@@ -1,16 +1,20 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { useWlMotion, useWlPt } from "../config";
+import type { WlPt } from "../pt-types";
+import { computed, useAttrs } from "vue";
+import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
 import { useToastStore } from "../services/toast";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import WlIcon from "./WlIcon.vue";
 
+defineOptions({ inheritAttrs: false });
+defineSlots<{}>();
 const props = withDefaults(defineProps<{
   group?: string;
   motion?: boolean;
-  pt?: Record<string, unknown>;
+  pt?: WlPt<"toast">;
 }>(), { motion: undefined });
 const store = useToastStore();
+const attrs = useAttrs();
 const section = useWlPt("toast", computed(() => props.pt));
 const motion = useWlMotion(computed(() => props.motion));
 const messages = computed(() => store.messages.value.filter((message) => message.group === props.group));
@@ -19,7 +23,7 @@ const iconName = { success: "check", info: "info", warn: "warn", error: "x" } as
 
 <template>
   <Teleport to="body">
-    <div v-bind="section('root')" class="wl-toast" data-wl="toast" aria-live="polite">
+    <div v-bind="mergeWlAttrs(section('root'), attrs)" class="wl-toast" data-wl="toast" aria-live="polite">
       <TransitionGroup name="wl-toast-motion" :css="motion"
         @before-leave="markOverlayLeaving" @before-enter="restoreOverlayEntering"
         @leave-cancelled="restoreOverlayEntering">

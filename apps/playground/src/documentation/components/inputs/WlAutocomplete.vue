@@ -2,8 +2,9 @@
 import { computed, ref } from "vue";
 import { WlAutocomplete, WlButton, WlField } from "../../../../../../packages/ui-kit/src";
 const people = [{ id: "anna", label: "Анна" }, { id: "boris", label: "Борис" }, { id: "dmitry", label: "Дмитрий" }, { id: "elena", label: "Елена" }];
-const person = ref<unknown>(people[0]);
-const participants = ref<unknown>([people[0]]);
+type Person = (typeof people)[number];
+const person = ref<Person | string | null>(people[0]!);
+const participants = ref<Person[] | null>([people[0]!]);
 const singleSuggestions = ref([...people]);
 const multipleSuggestions = ref([...people]);
 function filter(query: string) { return people.filter((item) => item.label.toLocaleLowerCase().includes(query.toLocaleLowerCase())); }

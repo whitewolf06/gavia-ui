@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
 import { computed, useSlots, type Slots } from "vue";
 import { useWlPt } from "../config";
 
 const props = withDefaults(
   defineProps<{
     hoverable?: boolean;
-    pt?: Record<string, unknown>;
+    pt?: WlPt<"card">;
   }>(),
   {
     hoverable: false

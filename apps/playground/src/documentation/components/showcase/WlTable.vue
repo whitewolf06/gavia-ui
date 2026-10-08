@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { WlTable, WlButton, WlPill, type WlTableColumn, type WlTableRow } from "../../../../../../packages/ui-kit/src";
+import { WlTable, WlButton, WlPill, type WlTableColumn } from "../../../../../../packages/ui-kit/src";
+interface MaterialRow { title: string; status: string; hours: number }
 const state = ref<"ready" | "empty" | "loading">("ready");
 const selected = ref("");
-const columns: WlTableColumn[] = [{ key: "title", label: "Материал" }, { key: "status", label: "Статус" }, { key: "hours", label: "Часы", numeric: true }];
-const rows: WlTableRow[] = [{ title: "План выпуска", status: "done", hours: 8 }, { title: "Обзор", status: "progress", hours: 3 }];
+const columns: readonly WlTableColumn<MaterialRow>[] = [{ key: "title", label: "Материал" }, { key: "status", label: "Статус" }, { key: "hours", label: "Часы", numeric: true }];
+const rows: readonly MaterialRow[] = [{ title: "План выпуска", status: "done", hours: 8 }, { title: "Обзор", status: "progress", hours: 3 }];
 </script>
 <template>
   <div class="wl-stack" data-space="lg">

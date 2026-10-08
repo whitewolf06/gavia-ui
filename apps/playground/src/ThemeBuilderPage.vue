@@ -65,7 +65,7 @@ watch([name, baseTheme, palette], () => {
 }, { deep: true });
 
 const title = ref("Новый проект");
-const priority = ref<unknown>("normal");
+const priority = ref<string | null>("normal");
 const notifications = ref(true);
 const publicProject = ref(false);
 const actions = ref(0);

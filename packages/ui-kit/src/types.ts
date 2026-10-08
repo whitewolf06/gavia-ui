@@ -37,8 +37,8 @@ export type { WlIconName } from "./icons.generated";
 import type { WlIconInput } from "./iconNames";
 export type { WlIconInput } from "./iconNames";
 
-export interface WlTabItem {
-  key: string;
+export interface WlTabItem<Key extends string = string> {
+  key: Key;
   label: string;
   icon?: WlIconInput;
   count?: number;
@@ -47,9 +47,9 @@ export interface WlTabItem {
 export type WlIconButtonVariant = "ghost" | "secondary" | "soft";
 export type WlPillVariant = "neutral" | "info" | "ok" | "warn" | "err";
 
-export interface WlSegmentedOption {
+export interface WlSegmentedOption<Value extends string = string> {
   label: string;
-  value: string;
+  value: Value;
   icon?: WlIconInput;
   disabled?: boolean;
 }
@@ -61,79 +61,11 @@ export interface WlBreadcrumbItem {
   icon?: WlIconInput;
 }
 
-export interface WlMenuItem {
-  key?: string;
-  label?: string;
-  icon?: WlIconInput;
-  shortcut?: string;
-  danger?: boolean;
-  disabled?: boolean;
-  separator?: boolean;
-  header?: string;
-  command?: (item: WlMenuItem) => void;
-}
-
-export interface WlSidebarItem {
-  key: string;
-  label: string;
-  icon?: WlIconInput;
-  badge?: number | string;
-  href?: string;
-  disabled?: boolean;
-  /** Произвольные данные потребителя; UI-kit их не интерпретирует. */
-  data?: unknown;
-}
-
-export interface WlSidebarGroup {
-  id: string;
-  label?: string;
-  separator?: boolean;
-  items: WlSidebarItem[];
-}
-
-export interface WlCommandPaletteItem {
-  id: string;
-  label: string;
-  description?: string;
-  keywords?: string[];
-  icon?: WlIconInput;
-  shortcut?: string;
-  href?: string;
-  target?: "_self" | "_blank" | "_parent" | "_top";
-  disabled?: boolean;
-  /** Произвольные данные потребителя; UI-kit их не интерпретирует. */
-  data?: unknown;
-}
-
-export interface WlCommandPaletteGroup {
-  id: string;
-  label: string;
-  items: WlCommandPaletteItem[];
-  /** Показывать группу до ввода запроса. Удобно для быстрых ссылок. */
-  showWhenEmpty?: boolean;
-  /** Переопределяет локальную фильтрацию для этой группы; false подходит внешним результатам. */
-  filter?: boolean;
-}
-
-export interface WlAccordionItem {
-  key: string;
-  title: string;
-  content?: string;
-  disabled?: boolean;
-}
-
 export interface WlStepItem {
   label: string;
 }
 
-export interface WlTableColumn {
-  key: string;
-  label: string;
-  numeric?: boolean;
-  width?: string | number;
-}
-
-export type WlTableRow = Record<string, unknown>;
+export type { WlTableRow, WlTableColumn, WlTableFieldColumn, WlTableVirtualColumn, WlTableFieldKey, WlTableCellSlotProps, WlTableSlots } from "./table-types";
 
 export type WlStatCardTone = "accent" | "success";
 
@@ -150,17 +82,6 @@ export interface WlCalendarEvent {
   tone?: WlCalendarEventTone;
 }
 
-/** Calendar locale shape accepted by Gavia UI configuration. */
-export interface WlDatePickerLocale {
-  firstDayOfWeek?: number;
-  dayNames?: string[];
-  dayNamesShort?: string[];
-  dayNamesMin?: string[];
-  monthNames?: string[];
-  monthNamesShort?: string[];
-  [key: string]: unknown;
-}
-
 export type WlFileRejectReason = "type" | "size" | "count";
 
 export interface WlFileReject {
@@ -169,3 +90,6 @@ export interface WlFileReject {
 }
 
 export type WlThemeName = "gavia" | "white" | "graphite" | "newspaper" | "gavia-dark";
+
+export type { WlMenuItemBase, WlMenuItem, WlMenuExpose, WlAccordionItem, WlAccordionSlots, WlSidebarItem, WlSidebarGroup, WlSidebarExpose, WlCommandPaletteItem, WlCommandPaletteGroup, WlCommandPaletteExpose } from "./navigation-types";
+export type { WlDatePickerLocale } from "./locale-types";

@@ -42,6 +42,66 @@ describe("setup-aware consumer source", () => {
     expect(literal).not.toContain("\u2029");
     compile(source);
   });
+  it.each(["WlCard", "WlDivider"])("removes the known %s typed preview without losing component bindings", (component) => {
+    const raw = [
+      '<script setup lang="ts">',
+      `import { ${component} } from "../../../packages/ui-kit/src";`,
+      `type PreviewProps = Partial<InstanceType<typeof ${component}>["$props"]>;`,
+      'defineProps<{ preview?: PreviewProps }>();',
+      '</script>',
+      `<template><${component} v-bind="preview">Details</${component}></template>`
+    ].join("\n");
+    const changed = component === "WlCard"
+      ? { hoverable: false, 'data-label': "A & B's <Details>" }
+      : { 'data-label': "A & B's <Details>" };
+    for (const options of [{}, changed]) {
+      const source = consumerSource(raw, options);
+      expect(source).toContain('from "gavia-ui"');
+      expect(source).not.toContain("defineProps");
+      expect(source).not.toContain("PreviewProps");
+      expect(source).not.toContain('v-bind="preview"');
+      expect(source).toContain("Details</" + component + ">");
+      if (Object.keys(options).length) {
+        expect(source).toContain("A &amp; B&#39;s &lt;Details>");
+        if (component === "WlCard") expect(source).toContain('"hoverable":false');
+      }
+      compile(source);
+    }
+  });
+  it("retains the component preview type in setup-aware consumers and escapes script literals", () => {
+    const raw = setupExample.replace('WlDatePicker', 'WlCard')
+      .replace('const props = defineProps<{ preview?: Record<string, unknown> }>();', [
+        'type PreviewProps = Partial<InstanceType<typeof WlCard>["$props"]>;',
+        'const props = defineProps<{ preview?: PreviewProps }>();'
+      ].join("\n"))
+      .replace('const mode = computed(() => props.preview?.selectionMode === "range" ? "range" : "single");',
+        'const active = computed(() => props.preview?.hoverable === true);')
+      .replace('WlDatePicker :selection-mode="mode"', 'WlCard :hoverable="active"');
+    const options = { hoverable: true, title: "</script> A & B's\u2028\u2029" };
+    const source = consumerSource(raw, options);
+    expect(source).toContain('type PreviewProps = Partial<InstanceType<typeof WlCard>["$props"]>;');
+    expect(source).toContain('const active = computed(() => props.preview?.hoverable === true);');
+    expect(source).not.toContain('defineProps');
+    const literal = source.match(/const props = \{ preview: (.+) as PreviewProps \};/)![1]!;
+    expect(JSON.parse(literal)).toEqual(options);
+    expect(literal).not.toContain('<');
+    expect(literal).not.toContain('\u2028');
+    expect(literal).not.toContain('\u2029');
+    compile(source);
+  });
+  it("leaves mixed app props and unrelated PreviewProps declarations intact", () => {
+    const mixed = setupExample.replace('WlDatePicker', 'WlCard')
+      .replace('const props = defineProps<{ preview?: Record<string, unknown> }>();', [
+        'type PreviewProps = Partial<InstanceType<typeof WlCard>["$props"]>;',
+        'const props = defineProps<{ preview?: PreviewProps; title: string }>();'
+      ].join("\n"));
+    const source = consumerSource(mixed, {});
+    expect(source).toContain('const props = defineProps<{ preview?: PreviewProps; title: string }>();');
+    expect(source).toContain('type PreviewProps = Partial<InstanceType<typeof WlCard>["$props"]>;');
+    const unrelated = mixed.replace('Partial<InstanceType<typeof WlCard>["$props"]>', '{ title: string }')
+      .replace('preview?: PreviewProps; title: string', 'preview?: PreviewProps');
+    expect(consumerSource(unrelated, {})).toContain('const props = defineProps<{ preview?: PreviewProps }>();');
+  });
   it("keeps the existing stateless example conversion", () => {
     const legacy = setupExample.replace('const props = defineProps', 'defineProps').replace('const mode = computed(() => props.preview?.selectionMode === "range" ? "range" : "single");', '').replace(':selection-mode="mode" ', '');
     const source = consumerSource(legacy, { invalid: true });

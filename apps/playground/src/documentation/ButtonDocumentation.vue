@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, type Component } from "vue";
 import { WlButton, WlCheckbox, WlSelect } from "../../../../packages/ui-kit/src";
-import type { WlComponentManifest } from "../../../../packages/ui-kit/src/manifest";
+import type { WlComponentManifest, WlPropManifest } from "../../../../packages/ui-kit/src/manifest";
 import CanonicalButtonExample from "../design-system/examples/WlButton.vue";
 import canonicalSource from "../design-system/examples/WlButton.vue?raw";
 import CodePanel from "../design-system/CodePanel.vue";
@@ -47,6 +47,11 @@ function updateEnum(name: string, value: unknown): void {
     preview.value = { ...preview.value, [name]: value };
   }
 }
+function enumValue(control: WlPropManifest): string | number | undefined {
+  const value = preview.value[control.name];
+  if (typeof value !== "string" && typeof value !== "number") return undefined;
+  return control.values?.some((option) => Object.is(option, value)) ? value : undefined;
+}
 function updateBoolean(name: string, value: unknown): void {
   preview.value = { ...preview.value, [name]: Boolean(value) };
 }
@@ -89,7 +94,7 @@ defineExpose({ showHeading });
           <div class="wl-inline" data-space="sm"><h2 :id="headings.controls.id" class="wl-text-subheading">{{ headings.controls.title }}</h2><WlButton size="sm" variant="ghost" @click="reset">Сбросить</WlButton></div>
           <div v-for="control in enumControls" :key="control.name" class="docs-control-label">
             <span>{{ control.name }}</span>
-            <WlSelect :id="'docs-control-' + control.name" class="docs-control-select" :aria-label="control.name" :aria-describedby="'docs-control-description-' + control.name" :data-testid="'docs-control-' + control.name" :model-value="preview[control.name]" :options="[...(control.values ?? [])]" @update:model-value="updateEnum(control.name, $event)" />
+            <WlSelect :id="'docs-control-' + control.name" class="docs-control-select" :aria-label="control.name" :aria-describedby="'docs-control-description-' + control.name" :data-testid="'docs-control-' + control.name" :model-value="enumValue(control)" :options="[...(control.values ?? [])]" @update:model-value="updateEnum(control.name, $event)" />
             <span :id="'docs-control-description-' + control.name" class="wl-text-small wl-text-muted">{{ control.description }}</span>
           </div>
           <div class="docs-control-flags wl-stack" data-space="md">

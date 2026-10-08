@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { WlButton, WlFilePicker, WlIcon } from "../../../../../../packages/ui-kit/src";
-const picker = ref<InstanceType<typeof WlFilePicker> | null>(null);
+import { WlButton, WlFilePicker, WlIcon, type WlFilePickerExpose } from "../../../../../../packages/ui-kit/src";
+const picker = ref<WlFilePickerExpose | null>(null);
 const files = ref<File[]>([]);
 const singleFiles = ref<File[]>([]);
 const message = ref("Файлы ещё не выбирали.");

@@ -23,7 +23,10 @@ const NATIVE_INPUT_ATTRS = new Set([
   "spellcheck",
   "tabindex",
   "title",
-  "role"
+  "role",
+  "rows",
+  "cols",
+  "wrap"
 ]);
 
 function belongsToInput(key: string): boolean {

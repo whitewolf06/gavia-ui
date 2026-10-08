@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
 import { computed } from "vue";
 import { useWlPt } from "../config";
 import WlIcon from "./WlIcon.vue";
@@ -15,7 +16,7 @@ const props = withDefaults(
     count?: number;
     dot?: boolean;
     ariaLabel?: string;
-    pt?: Record<string, unknown>;
+    pt?: WlPt<"button">;
   }>(),
   {
     variant: "ghost",

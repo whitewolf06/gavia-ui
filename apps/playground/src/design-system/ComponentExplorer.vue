@@ -36,6 +36,12 @@ function textValue(control: DocumentationControl): string {
   const value = controlValue(control.name, control.default);
   return typeof value === "string" ? value : "";
 }
+function selectValue(control: DocumentationControl, icon = false): string | number | undefined {
+  const fallback = icon ? control.default : control.default ?? control.values?.[0];
+  const value = controlValue(control.name, fallback);
+  if (typeof value !== "string" && typeof value !== "number") return undefined;
+  return icon && value === "" || control.values?.some((option) => Object.is(option, value)) ? value : undefined;
+}
 function numericValue(control: DocumentationControl): number | undefined {
   const value = controlValue(control.name, control.default);
   return typeof value === "number" && Number.isFinite(value) ? value : undefined;
@@ -114,8 +120,8 @@ async function focusPreview(): Promise<void> {
               <WlNumberInput v-if="numericValue(control) !== undefined" :model-value="numericValue(control)!" :min="numberBounds(control).min" :max="numberBounds(control).max" :step="control.numberStep ?? 1" :aria-label="'Пример: ' + control.name" :aria-describedby="control.description ? headingPrefix + '-control-' + control.name : undefined" @update:model-value="setValue(control, $event)" />
               <div v-else class="wl-inline" data-space="sm"><span class="wl-text-small wl-text-muted">Не задано</span><WlButton size="sm" variant="secondary" :aria-label="'Задать ' + control.name" @click="initializeNumber(control)">Задать</WlButton></div>
             </template>
-            <WlSelect v-else-if="control.editor === 'icon'" :model-value="controlValue(control.name, control.default)" :aria-label="'Пример: ' + control.name" placeholder="Не задано" :aria-describedby="control.description ? headingPrefix + '-control-' + control.name : undefined" :options="iconOptions(control)" option-label="label" option-value="value" @update:model-value="setValue(control, $event)" />
-            <WlSelect v-else :model-value="controlValue(control.name, control.default ?? control.values?.[0])" :aria-label="'Пример: ' + control.name" :aria-describedby="documentationLayout && control.description ? headingPrefix + '-control-' + control.name : undefined" :options="[...(control.values ?? [])]" @update:model-value="setValue(control, $event)" />
+            <WlSelect v-else-if="control.editor === 'icon'" :model-value="selectValue(control, true)" :aria-label="'Пример: ' + control.name" placeholder="Не задано" :aria-describedby="control.description ? headingPrefix + '-control-' + control.name : undefined" :options="iconOptions(control)" option-label="label" option-value="value" @update:model-value="setValue(control, $event)" />
+            <WlSelect v-else :model-value="selectValue(control)" :aria-label="'Пример: ' + control.name" :aria-describedby="documentationLayout && control.description ? headingPrefix + '-control-' + control.name : undefined" :options="[...(control.values ?? [])]" @update:model-value="setValue(control, $event)" />
           </template>
           <WlButton v-if="documentationLayout && Object.prototype.hasOwnProperty.call(overrides, control.name)" size="sm" variant="ghost" :aria-label="'Сбросить ' + control.name" @click="clearOverride(control.name)">По примеру</WlButton>
           <p v-if="documentationLayout && control.description" :id="headingPrefix + '-control-' + control.name" class="wl-text-small wl-text-muted">{{ control.description }}</p>

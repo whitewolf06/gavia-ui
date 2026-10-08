@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
 import { computed } from "vue";
 import { useWlPt } from "../config";
 import WlIcon from "./WlIcon.vue";
@@ -6,8 +7,8 @@ import type { WlBreadcrumbItem } from "../types";
 
 const props = withDefaults(
   defineProps<{
-    items?: WlBreadcrumbItem[];
-    pt?: Record<string, unknown>;
+    items?: readonly WlBreadcrumbItem[];
+    pt?: WlPt<"breadcrumb">;
   }>(),
   {
     items: () => []

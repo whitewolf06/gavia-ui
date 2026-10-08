@@ -1,10 +1,11 @@
 import { computed, inject, type App, type ComputedRef, type DirectiveBinding } from "vue";
-import { wlLocaleRu, type WlLocale } from "./locale";
-import { createWlPt, type WlPtCallbackOptions, type WlPtConfig } from "./theme";
+import { normalizeWlLocale, type WlResolvedLocale, type WlLocaleInput } from "./locale";
+import { createWlPt } from "./theme";
+import type { WlPtCallbackOptions, WlPtConfig } from "./pt-types";
 
 export interface WlConfigOptions {
   pt?: WlPtConfig;
-  locale?: Partial<WlLocale>;
+  locale?: WlLocaleInput;
   /** Animate overlay entry and exit; individual components may override this. */
   motion?: boolean;
 }
@@ -82,9 +83,9 @@ export function wlConfigForDirective(instance: DirectiveBinding["instance"]): Wl
   return publicInstance?.$?.appContext?.provides?.[configKey] as WlConfigOptions | undefined ?? {};
 }
 
-export function useWlLocale(): ComputedRef<WlLocale> {
+export function useWlLocale(): ComputedRef<WlResolvedLocale> {
   const config = inject<WlConfigOptions>(configKey, {});
-  return computed(() => ({ ...wlLocaleRu, ...config.locale }));
+  return computed(() => normalizeWlLocale(config.locale));
 }
 
 /** Motion defaults on, with a local prop taking precedence over app configuration. */

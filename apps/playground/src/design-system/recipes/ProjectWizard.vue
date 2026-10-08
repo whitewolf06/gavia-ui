@@ -3,7 +3,7 @@ import { computed, nextTick, ref } from "vue";
 import { WlPageHeader, WlSteps, WlField, WlInput, WlRadio, WlButton, WlAlert } from "../../../../../packages/ui-kit/src";
 const step = ref(0);
 const title = ref("");
-const access = ref<unknown>("team");
+const access = ref<string>("team");
 const checked = ref(false);
 const complete = ref(false);
 const error = computed(() => checked.value && !title.value.trim() ? "Введите название проекта." : "");

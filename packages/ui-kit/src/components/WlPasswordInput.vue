@@ -2,12 +2,14 @@
 import { computed, ref, useAttrs } from "vue";
 import WlIcon from "./WlIcon.vue";
 import type { WlDensity, WlSizeSm } from "../types";
+import type { WlTextModelModifiers } from "../model-types";
 import { splitInputAttrs } from "../utils/inputAttrs";
 
 defineOptions({ inheritAttrs: false });
 
 withDefaults(
   defineProps<{
+    modelModifiers?: WlTextModelModifiers;
     size?: WlSizeSm;
     density?: WlDensity;
     invalid?: boolean;
@@ -24,7 +26,7 @@ withDefaults(
   }
 );
 
-const model = defineModel<string>({ default: "" });
+const model = defineModel<string, "trim">({ default: "" });
 const visible = ref(false);
 const attrs = useAttrs();
 

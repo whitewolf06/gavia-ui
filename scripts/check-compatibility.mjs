@@ -5,6 +5,8 @@ import { mkdirSync, readFileSync, readdirSync, writeFileSync, existsSync, mkdtem
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
+import { loadMigrationPolicy, isApprovedMigration, migrationTypeHelpers, migrationPropsProjection } from "./compatibility-migration.mjs";
+
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const kitDir = join(repoRoot, "packages/ui-kit");
 const fixtureDir = join(kitDir, "tests/fixtures");
@@ -90,33 +92,67 @@ function publicTypes(ts, entry) {
     return { name: symbol.name, type: !!(target.flags & ts.SymbolFlags.Type), value: !!(target.flags & ts.SymbolFlags.Value), callable: declarations.some((node) => ts.isFunctionDeclaration(node)), requiredParameters: (typeDeclaration?.typeParameters ?? []).filter((parameter) => !parameter.default).length };
   }).sort((a, b) => a.name.localeCompare(b.name, "en"));
 }
-export function typeSource(baseline) {
+// Released-fixture self-checks compare two pre-generic data APIs; the real
+// candidate gate keeps generic specialization enabled by default. DatePicker
+// was already generic in the frozen release and is checked in both cases.
+export function typeSource(baseline, migration = null, { currentHasGenericDataContracts = true } = {}) {
+  if (migration && !isApprovedMigration(migration)) throw new Error("Typed migration projections require validated approval");
   const lines = [
     'import type * as Previous from "./previous/index";',
     'import * as Current from "./current/index";',
     'import type { ComponentPublicInstance, VNodeProps, AllowedComponentProps, ComponentCustomProps } from "vue";',
     'type Assert<T extends true> = T;',
     'type Assignable<A, B> = [A] extends [B] ? true : false;',
+    // Conditional extraction + Omit can retain misleading object variance.
+    // Check each field too, especially handler payloads; whole object assignment
+    // still catches newly required fields that are absent from the old contract.
+    'type InputsAccepted<A, B> = Assignable<A, B> extends true ? { [K in keyof A]-?: K extends keyof B ? Assignable<A[K], B[K]> : false }[keyof A] extends true | never ? true : false : false;',
     'type VueProps = VNodeProps & AllowedComponentProps & ComponentCustomProps;',
     'type Instance<T> = T extends abstract new (...args: any[]) => infer I ? I : never;',
-    'type RawProps<T> = Instance<T> extends { $props: infer P } ? P : T extends (props: infer P, ...args: any[]) => any ? P : never;',
+    'type RawProps<T> = [Instance<T>] extends [never] ? T extends (...args: any[]) => any ? Parameters<T>[0] : never : Instance<T> extends { $props: infer P } ? P : never;',
     'type Props<T> = Omit<RawProps<T>, keyof VueProps>;',
+    'type RuntimeDomain<P, Key extends keyof P, Value, Required extends boolean> = Omit<P, Key> & (Required extends true ? { [K in Key]-?: Value } : { [K in Key]?: Value });',
     'type Named<T> = { [K in keyof T as string extends K ? never : number extends K ? never : symbol extends K ? never : K]: T[K] };',
     'type RawSlots<T> = [Instance<T>] extends [never] ? T extends (props: any, context?: infer C, ...args: any[]) => any ? NonNullable<C> extends { slots: infer S } ? S : {} : {} : Instance<T> extends { $slots: infer S } ? S : {};',
     'type Slots<T> = Named<RawSlots<T>>;',
-    'type Exposed<T> = Omit<Instance<T>, keyof ComponentPublicInstance | keyof RawProps<T>>;',
+    'type CallableContext<T> = T extends (...args: any[]) => { __ctx?: infer C } ? NonNullable<C> : never;',
+    'type CallableExposed<T> = [CallableContext<T>] extends [never] ? {} : CallableContext<T> extends { expose: (exposed: infer E) => any } ? E : {};',
+    'type Exposed<T> = Omit<[Instance<T>] extends [never] ? CallableExposed<T> : Instance<T>, keyof ComponentPublicInstance | keyof RawProps<T>>;',
     'type KeysPreserved<A, B> = Exclude<keyof A, keyof B> extends never ? true : false;',
     'type AcceptedSlots<A, B> = { [K in keyof A]-?: K extends keyof B ? Assignable<A[K], B[K]> : false }[keyof A] extends true | never ? true : false;'
   ];
+  if (migration) lines.push(...migrationTypeHelpers(migration));
   for (const name of baseline.components) {
-    const modes = name === "WlDatePicker" ? ['<"single">', '<"range">'] : [""];
-    for (let index = 0; index < modes.length; index += 1) {
-      const suffix = modes[index];
-      const old = `typeof Previous.${name}${suffix}`;
-      const current = `typeof Current.${name}${suffix}`;
+    const previous = `typeof Previous.${name}`;
+    let branches = [{ old: previous, current: `typeof Current.${name}`, props: `Props<${previous}>` }];
+    if (name === "WlDatePicker") {
+      branches = ['"single"', '"range"'].map((mode) => ({
+        old: `${previous}<${mode}>`, current: `typeof Current.${name}<${mode}>`, props: `Props<${previous}<${mode}>>`
+      }));
+    } else if (currentHasGenericDataContracts && name === "WlTable") {
+      // Generic erasure uses Row=object instead of the declared dictionary default.
+      branches[0].current += "<Current.WlTableRow>";
+    } else if (currentHasGenericDataContracts && name === "WlAutocomplete") {
+      branches = ["false", "true", "boolean"].map((mode, index) => ({
+        old: previous, current: `typeof Current.${name}<unknown, ${mode}>`,
+        props: `RuntimeDomain<Props<${previous}>, "multiple", ${mode}, ${index !== 0}>`
+      }));
+    } else if (currentHasGenericDataContracts && (name === "WlSelect" || name === "WlMultiSelect")) {
+      const resolver = `NonNullable<Props<${previous}>["optionValue"]>`;
+      branches = ["undefined", resolver].map((mode, index) => ({
+        old: previous, current: `typeof Current.${name}<unknown, ${mode}>`,
+        props: `RuntimeDomain<Props<${previous}>, "optionValue", ${mode}, ${index !== 0}>`
+      }));
+    }
+    // Compare every matching runtime domain. The unapproved path specializes
+    // only the mode prop; approved migrations replace exact reviewed fields.
+    // Slot and exposed contracts are always compared with the released original.
+    for (let index = 0; index < branches.length; index += 1) {
+      const { old, current, props: originalProps } = branches[index];
+      const props = migration ? migrationPropsProjection(migration, name, index, originalProps) : originalProps;
       const id = `${name}_${index}`;
       lines.push(`type ${id}_propNames = Assert<KeysPreserved<Props<${old}>, Props<${current}>>>;`);
-      lines.push(`type ${id}_inputsAndHandlers = Assert<Assignable<Props<${old}>, Props<${current}>>>;`);
+      lines.push(`type ${id}_inputsAndHandlers = Assert<InputsAccepted<${props}, Props<${current}>>>;`);
       lines.push(`type ${id}_slotNames = Assert<KeysPreserved<Slots<${old}>, Slots<${current}>>>;`);
       lines.push(`type ${id}_slotPayloads = Assert<AcceptedSlots<Slots<${old}>, Slots<${current}>>>;`);
       if (name !== "WlDatePicker") {
@@ -134,7 +170,10 @@ export function typeSource(baseline) {
       lines.push(`declare const args_${item.name}: Parameters<typeof Previous.${item.name}>;`);
       lines.push(`Current.${item.name}(...args_${item.name});`);
       // Icon names are an extensible catalog: new names may appear in resolver output.
-      if (item.name !== "resolveWlIconName") lines.push(`type Return_${item.name} = Assert<Assignable<ReturnType<typeof Current.${item.name}>, ReturnType<typeof Previous.${item.name}>>>;`);
+      if (item.name !== "resolveWlIconName") {
+        const previousReturn = migration && item.name === "createWlPt" ? "Record<string, unknown>" : `ReturnType<typeof Previous.${item.name}>`;
+        lines.push(`type Return_${item.name} = Assert<Assignable<ReturnType<typeof Current.${item.name}>, ${previousReturn}>>;`);
+      }
     }
   }
   return `${lines.join("\n")}\n`;
@@ -184,6 +223,7 @@ async function main() {
   if (args.length) throw new Error("Usage: node scripts/check-compatibility.mjs");
   const baseline = readJson(join(baselineDir, "contract.json"));
   const current = await inventory(repoRoot);
+  const migration = loadMigrationPolicy(repoRoot, baselineDir, baseline, current.version);
   const errors = [];
   for (const [name, conditions] of Object.entries(baseline.exports)) {
     if (!(name in current.exports)) errors.push(`package exports: removed ${name}`);
@@ -203,25 +243,56 @@ async function main() {
   mkdirSync(temporaryBase, { recursive: true });
   const temporary = mkdtempSync(join(temporaryBase, "compatibility-"));
   try {
-    // Use original declarations as types, never compare generated declaration text.
-    // The compiler accepts additions and widening inputs, and checks callback variance.
-    const source = typeSource(baseline)
+    const renderSource = (approval) => typeSource(baseline, approval)
       .replace('"./previous/index"', JSON.stringify(join(baselineDir, "declarations/index").replaceAll("\\", "/")))
       .replace('"./current/index"', JSON.stringify(join(kitDir, "dist/index").replaceAll("\\", "/")));
-    const sourcePath = join(temporary, "contract.ts");
-    writeFileSync(sourcePath, source);
-    const program = ts.createProgram([sourcePath], compilerOptions(ts));
-    const diagnostics = ts.getPreEmitDiagnostics(program);
-    if (diagnostics.length) throw new Error(ts.formatDiagnosticsWithColorAndContext(diagnostics, { getCanonicalFileName: (file) => file, getCurrentDirectory: () => repoRoot, getNewLine: () => "\n" }));
-    const config = {
-      compilerOptions: { target: "ES2022", module: "ESNext", moduleResolution: "Bundler", strict: true, noEmit: true, skipLibCheck: false, lib: ["ESNext", "DOM", "DOM.Iterable"], types: [], paths: { "gavia-ui": [join(kitDir, "dist/index.d.ts").replaceAll("\\", "/")] } },
-      files: [join(baselineDir, "consumer.vue")]
+    const semanticCheck = (name, approval) => {
+      const sourcePath = join(temporary, `${name}.ts`);
+      writeFileSync(sourcePath, renderSource(approval));
+      const program = ts.createProgram([sourcePath], compilerOptions(ts));
+      return ts.formatDiagnosticsWithColorAndContext(ts.getPreEmitDiagnostics(program), {
+        getCanonicalFileName: (file) => file, getCurrentDirectory: () => repoRoot, getNewLine: () => "\n"
+      });
     };
-    const configPath = join(temporary, "tsconfig.json");
-    writeFileSync(configPath, JSON.stringify(config));
-    execFileSync(process.execPath, [require.resolve("vue-tsc/bin/vue-tsc.js"), "--noEmit", "-p", configPath], { cwd: kitDir, stdio: "inherit" });
+    const consumerCheck = (name, consumerPath) => {
+      const config = {
+        compilerOptions: { target: "ES2022", module: "ESNext", moduleResolution: "Bundler", strict: true, noEmit: true, skipLibCheck: false, lib: ["ESNext", "DOM", "DOM.Iterable"], types: [], paths: { "gavia-ui": [join(kitDir, "dist/index.d.ts").replaceAll("\\", "/")] } },
+        vueCompilerOptions: { strictTemplates: true, dataAttributes: ["data-*"] },
+        files: [consumerPath]
+      };
+      const configPath = join(temporary, `${name}.json`);
+      writeFileSync(configPath, JSON.stringify(config));
+      try {
+        execFileSync(process.execPath, [require.resolve("vue-tsc/bin/vue-tsc.js"), "--noEmit", "-p", configPath], { cwd: kitDir, encoding: "utf8", stdio: "pipe" });
+        return "";
+      } catch (error) {
+        // Infrastructure failures are not API migrations.
+        if (![1, 2].includes(error.status) || !error.stdout?.includes("error TS")) throw error;
+        return error.stdout + (error.stderr ?? "");
+      }
+    };
+    // Report the original released contract and app even with approved migration.
+    // They remain frozen: every projection is applied to an independent copy.
+    const rawContract = semanticCheck("released-contract", null);
+    const rawConsumer = consumerCheck("released-consumer", join(baselineDir, "consumer.vue"));
+    if (migration) {
+      console.log(`Released ${baseline.version} differences before approved ${migration.targetMinor} migration (${migration.migrationNote}):`);
+      console.log(rawContract || "Released declaration contract passed without migration.");
+      console.log(rawConsumer || "Released Vue consumer passed without migration.");
+      const migratedContract = semanticCheck("migrated-contract", migration);
+      if (migratedContract) errors.push(migratedContract);
+      const migratedConsumerPath = join(temporary, "migrated-consumer.vue");
+      writeFileSync(migratedConsumerPath, migration.migratedConsumer);
+      const migratedConsumer = consumerCheck("migrated-consumer", migratedConsumerPath);
+      if (migratedConsumer) errors.push(`Approved ${migration.targetMinor} migrated consumer failed:\n${migratedConsumer}`);
+    } else {
+      if (rawContract) errors.push(rawContract);
+      if (rawConsumer) errors.push(`Released ${baseline.version} Vue consumer failed:\n${rawConsumer}`);
+    }
   } finally { removeTemporary(temporary); }
-  console.log(`Compatibility with ${baseline.version} passed: ${baseline.components.length} components, public types/events/slots/models, ${baseline.classes.length} CSS classes, ${baseline.tokens.length} tokens, exports, data-wl and pt sections.`);
+  if (errors.length) throw new Error(errors.join("\n"));
+  const boundary = migration ? `Compatibility with ${baseline.version} after approved ${migration.targetMinor} migration passed` : `Compatibility with ${baseline.version} passed`;
+  console.log(`${boundary}: ${baseline.components.length} components, public types/events/slots/models, ${baseline.classes.length} CSS classes, ${baseline.tokens.length} tokens, exports, data-wl and pt sections.`);
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main().catch((error) => { console.error(error.message); process.exitCode = 1; });

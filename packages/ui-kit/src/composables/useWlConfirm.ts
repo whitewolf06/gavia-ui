@@ -3,6 +3,8 @@ import { useConfirmationStore } from "../services/confirmation";
 
 export interface WlConfirmOptions {
   message: string;
+  /** Mount a WlConfirmDialog with the same group to display this request. */
+  group?: string;
   header?: string;
   acceptLabel?: string;
   rejectLabel?: string;
@@ -10,18 +12,23 @@ export interface WlConfirmOptions {
   reject?: () => void;
 }
 
-/** App-level confirmation helper; install WlConfirmationService and mount WlConfirmDialog once. */
-export function useWlConfirm(): {
+export interface WlConfirmApi {
   confirm: (options: WlConfirmOptions) => void;
   confirmDanger: (options: WlConfirmOptions) => void;
+  /** Existing close remains global and safe to use directly as a DOM event handler. */
   close: () => void;
-} {
+  closeGroup: (group: string | undefined) => void;
+}
+
+/** App-level confirmation helper; install WlConfirmationService and mount WlConfirmDialog once. */
+export function useWlConfirm(): WlConfirmApi {
   const store = useConfirmationStore();
   const locale = useWlLocale();
   const require = (options: WlConfirmOptions, danger: boolean): void => {
     store.require({
       header: options.header ?? "Подтверждение",
       message: options.message,
+      group: options.group,
       acceptLabel: options.acceptLabel ?? locale.value.accept,
       rejectLabel: options.rejectLabel ?? locale.value.reject,
       danger,
@@ -32,6 +39,7 @@ export function useWlConfirm(): {
   return {
     confirm: (options) => require(options, false),
     confirmDanger: (options) => require(options, true),
-    close: store.close
+    close: store.close,
+    closeGroup: store.closeGroup
   };
 }

@@ -15,13 +15,15 @@ let requestedArchive;
 let browserRequested = false;
 let selectedManager = "pnpm";
 let requestedVue;
+let requestedTypescript;
 for (let index = 0; index < args.length; index += 1) {
   if (args[index] === "--browser" && !browserRequested) browserRequested = true;
   else if (args[index] === "--archive" && !requestedArchive && args[index + 1]?.trim()) requestedArchive = resolve(args[++index]);
   else if (args[index] === "--manager" && ["pnpm", "npm", "bun"].includes(args[index + 1])) selectedManager = args[++index];
   else if (/^--manager=(pnpm|npm|bun)$/.test(args[index])) selectedManager = args[index].split("=")[1];
   else if (args[index] === "--vue" && /^\d+\.\d+\.\d+$/.test(args[index + 1] ?? "")) requestedVue = args[++index];
-  else throw new Error("Usage: pnpm verify:package [--archive <path>] [--browser] [--manager=pnpm|npm|bun] [--vue <exact-version>]");
+  else if (args[index] === "--typescript" && /^\d+\.\d+\.\d+$/.test(args[index + 1] ?? "")) requestedTypescript = args[++index];
+  else throw new Error("Usage: pnpm verify:package [--archive <path>] [--browser] [--manager=pnpm|npm|bun] [--vue <exact-version>] [--typescript <exact-version>]");
 }
 if (requestedArchive && (!existsSync(requestedArchive) || !statSync(requestedArchive).isFile())) {
   throw new Error(`Archive must be an existing file: ${requestedArchive}`);
@@ -95,9 +97,9 @@ try {
       "gavia-ui": `file:${archivePath.replaceAll("\\", "/")}`,
       vue: registryVueVersion ?? localPackage("vue")
     },
-    devDependencies: selectedManager === "bun" ? undefined : {
+    devDependencies: selectedManager === "bun" ? (requestedTypescript ? { typescript: requestedTypescript } : undefined) : {
       "@vitejs/plugin-vue": localPackage("@vitejs/plugin-vue"),
-      typescript: localPackage("typescript"),
+      typescript: requestedTypescript ?? localPackage("typescript"),
       vite: localPackage("vite"),
       "vue-tsc": localPackage("vue-tsc")
     }
@@ -105,7 +107,8 @@ try {
 
   write("package.json", `${JSON.stringify(consumerPackage, null, 2)}\n`);
   write("tool-build.mjs", 'import { build } from "vite";\nawait build();\n');
-  write("tool-typecheck.mjs", 'import { execFileSync } from "node:child_process";\nimport { resolve } from "node:path";\nexecFileSync(process.execPath, [resolve("node_modules/vue-tsc/bin/vue-tsc.js"), "--noEmit", "-p", "tsconfig.json"], { stdio: "inherit" });\n');
+  // The pinned vue-tsc runner receives the consumer compiler path explicitly; linked tooling must not select the workspace TypeScript.
+  write("tool-typecheck.mjs", 'import { run } from "vue-tsc";\nimport { resolve } from "node:path";\nimport { realpathSync } from "node:fs";\nprocess.argv.push("--noEmit", "-p", "tsconfig.json");\nrun(realpathSync(resolve("node_modules/typescript/lib/tsc.js")));\n');
   write(
     "tsconfig.json",
     `${JSON.stringify(
@@ -119,9 +122,12 @@ try {
           skipLibCheck: false,
           allowJs: true,
           lib: ["ESNext", "DOM", "DOM.Iterable"],
-          types: ["vite/client"]
+          types: ["vite/client"],
+          jsx: "preserve",
+          jsxImportSource: "vue"
         },
-        include: ["src/**/*.ts", "src/**/*.vue"]
+        include: ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+        vueCompilerOptions: { target: 3.4, strictTemplates: true, dataAttributes: ["data-*"] }
       },
       null,
       2
@@ -172,6 +178,23 @@ createApp(App).use(WlConfig, { pt: createWlPt(), locale: wlLocaleRu })
       copiedExamples.push(`./${category}/${filename}`);
     }
   }
+  // Check positive and negative API type contracts against declarations from the actual archive.
+  // These are compile-only files: they are not imported by the runtime application.
+  const apiContractFiles = [
+    "selection-contracts.types.ts", "table-contract.types.ts", "pt-contract.types.ts",
+    "navigation-contract.types.ts", "generic-mode-contract.types.ts", "date-picker.types.ts",
+    "fixtures/selection-contracts-consumer.vue", "fixtures/table-contract-consumer.vue",
+    "fixtures/navigation-contract-consumer.vue", "fixtures/date-picker-consumer.vue",
+    "collection-contract.types.ts", "fixtures/collection-contract-consumer.vue",
+    "input-model-modifiers.types.ts", "fixtures/input-model-modifiers-consumer.vue",
+    "overlay-locale-contract.types.ts", "fixtures/overlay-model-modifiers-consumer.vue", "pt-tooltip-contract.types.ts",
+    "native-contract.types.ts", "native-contract.tsx", "field-slot-contract.types.ts", "fixtures/public-components-consumer.vue"
+  ];
+  for (const relativePath of apiContractFiles) {
+    const source = readFileSync(join(uiKitDir, "tests", relativePath), "utf8")
+      .replace(/from (["'])(?:\.\.\/)+src\1/g, 'from "gavia-ui"');
+    write(`src/contracts/${relativePath}`, source);
+  }
   const exampleImports = copiedExamples.map((path, index) => `import Example${index} from "${path}";`).join("\n");
   write("src/App.vue", `<script setup lang="ts">
 ${exampleImports}
@@ -183,7 +206,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
 `);
 
   // npm and Bun are used only in the throwaway consumer; the repository stays pnpm-only.
-  const offline = registryVueVersion ? [] : ["--offline"];
+  const offline = registryVueVersion || requestedTypescript ? [] : ["--offline"];
   if (selectedManager === "pnpm") {
     runPnpm(["--ignore-workspace", "install", ...offline, "--ignore-scripts"], consumerDir);
   } else if (selectedManager === "npm") {
@@ -193,6 +216,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     // Bun treats file: build tools as local projects and resolves their development
     // graphs. Reuse the existing pinned toolchain after the actual archive install.
     for (const name of ["@vitejs/plugin-vue", "typescript", "vite", "vue-tsc"]) {
+      if (name === "typescript" && requestedTypescript) continue;
       const destination = join(consumerDir, "node_modules", ...name.split("/"));
       mkdirSync(dirname(destination), { recursive: true });
       symlinkSync(join(uiKitDir, "node_modules", ...name.split("/")), destination,
@@ -357,10 +381,12 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   const evidencePath = join(evidenceDir, selectedManager + "-vue-" + installedVue.version + "-" + (browserRequested ? "browser" : "node") + ".json");
   writeFileSync(evidencePath, JSON.stringify({
     package: packageJson.name, version: packageJson.version,
-    toolchain: "Existing pinned workspace Vue/Vite tooling; package itself installed from the archive",
+    toolchain: "Pinned workspace Vue/Vite tooling; explicit consumer TypeScript path; package installed from the archive",
+    typescriptVersion: JSON.parse(readFileSync(join(consumerDir, "node_modules/typescript/package.json"), "utf8")).version,
+    strictTemplates: true, jsx: true,
     manager: selectedManager, managerVersion: consumerTool?.version ?? process.env.npm_config_user_agent?.split(" ")[0], vueVersion: installedVue.version,
     archiveSha256: createHash("sha256").update(readFileSync(archivePath)).digest("hex"),
-    copiedExamples: copiedExamples.length, nativeAndSSR, buttonBundle,
+    copiedExamples: copiedExamples.length, apiContractFiles, nativeAndSSR, buttonBundle,
     browser: browser ?? { skipped: true, command: "pnpm verify:package:browser" }
   }, null, 2) + "\n");
   console.log("Package verification evidence: " + evidencePath);

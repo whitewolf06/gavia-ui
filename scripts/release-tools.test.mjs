@@ -1,13 +1,16 @@
+import "./compatibility-migration.test.mjs";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, writeFileSync, mkdirSync, mkdtempSync, cpSync, symlinkSync, rmSync, existsSync } from "node:fs";
 import { resolve, join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
 import { releaseChannel } from "./release-channel.mjs";
 import { packageChangelog, releaseNotes, releaseDocsLinks, normalizeMarkdownNotes } from "./release-notes.mjs";
 import { prepareChangelog, promotionNotes } from "./version-release.mjs";
 import { assertPortableHtml } from "./archive-playground.mjs";
+import { compilerOptions, typeSource } from "./check-compatibility.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 
@@ -278,4 +281,118 @@ test("beta promotion deduplicates whole fenced blocks without dropping delimiter
   assert.ok(stable.includes(firstCode));
   assert.ok(stable.includes(secondCode));
   assert.equal(stable.match(/Checked fix\./g).length, 1);
+});
+
+
+test("compatibility type helpers preserve generic props and expose while rejecting real contract losses", () => {
+  const ts = createRequire(join(root, "packages/ui-kit/package.json"))("typescript");
+  const base = join(root, ".tmp");
+  mkdirSync(base, { recursive: true });
+  const fixture = mkdtempSync(join(base, "compatibility-helpers-"));
+  const constructor = (name) => [
+    `export declare const ${name}: {`,
+    '  new (): ComponentPublicInstance & {',
+    '    $props: { items?: readonly unknown[]; label?: string; onChange?: (value: unknown) => void };',
+    '    $slots: { default?: (props: {}) => unknown };',
+    '    open(target?: Event): void;',
+    '    clear(): boolean;',
+    '  };',
+    '};'
+  ].join("\n");
+  const callable = (name) => [
+    `export declare const ${name}: <T = unknown>(`,
+    '  props: { items?: readonly T[]; label?: string; onChange?: (value: T) => void },',
+    '  context?: { slots: { default?: (props: {}) => unknown } },',
+    '  expose?: (exposed: { open: (target?: Event) => void; clear: () => boolean }) => void',
+    ') => { __ctx?: { expose: (exposed: { open: (target?: Event) => void; clear: () => boolean }) => void } };'
+  ].join("\n");
+  const previousTable = [
+    'export declare const WlTable: { new (): ComponentPublicInstance & {',
+    '  $props: { value?: WlTableRow[]; columns?: { key: string; label: string }[] };',
+    '  $slots: { "cell-name"?: (props: { row: WlTableRow; value: unknown }) => unknown };',
+    '} };'
+  ].join("\n");
+  const currentTable = [
+    'export declare const WlTable: <Row extends object = WlTableRow>(',
+    '  props: { value?: readonly Row[]; columns?: readonly { key: Extract<keyof Row, string>; label: string }[] },',
+    '  context?: { slots: { "cell-name"?: (props: { row: Row; value: unknown }) => unknown } }',
+    ') => { __ctx?: { expose: (exposed: {}) => void } };'
+  ].join("\n");
+  const previousSelection = (name, model) => [
+    `export declare const ${name}: { new (): ComponentPublicInstance & {`,
+    `  $props: { options?: unknown[]; optionValue?: ValueResolver; modelValue?: ${model}; "onUpdate:modelValue"?: (value: ${model}) => void };`,
+    '  $slots: {};',
+    '} };'
+  ].join("\n");
+  const currentSelection = (name, model) => [
+    `export declare const ${name}: <Item = unknown, Resolver extends ValueResolver | undefined = undefined>(`,
+    `  props: RuntimeProp<{ options?: readonly Item[]; optionValue?: Resolver; modelValue?: ${model}; "onUpdate:modelValue"?: (value: ${model}) => void }, "optionValue", Resolver, undefined>,`,
+    '  context?: { slots: {} }',
+    ') => { __ctx?: { expose: (exposed: {}) => void } };'
+  ].join("\n");
+  const previousAuto = [
+    'export declare const WlAutocomplete: { new (): ComponentPublicInstance & {',
+    '  $props: { suggestions?: unknown[]; multiple?: boolean; modelValue?: unknown; "onUpdate:modelValue"?: (value: unknown) => void };',
+    '  $slots: {};',
+    '} };'
+  ].join("\n");
+  const currentAuto = [
+    'export declare const WlAutocomplete: <Item = unknown, Multiple extends boolean = false>(',
+    '  props: RuntimeProp<{ suggestions?: readonly Item[]; multiple?: Multiple; modelValue?: unknown; "onUpdate:modelValue"?: (value: unknown) => void }, "multiple", Multiple, false>,',
+    '  context?: { slots: {} }',
+    ') => { __ctx?: { expose: (exposed: {}) => void } };'
+  ].join("\n");
+  const header = [
+    'import type { ComponentPublicInstance } from "vue";',
+    'export type WlTableRow = Record<string, unknown>;',
+    'type ValueResolver = string | ((option: unknown) => unknown);',
+    'type RuntimeProp<P, Key extends PropertyKey, Value, Default> = P & ([Value] extends [Default] ? unknown : { [K in Key]: Value });',
+    ''
+  ].join("\n");
+  const previous = header + [constructor("WlGeneric"), callable("WlCallable"), constructor("WlClassic"), previousTable, previousAuto,
+    previousSelection("WlSelect", "unknown"), previousSelection("WlMultiSelect", "unknown[]")].join("\n");
+  const current = header + [callable("WlGeneric"), callable("WlCallable"), constructor("WlClassic"), currentTable, currentAuto,
+    currentSelection("WlSelect", "unknown"), currentSelection("WlMultiSelect", "unknown[]")].join("\n");
+  const currentPath = join(fixture, "current/index.d.ts");
+  const contractPath = join(fixture, "contract.ts");
+  try {
+    for (const version of ["previous", "current"]) mkdirSync(join(fixture, version));
+    writeFileSync(join(fixture, "previous/index.d.ts"), previous);
+    writeFileSync(contractPath, typeSource({ components: ["WlGeneric", "WlCallable", "WlClassic", "WlTable", "WlAutocomplete", "WlSelect", "WlMultiSelect"], declarationExports: [] }));
+    const diagnostics = (candidate) => {
+      writeFileSync(currentPath, candidate);
+      const program = ts.createProgram([contractPath], compilerOptions(ts));
+      return ts.getPreEmitDiagnostics(program);
+    };
+    const unchanged = diagnostics(current);
+    assert.deepEqual(unchanged.map((diagnostic) => ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")), [],
+      "equivalent constructor/generic declarations must not report removed props or expose");
+    const mutations = [
+      ["generic prop removed", current.replace('items?: readonly T[]; label?: string;', 'items?: readonly T[];'), /WlGeneric_0_propNames/],
+      ["generic input narrowed", current.replace('items?: readonly T[]; label?: string;', 'items?: readonly T[]; label?: number;'), /WlGeneric_0_inputsAndHandlers/],
+      ["generic exposed method removed", current.replaceAll(' clear: () => boolean', ''), /WlGeneric_0_exposedNames/],
+      ["generic exposed signature changed", current.replaceAll('open: (target?: Event) => void', 'open: (target: string) => void'), /WlGeneric_0_exposedMethods/],
+      ["existing callable prop removed", current.replace(callable("WlCallable"), callable("WlCallable").replace(' label?: string;', '')), /WlCallable_0_propNames/],
+      ["constructor input narrowed", current.replace(constructor("WlClassic"), constructor("WlClassic").replace('label?: string', 'label?: number')), /WlClassic_0_inputsAndHandlers/],
+      ["default table columns narrowed", current.replace('key: Extract<keyof Row, string>', 'key: never'), /WlTable_0_inputsAndHandlers/],
+      ["default table slot row changed", current.replace('props: { row: Row; value: unknown }', 'props: { row: number; value: unknown }'), /WlTable_0_slotPayloads/],
+      ["multiple autocomplete model narrowed", current.replace(currentAuto, currentAuto.replace('modelValue?: unknown;', 'modelValue?: Multiple extends true ? Item[] | null : unknown;')), /WlAutocomplete_1_inputsAndHandlers/],
+      ["resolved select model narrowed", current.replace(currentSelection("WlSelect", "unknown"), currentSelection("WlSelect", 'Resolver extends undefined ? unknown : number')), /WlSelect_1_inputsAndHandlers/],
+      ["resolved multiselect model narrowed", current.replace(currentSelection("WlMultiSelect", "unknown[]"), currentSelection("WlMultiSelect", 'Resolver extends undefined ? unknown[] : number[]')), /WlMultiSelect_1_inputsAndHandlers/]
+    ];
+    for (const [label, candidate, expected] of mutations) {
+      const failures = diagnostics(candidate);
+      assert.ok(failures.length, `${label} was silently accepted`);
+      assert.ok(failures.every((diagnostic) => diagnostic.code === 2344 && diagnostic.file && resolve(diagnostic.file.fileName) === contractPath),
+        `${label}: fixture must fail a compatibility assertion, not its declaration syntax`);
+      const lines = failures.map((diagnostic) => {
+        const line = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start).line;
+        return diagnostic.file.text.split("\n")[line];
+      });
+      assert.match(lines.join("\n"), expected, label);
+    }
+  } finally {
+    assert.equal(dirname(fixture), base, "cleanup must stay in the worktree .tmp directory");
+    rmSync(fixture, { recursive: true, force: true });
+  }
 });

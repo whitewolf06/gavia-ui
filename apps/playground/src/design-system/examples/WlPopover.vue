@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { WlPopover, WlButton, WlDatePicker, WlDialog, WlSelect } from "../../../../../packages/ui-kit/src";
+import { WlPopover, WlButton, WlDatePicker, WlDialog, WlSelect, type WlPopoverExpose } from "../../../../../packages/ui-kit/src";
 defineProps<{ preview?: Record<string, unknown> }>();
-const popover = ref<InstanceType<typeof WlPopover> | null>(null);
-const dialogPopover = ref<InstanceType<typeof WlPopover> | null>(null);
+const popover = ref<WlPopoverExpose | null>(null);
+const dialogPopover = ref<WlPopoverExpose | null>(null);
 const dialogVisible = ref(false);
 const type = ref("all");
 const dialogType = ref("all");

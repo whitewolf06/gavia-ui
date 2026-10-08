@@ -1,14 +1,19 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
+import type { WlNoModelModifiers } from "../model-types";
 import { useWlId } from "../utils/useWlId";
-import { computed, ref } from "vue";
-import { useWlMotion, useWlPt } from "../config";
+import { computed, ref, useAttrs } from "vue";
+import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
 import type { WlDrawerPosition } from "../types";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import WlIcon from "./WlIcon.vue";
 
+defineOptions({ inheritAttrs: false });
+defineSlots<{ default?(props: {}): unknown; header?(props: {}): unknown; footer?(props: {}): unknown }>();
 const props = withDefaults(defineProps<{
   header?: string;
+  visibleModifiers?: WlNoModelModifiers;
   position?: WlDrawerPosition;
   modal?: boolean;
   dismissable?: boolean;
@@ -17,15 +22,16 @@ const props = withDefaults(defineProps<{
   ariaLabel?: string;
   ariaLabelledby?: string;
   motion?: boolean;
-  pt?: Record<string, unknown>;
+  pt?: WlPt<"drawer">;
 }>(), {
   position: "right", modal: true, dismissable: true, closeOnEscape: true, blockScroll: true,
   motion: undefined
 });
 const emit = defineEmits<{ open: []; close: [] }>();
-const visible = defineModel<boolean>("visible", { default: false });
+const visible = defineModel<boolean, never>("visible", { default: false });
 const drawer = ref<HTMLElement | null>(null);
 const titleId = useWlId();
+const attrs = useAttrs();
 const section = useWlPt("drawer", computed(() => props.pt));
 const motion = useWlMotion(computed(() => props.motion));
 useOverlayLifecycle({
@@ -48,7 +54,7 @@ function onMask(event: MouseEvent): void {
       @leave-cancelled="restoreOverlayEntering">
     <div v-if="visible" v-bind="section('mask')" class="wl-drawer-mask"
       :class="{ 'wl-mask': modal, 'wl-drawer-host': !modal }" @mousedown="onMask">
-      <aside ref="drawer" v-bind="section('root')" class="wl-drawer" :class="`wl-drawer--${position}`"
+      <aside ref="drawer" v-bind="mergeWlAttrs(section('root'), attrs)" class="wl-drawer" :class="`wl-drawer--${position}`"
         role="dialog" :aria-modal="modal || undefined" :aria-label="ariaLabel"
         :aria-labelledby="ariaLabelledby ?? (!ariaLabel && header ? titleId : undefined)"
         tabindex="-1" data-wl="drawer">

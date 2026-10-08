@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
 import { computed } from "vue";
 import { useWlPt } from "../config";
 
@@ -8,7 +9,7 @@ const props = withDefaults(
     height?: string;
     borderRadius?: string;
     shape?: "rectangle" | "circle";
-    pt?: Record<string, unknown>;
+    pt?: WlPt<"skeleton">;
   }>(),
   {
     width: "100%",

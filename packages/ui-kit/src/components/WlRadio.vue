@@ -1,5 +1,7 @@
-<script setup lang="ts">
-import { computed, useAttrs } from "vue";
+<script setup lang="ts" generic="Value = unknown">
+import type { WlPt } from "../pt-types";
+import type { WlNoModelModifiers } from "../model-types";
+import { computed, useAttrs, type Ref } from "vue";
 import { useWlPt } from "../config";
 import { getWlControlProps, splitInputAttrs } from "../utils/inputAttrs";
 import { deepMerge } from "../utils/merge";
@@ -8,11 +10,12 @@ defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(
   defineProps<{
-    value: unknown;
+    modelModifiers?: WlNoModelModifiers;
+    value: NoInfer<Value>;
     name?: string;
     disabled?: boolean;
     invalid?: boolean;
-    pt?: Record<string, unknown>;
+    pt?: WlPt<"radiobutton">;
   }>(),
   {
     disabled: false,
@@ -20,7 +23,8 @@ const props = withDefaults(
   }
 );
 
-const model = defineModel<unknown>();
+// The empty default stabilizes generated emits; never bridges Vue 3.4/3.5 default typing.
+const model: Ref<Value | undefined> = defineModel<Value, never>({ default: undefined as never });
 const attrs = useAttrs();
 
 const attrGroups = computed(() => splitInputAttrs(attrs));

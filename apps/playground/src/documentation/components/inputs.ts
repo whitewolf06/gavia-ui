@@ -73,7 +73,7 @@ export const inputDocumentationAccessibility: Record<string, readonly string[]> 
     "Задайте имя нативному readonly combobox через id/label либо aria-label. aria-expanded сообщает открытие списка, listbox поддерживает множественный выбор.",
     "Стрелки и Home/End двигают активный пункт, Enter переключает его, Escape закрывает список. Выбор одного пункта оставляет список открытым.",
     "В display=chip каждый чип имеет кнопку удаления с именем выбранного значения. filter добавляет поле «Фильтр» в панели.",
-    "Модель — unknown[]. maxSelectedLabels сворачивает подписи только в display=comma. Ошибку связывайте через aria-describedby."
+    "Модель — TValue[], тип значения выводится из options и optionValue. maxSelectedLabels сворачивает подписи только в display=comma. Ошибку связывайте через aria-describedby."
   ],
   WlAutocomplete: [
     "Подпишите текстовый combobox через id/label либо aria-label; кнопке dropdown задайте различимое dropdownLabel.",

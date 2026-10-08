@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
 import { computed } from "vue";
 import { useWlPt } from "../config";
 import WlIcon from "./WlIcon.vue";
@@ -9,7 +10,7 @@ const props = withDefaults(
     variant?: WlTagVariant;
     removable?: boolean;
     removeLabel?: string;
-    pt?: Record<string, unknown>;
+    pt?: WlPt<"tag">;
   }>(),
   {
     variant: "gray",

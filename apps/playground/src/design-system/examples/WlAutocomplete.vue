@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { WlAutocomplete } from "../../../../../packages/ui-kit/src";
 defineProps<{ preview?: Record<string, unknown> }>();
-const value = ref<unknown>('Анна');
+const value = ref<string | null>('Анна');
 const suggestions = ref(['Анна', 'Андрей', 'Мария']);
 function complete(event: { query: string }): void {
   suggestions.value = ['Анна', 'Андрей', 'Мария'].filter((name) => name.toLowerCase().includes(event.query.toLowerCase()));

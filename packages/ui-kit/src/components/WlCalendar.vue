@@ -2,10 +2,13 @@
 import { computed, nextTick, ref, watch } from "vue";
 import WlIcon from "./WlIcon.vue";
 import type { WlCalendarEvent } from "../types";
+import type { WlNoModelModifiers } from "../model-types";
 
 const props = withDefaults(
   defineProps<{
-    events?: WlCalendarEvent[];
+    events?: readonly WlCalendarEvent[];
+    modelModifiers?: WlNoModelModifiers;
+    monthModifiers?: WlNoModelModifiers;
   }>(),
   {
     events: () => []
@@ -16,8 +19,8 @@ const props = withDefaults(
  * v-model — selected date as ISO "YYYY-MM-DD" string (serializable).
  * v-model:month — displayed month as "YYYY-MM"; uncontrolled default = current month.
  */
-const selected = defineModel<string>({ default: "" });
-const viewMonth = defineModel<string>("month", { default: "" });
+const selected = defineModel<string, never>({ default: "" });
+const viewMonth = defineModel<string, never>("month", { default: "" });
 
 const MONTHS_RU = [
   "Январь",

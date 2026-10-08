@@ -4,6 +4,7 @@ import WlCard from "./WlCard.vue";
 import WlIcon from "./WlIcon.vue";
 import type { WlIconInput, WlStatCardTone } from "../types";
 
+defineSlots<{ default?(props: {}): unknown; footer?(props: {}): unknown }>();
 const props = withDefaults(
   defineProps<{
     icon?: WlIconInput;
@@ -18,7 +19,10 @@ const props = withDefaults(
   }
 );
 
-const pct = computed(() => Math.min(Math.max(props.progress ?? 0, 0), 100));
+const pct = computed(() => {
+  const value = props.progress ?? 0;
+  return Number.isFinite(value) ? Math.min(Math.max(value, 0), 100) : 0;
+});
 </script>
 
 <template>

@@ -370,9 +370,9 @@ jobs:
       - name: Install pinned Chromium
         timeout-minutes: 6
         run: pnpm exec playwright install --with-deps chromium
-      - name: Verify minimum Vue with npm
+      - name: Verify minimum Vue and TypeScript with npm
         if: matrix.manager == 'npm'
-        run: pnpm verify:package:browser --manager npm --vue 3.4.0
+        run: pnpm verify:package:browser --manager npm --vue 3.4.0 --typescript 5.4.5
       - name: Verify Bun consumer
         if: matrix.manager == 'bun'
         run: pnpm verify:package:browser --manager bun --vue 3.5.40

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
+import type { WlNoModelModifiers } from "../model-types";
 import { useWlId } from "../utils/useWlId";
 import { computed, ref, useAttrs } from "vue";
 import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
@@ -7,8 +9,10 @@ import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTran
 import WlIcon from "./WlIcon.vue";
 
 defineOptions({ inheritAttrs: false });
+defineSlots<{ default?(props: {}): unknown; header?(props: {}): unknown; footer?(props: {}): unknown }>();
 const props = withDefaults(defineProps<{
   header?: string;
+  visibleModifiers?: WlNoModelModifiers;
   modal?: boolean;
   closable?: boolean;
   dismissable?: boolean;
@@ -18,13 +22,13 @@ const props = withDefaults(defineProps<{
   ariaLabelledby?: string;
   width?: string;
   motion?: boolean;
-  pt?: Record<string, unknown>;
+  pt?: WlPt<"dialog">;
 }>(), {
   modal: true, closable: true, dismissable: false, closeOnEscape: true, blockScroll: true,
   motion: undefined
 });
 const emit = defineEmits<{ open: []; close: []; afterLeave: [] }>();
-const visible = defineModel<boolean>("visible", { default: false });
+const visible = defineModel<boolean, never>("visible", { default: false });
 const dialog = ref<HTMLElement | null>(null);
 const titleId = useWlId();
 const attrs = useAttrs();

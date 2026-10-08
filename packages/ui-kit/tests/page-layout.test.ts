@@ -1,6 +1,6 @@
 import type { GlobalMountOptions } from "./mounting-types";
 import { describe, expect, it } from "vitest";
-import { nextTick } from "vue";
+import { defineComponent, h, nextTick } from "vue";
 import { mount, type VueWrapper } from "@vue/test-utils";
 import { WlConfig } from "../src";
 import { WlFilterBar, WlPageHeader, createWlPt } from "../src";
@@ -127,18 +127,21 @@ describe("WlFilterBar", () => {
     expect(updates[updates.length - 1]).toEqual([false]);
   });
 
-  it("creates unique toggle-to-panel relationships", () => {
-    const first = mount(WlFilterBar, { global });
-    const second = mount(WlFilterBar, { global });
-    const firstToggle = first.find(".wl-filter-bar__mobile-toggle button");
-    const secondToggle = second.find(".wl-filter-bar__mobile-toggle button");
-
-    expect(firstToggle.attributes("aria-controls")).not.toBe(
-      secondToggle.attributes("aria-controls")
-    );
-    expect(first.find(".wl-filter-bar__panel").attributes("id")).toBe(
-      firstToggle.attributes("aria-controls")
-    );
+  it("creates unique toggle-to-panel relationships for siblings in one application", () => {
+    // Vue-generated IDs are scoped to one app. Independent apps use distinct idPrefix values.
+    const Harness = defineComponent({
+      setup: () => () => h("main", [h(WlFilterBar), h(WlFilterBar)])
+    });
+    const wrapper = mount(Harness, { global });
+    try {
+      const bars = wrapper.findAll(".wl-filter-bar");
+      const controls = bars.map((bar) => bar.get(".wl-filter-bar__mobile-toggle button").attributes("aria-controls"));
+      expect(bars).toHaveLength(2);
+      expect(new Set(controls).size).toBe(2);
+      for (const [index, bar] of bars.entries()) {
+        expect(bar.get(".wl-filter-bar__panel").attributes("id")).toBe(controls[index]);
+      }
+    } finally { wrapper.unmount(); }
   });
 
   it("does not open or emit actions while disabled", async () => {

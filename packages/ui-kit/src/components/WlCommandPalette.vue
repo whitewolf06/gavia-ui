@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="Item extends WlCommandPaletteItem = WlCommandPaletteItem, Group extends WlCommandPaletteGroup<Item> = WlCommandPaletteGroup<Item>">
 import { useWlId } from "../utils/useWlId";
 import {
   computed,
@@ -10,7 +10,9 @@ import {
   watch
 } from "vue";
 import { useWlMotion } from "../config";
-import type { WlCommandPaletteGroup, WlCommandPaletteItem, WlDensity, WlSizeSm } from "../types";
+import type { WlDensity, WlSizeSm } from "../types";
+import type { WlCommandPaletteGroup, WlCommandPaletteItem, WlCommandPaletteExpose } from "../navigation-types";
+import type { WlNoModelModifiers, WlTextModelModifiers } from "../model-types";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import WlIcon from "./WlIcon.vue";
@@ -19,7 +21,9 @@ defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(
   defineProps<{
-    groups?: WlCommandPaletteGroup[];
+    groups?: readonly (WlCommandPaletteGroup<Item> & Group)[];
+    visibleModifiers?: WlNoModelModifiers;
+    queryModifiers?: WlTextModelModifiers;
     placeholder?: string;
     emptyText?: string;
     loadingText?: string;
@@ -55,26 +59,34 @@ const motion = useWlMotion(computed(() => props.motion));
 
 const emit = defineEmits<{
   search: [query: string];
-  select: [item: WlCommandPaletteItem, group: WlCommandPaletteGroup];
+  select: [item: Item, group: Group];
   open: [];
   close: [];
 }>();
 
-const visible = defineModel<boolean>("visible", { default: false });
-const query = defineModel<string>("query", { default: "" });
+defineSlots<{
+  group?(props: { group: Group }): unknown;
+  item?(props: { item: Item; group: Group; active: boolean }): unknown;
+  "item-icon"?(props: { item: Item; group: Group }): unknown;
+  empty?(props: { query: string }): unknown;
+  footer?(props: {}): unknown;
+}>();
+
+const visible = defineModel<boolean, never>("visible", { default: false });
+const query = defineModel<string, "trim">("query", { default: "" });
 const inputRef = ref<HTMLInputElement | null>(null);
 const panelRef = ref<HTMLElement | null>(null);
 const activeIndex = ref(0);
 const listboxId = `wl-command-palette-list-${useWlId()}`;
 
 interface VisibleGroup {
-  group: WlCommandPaletteGroup;
-  items: WlCommandPaletteItem[];
+  group: Group;
+  items: Item[];
 }
 
 interface VisibleItem {
-  item: WlCommandPaletteItem;
-  group: WlCommandPaletteGroup;
+  item: Item;
+  group: Group;
 }
 
 function normalize(value: string): string {
@@ -82,7 +94,7 @@ function normalize(value: string): string {
 }
 
 function matches(
-  item: WlCommandPaletteItem,
+  item: Item,
   normalizedQuery: string,
   shouldFilter: boolean
 ): boolean {
@@ -150,17 +162,17 @@ watch(selectableItems, (items) => {
   }
 });
 
-function select(item: WlCommandPaletteItem, group: WlCommandPaletteGroup): void {
+function select(item: Item, group: Group): void {
   if (item.disabled) return;
   emit("select", item, group);
   if (props.closeOnSelect) close();
 }
 
-function isActive(item: WlCommandPaletteItem): boolean {
+function isActive(item: Item): boolean {
   return selectableItems.value[activeIndex.value]?.item === item;
 }
 
-function optionId(item: WlCommandPaletteItem): string {
+function optionId(item: Item): string {
   const index = visibleItems.value.findIndex((entry) => entry.item === item);
   return `${listboxId}-option-${Math.max(0, index)}`;
 }
@@ -213,7 +225,7 @@ defineExpose({
     if (!props.disabled) visible.value = true;
   },
   close
-});
+} satisfies WlCommandPaletteExpose);
 </script>
 
 <template>

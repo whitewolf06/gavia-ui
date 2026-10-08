@@ -72,9 +72,9 @@ describe("accessibility contract", () => {
     const controls = [
       track(mount(WlInput, { global, attrs: { "aria-label": "Title" }, props: { invalid: true } })).get("input"),
       track(mount(WlTextarea, { global, attrs: { "aria-label": "Description" }, props: { invalid: true } })).get("textarea"),
-      track(mount(WlSelect, { global, attrs: { "aria-label": "Project" }, props: { options: [], invalid: true } })).get('[role="combobox"]'),
-      track(mount(WlMultiSelect, { global, attrs: { "aria-label": "Tags" }, props: { options: [], invalid: true } })).get('[role="combobox"]'),
-      track(mount(WlAutocomplete, { global, attrs: { "aria-label": "Assignee" }, props: { suggestions: [], invalid: true } })).get("input"),
+      track(mount(WlSelect<string>, { global, attrs: { "aria-label": "Project" }, props: { options: [], invalid: true } })).get('[role="combobox"]'),
+      track(mount(WlMultiSelect<string>, { global, attrs: { "aria-label": "Tags" }, props: { options: [], invalid: true } })).get('[role="combobox"]'),
+      track(mount(WlAutocomplete<string, false>, { global, attrs: { "aria-label": "Assignee" }, props: { suggestions: [], invalid: true } })).get("input"),
       track(mount(WlDatePicker, { global, attrs: { "aria-label": "Due date" }, props: { invalid: true } })).get("input"),
       track(mount(WlCheckbox, { global, attrs: { "aria-label": "Done" }, props: { invalid: true } })).get('input[type="checkbox"]'),
       track(mount(WlRadio, { global, attrs: { "aria-label": "Priority" }, props: { value: "high", invalid: true } })).get('input[type="radio"]'),

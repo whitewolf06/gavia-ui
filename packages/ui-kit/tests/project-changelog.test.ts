@@ -4,6 +4,7 @@ import { fileURLToPath, URL as NodeURL } from "node:url";
 import { describe, expect, it } from "vitest";
 import { parseChangelog, parseChangelogInline, resolveChangelogLink } from "../../../apps/playground/src/project/changelog";
 import type { ChangelogInline } from "../../../apps/playground/src/project/changelog";
+import { gaviaProjectInfo } from "../../../apps/playground/src/project/project-info";
 
 const docsBase = "https://github.com/whitewolf06/gavia-ui/blob/main/";
 const text = (content: ChangelogInline[]): string => content.map((part) => part.kind === "link" ? part.label : part.value).join("");
@@ -17,11 +18,10 @@ describe("public changelog rendering", () => {
     // New releases precede the immutable historical tail; publishing must not drop it.
     expect(versions.slice(versions.indexOf("0.9.1"))).toEqual(["0.9.1", "0.8.1", "0.7.1", "0.7.0", "0.6.0", "0.3.0", "0.2.1", "0.2.0", "0.1.0"]);
     expect(new Set(versions).size).toBe(versions.length);
-    const manifest = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../package.json", import.meta.url)), "utf8")) as { version: string };
     expect(document.sections.find((section) => section.version)).toMatchObject({
-      version: manifest.version,
+      version: gaviaProjectInfo.publishedVersion,
       date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
-      id: "project-release-" + manifest.version.replace(/\./g, "-"),
+      id: "project-release-" + gaviaProjectInfo.publishedVersion.replace(/\./g, "-"),
       unreleased: false
     });
     expect(document.sections.find((section) => section.version === "0.9.1"))
@@ -63,6 +63,28 @@ describe("public changelog rendering", () => {
     expect(bullets).toContain("Переменная локального стенда — GAVIA_E2E_BASE_URL; тексты ошибок каталога используют Gavia UI. Изменения перечислены в миграции.");
     expect(bullets).toContain("Публичные Wl*, props, события, модели, слоты, имена иконок, классы wl-* и токены --wl-* сохраняются.");
     expect(document.sections.some((section) => section.title === "Правила ведения")).toBe(true);
+  });
+
+  it("distinguishes the prepared source version from dated published releases", () => {
+    const source = readFileSync(fileURLToPath(new NodeURL("../../../CHANGELOG.md", import.meta.url)), "utf8");
+    const document = parseChangelog(source, docsBase);
+    const manifest = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../package.json", import.meta.url)), "utf8")) as { version: string };
+    expect(gaviaProjectInfo.version).toBe(manifest.version);
+    const preparedTitle = `${manifest.version} — подготовлено`;
+    const prepared = document.sections.filter((section) => section.title === preparedTitle);
+    if (manifest.version !== gaviaProjectInfo.publishedVersion) {
+      expect(prepared).toHaveLength(1);
+      expect(document.sections[1]).toBe(prepared[0]);
+      expect(prepared[0]).not.toHaveProperty("version");
+      expect(prepared[0]).not.toHaveProperty("date");
+      expect(prepared[0]!.blocks.length).toBeGreaterThan(0);
+      expect(document.sections.some((section) => section.version === manifest.version)).toBe(false);
+    } else {
+      expect(prepared).toHaveLength(0);
+      expect(document.sections.find((section) => section.version)).toMatchObject({
+        version: manifest.version, date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/)
+      });
+    }
   });
 
   it("keeps exact inline text and code while resolving documentation links canonically", () => {

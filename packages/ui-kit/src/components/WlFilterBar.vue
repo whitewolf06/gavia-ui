@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import {
   computed,
-  getCurrentInstance,
   onBeforeUnmount,
   onMounted,
   ref,
-  useSlots,
 } from "vue";
 import type { WlDensity } from "../types";
+import type { WlNoModelModifiers } from "../model-types";
+import type { WlFilterBarExpose, WlFilterBarSlots } from "../overlay-types";
+import { useWlId } from "../utils/useWlId";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
 import WlButton from "./WlButton.vue";
 import WlIcon from "./WlIcon.vue";
@@ -16,6 +17,7 @@ import WlIconButton from "./WlIconButton.vue";
 const props = withDefaults(
   defineProps<{
     activeCount?: number;
+    openModifiers?: WlNoModelModifiers;
     ariaLabel?: string;
     toggleLabel?: string;
     panelTitle?: string;
@@ -49,14 +51,14 @@ const emit = defineEmits<{
   close: [];
 }>();
 
-const open = defineModel<boolean>("open", { default: false });
-const slots = useSlots();
-const panelId = `wl-filter-bar-panel-${getCurrentInstance()?.uid ?? 0}`;
+const open = defineModel<boolean, never>("open", { default: false });
+const slots = defineSlots<WlFilterBarSlots>();
+const panelId = `wl-filter-bar-panel-${useWlId()}`;
 const panelRef = ref<HTMLElement | null>(null);
 const isMobile = ref(false);
 let mediaQuery: MediaQueryList | null = null;
 
-const count = computed(() => Math.max(0, Math.floor(props.activeCount)));
+const count = computed(() => Number.isFinite(props.activeCount) ? Math.max(0, Math.floor(props.activeCount)) : 0);
 const hasSummary = computed(() => Boolean(slots.summary));
 const hasLeading = computed(() => Boolean(slots.leading));
 const hasActions = computed(() => Boolean(slots.actions) || (props.showClear && count.value > 0));
@@ -107,7 +109,7 @@ function apply(): void {
   requestClose();
 }
 
-defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply });
+defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } satisfies WlFilterBarExpose);
 </script>
 
 <template>

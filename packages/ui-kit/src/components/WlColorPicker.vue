@@ -8,7 +8,7 @@ const props = withDefaults(
   defineProps<{
     /** v-model — hex color, always emitted normalized as lowercase #rrggbb. */
     modelValue?: string;
-    swatches?: string[];
+    swatches?: readonly string[];
     size?: WlColorPickerSize;
     disabled?: boolean;
     invalid?: boolean;

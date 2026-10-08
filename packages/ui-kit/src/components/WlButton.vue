@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
 import { computed } from "vue";
 import { useWlPt } from "../config";
 import type { WlButtonVariant, WlDensity, WlSize } from "../types";
@@ -12,7 +13,7 @@ const props = withDefaults(
     disabled?: boolean;
     block?: boolean;
     type?: "button" | "submit" | "reset";
-    pt?: Record<string, unknown>;
+    pt?: WlPt<"button">;
   }>(),
   {
     variant: "secondary",

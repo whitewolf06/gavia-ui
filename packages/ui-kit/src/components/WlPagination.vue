@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
 import { computed, ref, watch } from "vue";
 import { useWlPt } from "../config";
 import WlIcon from "./WlIcon.vue";
@@ -10,7 +11,7 @@ const props = withDefaults(
     siblings?: number;
     compact?: boolean;
     disabled?: boolean;
-    pt?: Record<string, unknown>;
+    pt?: WlPt<"paginator">;
   }>(),
   {
     page: 1,
@@ -26,25 +27,31 @@ const emit = defineEmits<{
 const section = useWlPt("paginator", computed(() => props.pt));
 
 type PagerItem = number | "gap";
+const count = computed(() => Number.isFinite(props.pageCount)
+  ? Math.min(Number.MAX_SAFE_INTEGER, Math.max(1, Math.floor(props.pageCount))) : 1);
+const currentPage = computed(() => clamp(props.page));
+// Keep the rendered navigation bounded even when a consumer supplies an excessive window.
+const siblingCount = computed(() => Number.isFinite(props.siblings)
+  ? Math.min(100, Math.max(0, Math.floor(props.siblings))) : 1);
 
 /** Classic pinned-first/last window with ellipsis gaps. */
 const pageItems = computed<PagerItem[]>(() => {
-  const count = Math.max(props.pageCount, 1);
-  const current = Math.min(Math.max(props.page, 1), count);
-  const window = 2 * props.siblings + 5;
-  if (count <= window) {
-    return Array.from({ length: count }, (_, i) => i + 1);
+  const total = count.value;
+  const current = currentPage.value;
+  const window = 2 * siblingCount.value + 5;
+  if (total <= window) {
+    return Array.from({ length: total }, (_, i) => i + 1);
   }
-  const s = props.siblings;
+  const s = siblingCount.value;
   const leftEdge = 3 + 2 * s; // last page of the left-pinned window
   if (current <= leftEdge) {
-    return [...range(1, leftEdge), "gap", count];
+    return [...range(1, leftEdge), "gap", total];
   }
-  const rightEdge = count - (2 + 2 * s); // first page of the right-pinned window
+  const rightEdge = total - (2 + 2 * s); // first page of the right-pinned window
   if (current >= rightEdge) {
-    return [1, "gap", ...range(rightEdge, count)];
+    return [1, "gap", ...range(rightEdge, total)];
   }
-  return [1, "gap", ...range(current - s, current + s), "gap", count];
+  return [1, "gap", ...range(current - s, current + s), "gap", total];
 });
 
 function range(from: number, to: number): number[] {
@@ -52,10 +59,11 @@ function range(from: number, to: number): number[] {
 }
 
 function clamp(value: number): number {
-  return Math.min(Math.max(value, 1), Math.max(props.pageCount, 1));
+  return Math.min(Math.max(Number.isFinite(value) ? Math.trunc(value) : 1, 1), count.value);
 }
 
 function onFirst(value: number): void {
+  if (props.disabled || !Number.isFinite(value)) return;
   // Paginator rows = 1, so `first` is the 0-based page offset.
   const next = clamp(value + 1);
   if (next !== props.page) emit("update:page", next);
@@ -63,17 +71,18 @@ function onFirst(value: number): void {
 const changePageCallback = onFirst;
 
 /* Compact variant: editable draft committed on Enter / blur. */
-const draft = ref(String(props.page));
+const draft = ref(String(currentPage.value));
 watch(
-  () => props.page,
+  currentPage,
   (value) => {
     draft.value = String(value);
   }
 );
 
 function commit(changePage: (page: number) => void): void {
+  if (props.disabled) { draft.value = String(currentPage.value); return; }
   const parsed = Number.parseInt(draft.value, 10);
-  const next = clamp(Number.isNaN(parsed) ? props.page : parsed);
+  const next = clamp(Number.isNaN(parsed) ? currentPage.value : parsed);
   draft.value = String(next);
   if (next !== props.page) changePage(next - 1);
 }
@@ -92,7 +101,7 @@ function commit(changePage: (page: number) => void): void {
         <button
           type="button"
           class="wl-pager__btn wl-pager__nav"
-          :disabled="disabled || page <= 1"
+          :disabled="disabled || currentPage <= 1"
           aria-label="Первая страница"
           @click="changePageCallback(0)"
         >
@@ -102,9 +111,9 @@ function commit(changePage: (page: number) => void): void {
         <button
           type="button"
           class="wl-pager__btn wl-pager__nav"
-          :disabled="disabled || page <= 1"
+          :disabled="disabled || currentPage <= 1"
           aria-label="Предыдущая страница"
-          @click="changePageCallback(page - 2)"
+          @click="changePageCallback(currentPage - 2)"
         >
           <WlIcon name="chevron-left" :size="14" />
         </button>
@@ -114,9 +123,9 @@ function commit(changePage: (page: number) => void): void {
             v-else
             type="button"
             class="wl-pager__btn"
-            :class="{ 'is-active': item === page }"
+            :class="{ 'is-active': item === currentPage }"
             :disabled="disabled"
-            :aria-current="item === page ? 'page' : undefined"
+            :aria-current="item === currentPage ? 'page' : undefined"
             @click="changePageCallback(item - 1)"
           >
             {{ item }}
@@ -125,18 +134,18 @@ function commit(changePage: (page: number) => void): void {
         <button
           type="button"
           class="wl-pager__btn wl-pager__nav"
-          :disabled="disabled || page >= pageCount"
+          :disabled="disabled || currentPage >= count"
           aria-label="Следующая страница"
-          @click="changePageCallback(page)"
+          @click="changePageCallback(currentPage)"
         >
           <WlIcon name="chevron-right" :size="14" />
         </button>
         <button
           type="button"
           class="wl-pager__btn wl-pager__nav"
-          :disabled="disabled || page >= pageCount"
+          :disabled="disabled || currentPage >= count"
           aria-label="Последняя страница"
-          @click="changePageCallback(pageCount - 1)"
+          @click="changePageCallback(count - 1)"
         >
           <WlIcon name="chevron-right" :size="14" />
           <WlIcon name="chevron-right" :size="14" class="wl-pager__nav-overlap" />
@@ -147,9 +156,9 @@ function commit(changePage: (page: number) => void): void {
         <button
           type="button"
           class="wl-pager__btn wl-pager__nav"
-          :disabled="disabled || page <= 1"
+          :disabled="disabled || currentPage <= 1"
           aria-label="Предыдущая страница"
-          @click="changePageCallback(page - 2)"
+          @click="changePageCallback(currentPage - 2)"
         >
           <WlIcon name="chevron-left" :size="14" />
         </button>
@@ -162,13 +171,13 @@ function commit(changePage: (page: number) => void): void {
           @keydown.enter="commit(changePageCallback)"
           @blur="commit(changePageCallback)"
         />
-        <span class="wl-pager__total">из {{ pageCount }}</span>
+        <span class="wl-pager__total">из {{ count }}</span>
         <button
           type="button"
           class="wl-pager__btn wl-pager__nav"
-          :disabled="disabled || page >= pageCount"
+          :disabled="disabled || currentPage >= count"
           aria-label="Следующая страница"
-          @click="changePageCallback(page)"
+          @click="changePageCallback(currentPage)"
         >
           <WlIcon name="chevron-right" :size="14" />
         </button>

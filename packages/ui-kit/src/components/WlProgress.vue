@@ -1,15 +1,17 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
 import { computed } from "vue";
 import { useWlPt } from "../config";
 import type { WlProgressVariant } from "../types";
 
+defineSlots<{}>();
 const props = withDefaults(
   defineProps<{
     value?: number;
     variant?: WlProgressVariant;
     thin?: boolean;
     showValue?: boolean;
-    pt?: Record<string, unknown>;
+    pt?: WlPt<"progressbar">;
   }>(),
   {
     value: 0,
@@ -25,7 +27,7 @@ const rootClass = computed(() => [
   props.thin && "wl-progress--thin"
 ]);
 const section = useWlPt("progressbar", computed(() => props.pt));
-const percent = computed(() => Math.max(0, Math.min(100, props.value)));
+const percent = computed(() => Number.isFinite(props.value) ? Math.max(0, Math.min(100, props.value)) : 0);
 </script>
 
 <template>

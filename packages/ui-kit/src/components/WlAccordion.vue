@@ -1,13 +1,15 @@
-<script setup lang="ts">
-import { computed, ref } from "vue";
+<script setup lang="ts" generic="Item extends WlAccordionItem = WlAccordionItem">
+import { computed, shallowRef } from "vue";
 import WlIcon from "./WlIcon.vue";
-import type { WlAccordionItem } from "../types";
+import type { WlAccordionItem, WlAccordionSlots } from "../navigation-types";
+import type { WlNoModelModifiers } from "../model-types";
 
 const props = withDefaults(
   defineProps<{
-    items?: WlAccordionItem[];
+    items?: readonly Item[];
     single?: boolean;
-    openKeys?: string[];
+    openKeys?: readonly NoInfer<Item["key"]>[];
+    openKeysModifiers?: WlNoModelModifiers;
   }>(),
   {
     items: () => [],
@@ -17,15 +19,16 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-  (e: "update:openKeys", value: string[]): void;
+  (e: "update:openKeys", value: Item["key"][]): void;
 }>();
 
 /* Uncontrolled fallback when v-model:openKeys is not used. */
-const inner = ref<string[]>([]);
+defineSlots<WlAccordionSlots<Item>>();
+const inner = shallowRef<Item["key"][]>([]);
 const isControlled = computed(() => props.openKeys !== undefined);
 const openSet = computed(() => new Set(isControlled.value ? (props.openKeys ?? []) : inner.value));
 
-function toggle(item: WlAccordionItem): void {
+function toggle(item: Item): void {
   if (item.disabled) return;
   const next = openSet.value.has(item.key)
     ? [...openSet.value].filter((key) => key !== item.key)

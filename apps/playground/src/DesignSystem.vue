@@ -79,7 +79,7 @@ const stateOptions = [
   { label: "Данные", value: "ready" }, { label: "Загрузка", value: "loading" },
   { label: "Пусто", value: "empty" }, { label: "Ошибка", value: "error" }
 ];
-const columns: WlTableColumn[] = [{ key: "name", label: "Материал" }, { key: "status", label: "Состояние" }];
+const columns: WlTableColumn<{ name: string; status: string }>[] = [{ key: "name", label: "Материал" }, { key: "status", label: "Состояние" }];
 const rows = [{ name: "Правила типографики", status: "Готово" }, { name: "Каталог токенов", status: "Готово" }, { name: "Контракты компонентов", status: "Готово" }];
 const drawerVisible = ref(false);
 const motion = ref(true);

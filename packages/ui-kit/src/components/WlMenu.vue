@@ -1,18 +1,22 @@
-<script setup lang="ts">
-import { computed, ref } from "vue";
+<script setup lang="ts" generic="Item extends WlMenuItemBase = WlMenuItem">
+import type { WlPt } from "../pt-types";
+import { computed, mergeProps, ref, useAttrs } from "vue";
 import { useWlMotion, useWlPt } from "../config";
-import type { WlMenuItem } from "../types";
+import type { WlMenuItem, WlMenuItemBase, WlMenuExpose } from "../navigation-types";
 import { useAnchoredOverlay } from "../utils/anchoredOverlay";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import WlIcon from "./WlIcon.vue";
 
+defineOptions({ inheritAttrs: false });
+const attrs = useAttrs();
+
 const props = withDefaults(defineProps<{
-  items?: WlMenuItem[];
+  items?: readonly (Item & WlMenuItem<NoInfer<Item>>)[];
   popup?: boolean;
   ariaLabel?: string;
   ariaLabelledby?: string;
   motion?: boolean;
-  pt?: Record<string, unknown>;
+  pt?: WlPt<"menu">;
 }>(), { items: () => [], popup: false, motion: undefined });
 const emit = defineEmits<{ open: []; close: [] }>();
 const section = useWlPt("menu", computed(() => props.pt));
@@ -22,7 +26,7 @@ const { visible, panel, style, toggle, show, hide } = useAnchoredOverlay({
   onClose: () => emit("close")
 });
 const links = ref<HTMLElement[]>([]);
-function activate(item: WlMenuItem, event: MouseEvent): void {
+function activate(item: Item & WlMenuItem<NoInfer<Item>>, event: MouseEvent): void {
   event.preventDefault();
   if (item.disabled) return;
   item.command?.(item);
@@ -39,7 +43,7 @@ function onKeydown(event: KeyboardEvent): void {
     : (current + enabled.length - 1) % enabled.length;
   enabled[next]?.focus();
 }
-defineExpose({ toggle, show, hide });
+defineExpose({ toggle, show, hide } satisfies WlMenuExpose);
 </script>
 
 <template>
@@ -47,7 +51,7 @@ defineExpose({ toggle, show, hide });
     <Transition name="wl-pop-motion" :css="popup && motion"
       @before-leave="markOverlayLeaving" @before-enter="restoreOverlayEntering"
       @leave-cancelled="restoreOverlayEntering">
-    <div v-if="!popup || visible" ref="panel" v-bind="section('root')"
+    <div v-if="!popup || visible" ref="panel" v-bind="mergeProps(section('root'), attrs)"
       class="wl-menu" :style="popup ? style : undefined" data-wl="menu">
       <ul v-bind="section('list')" class="wl-menu__list" role="menu"
         :aria-label="ariaLabel" :aria-labelledby="ariaLabelledby" @keydown="onKeydown">

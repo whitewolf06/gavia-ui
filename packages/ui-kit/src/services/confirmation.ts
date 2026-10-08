@@ -13,7 +13,10 @@ export interface WlConfirmation {
 export interface WlConfirmationStore {
   current: Ref<WlConfirmation | null>;
   require: (entry: WlConfirmation) => void;
+  /** Close the active confirmation regardless of its group. */
   close: () => void;
+  /** Close only the matching group; undefined selects the default group. */
+  closeGroup: (group: string | undefined) => void;
 }
 const confirmationKey = Symbol("wl-confirmation");
 
@@ -23,7 +26,10 @@ export const WlConfirmationService = {
     app.provide<WlConfirmationStore>(confirmationKey, {
       current,
       require(entry) { current.value = entry; },
-      close() { current.value = null; }
+      close() { current.value = null; },
+      closeGroup(group) {
+        if (current.value?.group === group) current.value = null;
+      }
     });
   }
 };

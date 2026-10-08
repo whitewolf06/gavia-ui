@@ -1,13 +1,14 @@
+import type { WlPt } from "../pt-types";
 import { normalizeClass, normalizeStyle, type Directive, type DirectiveBinding } from "vue";
 import { resolveWlPt, wlConfigForDirective, type WlConfigOptions } from "../config";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 
-type TooltipValue = string | {
+export type WlTooltipValue = string | {
   value: string;
   showDelay?: number;
   hideDelay?: number;
   motion?: boolean;
-  pt?: Record<string, unknown>;
+  pt?: WlPt<"tooltip">;
 };
 interface TooltipState {
   node: HTMLSpanElement | null;
@@ -23,7 +24,7 @@ interface TooltipState {
   placement: "top" | "bottom" | "left" | "right";
   previousDescription: string | null;
   config: WlConfigOptions;
-  pt: Record<string, unknown> | undefined;
+  pt: WlPt<"tooltip"> | undefined;
   onEnter: () => void;
   onLeave: () => void;
   onKeydown: (event: KeyboardEvent) => void;
@@ -38,7 +39,8 @@ function applySection(element: HTMLElement, baseClass: string, attrs: Record<str
   if (typeof style === "string") element.style.cssText = style;
   else if (style) Object.assign(element.style, style);
   for (const [key, value] of Object.entries(attrs)) {
-    if (key === "class" || key === "style" || value == null) continue;
+    if (key === "class" || key === "style" || key === "key" || key === "ref"
+      || key === "ref_for" || key === "ref_key" || key.startsWith("on") || value == null) continue;
     if (["string", "number", "boolean"].includes(typeof value)) element.setAttribute(key, String(value));
   }
 }
@@ -71,7 +73,7 @@ function transitionDuration(element: HTMLElement): number {
   return Math.max(0, ...durations.map((duration, index) => duration + (delays[index % delays.length] ?? 0)));
 }
 
-function updateState(state: TooltipState, binding: DirectiveBinding<TooltipValue>): void {
+function updateState(state: TooltipState, binding: DirectiveBinding<WlTooltipValue>): void {
   const value = binding.value;
   state.text = typeof value === "string" ? value : value?.value ?? "";
   state.showDelay = typeof value === "string" ? 0 : value?.showDelay ?? 0;
@@ -101,7 +103,7 @@ function position(element: HTMLElement, state: TooltipState): void {
   state.node.style.top = `${Math.max(4, Math.min(y, window.innerHeight - tip.height - 4))}px`;
 }
 
-export const WlTooltip: Directive<HTMLElement, TooltipValue> = {
+export const WlTooltip: Directive<HTMLElement, WlTooltipValue> = {
   mounted(element, binding) {
     const state: TooltipState = {
       node: null, timer: null, exitTimer: null, enterFrame: null, onTransitionEnd: null,

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
+import type { WlNoModelModifiers } from "../model-types";
 import { computed, ref, useAttrs, watch } from "vue";
 import { mergeWlAttrs, useWlPt } from "../config";
 import { splitInputAttrs } from "../utils/inputAttrs";
@@ -6,21 +8,28 @@ import type { WlDensity, WlSizeSm } from "../types";
 
 defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<{
+  modelModifiers?: WlNoModelModifiers;
   minTime?: string;
   maxTime?: string;
   size?: WlSizeSm;
   density?: WlDensity;
   disabled?: boolean;
   invalid?: boolean;
-  pt?: Record<string, unknown>;
+  pt?: WlPt<"timepicker">;
 }>(), { size: "md", density: "default", disabled: false, invalid: false });
 /** A local wall-clock time, without a date, seconds or timezone. */
-const model = defineModel<string | null>({ default: null });
+const model = defineModel<string | null, never>({ default: null });
 const attrs = useAttrs();
 const attrGroups = computed(() => splitInputAttrs(attrs));
 const section = useWlPt("timepicker", computed(() => props.pt));
-const min = computed(() => props.minTime ?? (typeof attrGroups.value.inputAttrs.min === "string" ? attrGroups.value.inputAttrs.min : undefined));
-const max = computed(() => props.maxTime ?? (typeof attrGroups.value.inputAttrs.max === "string" ? attrGroups.value.inputAttrs.max : undefined));
+const min = computed(() => {
+  const value = props.minTime ?? attrGroups.value.inputAttrs.min;
+  return typeof value === "string" && isTime(value) ? value : undefined;
+});
+const max = computed(() => {
+  const value = props.maxTime ?? attrGroups.value.inputAttrs.max;
+  return typeof value === "string" && isTime(value) ? value : undefined;
+});
 const control = ref<HTMLInputElement | null>(null);
 const draft = ref("");
 function isTime(value: string): boolean { return /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value); }

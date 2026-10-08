@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
+import type { WlNoModelModifiers } from "../model-types";
 import { computed, useAttrs } from "vue";
 import { useWlPt } from "../config";
 import type { WlSwitchSize } from "../types";
@@ -9,10 +11,11 @@ defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(
   defineProps<{
+    modelModifiers?: WlNoModelModifiers;
     size?: WlSwitchSize;
     disabled?: boolean;
     invalid?: boolean;
-    pt?: Record<string, unknown>;
+    pt?: WlPt<"toggleswitch">;
   }>(),
   {
     size: "md",
@@ -21,7 +24,7 @@ const props = withDefaults(
   }
 );
 
-const model = defineModel<boolean>({ default: false });
+const model = defineModel<boolean, never>({ default: false });
 const attrs = useAttrs();
 
 const attrGroups = computed(() => splitInputAttrs(attrs));

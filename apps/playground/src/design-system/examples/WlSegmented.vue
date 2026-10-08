@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { WlSegmented } from "../../../../../packages/ui-kit/src";
 defineProps<{ preview?: Record<string, unknown> }>();
-const selected = ref<string | null>('list');
+const selected = ref<"list" | "grid" | "archive" | null>("list");
 </script>
 
 <template>

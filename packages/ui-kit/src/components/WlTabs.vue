@@ -1,20 +1,25 @@
-<script setup lang="ts">
-import { computed, ref, watchEffect } from "vue";
+<script setup lang="ts" generic="Item extends WlTabItem = WlTabItem">
+import type { WlNoModelModifiers } from "../model-types";
+import type { WlPt } from "../pt-types";
+import { computed, ref, watchEffect, type PropType } from "vue";
 import { useWlPt } from "../config";
 import WlIcon from "./WlIcon.vue";
 import type { WlTabItem } from "../types";
 
 const props = withDefaults(
   defineProps<{
-    items?: WlTabItem[];
-    pt?: Record<string, unknown>;
+    modelModifiers?: WlNoModelModifiers;
+    items?: readonly Item[];
+    pt?: WlPt<"tablist">;
   }>(),
   {
     items: () => []
   }
 );
 
-const model = defineModel<string>({ default: "" });
+const model = defineModel<NoInfer<Item["key"]> | "", never>({ type: String as PropType<Item["key"] | "">, default: "" });
+
+defineSlots<{ panel?(props: { item: Item }): unknown }>();
 
 watchEffect(() => {
   if (!model.value && props.items.length > 0) {
@@ -23,7 +28,7 @@ watchEffect(() => {
 });
 
 function onUpdate(value: string | number): void {
-  model.value = String(value);
+  model.value = String(value) as Item["key"];
 }
 
 const section = useWlPt("tablist", computed(() => props.pt));

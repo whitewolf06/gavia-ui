@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { wlManifest } from "../src/manifest";
+import * as publicComponents from "../src/components";
+import { parseComponentExports } from "./component-export-parser";
 import baseline from "./fixtures/public-contract-0.3.json";
 import oldIcons from "./fixtures/icons-0.3.json";
 import { WL_ICONS } from "../src/icons.generated";
@@ -9,6 +11,24 @@ const componentSources = import.meta.glob<string>("../src/components/*.vue", {
   query: "?raw",
   import: "default"
 });
+
+const componentValues = import.meta.glob<unknown>("../src/components/*.vue", {
+  eager: true,
+  import: "default"
+});
+const facadeSources = import.meta.glob<string>("../src/components/*-contracts.ts", {
+  eager: true,
+  query: "?raw",
+  import: "default"
+});
+
+// Only these explicitly reviewed generic descriptions may refine the frozen 0.3 model metadata.
+const genericModelRefinements: Readonly<Record<string, { previous: string; current: string }>> = {
+  WlSelect: { previous: "unknown", current: "TValue | null" },
+  WlMultiSelect: { previous: "unknown[]", current: "TValue[]" },
+  WlAutocomplete: { previous: "unknown", current: "TOption | string | null / TOption[] | null" },
+  WlRadio: { previous: "unknown", current: "TValue | undefined" }
+};
 
 const componentsIndex = import.meta.glob<string>("../src/components/index.ts", {
   eager: true,
@@ -31,7 +51,7 @@ describe("component public contract", () => {
     }
   });
 
-  it("preserves the 0.3 public contract of all 51 components", () => {
+  it("preserves legacy 0.3 metadata with the exact reviewed generic model refinements", () => {
     const current = JSON.parse(JSON.stringify(wlManifest, (key, value) =>
       key === "description" ? undefined : value
     )) as typeof baseline;
@@ -59,7 +79,18 @@ describe("component public contract", () => {
       );
       expect(slots, `${entry.name}: original slot removed`).not.toContain(undefined);
       expect(emits, `${entry.name}: original event removed`).not.toContain(undefined);
-      expect({ ...entry, props, slots, emits }).toEqual(original);
+      let model = entry.model;
+      const refinement = genericModelRefinements[original.name];
+      if (refinement) {
+        expect(original.model?.type, `${entry.name}: frozen model baseline changed`).toBe(refinement.previous);
+        expect(model, `${entry.name}: reviewed generic model refinement changed`).toEqual({
+          name: original.model!.name, type: refinement.current
+        });
+        expect(componentSources[`../src/components/${entry.name}.vue`], `${entry.name}: generic implementation missing`)
+          .toMatch(/<script[^>]*\bgeneric=/);
+        model = { ...model!, type: refinement.previous };
+      }
+      expect({ ...entry, props, slots, emits, ...(model ? { model } : {}) }).toEqual(original);
     }
   });
 
@@ -86,13 +117,35 @@ describe("component public contract", () => {
 
   it("keeps source files, public exports and manifest entries in exact sync", () => {
     const sourceNames = Object.keys(componentSources).map(componentName).sort();
-    const exportedNames = [...componentsIndex.matchAll(/export \{ default as (Wl\w+) \}/g)]
-      .map((match) => match[1]!)
-      .sort();
+    const facades = Object.fromEntries(Object.entries(facadeSources).map(([file, source]) => [
+      `./${file.match(/\/([^/]+)\.ts$/)![1]}`, source
+    ]));
+    const exports = parseComponentExports(componentsIndex, facades);
+    const exportedNames = exports.map((entry) => entry.name).sort();
+    const values: Record<string, unknown> = publicComponents;
+    for (const entry of exports) {
+      expect(entry.file, `${entry.name}: export refers to a different component`).toBe(`./${entry.name}.vue`);
+      const raw = componentValues[`../src/components/${entry.name}.vue`];
+      expect(raw, `${entry.name}: resolved SFC source missing`).toBeDefined();
+      expect(values[entry.name], `${entry.name}: public facade changed runtime identity`).toBe(raw);
+    }
     const manifestNames = wlManifest.map((entry) => entry.name).sort();
 
     expect(exportedNames).toEqual(sourceNames);
     expect(manifestNames).toEqual(sourceNames);
+  });
+
+  it("rejects facade aliases to another component and rendering wrappers", () => {
+    const barrel = 'export { WlButton } from "./contracts";';
+    const wrongImport = 'import RawButton from "./WlInput.vue"; export const WlButton = RawButton as Contract;';
+    expect(() => parseComponentExports(barrel, { "./contracts": wrongImport }))
+      .toThrow("export refers to a different component");
+    const wrapper = 'import RawButton from "./WlButton.vue"; export const WlButton = wrap(RawButton) as Contract;';
+    expect(() => parseComponentExports(barrel, { "./contracts": wrapper })).toThrow("preserve its imported SFC identity");
+    expect(() => parseComponentExports(barrel, { "./contracts": 'export const WlButton = RawButton as Contract;' }))
+      .toThrow("default SFC import");
+    expect(() => parseComponentExports(`${barrel}\n${barrel}`, { "./contracts": 'import RawButton from "./WlButton.vue"; export const WlButton = RawButton as Contract;' }))
+      .toThrow("duplicate component export");
   });
 
   it("keeps data-wl values unique and namespaced", () => {

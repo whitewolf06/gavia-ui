@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "public-api-contracts-0.11",
+  "baseline": {
+    "version": "0.9.1",
+    "contractSha256": "704533c3168219ad8931cd6147c397c2fa4ba50b7c6398689b790b87bdc2dbc6",
+    "inventorySha256": "950f6a683f0bb108f54d6413612d1cac4c2b6a0d44df261ea810cc97b106d38b",
+    "consumerSha256": "7cf3efbfd10dceee0465e77fb89a6f83fac69bd4214f5f7f14e5f4c1078a5878"
+  },
+  "targetMinor": "0.11",
+  "prepareVersion": "0.10.0",
+  "changeset": ".changeset/public-api-contracts.md",
+  "migrationNote": "docs/migration-0.11.0.md",
+  "approvedChanges": [
+    "autocomplete-multiple-model",
+    "sidebar-select-readonly-items",
+    "command-select-readonly-items-and-keywords",
+    "pt-extension-return-unknown",
+    "datepicker-range-mode-required"
+  ],
+  "consumer": {
+    "from": "const selected = ref<unknown>(null);",
+    "to": "const selected = ref<number | null>(null);",
+    "migratedSha256": "e0a130adf7dba8ffafb4b41ef53a7fcc28f26312c8fc5fd8cba59a63b9f8ae06"
+  }
+}

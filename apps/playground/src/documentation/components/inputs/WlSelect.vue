@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { WlButton, WlField, WlSelect } from "../../../../../../packages/ui-kit/src";
-const area = ref<unknown>("team");
+const area = ref<string | null>("team");
 const options = [{ id: "personal", label: "Личное пространство" }, { id: "team", label: "Команда" }, { id: "public", label: "Открытые материалы" }];
 </script>
 

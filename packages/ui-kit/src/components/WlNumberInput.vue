@@ -2,12 +2,14 @@
 import { computed, ref, useAttrs, watch } from "vue";
 import WlIcon from "./WlIcon.vue";
 import type { WlDensity, WlSizeSm } from "../types";
+import type { WlNoModelModifiers } from "../model-types";
 import { splitInputAttrs } from "../utils/inputAttrs";
 
 defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(
   defineProps<{
+    modelModifiers?: WlNoModelModifiers;
     min?: number;
     max?: number;
     step?: number;
@@ -32,7 +34,7 @@ const props = withDefaults(
   }
 );
 
-const model = defineModel<number>({ default: 0 });
+const model = defineModel<number, never>({ default: 0 });
 const attrs = useAttrs();
 
 const attrGroups = computed(() => splitInputAttrs(attrs));
@@ -50,11 +52,20 @@ watch(model, (value) => {
   draft.value = String(value);
 });
 
+// Unbounded limits remain supported; NaN and reversed bounds cannot leak into updates.
+const minimum = computed(() => Number.isFinite(props.min) || props.min === -Infinity ? props.min : 0);
+const maximum = computed(() => Math.max(minimum.value,
+  Number.isFinite(props.max) || props.max === Infinity ? props.max : 99));
+const increment = computed(() => Number.isFinite(props.step) && props.step > 0 ? props.step : 1);
+
 function clamp(value: number): number {
-  return Math.min(Math.max(value, props.min), props.max);
+  const finite = Number.isFinite(value) ? value
+    : value === Infinity ? Number.MAX_VALUE : value === -Infinity ? -Number.MAX_VALUE : 0;
+  return Math.min(Math.max(finite, minimum.value), maximum.value);
 }
 
 function commit(next: number): void {
+  if (props.disabled) { draft.value = String(model.value); return; }
   const value = clamp(next);
   draft.value = String(value);
   if (value !== model.value) model.value = value;
@@ -62,7 +73,8 @@ function commit(next: number): void {
 
 function bump(direction: 1 | -1): void {
   if (props.disabled) return;
-  commit((model.value ?? 0) + direction * props.step);
+  const value = Number.isFinite(model.value) ? model.value : clamp(model.value);
+  commit(value + direction * increment.value);
 }
 
 function commitDraft(): void {
@@ -115,8 +127,8 @@ function onKeydown(event: KeyboardEvent): void {
       :disabled="disabled"
       :aria-label="ariaLabel"
       :aria-invalid="invalid || undefined"
-      :aria-valuemin="Number.isFinite(min) ? min : undefined"
-      :aria-valuemax="Number.isFinite(max) ? max : undefined"
+      :aria-valuemin="Number.isFinite(minimum) ? minimum : undefined"
+      :aria-valuemax="Number.isFinite(maximum) ? maximum : undefined"
       :aria-valuenow="model"
       @blur="commitDraft"
       @keydown.enter="commitDraft"

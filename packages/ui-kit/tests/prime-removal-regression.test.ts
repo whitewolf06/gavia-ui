@@ -75,7 +75,7 @@ describe("PrimeVue-free public behavior", () => {
   });
 
   it("selects an option using keyboard and keeps the model shape", async () => {
-    const wrapper = mount(WlSelect, {
+    const wrapper = mount(WlSelect<{ label: string; value: string }, "value">, {
       attachTo: document.body,
       props: {
         options: [{ label: "One", value: "one" }, { label: "Two", value: "two" }],

@@ -6,6 +6,42 @@
 
 ## Не выпущено
 
+## 0.11.0 — подготовлено
+
+### Типизация публичного API
+
+- Select/MultiSelect связывают options, optionValue, модель и update-событие generics; any в резолверах убран, readonly-списки поддерживаются.
+- Autocomplete различает свободный single-ввод и массив подсказок; исправлены потеря текста при option-label с ключом и неочищенное поле после внешнего сброса null/undefined.
+- Table выводит Row из value и проверяет обычные колонки по ключам строки; виртуальные колонки требуют kind: "virtual". Cell-слоты сохраняют тип поля.
+- pt получает подсказки секций и контекстов; WlPtStrict / WlPtConfigStrict выявляют опечатки через satisfies без закрытия динамических настроек.
+- Radio/Segmented/Tabs связывают модель с доменом; Sidebar/CommandPalette сохраняют тип item/data в событиях и слотах. Добавлены Expose-типы методов ref и WlTooltipValue.
+- Публичные generic-экспорты требуют фактический resolver/mode prop при явно заданном non-default generic, включая DatePicker range.
+- Menu/Accordion связывают callbacks, ключи и slots с полным item; Sidebar/CommandPalette сохраняют дополнительные поля групп. Коллекции описаний принимают readonly.
+- DOM-атрибуты/events типизированы без новых runtime props; Field scoped-slot и ref-методы Menu/Popover/FilePicker/FilterBar получили публичные контракты.
+- Модели описывают модификаторы: trim только у текстовых полей и query CommandPalette. Locale нормализуется безопасно; известные ключи больше не unknown.
+- Confirm/Toast получили scoped group helpers; attrs Teleport-компонентов передаются на DOM. FilterBar использует SSR id.
+- Исправлены single FileUpload, сохранение выбора при отклонённой замене, обход disabled и NaN/Infinity в числовых UI.
+- Положительные и отрицательные API fixtures проверены в исходниках и устанавливаемом архиве на Vue 3.4 / TypeScript 5.4 и Vue 3.5; локальные результаты и границы проверок — в [документации качества](docs/quality.md).
+
+### Breaking changes — подготовлено для 0.11.0
+
+- Unknown-модели и callback label без обработки свободного текста требуют явного типа данных. Коллекции навигационных описаний readonly; generic SFC могут потребовать замены InstanceType на Expose-контракт.
+- Явный generic range DatePicker требует фактический selectionMode="range"; остальные модели и обработчики сохраняются.
+- Виртуальные колонки помечаются явно; Menu/Accordion/Sidebar ключи и callbacks проверяются по данным. Для новых деклараций требуется TypeScript 5.4+.
+- Исторический fixture 0.9.1 сохраняется неизменным. Для 0.11 оформлен точечный контракт согласованной миграции; новые потери API продолжают блокировать gate. Minor Changeset применён: версии корня и пакета 0.11.0. Публикация этой ветки не выполнялась. [Миграция 0.11](docs/migration-0.11.0.md).
+
+### Changesets
+
+Уточнить публичные TypeScript-контракты всех компонентов: связанные модели выбора,
+ключи таблицы, payload/slots, нативные attrs/events, pt и exposed refs. Добавить
+безопасную нормализацию входных значений и проверки отключённых контролов.
+
+Breaking changes: TypeScript 5.4+, доменные модели вместо unknown, обработка
+свободной строки Autocomplete, явные virtual columns, readonly коллекции
+навигационных описаний, явный selectionMode для range DatePicker и проверка
+поддерживаемых v-model modifiers. Руководство
+перехода: [миграция 0.11](docs/migration-0.11.0.md).
+
 ## 0.10.0 — 2026-10-08
 
 ### Темы

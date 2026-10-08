@@ -138,7 +138,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
     category: "inputs",
     description: "Выпадающий список с клавиатурной навигацией.",
     props: [
-      { name: "options", type: "array", default: [], description: "Опции (произвольные значения)." },
+      { name: "options", type: "array", default: [], description: "Readonly-список TOption; тип модели определяется optionValue." },
       {
         name: "optionLabel",
         type: "union",
@@ -147,7 +147,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       {
         name: "optionValue",
         type: "union",
-        description: "Имя поля-значения или функция (option) => unknown."
+        description: "Ключ TOption или функция (option: TOption) => TValue; определяет тип модели."
       },
       { name: "placeholder", type: "string", description: "Плейсхолдер." },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
@@ -159,7 +159,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
     ],
     slots: [],
     emits: [],
-    model: { name: "modelValue", type: "unknown", description: "Выбранное значение (без default)." }
+    model: { name: "modelValue", type: "TValue | null", description: "Выбранное значение по optionValue; без резолвера — TOption. Без default; можно не передавать модель." }
   },
   {
     name: "WlMultiSelect",
@@ -167,7 +167,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
     description:
       "Мультивыбор: выбранные значения чипами или comma-строкой, фильтр в оверлее.",
     props: [
-      { name: "options", type: "array", default: [], description: "Опции (произвольные значения)." },
+      { name: "options", type: "array", default: [], description: "Readonly-список TOption; тип выбранных значений определяется optionValue." },
       {
         name: "optionLabel",
         type: "union",
@@ -176,7 +176,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       {
         name: "optionValue",
         type: "union",
-        description: "Имя поля-значения или функция (option) => unknown."
+        description: "Ключ TOption или функция (option: TOption) => TValue; определяет тип массива модели."
       },
       { name: "placeholder", type: "string", description: "Плейсхолдер." },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
@@ -201,7 +201,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
     ],
     slots: [],
     emits: [],
-    model: { name: "modelValue", type: "unknown[]", description: "Выбранные значения (default [])." }
+    model: { name: "modelValue", type: "TValue[]", description: "Массив значений по optionValue; без резолвера — TOption[]. Default []." }
   },
   {
     name: "WlAutocomplete",
@@ -209,7 +209,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
     description:
       "Поле с подсказками; список suggestions обновляется по событию complete.",
     props: [
-      { name: "suggestions", type: "array", default: [], description: "Текущий список подсказок." },
+      { name: "suggestions", type: "array", default: [], description: "Readonly-список TOption; определяет тип выбранных подсказок." },
       {
         name: "optionLabel",
         type: "union",
@@ -247,8 +247,8 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
     ],
     model: {
       name: "modelValue",
-      type: "unknown",
-      description: "Значение (в multiple — массив), без default."
+      type: "TOption | string | null / TOption[] | null",
+      description: "Single: подсказка или свободный текст; multiple: массив подсказок. Без default."
     }
   },
   {
@@ -278,7 +278,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
     ],
     slots: [{ name: "default", description: "Подпись рядом с радиокнопкой." }],
     emits: [],
-    model: { name: "modelValue", type: "unknown", description: "Выбранное value (без default)." }
+    model: { name: "modelValue", type: "TValue | undefined", description: "Модель группы задаёт тип value; nullable-модель задаётся потребителем. Без default." }
   },
   {
     name: "WlSwitch",

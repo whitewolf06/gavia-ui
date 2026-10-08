@@ -25,7 +25,7 @@ const rows: WlTableRow[] = [
 
 describe("WlTable", () => {
   it("renders headers and rows from the columns prop", () => {
-    const wrapper = mount(WlTable, { global, props: { value: rows, columns } });
+    const wrapper = mount(WlTable<WlTableRow>, { global, props: { value: rows, columns } });
     expect(wrapper.find('[data-wl="table"]').exists()).toBe(true);
 
     const headers = wrapper.findAll("th");
@@ -39,7 +39,7 @@ describe("WlTable", () => {
   });
 
   it("marks numeric columns on both th and td", () => {
-    const wrapper = mount(WlTable, { global, props: { value: rows, columns } });
+    const wrapper = mount(WlTable<WlTableRow>, { global, props: { value: rows, columns } });
     const numericCells = wrapper.findAll(".wl-table__cell--num");
     // 1 header + 3 body cells
     expect(numericCells).toHaveLength(4);
@@ -48,7 +48,7 @@ describe("WlTable", () => {
   });
 
   it("renders a scoped cell slot override with row and value", () => {
-    const wrapper = mount(WlTable, {
+    const wrapper = mount(WlTable<WlTableRow>, {
       global,
       props: { value: rows, columns },
       slots: {
@@ -61,14 +61,14 @@ describe("WlTable", () => {
   });
 
   it("shows the empty message when there are no rows", () => {
-    const wrapper = mount(WlTable, { global, props: { value: [], columns } });
+    const wrapper = mount(WlTable<WlTableRow>, { global, props: { value: [], columns } });
     const empty = wrapper.find(".wl-table__empty-cell");
     expect(empty.exists()).toBe(true);
     expect(empty.text()).toBe("Нет данных");
   });
 
   it("honors a custom emptyMessage", () => {
-    const wrapper = mount(WlTable, {
+    const wrapper = mount(WlTable<WlTableRow>, {
       global,
       props: { value: [], columns, emptyMessage: "Задач пока нет" }
     });
@@ -76,7 +76,7 @@ describe("WlTable", () => {
   });
 
   it("shows the loading mask", () => {
-    const wrapper = mount(WlTable, { global, props: { value: rows, columns, loading: true } });
+    const wrapper = mount(WlTable<WlTableRow>, { global, props: { value: rows, columns, loading: true } });
     expect(wrapper.find(".wl-table__mask").exists()).toBe(true);
   });
 });

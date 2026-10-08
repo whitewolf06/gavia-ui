@@ -3,8 +3,7 @@ import { computed, ref } from "vue";
 import {
   WlAutocomplete, WlButton, WlCommandPalette, WlConfirmDialog, WlDatePicker, WlDialog, WlDrawer,
   WlMenu, WlMultiSelect, WlPopover, WlSelect, WlTable, WlToast,
-  useWlConfirm, useWlToast
-} from "../../../packages/ui-kit/src";
+  useWlConfirm, useWlToast, type WlMenuExpose, type WlPopoverExpose } from "../../../packages/ui-kit/src";
 
 const choices = [{ label: "Альфа", value: "a" }, { label: "Бета", value: "b" }];
 const select = ref<string | null>(null);
@@ -20,8 +19,8 @@ const dialog = ref(false);
 const dialogMotion = ref<boolean | undefined>();
 const drawer = ref(false);
 const palette = ref(false);
-const menu = ref<InstanceType<typeof WlMenu> | null>(null);
-const popover = ref<InstanceType<typeof WlPopover> | null>(null);
+const menu = ref<WlMenuExpose | null>(null);
+const popover = ref<WlPopoverExpose | null>(null);
 const status = ref("Ожидание");
 const toast = useWlToast();
 const { confirmDanger } = useWlConfirm();

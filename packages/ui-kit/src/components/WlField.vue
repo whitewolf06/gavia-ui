@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { WlFieldSlotProps } from "../field-types";
 import { useWlId } from "../utils/useWlId";
 import { computed } from "vue";
 import WlIcon from "./WlIcon.vue";
@@ -15,6 +16,8 @@ const props = withDefaults(
     required: false
   }
 );
+
+defineSlots<{ default?(props: WlFieldSlotProps): unknown }>();
 
 const uid = useWlId();
 const controlId = computed(() => props.id ?? `wl-field-${uid}`);

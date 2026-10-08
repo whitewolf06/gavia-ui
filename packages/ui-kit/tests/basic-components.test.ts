@@ -170,7 +170,7 @@ describe("basic component behavior", () => {
       { label: "Alpha", value: "a" },
       { label: "Beta", value: "b" }
     ];
-    const wrapper = mount(WlSelect, {
+    const wrapper = mount(WlSelect<{ label: string; value: string }, "value">, {
       global,
       attachTo: document.body,
       props: { options, modelValue: null, optionLabel: "label", optionValue: "value" }

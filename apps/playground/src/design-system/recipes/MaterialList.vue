@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from "vue";
-import { WlPageHeader, WlButton, WlFilterBar, WlInput, WlSelect, WlTag, WlTable, WlPill, WlPagination, WlEmpty, WlDrawer, WlField, useWlConfirm, useWlToast } from "../../../../../packages/ui-kit/src";
+import { WlPageHeader, WlButton, WlFilterBar, WlInput, WlSelect, WlTag, WlTable, WlPill, WlPagination, WlEmpty, WlDrawer, WlField, useWlConfirm, useWlToast, type WlTableColumn } from "../../../../../packages/ui-kit/src";
 type Material = { id: number; title: string; status: string };
 const materials = ref<Material[]>(Array.from({ length: 12 }, (_, index) => ({
   id: index + 1, title: ["Руководство команды", "План исследования", "Правила ревью", "Доступы и роли"][index % 4] + (index < 4 ? "" : ` · ${index + 1}`),
@@ -19,7 +19,7 @@ const pageCount = computed(() => Math.max(1, Math.ceil(filtered.value.length / 4
 const visibleRows = computed(() => filtered.value.slice((page.value - 1) * 4, page.value * 4));
 watch([search, status, order], () => { page.value = 1; });
 watch(pageCount, (count) => { page.value = Math.min(page.value, count); });
-const columns = [{ key: "title", label: "Материал" }, { key: "status", label: "Статус" }, { key: "actions", label: "Действия" }];
+const columns: readonly WlTableColumn<Material>[] = [{ key: "title", label: "Материал" }, { key: "status", label: "Статус" }, { key: "actions", label: "Действия", kind: "virtual" }];
 function clear(): void { search.value = ""; status.value = null; }
 const editing = ref(false);
 const editingId = ref<number | null>(null);

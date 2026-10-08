@@ -3,9 +3,9 @@ import { mount } from "@vue/test-utils";
 import { WlAutocomplete, WlMultiSelect, WlSelect } from "../src";
 
 const components = [
-  { name: "Select", component: WlSelect, props: { options: ["One", "Two"] } },
-  { name: "MultiSelect", component: WlMultiSelect, props: { options: ["One", "Two"] } },
-  { name: "Autocomplete", component: WlAutocomplete, props: { suggestions: ["One", "Two"] } }
+  { name: "Select", component: WlSelect<string>, props: { options: ["One", "Two"] } },
+  { name: "MultiSelect", component: WlMultiSelect<string>, props: { options: ["One", "Two"] } },
+  { name: "Autocomplete", component: WlAutocomplete<string, false>, props: { suggestions: ["One", "Two"] } }
 ] as const;
 
 describe.each(components)("$name accessible listbox", ({ component, props }) => {

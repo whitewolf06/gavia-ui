@@ -29,7 +29,7 @@ const sharedAttrs = {
 describe("form control native attribute routing", () => {
   it("routes Select attributes and handlers to the focusable combobox", async () => {
     const onFocus = vi.fn();
-    const wrapper = mount(WlSelect, {
+    const wrapper = mount(WlSelect<string>, {
       global,
       attrs: { ...sharedAttrs, onFocus },
       props: { options: ["One"], modelValue: null }
@@ -47,12 +47,12 @@ describe("form control native attribute routing", () => {
   });
 
   it("routes MultiSelect, Autocomplete and DatePicker attrs to their inputs", () => {
-    const multi = mount(WlMultiSelect, {
+    const multi = mount(WlMultiSelect<string>, {
       global,
       attrs: sharedAttrs,
       props: { options: ["One"], modelValue: [] }
     });
-    const autocomplete = mount(WlAutocomplete, {
+    const autocomplete = mount(WlAutocomplete<string, false>, {
       global,
       attrs: sharedAttrs,
       props: { suggestions: [], modelValue: "" }

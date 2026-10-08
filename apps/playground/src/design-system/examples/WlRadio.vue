@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { WlRadio } from "../../../../../packages/ui-kit/src";
 defineProps<{ preview?: Record<string, unknown> }>();
-const value = ref<unknown>('team');
+const value = ref<string>('team');
 </script>
 
 <template>

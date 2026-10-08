@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
 import { computed } from "vue";
 import { useWlPt } from "../config";
 import type { WlBadgeVariant } from "../types";
@@ -8,7 +9,7 @@ const props = withDefaults(
     value?: string | number;
     variant?: WlBadgeVariant;
     dot?: boolean;
-    pt?: Record<string, unknown>;
+    pt?: WlPt<"badge">;
   }>(),
   {
     variant: "accent",

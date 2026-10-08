@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { WlDivider } from "../../../../../packages/ui-kit/src";
-defineProps<{ preview?: Record<string, unknown> }>();
+type PreviewProps = Partial<InstanceType<typeof WlDivider>["$props"]>;
+defineProps<{ preview?: PreviewProps }>();
 
 </script>
 

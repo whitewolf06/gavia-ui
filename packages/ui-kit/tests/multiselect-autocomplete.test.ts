@@ -36,7 +36,7 @@ describe("WlMultiSelect", () => {
   ];
 
   it("renders root with kit classes and data attributes", () => {
-    const wrapper = mount(WlMultiSelect, { global, props: { options, modelValue: [] } });
+    const wrapper = mount(WlMultiSelect<(typeof options)[number]>, { global, props: { options, modelValue: [] } });
     const root = wrapper.find('[data-wl="multiselect"]');
     expect(root.exists()).toBe(true);
     expect(root.classes()).toContain("wl-multiselect");
@@ -45,7 +45,7 @@ describe("WlMultiSelect", () => {
   });
 
   it("shows placeholder when nothing is selected", () => {
-    const wrapper = mount(WlMultiSelect, {
+    const wrapper = mount(WlMultiSelect<(typeof options)[number]>, {
       global,
       props: { options, modelValue: [], placeholder: "Города" }
     });
@@ -53,7 +53,7 @@ describe("WlMultiSelect", () => {
   });
 
   it("marks size, invalid and disabled states", () => {
-    const wrapper = mount(WlMultiSelect, {
+    const wrapper = mount(WlMultiSelect<(typeof options)[number]>, {
       global,
       props: { options, modelValue: [], size: "sm", invalid: true, disabled: true }
     });
@@ -64,7 +64,7 @@ describe("WlMultiSelect", () => {
   });
 
   it("renders selected values as chips when display=chip", () => {
-    const wrapper = mount(WlMultiSelect, {
+    const wrapper = mount(WlMultiSelect<(typeof options)[number], "value">, {
       global,
       props: {
         options,
@@ -81,7 +81,7 @@ describe("WlMultiSelect", () => {
   });
 
   it("opens the overlay and emits update:modelValue on option click", async () => {
-    const wrapper = mount(WlMultiSelect, {
+    const wrapper = mount(WlMultiSelect<(typeof options)[number], "value">, {
       global,
       attachTo: document.body,
       props: { options, modelValue: [], optionLabel: "label", optionValue: "value" }
@@ -101,7 +101,7 @@ describe("WlMultiSelect", () => {
 
 describe("WlAutocomplete", () => {
   it("renders input with wl-input classes and data attributes", () => {
-    const wrapper = mount(WlAutocomplete, {
+    const wrapper = mount(WlAutocomplete<string, false>, {
       global,
       props: { suggestions: [], modelValue: "", placeholder: "Город" }
     });
@@ -115,7 +115,7 @@ describe("WlAutocomplete", () => {
   });
 
   it("marks invalid state on the input", () => {
-    const wrapper = mount(WlAutocomplete, {
+    const wrapper = mount(WlAutocomplete<string, false>, {
       global,
       props: { suggestions: [], modelValue: "", invalid: true }
     });
@@ -126,7 +126,7 @@ describe("WlAutocomplete", () => {
   it("emits typed complete event on search", async () => {
     vi.useFakeTimers();
     try {
-      const wrapper = mount(WlAutocomplete, {
+      const wrapper = mount(WlAutocomplete<string, false>, {
         global,
         props: { suggestions: [], modelValue: "" }
       });
@@ -141,7 +141,7 @@ describe("WlAutocomplete", () => {
   });
 
   it("renders dropdown button when dropdown is on", () => {
-    const wrapper = mount(WlAutocomplete, {
+    const wrapper = mount(WlAutocomplete<string, false>, {
       global,
       props: { suggestions: [], modelValue: "", dropdown: true }
     });
@@ -151,7 +151,7 @@ describe("WlAutocomplete", () => {
   });
 
   it("merges a custom dropdown label with consumer pt options", () => {
-    const wrapper = mount(WlAutocomplete, {
+    const wrapper = mount(WlAutocomplete<string, false>, {
       global,
       props: {
         suggestions: [],
@@ -250,7 +250,7 @@ describe("WlConfirmDialog + useWlConfirm", () => {
 
 describe("dropdown SVG contracts", () => {
   it.each([false, true])("preserves MultiSelect icon pt and selection when disabled=%s", async (disabled) => {
-    const wrapper = mount(WlMultiSelect, {
+    const wrapper = mount(WlMultiSelect<string>, {
       attachTo: document.body,
       global: { plugins: [[WlConfig, { pt: createWlPt({
         multiselect: { dropdownIcon: { class: "app-arrow", "data-app": "kept", "data-source": "app" } }
@@ -292,7 +292,7 @@ describe("dropdown SVG contracts", () => {
   });
 
   it.each([false, true])("preserves Autocomplete dropdown pt, keyboard and disabled behavior with multiple=%s", async (multiple) => {
-    const wrapper = mount(WlAutocomplete, {
+    const wrapper = mount(WlAutocomplete<string, boolean>, {
       attachTo: document.body,
       global: { plugins: [[WlConfig, { pt: createWlPt({
         autocomplete: { dropdownIcon: { class: "app-arrow", "data-app": "kept", "data-source": "app" } }

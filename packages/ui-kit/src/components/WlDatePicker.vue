@@ -1,4 +1,6 @@
 <script setup lang="ts" generic="Mode extends WlDatePickerSelectionMode = 'single'">
+import type { WlPt } from "../pt-types";
+import type { WlNoModelModifiers } from "../model-types";
 import { useWlId } from "../utils/useWlId";
 import { computed, nextTick, ref, useAttrs, watch } from "vue";
 import Teleport from "../utils/templateTeleport.vue";
@@ -12,6 +14,7 @@ import WlIcon from "./WlIcon.vue";
 
 defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<{
+  modelModifiers?: WlNoModelModifiers;
   placeholder?: string;
   size?: WlSizeSm;
   disabled?: boolean;
@@ -24,13 +27,13 @@ const props = withDefaults(defineProps<{
   startLabel?: string;
   endLabel?: string;
   motion?: boolean;
-  pt?: Record<string, unknown>;
+  pt?: WlPt<"datepicker">;
 }>(), {
   placeholder: "дд.мм.гггг", size: "md", disabled: false, invalid: false, showIcon: false,
   selectionMode: () => "single" as Mode, startLabel: "От", endLabel: "До",
   motion: undefined, displayFormat: "dd.mm.yyyy"
 });
-const model = defineModel<WlDatePickerModel<NoInfer<Mode>>>({ default: null });
+const model = defineModel<WlDatePickerModel<NoInfer<Mode>>, never>({ default: null });
 const attrs = useAttrs();
 const attrGroups = computed(() => splitInputAttrs(attrs));
 const locale = useWlLocale();

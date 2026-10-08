@@ -1,15 +1,18 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
+import type { WlTextModelModifiers } from "../model-types";
 import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { useWlPt } from "../config";
 
 const props = withDefaults(
   defineProps<{
+    modelModifiers?: WlTextModelModifiers;
     invalid?: boolean;
     disabled?: boolean;
     rows?: number;
     autoResize?: boolean;
     placeholder?: string;
-    pt?: Record<string, unknown>;
+    pt?: WlPt<"textarea">;
   }>(),
   {
     invalid: false,
@@ -19,7 +22,7 @@ const props = withDefaults(
   }
 );
 
-const model = defineModel<string>({ default: "" });
+const model = defineModel<string, "trim">({ default: "" });
 const control = ref<HTMLTextAreaElement | null>(null);
 const section = useWlPt("textarea", computed(() => props.pt));
 async function resize(): Promise<void> {

@@ -4,7 +4,7 @@ import type { WlStepItem } from "../types";
 
 withDefaults(
   defineProps<{
-    items?: WlStepItem[];
+    items?: readonly WlStepItem[];
     current?: number;
   }>(),
   {

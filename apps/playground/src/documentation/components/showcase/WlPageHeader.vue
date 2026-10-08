@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { WlPageHeader, WlBreadcrumbs, WlButton, WlCheckbox, WlPill, WlSegmented, type WlSizeSm } from "../../../../../../packages/ui-kit/src";
 const size = ref<WlSizeSm>("lg");
 const compact = ref(false);
-const view = ref<string | null>("list");
+const view = ref<"list" | "grid" | null>("list");
 const added = ref(0);
 </script>
 <template>

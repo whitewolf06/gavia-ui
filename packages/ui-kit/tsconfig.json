@@ -3,12 +3,15 @@
   "compilerOptions": {
     "types": [
       "vite/client"
-    ]
+    ],
+    "jsx": "preserve",
+    "jsxImportSource": "vue"
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.vue",
     "tests/**/*.ts",
+    "tests/**/*.tsx",
     "vite.config.ts"
   ],
   "vueCompilerOptions": {

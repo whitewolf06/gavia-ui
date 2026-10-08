@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
 import { computed, useSlots } from "vue";
 import { useWlPt } from "../config";
 
 const props = defineProps<{
-  pt?: Record<string, unknown>;
+  pt?: WlPt<"divider">;
 }>();
 
 const slots = useSlots();

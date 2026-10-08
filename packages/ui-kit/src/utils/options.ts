@@ -1,15 +1,21 @@
 import { ref, type Ref } from "vue";
+import type { WlOptionValue, WlOptionValueResolver } from "../selection-types";
 
-export type OptionResolver = string | ((option: any) => unknown) | undefined;
+export type OptionResolver<TOption = unknown> = WlOptionValueResolver<TOption> | undefined;
 
 function field(option: unknown, key: string): unknown {
   return option && typeof option === "object" ? (option as Record<string, unknown>)[key] : undefined;
 }
-export function optionValue(option: unknown, resolver: OptionResolver): unknown {
-  return typeof resolver === "function" ? resolver(option) : typeof resolver === "string"
-    ? field(option, resolver) : option;
+export function optionValue<TOption, TResolver extends OptionResolver<TOption>>(
+  option: TOption, resolver: TResolver
+): WlOptionValue<TOption, TResolver> {
+  // The conditional public type follows the same three runtime branches.
+  return (typeof resolver === "function" ? resolver(option) : typeof resolver === "string"
+    ? field(option, resolver) : option) as WlOptionValue<TOption, TResolver>;
 }
-export function optionLabel(option: unknown, resolver: OptionResolver): string {
+export function optionLabel<TOption>(
+  option: TOption, resolver: string | ((option: TOption) => unknown) | undefined
+): string {
   const value = typeof resolver === "function" ? resolver(option) : typeof resolver === "string"
     ? field(option, resolver) : field(option, "label") ?? option;
   return value == null ? "" : String(value);

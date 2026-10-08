@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { WlMenu, WlButton, type WlMenuItem } from "../../../../../../packages/ui-kit/src";
-const popup = ref<InstanceType<typeof WlMenu> | null>(null);
+import { WlMenu, WlButton, type WlMenuItem, type WlMenuExpose } from "../../../../../../packages/ui-kit/src";
+const popup = ref<WlMenuExpose | null>(null);
 const message = ref("Команда ещё не выбрана.");
 const items: WlMenuItem[] = [
   { header: "Материал" },

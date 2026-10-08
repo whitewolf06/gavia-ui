@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
+import type { WlFilePickerExpose } from "../input-expose-types";
 import { computed, useAttrs } from "vue";
 import { mergeWlAttrs, useWlPt } from "../config";
 import { useNativeFilePicker } from "../composables/useNativeFilePicker";
@@ -16,7 +18,7 @@ const props = withDefaults(defineProps<{
   ariaLabel?: string;
   size?: WlSizeSm;
   density?: WlDensity;
-  pt?: Record<string, unknown>;
+  pt?: WlPt<"filepicker">;
 }>(), {
   multiple: false, disabled: false, chooseLabel: "Выбрать файлы", size: "md", density: "default"
 });
@@ -33,7 +35,7 @@ const section = useWlPt("filepicker", computed(() => props.pt));
 const { input, choose, clear, onChange, onCancel } = useNativeFilePicker(
   () => props.disabled, (files) => emit("select", files), () => emit("cancel")
 );
-defineExpose({ choose, clear });
+defineExpose<WlFilePickerExpose>({ choose, clear });
 </script>
 
 <template>

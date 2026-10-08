@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
+import type { WlTextModelModifiers } from "../model-types";
 import { computed, useAttrs, useSlots } from "vue";
 import { mergeWlAttrs, useWlPt } from "../config";
 import type { WlDensity, WlSizeSm } from "../types";
@@ -8,13 +10,14 @@ defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(
   defineProps<{
+    modelModifiers?: WlTextModelModifiers;
     size?: WlSizeSm;
     density?: WlDensity;
     invalid?: boolean;
     disabled?: boolean;
     placeholder?: string;
     type?: string;
-    pt?: Record<string, unknown>;
+    pt?: WlPt<"inputtext">;
   }>(),
   {
     size: "md",
@@ -26,7 +29,7 @@ const props = withDefaults(
 );
 
 // Native type="number" v-model coerces to a number; WlInput keeps its string contract.
-const model = defineModel<string>({ default: "", set: (value) => String(value ?? "") });
+const model = defineModel<string, "trim">({ default: "", set: (value) => String(value ?? "") });
 const slots = useSlots();
 const attrs = useAttrs();
 

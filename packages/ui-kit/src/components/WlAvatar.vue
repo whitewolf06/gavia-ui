@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { WlPt } from "../pt-types";
 import { computed } from "vue";
 import { useWlPt } from "../config";
 import type { WlAvatarPresence, WlAvatarSize } from "../types";
@@ -9,7 +10,7 @@ const props = withDefaults(
     image?: string;
     size?: WlAvatarSize;
     presence?: WlAvatarPresence;
-    pt?: Record<string, unknown>;
+    pt?: WlPt<"avatar">;
   }>(),
   {
     size: 32

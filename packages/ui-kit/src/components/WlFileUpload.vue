@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useNativeFilePicker } from "../composables/useNativeFilePicker";
 import WlIcon from "./WlIcon.vue";
 import type { WlFileReject, WlFileRejectReason, WlIconName } from "../types";
+import type { WlNoModelModifiers } from "../model-types";
 
 const props = withDefaults(
   defineProps<{
+    modelModifiers?: WlNoModelModifiers;
     accept?: string;
     multiple?: boolean;
     maxFiles?: number;
@@ -31,12 +33,21 @@ const emit = defineEmits<{
  * the component only keeps the list; the consumer handles the upload.
  * With multiple=false a new pick replaces the current file.
  */
-const model = defineModel<File[]>({ default: () => [] });
+const model = defineModel<File[], never>({ default: () => [] });
 
 const { input, choose: openPicker, onChange: onPick } = useNativeFilePicker(() => props.disabled, addFiles);
 const dragDepth = ref(0);
 const dragOver = ref(false);
 const errors = ref<Array<{ name: string; message: string }>>([]);
+const fileLimit = computed(() => {
+  const value = props.maxFiles;
+  const limit = value !== undefined && Number.isFinite(value) && value >= 0 ? Math.floor(value) : undefined;
+  return props.multiple ? limit : Math.min(limit ?? 1, 1);
+});
+const sizeLimit = computed(() => {
+  const value = props.maxSize;
+  return value !== undefined && Number.isFinite(value) && value >= 0 ? value : undefined;
+});
 
 function formatNum(n: number): string {
   const r = n >= 100 ? Math.round(n) : Math.round(n * 10) / 10;
@@ -53,9 +64,9 @@ function humanSize(bytes: number): string {
 function reasonMessage(reason: WlFileRejectReason): string {
   if (reason === "type") return "неподдерживаемый тип";
   if (reason === "size") {
-    return props.maxSize !== undefined ? `больше ${humanSize(props.maxSize)}` : "слишком большой";
+    return sizeLimit.value !== undefined ? `больше ${humanSize(sizeLimit.value)}` : "слишком большой";
   }
-  return props.maxFiles !== undefined ? `лимит — не больше ${props.maxFiles}` : "слишком много файлов";
+  return fileLimit.value !== undefined ? `лимит — не больше ${fileLimit.value}` : "слишком много файлов";
 }
 
 function acceptMatches(file: File): boolean {
@@ -81,8 +92,8 @@ function addFiles(list: Iterable<File>): void {
   for (const file of Array.from(list)) {
     let reason: WlFileRejectReason | null = null;
     if (!acceptMatches(file)) reason = "type";
-    else if (props.maxSize !== undefined && file.size > props.maxSize) reason = "size";
-    else if (props.maxFiles !== undefined && next.length >= props.maxFiles) reason = "count";
+    else if (sizeLimit.value !== undefined && file.size > sizeLimit.value) reason = "size";
+    else if (fileLimit.value !== undefined && next.length >= fileLimit.value) reason = "count";
 
     if (reason) {
       emit("reject", { file, reason });
@@ -93,7 +104,8 @@ function addFiles(list: Iterable<File>): void {
     if (next.some((f) => f.name === file.name && f.size === file.size)) continue;
     next.push(file);
   }
-  model.value = next;
+  // A rejected replacement must not discard the previously accepted single file.
+  if (props.multiple || next.length > 0) model.value = next;
 }
 
 function onDragEnter(event: DragEvent): void {

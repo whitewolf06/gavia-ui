@@ -1,15 +1,16 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="Row extends object = WlTableRow">
+import type { WlPt } from "../pt-types";
 import { computed } from "vue";
 import { useWlPt } from "../config";
-import type { WlTableColumn, WlTableRow } from "../types";
+import type { WlTableColumn, WlTableRow, WlTableSlots } from "../table-types";
 
 const props = withDefaults(
   defineProps<{
-    value?: WlTableRow[];
-    columns?: WlTableColumn[];
+    value?: readonly Row[];
+    columns?: readonly WlTableColumn<NoInfer<Row>>[];
     loading?: boolean;
     emptyMessage?: string;
-    pt?: Record<string, unknown>;
+    pt?: WlPt<"datatable">;
   }>(),
   {
     value: () => [],
@@ -18,10 +19,15 @@ const props = withDefaults(
     emptyMessage: "Нет данных"
   }
 );
+defineSlots<WlTableSlots<Row>>();
 const section = useWlPt("datatable", computed(() => props.pt));
 
 function widthOf(col: WlTableColumn): string | undefined {
   return col.width === undefined ? undefined : typeof col.width === "number" ? `${col.width}px` : col.width;
+}
+function valueOf(row: Row, key: string): unknown {
+  // A lookup keeps the existing virtual-column behavior (missing keys are undefined).
+  return (row as WlTableRow)[key];
 }
 </script>
 
@@ -37,7 +43,7 @@ function widthOf(col: WlTableColumn): string | undefined {
         <tr v-for="(row, rowIndex) in value" :key="rowIndex" v-bind="section('bodyRow')" class="wl-table__row">
           <td v-for="col in columns" :key="col.key" class="wl-table__td"
             :class="{ 'wl-table__cell--num': col.numeric }">
-            <slot :name="`cell-${col.key}`" :row="row" :value="row[col.key]">{{ row[col.key] }}</slot>
+            <slot :name="`cell-${col.key}`" :row="row" :value="valueOf(row, col.key)">{{ valueOf(row, col.key) }}</slot>
           </td>
         </tr>
         <tr v-if="value.length === 0" v-bind="section('emptyMessage')"><td v-bind="section('emptyMessageCell')"
