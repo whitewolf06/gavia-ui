@@ -14,7 +14,16 @@ describe("public changelog rendering", () => {
     const document = parseChangelog(source, docsBase);
     expect(document.sections[0]).toMatchObject({ title: "Не выпущено", id: "project-unreleased", unreleased: true });
     const versions = document.sections.filter((section) => section.version).map((section) => section.version);
-    expect(versions).toEqual(["0.9.1", "0.8.1", "0.7.1", "0.7.0", "0.6.0", "0.3.0", "0.2.1", "0.2.0", "0.1.0"]);
+    // New releases precede the immutable historical tail; publishing must not drop it.
+    expect(versions.slice(versions.indexOf("0.9.1"))).toEqual(["0.9.1", "0.8.1", "0.7.1", "0.7.0", "0.6.0", "0.3.0", "0.2.1", "0.2.0", "0.1.0"]);
+    expect(new Set(versions).size).toBe(versions.length);
+    const manifest = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../package.json", import.meta.url)), "utf8")) as { version: string };
+    expect(document.sections.find((section) => section.version)).toMatchObject({
+      version: manifest.version,
+      date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+      id: "project-release-" + manifest.version.replace(/\./g, "-"),
+      unreleased: false
+    });
     expect(document.sections.find((section) => section.version === "0.9.1"))
       .toMatchObject({ date: "2026-10-07", id: "project-release-0-9-1", unreleased: false });
     const current = document.sections.find((section) => section.version === "0.6.0")!;
