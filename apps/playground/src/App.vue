@@ -6,7 +6,7 @@ import type { WlCommandPaletteGroup, WlCommandPaletteItem, WlThemeName } from ".
 import PlaygroundHeader from "./PlaygroundHeader.vue";
 import FontDownloadLink from "./project/FontDownloadLink.vue";
 import { playgroundNavigationKey } from "./playground-navigation";
-import { createPlaygroundThemeUrl, isPlaygroundTheme, parsePlaygroundTheme, playgroundThemeOptions } from "./themes";
+import { createPlaygroundThemeUrl, getPlaygroundThemeToggleTarget, isPlaygroundTheme, parsePlaygroundTheme, playgroundThemeOptions } from "./themes";
 import gaviaMarkUrl from "../../../docs/brand/gavia-ui-mark-v2.png";
 import { gaviaProjectInfo as project } from "./project/project-info";
 const WlCommandPalette = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlCommandPalette.vue"));
@@ -22,6 +22,7 @@ const headerElement = ref<HTMLElement | null>(null);
 let restoreScrollPadding: (() => void) | undefined;
 let historyAnchorFrame: number | undefined;
 let appMounted = false;
+let themeColorTransitionTimer: number | undefined;
 function cancelHistoryAnchor(): void {
   if (historyAnchorFrame !== undefined) window.cancelAnimationFrame(historyAnchorFrame);
   historyAnchorFrame = undefined;
@@ -108,7 +109,13 @@ onMounted(() => {
     else rootStyle.removeProperty("--wl-playground-header-offset");
   };
 });
-onBeforeUnmount(() => { appMounted = false; cancelHistoryAnchor(); window.removeEventListener("popstate", readView); restoreScrollPadding?.(); });
+onBeforeUnmount(() => {
+  appMounted = false;
+  cancelHistoryAnchor();
+  stopThemeColorTransition();
+  window.removeEventListener("popstate", readView);
+  restoreScrollPadding?.();
+});
 const commandPaletteVisible = ref(false);
 const commandPaletteQuery = ref("");
 const commandPaletteGroups: WlCommandPaletteGroup[] = [
@@ -224,13 +231,46 @@ async function onCommandPaletteSelect(item: WlCommandPaletteItem): Promise<void>
 const theme = ref<WlThemeName>(parsePlaygroundTheme(typeof window === "undefined" ? "" : window.location.search));
 provide(playgroundNavigationKey, { navigate, theme });
 const themeOptions = playgroundThemeOptions;
+let classicLightTheme: "white" | "newspaper" = "white";
+function stopThemeColorTransition(): void {
+  if (themeColorTransitionTimer !== undefined) window.clearTimeout(themeColorTransitionTimer);
+  themeColorTransitionTimer = undefined;
+  delete document.documentElement.dataset.wlPlaygroundThemeTransition;
+}
+function startThemeColorTransition(): void {
+  if (themeColorTransitionTimer !== undefined) window.clearTimeout(themeColorTransitionTimer);
+  themeColorTransitionTimer = undefined;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    stopThemeColorTransition();
+    return;
+  }
+  const root = document.documentElement;
+  const token = window.getComputedStyle(root).getPropertyValue("--wl-motion-slow").trim();
+  const tokenDuration = Number.parseFloat(token) * (token.endsWith("ms") ? 1 : 1000) * 2.5;
+  const duration = Number.isFinite(tokenDuration) ? Math.max(0, tokenDuration) : 500;
+  if (duration === 0) {
+    stopThemeColorTransition();
+    return;
+  }
+  root.dataset.wlPlaygroundThemeTransition = "";
+  // Keep the marker through the first rendering frame; reset it after rapid toggles.
+  themeColorTransitionTimer = window.setTimeout(stopThemeColorTransition, duration + 50);
+}
+function toggleThemeVariant(): void {
+  chooseTheme(getPlaygroundThemeToggleTarget(theme.value, classicLightTheme));
+}
 function chooseTheme(value: unknown): void {
   if (!isPlaygroundTheme(value)) return;
+  if (theme.value !== value) startThemeColorTransition();
   theme.value = value;
   const url = createPlaygroundThemeUrl(new URL(window.location.href), value);
   if (url.href !== window.location.href) window.history.replaceState(null, "", url);
 }
-watch(theme, (value) => { document.documentElement.dataset.wlTheme = value; }, { immediate: true });
+watch(theme, (value, previous) => {
+  if (value === "newspaper") classicLightTheme = "newspaper";
+  else if (value !== "graphite" || previous !== "newspaper") classicLightTheme = "white";
+  document.documentElement.dataset.wlTheme = value;
+}, { immediate: true, flush: "sync" });
 </script>
 <template>
   <header ref="headerElement" class="pg-top">
@@ -242,7 +282,7 @@ watch(theme, (value) => { document.documentElement.dataset.wlTheme = value; }, {
     :groups="commandPaletteGroups" :shortcut="globalSearchShortcut" @select="onCommandPaletteSelect">
     <template #footer>Быстрые переходы и компоненты ищутся одной строкой</template>
   </WlCommandPalette>
-  <HomePage v-if="activeView === 'home'" :theme="theme" @navigate="showView" @component="openDocs" @catalog="openDocsCatalog" @quality="openDocsSection('quality')" />
+  <HomePage v-if="activeView === 'home'" :theme="theme" @navigate="showView" @component="openDocs" @catalog="openDocsCatalog" @quality="openDocsSection('quality')" @toggle-theme="toggleThemeVariant" />
   <DocsPage v-else-if="activeView === 'docs'" :component="activeRoute.component" :section="activeRoute.section" :theme="theme"
     @section="openDocsSection" @component="openDocs" @overview="openDocsOverview" @navigate="showView" />
   <FontPage v-else-if="activeView === 'font'" :theme="theme" @navigate="showView" />
@@ -264,4 +304,15 @@ watch(theme, (value) => { document.documentElement.dataset.wlTheme = value; }, {
 .pg-footer { display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 12px 24px; padding: 24px; border-top: 1px solid var(--wl-border); color: var(--wl-text-2); font-size: var(--wl-type-small-size); }
 .pg-footer a { color: var(--wl-text-accent); text-underline-offset: 3px; }
 .pg-footer a:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 3px; }
+@media (prefers-reduced-motion: no-preference) {
+  html[data-wl-playground-theme-transition] :where(
+    body, .pg-top, .pg-top :not(img), .pg-footer, .pg-footer :not(img),
+    .home-page, .home-page :not(img, .home-theme-sun, .home-theme-moon)
+  ) {
+    transition-property: background-color, border-color, color, outline-color, fill, stroke;
+    transition-duration: calc(var(--wl-motion-slow) * 2.5);
+    transition-timing-function: ease-in-out;
+    transition-delay: 0s;
+  }
+}
 </style>

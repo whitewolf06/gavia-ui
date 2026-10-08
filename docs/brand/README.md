@@ -37,7 +37,7 @@ PNG-исходник: [gavia-lake-hero-v2.png](gavia-lake-hero-v2.png).
 Запрос: [gavia-lake-hero-v1-prompt.txt](gavia-lake-hero-v1-prompt.txt).
 Новые варианты сохраняйте рядом с новым суффиксом версии.
 
-Для Gavia Dark используется [gavia-lake-night-v2.webp](gavia-lake-night-v2.webp):
+Для Gavia Dark и Classic Dark используется [gavia-lake-night-v2.webp](gavia-lake-night-v2.webp):
 та же локация, берег и гагара в лунную ночь с лёгким голубоватым светом.
 Луна занимает место исходного солнца слева у горизонта, частично скрываясь
 за тем же хребтом. Серебристое отражение остаётся на исходной оси солнечного
@@ -45,7 +45,15 @@ PNG-исходник: [gavia-lake-hero-v2.png](gavia-lake-hero-v2.png).
 [PNG-исходник](gavia-lake-night-v2.png) и
 [точные запросы](gavia-lake-night-v2-prompt.txt). Встроенный imagegen (builtin),
 без CLI; размер 2172 × 724. WebP: quality 86, без изменения кадрирования
-и цвета при экспорте. Выбор изображения следует теме, общая компоновка hero сохраняется.
+и цвета при экспорте. Дневное изображение используется во всех светлых темах
+(Gavia, Classic и Newspaper), ночное — в обеих тёмных. Общая компоновка hero сохраняется.
+
+Оба изображения загружаются заранее и остаются двумя слоями hero. Ночной слой
+плавно проявляется после загрузки; цвета интерфейса также меняются плавно.
+`prefers-reduced-motion: reduce` отключает crossfade и цветовые переходы.
+В правом верхнем углу hero кнопка `WlIconButton` с солнцем или луной переключает
+Gavia ↔ Gavia Dark и Classic ↔ Classic Dark; Newspaper переключается
+в Classic Dark и возвращается при повторном нажатии.
 
 Предыдущий [ночной вариант v1](gavia-lake-night-v1.webp) сохранён как история.
 

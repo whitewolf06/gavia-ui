@@ -2,7 +2,7 @@
 import { computed, ref, watch } from "vue";
 import type { WlThemeName } from "../../../packages/ui-kit/src/types";
 import { withPlaygroundTheme } from "./themes";
-import { WlButton, WlIcon, WlSegmented } from "../../../packages/ui-kit/src";
+import { WlButton, WlIcon, WlIconButton, WlSegmented } from "../../../packages/ui-kit/src";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
 import { wlDesignThemes, wlDesignTokens } from "../../../packages/ui-kit/src/design-system";
@@ -21,8 +21,9 @@ import buttonExampleSource from "./design-system/examples/WlButton.vue?raw";
 import { consumerSource } from "./design-system/code";
 
 const props = defineProps<{ theme: WlThemeName }>();
-const heroArtUrl = computed(() => props.theme === "gavia-dark" ? gaviaNightHeroUrl : gaviaHeroUrl);
 const isDarkTheme = computed(() => wlDesignThemes.find((item) => item.name === props.theme)?.colorScheme === "dark");
+const nightArtReady = ref(false);
+const themeToggleLabel = computed(() => isDarkTheme.value ? "Включить светлую тему" : "Включить тёмную тему");
 const themedHref = (href: string): string => withPlaygroundTheme(href, props.theme);
 const pageElement = ref<HTMLElement | null>(null);
 usePageAnchor(pageElement);
@@ -32,6 +33,7 @@ const emit = defineEmits<{
   catalog: [];
   component: [name: string];
   quality: [];
+  "toggle-theme": [];
 }>();
 const installManager = ref<string | null>("pnpm");
 const installCommand = computed(() => getInstallCommand((installManager.value ?? "pnpm") as PackageManager));
@@ -82,7 +84,16 @@ createApp(App).mount("#app");`;
 <template>
   <main ref="pageElement" class="home-page" data-testid="home-page" aria-labelledby="home-title">
     <header class="home-hero">
-      <img class="home-hero-art" :src="heroArtUrl" alt="" aria-hidden="true" width="2172" height="724" fetchpriority="high" decoding="async" />
+      <img class="home-hero-layer" :class="{ 'home-hero-art': !isDarkTheme }" :src="gaviaHeroUrl" alt="" aria-hidden="true" width="2172" height="724" :fetchpriority="isDarkTheme ? 'auto' : 'high'" decoding="async" />
+      <img class="home-hero-layer home-hero-layer--night" :class="{ 'home-hero-art': isDarkTheme, 'home-hero-layer--visible': isDarkTheme && nightArtReady }" :src="gaviaNightHeroUrl" alt="" aria-hidden="true" width="2172" height="724" :fetchpriority="isDarkTheme ? 'high' : 'auto'" decoding="async" @load="nightArtReady = true" />
+      <div class="home-hero-tools wl-container">
+        <WlIconButton class="home-theme-toggle" variant="secondary" :aria-label="themeToggleLabel" :title="themeToggleLabel" @click="emit('toggle-theme')">
+          <svg class="home-theme-symbol" :class="isDarkTheme ? 'home-theme-symbol--dark' : 'home-theme-symbol--light'" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <g class="home-theme-sun"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></g>
+            <path class="home-theme-moon" d="M20.4 14.3A8.8 8.8 0 0 1 9.7 3.6a8.8 8.8 0 1 0 10.7 10.7Z" />
+          </svg>
+        </WlIconButton>
+      </div>
       <div class="home-hero-content wl-container">
       <div class="home-intro wl-stack" data-space="lg">
         <div class="home-kicker wl-inline" data-space="sm">
@@ -189,7 +200,15 @@ createApp(App).mount("#app");`;
   font-family: var(--wl-font);
 }
 .home-hero { position: relative; isolation: isolate; min-height: 450px; padding-block: 40px; overflow: hidden; background: var(--wl-bg); border-bottom: 1px solid var(--wl-border); }
-.home-hero-art { position: absolute; inset: 0; z-index: -2; display: block; width: 100%; height: 100%; object-fit: cover; object-position: right center; }
+.home-hero-layer { position: absolute; inset: 0; z-index: -2; display: block; width: 100%; height: 100%; object-fit: cover; object-position: right center; }
+.home-hero-layer--night { z-index: -1; opacity: 0; transition: opacity calc(var(--wl-motion-slow) * 2.5) var(--wl-ease); }
+.home-hero-layer--visible { opacity: 1; }
+.home-hero-tools { position: absolute; inset-block-start: var(--wl-space-lg); inset-inline: 0; z-index: 1; display: flex; justify-content: flex-end; pointer-events: none; }
+.home-theme-toggle { min-width: 44px; min-height: 44px; pointer-events: auto; box-shadow: var(--wl-elevation-surface); }
+.home-theme-symbol { display: block; }
+.home-theme-sun, .home-theme-moon { transform-origin: center; transform-box: view-box; transition: opacity calc(var(--wl-motion-slow) * 2.5) var(--wl-ease), transform calc(var(--wl-motion-slow) * 2.5) var(--wl-ease); }
+.home-theme-symbol--light .home-theme-sun { opacity: 0; transform: rotate(-45deg) scale(0.6); }
+.home-theme-symbol--dark .home-theme-moon { opacity: 0; transform: rotate(35deg) scale(0.6); }
 .home-hero-content { display: grid; grid-template-columns: minmax(0, 520px) minmax(0, 1fr); gap: var(--wl-space-2xl); align-items: center; }
 .home-content { padding-top: var(--wl-space-2xl); padding-bottom: var(--wl-space-4xl); }
 .home-intro { min-width: 0; padding: var(--wl-space-2xl); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg); box-shadow: var(--wl-elevation-surface); gap: var(--wl-space-md); }
@@ -249,7 +268,7 @@ createApp(App).mount("#app");`;
 
 @media (max-width: 760px) {
   .home-hero { min-height: 0; padding-block: 0 var(--wl-space-2xl); }
-  .home-hero-art { height: 240px; }
+  .home-hero-layer { height: 240px; }
   .home-hero-content { grid-template-columns: minmax(0, 1fr); align-items: start; padding-block-start: calc(240px + var(--wl-space-xl)); }
 
 }
@@ -270,5 +289,7 @@ createApp(App).mount("#app");`;
   .home-project-panel { grid-template-columns: 36px minmax(0, 1fr); gap: var(--wl-space-sm); }
   .home-project-icon { width: 36px; height: 36px; }
 }
-@media (prefers-reduced-motion: reduce) { .home-action, .home-section-card { transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .home-action, .home-section-card, .home-hero-layer--night, .home-theme-sun, .home-theme-moon { transition: none; }
+}
 </style>

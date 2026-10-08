@@ -35,3 +35,14 @@ export function withPlaygroundTheme(href: string, theme: WlThemeName): string {
   query.set("theme", theme);
   return path + "?" + query.toString() + fragment;
 }
+
+/** Pair the quick light/dark switch without changing the saved theme catalog. */
+export function getPlaygroundThemeToggleTarget(theme: WlThemeName, classicLightTheme: "white" | "newspaper" = "white"): WlThemeName {
+  switch (theme) {
+    case "gavia": return "gavia-dark";
+    case "gavia-dark": return "gavia";
+    case "graphite": return classicLightTheme;
+    case "white":
+    case "newspaper": return "graphite";
+  }
+}
