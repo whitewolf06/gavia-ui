@@ -22,6 +22,7 @@ import { consumerSource } from "./design-system/code";
 
 const props = defineProps<{ theme: WlThemeName }>();
 const heroArtUrl = computed(() => props.theme === "gavia-dark" ? gaviaNightHeroUrl : gaviaHeroUrl);
+const isDarkTheme = computed(() => wlDesignThemes.find((item) => item.name === props.theme)?.colorScheme === "dark");
 const themedHref = (href: string): string => withPlaygroundTheme(href, props.theme);
 const pageElement = ref<HTMLElement | null>(null);
 usePageAnchor(pageElement);
@@ -146,24 +147,24 @@ createApp(App).mount("#app");`;
       <h2 id="home-project-title" class="wl-text-title">Свободно для ваших проектов</h2>
       <div class="home-project-grid">
         <article class="home-project-panel home-project-panel--forest">
-          <img class="home-project-art" :src="gaviaForestUrl" alt="" aria-hidden="true" width="2172" height="724" loading="lazy" decoding="async" />
+          <img class="home-project-art" :class="{ 'home-project-art--dark': isDarkTheme }" :src="gaviaForestUrl" alt="" aria-hidden="true" width="2172" height="724" loading="lazy" decoding="async" />
           <span class="home-project-icon" aria-hidden="true"><WlIcon name="heart" :size="25" /></span>
           <div class="home-project-copy wl-stack" data-space="md">
             <h3 class="wl-text-heading">Бесплатно, включая коммерческое использование</h3>
             <p class="wl-text-body wl-text-muted">Gavia UI можно использовать в личных и коммерческих проектах, изменять и распространять с сохранением текста MIT и уведомления об авторских правах.</p>
             <nav class="wl-stack" data-space="sm" aria-label="Документация подключения">
-              <a class="home-text-link wl-text-small" :href="project.instructionsUrl">Подключение и инструкции</a>
-              <a class="home-text-link wl-text-small" :href="project.documentationBaseUrl + 'docs/design-system.md'">Правила дизайн-системы</a>
-              <a class="home-text-link wl-text-small" :href="project.documentationBaseUrl + 'docs/migration-gavia.md'">Переход на Gavia UI</a>
+              <a class="home-text-link wl-text-small" :href="project.instructionsUrl" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">Подключение и <span class="home-external-link-tail">инструкции <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>
+              <a class="home-text-link wl-text-small" :href="project.documentationBaseUrl + 'docs/design-system.md'" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">Правила <span class="home-external-link-tail">дизайн-системы <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>
+              <a class="home-text-link wl-text-small" :href="project.documentationBaseUrl + 'docs/migration-gavia.md'" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">Переход на Gavia <span class="home-external-link-tail">UI <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>
             </nav>
           </div>
         </article>
         <article class="home-project-panel home-project-panel--reeds">
-          <img class="home-project-art" :src="gaviaReedsUrl" alt="" aria-hidden="true" width="2172" height="724" loading="lazy" decoding="async" />
+          <img class="home-project-art" :class="{ 'home-project-art--dark': isDarkTheme }" :src="gaviaReedsUrl" alt="" aria-hidden="true" width="2172" height="724" loading="lazy" decoding="async" />
           <span class="home-project-icon" aria-hidden="true"><WlIcon name="users" :size="25" /></span>
           <div class="home-project-copy wl-stack" data-space="md">
             <h3 class="wl-text-heading">Участвуйте в развитии</h3>
-            <p class="wl-text-body wl-text-muted">Идеи, сообщения об ошибках и улучшения принимаются в <a class="home-text-link" :href="project.repositoryUrl + '/issues'">GitHub Issues</a>. Порядок работы с кодом и проверками описан в <a class="home-text-link" :href="project.contributingUrl">руководстве для участников</a>.</p>
+            <p class="wl-text-body wl-text-muted">Идеи, сообщения об ошибках и улучшения принимаются в <a class="home-text-link" :href="project.repositoryUrl + '/issues'" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">GitHub <span class="home-external-link-tail">Issues <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>. Порядок работы с кодом и проверками описан в <a class="home-text-link" :href="project.contributingUrl" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">руководстве для <span class="home-external-link-tail">участников <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>.</p>
             <p class="wl-text-small wl-text-muted">В Changelog собраны выпущенные версии и подготовленные изменения. Перед обновлением проверьте заметки о миграции.</p>
           </div>
         </article>
@@ -202,6 +203,7 @@ createApp(App).mount("#app");`;
 .home-text-link { display: inline; color: var(--wl-text-accent); text-decoration: underline; text-underline-offset: 0.18em; }
 .home-text-link:hover { color: var(--wl-text-accent-hover); }
 .home-text-link .wl-icon { display: inline-block; vertical-align: -0.15em; }
+.home-external-link-tail { white-space: nowrap; }
 .home-text-link:focus-visible, .home-section-card:focus-visible, .home-manual-copy:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 4px; }
 .home-credit { line-height: var(--wl-type-body-line-height); color: var(--wl-text); }
 .home-install-card { min-width: 0; border: 1px solid var(--wl-accent-border); border-radius: var(--wl-corner-surface); padding: var(--wl-space-xl); background: var(--wl-accent-soft); gap: var(--wl-space-md); }
@@ -233,6 +235,8 @@ createApp(App).mount("#app");`;
 .home-project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--wl-space-lg); }
 .home-project-panel { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: 48px minmax(0, 1fr); align-items: start; gap: var(--wl-space-lg); min-width: 0; padding: var(--wl-space-xl); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg); }
 .home-project-art { position: absolute; inset: 0; z-index: -1; display: block; width: 100%; height: 100%; object-fit: cover; object-position: right bottom; opacity: 0.5; mix-blend-mode: multiply; }
+.home-project-art--dark { filter: grayscale(1) invert(1); mix-blend-mode: screen; opacity: 0.3; mask-image: linear-gradient(110deg, transparent, rgb(0 0 0 / 0.35) 30%, #000 75%); }
+.home-project-panel--reeds .home-project-art--dark { opacity: 0.24; }
 .home-project-icon { display: inline-flex; justify-content: center; align-items: center; width: 48px; height: 48px; border-radius: 50%; color: var(--wl-text); background: color-mix(in srgb, var(--wl-text) 9%, transparent); }
 .home-project-copy { min-width: 0; }
 :where(.home-project-copy) .wl-text-muted, :where(.home-project-copy) .home-text-link { color: var(--wl-text); }

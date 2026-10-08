@@ -74,12 +74,12 @@ Gavia Dark выбирается через `data-wl-theme="gavia-dark"` и от�
 | Фон страницы | `--wl-bg` | `#1a1917` |
 | Поднятая поверхность | `--wl-bg-raised` | `#242321` |
 | Вторичная поверхность | `--wl-bg-soft` | `#2e2d2a` |
-| Мягкий акцентный фон | `--wl-accent-soft` | `#273d3a` |
+| Мягкий акцентный фон | `--wl-accent-soft` | `#273d3c` |
 | Граница | `--wl-border` | `#4b4a46` |
 | Основной текст | `--wl-text` | `#eceee8` |
 | Вспомогательный текст | `--wl-text-muted` | `#b7bfc1` |
-| Основное действие | `--wl-action-primary-bg` | `#5faba5` |
-| Ссылки и фокус | `--wl-text-accent` / `--wl-focus-color` | `#67bcb5` |
+| Основное действие | `--wl-action-primary-bg` | `#5faaab` |
+| Ссылки и фокус | `--wl-text-accent` / `--wl-focus-color` | `#67bbbc` |
 | Опасное действие | `--wl-action-danger-bg` | `#ab4448` |
 
 Фон страницы и обычных карточек почти серый с едва заметным тёплым подтоном.
