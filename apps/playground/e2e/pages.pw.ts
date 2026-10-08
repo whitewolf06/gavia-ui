@@ -7,7 +7,7 @@ import { fileURLToPath, URL as NodeURL } from "node:url";
 
 const packageMetadata = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../../../packages/ui-kit/package.json", import.meta.url)), "utf8")) as { name: string; version: string };
 const packageUrl = "https://www.npmjs.com/package/gavia-ui";
-const publishedVersion = "0.9.1";
+const publishedVersion = "0.10.0";
 
 const pagesPath = "/gavia-ui/";
 const projectTitle = "Changelog";

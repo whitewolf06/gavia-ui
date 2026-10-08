@@ -187,7 +187,7 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
             <WlSegmented v-model="installManager" :options="installationManagers" aria-label="Менеджер пакетов для установки" />
             <CodePanel :source="installationCommand" :title="`Установка через ${installManager}`" :expanded="true" />
             <CodePanel :source="installationSource" title="main.ts · подключение приложения" :expanded="true" />
-            <p class="wl-text-small wl-text-muted">В примере подключена Classic. Для Classic Dark, Newspaper, Gavia или Gavia Dark импортируйте соответствующий CSS из <code>gavia-ui/themes/</code> и установите <code>data-wl-theme</code> на корневом элементе. Gavia и её шрифт доступны начиная с 0.9.1; Gavia Dark подготовлена для следующего выпуска. Для обеих тем Gavia дополнительно подключите <code>gavia-ui/styles/fonts/gavia.css</code>.</p>
+            <p class="wl-text-small wl-text-muted">В примере подключена Classic. Для Classic Dark, Newspaper, Gavia или Gavia Dark импортируйте соответствующий CSS из <code>gavia-ui/themes/</code> и установите <code>data-wl-theme</code> на корневом элементе. Gavia и её шрифт доступны начиная с 0.9.1; Gavia Dark доступна начиная с 0.10.0. Для обеих тем Gavia дополнительно подключите <code>gavia-ui/styles/fonts/gavia.css</code>.</p>
           </section>
 
           <section class="docs-overview-section wl-stack" data-space="lg">
