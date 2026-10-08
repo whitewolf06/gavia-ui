@@ -44,6 +44,35 @@ Classic, Classic Dark и Newspaper сохраняют свою типограф�
 стили подключаются явно. Библиотека работает без дополнительных UI-пакетов,
 роутера, хранилища состояния и API-клиента.
 
+## Темы
+
+### Основные
+
+**Gavia** и **Gavia Dark** — фирменные светлая и тёмная темы Gavia UI:
+бирюзовый акцент, общая геометрия компонентов и шрифт **Gavia Sans**.
+
+| Тема | Режим | `data-wl-theme` | CSS из пакета |
+| --- | --- | --- | --- |
+| **Gavia** | Светлая | `gavia` | `gavia-ui/themes/gavia.css` |
+| **Gavia Dark** | Тёмная | `gavia-dark` | `gavia-ui/themes/gavia-dark.css` |
+
+Gavia Dark добавлена в исходники для следующего выпуска; npm 0.9.1 её ещё не содержит.
+
+### Дополнительные
+
+Альтернативное оформление тех же компонентов: Classic и Classic Dark используют
+системный sans, Newspaper — системный основной текст и заголовки с засечками.
+
+| Тема | Оформление | `data-wl-theme` | CSS из пакета |
+| --- | --- | --- | --- |
+| **Classic** | Светлая нейтральная | `white` | `gavia-ui/themes/white.css` |
+| **Classic Dark** | Тёмная нейтральная | `graphite` | `gavia-ui/themes/graphite.css` |
+| **Newspaper** | Бумажная, с редакционной типографикой | `newspaper` | `gavia-ui/themes/newspaper.css` |
+
+Выберите CSS темы и её идентификатор из таблицы. Для обеих основных тем также
+подключите `gavia-ui/styles/fonts/gavia.css`. Без явного выбора темы библиотека
+использует Classic (`white`).
+
 ## Быстрый старт
 
 Установите библиотеку в Vue-приложение:
@@ -89,7 +118,6 @@ import { WlButton } from "gavia-ui";
 `themes/newspaper.css` и выберите `white`, `graphite` или `newspaper` соответственно.
 Без шрифтового CSS обе Gavia используют системный fallback; без выбора темы
 библиотека сохраняет Classic (`white`). `WlConfig` для базового подключения не требуется.
-Gavia Dark добавлена в исходники для следующего выпуска; npm 0.9.1 её ещё не содержит.
 [Названия тем и совместимость](docs/migration-themes.md).
 [Подробное подключение, API и доступность](https://whitewolf06.github.io/gavia-ui/?view=docs).
 

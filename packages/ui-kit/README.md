@@ -33,6 +33,35 @@ unit-тесты, покрытие Vitest/V8, браузеры, доступно�
 Код UI Kit — [MIT](LICENSE), файлы шрифта —
 [SIL OFL 1.1](https://github.com/whitewolf06/gavia-ui/blob/main/packages/ui-kit/fonts/gavia/OFL.txt).
 
+## Темы
+
+### Основные
+
+**Gavia** и **Gavia Dark** — фирменные светлая и тёмная темы Gavia UI:
+бирюзовый акцент, общая геометрия компонентов и шрифт **Gavia Sans**.
+
+| Тема | Режим | `data-wl-theme` | CSS из пакета |
+| --- | --- | --- | --- |
+| **Gavia** | Светлая | `gavia` | `gavia-ui/themes/gavia.css` |
+| **Gavia Dark** | Тёмная | `gavia-dark` | `gavia-ui/themes/gavia-dark.css` |
+
+Gavia Dark добавлена в исходники для следующего выпуска; npm 0.9.1 её ещё не содержит.
+
+### Дополнительные
+
+Альтернативное оформление тех же компонентов: Classic и Classic Dark используют
+системный sans, Newspaper — системный основной текст и заголовки с засечками.
+
+| Тема | Оформление | `data-wl-theme` | CSS из пакета |
+| --- | --- | --- | --- |
+| **Classic** | Светлая нейтральная | `white` | `gavia-ui/themes/white.css` |
+| **Classic Dark** | Тёмная нейтральная | `graphite` | `gavia-ui/themes/graphite.css` |
+| **Newspaper** | Бумажная, с редакционной типографикой | `newspaper` | `gavia-ui/themes/newspaper.css` |
+
+Выберите CSS темы и её идентификатор из таблицы. Для обеих основных тем также
+подключите `gavia-ui/styles/fonts/gavia.css`. Без явного выбора темы библиотека
+использует Classic (`white`).
+
 ## Быстрый старт
 
 ```bash
@@ -73,7 +102,6 @@ import { WlButton } from "gavia-ui";
 и `data-wl-theme="gavia-dark"`. Без выбора темы библиотека сохраняет Classic (`white`).
 Classic / Classic Dark / Newspaper используют `themes/white.css` / `themes/graphite.css` /
 `themes/newspaper.css` и идентификаторы `white` / `graphite` / `newspaper`.
-Gavia Dark добавлена в исходники для следующего выпуска; npm 0.9.1 её ещё не содержит.
 [Названия тем и совместимость](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-themes.md).
 `WlConfig` для базового подключения не требуется.
 
