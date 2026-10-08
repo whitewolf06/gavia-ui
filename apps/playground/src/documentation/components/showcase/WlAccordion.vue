@@ -12,6 +12,6 @@ const items: WlAccordionItem[] = [{ key: "guide", title: "Подключение
     <WlCheckbox v-model="single">Только один раскрытый пункт</WlCheckbox>
     <WlAccordion v-model:open-keys="open" :items="items" :single="single"><template #item="{ item, open: expanded }"><div class="wl-stack" data-space="sm"><p class="wl-text-body">{{ item.content }}</p><div><WlButton size="sm" @click="action = item.title">Проверить {{ item.title }}</WlButton></div><p class="wl-text-small wl-text-muted">Scoped-слот: open = {{ expanded }}</p></div></template></WlAccordion>
     <p class="wl-text-small" role="status">Открытые ключи: {{ open.join(', ') || 'нет' }}. {{ action ? 'Действие: ' + action : '' }}</p>
-    <div class="wl-stack" data-space="sm"><h3 class="wl-text-label">Неконтролируемый вариант</h3><WlAccordion single :items="items" /></div>
+    <div class="wl-stack" data-space="sm"><h3 class="wl-text-label">Uncontrolled-вариант</h3><WlAccordion single :items="items" /></div>
   </div>
 </template>

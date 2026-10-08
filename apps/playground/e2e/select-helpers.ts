@@ -53,7 +53,7 @@ export async function copyCodePanel(panel: Locator): Promise<void> {
 /** Navigate through the visible desktop links or the compact drawer. */
 export async function navigateMainView(page: Page, label: string): Promise<void> {
   await expect(page.locator(".pg-header-inner")).toBeVisible();
-  const desktopNavigation = page.getByRole("navigation", { name: "Режим витрины", exact: true });
+  const desktopNavigation = page.getByRole("navigation", { name: "Основная навигация Gavia UI", exact: true });
   if (await desktopNavigation.isVisible()) {
     await desktopNavigation.getByRole("button", { name: label, exact: true }).click();
     return;

@@ -11,8 +11,8 @@ function save(): void { description.value = draft.value; editing.value = false; 
 </script>
 
 <template>
-  <section class="wl-stack" data-space="lg" aria-label="Деталь материала">
-    <WlPageHeader title="Руководство команды" description="Единый источник рабочих договорённостей." :heading-level="2" size="md">
+  <section class="wl-stack" data-space="lg" aria-label="Страница материала">
+    <WlPageHeader title="Руководство команды" description="Как команда работает и принимает решения." :heading-level="2" size="md">
       <template #breadcrumbs><WlBreadcrumbs :items="[{ label: 'Материалы', href: '#ds-recipes' }, { label: 'Руководство команды' }]" /></template>
       <template #meta><div class="wl-inline" data-space="sm"><WlTag variant="green">Опубликовано</WlTag><WlAvatar label="АМ" :size="24" aria-label="Автор Анна Михайлова" /><span class="wl-text-small wl-text-muted">Анна Михайлова · 1 октября</span></div></template>
       <template #actions><WlButton @click="edit">Редактировать описание</WlButton></template>

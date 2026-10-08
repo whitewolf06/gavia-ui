@@ -49,7 +49,7 @@ const pageIntroduction = computed(() => {
     : foundationSection.value ? documentationFoundationPages[foundationSection.value] : undefined;
   const title = metadata?.label ?? entry.value?.name ?? "Документация";
   const description = metadata?.description ?? entry.value?.description
-    ?? "Подключение библиотеки, основы интерфейса, иконки, цвета и публичные контракты. Начните с WlButton: сравните варианты, настройте живой пример и скопируйте код для приложения.";
+    ?? "Подключение библиотеки, работа с компонентами, тексты, цвета и иконки. У компонентов есть примеры с настройками и кодом для копирования.";
   return { title, description, breadcrumbs: metadata || entry.value
     ? [{ label: "Документация", route: { view: "docs" as const } }, { label: title }]
     : [{ label: "Документация" }] };
@@ -180,49 +180,49 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
         </template>
 
         <template v-else>
-          <p v-if="component" class="docs-notice wl-text-small" role="alert">Компонент «{{ component }}» не найден в публичном манифесте. Выберите компонент в каталоге.</p>
+          <p v-if="component" class="docs-notice wl-text-small" role="alert">Компонент «{{ component }}» не найден. Выберите компонент в каталоге.</p>
           <nav class="docs-section-links" aria-label="Разделы документации"><a v-for="section in overviewSections" :key="section.id" class="docs-anchor-link" :href="'#' + section.id">{{ section.title }}</a></nav>
           <section class="docs-overview-section wl-stack" data-space="lg">
-            <div class="wl-stack" data-space="sm"><p class="docs-eyebrow">01 / Начало</p><h2 :id="installHeading.id" class="wl-text-heading">{{ installHeading.title }}</h2><p class="wl-text-body wl-text-muted">Vue 3 — единственный обязательный peer. Установите пакет, явно подключите стили и выберите тему. WlConfig нужен только для глобальных pt, локали и анимаций.</p></div>
+            <div class="wl-stack" data-space="sm"><p class="docs-eyebrow">01 / Начало</p><h2 :id="installHeading.id" class="wl-text-heading">{{ installHeading.title }}</h2><p class="wl-text-body wl-text-muted">Vue 3 — единственная обязательная peer-зависимость. Установите пакет, подключите стили и выберите тему. WlConfig нужен для общих настроек pt, локали и анимаций.</p></div>
             <WlSegmented v-model="installManager" :options="installationManagers" aria-label="Менеджер пакетов для установки" />
             <CodePanel :source="installationCommand" :title="`Установка через ${installManager}`" :expanded="true" />
             <CodePanel :source="installationSource" title="main.ts · подключение приложения" :expanded="true" />
-            <p class="wl-text-small wl-text-muted">В примере подключена Classic. Для Classic Dark, Newspaper, Gavia или Gavia Dark импортируйте соответствующий CSS из <code>gavia-ui/themes/</code> и установите <code>data-wl-theme</code> на корневом элементе. Gavia и её шрифт доступны начиная с 0.9.1; Gavia Dark доступна начиная с 0.10.0. Для обеих тем Gavia дополнительно подключите <code>gavia-ui/styles/fonts/gavia.css</code>.</p>
+            <p class="wl-text-small wl-text-muted">В примере подключена Classic. Для Classic Dark, Newspaper, Gavia или Gavia Dark импортируйте соответствующий CSS из <code>gavia-ui/themes/</code> и установите <code>data-wl-theme</code> на корневом элементе. Gavia и её шрифт доступны с 0.9.1; Gavia Dark — с 0.10.0. Для обеих тем Gavia дополнительно подключите <code>gavia-ui/styles/fonts/gavia.css</code>.</p>
           </section>
 
           <section class="docs-overview-section wl-stack" data-space="lg">
-            <div class="wl-stack" data-space="sm"><h2 :id="foundationsHeading.id" class="wl-text-heading">{{ foundationsHeading.title }}</h2><p class="wl-text-body wl-text-muted">Типографика, компоновка и понятный текст: практические правила и живые примеры с кодом для приложения.</p></div>
+            <div class="wl-stack" data-space="sm"><h2 :id="foundationsHeading.id" class="wl-text-heading">{{ foundationsHeading.title }}</h2><p class="wl-text-body wl-text-muted">Типографика, layout и тексты интерфейса. Правила и примеры с кодом.</p></div>
             <div class="wl-grid" data-space="lg">
               <article v-for="foundation in documentationFoundations" :key="foundation.key" class="wl-surface wl-stack" data-space="md">
                 <h3 class="wl-text-subheading">{{ foundation.label }}</h3><p class="wl-text-body wl-text-muted">{{ foundation.description }}</p>
-                <div><WlButton size="sm" @click="emit('section', foundation.key)">Читать {{ foundation.label }}</WlButton></div>
+                <div><WlButton size="sm" @click="emit('section', foundation.key)">К разделу «{{ foundation.label }}»</WlButton></div>
               </article>
             </div>
           </section>
           <section class="docs-overview-section wl-stack" data-space="lg">
-            <div class="wl-stack" data-space="sm"><p class="docs-eyebrow">02 / Компоненты</p><h2 :id="componentsHeading.id" class="wl-text-heading">{{ componentsHeading.title }}</h2><p class="wl-text-body wl-text-muted">В каталоге {{ wlManifest.length }} компонента: props, значения по умолчанию, события, слоты и v-model читаются из манифеста. У каждого компонента есть живой пример с настройками, расширенные сценарии, API и правила доступности.</p></div>
+            <div class="wl-stack" data-space="sm"><p class="docs-eyebrow">02 / Компоненты</p><h2 :id="componentsHeading.id" class="wl-text-heading">{{ componentsHeading.title }}</h2><p class="wl-text-body wl-text-muted">В каталоге {{ wlManifest.length }} компонента. Для каждого есть пример с настройками, дополнительные сценарии, API и правила доступности. Props, значения по умолчанию, события, слоты и v-model взяты из манифеста.</p></div>
             <article class="docs-pilot-card wl-stack" data-space="md">
               <p class="docs-eyebrow">Примеры, API и доступность</p><h3 class="wl-text-heading">WlButton</h3>
-              <p class="wl-text-body wl-text-muted">Все варианты и размеры, disabled/loading, доступность, pt и копируемый Vue SFC, который совпадает с живым примером.</p>
-              <div class="wl-inline" data-space="sm"><WlButton variant="primary" @click="emit('component', 'WlButton')">Изучить WlButton</WlButton><WlButton variant="ghost" @click="emit('component', 'WlInput')">Поля и формы</WlButton><WlButton variant="ghost" @click="emit('component', 'WlDialog')">Диалоги и оверлеи</WlButton></div>
+              <p class="wl-text-body wl-text-muted">Варианты, размеры, disabled/loading, pt и правила доступности. Код Vue SFC совпадает с примером на странице.</p>
+              <div class="wl-inline" data-space="sm"><WlButton variant="primary" @click="emit('component', 'WlButton')">Открыть WlButton</WlButton><WlButton variant="ghost" @click="emit('component', 'WlInput')">Поля и формы</WlButton><WlButton variant="ghost" @click="emit('component', 'WlDialog')">Диалоги и оверлеи</WlButton></div>
             </article>
           </section>
 
           <section class="docs-overview-section wl-stack" data-space="md">
             <p class="docs-eyebrow">03 / Оформление</p><h2 :id="tokensHeading.id" class="wl-text-heading">{{ tokensHeading.title }}</h2>
-            <p class="wl-text-body wl-text-muted">Foundation → semantic → component. Namespace <code>--wl-*</code>, пять тем через <code>data-wl-theme</code>, явный импорт CSS. Компоненты сохраняют DOM и поведение при смене темы.</p>
-            <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="emit('section', 'colors')">Цвета и темы</WlButton><WlButton size="sm" variant="ghost" @click="emit('navigate', 'system')">Каталог токенов и правила</WlButton><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md">Документ дизайн-системы</a></div>
+            <p class="wl-text-body wl-text-muted">Токены разделены на foundation → semantic → component и используют namespace <code>--wl-*</code>. Подключите CSS темы и выберите её через <code>data-wl-theme</code>. Доступно пять тем; при переключении DOM и поведение компонентов сохраняются.</p>
+            <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="emit('section', 'colors')">Цвета и темы</WlButton><WlButton size="sm" variant="ghost" @click="emit('navigate', 'system')">Каталог токенов и правила</WlButton><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md">Руководство по дизайн-системе</a></div>
           </section>
 
           <section class="docs-overview-section wl-stack" data-space="md">
-            <p class="docs-eyebrow">04 / Иконография</p><h2 :id="iconsHeading.id" class="wl-text-heading">{{ iconsHeading.title }}</h2>
-            <p class="wl-text-body wl-text-muted">WlIcon использует встроенный SVG-каталог. Передавайте имя через <code>name</code>; новые рисунки добавляются SVG-партией и проверяются командами <code>icons:sync</code> и <code>icons:check</code>.</p>
+            <p class="docs-eyebrow">04 / Иконки</p><h2 :id="iconsHeading.id" class="wl-text-heading">{{ iconsHeading.title }}</h2>
+            <p class="wl-text-body wl-text-muted">Передайте в <code>name</code> имя иконки из встроенного SVG-каталога. Для добавления иконок используйте <code>icons:sync</code> и <code>icons:check</code>.</p>
             <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="emit('section', 'icons')">Открыть каталог иконок</WlButton><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/icons.md">Правила создания SVG</a></div>
           </section>
 
           <section class="docs-overview-section wl-stack" data-space="md">
             <p class="docs-eyebrow">05 / Обновление</p><h2 :id="migrationHeading.id" class="wl-text-heading">{{ migrationHeading.title }}</h2>
-            <p class="wl-text-body wl-text-muted">Публичные exports Wl*, классы wl-* и токены --wl-* сохраняются. Перед обновлением прочитайте заметки нужной версии и проверьте сценарии своего приложения.</p>
+            <p class="wl-text-body wl-text-muted">Имена exports Wl*, классов wl-* и токенов --wl-* сохраняются. Перед обновлением прочитайте заметки к нужной версии и проверьте своё приложение.</p>
             <ul class="docs-migration-links"><li><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-gavia.md">Переход на имя gavia-ui</a></li><li><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.8.md">Миграция 0.8: pickers и иконки</a></li><li><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.5.md">Миграция 0.5: настройка WlConfig</a></li></ul>
             <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="emit('navigate', 'project')">Changelog</WlButton></div>
           </section>

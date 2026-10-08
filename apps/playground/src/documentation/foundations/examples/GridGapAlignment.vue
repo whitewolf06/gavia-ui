@@ -19,7 +19,7 @@ const alignmentOptions = [
     </div>
     <div class="alignment-example-grid wl-grid" :data-space="space" :style="{ alignItems: alignment }">
       <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">Короткая карточка</h3><p class="wl-text-body">Одна короткая мысль.</p></article>
-      <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">Больше содержимого</h3><p class="wl-text-body">Другая карточка содержит несколько абзацев. Высота ряда определяется самой высокой карточкой.</p><p class="wl-text-small wl-text-muted">Stretch растягивает соседей; start и center сохраняют их собственную высоту.</p></article>
+      <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">Больше содержимого</h3><p class="wl-text-body">В этой карточке больше текста. Самая высокая карточка задаёт высоту ряда.</p><p class="wl-text-small wl-text-muted">Stretch растягивает соседей; start и center сохраняют их собственную высоту.</p></article>
     </div>
     <p class="wl-text-small wl-text-muted" role="status">Gap: {{ space }} · align-items: {{ alignment }}</p>
   </section>

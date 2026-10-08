@@ -80,7 +80,7 @@ test("Home metadata and the old project query survive refresh with production as
   await expect(page.getByTestId("project-version")).toHaveText(packageMetadata.version);
   await expect(page.locator(".pg-kit-version")).toHaveText(`v${packageMetadata.version}`);
   const packageStatus = page.getByTestId("project-npm-status");
-  await expect(packageStatus).toContainText("опубликован в публичном npm");
+  await expect(packageStatus).toContainText("доступен в npm");
   await expect(packageStatus.getByRole("link", { name: `${packageMetadata.name}@${publishedVersion}`, exact: true })).toHaveAttribute("href", packageUrl);
   await expect(packageStatus.locator("code")).toHaveText(`pnpm add ${packageMetadata.name}@${publishedVersion}`);
 
@@ -115,7 +115,7 @@ test("Home metadata and the old project query survive refresh with production as
   expect(releaseHash).toMatch(/^#project-release-/);
   await releaseLink.click();
   await navigateMainView(page, "Дизайн-система");
-  await expect(page.getByRole("heading", { name: "Единый язык интерфейсов", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
   await page.goBack();
   await expect(page.locator(`${releaseHash}-title`)).toBeInViewport();
   expectPagesLocation(page, "project");
@@ -126,7 +126,7 @@ test("navigation, Back and Forward preserve the repository subpath", async ({ pa
   await expect(page.getByRole("heading", { name: projectTitle, exact: true })).toBeVisible();
 
   await navigateMainView(page, "Дизайн-система");
-  await expect(page.getByRole("heading", { name: "Единый язык интерфейсов", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
   expectPagesLocation(page, "system");
 
   await navigateMainView(page, "Документация");
@@ -141,7 +141,7 @@ test("navigation, Back and Forward preserve the repository subpath", async ({ pa
   await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Документация");
   expectPagesLocation(page, "docs");
   await page.goBack();
-  await expect(page.getByRole("heading", { name: "Единый язык интерфейсов", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
   expectPagesLocation(page, "system");
   await page.goForward();
   await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Документация");
@@ -183,7 +183,7 @@ test("Changelog history links point to repository documents and all themes fit t
 test("production lazy examples, recipes and copied source work beneath the Pages prefix", async ({ page, context }) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.goto(`${pagesPath}?view=system`);
-  await expect(page.getByRole("heading", { name: "Единый язык интерфейсов", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
 
   await page.getByRole("combobox", { name: "Компонент", exact: true }).click();
   await page.getByRole("listbox").getByRole("option", { name: "WlButton", exact: true }).click();
@@ -191,7 +191,7 @@ test("production lazy examples, recipes and copied source work beneath the Pages
   await expect(explorer).toHaveAttribute("data-component", "WlButton");
   const example = page.getByTestId("ds-example-preview");
   await example.getByRole("button", { name: "Добавить", exact: true }).click();
-  await expect(example.getByRole("status")).toHaveText("Действий: 1");
+  await expect(example.getByRole("status")).toHaveText("Нажатий: 1");
 
   await explorer.getByText("Показать Vue-код", { exact: true }).click();
   const source = await explorer.locator("pre code").innerText();
@@ -243,7 +243,7 @@ test("picker documentation examples work beneath the Pages prefix", async ({ pag
   await fileCard.getByRole("button", { name: "Выбрать файлы", exact: true }).click();
   await (await opened).setFiles({ name: "pages-example.txt", mimeType: "text/plain", buffer: Buffer.from("Pages example") });
   await expect(fileCard.getByRole("status")).toHaveText("Выбрано: pages-example.txt");
-  await fileCard.getByRole("button", { name: "Очистить список приложения", exact: true }).click();
+  await fileCard.getByRole("button", { name: "Очистить список", exact: true }).click();
   await expect(fileCard.getByRole("status")).toHaveText("Можно выбрать файлы повторно.");
   await expectNoPageOverflow(page);
   expectPagesLocation(page, "docs", "WlFilePicker");
@@ -270,7 +270,7 @@ test("Theme builder scopes live colors, restores its draft and exports a working
   await page.keyboard.down("Space");
   await expect(createAction).toHaveCSS("background-color", "rgb(24, 42, 51)");
   await page.keyboard.up("Space");
-  await expect(preview.getByRole("status")).toHaveText("Действий: 1");
+  await expect(preview.getByRole("status")).toHaveText("Нажатий: 1");
   const bg = builder.getByRole("textbox", { name: "Основной фон", exact: true });
   await bg.fill("#f0");
   await expect(bg).toHaveAttribute("aria-invalid", "true");
@@ -290,7 +290,7 @@ test("Theme builder scopes live colors, restores its draft and exports a working
   await overlay.getByRole("option", { name: "Высокий", exact: true }).click();
   await expect(priority).toHaveText("Высокий");
   await preview.getByRole("button", { name: "Создать проект", exact: true }).click();
-  await expect(preview.getByRole("status")).toHaveText("Действий: 2");
+  await expect(preview.getByRole("status")).toHaveText("Нажатий: 2");
   await builder.getByRole("checkbox", { name: "Disabled", exact: true }).check();
   await expect(preview.getByRole("button", { name: "Создать проект", exact: true })).toBeDisabled();
   await page.reload();
@@ -403,7 +403,7 @@ test("quality documentation keeps bookmarked anchors and theme links under the P
   await expectNoPageOverflow(page);
   await navigateMainView(page, "Главная");
   const summary = page.getByTestId("home-quality");
-  const homeLink = summary.getByRole("link", { name: "Все проверки", exact: true });
+  const homeLink = summary.getByRole("link", { name: "Результаты проверок", exact: true });
   const homeUrl = new URL((await homeLink.getAttribute("href"))!, page.url());
   expect(homeUrl.pathname).toBe(pagesPath);
   expect(homeUrl.searchParams.get("theme")).toBe("graphite");

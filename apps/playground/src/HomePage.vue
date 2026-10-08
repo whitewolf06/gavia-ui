@@ -56,15 +56,15 @@ async function copyInstall(): Promise<void> {
   }
 }
 const sections = [
-  { view: "docs", number: "01", icon: "book", title: "Документация", description: "Подключение, основы и руководства по всем компонентам: настройки, примеры, API и доступность." },
-  { view: "system", number: "02", icon: "image", title: "Дизайн-система", description: "Токены, типографика, состояния и готовые сценарии. Единые правила в пяти темах." },
-  { view: "project", number: "03", icon: "file", title: "Changelog", description: "История выпусков, подготовленные изменения и заметки о переходе между версиями." }
+  { view: "docs", number: "01", icon: "book", title: "Документация", description: "Подключение библиотеки и работа с компонентами: примеры, настройки, API и доступность." },
+  { view: "system", number: "02", icon: "image", title: "Дизайн-система", description: "Токены, типографика, состояния компонентов и примеры в пяти темах." },
+  { view: "project", number: "03", icon: "file", title: "Changelog", description: "Что изменилось в выпущенных версиях, что подготовлено и что учесть при обновлении." }
 ] as const;
 const metrics = [
-  { label: "Компонентов", value: wlManifest.length, icon: "box", caption: "Готовых к использованию" },
-  { label: "Иконок", value: WL_ICON_NAMES.length, icon: "image", caption: "Единый стиль" },
+  { label: "Компонентов", value: wlManifest.length, icon: "box", caption: "" },
+  { label: "Иконок", value: WL_ICON_NAMES.length, icon: "image", caption: "" },
   { label: "Токенов", value: wlDesignTokens.length, icon: "database", caption: "Цвета, отступы, типографика" },
-  { label: "Темы", value: wlDesignThemes.length, icon: "grid", caption: "Светлая, тёмная и другие" }
+  { label: "Темы", value: wlDesignThemes.length, icon: "grid", caption: "Светлые и тёмные темы" }
 ] as const;
 const buttonPreview = { variant: "primary" } as const;
 const buttonSource = consumerSource(buttonExampleSource, buttonPreview);
@@ -107,8 +107,8 @@ createApp(App).mount("#app");`;
           <span class="wl-text-small wl-text-muted" title="Версия исходников">v<span data-testid="project-version">{{ project.version }}</span></span>
         </div>
         <h1 id="home-title" class="home-title">Gavia UI</h1>
-        <p class="home-tagline">Ясный язык для ваших интерфейсов.</p>
-        <p class="home-lead wl-text-body wl-text-muted">Компоненты, общие токены и живые примеры для Vue-приложений. От первой кнопки до согласованного интерфейса в пяти темах.</p>
+        <p class="home-tagline">Библиотека компонентов для Vue&nbsp;3.</p>
+        <p class="home-lead wl-text-body wl-text-muted">Кнопки, поля, таблицы и иконки. Общие токены, пять тем оформления и примеры с кодом.</p>
         <nav class="wl-inline" data-space="md" aria-label="Начать работу с Gavia UI">
           <a class="home-action wl-btn wl-btn--primary wl-btn--md" data-wl="button" data-variant="primary" data-size="md" data-density="default" :href="themedHref('?view=docs')" @click.prevent="emit('navigate', 'docs')">Читать документацию <WlIcon name="arrow-right" :size="18" /></a>
           <a class="home-action wl-btn wl-btn--secondary wl-btn--md" data-wl="button" data-variant="secondary" data-size="md" data-density="default" :href="themedHref('?view=docs#docs-components')" @click.prevent="emit('catalog')">Все компоненты</a>
@@ -127,7 +127,7 @@ createApp(App).mount("#app");`;
       <section class="home-install-card wl-stack" data-space="lg" aria-labelledby="home-install-title" data-testid="project-npm-status">
         <div class="home-install-brand">
           <span class="home-mark home-mark-mask" aria-hidden="true" :style="{ maskImage: 'url(' + gaviaMarkUrl + ')', WebkitMaskImage: 'url(' + gaviaMarkUrl + ')' }" />
-          <div class="wl-stack" data-space="xs"><p class="wl-text-subheading">Начните с установки</p><p v-if="project.npmPublished" class="wl-text-small wl-text-muted">Пакет <a class="home-text-link" :href="project.packageUrl">{{ project.packageName }}@{{ project.publishedVersion }}</a> опубликован в публичном npm.</p><p v-else class="wl-text-small wl-text-muted">Первый выпуск {{ project.packageName }} в публичном npm ещё не опубликован. Установка из исходников описана в инструкции ниже.</p></div>
+          <div class="wl-stack" data-space="xs"><p v-if="project.npmPublished" class="wl-text-small wl-text-muted">Пакет <a class="home-text-link" :href="project.packageUrl">{{ project.packageName }}@{{ project.publishedVersion }}</a> доступен в npm.</p><p v-else class="wl-text-small wl-text-muted">{{ project.packageName }} ещё не опубликован в npm. Подключение из исходников описано ниже.</p></div>
         </div>
         <h2 id="home-install-title" class="wl-text-heading">Добавьте Gavia UI в проект</h2>
         <WlSegmented v-if="project.npmPublished" v-model="installManager" :options="installationManagers" aria-label="Менеджер пакетов для установки" />
@@ -136,20 +136,20 @@ createApp(App).mount("#app");`;
           <WlButton v-if="project.npmPublished" size="sm" variant="secondary" :loading="pending" @click="copyInstall"><template #icon><WlIcon :name="copied ? 'check' : 'copy'" :size="16" /></template>{{ copied ? 'Скопировано' : 'Копировать команду' }}</WlButton>
           <a class="home-text-link wl-text-small" href="#home-quickstart">Пример подключения</a>
         </div>
-        <p class="home-copy-status wl-text-small wl-text-muted" role="status">{{ copied ? 'Команда установки скопирована.' : manual ? 'Буфер обмена недоступен. Скопируйте команду из поля ниже.' : 'Vue 3 должен быть установлен в вашем приложении.' }}</p>
+        <p class="home-copy-status wl-text-small wl-text-muted" role="status">{{ copied ? 'Команда установки скопирована.' : manual ? 'Буфер обмена недоступен. Скопируйте команду из поля ниже.' : 'Для работы библиотеки нужен Vue 3.' }}</p>
         <textarea v-if="manual" class="home-manual-copy" readonly :value="installCommand" aria-label="Команда установки для ручного копирования" @focus="($event.target as HTMLTextAreaElement).select()" />
       </section>
     <dl class="home-metrics" aria-label="Состав библиотеки">
       <div v-for="metric in metrics" :key="metric.label" class="home-metric">
         <dt class="home-metric-label"><span class="home-metric-icon" aria-hidden="true"><WlIcon :name="metric.icon" :size="25" /></span>{{ metric.label }}</dt>
         <dd class="home-metric-value">{{ metric.value }}</dd>
-        <dd class="home-metric-caption wl-text-small wl-text-muted">{{ metric.caption }}</dd>
+        <dd v-if="metric.caption" class="home-metric-caption wl-text-small wl-text-muted">{{ metric.caption }}</dd>
       </div>
     </dl>
     </div>
 
     <section class="wl-stack" data-space="lg" aria-labelledby="home-sections-title">
-      <div class="home-section-heading"><h2 id="home-sections-title" class="wl-text-title">Найдите нужный раздел</h2><span class="wl-text-small wl-text-muted">Документы · примеры · правила</span></div>
+      <div class="home-section-heading"><h2 id="home-sections-title" class="wl-text-title">Разделы</h2></div>
       <nav class="home-sections" aria-label="Разделы Gavia UI">
         <a v-for="section in sections" :key="section.view" class="home-section-card wl-stack" data-space="lg" :href="themedHref(`?view=${section.view === 'project' ? 'changelog' : section.view}`)" @click.prevent="emit('navigate', section.view)">
           <div class="home-card-top"><span class="home-card-icon"><WlIcon :name="section.icon" :size="22" /></span><span class="home-card-number wl-text-code">{{ section.number }}</span></div>
@@ -157,18 +157,18 @@ createApp(App).mount("#app");`;
           <span class="home-card-arrow" aria-hidden="true"><WlIcon name="arrow-right" :size="20" /></span>
         </a>
       </nav>
-      <p class="wl-text-small wl-text-muted">Хотите свою палитру? <a class="home-text-link" :href="themedHref('?view=theme-builder')" @click.prevent="emit('navigate', 'theme-builder')">Подобрать тему <WlIcon name="arrow-right" :size="14" /></a></p>
+      <p class="wl-text-small wl-text-muted">Настройте цвета в разделе <a class="home-text-link" :href="themedHref('?view=theme-builder')" @click.prevent="emit('navigate', 'theme-builder')">«Подбор темы» <WlIcon name="arrow-right" :size="14" /></a>.</p>
     </section>
 
     <section id="home-project" class="home-project wl-stack" data-space="lg" aria-labelledby="home-project-title" data-testid="home-project-info">
-      <h2 id="home-project-title" class="wl-text-title">Свободно для ваших проектов</h2>
+      <h2 id="home-project-title" class="wl-text-title">Лицензия и участие в проекте</h2>
       <div class="home-project-grid">
         <article class="home-project-panel home-project-panel--forest">
           <img class="home-project-art" :class="{ 'home-project-art--dark': isDarkTheme }" :src="gaviaForestUrl" alt="" aria-hidden="true" width="2172" height="724" loading="lazy" decoding="async" />
           <span class="home-project-icon" aria-hidden="true"><WlIcon name="heart" :size="25" /></span>
           <div class="home-project-copy wl-stack" data-space="md">
-            <h3 class="wl-text-heading">Бесплатно, включая коммерческое использование</h3>
-            <p class="wl-text-body wl-text-muted">Gavia UI можно использовать в личных и коммерческих проектах, изменять и распространять с сохранением текста MIT и уведомления об авторских правах.</p>
+            <h3 class="wl-text-heading">Бесплатно для личных и коммерческих проектов</h3>
+            <p class="wl-text-body wl-text-muted">Gavia UI можно использовать, изменять и распространять, в том числе в коммерческих проектах. Сохраняйте текст лицензии MIT и уведомление об авторских правах.</p>
             <nav class="wl-stack" data-space="sm" aria-label="Документация подключения">
               <a class="home-text-link wl-text-small" :href="project.instructionsUrl" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">Подключение и <span class="home-external-link-tail">инструкции <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>
               <a class="home-text-link wl-text-small" :href="project.documentationBaseUrl + 'docs/design-system.md'" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">Правила <span class="home-external-link-tail">дизайн-системы <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>
@@ -180,19 +180,19 @@ createApp(App).mount("#app");`;
           <img class="home-project-art" :class="{ 'home-project-art--dark': isDarkTheme }" :src="gaviaReedsUrl" alt="" aria-hidden="true" width="2172" height="724" loading="lazy" decoding="async" />
           <span class="home-project-icon" aria-hidden="true"><WlIcon name="users" :size="25" /></span>
           <div class="home-project-copy wl-stack" data-space="md">
-            <h3 class="wl-text-heading">Участвуйте в развитии</h3>
-            <p class="wl-text-body wl-text-muted">Идеи, сообщения об ошибках и улучшения принимаются в <a class="home-text-link" :href="project.repositoryUrl + '/issues'" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">GitHub <span class="home-external-link-tail">Issues <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>. Порядок работы с кодом и проверками описан в <a class="home-text-link" :href="project.contributingUrl" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">руководстве для <span class="home-external-link-tail">участников <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>.</p>
-            <p class="wl-text-small wl-text-muted">В Changelog собраны выпущенные версии и подготовленные изменения. Перед обновлением проверьте заметки о миграции.</p>
+            <h3 class="wl-text-heading">Ошибки и предложения</h3>
+            <p class="wl-text-body wl-text-muted">Об ошибках и предложениях пишите в <a class="home-text-link" :href="project.repositoryUrl + '/issues'" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">GitHub <span class="home-external-link-tail">Issues <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>. Если хотите внести изменения в код, прочитайте <a class="home-text-link" :href="project.contributingUrl" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">руководство для <span class="home-external-link-tail">участников <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>.</p>
+            <p class="wl-text-small wl-text-muted">Перед обновлением прочитайте Changelog и заметки о миграции.</p>
           </div>
         </article>
       </div>
     </section>
 
     <section id="home-quickstart" class="home-quickstart wl-stack" data-space="lg" aria-labelledby="home-quickstart-title">
-      <div class="home-section-heading"><div class="wl-stack" data-space="xs"><h2 id="home-quickstart-title" class="wl-text-title">Первая кнопка — без лишних настроек</h2><p class="wl-text-small wl-text-muted">Подключите стили и тему явно, затем импортируйте компонент. В примере используется Classic. Для Gavia и Gavia Dark дополнительно подключите шрифтовой CSS и выберите тему gavia или gavia-dark. Gavia Dark доступна начиная с 0.10.0.</p></div><a class="home-text-link wl-text-small" :href="themedHref('?view=docs&component=WlButton')" @click.prevent="emit('component', 'WlButton')">Документация WlButton <WlIcon name="arrow-right" :size="16" /></a></div>
+      <div class="home-section-heading"><div class="wl-stack" data-space="xs"><h2 id="home-quickstart-title" class="wl-text-title">Подключение и пример кнопки</h2><p class="wl-text-small wl-text-muted">Подключите стили и тему, затем импортируйте компонент. В примере используется Classic. Для Gavia и Gavia Dark дополнительно подключите CSS шрифта и выберите тему gavia или gavia-dark. Gavia Dark доступна с версии 0.10.0.</p></div><a class="home-text-link wl-text-small" :href="themedHref('?view=docs&component=WlButton')" @click.prevent="emit('component', 'WlButton')">Документация WlButton <WlIcon name="arrow-right" :size="16" /></a></div>
       <div class="home-quickstart-grid">
-        <article class="home-setup-panel wl-stack" data-space="lg" aria-labelledby="home-setup-title"><div class="wl-stack" data-space="sm"><p class="home-panel-label wl-text-small">01 / main.ts</p><h3 id="home-setup-title" class="wl-text-subheading">Стили и тема</h3><p class="wl-text-small wl-text-muted">Для базовых компонентов установка плагина не требуется.</p></div><CodePanel :source="setupSource" title="Показать main.ts" /></article>
-        <article class="home-button-panel wl-stack" data-space="lg" aria-labelledby="home-button-title"><div class="wl-stack" data-space="sm"><p class="home-panel-label wl-text-small">02 / App.vue</p><h3 id="home-button-title" class="wl-text-subheading">Попробуйте компонент</h3></div><div class="home-button-preview"><ButtonExample :preview="buttonPreview" /></div><CodePanel :source="buttonSource" title="Показать App.vue" /></article>
+        <article class="home-setup-panel wl-stack" data-space="lg" aria-labelledby="home-setup-title"><div class="wl-stack" data-space="sm"><p class="home-panel-label wl-text-small">01 / main.ts</p><h3 id="home-setup-title" class="wl-text-subheading">Стили и тема</h3><p class="wl-text-small wl-text-muted">Базовые компоненты работают без установки плагина.</p></div><CodePanel :source="setupSource" title="Показать main.ts" /></article>
+        <article class="home-button-panel wl-stack" data-space="lg" aria-labelledby="home-button-title"><div class="wl-stack" data-space="sm"><p class="home-panel-label wl-text-small">02 / App.vue</p><h3 id="home-button-title" class="wl-text-subheading">Пример кнопки</h3></div><div class="home-button-preview"><ButtonExample :preview="buttonPreview" /></div><CodePanel :source="buttonSource" title="Показать App.vue" /></article>
       </div>
     </section>
     <QualitySummary :href="themedHref('?view=docs&section=quality')" @navigate="emit('quality')" />

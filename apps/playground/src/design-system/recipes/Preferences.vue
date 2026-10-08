@@ -14,10 +14,10 @@ function cancel(): void { draft.value = { ...saved.value }; success.value = fals
   <form class="wl-stack" data-space="lg" aria-label="Настройки уведомлений" @submit.prevent="save">
     <WlPageHeader title="Уведомления и доступ" description="Изменения применяются после сохранения." :heading-level="2" size="md" />
     <fieldset class="ds-recipe-fieldset wl-stack" data-space="md"><legend class="wl-text-label">Каналы уведомлений</legend><WlSwitch v-model="draft.email" aria-label="Email-уведомления">Email</WlSwitch><WlSwitch v-model="draft.push" aria-label="Push-уведомления">Push</WlSwitch></fieldset>
-    <WlField label="Частота" id="recipe-frequency" hint="Включите хотя бы один канал."><WlSelect id="recipe-frequency" v-model="draft.frequency" aria-label="Частота уведомлений" aria-describedby="recipe-frequency-desc" :disabled="!draft.email && !draft.push" :options="[{ label: 'Каждый день', value: 'daily' }, { label: 'Раз в неделю', value: 'weekly' }]" option-label="label" option-value="value" /></WlField>
+    <WlField label="Частота" id="recipe-frequency" hint="Чтобы выбрать частоту, включите Email или Push."><WlSelect id="recipe-frequency" v-model="draft.frequency" aria-label="Частота уведомлений" aria-describedby="recipe-frequency-desc" :disabled="!draft.email && !draft.push" :options="[{ label: 'Каждый день', value: 'daily' }, { label: 'Раз в неделю', value: 'weekly' }]" option-label="label" option-value="value" /></WlField>
     <fieldset class="ds-recipe-fieldset wl-stack" data-space="md"><legend class="wl-text-label">Кто видит материалы</legend><WlRadio v-model="draft.access" value="team" name="recipe-access">Вся команда</WlRadio><WlRadio v-model="draft.access" value="private" name="recipe-access">Только я</WlRadio></fieldset>
     <p class="wl-text-small wl-text-muted" role="status">{{ changed ? 'Есть несохранённые изменения.' : 'Изменений нет.' }}</p>
-    <WlAlert v-if="success && !changed" variant="ok" title="Настройки сохранены">Предпочтения обновлены.</WlAlert>
+    <WlAlert v-if="success && !changed" variant="ok" title="Настройки сохранены">Изменения применены.</WlAlert>
     <div class="wl-inline" data-space="sm"><WlButton variant="primary" type="submit" :disabled="!changed">Сохранить настройки</WlButton><WlButton variant="ghost" :disabled="!changed" @click="cancel">Отменить изменения</WlButton></div>
   </form>
 </template>

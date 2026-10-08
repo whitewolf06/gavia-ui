@@ -4,7 +4,7 @@ import { WlButton, useWlConfirm } from "../../../../../../packages/ui-kit/src";
 // Install WlConfirmationService and mount one WlConfirmDialog in the root.
 const confirm = useWlConfirm();
 const removed = ref(false);
-const result = ref("Ожидается действие.");
+const result = ref("Выберите действие.");
 function share(): void { confirm.confirm({ header: "Поделиться планом?", message: "В этом примере изменится только локальный статус.", acceptLabel: "Поделиться", rejectLabel: "Не сейчас", accept: () => result.value = "План отмечен как общий.", reject: () => result.value = "Публикация отменена." }); }
 function remove(): void { confirm.confirmDanger({ header: "Удалить черновик?", message: "Перед удалением сохраните нужные данные.", acceptLabel: "Удалить черновик", rejectLabel: "Оставить", accept: () => { removed.value = true; result.value = "Черновик удалён в локальном примере."; }, reject: () => result.value = "Черновик оставлен." }); }
 </script>

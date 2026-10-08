@@ -26,26 +26,26 @@ function navigate(event: MouseEvent): void {
     <div class="pg-quality-summary-heading">
       <div class="wl-stack" data-space="xs">
         <h2 id="home-quality-title" class="wl-text-title">Качество и совместимость</h2>
-        <p class="wl-text-small wl-text-muted">Проверки компонентов, браузеров, доступности и установленного пакета.</p>
+        <p class="wl-text-small wl-text-muted">Проверки компонентов, доступности, работы в браузерах и установки пакета.</p>
       </div>
       <a :href="href" class="wl-btn wl-btn--secondary wl-btn--md pg-quality-summary-link"
         data-wl="button" data-variant="secondary" data-size="md" data-density="default"
         @click="navigate">
-        <span class="wl-btn__label">Все проверки</span><WlIcon name="arrow-right" :size="16" />
+        <span class="wl-btn__label">Результаты проверок</span><WlIcon name="arrow-right" :size="16" />
       </a>
     </div>
     <div class="pg-quality-summary-metrics">
-      <WlStatCard icon="check" label="Unit-тесты" :value="testResult" description="Пройдено / всего в измеренном прогоне">
-        <template #footer><QualityMeter :value="unitPassRate" label="Пройденные unit-тесты в измеренном прогоне" /></template>
+      <WlStatCard icon="check" label="Unit-тесты" :value="testResult" description="Пройдено / всего в этом прогоне">
+        <template #footer><QualityMeter :value="unitPassRate" label="Пройденные unit-тесты в этом прогоне" /></template>
       </WlStatCard>
       <WlStatCard icon="chart-bar" label="Покрытие строк" :value="lineCoverage" description="Vitest / V8 · код библиотеки">
         <template #footer><QualityMeter :value="report.coverage.lines" label="Покрытие строк unit-тестами" /></template>
       </WlStatCard>
     </div>
     <p class="wl-text-small wl-text-muted">
-      Снимок unit-проверок: <time :datetime="report.measuredAt" :title="report.measuredAt">{{ measuredDate }} (UTC)</time>
+      Результаты unit-тестов: <time :datetime="report.measuredAt" :title="report.measuredAt">{{ measuredDate }} (UTC)</time>
       · v{{ report.version }} · {{ reportSource }}{{ report.source.dirty ? ' рабочей версии' : '' }}.
-      Текущие результаты CI — на странице качества.
+      Актуальные результаты CI — на странице качества.
     </p>
   </section>
 </template>

@@ -33,7 +33,7 @@ const workflowUrl = gaviaProjectInfo.repositoryUrl + "/actions/workflows/publish
     <section class="wl-stack" data-space="lg" :aria-labelledby="headings.measurement.id">
       <div class="wl-stack" data-space="sm">
         <h2 :id="headings.measurement.id" class="quality-anchor wl-text-heading">{{ headings.measurement.title }}</h2>
-        <p class="wl-text-body wl-text-muted">Покрытие показывает, какая часть кода выполнена unit-тестами в измеренном прогоне.</p>
+        <p class="wl-text-body wl-text-muted">Покрытие показывает, какую часть кода выполнили unit-тесты в этом прогоне.</p>
       </div>
       <div class="quality-metrics" role="group" aria-label="Покрытие unit-тестами" data-testid="quality-coverage">
         <WlStatCard v-for="metric in metrics" :key="metric.key" :icon="metric.icon" :label="metric.label" :value="percentages.format(report.coverage[metric.key]) + '%'" :description="metric.description" :data-coverage-metric="metric.key">
@@ -42,9 +42,9 @@ const workflowUrl = gaviaProjectInfo.repositoryUrl + "/actions/workflows/publish
       </div>
       <WlCard>
         <div class="wl-stack" data-space="sm">
-          <p class="wl-text-body"><strong data-testid="quality-unit-count">{{ report.tests.passed }} / {{ report.tests.total }}</strong> unit-тестов прошли в этом измерении.</p>
+          <p class="wl-text-body"><strong data-testid="quality-unit-count">{{ report.tests.passed }} / {{ report.tests.total }}</strong> unit-тестов прошли в этом прогоне.</p>
           <p class="wl-text-small wl-text-muted" data-testid="quality-report-source">{{ reportSource }} · версия {{ report.version }} · <time :datetime="report.measuredAt" :title="report.measuredAt">{{ measuredLabel }}</time></p>
-          <p class="wl-text-small wl-text-muted">Ревизия <code>{{ formatRevision(report.source.revision) }}</code><span v-if="report.source.dirty"> · рабочая копия с незакоммиченными изменениями</span>.</p>
+          <p class="wl-text-small wl-text-muted">Ревизия <code>{{ formatRevision(report.source.revision) }}</code><span v-if="report.source.dirty"> · в рабочей копии есть незакоммиченные изменения</span>.</p>
           <p class="wl-text-small">В расчёт входят компоненты, утилиты, разрешение имён иконок и токенов. E2E, визуальные сравнения и Axe выполняются отдельно. Декларации типов, сгенерированные каталоги, метаданные manifest и точки реэкспорта исключены.</p>
           <div class="wl-inline" data-space="lg"><a class="quality-link" :href="workflowUrl">Запуски и артефакты GitHub Actions</a><a class="quality-link" :href="qualitySourceUrl">Методика проверок</a></div>
         </div>
@@ -54,7 +54,7 @@ const workflowUrl = gaviaProjectInfo.repositoryUrl + "/actions/workflows/publish
     <section class="wl-stack" data-space="md" :aria-labelledby="headings.checks.id">
       <h2 :id="headings.checks.id" class="quality-anchor wl-text-heading">{{ headings.checks.title }}</h2>
       <WlTable class="quality-table" :columns="qualityCheckColumns" :value="qualityCheckRows" :pt="{ table: { 'aria-labelledby': headings.checks.id } }" />
-      <p class="wl-text-small wl-text-muted">Таблица описывает состав проверок. Состояние конкретного CI-запуска смотрите в GitHub Actions; локальный отчёт покрытия его не подтверждает. Изменения PNG принимаются после просмотра expected/actual/diff.</p>
+      <p class="wl-text-small wl-text-muted">В таблице указан состав проверок. Результат конкретного прогона смотрите в GitHub Actions. Локальный отчёт покрытия не подтверждает результат CI. Изменения PNG принимаются после просмотра expected/actual/diff.</p>
     </section>
 
     <section class="wl-stack" data-space="md" :aria-labelledby="headings.environment.id">

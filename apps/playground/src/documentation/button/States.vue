@@ -32,7 +32,7 @@ function cancel(): void {
       <WlButton v-if="loading" @click="finish">Завершить сохранение</WlButton>
       <WlButton v-if="loading" variant="ghost" @click="cancel">Отменить загрузку</WlButton>
     </div>
-    <p id="button-saving-reason" class="wl-text-small wl-text-muted">{{ noAccess ? 'Для этого действия нужны права на редактирование.' : 'Демо не отправляет запросы: завершение и отмена управляются вручную.' }}</p>
+    <p id="button-saving-reason" class="wl-text-small wl-text-muted">{{ noAccess ? 'Для этого действия нужны права на редактирование.' : 'Запросы не отправляются. Завершение и отмена в этом примере выполняются вручную.' }}</p>
     <p class="wl-text-small" role="status">{{ message }} Сохранений: {{ saved }}.</p>
   </div>
 </template>

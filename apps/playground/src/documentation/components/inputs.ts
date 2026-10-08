@@ -6,23 +6,23 @@ export interface InputDocumentationExample {
 
 /** Additional examples accompany the shared controlled preview of each input. */
 export const inputDocumentationExamples: Record<string, InputDocumentationExample> = {
-  WlTimePicker: { title: "Время, границы и состояния", description: "Три размера, компактная плотность, дневной и ночной диапазоны, ошибка и очистка nullable-модели.", sourceName: "inputs/WlTimePicker.vue" },
-  WlFilePicker: { title: "Выбор партии файлов", description: "Собственный trigger, методы ref, select/cancel, стандартные размеры и список, которым управляет приложение.", sourceName: "inputs/WlFilePicker.vue" },
+  WlTimePicker: { title: "Время, границы и состояния", description: "Три размера, плотность compact, дневной и ночной диапазоны, ошибка и очистка nullable-модели.", sourceName: "inputs/WlTimePicker.vue" },
+  WlFilePicker: { title: "Выбор нескольких файлов", description: "Собственный trigger, методы ref, select/cancel, стандартные размеры и список, которым управляет приложение.", sourceName: "inputs/WlFilePicker.vue" },
   WlInput: { title: "Размеры, слоты и проверка", description: "Сравнение размеров и плотности, prefix/suffix, связанная ошибка, disabled и очистка текста.", sourceName: "inputs/WlInput.vue" },
   WlPasswordInput: { title: "Видимость и проверка пароля", description: "Размеры и компактность, переключение отображения, проверка длины приложением и отключённое поле.", sourceName: "inputs/WlPasswordInput.vue" },
   WlNumberInput: { title: "Числа, шаг и диапазон", description: "Сравнение размеров, целые и дробные шаги, ограничение min/max, compact, invalid и disabled.", sourceName: "inputs/WlNumberInput.vue" },
-  WlTextarea: { title: "Строки, автовысота и ошибка", description: "Фиксированные rows и autoResize на общей модели, добавление строк, обязательный комментарий и очистка.", sourceName: "inputs/WlTextarea.vue" },
-  WlSelect: { title: "Объектные варианты и состояния", description: "Отдельные label/id, три размера и compact, доступные имена, ошибка, disabled и внешняя очистка.", sourceName: "inputs/WlSelect.vue" },
+  WlTextarea: { title: "Строки, высота и ошибка", description: "Фиксированная высота через rows и высота по содержимому через autoResize. Общая модель, добавление строк, обязательный комментарий и очистка.", sourceName: "inputs/WlTextarea.vue" },
+  WlSelect: { title: "Варианты из объектов и состояния", description: "Отдельные label/id, три размера и compact, доступные имена, ошибка, disabled и внешняя очистка.", sourceName: "inputs/WlSelect.vue" },
   WlMultiSelect: { title: "Чипы, фильтр и сводка", description: "Множественный выбор с фильтром, удаляемые чипы и comma-счётчик, размеры, состояния и очистка массива.", sourceName: "inputs/WlMultiSelect.vue" },
   WlAutocomplete: { title: "Поиск и несколько участников", description: "Объектные suggestions по complete, заранее заполненный dropdown, multiple, размеры и состояния.", sourceName: "inputs/WlAutocomplete.vue" },
   WlCheckbox: { title: "Связанные флажки", description: "Выбор всех доступных пунктов с вычисляемым indeterminate, согласие с ошибкой и disabled.", sourceName: "inputs/WlCheckbox.vue" },
-  WlRadio: { title: "Нативные группы выбора", description: "Две группы с общим name, подписи в слотах, обязательный выбор, invalid и недоступный вариант.", sourceName: "inputs/WlRadio.vue" },
+  WlRadio: { title: "Группы выбора", description: "Две группы с общим name внутри каждой, подписи в слотах, обязательный выбор, invalid и недоступный вариант.", sourceName: "inputs/WlRadio.vue" },
   WlSwitch: { title: "Настройки и состояния", description: "Сравнение sm/md, подписи, проверяемая настройка с ошибкой, disabled и сброс моделей.", sourceName: "inputs/WlSwitch.vue" },
-  WlSlider: { title: "Диапазоны с явным значением", description: "Два ограниченных диапазона с разными шагами, текстовые output, отключение и сброс.", sourceName: "inputs/WlSlider.vue" },
+  WlSlider: { title: "Диапазоны и текущее значение", description: "Два ограниченных диапазона с разными шагами, текстовые output, отключение и сброс.", sourceName: "inputs/WlSlider.vue" },
   WlDatePicker: { title: "Одна дата и диапазон от–до", description: "Три размера, общий focus ring, ручной ISO-ввод, minDate/maxDate, диапазон [start,end|null], ошибка, disabled и очистка.", sourceName: "inputs/WlDatePicker.vue" },
-  WlCalendar: { title: "Дата, месяц и события", description: "Две управляемые модели, несколько событий дня, переход между месяцами, переход к сегодняшней дате и список выбранного дня.", sourceName: "inputs/WlCalendar.vue" },
+  WlCalendar: { title: "Дата, месяц и события", description: "Модели даты и месяца, события выбранного дня, переход между месяцами и к сегодняшней дате.", sourceName: "inputs/WlCalendar.vue" },
   WlColorPicker: { title: "Палитра и HEX-ввод", description: "Собственные swatches, sm/md, нормализованная модель, внешний invalid, disabled и текстовое значение цвета.", sourceName: "inputs/WlColorPicker.vue" },
-  WlFileUpload: { title: "Лимиты и локальный список", description: "Проверка типа, размера и количества, reject, режим замены одним файлом, удаление и сброс ошибок.", sourceName: "inputs/WlFileUpload.vue" }
+  WlFileUpload: { title: "Лимиты и локальный список", description: "Ограничения типа, размера и количества, событие reject, замена одного файла, удаление и сброс ошибок.", sourceName: "inputs/WlFileUpload.vue" }
 };
 
 /** Rules describe each component's actual DOM and model contract. */
@@ -36,8 +36,8 @@ export const inputDocumentationAccessibility: Record<string, readonly string[]> 
   WlFilePicker: [
     "Стандартный trigger — кнопка с chooseLabel/ariaLabel. В своём trigger сохраните переданные attrs и disabled; используйте настоящий button.",
     "Вызывайте choose() из действия пользователя, чтобы браузер разрешил открытие окна выбора. Кнопке доступны Enter и Space.",
-    "select передаёт новую File[]-партию, cancel не меняет список приложения. Сообщайте итог выбора текстом и сохраняйте имена файлов.",
-    "clear() очищает нативное поле, а список приложения сбрасывается отдельно. accept лишь подсказывает типы браузеру; проверку выполняет потребитель."
+    "select передаёт новый список File[], cancel не меняет список приложения. Сообщайте итог выбора текстом и сохраняйте имена файлов.",
+    "clear() очищает нативное поле, а список приложения сбрасывается отдельно. accept подсказывает браузеру типы файлов; проверку выполняет приложение."
   ],
   WlInput: [
     "Задайте id и видимый label либо aria-label. placeholder дополняет подпись, но не заменяет её.",
@@ -49,7 +49,7 @@ export const inputDocumentationAccessibility: Record<string, readonly string[]> 
     "Нативному полю нужна подпись через id/for либо ariaLabel; autocomplete задаёт потребитель под сценарий формы.",
     "Кнопка видимости доступна с клавиатуры, меняет aria-pressed и имя «Показать пароль»/«Скрыть пароль».",
     "Переключение видимости сохраняет строковую модель. Не выводите пароль в статусах, журнале или ошибках.",
-    "Правила сложности проверяет приложение. invalid и связанное описание ошибки дополняют отключение через disabled."
+    "Сложность пароля проверяет приложение. Для ошибки передайте invalid и связанный текст; для отключения поля — disabled."
   ],
   WlNumberInput: [
     "Дайте полю ariaLabel и различимые decrementLabel/incrementLabel, особенно если на странице несколько степперов.",
@@ -97,12 +97,12 @@ export const inputDocumentationAccessibility: Record<string, readonly string[]> 
     "Нативный checkbox имеет role=switch. Подпись default-слота называет настройку, aria-checked сообщает boolean-состояние.",
     "Space переключает сфокусированный switch. Сохраняйте одинаковую подпись во включённом и выключенном состоянии.",
     "Поддерживаются размеры sm/md. disabled отключает изменение настройки, а invalid требует поясняющего текста от приложения.",
-    "Свяжите ошибку через aria-describedby; побочные действия и сохранение настройки выполняет потребитель."
+    "Свяжите ошибку через aria-describedby; сохранение настройки и связанные действия выполняет приложение."
   ],
   WlSlider: [
-    "Нативному range задайте ariaLabel и видимую подпись. Показывайте текущее число текстом, а не только положением или цветом трека.",
+    "Нативному range задайте ariaLabel и видимую подпись. Показывайте текущее значение числом рядом с ползунком. Положение и цвет трека дополняют его.",
     "Стрелки меняют значение по step, Home/End выбирают края диапазона. Нативный элемент ограничивает ввод min/max.",
-    "Модель — число. Единицы измерения и пояснение диапазона удобно связать с контролом через aria-describedby.",
+    "Модель — число. Свяжите единицы измерения и пояснение диапазона с полем через aria-describedby.",
     "disabled отключает управление. Публичный контракт не содержит invalid, size или density — проверки потребителя показывайте отдельным текстом."
   ],
   WlDatePicker: [
@@ -118,9 +118,9 @@ export const inputDocumentationAccessibility: Record<string, readonly string[]> 
     "События дополнительно перечисляйте текстом для выбранного дня. Не добавляйте несуществующие disabled/minDate/invalid: эти ограничения не входят в контракт календаря."
   ],
   WlColorPicker: [
-    "Дайте отдельные paletteLabel и inputLabel: палитра и HEX-поле являются разными контролами.",
+    "Дайте отдельные paletteLabel и inputLabel: палитра и HEX-поле — отдельные элементы управления.",
     "Стрелки циклически перемещают фокус по свотчам, Home/End — к краям; Enter/Space выбирают цвет нативной кнопкой.",
-    "Модель нормализуется к lowercase #rrggbb. Ошибочный черновик помечает HEX-поле и сохраняет последнее допустимое значение.",
+    "Модель приводится к #rrggbb в нижнем регистре. Ошибочный черновик помечает HEX-поле и сохраняет последнее допустимое значение.",
     "Показывайте цвет также текстом. Внешний invalid сопровождайте объяснением, disabled отключает палитру и ввод."
   ],
   WlFileUpload: [

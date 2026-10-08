@@ -17,7 +17,7 @@ const swatches = ["#2563eb", "#2e9e68", "#bf8615", "#d2494f", "#22252b", "#f7f7f
     <section class="wl-stack" data-space="md">
       <h4 class="wl-text-title">Внешняя ошибка и disabled</h4>
       <div class="wl-grid" data-space="lg">
-        <div class="wl-stack" data-space="sm" role="group" aria-label="Цвет с внешней ошибкой" aria-describedby="docs-color-error"><WlColorPicker v-model="color" :swatches="swatches" invalid palette-label="Палитра с ошибкой" input-label="HEX с ошибкой" /><p id="docs-color-error" class="wl-text-small" role="alert">Приложение просит согласовать выбранный цвет.</p></div>
+        <div class="wl-stack" data-space="sm" role="group" aria-label="Цвет с внешней ошибкой" aria-describedby="docs-color-error"><WlColorPicker v-model="color" :swatches="swatches" invalid palette-label="Палитра с ошибкой" input-label="HEX с ошибкой" /><p id="docs-color-error" class="wl-text-small" role="alert">Согласуйте выбранный цвет перед сохранением.</p></div>
         <div class="wl-stack" data-space="sm"><p class="wl-text-small">Недоступный цвет</p><WlColorPicker model-value="#2e9e68" :swatches="swatches" disabled palette-label="Недоступная палитра" input-label="Недоступный HEX" /></div>
       </div>
       <div class="wl-inline" data-space="sm"><span class="docs-color-preview" :style="{ backgroundColor: color }" aria-hidden="true" /><WlButton size="sm" @click="color = '#2563eb'">Сбросить цвет</WlButton></div>

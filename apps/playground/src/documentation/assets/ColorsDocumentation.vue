@@ -64,14 +64,14 @@ async function copyToken(token: string, value: string): Promise<void> {
           <p class="wl-text-code">bg: {{ resolveWlToken('--wl-bg', definition.name) }}</p><p class="wl-text-code">text: {{ resolveWlToken('--wl-text', definition.name) }}</p>
         </article>
       </div>
-      <p class="wl-text-small wl-text-muted">Foundation задаёт исходные значения, semantic связывает их с ролью, component применяет роль к конкретному элементу. Для оформления приложения используйте semantic переменные.</p>
+      <p class="wl-text-small wl-text-muted">Foundation хранит исходные значения, semantic определяет их назначение, component применяет их к элементу. Для оформления приложения используйте semantic переменные.</p>
     </section>
     <section class="wl-stack" data-space="lg" :aria-labelledby="headings.setup.id">
       <h2 :id="headings.setup.id" class="docs-assets-anchor wl-text-heading">{{ headings.setup.title }}</h2>
       <p class="wl-text-body">Импортируйте стили явно и задайте data-wl-theme на корневом элементе. Для переключения между несколькими темами импортируйте их CSS один раз и меняйте атрибут.</p>
       <div data-testid="docs-color-setup"><CodePanel :source="setupCode" title="main.ts · текущая тема" language="ts" :expanded="true" /></div>
     </section>
-    <p class="wl-text-small wl-text-muted" data-testid="docs-color-count">Semantic ролей на странице: {{ tokenCount }}. Значения взяты из текущего каталога темы; локальные CSS-переопределения приложения могут отличаться.</p>
+    <p class="wl-text-small wl-text-muted" data-testid="docs-color-count">Semantic токенов на странице: {{ tokenCount }}. Значения взяты из текущего каталога темы; локальные CSS-переопределения приложения могут отличаться.</p>
     <section v-for="group in groups" :key="group.key" class="wl-stack" data-space="lg" :aria-labelledby="group.heading.id" :data-color-group="group.key">
       <h2 :id="group.heading.id" class="docs-assets-anchor wl-text-heading">{{ group.heading.title }}</h2><p class="wl-text-body wl-text-muted">{{ group.description }}</p>
       <div class="docs-color-grid">
@@ -87,7 +87,7 @@ async function copyToken(token: string, value: string): Promise<void> {
     </section>
     <section class="wl-stack" data-space="xl" :aria-labelledby="headings.examples.id">
       <h2 :id="headings.examples.id" class="docs-assets-anchor wl-text-heading">{{ headings.examples.title }}</h2>
-      <p class="wl-text-body">Подпись, число и понятное сообщение передают смысл вместе с цветом. Проверяйте читаемость на нужной поверхности и сохраняйте видимый фокус.</p>
+      <p class="wl-text-body">Название состояния, число и сообщение должны быть понятны независимо от цвета. Проверяйте читаемость на нужной поверхности и сохраняйте видимый фокус.</p>
       <AssetExample name="color-roles" title="Поверхности и текстовые роли" :example="ColorRoles" :source="rolesSource" />
       <AssetExample name="color-states" title="Состояние, сообщение и счётчик" :example="ColorStates" :source="statesSource" />
     </section>

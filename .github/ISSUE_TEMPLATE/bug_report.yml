@@ -1,12 +1,12 @@
 name: Ошибка
-description: Сообщить о воспроизводимой проблеме Gavia UI
+description: Сообщить об ошибке и показать, как её повторить
 title: "[Bug]: "
 body:
   - type: input
     id: gavia
     attributes:
       label: Версия Gavia UI
-      placeholder: "0.9.1"
+      placeholder: "0.11.0"
     validations:
       required: true
   - type: input
@@ -35,14 +35,14 @@ body:
   - type: textarea
     id: reproduction
     attributes:
-      label: Минимальный пример и шаги воспроизведения
-      description: Ссылка на пример или минимальный Vue SFC; не прикладывайте секреты и данные пользователей.
+      label: Как повторить ошибку?
+      description: Дайте ссылку на небольшой пример или приложите Vue SFC и опишите шаги. Уберите секреты и данные пользователей.
     validations:
       required: true
   - type: textarea
     id: behavior
     attributes:
-      label: Ожидаемый и фактический результат
+      label: Что ожидали и что произошло?
     validations:
       required: true
 

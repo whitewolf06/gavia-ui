@@ -1,11 +1,11 @@
 # Переход на Gavia UI
 
-Gavia UI — независимая библиотека компонентов и дизайн-система.
-Личный репозиторий — `https://github.com/whitewolf06/gavia-ui`,
-пакет [gavia-ui@0.7.0](https://www.npmjs.com/package/gavia-ui) опубликован
+Gavia UI — библиотека компонентов и дизайн-система для Vue 3.
+Репозиторий — `https://github.com/whitewolf06/gavia-ui`.
+Первый пакет [gavia-ui@0.7.0](https://www.npmjs.com/package/gavia-ui) опубликован
 в публичном npm 2026-10-05 (Москва).
-Его изменения и путь обновления описаны в [миграции 0.7](migration-0.7.md).
-Публичная документация уже доступна в [GitHub Pages](https://whitewolf06.github.io/gavia-ui/).
+Переход на новое имя описан в [миграции 0.7](migration-0.7.md),
+документация доступна в [GitHub Pages](https://whitewolf06.github.io/gavia-ui/).
 
 ## Обновление зависимости из npm
 

@@ -14,7 +14,7 @@ function clear() { documents.value = []; image.value = []; lastRejection.value =
   <div class="wl-stack" data-space="xl" data-input-example="WlFileUpload">
     <section class="wl-stack" data-space="md" aria-labelledby="docs-upload-documents">
       <h4 id="docs-upload-documents" class="wl-text-title">Документы: тип, размер и количество</h4>
-      <p class="wl-text-small">PDF или TXT, не более двух файлов, каждый до 1 МиБ. Новая партия дополняет список; кнопка рядом с файлом удаляет его.</p>
+      <p class="wl-text-small">PDF или TXT, не более двух файлов, каждый до 1 МиБ. Новые файлы дополняют список; кнопка рядом с файлом удаляет его.</p>
       <WlFileUpload :key="`documents-${revision}`" v-model="documents" accept=".pdf,.txt" :max-files="2" :max-size="1048576" @reject="reject" />
       <p v-if="lastRejection" class="wl-text-small docs-upload-message">Последнее событие reject: {{ lastRejection }}</p>
     </section>

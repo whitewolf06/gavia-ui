@@ -2,18 +2,20 @@
 
 ## Что публикуется
 
-GitHub Pages размещает существующий playground: главную страницу, Docs,
-галерею 53 компонентов, 113 SVG-иконок, три темы, правила дизайн-системы,
-живые примеры с копированием кода и шесть законченных сценариев. Создатель,
-MIT и участие в проекте собраны на главной. Отдельная страница Changelog
-показывает историю из корневого CHANGELOG.md.
-Новые runtime-зависимости, роутер и отдельный генератор документации не нужны.
+В GitHub Pages публикуется playground: главная, Docs с руководствами
+по 53 компонентам, 113 SVG-иконок, пять тем, дизайн-система,
+рабочие примеры с кодом и шесть сценариев. Автор, лицензия MIT
+и ссылки для участников указаны на главной. Страница Changelog
+читает историю из корневого CHANGELOG.md.
+Отдельный генератор документации, роутер и новые runtime-зависимости не используются.
 
 Витрина опубликована в GitHub Pages: [Gavia UI](https://whitewolf06.github.io/gavia-ui/).
 В каноническом репозитории включён **Source: GitHub Actions**; публичный адрес
 и production-ресурсы проверены после деплоя на desktop и mobile.
-Библиотека [gavia-ui@0.7.0](https://www.npmjs.com/package/gavia-ui) также опубликована
-в публичном npm 2026-10-05 (Москва); установка в Vue-приложении: `pnpm add gavia-ui@0.7.0`.
+Библиотека доступна в [публичном npm](https://www.npmjs.com/package/gavia-ui).
+Первый выпуск 0.7.0 опубликован 2026-10-05 (Москва); текущий подтверждённый
+выпуск — 0.11.0. Установка: `pnpm add gavia-ui@0.11.0`.
+[История публикаций и проверок](releases.md).
 
 ## Настройка публикации
 
@@ -58,20 +60,20 @@ pnpm --filter gavia-ui-playground exec vite preview --base=/gavia-ui/ --host 127
 - Docs: `/gavia-ui/?view=docs`.
 - Основы: `/gavia-ui/?view=docs&section=typography`, `section=layout`, `section=content`.
 - Первая полная страница компонента: `/gavia-ui/?view=docs&component=WlButton`.
-- Галерея компонентов: `/gavia-ui/?view=components`.
+- Каталог компонентов: `/gavia-ui/?view=docs`; прежний `?view=components` открывает Docs.
 - Дизайн-система: `/gavia-ui/?view=system`.
 - Changelog: `/gavia-ui/?view=changelog`.
 - История сразу: `/gavia-ui/?view=changelog#project-changelog`.
 - Прежний `/gavia-ui/?view=project` сохраняется как совместимый адрес истории.
 
-Query-навигация сохраняет подпуть; refresh и Back/Forward работают с одним
-index.html, без серверного fallback. Подпункты выбранного раздела Docs ведут
+Переходы через query сохраняют подпуть. Обновление страницы и Back/Forward
+работают с одним index.html; серверный fallback не нужен. Подпункты выбранного раздела Docs ведут
 к его h2-якорям и сохраняют query-маршрут. Логотип, CSS и lazy-примеры проходят через
 Vite, без абсолютных файловых путей. Ссылки из changelog на Markdown-документацию
 преобразуются в абсолютные GitHub URL.
 
-После деплоя проверить публичный URL, загрузку ресурсов, переходы и пример.
-Зелёная сборка сама по себе не подтверждает доступность сайта.
+После деплоя откройте публичный URL и проверьте ресурсы, переходы и пример.
+Успешная сборка сама по себе не подтверждает, что сайт доступен.
 
 ## Обновление
 
@@ -84,8 +86,7 @@ Vite, без абсолютных файловых путей. Ссылки из
 
 Та же статическая сборка подходит для Cloudflare Pages или Netlify. Для корня
 домена собирать `pnpm build:playground` и публиковать `apps/playground/dist`.
-Смена хостинга не требует изменений компонентов. Для текущей публичной витрины
-GitHub Pages достаточно; отдельная платформа не требуется.
+Смена хостинга не требует изменений компонентов. Текущая витрина размещается в GitHub Pages.
 
 Официальные инструкции: [Vite / GitHub Pages](https://vite.dev/guide/static-deploy.html#github-pages),
 [GitHub / custom Pages workflow](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).

@@ -100,10 +100,10 @@ export function createDocumentationControls(entry: WlComponentManifest, source?:
     if (prop.values?.length) return [{ ...prop, editor: "select" }];
     if (prop.type === "number") return [numericControl(entry, prop)];
     if (entry.name === "WlIcon" && prop.name === "size") return [numericControl(entry, {
-      ...prop, description: (prop.description ?? "") + " Здесь размер задаётся числом в px; CSS-строку задайте в SFC."
+      ...prop, description: (prop.description ?? "") + " Здесь укажите размер в пикселях. CSS-значение можно задать в SFC."
     })];
     if (entry.name === "WlBadge" && prop.name === "value" || entry.name === "WlNavItem" && prop.name === "badge") return [numericControl(entry, {
-      ...prop, description: (prop.description ?? "") + " Здесь числовое значение; строковую подпись задайте в SFC."
+      ...prop, description: (prop.description ?? "") + " Здесь укажите число. Текстовую подпись можно задать в SFC."
     })];
     if (prop.type === "string") return [{
       ...prop, editor: "text",
@@ -127,13 +127,13 @@ export function documentationComplexProps(entry: WlComponentManifest, controls: 
 /** Known literal data keeps option keys and selected models compatible with the primary SFC. */
 export function documentationPresets(entry: WlComponentManifest): DocumentationPreset[] {
   if (entry.name === "WlSelect") return [{
-    id: "with-archive", label: "Опции: с недоступным архивом", props: { options: [
+    id: "with-archive", label: "С недоступным архивом", props: { options: [
       { label: "Команда", value: "team" }, { label: "Личное", value: "personal" },
       { label: "Архив", value: "archive", disabled: true }
     ] }
-  }, { id: "empty-options", label: "Опции: пустой список", props: { options: [] } }];
-  if (entry.name === "WlTable") return [{ id: "empty-rows", label: "Строки: пустая таблица", props: { value: [] } }];
-  if (entry.name === "WlColorPicker") return [{ id: "compact-palette", label: "Палитра: три цвета", props: { swatches: ["#2563eb", "#2e9e68", "#bf8615"] } }];
+  }, { id: "empty-options", label: "Пустой список", props: { options: [] } }];
+  if (entry.name === "WlTable") return [{ id: "empty-rows", label: "Пустая таблица", props: { value: [] } }];
+  if (entry.name === "WlColorPicker") return [{ id: "compact-palette", label: "Три цвета", props: { swatches: ["#2563eb", "#2e9e68", "#bf8615"] } }];
   return [];
 }
 export function documentationControlSamples(control: DocumentationControl): readonly Scalar[] {

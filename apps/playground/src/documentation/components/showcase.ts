@@ -8,33 +8,33 @@ export const showcaseDocumentationExamples: Record<string, { title: string; desc
   WlPageHeader: { title: "Все секции заголовка страницы", description: "Breadcrumbs, eyebrow/title/description/meta/actions/navigation, три размера и compact без дополнительного h1.", sourceName: "showcase/WlPageHeader.vue" },
   WlFilterBar: { title: "Поиск, фильтры и мобильная панель", description: "Leading, controls, actions, summary, удаление активных фильтров, clear/apply и именованная модель open.", sourceName: "showcase/WlFilterBar.vue" },
   WlSidebar: { title: "Группы, закрепление и mobile", description: "Основные/нижние пункты, brand-mark/footer, disabled, hover/pinned и контролируемый мобильный drawer.", sourceName: "showcase/WlSidebar.vue" },
-  WlCommandPalette: { title: "Быстрые действия, поиск и состояния", description: "Две группы, ключевые слова, disabled, локальная фильтрация, загрузка, empty и footer без второго глобального shortcut.", sourceName: "showcase/WlCommandPalette.vue" },
+  WlCommandPalette: { title: "Быстрые действия, поиск и состояния", description: "Две группы, ключевые слова, disabled, локальная фильтрация, загрузка, empty и footer. Глобальный shortcut в этом примере выключен.", sourceName: "showcase/WlCommandPalette.vue" },
   WlCard: { title: "Обычная и hoverable-карточка", description: "Header, title/subtitle, содержимое и footer на адаптивной сетке; отдельные доступные действия.", sourceName: "showcase/WlCard.vue" },
-  WlAccordion: { title: "Режимы раскрытия и scoped-слот", description: "Контролируемые openKeys, single, disabled, item-слот и отдельный неконтролируемый аккордеон.", sourceName: "showcase/WlAccordion.vue" },
+  WlAccordion: { title: "Режимы раскрытия и scoped-слот", description: "Controlled через openKeys, single, disabled, item-слот и отдельный uncontrolled-аккордеон.", sourceName: "showcase/WlAccordion.vue" },
   WlTabs: { title: "Вкладки с иконками и панелями", description: "Контролируемая модель, счётчик заметок, scoped panel и клавиатурное переключение разделов.", sourceName: "showcase/WlTabs.vue" },
   WlDialog: { title: "Редактирование в диалоге", description: "Поле с label/hint, footer с сохранением/отменой, настройки motion/dismissable и afterLeave.", sourceName: "showcase/WlDialog.vue" },
-  WlDrawer: { title: "Пять сторон открытия", description: "Right/left/top/bottom/full, управляемая анимация, подробности и действия в footer.", sourceName: "showcase/WlDrawer.vue" },
-  WlPopover: { title: "Привязанная интерактивная панель", description: "Toggle/hide, содержимое и действие, ariaLabel, motion и события открытия/закрытия.", sourceName: "showcase/WlPopover.vue" },
+  WlDrawer: { title: "Положения панели", description: "Right/left/top/bottom/full, управляемая анимация, подробности и действия в footer.", sourceName: "showcase/WlDrawer.vue" },
+  WlPopover: { title: "Панель рядом с кнопкой", description: "Toggle/hide, содержимое и действие, ariaLabel, motion и события открытия/закрытия.", sourceName: "showcase/WlPopover.vue" },
   WlDivider: { title: "Линия и подпись разделителя", description: "Простой разделитель, текст «или» и собственное содержимое default-слота между частями страницы.", sourceName: "showcase/WlDivider.vue" },
-  WlBreadcrumbs: { title: "Полный и короткий путь", description: "Настоящие ссылки родителей, иконка, текущая страница без перехода и одноуровневый путь.", sourceName: "showcase/WlBreadcrumbs.vue" },
+  WlBreadcrumbs: { title: "Полный и короткий путь", description: "Ссылки на родительские страницы, иконка, текущая страница без перехода и путь из одного уровня.", sourceName: "showcase/WlBreadcrumbs.vue" },
   WlSteps: { title: "Пройденный, текущий и будущий шаг", description: "Все состояния сразу, назад/вперёд, ограничения крайних шагов и перезапуск локального сценария.", sourceName: "showcase/WlSteps.vue" },
   WlAlert: { title: "Четыре варианта и повтор действия", description: "Info/ok/warn/err, action-слот, closable с понятной подписью и восстановление скрытой ошибки.", sourceName: "showcase/WlAlert.vue" },
   WlToast: { title: "Четыре вида уведомлений", description: "useWlToast показывает ok/info/warn/err с detail через один уже установленный контейнер приложения.", sourceName: "showcase/WlToast.vue" },
-  WlConfirmDialog: { title: "Обычное и опасное подтверждение", description: "Confirm/confirmDanger, собственные подписи accept/reject, отмена, локальный результат и повтор примера.", sourceName: "showcase/WlConfirmDialog.vue" },
+  WlConfirmDialog: { title: "Подтверждение действия и удаления", description: "Confirm/confirmDanger, собственные подписи accept/reject, отмена, локальный результат и повтор примера.", sourceName: "showcase/WlConfirmDialog.vue" },
   WlSpinner: { title: "Размеры, светлый вариант и загрузка", description: "Sm/md/lg, light на тёмной поверхности, понятные label и контролируемое завершение/повтор.", sourceName: "showcase/WlSpinner.vue" },
   WlTable: { title: "Ячейки, пустое состояние и загрузка", description: "Columns, numeric, cell-title/cell-status, empty-слот, loading, доступная прокрутка и собственная таблица в default.", sourceName: "showcase/WlTable.vue" },
-  WlPagination: { title: "Окно страниц и компактный ввод", description: "Многоточия, две именованные навигации, Enter/blur для компактного номера и disabled.", sourceName: "showcase/WlPagination.vue" },
+  WlPagination: { title: "Список страниц и компактный ввод", description: "Многоточия, две именованные навигации, Enter/blur для компактного номера и disabled.", sourceName: "showcase/WlPagination.vue" },
   WlBadge: { title: "Числа, тексты и точки", description: "Все пять вариантов, dot с текстовым контекстом, нулевой счётчик и локальная отметка прочитанного.", sourceName: "showcase/WlBadge.vue" },
   WlTag: { title: "Варианты и удаляемые теги", description: "Все пять цветов, removable с уникальным removeLabel, controlled-массив и восстановление фокуса/тегов.", sourceName: "showcase/WlTag.vue" },
   WlChip: { title: "Независимые фильтры", description: "Active, count включая ноль, disabled, именованные модели и снятие всех фильтров.", sourceName: "showcase/WlChip.vue" },
-  WlPill: { title: "Пять смысловых статусов", description: "Neutral/info/ok/warn/err, label и собственный default-слот с декоративной иконкой.", sourceName: "showcase/WlPill.vue" },
+  WlPill: { title: "Пять статусов", description: "Neutral/info/ok/warn/err, label и собственный default-слот с декоративной иконкой.", sourceName: "showcase/WlPill.vue" },
   WlAvatar: { title: "Размеры, presence, image и слот", description: "24/28/32/36/48, три статуса присутствия, безопасное локальное изображение/инициалы и собственная иконка.", sourceName: "showcase/WlAvatar.vue" },
-  WlStatCard: { title: "Метрики, тона и прогресс", description: "Accent/success, подпись/описание, прогресс, значение через default-слот, footer и обновление метрики.", sourceName: "showcase/WlStatCard.vue" },
+  WlStatCard: { title: "Метрики, tone и прогресс", description: "Accent/success, подпись/описание, прогресс, значение через default-слот, footer и обновление метрики.", sourceName: "showcase/WlStatCard.vue" },
   WlProgress: { title: "Обычный, тонкий и завершённый прогресс", description: "Default/ok, thin, showValue, доступные имена, изменение значения и перезапуск.", sourceName: "showcase/WlProgress.vue" },
   WlSkeleton: { title: "Карточка во время загрузки", description: "Rectangle/circle, размеры и радиус, aria-busy с пояснением и переход к реальному содержимому.", sourceName: "showcase/WlSkeleton.vue" },
   WlEmpty: { title: "Нет данных, нет результатов и свой слот", description: "Добавление первого материала, сброс поиска, повтор пустого состояния, icon/default/action.", sourceName: "showcase/WlEmpty.vue" },
-  WlField: { title: "Связь label, подсказки и ошибки", description: "Required, error/hint, slot id/ariaDescribedby/invalid, email/readonly/textarea и локальная проверка.", sourceName: "showcase/WlField.vue" },
-  WlIcon: { title: "Размеры, совместимые имена и SVG-слот", description: "Несколько реальных имён, 14/18/24/32 и 1em, alias pi pi-search и собственный безопасный SVG.", sourceName: "showcase/WlIcon.vue" }
+  WlField: { title: "Подпись поля, подсказка и ошибка", description: "Required, error/hint, slot id/ariaDescribedby/invalid, email/readonly/textarea и локальная проверка.", sourceName: "showcase/WlField.vue" },
+  WlIcon: { title: "Размеры, совместимые имена и SVG-слот", description: "Имена из каталога, размеры 14/18/24/32 и 1em, alias pi pi-search и собственный безопасный SVG.", sourceName: "showcase/WlIcon.vue" }
 };
 
 /** Rules reflect each component's actual native DOM and public contract. */
@@ -82,11 +82,11 @@ export const showcaseDocumentationAccessibility: Record<string, readonly string[
   WlCommandPalette: [
     "AriaLabel именует диалог и поисковый combobox; disabled-элементы не участвуют в выборе.",
     "ArrowUp/ArrowDown меняют активный элемент, Enter выбирает его, Escape закрывает окно и возвращает фокус.",
-    "Visible и query являются отдельными моделями. Регистрируйте глобальный shortcut только у одной палитры; loading/empty должны объяснять состояние поиска."
+    "Visible и query являются отдельными моделями. Включайте глобальный shortcut только у одной палитры; loading/empty должны объяснять состояние поиска."
   ],
   WlCard: [
     "Title-слот сам не создаёт заголовок: используйте подходящий h2/h3 и при необходимости aria-labelledby карточки.",
-    "Hoverable изменяет оформление. Для перехода или действия внутри карточки нужна настоящая ссылка или кнопка.",
+    "Hoverable меняет оформление при наведении. Для перехода или действия добавьте в карточку ссылку или кнопку.",
     "Сохраняйте логичный порядок header, title/subtitle, содержимого и footer; не делайте вложенные интерактивные области одной кнопкой."
   ],
   WlAccordion: [
@@ -102,7 +102,7 @@ export const showcaseDocumentationAccessibility: Record<string, readonly string[
   WlDialog: [
     "Передавайте header либо ariaLabel/ariaLabelledby, особенно если используете собственный header-слот.",
     "Модальный диалог удерживает фокус; Escape и явная отмена закрывают окно и восстанавливают фокус открывшей кнопки.",
-    "Label и ошибки полей связывайте с контролами. Motion учитывает reduced-motion; после afterLeave закрытый DOM удалён."
+    "Связывайте Label и текст ошибки с полем. Motion учитывает reduced-motion; после afterLeave разметка закрытого окна удаляется."
   ],
   WlDrawer: [
     "У панели должно быть доступное имя через header либо ariaLabel/ariaLabelledby; сторона открытия не меняет её смысл.",
@@ -151,12 +151,12 @@ export const showcaseDocumentationAccessibility: Record<string, readonly string[
   ],
   WlTable: [
     "Columns создают нативные table/th scope=col. Имя таблицы передавайте через pt.table aria-label или caption собственной таблицы.",
-    "Cell-слоты должны сохранять смысл строки/колонки; действия в ячейках получают понятные имена и disabled во время заблокированной операции.",
+    "В Cell-слотах сохраняйте смысл строки и колонки. Кнопкам в ячейках задавайте понятные имена и disabled, когда действие недоступно.",
     "Loading задаёт aria-busy. Empty объясняет отсутствие данных; на узком экране предоставьте доступную по Tab область горизонтальной прокрутки."
   ],
   WlPagination: [
     "Page использует нумерацию с 1; актуальная кнопка получает aria-current=page.",
-    "Обычные кнопки имеют нативную клавиатуру и доступные подписи переходов. Компактный ввод применяет номер по Enter или blur.",
+    "Обычные кнопки поддерживают управление с клавиатуры и имеют доступные подписи переходов. Компактный ввод применяет номер по Enter или blur.",
     "Disabled блокирует кнопки и поле. Для нескольких пагинаторов задавайте разные pt.root aria-label и сообщайте номер/общее число текстом."
   ],
   WlBadge: [
@@ -182,12 +182,12 @@ export const showcaseDocumentationAccessibility: Record<string, readonly string[
   WlAvatar: [
     "У image alt берётся из label. Для смысловых инициалов/слота добавьте роль и доступное имя либо имя человека рядом.",
     "Presence является декоративной точкой aria-hidden; онлайн/занят/офлайн объясняйте текстом.",
-    "Размер не заменяет семантику. При замене изображения на инициалы сохраняйте имя пользователя; сетевую ошибку изображения обрабатывает потребитель."
+    "Размер не заменяет семантику. При замене изображения на инициалы сохраняйте имя пользователя; ошибку загрузки изображения обрабатывает приложение."
   ],
   WlStatCard: [
     "Label, value и description должны объяснять единицу измерения и период метрики.",
     "Default-слот заменяет значение, footer добавляет контекст; не используйте только цвет tone для сравнения.",
-    "Progress задаёт внутренний progressbar с числом 0–100; проверяйте его доступное имя и контекст в странице потребителя."
+    "Progress задаёт внутренний progressbar со значением 0–100. Проверьте его доступное имя и пояснение в своём приложении."
   ],
   WlProgress: [
     "Передавайте aria-label корневому progressbar, объясняющий конкретную операцию.",
@@ -197,7 +197,7 @@ export const showcaseDocumentationAccessibility: Record<string, readonly string[
   WlSkeleton: [
     "Скелетоны скрыты через aria-hidden и не должны попадать в порядок фокуса.",
     "На содержащем блоке передавайте aria-busy и текстом сообщайте, что загружается.",
-    "Заменяйте геометрию реальным содержимым после загрузки; при ошибке нужен понятный результат и повтор, а не бесконечная заглушка."
+    "После загрузки замените заглушку содержимым. При ошибке покажите сообщение и кнопку повтора."
   ],
   WlEmpty: [
     "Title/description/default объясняют отсутствие данных, фильтра или выбора; title сам не создаёт HTML-заголовок.",
@@ -206,7 +206,7 @@ export const showcaseDocumentationAccessibility: Record<string, readonly string[
   ],
   WlField: [
     "Из default-слота передавайте id, ariaDescribedby и invalid на настоящий input/textarea; label связывается через for.",
-    "Required в WlField рисует маркер; реальный required нужно также передать контролу из scope.",
+    "Required в WlField показывает маркер обязательного поля. Передайте required самому полю из scope.",
     "Error имеет приоритет над hint и role=alert. Валидатор и сохранение принадлежат приложению; readonly/disabled назначайте самому контролу."
   ],
   WlIcon: [

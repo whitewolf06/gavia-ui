@@ -5,14 +5,14 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlCard",
     category: "containers",
-    description: "Карточка с секциями header/title/subtitle/content/footer.",
+    description: "Карточка со слотами header, title, subtitle, default и footer.",
     props: [
       { name: "hoverable", type: "boolean", default: false, description: "Подсветка при наведении." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [
       { name: "default", description: "Основное содержимое." },
-      { name: "header", description: "Шапка (медиа/баннер)." },
+      { name: "header", description: "Шапка для изображения или баннера." },
       { name: "title", description: "Заголовок." },
       { name: "subtitle", description: "Подзаголовок." },
       { name: "footer", description: "Подвал." }
@@ -22,7 +22,7 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlAccordion",
     category: "containers",
-    description: "Аккордеон на нативных details/summary; контролируемый через openKeys или неконтролируемый.",
+    description: "Аккордеон на details/summary: controlled через openKeys или uncontrolled.",
     props: [
       {
         name: "items",
@@ -34,7 +34,7 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
       {
         name: "openKeys",
         type: "array",
-        description: "Открытые ключи (контролируемый режим, v-model:openKeys)."
+        description: "Ключи открытых разделов; управляются через v-model:openKeys."
       }
     ],
     slots: [
@@ -47,7 +47,7 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlTabs",
     category: "containers",
-    description: "Вкладки с клавиатурной навигацией; панели наполняются через scoped-слот panel.",
+    description: "Вкладки с навигацией с клавиатуры. Содержимое каждой вкладки задаётся в scoped-слоте panel.",
     props: [
       {
         name: "items",
@@ -77,14 +77,14 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "closeOnEscape", type: "boolean", default: true, description: "Закрытие клавишей Escape." },
       { name: "blockScroll", type: "boolean", default: true, description: "Блокирует прокрутку страницы, пока диалог открыт." },
       { name: "ariaLabel", type: "string", description: "Доступное имя диалога без текстового заголовка." },
-      { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего диалог." },
+      { name: "ariaLabelledby", type: "string", description: "ID элемента с подписью диалога." },
       { name: "width", type: "string", description: "Ширина (CSS), например \"480px\"." },
       { name: "motion", type: "boolean", description: "Анимация открытия и закрытия; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [
       { name: "default", description: "Тело диалога." },
-      { name: "header", description: "Кастомная шапка." },
+      { name: "header", description: "Своя шапка." },
       { name: "footer", description: "Подвал (кнопки)." }
     ],
     emits: [
@@ -112,13 +112,13 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "closeOnEscape", type: "boolean", default: true, description: "Закрытие клавишей Escape." },
       { name: "blockScroll", type: "boolean", default: true, description: "Блокирует прокрутку страницы, пока панель открыта." },
       { name: "ariaLabel", type: "string", description: "Доступное имя панели без текстового заголовка." },
-      { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего панель." },
+      { name: "ariaLabelledby", type: "string", description: "ID элемента с подписью панели." },
       { name: "motion", type: "boolean", description: "Анимация открытия и закрытия; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [
       { name: "default", description: "Содержимое панели." },
-      { name: "header", description: "Кастомная шапка." },
+      { name: "header", description: "Своя шапка." },
       { name: "footer", description: "Подвал." }
     ],
     emits: [
@@ -135,7 +135,7 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "dismissable", type: "boolean", default: true, description: "Закрытие кликом вне поповера." },
       { name: "closeOnEscape", type: "boolean", default: true, description: "Закрытие клавишей Escape." },
       { name: "ariaLabel", type: "string", description: "Доступное имя поповера." },
-      { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего поповер." },
+      { name: "ariaLabelledby", type: "string", description: "ID элемента с подписью поповера." },
       { name: "motion", type: "boolean", description: "Анимация открытия и закрытия; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
@@ -150,7 +150,7 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
     category: "containers",
     description: "Разделитель; без слота — простая линия.",
     props: [{ name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }],
-    slots: [{ name: "default", description: "Текст/содержимое по центру линии." }],
+    slots: [{ name: "default", description: "Текст или другое содержимое по центру линии." }],
     emits: []
   }
 ]);

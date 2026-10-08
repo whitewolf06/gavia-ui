@@ -18,7 +18,7 @@ async function recipe(page: Page, id: string) {
 }
 test.beforeEach(async ({ page }) => {
   await page.goto("/?view=system", { waitUntil: "domcontentloaded" });
-  await page.getByRole("heading", { name: "Единый язык интерфейсов" }).waitFor({ state: "visible" });
+  await page.getByRole("heading", { name: "Дизайн-система" }).waitFor({ state: "visible" });
   // Workflow assertions target settled controls; overlay motion has its own suite.
   await page.addStyleTag({ content: "html { scroll-behavior: auto; }" });
 });
@@ -79,10 +79,10 @@ test("state combinations change the real component and copied code; keyboard foc
   await expect(button).toBeFocused();
   await expect(button).toHaveCSS("outline-width", "2px");
   await button.press("Enter");
-  await expect(page.getByTestId("ds-example-preview").getByRole("status")).toHaveText("Действий: 1");
+  await expect(page.getByTestId("ds-example-preview").getByRole("status")).toHaveText("Нажатий: 1");
   await explorer.getByRole("button", { name: "Сбросить пример" }).click();
   await expect(button).toHaveAttribute("data-size", "md");
-  await expect(page.getByTestId("ds-example-preview").getByRole("status")).toHaveText("Действий: 0");
+  await expect(page.getByTestId("ds-example-preview").getByRole("status")).toHaveText("Нажатий: 0");
 });
 
 test("clipboard failure offers selectable manual source and reports no false success", async ({ page }) => {
@@ -159,7 +159,7 @@ test("profile form keeps values after request error and supports retry", async (
   await expect(preview.getByRole("textbox", { name: "Имя участника", exact: true })).toBeFocused();
   await preview.getByRole("textbox", { name: "Имя участника", exact: true }).fill("Анна");
   await preview.getByRole("textbox", { name: "Email участника", exact: true }).fill("anna@example.com");
-  await preview.getByRole("switch", { name: "Проверить ошибку сохранения" }).check();
+  await preview.getByRole("switch", { name: "Имитировать ошибку сохранения" }).check();
   await preview.getByRole("button", { name: "Сохранить профиль" }).click();
   await expect(preview.getByRole("button", { name: "Сохранить профиль" })).toBeDisabled();
   await page.clock.runFor(400);
@@ -236,10 +236,10 @@ test("attachment upload rejects bad files, supports error/retry and cancels prog
   const fileInput = preview.locator('input[type="file"]');
   await fileInput.setInputFiles([{ name: "script.exe", mimeType: "application/octet-stream", buffer: Buffer.from("bad") }, { name: "oversize.pdf", mimeType: "application/pdf", buffer: Buffer.alloc(1048577) }, { name: "guide.txt", mimeType: "text/plain", buffer: Buffer.from("guide") }]);
   await expect(preview.locator(".wl-upload__errors")).toHaveAttribute("role", "alert");
-  await expect(preview.locator(".wl-upload__errors")).toContainText("неподдерживаемый тип");
+  await expect(preview.locator(".wl-upload__errors")).toContainText("тип файла не поддерживается");
   await expect(preview.locator(".wl-upload__errors")).toContainText("больше");
   await expect(preview.locator(".wl-upload__row")).toHaveCount(1);
-  await preview.getByRole("switch", { name: "Проверить ошибку загрузки" }).check();
+  await preview.getByRole("switch", { name: "Имитировать ошибку загрузки" }).check();
   await upload.click();
   await expect(preview.getByRole("button", { name: "Удалить guide.txt" })).toBeDisabled();
   await page.clock.runFor(600);

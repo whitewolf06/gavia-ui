@@ -50,7 +50,7 @@ for (const theme of wlDesignThemes) {
       const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
       url.search = new URLSearchParams({ view: "system", theme: theme.name }).toString();
       await page.goto(url.href, { waitUntil: "domcontentloaded" });
-      await expect(page.getByRole("heading", { name: "Единый язык интерфейсов", exact: true })).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
       await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme.name);
 
       await chooseDropdownOption(page, page.getByRole("combobox", { name: "Компонент", exact: true }), "WlAlert");

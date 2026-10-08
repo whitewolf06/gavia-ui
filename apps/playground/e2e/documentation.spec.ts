@@ -41,7 +41,7 @@ async function enterCompactDocumentation(page: Page): Promise<void> {
 }
 
 const buttonExampleLinks = [
-  "Живой пример", "Все варианты", "Размеры и плотность", "Disabled и loading",
+  "Пример", "Все варианты", "Размеры и плотность", "Disabled и loading",
   "Иконки и содержимое слотов", "Ширина кнопки и отправка формы", "Когда использовать"
 ] as const;
 
@@ -182,7 +182,7 @@ test("home opens WlButton documentation and controls update the live button, con
   await expect(button).toHaveAttribute("data-size", "lg");
   await expect(button).toHaveAttribute("data-density", "compact");
   await button.click();
-  await expect(preview.getByRole("status")).toHaveText("Действий: 1");
+  await expect(preview.getByRole("status")).toHaveText("Нажатий: 1");
   await workspace.getByRole("checkbox", { name: "disabled", exact: true }).check();
   await expect(button).toBeDisabled();
   await expect(source.locator("pre code")).toContainText('"variant":"primary"');
@@ -245,7 +245,7 @@ test("home opens WlButton documentation and controls update the live button, con
   await expect(button).toHaveAttribute("data-size", "md");
   await expect(button).toHaveAttribute("data-density", "default");
   await expect.poll(() => buttonFillRatio(button)).toBeLessThan(0.9);
-  await expect(preview.getByRole("status")).toHaveText("Действий: 0");
+  await expect(preview.getByRole("status")).toHaveText("Нажатий: 0");
   await expect(source.locator("pre code")).toContainText('"block":false');
   await expect(source.locator("pre code")).toContainText('"variant":"secondary"');
   await expect(source.locator("pre code")).toContainText('"size":"md"');
@@ -453,7 +453,7 @@ test("home and interactive WlButton documentation remain usable at 320px", async
   await expect(button).toHaveAttribute("data-variant", "ghost");
   await expect(button).toHaveAttribute("data-size", "sm");
   await button.click();
-  await expect(preview.getByRole("status")).toHaveText("Действий: 1");
+  await expect(preview.getByRole("status")).toHaveText("Нажатий: 1");
   await expectNoHorizontalOverflow(page, preview);
   await expect(page.getByTestId("docs-button-source").locator("pre code")).toContainText('"variant":"ghost"');
   await workspace.getByRole("tab", { name: "API", exact: true }).click();
@@ -473,7 +473,7 @@ test("foundations navigation preserves live examples and highlighted copy across
   const sections = [
     { name: "typography", label: "Типографика", examples: ["typography-scale", "text-hierarchy"] },
     { name: "layout", label: "Layout и сетка", examples: ["containers", "equal-columns", "column-proportions", "responsive-grid", "gap-alignment", "nested-grid", "page-composition", "spacing", "css-helpers", "stacking-layers"] },
-    { name: "content", label: "Content и тексты", examples: ["content-writing", "content-states"] }
+    { name: "content", label: "Контент и состояния", examples: ["content-writing", "content-states"] }
   ];
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", {
     configurable: true,
@@ -675,7 +675,7 @@ test("generic documentation keeps controls beside live code, preserves tab state
   }, "Desktop controls occupy the left column; preview and code share the right column").toBe(true);
 
   const outline = docs.locator(".docs-component-outline");
-  await expectComponentOutline(workspace, ["Живой пример", "Размеры, слоты и проверка"]);
+  await expectComponentOutline(workspace, ["Пример", "Размеры, слоты и проверка"]);
   await expect(outline.getByRole("link").first()).toBeVisible();
   await outline.getByRole("link").first().click();
   await page.mouse.move(0, 0);
@@ -713,7 +713,7 @@ test("generic documentation keeps controls beside live code, preserves tab state
   await expectComponentOutline(workspace, ["Клавиатура и доступность"]);
   await tabs.getByRole("tab", { name: "Примеры", exact: true }).click();
   await expect(preview).toBeVisible();
-  await expectComponentOutline(workspace, ["Живой пример", "Размеры, слоты и проверка"]);
+  await expectComponentOutline(workspace, ["Пример", "Размеры, слоты и проверка"]);
   await expect(size).toContainText("lg");
   await expect(density).toContainText("compact");
   await expect(invalid).toBeChecked();

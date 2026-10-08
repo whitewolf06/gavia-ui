@@ -15,7 +15,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
     name: "WlTable",
     category: "data",
     description:
-      "Таблица: декларативные columns и scoped-слоты cell-*; без columns default-слот для собственной таблицы.",
+      "Таблица с колонками из columns. Scoped-слоты cell-* задают содержимое ячеек. Если columns не заданы, свою таблицу можно разместить в слоте default.",
     props: [
       { name: "value", type: "array", default: [], description: "Readonly-список Row extends object; поддерживаются интерфейсы без index signature." },
       {
@@ -29,8 +29,8 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [
-      { name: "default", description: "Кастомное содержимое таблицы, когда columns не заданы." },
-      { name: "empty", description: "Кастомное пустое состояние." },
+      { name: "default", description: "Своё содержимое таблицы, если columns не заданы." },
+      { name: "empty", description: "Своё содержимое для пустой таблицы." },
       {
         name: "cell-<key>",
         description: "Scope { row: Row, value: Row[key] }; у виртуальной колонки value: unknown."
@@ -41,9 +41,9 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlPagination",
     category: "data",
-    description: "Пагинация с окном страниц и многоточиями; compact-режим — поле ввода номера страницы.",
+    description: "Пагинация с номерами страниц и многоточиями. В режиме compact номер страницы вводится в поле.",
     props: [
-      { name: "page", type: "number", default: 1, description: "Текущая страница (1-based)." },
+      { name: "page", type: "number", default: 1, description: "Номер текущей страницы, начиная с 1." },
       { name: "pageCount", type: "number", required: true, description: "Всего страниц." },
       { name: "siblings", type: "number", default: 1, description: "Сколько страниц показывать вокруг текущей." },
       { name: "compact", type: "boolean", default: false, description: "Компактный вид с полем ввода." },
@@ -51,7 +51,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [],
-    emits: [{ name: "update:page", payload: "number", description: "Смена страницы (1-based)." }]
+    emits: [{ name: "update:page", payload: "number", description: "Новый номер страницы, начиная с 1." }]
   },
   {
     name: "WlBadge",
@@ -69,7 +69,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlTag",
     category: "data",
-    description: "Тег с опциональной кнопкой удаления.",
+    description: "Тег. Можно добавить кнопку удаления.",
     props: [
       { name: "variant", type: "enum", default: "gray", values: WL_TAG_VARIANTS, description: "Цветовой вариант." },
       { name: "removable", type: "boolean", default: false, description: "Показать кнопку удаления." },
@@ -82,7 +82,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlChip",
     category: "data",
-    description: "Чип-переключатель (кнопка) с опциональным счётчиком.",
+    description: "Чип с переключением выбранного состояния. Можно добавить счётчик.",
     props: [
       { name: "active", type: "boolean", default: false, description: "Выбран ли чип." },
       { name: "count", type: "number", description: "Счётчик справа." },
@@ -91,18 +91,18 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
     slots: [{ name: "default", description: "Текст чипа." }],
     emits: [
       { name: "click", payload: "MouseEvent", description: "Клик (не срабатывает при disabled)." },
-      { name: "update:active", payload: "boolean", description: "Инвертированное active — для v-model:active." }
+      { name: "update:active", payload: "boolean", description: "Новое значение active после переключения; для v-model:active." }
     ]
   },
   {
     name: "WlPill",
     category: "data",
-    description: "Компактная пилюля-статус.",
+    description: "Компактная метка статуса.",
     props: [
       { name: "variant", type: "enum", default: "neutral", values: WL_PILL_VARIANTS, description: "Цветовой вариант." },
       { name: "label", type: "string", description: "Текст (если не задан слот)." }
     ],
-    slots: [{ name: "default", description: "Кастомный текст вместо label." }],
+    slots: [{ name: "default", description: "Свой текст вместо label." }],
     emits: []
   },
   {
@@ -116,23 +116,23 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "presence", type: "enum", values: WL_AVATAR_PRESENCES, description: "Индикатор присутствия." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
-    slots: [{ name: "default", description: "Кастомное содержимое вместо label/image." }],
+    slots: [{ name: "default", description: "Своё содержимое вместо label/image." }],
     emits: []
   },
   {
     name: "WlStatCard",
     category: "data",
-    description: "Карточка метрики: иконка, подпись, значение, описание и опциональный прогресс-бар.",
+    description: "Карточка метрики с иконкой, подписью, значением и пояснением. Можно добавить прогресс-бар.",
     props: [
       { name: "icon", type: "icon", values: WL_ICON_NAMES, description: "Иконка в подписи." },
       { name: "label", type: "string", description: "Подпись метрики." },
       { name: "value", type: "string", description: "Значение (если не задан слот)." },
       { name: "description", type: "string", description: "Пояснение под значением." },
-      { name: "progress", type: "number", description: "Прогресс 0–100; если задан — показывается бар." },
+      { name: "progress", type: "number", description: "Прогресс от 0 до 100. Если задан, показывается индикатор." },
       { name: "tone", type: "enum", default: "accent", values: WL_STAT_CARD_TONES, description: "Тон акцента." }
     ],
     slots: [
-      { name: "default", description: "Кастомное значение вместо value." },
+      { name: "default", description: "Своё содержимое вместо value." },
       { name: "footer", description: "Подвал карточки." }
     ],
     emits: []
@@ -140,7 +140,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlProgress",
     category: "data",
-    description: "Линейный прогресс-бар.",
+    description: "Линейный прогресс-бар от 0 до 100%.",
     props: [
       { name: "value", type: "number", default: 0, description: "Процент 0–100." },
       { name: "variant", type: "enum", default: "default", values: WL_PROGRESS_VARIANTS, description: "Цветовой вариант." },
@@ -154,7 +154,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlSkeleton",
     category: "data",
-    description: "Скелетон-заглушка.",
+    description: "Скелетон на время загрузки содержимого.",
     props: [
       { name: "width", type: "string", default: "100%", description: "Ширина (CSS)." },
       { name: "height", type: "string", default: "12px", description: "Высота (CSS)." },
@@ -181,9 +181,9 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "description", type: "string", description: "Описание (если не задан слот)." }
     ],
     slots: [
-      { name: "default", description: "Кастомное описание." },
-      { name: "icon", description: "Кастомная иконка/иллюстрация." },
-      { name: "action", description: "Кнопка/действие под описанием." }
+      { name: "default", description: "Своё описание." },
+      { name: "icon", description: "Своя иконка или иллюстрация." },
+      { name: "action", description: "Кнопка или другое действие под описанием." }
     ],
     emits: []
   }

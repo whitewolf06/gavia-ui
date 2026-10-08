@@ -28,9 +28,9 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlFilePicker",
     category: "inputs",
-    description: "Выбор файлов браузером без собственного списка, фильтрации, лимитов или загрузки. Методы choose()/clear() доступны через ref.",
+    description: "Открывает выбор файлов в браузере. Список файлов, проверку ограничений и отправку на сервер подключает приложение. Методы choose()/clear() доступны через ref.",
     props: [
-      { name: "accept", type: "string", description: "Подсказка браузеру по расширениям/MIME; проверку выполняет приложение." },
+      { name: "accept", type: "string", description: "Расширения или MIME-типы для окна выбора. Проверку файлов выполняет приложение." },
       { name: "multiple", type: "boolean", default: false, description: "Разрешает выбор нескольких файлов." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает trigger и choose()." },
       { name: "chooseLabel", type: "string", default: "Выбрать файлы", description: "Подпись стандартной кнопки." },
@@ -39,10 +39,10 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "density", type: "enum", default: "default", values: WL_DENSITIES, description: "Плотность кнопки." },
       { name: "pt", type: "object", description: "Атрибуты root, trigger и input." }
     ],
-    slots: [{ name: "trigger", description: "Собственная кнопка; параметры { choose, clear, disabled, attrs } (attrs для фокуса/aria)." }],
+    slots: [{ name: "trigger", description: "Своя кнопка; параметры { choose, clear, disabled, attrs }. attrs связывает фокус и aria-атрибуты." }],
     emits: [
-      { name: "select", payload: "File[]", description: "Неизменённая выбранная партия файлов; событие не накапливает список." },
-      { name: "cancel", description: "Браузер отменил выбор; выбранные приложением файлы не изменяются." }
+      { name: "select", payload: "File[]", description: "Файлы из текущего выбора, без изменений. Компонент не объединяет их с предыдущим списком." },
+      { name: "cancel", description: "Выбор отменён. Список файлов в приложении не меняется." }
     ]
   },
   {
@@ -56,12 +56,12 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
         type: "enum",
         default: "default",
         values: WL_DENSITIES,
-        description: "Плотность (compact уменьшает высоту)."
+        description: "В режиме compact высота поля меньше."
       },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает поле." },
       { name: "placeholder", type: "string", description: "Плейсхолдер." },
-      { name: "type", type: "string", default: "text", description: "Нативный type инпута." },
+      { name: "type", type: "string", default: "text", description: "Атрибут type элемента input." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [
@@ -90,11 +90,11 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlNumberInput",
     category: "inputs",
-    description: "Числовой степпер с кнопками +/- и вводом с клавиатуры (значение клампится в [min, max]).",
+    description: "Числовое поле с кнопками +/− и вводом с клавиатуры. Значение остаётся в пределах [min, max].",
     props: [
       { name: "min", type: "number", default: 0, description: "Минимум." },
       { name: "max", type: "number", default: 99, description: "Максимум." },
-      { name: "step", type: "number", default: 1, description: "Шаг степпера." },
+      { name: "step", type: "number", default: 1, description: "Шаг изменения числа." },
       { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер поля." },
       { name: "density", type: "enum", default: "default", values: WL_DENSITIES, description: "Плотность." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает поле." },
@@ -120,12 +120,12 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlTextarea",
     category: "inputs",
-    description: "Многострочное поле с опциональной авто-высотой.",
+    description: "Многострочное поле. Высоту можно менять по содержимому через autoResize.",
     props: [
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает поле." },
       { name: "rows", type: "number", default: 3, description: "Число строк." },
-      { name: "autoResize", type: "boolean", default: false, description: "Автовысота по содержимому." },
+      { name: "autoResize", type: "boolean", default: false, description: "Подстраивает высоту под содержимое." },
       { name: "placeholder", type: "string", description: "Плейсхолдер." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
@@ -165,7 +165,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
     name: "WlMultiSelect",
     category: "inputs",
     description:
-      "Мультивыбор: выбранные значения чипами или comma-строкой, фильтр в оверлее.",
+      "Выбор нескольких значений. Выбранные значения показываются чипами или через запятую; в списке можно включить фильтр.",
     props: [
       { name: "options", type: "array", default: [], description: "Readonly-список TOption; тип выбранных значений определяется optionValue." },
       {
@@ -183,25 +183,25 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "disabled", type: "boolean", default: false, description: "Отключает поле." },
       { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер поля." },
       { name: "density", type: "enum", default: "default", values: WL_DENSITIES, description: "Плотность." },
-      { name: "filter", type: "boolean", default: false, description: "Строка фильтра в оверлее." },
+      { name: "filter", type: "boolean", default: false, description: "Поле фильтра внутри списка." },
       {
         name: "display",
         type: "enum",
         default: "comma",
         values: WL_MULTISELECT_DISPLAYS,
-        description: "Представление выбранных: comma-строка или чипы."
+        description: "comma — подписи через запятую, chip — отдельные чипы."
       },
       {
         name: "maxSelectedLabels",
         type: "number",
-        description: "Максимум подписей до свёртки в счётчик (только display=\"comma\")."
+        description: "Сколько подписей показывать до замены счётчиком. Только для display=\"comma\"."
       },
       { name: "motion", type: "boolean", description: "Анимация списка; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [],
     emits: [],
-    model: { name: "modelValue", type: "TValue[]", description: "Массив значений по optionValue; без резолвера — TOption[]. Default []." }
+    model: { name: "modelValue", type: "TValue[]", description: "Массив значений по optionValue; без него — TOption[]. По умолчанию []." }
   },
   {
     name: "WlAutocomplete",
@@ -248,13 +248,13 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
     model: {
       name: "modelValue",
       type: "TOption | string | null / TOption[] | null",
-      description: "Single: подсказка или свободный текст; multiple: массив подсказок. Без default."
+      description: "При одиночном выборе — подсказка или введённый текст. При multiple — массив подсказок. Значения по умолчанию нет."
     }
   },
   {
     name: "WlCheckbox",
     category: "inputs",
-    description: "Чекбокс (binary) с подписью в слоте.",
+    description: "Чекбокс со значением boolean и подписью в слоте.",
     props: [
       { name: "disabled", type: "boolean", default: false, description: "Отключает чекбокс." },
       { name: "indeterminate", type: "boolean", default: false, description: "Промежуточное состояние." },
@@ -297,7 +297,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlSlider",
     category: "inputs",
-    description: "Нативный range-слайдер со стилизованной заливкой трека.",
+    description: "Ползунок на input type=\"range\" с заполненной полосой до выбранного значения.",
     props: [
       { name: "min", type: "number", default: 0, description: "Минимум." },
       { name: "max", type: "number", default: 100, description: "Максимум." },
@@ -313,7 +313,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
     name: "WlDatePicker",
     category: "inputs",
     description:
-      "Выбор даты или диапазона. single сохраняет ISO-строку/null; range использует [start, end|null]/null. Локаль задаёт WlConfig приложения.",
+      "Выбор даты или диапазона. В режиме single модель — ISO-строка/null, в range — [start, end|null]/null. Локаль задаётся через WlConfig.",
     props: [
       { name: "placeholder", type: "string", default: "дд.мм.гггг", description: "Плейсхолдер." },
       { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер поля." },
@@ -323,8 +323,8 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "startLabel", type: "string", default: "От", description: "Видимая подпись начала диапазона." },
       { name: "endLabel", type: "string", default: "До", description: "Видимая подпись конца диапазона." },
       { name: "showIcon", type: "boolean", default: false, description: "Кнопка-иконка календаря." },
-      { name: "minDate", type: "string", description: "Минимальная дата, ISO \"YYYY-MM-DD\"; пустое/невалидное значение не ограничивает выбор." },
-      { name: "maxDate", type: "string", description: "Максимальная дата, ISO \"YYYY-MM-DD\"; пустое/невалидное значение не ограничивает выбор." },
+      { name: "minDate", type: "string", description: "Минимальная дата в формате \"YYYY-MM-DD\". Пустое или неверное значение не ограничивает выбор." },
+      { name: "maxDate", type: "string", description: "Максимальная дата в формате \"YYYY-MM-DD\". Пустое или неверное значение не ограничивает выбор." },
       { name: "displayFormat", type: "enum", default: "dd.mm.yyyy", values: ["dd.mm.yyyy", "yyyy-mm-dd"], description: "Формат отображения и ручного ввода; модель остаётся ISO." },
       { name: "motion", type: "boolean", description: "Анимация календаря; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
@@ -337,7 +337,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
     name: "WlCalendar",
     category: "inputs",
     description:
-      "Месячный календарь с событиями. Дополнительно поддерживает v-model:month (\"YYYY-MM\") — отображаемый месяц.",
+      "Календарь на месяц с событиями. Отображаемый месяц задаётся через v-model:month (\"YYYY-MM\").",
     props: [
       {
         name: "events",
@@ -353,13 +353,13 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlColorPicker",
     category: "inputs",
-    description: "Палитра свотчей + hex-инпут; значение нормализуется к lowercase #rrggbb.",
+    description: "Выбор цвета из палитры или по HEX-коду. Значение приводится к #rrggbb в нижнем регистре.",
     props: [
       {
         name: "modelValue",
         type: "string",
         default: "",
-        description: "Текущий цвет (#rgb/#rrggbb, нормализуется к #rrggbb)."
+        description: "Текущий цвет: #rgb или #rrggbb. Приводится к #rrggbb."
       },
       {
         name: "swatches",
@@ -380,7 +380,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
         ],
         description: "Hex-цвета палитры."
       },
-      { name: "size", type: "enum", default: "md", values: WL_COLOR_PICKER_SIZES, description: "Размер свотчей." },
+      { name: "size", type: "enum", default: "md", values: WL_COLOR_PICKER_SIZES, description: "Размер образцов цвета." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает палитру и ввод." },
       { name: "invalid", type: "boolean", default: false, description: "Внешнее состояние ошибки." },
       { name: "paletteLabel", type: "string", default: "Палитра", description: "Доступное имя списка цветов." },
@@ -396,13 +396,13 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
     name: "WlFileUpload",
     category: "inputs",
     description:
-      "Дропзона + выбор файлов; файлы НЕ загружаются на сервер — компонент хранит только список File[].",
+      "Дропзона и кнопка выбора файлов. Компонент хранит список File[]; отправку на сервер подключает приложение.",
     props: [
       { name: "accept", type: "string", description: "Фильтр типов (расширения/MIME, через запятую)." },
       { name: "multiple", type: "boolean", default: true, description: "Несколько файлов (иначе новый заменяет текущий)." },
       { name: "maxFiles", type: "number", description: "Лимит числа файлов." },
       { name: "maxSize", type: "number", description: "Максимальный размер файла, байты." },
-      { name: "disabled", type: "boolean", default: false, description: "Отключает дропзону." }
+      { name: "disabled", type: "boolean", default: false, description: "Отключает выбор и перетаскивание файлов." }
     ],
     slots: [],
     emits: [

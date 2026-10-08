@@ -101,7 +101,7 @@ test(`${theme}: Cyrillic, Latin, numeral spacing and all six weights`, async ({ 
 
 test(`${theme}: form, selected control and dialog with actual font`, async ({ page, baseURL }) => {
   await page.goto(gaviaUrl(baseURL, "system", theme), { waitUntil: "domcontentloaded" });
-  await expect(page.getByRole("heading", { name: "Единый язык интерфейсов" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Дизайн-система" })).toBeVisible();
   await readyForDrawing(page, theme);
   await prepareSectionCrops(page);
   await page.locator('[data-testid="ds-recipes"] [data-recipe="ProfileForm"]').first().click();

@@ -5,7 +5,7 @@ export const compositesManifest = /* @__PURE__ */ defineComponentManifest([
     name: "WlPageHeader",
     category: "composites",
     description:
-      "Воздушный заголовок страницы с breadcrumbs, основным заголовком, описанием, метаданными, действиями и навигацией. Не добавляет фоновую подложку и бизнес-логику.",
+      "Заголовок страницы с хлебными крошками, описанием, метаданными, кнопками и навигацией. Без фоновой подложки.",
     props: [
       { name: "title", type: "string", default: "", description: "Основной заголовок страницы." },
       { name: "description", type: "string", default: "", description: "Краткое описание страницы." },
@@ -19,9 +19,9 @@ export const compositesManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "eyebrow", description: "Произвольный надзаголовок." },
       { name: "title", description: "Произвольное содержимое заголовка." },
       { name: "description", description: "Расширенное описание страницы." },
-      { name: "meta", description: "Статусы, даты и другая компактная метаинформация." },
+      { name: "meta", description: "Статусы, даты и другие метаданные." },
       { name: "actions", description: "Основные и вторичные действия страницы." },
-      { name: "navigation", description: "Табы или переключатель режима под заголовком." }
+      { name: "navigation", description: "Вкладки или переключатель режима под заголовком." }
     ],
     emits: []
   },
@@ -29,7 +29,7 @@ export const compositesManifest = /* @__PURE__ */ defineComponentManifest([
     name: "WlFilterBar",
     category: "composites",
     description:
-      "Адаптивная панель произвольных фильтров: горизонтальный toolbar на desktop и доступный drawer с фокусом, Escape, сбросом и применением на мобильном.",
+      "На desktop — toolbar с фильтрами, на мобильном — Drawer. Поддерживает управление фокусом, закрытие по Escape, сброс и применение фильтров.",
     props: [
       { name: "activeCount", type: "number", default: 0, description: "Количество активных фильтров." },
       { name: "ariaLabel", type: "string", default: "Фильтры" },
@@ -45,28 +45,28 @@ export const compositesManifest = /* @__PURE__ */ defineComponentManifest([
     ],
     slots: [
       { name: "default", description: "Контролы фильтров; scope { open, close, clear }." },
-      { name: "leading", description: "Поиск или другой ведущий контрол." },
+      { name: "leading", description: "Поиск или другой контрол перед фильтрами." },
       { name: "actions", description: "Действия desktop-панели; scope { clear, close }." },
       { name: "summary", description: "Активные фильтры или chips под панелью; scope { clear }." },
-      { name: "footer", description: "Действия мобильного drawer; scope { apply, clear, close }." }
+      { name: "footer", description: "Действия мобильного Drawer; scope { apply, clear, close }." }
     ],
     emits: [
-      { name: "clear", description: "Потребитель должен сбросить значения фильтров." },
-      { name: "apply", description: "Потребитель должен применить текущие значения." },
+      { name: "clear", description: "Сбросьте значения фильтров в приложении." },
+      { name: "apply", description: "Примените текущие значения в приложении." },
       { name: "open" },
       { name: "close" }
     ],
     model: {
       name: "open",
       type: "boolean",
-      description: "Открыт ли мобильный drawer фильтров."
+      description: "Открыт ли мобильный Drawer фильтров."
     }
   },
   {
     name: "WlSidebar",
     category: "composites",
     description:
-      "Адаптивный sidebar из WlNavItem: группы навигации, footer, collapsed/hover, закрепление и мобильный drawer. Не зависит от роутера.",
+      "Адаптивный sidebar из WlNavItem: группы навигации, footer, collapsed/hover и закрепление. На мобильном открывается как Drawer. Роутер не требуется.",
     props: [
       {
         name: "groups",
@@ -103,8 +103,8 @@ export const compositesManifest = /* @__PURE__ */ defineComponentManifest([
       }
     ],
     slots: [
-      { name: "brand-mark", description: "Кастомная марка бренда." },
-      { name: "brand", description: "Кастомное название бренда." },
+      { name: "brand-mark", description: "Свой знак бренда." },
+      { name: "brand", description: "Своё название бренда." },
       {
         name: "item",
         description: "Пункт основной группы; scope { item, group, active, expanded, select }."
@@ -119,7 +119,7 @@ export const compositesManifest = /* @__PURE__ */ defineComponentManifest([
       {
         name: "select",
         payload: "WlSidebarItem, WlSidebarGroup | undefined",
-        description: "Выбран пункт; навигацию выполняет потребитель."
+        description: "Выбран пункт. Переход выполняет приложение."
       }
     ],
     model: {
@@ -132,14 +132,14 @@ export const compositesManifest = /* @__PURE__ */ defineComponentManifest([
     name: "WlCommandPalette",
     category: "composites",
     description:
-      "Командная палитра для быстрых ссылок и единого поиска по произвольным группам. Не зависит от роутера, API и бизнес-сущностей.",
+      "Командная палитра: группы команд, быстрые ссылки и поиск. Переходы и внешние запросы подключает приложение.",
     props: [
       {
         name: "groups",
         type: "array",
         default: [],
         description:
-          "WlCommandPaletteGroup[] с быстрыми ссылками и поисковыми элементами; group.filter переключает локальную/внешнюю фильтрацию."
+          "WlCommandPaletteGroup[] с быстрыми ссылками и результатами поиска. group.filter выбирает локальную или внешнюю фильтрацию."
       },
       { name: "placeholder", type: "string", default: "Поиск или переход…" },
       { name: "emptyText", type: "string", default: "Ничего не найдено" },
@@ -166,7 +166,7 @@ export const compositesManifest = /* @__PURE__ */ defineComponentManifest([
       {
         name: "select",
         payload: "WlCommandPaletteItem, WlCommandPaletteGroup",
-        description: "Выбран элемент; переход или действие выполняет потребитель."
+        description: "Выбран элемент. Переход или действие выполняет приложение."
       },
       { name: "open" },
       { name: "close" }

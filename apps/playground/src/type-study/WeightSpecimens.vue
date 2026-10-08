@@ -25,13 +25,13 @@ const copy = {
   ru: {
     eyebrow: "05 / Семейство Gavia Sans",
     title: "Шесть весов",
-    description: "Одинаковые слова, разная плотность. От тонкой линии до уверенного акцента — сравните все шесть весов на заголовках, тексте и цифрах.",
+    description: "Сравните шесть весов на одинаковых заголовках, тексте и цифрах. Можно ввести свою строку и переключить начертание.",
     normal: "Прямое",
     italic: "Курсив",
     styleLabel: "Стиль начертаний",
     customTextLabel: "Своя строка",
-    sampleHeading: "Ясные формы. Точные решения.",
-    sampleParagraph: "Спокойный ритм помогает читать и замечать главное. Буквы оставляют достаточно воздуха, заголовки задают порядок, а цифры сохраняют ясность в датах, суммах и коротких подписях.",
+    sampleHeading: "Заголовки, текст и цифры.",
+    sampleParagraph: "Один и тот же текст показан в шести весах. Сравните буквы, знаки препинания и цифры. Проверьте, как выглядит короткая подпись, длинное предложение, дата или сумма. Для каждого веса есть прямое и наклонное начертание.",
     numeralLabel: "Цифры / Gavia Sans",
     refinement: "Кириллица и латиница — во всех шести весах.",
     collection: "6 весов × 2 стиля / 12 начертаний"
@@ -39,13 +39,13 @@ const copy = {
   en: {
     eyebrow: "05 / Gavia Sans family",
     title: "Six weights",
-    description: "The same words, a different texture. From a fine line to a confident accent, compare all six weights in headings, paragraphs and numbers.",
+    description: "Compare six weights using the same headings, text and numbers. Enter your own heading and switch between styles.",
     normal: "Upright",
     italic: "Italic",
     styleLabel: "Typeface style",
     customTextLabel: "Your text",
-    sampleHeading: "Clear forms. Precise decisions.",
-    sampleParagraph: "A calm rhythm makes reading easier and brings the essentials into focus. Letters have room to breathe, headings establish order, and numbers remain clear in dates, amounts and short labels.",
+    sampleHeading: "Headings, text and numbers.",
+    sampleParagraph: "The same text appears in six weights. Compare letters, punctuation and numerals. Check a short label, a longer sentence, a date or an amount. Each weight has an upright and an oblique style.",
     numeralLabel: "Numbers / Gavia Sans",
     refinement: "Cyrillic and Latin across all six weights.",
     collection: "6 weights × 2 styles / 12 faces"

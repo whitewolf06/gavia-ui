@@ -4116,31 +4116,31 @@ export const wlDesignThemes = [
   {
     "name": "gavia",
     "label": "Gavia",
-    "description": "Светлые поверхности, глубокий озёрный акцент и мягкие серо-голубые выбранные состояния.",
+    "description": "Светлая тема со шрифтом Gavia Sans.",
     "colorScheme": "light"
   },
   {
     "name": "white",
     "label": "Classic",
-    "description": "Светлая нейтральная основа с синим акцентом.",
+    "description": "Светлая тема с синим акцентом.",
     "colorScheme": "light"
   },
   {
     "name": "graphite",
     "label": "Classic Dark",
-    "description": "Тёмные поверхности для длительной работы и яркие статусные акценты.",
+    "description": "Тёмная тема с цветами для статусов.",
     "colorScheme": "dark"
   },
   {
     "name": "newspaper",
     "label": "Newspaper",
-    "description": "Бумажные поверхности, печатный акцент и редакционная типографика.",
+    "description": "Светлая тема с тёплым фоном под бумагу.",
     "colorScheme": "light"
   },
   {
     "name": "gavia-dark",
     "label": "Gavia Dark",
-    "description": "Почти серые тёмные поверхности с лёгким синеватым подтоном, выразительный бирюзовый акцент, тёмные бирюзово-голубые заливки и типографика Gavia Sans.",
+    "description": "Тёмная тема с бирюзовым акцентом и шрифтом Gavia Sans.",
     "colorScheme": "dark"
   }
 ] as const satisfies readonly WlDesignTheme[];

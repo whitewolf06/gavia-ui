@@ -34,11 +34,11 @@ const source = computed(() => consumerSource(canonicalSource, preview.value));
 
 interface ButtonExample { name: string; id: string; title: string; description: string; component: Component; source: string; }
 const examples: readonly ButtonExample[] = [
-  { name: "variants", id: "docs-button-variants", title: "Все варианты", description: "Все допустимые значения variant рядом: основное действие, дополнительные действия и действия с риском удаления.", component: ButtonVariants, source: consumerSource(variantsSource) },
+  { name: "variants", id: "docs-button-variants", title: "Все варианты", description: "Сравните значения variant для основного, дополнительного действия и удаления.", component: ButtonVariants, source: consumerSource(variantsSource) },
   { name: "sizes", id: "docs-button-sizes", title: "Размеры и плотность", description: "Четыре размера в обычной и компактной плотности. Сравните их сразу или скройте компактный ряд.", component: ButtonSizes, source: consumerSource(sizesSource) },
-  { name: "states", id: "docs-button-states", title: "Disabled и loading", description: "Постоянные образцы состояний и управляемое сохранение с завершением, отменой и повтором.", component: ButtonStates, source: consumerSource(statesSource) },
-  { name: "slots", id: "docs-button-slot-layout", title: "Иконки и содержимое слотов", description: "Иконка слева, композиция справа, кнопка без текста и default-слот со счётчиком.", component: ButtonSlots, source: consumerSource(slotsSource) },
-  { name: "form", id: "docs-button-form", title: "Ширина кнопки и отправка формы", description: "Переключайте block, заполните обязательное поле и сравните нативные button, submit и reset.", component: ButtonForm, source: consumerSource(formSource) }
+  { name: "states", id: "docs-button-states", title: "Disabled и loading", description: "Disabled и loading, а также пример сохранения с завершением, отменой и повтором.", component: ButtonStates, source: consumerSource(statesSource) },
+  { name: "slots", id: "docs-button-slot-layout", title: "Иконки и содержимое слотов", description: "Иконки слева и справа, кнопка без текста и счётчик в default-слоте.", component: ButtonSlots, source: consumerSource(slotsSource) },
+  { name: "form", id: "docs-button-form", title: "Ширина кнопки и отправка формы", description: "Переключите block, заполните обязательное поле и сравните button, submit и reset.", component: ButtonForm, source: consumerSource(formSource) }
 ];
 
 function updateEnum(name: string, value: unknown): void {
@@ -88,7 +88,7 @@ defineExpose({ showHeading });
     </DocumentationTabs>
 
     <div v-show="selectedTab === 'examples'" id="docs-button-panel-examples" role="tabpanel" aria-labelledby="docs-button-tab-examples" class="wl-stack" data-space="xl">
-      <p class="wl-text-body wl-text-muted">Настройте props: пример и код используют один набор настроек.</p>
+      <p class="wl-text-body wl-text-muted">Измените props и посмотрите результат. Настройки одинаковы для примера и кода.</p>
       <div class="docs-button-workspace">
         <section class="docs-controls wl-stack" data-space="lg" :aria-labelledby="headings.controls.id">
           <div class="wl-inline" data-space="sm"><h2 :id="headings.controls.id" class="wl-text-subheading">{{ headings.controls.title }}</h2><WlButton size="sm" variant="ghost" @click="reset">Сбросить</WlButton></div>
@@ -126,7 +126,7 @@ defineExpose({ showHeading });
           <h2 :id="example.id" class="wl-text-heading" :data-testid="'docs-button-example-heading-' + example.name">{{ example.title }}</h2>
           <p class="wl-text-body wl-text-muted">{{ example.description }}</p>
         </div>
-        <div class="docs-button-example-preview" data-testid="docs-button-example-preview" role="region" :aria-label="example.title + ' — живой пример'"><component :is="example.component" /></div>
+        <div class="docs-button-example-preview" data-testid="docs-button-example-preview" role="region" :aria-label="example.title + ' — пример'"><component :is="example.component" /></div>
         <div data-testid="docs-button-example-source"><CodePanel :source="example.source" title="Vue SFC · пример для приложения" /></div>
       </section>
       <section class="docs-guide wl-stack" data-space="md">
@@ -134,7 +134,7 @@ defineExpose({ showHeading });
         <ul class="docs-guide-list">
           <li><strong>primary</strong> — основное действие группы; <strong>secondary</strong> — дополнительное.</li>
           <li><strong>ghost</strong> и <strong>link</strong> — менее заметные действия; danger-варианты — действия с риском удаления.</li>
-          <li><strong>block</strong> заполняет доступную ширину; <strong>size</strong> и <strong>density</strong> меняют геометрию без изменения DOM-контракта.</li>
+          <li><strong>block</strong> заполняет доступную ширину; <strong>size</strong> и <strong>density</strong> меняют размеры и отступы, сохраняя DOM-контракт.</li>
         </ul>
         <p class="wl-text-small wl-text-muted">Полный список вариантов берётся из манифеста в настройках и API. Для перехода по URL используйте ссылку; WlButton рендерит нативный <code>button</code>.</p>
       </section>
@@ -147,12 +147,12 @@ defineExpose({ showHeading });
     <section v-show="selectedTab === 'accessibility'" id="docs-button-panel-accessibility" class="docs-guide wl-stack" data-space="lg" role="tabpanel" tabindex="0" aria-labelledby="docs-button-tab-accessibility">
       <h2 :id="headings.accessibility.id" class="wl-text-heading">{{ headings.accessibility.title }}</h2>
       <ul class="docs-guide-list">
-        <li>Доступная кнопка получает фокус по Tab и активируется Enter или Space. Видимый focus сохраняется во всех темах.</li>
+        <li>Tab переводит фокус на доступную кнопку, Enter или Space выполняют действие. Фокус виден во всех темах.</li>
         <li>При <code>disabled</code> или <code>loading</code> нативный <code>disabled</code> блокирует click и исключает кнопку из Tab-порядка.</li>
         <li><code>loading</code> задаёт <code>aria-busy="true"</code>. Спиннер имеет <code>aria-hidden="true"</code>; текст кнопки остаётся её доступным именем.</li>
         <li>Объясняйте причину недоступности рядом с действием. Не передавайте смысл только цветом или иконкой.</li>
         <li>У кнопки только с иконкой должно быть доступное имя, например <code>aria-label</code>. Для этого сценария также есть WlIconButton.</li>
-        <li>Внутри формы задавайте <code>type="submit"</code> или <code>type="reset"</code> намеренно; по умолчанию используется безопасный <code>type="button"</code>.</li>
+        <li>Внутри формы задавайте <code>type="submit"</code> или <code>type="reset"</code> намеренно; по умолчанию используется <code>type="button"</code>, который не отправляет форму.</li>
       </ul>
       <p class="wl-text-small wl-text-muted">Проверка на этой странице: вернитесь к примерам, нажмите «Фокус на примере», нажмите Enter/Space и проверьте счётчик. Затем включите disabled или loading: действие перестанет выполняться.</p>
     </section>

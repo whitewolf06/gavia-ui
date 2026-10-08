@@ -39,7 +39,7 @@ onBeforeUnmount(() => { mounted = false; revision++; media?.removeEventListener(
     <div v-if="wide || filtersOpen" ref="filter" id="responsive-behavior-filter" class="media-behavior-filter wl-surface wl-stack" data-space="sm">
       <label for="responsive-behavior-search" class="wl-text-label">Поиск в примере</label>
       <WlInput id="responsive-behavior-search" v-model="search" placeholder="Например, карточка" />
-      <p class="wl-text-small wl-text-muted">Введённый текст сохраняется при перестройке: модель находится за пределами условной разметки.</p>
+      <p class="wl-text-small wl-text-muted">При перестройке введённый текст остаётся. Его модель находится за пределами условной разметки.</p>
     </div>
     <p class="wl-text-small wl-text-muted">Текущее значение: {{ search || 'пусто' }}. CSS отвечает за размещение, matchMedia — только за изменение поведения фильтра.</p>
   </section>

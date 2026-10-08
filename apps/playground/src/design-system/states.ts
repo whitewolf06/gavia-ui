@@ -16,8 +16,8 @@ export function stateCases(entry: WlComponentManifest): StateCase[] {
     const values = prop.type === "boolean" ? [true, false] : prop.values ?? [];
     for (const value of values) cases.push({ id: `${prop.name}-${value}`, label: `${prop.name}: ${value}`, props: { [prop.name]: value } });
   }
-  if (entry.name === "WlField") cases.push({ id: "error", label: "Ошибка + пояснение", props: { error: "Введите название материала." } });
-  if (entry.name === "WlTable") cases.push({ id: "empty", label: "Пустые данные", props: { value: [], emptyMessage: "Ничего не найдено" } });
+  if (entry.name === "WlField") cases.push({ id: "error", label: "Поле с ошибкой", props: { error: "Введите название материала." } });
+  if (entry.name === "WlTable") cases.push({ id: "empty", label: "Пустая таблица", props: { value: [], emptyMessage: "Ничего не найдено" } });
   if (entry.name === "WlProgress") for (const value of [0, 100]) cases.push({ id: `value-${value}`, label: `Прогресс: ${value}%`, props: { value } });
   if (entry.name === "WlSteps") for (const current of [0, 1, 2]) cases.push({ id: `step-${current}`, label: `Шаг: ${current + 1}`, props: { current } });
   if (entry.name === "WlIcon") for (const size of [12, 16, 24, 32]) cases.push({ id: `size-${size}`, label: `size: ${size}`, props: { size } });

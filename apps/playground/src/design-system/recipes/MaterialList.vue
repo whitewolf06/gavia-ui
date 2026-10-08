@@ -68,7 +68,7 @@ function remove(id: number): void {
     <WlDrawer v-model:visible="editing" :header="editingId ? 'Редактирование материала' : 'Новый материал'">
       <form id="recipe-material-form" class="wl-stack" data-space="lg" @submit.prevent="save">
         <WlField id="recipe-material-title" label="Название" required :error="titleError" v-slot="field"><WlInput :id="field.id" v-model="title" :invalid="field.invalid" :aria-describedby="field.ariaDescribedby" maxlength="120" /></WlField>
-        <p class="wl-text-small wl-text-muted">Изменения сохранятся после нажатия «Сохранить».</p>
+        <p class="wl-text-small wl-text-muted">Чтобы применить изменения, нажмите «Сохранить».</p>
       </form>
       <template #footer><WlButton variant="ghost" @click="editing = false">Отмена</WlButton><WlButton variant="primary" type="submit" form="recipe-material-form">Сохранить</WlButton></template>
     </WlDrawer>

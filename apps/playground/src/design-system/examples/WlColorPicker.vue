@@ -7,6 +7,6 @@ const value = ref('#3c6cff');
 
 <template>
   <div class="wl-stack" data-space="md">
-    <WlColorPicker v-model="value" palette-label="Цвет материала" input-label="HEX материала" v-bind="preview" />
+    <WlColorPicker v-model="value" palette-label="Цвет материала" input-label="HEX-код цвета материала" v-bind="preview" />
   </div>
 </template>

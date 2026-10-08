@@ -70,7 +70,7 @@ const layers = [
   { name: "Мобильная навигация", token: "--wl-layer-navigation-modal", purpose: "Sidebar в мобильном модальном режиме." },
   { name: "Command palette", token: "--wl-layer-command", purpose: "Поиск и быстрые переходы." },
   { name: "Панель фильтров", token: "--wl-layer-filter", purpose: "Оверлей фильтров." },
-  { name: "Toast", token: "--wl-layer-toast", purpose: "Уведомления над остальными штатными слоями." }
+  { name: "Toast", token: "--wl-layer-toast", purpose: "Уведомления над остальными слоями библиотеки." }
 ] as const;
 </script>
 
@@ -80,7 +80,7 @@ const layers = [
     <section class="wl-stack" data-space="md" :aria-labelledby="metadata.rulesHeading.id">
       <h2 :id="metadata.rulesHeading.id" class="docs-foundation-anchor wl-text-heading">{{ metadata.rulesHeading.title }}</h2>
       <ul class="docs-foundation-rules"><li v-for="rule in metadata.rules" :key="rule">{{ rule }}</li></ul>
-      <p class="wl-text-small wl-text-muted">Подключите <code>gavia-ui/styles/primitives.css</code> после base.css. Живые примеры и копируемый код используют один SFC; оформление наследует выбранную тему.</p>
+      <p class="wl-text-small wl-text-muted">Подключите <code>gavia-ui/styles/primitives.css</code> после base.css. Примеры и код для копирования используют один SFC. Оформление берётся из выбранной темы.</p>
     </section>
     <section v-if="metadata.breakpointsHeading" class="docs-foundation-breakpoints wl-stack" data-space="sm" :aria-labelledby="metadata.breakpointsHeading.id">
       <h2 :id="metadata.breakpointsHeading.id" class="docs-foundation-anchor wl-text-subheading">{{ metadata.breakpointsHeading.title }}</h2>
@@ -99,7 +99,7 @@ const layers = [
     </section>
     <footer class="docs-foundation-footer wl-stack" data-space="md">
       <h2 :id="metadata.continueHeading.id" class="docs-foundation-anchor wl-text-subheading">{{ metadata.continueHeading.title }}</h2>
-      <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="emit('component', undefined)">Обзор компонентов</WlButton><WlButton size="sm" @click="emit('navigate', 'components')">Рабочая галерея</WlButton><WlButton size="sm" variant="ghost" @click="emit('navigate', 'system')">Дизайн-система и токены</WlButton></div>
+      <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="emit('component', undefined)">Обзор компонентов</WlButton><WlButton size="sm" @click="emit('navigate', 'components')">Галерея компонентов</WlButton><WlButton size="sm" variant="ghost" @click="emit('navigate', 'system')">Дизайн-система и токены</WlButton></div>
       <a class="docs-text-link wl-text-small" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md">Все правила дизайн-системы</a>
     </footer>
   </article>

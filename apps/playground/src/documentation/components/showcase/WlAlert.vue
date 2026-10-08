@@ -18,6 +18,6 @@ async function showError(visible: boolean, retry = false): Promise<void> {
     <WlAlert variant="warn" title="Мало места">Освободите место перед следующим вложением.<template #action><WlButton size="sm" @click="attempts++">Проверить место</WlButton></template></WlAlert>
     <div ref="errorRegion"><WlAlert v-if="error" variant="err" title="Не удалось сохранить" closable close-label="Скрыть сообщение об ошибке" @close="showError(false)">Черновик сохранён, повторите попытку.<template #action><WlButton size="sm" @click="showError(false, true)">Повторить сохранение</WlButton></template></WlAlert>
     <div v-else><WlButton size="sm" variant="soft" @click="showError(true)">Показать ошибку снова</WlButton></div></div>
-    <p class="wl-text-small" role="status">Локальных проверок: {{ attempts }}. Ошибка: {{ error ? 'видна' : 'скрыта' }}.</p>
+    <p class="wl-text-small" role="status">Проверок в примере: {{ attempts }}. Ошибка: {{ error ? 'видна' : 'скрыта' }}.</p>
   </div>
 </template>

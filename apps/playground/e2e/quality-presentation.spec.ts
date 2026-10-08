@@ -21,9 +21,9 @@ test("quality summary, footer and documentation preserve themes and show the mea
     await expect(summary).toContainText(percent.format(report.coverage.lines) + "%");
     await expect(summary).toContainText(report.version);
     await expect(summary.getByRole("progressbar", { name: "Покрытие строк unit-тестами", exact: true })).toHaveAttribute("aria-valuenow", String(report.coverage.lines));
-    await expect(summary.getByRole("progressbar", { name: "Пройденные unit-тесты в измеренном прогоне", exact: true })).toHaveAttribute("aria-valuenow", String(report.tests.passed / report.tests.total * 100));
+    await expect(summary.getByRole("progressbar", { name: "Пройденные unit-тесты в этом прогоне", exact: true })).toHaveAttribute("aria-valuenow", String(report.tests.passed / report.tests.total * 100));
     await expect(summary.locator("time")).toHaveAttribute("datetime", report.measuredAt);
-    const link = summary.getByRole("link", { name: "Все проверки", exact: true });
+    const link = summary.getByRole("link", { name: "Результаты проверок", exact: true });
     const href = new URL((await link.getAttribute("href"))!, page.url());
     expect(href.searchParams.get("section")).toBe("quality");
     expect(href.searchParams.get("theme")).toBe(theme);

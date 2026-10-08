@@ -30,7 +30,7 @@ function cancel(): void { stop(); progress.value = 0; outcome.value = "idle"; }
     <WlPageHeader title="Вложения материала" description="PDF и TXT, до трёх файлов по 1 МБ." :heading-level="2" size="md" />
     <WlFileUpload v-model="files" accept=".pdf,.txt" :max-files="3" :max-size="1048576" :disabled="busy" />
     <p class="wl-text-small wl-text-muted" role="status">Файлов: {{ files.length }} · объём: {{ bytes }} байт</p>
-    <WlSwitch v-model="failure" :disabled="busy" aria-label="Проверить ошибку загрузки">Проверить ошибку загрузки</WlSwitch>
+    <WlSwitch v-model="failure" :disabled="busy" aria-label="Имитировать ошибку загрузки">Имитировать ошибку загрузки</WlSwitch>
     <WlProgress v-if="busy || progress" :value="progress" show-value aria-label="Загрузка вложений" />
     <WlAlert v-if="outcome === 'error'" variant="err" title="Загрузка не завершена">Файлы остались в списке.<template #action><WlButton size="sm" @click="retry">Повторить загрузку</WlButton></template></WlAlert>
     <WlAlert v-if="outcome === 'success'" variant="ok" title="Вложения готовы">{{ files.length }} файлов обработано.</WlAlert>

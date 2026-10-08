@@ -4,7 +4,7 @@ export const navigationManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlBreadcrumbs",
     category: "navigation",
-    description: "Хлебные крошки; последний пункт — текущая страница (без ссылки).",
+    description: "Хлебные крошки: путь к текущей странице. Последний пункт — без ссылки.",
     props: [
       {
         name: "items",
@@ -20,10 +20,10 @@ export const navigationManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlSteps",
     category: "navigation",
-    description: "Линейный индикатор шагов: пройденные — с галочкой, текущий подсвечен.",
+    description: "Шаги процесса. Пройденные отмечены галочкой, текущий выделен.",
     props: [
       { name: "items", type: "array", default: [], description: "WlStepItem[]: { label }." },
-      { name: "current", type: "number", default: 0, description: "Индекс текущего шага (0-based)." }
+      { name: "current", type: "number", default: 0, description: "Индекс текущего шага, начиная с 0." }
     ],
     slots: [],
     emits: []

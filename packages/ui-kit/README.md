@@ -6,11 +6,12 @@
 
 [![Покрытие строк unit-тестами — снимок репозитория](https://raw.githubusercontent.com/whitewolf06/gavia-ui/main/docs/quality-coverage.svg)](https://github.com/whitewolf06/gavia-ui/blob/main/apps/playground/src/project/quality-report.generated.json)
 
-Бесплатная библиотека компонентов и дизайн-система для **Vue 3 + TypeScript**.
-В составе: **53 компонента, 113 SVG-иконок, 447 дизайн-токенов, пять тем:
-Gavia, Gavia Dark, Classic, Classic Dark, Newspaper и гарнитура Gavia Sans 0.6**.
-Runtime-зависимостей нет; Vue 3 — единственный
-обязательный peer. Стили подключаются явно.
+Библиотека компонентов и дизайн-система для **Vue 3 + TypeScript**.
+**53 компонента, 113 SVG-иконок, 447 дизайн-токенов и пять тем:**
+Gavia, Gavia Dark, Classic, Classic Dark и Newspaper. В пакет входит Gavia Sans 0.6.
+Vue 3 — единственный обязательный peer; runtime-зависимостей нет.
+Стили подключаются явно. Код библиотеки можно использовать бесплатно,
+в том числе в коммерческих проектах.
 
 <p align="center">
   <a href="https://whitewolf06.github.io/gavia-ui/"><img src="https://raw.githubusercontent.com/whitewolf06/gavia-ui/main/docs/brand/playground-button.svg" alt="Открыть Playground" width="230" height="44"></a><br>
@@ -21,14 +22,15 @@ Runtime-зависимостей нет; Vue 3 — единственный
 
 [Качество и совместимость](https://whitewolf06.github.io/gavia-ui/?view=docs&section=quality):
 unit-тесты, покрытие Vitest/V8, браузеры, доступность, SSR и проверка установленного пакета.
-Доля успешных unit-тестов и покрытие показаны процентными шкалами 0–100%; это измерение, а не статус CI.
-Бейдж — сохранённый снимок покрытия строк в репозитории. Его дата, версия и источник —
-[в JSON-отчёте](https://github.com/whitewolf06/gavia-ui/blob/main/apps/playground/src/project/quality-report.generated.json). Страница качества показывает измерение
-из CI последней опубликованной сборки Playground; оно может отличаться от снимка.
+Шкалы 0–100% показывают долю пройденных unit-тестов и покрытие.
+Бейдж хранит результат измерения покрытия строк. Дата, версия и источник —
+[в JSON-отчёте](https://github.com/whitewolf06/gavia-ui/blob/main/apps/playground/src/project/quality-report.generated.json). В опубликованном playground страница качества показывает отчёт CI этой сборки.
+Он может отличаться от сохранённого снимка. Статус текущего CI проверяйте отдельно:
 [Текущие запуски CI](https://github.com/whitewolf06/gavia-ui/actions).
 
-Версия **0.10.0**. [История изменений](CHANGELOG.md) ·
-[Миграция 0.10](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.10.0.md) ·
+Версия **0.11.0**. [История изменений](CHANGELOG.md) ·
+[Миграция 0.11](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.11.0.md) ·
+[Темы 0.10](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.10.0.md) ·
 [История ребрендинга](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-gavia.md).
 Код UI Kit — [MIT](LICENSE), файлы шрифта —
 [SIL OFL 1.1](https://github.com/whitewolf06/gavia-ui/blob/main/packages/ui-kit/fonts/gavia/OFL.txt).
@@ -37,8 +39,8 @@ unit-тесты, покрытие Vitest/V8, браузеры, доступно�
 
 ### Основные
 
-**Gavia** и **Gavia Dark** — фирменные светлая и тёмная темы Gavia UI:
-бирюзовый акцент, общая геометрия компонентов и шрифт **Gavia Sans**.
+**Gavia** и **Gavia Dark** — светлая и тёмная темы с озёрной палитрой,
+общими размерами компонентов и шрифтом **Gavia Sans**.
 
 | Тема | Режим | `data-wl-theme` | CSS из пакета |
 | --- | --- | --- | --- |
@@ -49,14 +51,15 @@ Gavia Dark добавлена в 0.10.0.
 
 ### Дополнительные
 
-Альтернативное оформление тех же компонентов: Classic и Classic Dark используют
-системный sans, Newspaper — системный основной текст и заголовки с засечками.
+Classic и Classic Dark используют системный шрифт без засечек.
+В Newspaper основной текст тоже системный, а заголовки — с засечками.
+Компоненты во всех темах общие.
 
 | Тема | Оформление | `data-wl-theme` | CSS из пакета |
 | --- | --- | --- | --- |
 | **Classic** | Светлая нейтральная | `white` | `gavia-ui/themes/white.css` |
 | **Classic Dark** | Тёмная нейтральная | `graphite` | `gavia-ui/themes/graphite.css` |
-| **Newspaper** | Бумажная, с редакционной типографикой | `newspaper` | `gavia-ui/themes/newspaper.css` |
+| **Newspaper** | Светлая, с заголовками с засечками | `newspaper` | `gavia-ui/themes/newspaper.css` |
 
 Выберите CSS темы и её идентификатор из таблицы. Для обеих основных тем также
 подключите `gavia-ui/styles/fonts/gavia.css`. Без явного выбора темы библиотека
@@ -65,11 +68,11 @@ Gavia Dark добавлена в 0.10.0.
 ## Быстрый старт
 
 ```bash
-pnpm add gavia-ui@0.10.0 vue
+pnpm add gavia-ui@0.11.0 vue
 # либо
-npm install gavia-ui@0.10.0 vue
+npm install gavia-ui@0.11.0 vue
 # либо
-bun add gavia-ui@0.10.0 vue
+bun add gavia-ui@0.11.0 vue
 ```
 
 ```ts
@@ -97,8 +100,8 @@ import { WlButton } from "gavia-ui";
 ```
 
 Вместо строки `dataset.wlTheme` можно указать `<html data-wl-theme="gavia">`
-в `index.html`. Обе Gavia используют Gavia Sans; без шрифтового CSS доступен
-системный fallback. Gavia Dark подключается через `gavia-ui/themes/gavia-dark.css`
+в `index.html`. Обе Gavia используют Gavia Sans. Без CSS шрифта
+браузер выберет системный шрифт. Gavia Dark подключается через `gavia-ui/themes/gavia-dark.css`
 и `data-wl-theme="gavia-dark"`. Без выбора темы библиотека сохраняет Classic (`white`).
 Classic / Classic Dark / Newspaper используют `themes/white.css` / `themes/graphite.css` /
 `themes/newspaper.css` и идентификаторы `white` / `graphite` / `newspaper`.
@@ -109,8 +112,8 @@ Classic / Classic Dark / Newspaper используют `themes/white.css` / `th
 
 Gavia Sans 0.6 входит в пакет: кириллица и латиница, шесть весов
 100 / 300 / 400 / 500 / 600 / 700 с прямым и наклонным начертанием, WOFF2 и TTF.
-Она служит основным шрифтом **тем Gavia и Gavia Dark**; Classic, Classic Dark и Newspaper
-сохраняют свою типографику. Подключение явное: `import "gavia-ui/styles/fonts/gavia.css";`.
+Это основной шрифт **тем Gavia и Gavia Dark**. В Classic, Classic Dark и Newspaper
+типографика остаётся прежней. Подключение явное: `import "gavia-ui/styles/fonts/gavia.css";`.
 
 Файлы доступны через `gavia-ui/fonts/gavia/<file>` и применимы без Vue.
 [Образцы и скачивание Gavia-Sans-0.6.zip](https://whitewolf06.github.io/gavia-ui/?view=font) ·
@@ -124,7 +127,7 @@ Gavia Sans 0.6 входит в пакет: кириллица и латиниц�
 описаны в [руководстве](https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md). Playground `?view=system`
 показывает 447 токенов, пять тем и контракты 53 компонентов.
 
-Опциональная компоновка и типографика: явный импорт
+Чтобы использовать CSS-классы для layout и типографики, подключите
 `gavia-ui/styles/primitives.css`. Экспорты `wlDesignTokens`,
 `wlDesignThemes`, `wlSpacing`, `wlTypography`, `wlBreakpoints`, `resolveWlToken`,
 `getWlThemeTokens` работают без DOM. JSON-каталог доступен по
@@ -137,9 +140,9 @@ primary/danger используют новые роли `--wl-action-primary-*` 
 и проверяйте их сочетания. Во всех темах добавлена видимая обводка фокуса.
 Подсказки полей, заголовки и пустые состояния используют `--wl-text-muted`.
 
-Независимая библиотека компонентов Gavia UI: Vue 3 + TypeScript (strict), собственный DOM
-и поведение; стили — обычный CSS с custom properties
-`--wl-*` и CSS Layers. Без Pinia, роутера, API-клиентов и бизнес-логики.
+Компоненты используют собственную разметку и поведение, strict TypeScript
+и обычный CSS с переменными `--wl-*` и CSS Layers.
+Хранилище состояния, маршруты, API и бизнес-правила остаются в приложении.
 
 ## Peer dependencies
 
@@ -202,7 +205,7 @@ const text = ref("");
 | `gavia-ui/styles/primitives.css` | необязательные классы компоновки и типографики |
 | `gavia-ui/styles/fonts/gavia.css` | явное подключение Gavia Sans и совместимого CSS-алиаса `Gavia` |
 | `gavia-ui/fonts/gavia/<file>` | WOFF2, TTF и лицензии шрифта |
-| `gavia-ui/themes/<theme>.css` | `gavia`, `white`, `graphite` или `newspaper` |
+| `gavia-ui/themes/<theme>.css` | `gavia`, `gavia-dark`, `white`, `graphite` или `newspaper` |
 | `gavia-ui/manifest.json` | JSON-контракты всех 53 компонентов |
 | `gavia-ui/design-tokens.json` | JSON-каталог токенов, тем, типографики и шкал |
 | `gavia-ui/package.json` | метаданные пакета |
@@ -235,9 +238,8 @@ import "gavia-ui/themes/newspaper.css";
 <html data-wl-theme="newspaper">
 ```
 
-`newspaper` — светлая газетная тема с почти белой бумажной палитрой, антиквенными
-заголовками, sans-serif интерфейсным текстом, тонкими линейками и сдержанными
-spot-цветами.
+В `newspaper` почти белый фон, заголовки с засечками, интерфейсный текст
+без засечек, тонкие разделители и небольшие цветовые акценты.
 
 ```css
 [data-wl-theme="my-brand"] {
@@ -284,8 +286,8 @@ spot-цветами.
 `WlDialog`, `WlDrawer`, `WlPopover` и popup-`WlMenu` эмитят единые события
 `open` / `close`. Диалог, дровер и поповер поддерживают `closeOnEscape`,
 dismiss-поведение и доступную подпись; диалог и дровер также позволяют управлять
-`blockScroll`. Собственные мобильные оверлеи кита закрываются только верхним
-слоем, удерживают фокус внутри и корректно возвращают его в триггер.
+`blockScroll`. В стеке мобильных оверлеев закрывается только верхний слой.
+Он удерживает фокус внутри и после закрытия возвращает его на триггер открытия.
 При блокировке страницы место существующей вертикальной полосы прокрутки
 сохраняется, чтобы контент не смещался при открытии и закрытии.
 
@@ -353,7 +355,7 @@ app.use(WlConfig, {
 
 ### Подтверждения: WlConfirmDialog + useWlConfirm
 
-По аналогии с тостами нужны сервис и один экземпляр диалога в корне приложения:
+Установите сервис и добавьте один диалог в корень приложения:
 
 ```ts
 // main.ts
@@ -384,16 +386,16 @@ function remove(): void {
 </template>
 ```
 
-`confirm` рисует primary-кнопку подтверждения, `confirmDanger` — danger с
-иконкой предупреждения; подписи по умолчанию берутся из локали кита
+`confirm` показывает primary-кнопку, `confirmDanger` — danger-кнопку
+с иконкой предупреждения. Подписи по умолчанию берутся из локали библиотеки
 (`wlLocaleRu.accept` / `wlLocaleRu.reject`).
 
 ## Component manifest
 
-Машиночитаемое описание всех 53 компонентов: пропсы (типы, дефолты, enum-значения),
-слоты, события, `v-model` и `introducedIn` — первая публичная версия, содержащая
-компонент. Предназначен для визуальных редакторов (палитра +
-инспектор пропсов) и AI-агентов, генерирующих разметку.
+Манифест описывает все 53 компонента: props с типами, значениями по умолчанию
+и допустимыми enum-значениями, слоты, события, `v-model` и `introducedIn` — версию первого выпуска.
+Визуальный редактор может строить по нему палитру и инспектор props,
+а AI-агент — использовать его при подготовке разметки.
 
 ```ts
 import { wlManifest } from "gavia-ui";
@@ -421,7 +423,7 @@ pnpm build      # сборка (vite lib mode → dist/index.js + dist/*.d.ts)
 pnpm test       # Vitest + Vue Test Utils
 pnpm typecheck  # vue-tsc --noEmit
 pnpm test:e2e   # desktop/mobile, Chromium/Firefox/WebKit
-pnpm test:visual # сравнение эталонов трёх тем на desktop/mobile
+pnpm test:visual # сравнение эталонов пяти тем на desktop/mobile
 pnpm icons:check
 pnpm tokens:check
 pnpm verify:package
@@ -429,4 +431,5 @@ pnpm verify:dependencies
 ```
 
 [Совместимость, браузеры, доступность и проверки](https://github.com/whitewolf06/gavia-ui/blob/main/docs/quality.md).
-Потребители могут использовать pnpm, npm и Bun; разработка репозитория — pnpm.
+В приложении можно установить пакет через pnpm, npm или Bun.
+Для разработки этого репозитория используйте pnpm.

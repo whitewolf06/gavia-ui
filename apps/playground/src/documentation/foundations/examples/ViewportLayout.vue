@@ -12,7 +12,7 @@ const steps = ["Исследование", "Прототип", "Разработ
         <p class="wl-text-small">Карточки сохраняют порядок чтения при перестройке.</p>
       </article>
     </div>
-    <p class="wl-text-small" role="status">Текущая ступень:
+    <p class="wl-text-small" role="status">Текущий брейкпоинт:
       <span class="viewport-tier viewport-tier--base">до 640 px · 1 колонка</span>
       <span class="viewport-tier viewport-tier--sm">sm · от 640 px · 2 колонки</span>
       <span class="viewport-tier viewport-tier--md">md · от 900 px · 3 колонки</span>

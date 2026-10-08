@@ -4,12 +4,12 @@ import { WlButton } from "../../../../packages/ui-kit/src";
 import CodePanel from "./CodePanel.vue";
 import { consumerSource } from "./code";
 const recipes = [
-  { id: "MaterialList", label: "Список и CRUD", description: "Поиск, статус, сортировка, страницы, создание и редактирование в Drawer, подтверждение удаления и Toast." },
-  { id: "ProfileForm", label: "Форма", description: "Связь label/error с полем, первая ошибка получает фокус, загрузка, ошибка запроса и повторное сохранение без потери ввода." },
-  { id: "Preferences", label: "Настройки", description: "Черновик, зависимые поля, несохранённые изменения, отмена и сохранение предпочтений." },
-  { id: "MaterialDetail", label: "Деталь", description: "Заголовок, хлебные крошки, автор, статус, вкладки, редактирование в Dialog с отменой и возвратом фокуса." },
-  { id: "ProjectWizard", label: "Пошаговая форма", description: "Валидация шага, переходы вперёд и назад, сохранение ввода, обзор и завершение." },
-  { id: "AttachmentUpload", label: "Вложения", description: "Ограничение типов, размера и количества, прогресс, отмена, ошибка и повторная загрузка." }
+  { id: "MaterialList", label: "Список и CRUD", description: "Поиск, фильтры, сортировка и страницы. Создание и редактирование в Drawer, подтверждение удаления и Toast." },
+  { id: "ProfileForm", label: "Форма", description: "Подписи и ошибки связаны с полями. Первая ошибка получает фокус, при сохранении показана загрузка. После ошибки запроса можно повторить сохранение — введённые данные остаются." },
+  { id: "Preferences", label: "Настройки", description: "Зависимые поля, сохранение и отмена изменений. Форма показывает, есть ли несохранённые изменения." },
+  { id: "MaterialDetail", label: "Страница материала", description: "Заголовок, автор, статус и вкладки. Описание редактируется в Dialog с отменой изменений; после закрытия фокус возвращается к кнопке." },
+  { id: "ProjectWizard", label: "Пошаговая форма", description: "Валидация шага, переходы вперёд и назад. Ввод сохраняется между шагами; перед созданием проекта можно проверить все данные." },
+  { id: "AttachmentUpload", label: "Вложения", description: "Ограничения типов, размера и количества файлов. Прогресс загрузки, отмена и повтор после ошибки." }
 ] as const;
 const modules = import.meta.glob<{ default: Component }>("./recipes/*.vue");
 const sources = import.meta.glob<string>("./recipes/*.vue", { eager: true, query: "?raw", import: "default" });
@@ -53,7 +53,7 @@ createApp(App).use(WlConfig, { locale: wlLocaleRu, motion: true, pt })
     <div class="ds-recipe-preview wl-surface" data-testid="ds-recipe-preview" :data-recipe="recipe.id"><component :is="component" :key="`${selected}-${revision}`" /></div>
     <div><WlButton size="sm" variant="ghost" @click="revision++">Начать сценарий заново</WlButton></div>
     <CodePanel :source="source" />
-    <p class="wl-text-small wl-text-muted">Данные демонстрационные, запросы формы и загрузки моделируются локально. При переносе подключите запросы своего приложения. Код примера и работающий сценарий берутся из одного Vue-файла.</p>
+    <p class="wl-text-small wl-text-muted">В примерах тестовые данные. Сохранение и загрузка имитируются в браузере. В своём приложении подключите запросы к серверу. Сценарий и код для копирования берутся из одного Vue-файла.</p>
     <CodePanel :source="setupSource" title="Подключение стилей, темы и сервисов" />
   </div>
 </template>

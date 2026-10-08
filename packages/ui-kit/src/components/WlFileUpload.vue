@@ -62,11 +62,11 @@ function humanSize(bytes: number): string {
 }
 
 function reasonMessage(reason: WlFileRejectReason): string {
-  if (reason === "type") return "неподдерживаемый тип";
+  if (reason === "type") return "тип файла не поддерживается";
   if (reason === "size") {
-    return sizeLimit.value !== undefined ? `больше ${humanSize(sizeLimit.value)}` : "слишком большой";
+    return sizeLimit.value !== undefined ? `размер больше ${humanSize(sizeLimit.value)}` : "файл слишком большой";
   }
-  return fileLimit.value !== undefined ? `лимит — не больше ${fileLimit.value}` : "слишком много файлов";
+  return fileLimit.value !== undefined ? `лимит файлов: ${fileLimit.value}` : "слишком много файлов";
 }
 
 function acceptMatches(file: File): boolean {

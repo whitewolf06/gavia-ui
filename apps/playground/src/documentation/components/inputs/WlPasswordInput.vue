@@ -8,7 +8,7 @@ const touched = ref(false);
 <template>
   <div class="wl-stack" data-space="xl" data-input-example="WlPasswordInput">
     <section class="wl-stack" data-space="md">
-      <h4 class="wl-text-title">Размеры и кнопка видимости</h4>
+      <h4 class="wl-text-title">Размеры и показ пароля</h4>
       <div class="wl-grid" data-space="lg">
         <WlField v-for="size in ['sm', 'md', 'lg'] as const" :key="size" :id="`docs-password-${size}`" :label="`Пароль, ${size}`" v-slot="{ id }">
           <WlPasswordInput :id="id" v-model="password" :size="size" autocomplete="new-password" />

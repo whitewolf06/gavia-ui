@@ -150,7 +150,7 @@ const commandPaletteGroups: WlCommandPaletteGroup[] = [
       {
         id: "page-components",
         label: "Все компоненты",
-        description: "Каталог руководств по всем компонентам",
+        description: "Примеры и API всех компонентов",
         icon: "file",
         keywords: ["страницы", "каталог"],
         data: { catalog: true }
@@ -198,7 +198,7 @@ const commandPaletteGroups: WlCommandPaletteGroup[] = [
       {
         id: "page-theme-builder",
         label: "Подбор темы",
-        description: "Своя палитра, живые компоненты и настройки для агента",
+        description: "Цвета темы, примеры компонентов и экспорт настроек",
         icon: "sliders-h",
         keywords: ["редактор", "цвет", "theme", "палитра"],
         data: { view: "theme-builder" }
@@ -289,7 +289,7 @@ watch(theme, (value) => {
   </header>
   <WlCommandPalette v-model:visible="commandPaletteVisible" v-model:query="commandPaletteQuery"
     :groups="commandPaletteGroups" :shortcut="globalSearchShortcut" @select="onCommandPaletteSelect">
-    <template #footer>Быстрые переходы и компоненты ищутся одной строкой</template>
+    <template #footer>Введите название раздела или компонента</template>
   </WlCommandPalette>
   <HomePage v-if="activeView === 'home'" :theme="theme" @navigate="showView" @component="openDocs" @catalog="openDocsCatalog" @quality="openDocsSection('quality')" @toggle-theme="toggleThemeVariant" />
   <DocsPage v-else-if="activeView === 'docs'" :component="activeRoute.component" :section="activeRoute.section" :theme="theme"

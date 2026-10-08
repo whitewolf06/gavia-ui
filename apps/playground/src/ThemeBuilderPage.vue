@@ -78,7 +78,7 @@ const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.
 <template>
   <main class="tb-page wl-container wl-stack" data-space="2xl" data-testid="theme-builder-page" aria-labelledby="tb-title">
     <PlaygroundPageHeader title="Подбор темы" title-id="tb-title"
-      description="Выберите основу, измените ключевые цвета и попробуйте настоящие компоненты. Когда палитра готова, скопируйте настройки для агента или CSS для проекта."
+      description="Выберите базовую тему, измените цвета и посмотрите, как выглядят компоненты. Скопируйте CSS для проекта или задание для агента."
       :breadcrumbs="[{ label: 'Подбор темы' }]" />
 
     <div class="tb-workspace">
@@ -90,7 +90,7 @@ const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.
         <div class="wl-stack" data-space="sm">
           <label id="tb-base-label" class="wl-text-label">Взять за основу</label>
           <WlSelect :model-value="baseTheme" :options="playgroundThemeOptions" option-label="label" option-value="value" aria-labelledby="tb-base-label" @update:model-value="chooseBase" />
-          <p class="wl-text-small wl-text-muted">Выбор основы начинает новую палитру. Размеры, шрифты и статусные цвета наследуются из неё.</p>
+          <p class="wl-text-small wl-text-muted">При смене основы цвета сбрасываются к выбранной теме. Из неё также берутся размеры, шрифты и цвета статусов.</p>
         </div>
         <div class="wl-stack" data-space="sm">
           <label for="tb-name" class="wl-text-label">Имя темы</label>
@@ -104,7 +104,7 @@ const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.
               <input class="tb-native-color" type="color" :aria-label="'Выбрать цвет: ' + field.label" :value="palette[field.key]" @input="setColor(field.key, ($event.target as HTMLInputElement).value)" />
               <WlInput :id="'tb-hex-' + field.key" :model-value="hexDrafts[field.key]" :invalid="!normalizeHex(hexDrafts[field.key])" :aria-describedby="'tb-help-' + field.key" spellcheck="false" autocomplete="off" @update:model-value="setColor(field.key, $event)" />
             </div>
-            <p :id="'tb-help-' + field.key" class="wl-text-small" :class="!normalizeHex(hexDrafts[field.key]) ? 'tb-error' : 'wl-text-muted'">{{ !normalizeHex(hexDrafts[field.key]) ? 'Укажите HEX: #rgb или #rrggbb. Пример сохраняет последний корректный цвет.' : field.description }}</p>
+            <p :id="'tb-help-' + field.key" class="wl-text-small" :class="!normalizeHex(hexDrafts[field.key]) ? 'tb-error' : 'wl-text-muted'">{{ !normalizeHex(hexDrafts[field.key]) ? 'Введите цвет в формате #rgb или #rrggbb. В примере остаётся последний корректный цвет.' : field.description }}</p>
           </div>
         </div>
         <p class="wl-text-small wl-text-muted" role="status">{{ storageUnavailable ? 'Сохранение в браузере недоступно. Настройки можно скопировать ниже.' : savedLocally ? 'Черновик сохранён в этом браузере.' : 'Изменения сохраняются в этом браузере.' }}</p>
@@ -112,7 +112,7 @@ const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.
 
       <div class="tb-preview-column wl-stack" data-space="lg">
         <div class="tb-section-header">
-          <div class="wl-stack" data-space="xs"><h2 id="tb-preview-title" class="wl-text-subheading">Живой пример</h2><p class="wl-text-small wl-text-muted">Цвета применяются только к этому примеру.</p></div>
+          <div class="wl-stack" data-space="xs"><h2 id="tb-preview-title" class="wl-text-subheading">Пример интерфейса</h2><p class="wl-text-small wl-text-muted">Цвета применяются только к этому примеру.</p></div>
           <span class="tb-base-tag wl-text-code">{{ baseTheme }}</span>
         </div>
         <div class="tb-preview-modes wl-inline" data-space="lg">
@@ -122,30 +122,30 @@ const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.
         <section class="tb-preview wl-stack" data-space="lg" :data-wl-theme="baseTheme" :style="overrides" data-testid="theme-builder-preview" aria-labelledby="tb-preview-title">
           <div class="tb-demo-bar"><span class="tb-demo-brand"><WlIcon name="waves" :size="20" /> {{ nameInvalid ? 'Моя тема' : name }}</span><a href="#tb-export-title">Настройки темы <WlIcon name="arrow-right" :size="14" /></a></div>
           <article class="tb-demo-card wl-stack" data-space="lg">
-            <div class="tb-section-header"><div class="wl-stack" data-space="xs"><span class="tb-demo-eyebrow wl-text-small">Рабочее пространство</span><h3 class="wl-text-heading">Создайте что-нибудь хорошее</h3></div><WlTag variant="blue">Черновик</WlTag></div>
-            <p class="wl-text-body wl-text-muted">Так будут сочетаться поверхности, текст и основной цвет в вашем приложении.</p>
+            <div class="tb-section-header"><div class="wl-stack" data-space="xs"><span class="tb-demo-eyebrow wl-text-small">Пример формы</span><h3 class="wl-text-heading">Новый проект</h3></div><WlTag variant="blue">Черновик</WlTag></div>
+            <p class="wl-text-body wl-text-muted">Посмотрите, как сочетаются фон, текст и основной цвет. Форма не создаёт и не сохраняет проекты.</p>
             <div class="tb-demo-fields">
               <div class="wl-stack" data-space="sm"><label for="tb-demo-name" class="wl-text-label">Название проекта</label><WlInput id="tb-demo-name" v-model="title" :disabled="demoDisabled" :invalid="demoInvalid" :aria-describedby="demoInvalid ? 'tb-demo-error' : undefined" /><span v-if="demoInvalid" id="tb-demo-error" class="tb-demo-error wl-text-small">Проверьте название проекта.</span></div>
               <div class="wl-stack" data-space="sm"><label id="tb-demo-priority-label" class="wl-text-label">Приоритет</label><WlSelect v-model="priority" :options="previewOptions" option-label="label" option-value="value" :disabled="demoDisabled" :invalid="demoInvalid" :pt="previewSelectPt" aria-labelledby="tb-demo-priority-label" /></div>
             </div>
             <div class="tb-demo-checks wl-stack" data-space="md"><WlCheckbox v-model="notifications" :disabled="demoDisabled">Получать уведомления</WlCheckbox><WlSwitch v-model="publicProject" :disabled="demoDisabled">Публичный проект</WlSwitch></div>
-            <div class="wl-inline" data-space="md"><WlButton variant="primary" :disabled="demoDisabled" @click="actions++"><template #icon><WlIcon name="plus" :size="16" /></template>Создать проект</WlButton><WlButton variant="secondary" :disabled="demoDisabled" @click="actions = 0">Сбросить действия</WlButton></div>
-            <p class="wl-text-small wl-text-muted" role="status">Действий: {{ actions }}</p>
+            <div class="wl-inline" data-space="md"><WlButton variant="primary" :disabled="demoDisabled" @click="actions++"><template #icon><WlIcon name="plus" :size="16" /></template>Создать проект</WlButton><WlButton variant="secondary" :disabled="demoDisabled" @click="actions = 0">Сбросить счётчик</WlButton></div>
+            <p class="wl-text-small wl-text-muted" role="status">Нажатий: {{ actions }}</p>
           </article>
           <div class="tb-demo-soft wl-stack" data-space="md"><h3 class="wl-text-label">Варианты действий</h3><div class="wl-inline" data-space="sm"><WlButton variant="primary" size="sm" :disabled="demoDisabled">Primary</WlButton><WlButton variant="soft" size="sm" :disabled="demoDisabled">Soft</WlButton><WlButton variant="secondary" size="sm" :disabled="demoDisabled">Secondary</WlButton><WlButton variant="ghost" size="sm" :disabled="demoDisabled">Ghost</WlButton><WlButton variant="danger" size="sm" :disabled="demoDisabled">Danger</WlButton></div></div>
           <div class="wl-inline" data-space="sm"><WlTag variant="green">Готово</WlTag><WlTag variant="amber">В процессе</WlTag><WlTag variant="red">Нужна проверка</WlTag><WlTag variant="gray">Без статуса</WlTag></div>
-          <WlAlert variant="info" title="Цвета статусов сохраняют смысл">Успех, предупреждение и ошибка наследуются от выбранной основы.</WlAlert>
+          <WlAlert variant="info" title="Цвета статусов берутся из базовой темы">Цвета успеха, предупреждения и ошибки здесь не меняются.</WlAlert>
         </section>
         <section class="tb-contrast wl-stack" data-space="md" aria-labelledby="tb-contrast-title">
           <div class="tb-section-header"><h2 id="tb-contrast-title" class="wl-text-subheading">Контраст текста</h2><span class="wl-text-small" :class="failedContrast ? 'tb-error' : 'wl-text-muted'">{{ failedContrast ? 'Нужно проверить: ' + failedContrast : 'Показанные пары проходят проверку' }}</span></div>
           <ul class="tb-contrast-list"><li v-for="pair in contrast" :key="pair.key" :data-passes="pair.passes"><span>{{ pair.label }}</span><span class="tb-contrast-value"><WlIcon :name="pair.passes ? 'check-circle' : 'warn'" :size="14" />{{ pair.ratio.toFixed(2) }}:1 <span class="tb-contrast-min">/ {{ pair.minimum }}:1</span></span></li></ul>
-          <p class="wl-text-small wl-text-muted">Проверяется несколько цветовых пар, а не доступность всей темы. Яркий основной цвет получает светлый или тёмный текст автоматически; цвета ссылок выбираете вы.</p>
+          <p class="wl-text-small wl-text-muted">Здесь проверяется контраст нескольких цветовых пар. Доступность всего интерфейса нужно проверить отдельно. Для основного цвета автоматически выбирается светлый или тёмный текст; цвет ссылок задаёте вы.</p>
         </section>
       </div>
     </div>
 
     <section class="tb-export wl-stack" data-space="lg" aria-labelledby="tb-export-title">
-      <div class="tb-section-header"><div class="wl-stack" data-space="sm"><h2 id="tb-export-title" class="wl-text-heading">Заберите свою тему</h2><p class="wl-text-body wl-text-muted">Для агента — задача и параметры. JSON — структурированные настройки. CSS — готовая тема с выбранной основой.</p></div><WlButton variant="primary" :disabled="nameInvalid || hexInvalid" @click="exportPanel?.copy()"><template #icon><WlIcon name="copy" :size="16" /></template>{{ exportMode === 'prompt' ? 'Копировать для агента' : 'Копировать ' + exportMode.toUpperCase() }}</WlButton></div>
+      <div class="tb-section-header"><div class="wl-stack" data-space="sm"><h2 id="tb-export-title" class="wl-text-heading">Скопируйте настройки темы</h2><p class="wl-text-body wl-text-muted">Выберите задание для агента, настройки в JSON или CSS для подключения в проекте.</p></div><WlButton variant="primary" :disabled="nameInvalid || hexInvalid" @click="exportPanel?.copy()"><template #icon><WlIcon name="copy" :size="16" /></template>{{ exportMode === 'prompt' ? 'Копировать для агента' : 'Копировать ' + exportMode.toUpperCase() }}</WlButton></div>
       <div class="wl-inline" data-space="sm" role="group" aria-label="Формат экспорта"><WlButton v-for="option in exportOptions" :key="option.value" size="sm" :variant="exportMode === option.value ? 'soft' : 'secondary'" :aria-pressed="exportMode === option.value" @click="exportMode = option.value">{{ option.label }}</WlButton></div>
       <p v-if="nameInvalid || hexInvalid" class="tb-error wl-text-small" role="alert">Исправьте имя и HEX-значения перед копированием.</p>
       <div v-else data-testid="theme-builder-export"><CodePanel ref="exportPanel" :source="exportSource" :title="exportMode === 'prompt' ? 'Задание для агента' : exportMode === 'json' ? name + '.theme.json' : name + '.css'" :language="exportMode === 'css' ? 'css' : exportMode === 'json' ? 'json' : 'auto'" :expanded="true" /></div>

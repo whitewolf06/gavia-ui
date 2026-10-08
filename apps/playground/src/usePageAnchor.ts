@@ -11,7 +11,7 @@ export function usePageAnchor(element: Ref<HTMLElement | null>): void {
     frame = window.requestAnimationFrame(() => {
       frame = undefined;
       const target = document.getElementById(id);
-      if (target && element.value?.contains(target)) target.scrollIntoView({ block: "start" });
+      if (target && element.value?.contains(target)) target.scrollIntoView({ block: "start", behavior: "instant" });
     });
   });
   onBeforeUnmount(() => {

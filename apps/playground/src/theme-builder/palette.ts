@@ -7,13 +7,13 @@ import type { WlThemeName } from "../../../../packages/ui-kit/src/types";
 export const THEME_DRAFT_SCHEMA_VERSION = 1 as const;
 
 export const themePaletteFields = [
-  { key: "background", label: "Основной фон", description: "Поверхность страницы." },
-  { key: "surface", label: "Карточки и панели", description: "Карточки и поднятые поверхности." },
-  { key: "softSurface", label: "Мягкая поверхность", description: "Фон групп и мягких состояний, например hover и disabled." },
+  { key: "background", label: "Основной фон", description: "Фон страницы." },
+  { key: "surface", label: "Карточки и панели", description: "Фон карточек и панелей." },
+  { key: "softSurface", label: "Soft surface", description: "Фон групп и состояний hover и disabled." },
   { key: "text", label: "Основной текст", description: "Заголовки и основной текст интерфейса." },
-  { key: "mutedText", label: "Вспомогательный текст", description: "Подписи, пояснения и placeholder." },
+  { key: "mutedText", label: "Вспомогательный текст", description: "Подписи, пояснения и текст placeholder." },
   { key: "border", label: "Границы", description: "Рамки полей, карточек и разделители." },
-  { key: "primary", label: "Основное действие", description: "Фон основной кнопки; текст, hover и active подбираются автоматически." },
+  { key: "primary", label: "Основное действие", description: "Фон основной кнопки. Цвет текста и цвета состояний hover и active подбираются автоматически." },
   { key: "link", label: "Ссылки и фокус", description: "Ссылки, выделение выбора и клавиатурный фокус." }
 ] as const;
 

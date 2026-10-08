@@ -5,9 +5,9 @@ const picker = ref<WlFilePickerExpose | null>(null);
 const files = ref<File[]>([]);
 const singleFiles = ref<File[]>([]);
 const message = ref("Файлы ещё не выбирали.");
-function selectFiles(batch: File[]) { files.value = batch; message.value = `Получена новая партия: ${batch.length}.`; }
-function cancelSelection() { message.value = "Выбор отменён; предыдущая партия сохранена."; }
-function clear() { picker.value?.clear(); files.value = []; singleFiles.value = []; message.value = "Список приложения и нативный выбор очищены."; }
+function selectFiles(batch: File[]) { files.value = batch; message.value = `Выбрано файлов: ${batch.length}.`; }
+function cancelSelection() { message.value = "Выбор отменён. Прежний список файлов сохранён."; }
+function clear() { picker.value?.clear(); files.value = []; singleFiles.value = []; message.value = "Список файлов и нативное поле очищены."; }
 </script>
 
 <template>
@@ -18,9 +18,9 @@ function clear() { picker.value?.clear(); files.value = []; singleFiles.value = 
         <template #trigger="{ choose, disabled, attrs }"><WlButton v-bind="attrs" variant="primary" :disabled="disabled" @click="choose"><template #icon><WlIcon name="upload" :size="18" /></template>Выбрать документы</WlButton></template>
       </WlFilePicker>
       <ul v-if="files.length" class="wl-stack docs-file-list" data-space="sm"><li v-for="(file, index) in files" :key="`${file.name}:${index}`">{{ file.name }} — {{ file.size }} байт</li></ul>
-      <p v-else class="wl-text-small">Партия документов пуста.</p>
+      <p v-else class="wl-text-small">Документы не выбраны.</p>
       <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="picker?.choose()">Открыть через ref</WlButton><WlButton size="sm" @click="clear">Очистить файлы</WlButton></div>
-      <p class="wl-text-small wl-text-muted">select возвращает новую партию File[]. Здесь она заменяет список приложения. Отмена сохраняет его; clear() очищает нативное поле, поэтому список сбрасывается отдельно.</p>
+      <p class="wl-text-small wl-text-muted">select возвращает новый список File[]. В этом примере он заменяет список приложения. Отмена сохраняет прежний выбор; clear() очищает нативное поле, поэтому список нужно сбросить отдельно.</p>
     </section>
     <section class="wl-stack" data-space="md">
       <h4 class="wl-text-title">Стандартная кнопка: размеры и disabled</h4>

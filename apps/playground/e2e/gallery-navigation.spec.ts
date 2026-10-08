@@ -114,7 +114,7 @@ test("every manifest component has a populated live and source destination in Do
   const buttonWorkspace = await navigateDocumentationComponent(page, "WlButton");
   const button = buttonWorkspace.getByTestId("docs-button-preview").getByRole("button", { name: "Добавить", exact: true });
   await button.click();
-  await expect(buttonWorkspace.getByTestId("docs-button-preview").getByRole("status")).toHaveText("Действий: 1");
+  await expect(buttonWorkspace.getByTestId("docs-button-preview").getByRole("status")).toHaveText("Нажатий: 1");
 });
 
 test("Docs catalog reaches the time picker and its model clears to null in all themes", async ({ page, baseURL }) => {
@@ -180,9 +180,9 @@ for (const theme of themes) {
     await setDocumentationViewport(page, originalViewport);
     await navigateDocumentationComponent(page, "WlFilePicker");
     await expectPickerDestination(page, "WlFilePicker");
-    await card.getByRole("button", { name: "Очистить список приложения", exact: true }).click();
+    await card.getByRole("button", { name: "Очистить список", exact: true }).click();
     await expect(status).toHaveText("Можно выбрать файлы повторно.");
-    await expect(card.getByRole("button", { name: "Очистить список приложения", exact: true })).toHaveCount(0);
+    await expect(card.getByRole("button", { name: "Очистить список", exact: true })).toHaveCount(0);
     await expectNoOverflow(page, card);
 
     // Each theme owns a fresh page, so reselect the same raw file on this mounted picker.
@@ -193,9 +193,9 @@ for (const theme of themes) {
     await sameFileChooser.setFiles(file);
     await expect(status).toHaveText("Выбрано: " + file.name);
     await expect(input).toHaveValue("");
-    await card.getByRole("button", { name: "Очистить список приложения", exact: true }).click();
+    await card.getByRole("button", { name: "Очистить список", exact: true }).click();
     await expect(status).toHaveText("Можно выбрать файлы повторно.");
-    await expect(card.getByRole("button", { name: "Очистить список приложения", exact: true })).toHaveCount(0);
+    await expect(card.getByRole("button", { name: "Очистить список", exact: true })).toHaveCount(0);
     await expectNoOverflow(page, card);
   });
 }
@@ -203,7 +203,7 @@ for (const theme of themes) {
 for (const name of pickerNames) {
   test("DesignSystem opens the live " + name + " documentation", async ({ page }) => {
     await navigateMainView(page, "Дизайн-система");
-    await expect(page.getByRole("heading", { name: "Единый язык интерфейсов", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
     await chooseDropdownOption(page, page.getByRole("combobox", { name: "Компонент", exact: true }), name);
     await expect(page.getByTestId("ds-explorer")).toHaveAttribute("data-component", name);
     await expect(page.getByTestId("ds-example-preview").locator(":scope > .wl-stack")).toBeVisible();
@@ -216,7 +216,7 @@ for (const name of pickerNames) {
 
   test("command palette routes " + name + " from DesignSystem to its live documentation", async ({ page }) => {
     await navigateMainView(page, "Дизайн-система");
-    await expect(page.getByRole("heading", { name: "Единый язык интерфейсов", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
     await page.locator(".pg-top").getByRole("button", { name: "Поиск", exact: true }).click();
     const search = page.getByRole("combobox", { name: "Командная палитра", exact: true });
     await expect(search).toBeFocused();

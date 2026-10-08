@@ -9,13 +9,13 @@ const densities = computed<readonly WlDensity[]>(() => showCompact.value ? ["def
 
 <template>
   <div class="wl-stack" data-space="lg">
-    <WlCheckbox v-model="showCompact">Показать компактную плотность</WlCheckbox>
+    <WlCheckbox v-model="showCompact">Показать компактный ряд</WlCheckbox>
     <div v-for="density in densities" :key="density" class="wl-stack" data-space="sm" :data-button-density="density">
       <h3 class="wl-text-label">{{ density === 'compact' ? 'Компактная плотность' : 'Обычная плотность' }}</h3>
       <div class="wl-inline" data-space="md">
         <WlButton v-for="size in sizes" :key="size" :size="size" :density="density" variant="primary">{{ labels[size] }}</WlButton>
       </div>
     </div>
-    <p class="wl-text-small wl-text-muted">size выбирает размер, density="compact" уменьшает высоту. Фактическая геометрия берётся из токенов текущей темы.</p>
+    <p class="wl-text-small wl-text-muted">size выбирает размер, density="compact" уменьшает высоту. Размеры берутся из токенов выбранной темы.</p>
   </div>
 </template>

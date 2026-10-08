@@ -52,9 +52,9 @@ test("home shows creator, source version, license and truthful package status wh
   await expect(main.getByRole("link", { name: "GitHub", exact: true })).toHaveAttribute("href", "https://github.com/whitewolf06/gavia-ui");
   await expect(main.getByRole("link", { name: "Подключение и инструкции", exact: true })).toHaveAttribute("href", project.instructionsUrl);
   await expect(main.getByRole("link", { name: "GitHub Issues", exact: true })).toHaveAttribute("href", "https://github.com/whitewolf06/gavia-ui/issues");
-  await expect(main.getByRole("link", { name: "руководстве для участников", exact: true })).toHaveAttribute("href", project.documentationBaseUrl + "CONTRIBUTING.md");
+  await expect(main.getByRole("link", { name: "руководство для участников", exact: true })).toHaveAttribute("href", project.documentationBaseUrl + "CONTRIBUTING.md");
   const packageStatus = main.getByTestId("project-npm-status");
-  await expect(packageStatus).toContainText("опубликован в публичном npm");
+  await expect(packageStatus).toContainText("доступен в npm");
   await expect(packageStatus.getByRole("link", { name: `${project.packageName}@${publishedVersion}`, exact: true })).toHaveAttribute("href", project.packageUrl);
   await expect(packageStatus.locator("code")).toHaveText(`pnpm add ${project.packageName}@${publishedVersion}`);
   await expect(page.locator(".pg-footer")).toContainText(`Автор: ${project.author.name}`);
@@ -89,7 +89,7 @@ test("renders the canonical changelog with complete releases, continued bullets 
 
 test("navigates from the design system, opens release anchors and restores the page through history", async ({ page }) => {
   await page.goto("/?view=system");
-  await expect(page.getByRole("heading", { name: "Единый язык интерфейсов", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
   await navigateMainView(page, "Changelog");
   await expect(page).toHaveURL(/\?view=changelog$/);
   await expect(page.locator(".project-main")).toBeVisible();
@@ -103,7 +103,7 @@ test("navigates from the design system, opens release anchors and restores the p
   await expect(page.locator(".project-main")).toBeVisible();
   await expect(page.locator(`#${release.id}-title`)).toBeInViewport();
   await navigateMainView(page, "Дизайн-система");
-  await expect(page.getByRole("heading", { name: "Единый язык интерфейсов", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
   await page.goBack();
   await expect(page.locator(".project-main")).toBeVisible();
   await expect(page.locator(".pg-views [aria-current='page']")).toHaveText("Changelog");

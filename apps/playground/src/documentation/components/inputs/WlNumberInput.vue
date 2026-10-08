@@ -23,7 +23,7 @@ const price = ref(12.5);
       <div class="wl-grid" data-space="lg">
         <WlField id="docs-number-price" label="Цена, шаг 0.5" v-slot="{ id }"><WlNumberInput :id="id" v-model="price" :min="0" :max="100" :step="0.5" inputmode="decimal" aria-label="Цена" decrement-label="Уменьшить цену" increment-label="Увеличить цену" /></WlField>
         <WlField id="docs-number-invalid" label="Количество с ошибкой" error="Количество нужно согласовать." v-slot="{ id, ariaDescribedby, invalid }"><WlNumberInput :id="id" v-model="quantity" :min="1" :max="10" :invalid="invalid" :aria-describedby="ariaDescribedby" aria-label="Количество с ошибкой" /></WlField>
-        <WlField id="docs-number-disabled" label="Отключённый степпер" v-slot="{ id }"><WlNumberInput :id="id" :model-value="5" disabled aria-label="Отключённое количество" /></WlField>
+        <WlField id="docs-number-disabled" label="Отключённое числовое поле" v-slot="{ id }"><WlNumberInput :id="id" :model-value="5" disabled aria-label="Отключённое количество" /></WlField>
       </div>
       <WlButton size="sm" @click="quantity = 3; budget = 20; price = 12.5">Сбросить числа</WlButton>
       <p class="wl-text-small" role="status">Количество: {{ quantity }}; бюджет: {{ budget }}; цена: {{ price }}.</p>

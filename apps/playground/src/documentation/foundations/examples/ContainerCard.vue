@@ -11,7 +11,7 @@ const widthOptions = ["280px", "420px", "640px"];
     <div class="container-card-host" :style="{ width: 'min(100%, ' + width + ')' }">
       <article class="container-card-body wl-surface">
         <div class="container-card-illustration" aria-hidden="true"><WlIcon name="grid" :size="36" /></div>
-        <div class="wl-stack" data-space="sm"><h3 class="container-card-heading wl-text-subheading">Одна карточка, разные места</h3><p class="wl-text-body">В sidebar карточка складывается, в широкой области — располагается в две колонки. Ширина окна при этом не меняется.</p></div>
+        <div class="wl-stack" data-space="sm"><h3 class="container-card-heading wl-text-subheading">Карточка в узком и широком контейнере</h3><p class="wl-text-body">В узком sidebar карточка занимает одну колонку, в широкой области — две. Ширина окна остаётся прежней.</p></div>
       </article>
     </div>
     <p class="wl-text-small wl-text-muted" role="status">Запрошено: {{ width }}. Контейнер ограничен шириной родителя; две колонки появляются при фактической ширине от 420 px.</p>

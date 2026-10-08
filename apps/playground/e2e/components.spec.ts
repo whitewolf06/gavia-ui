@@ -135,7 +135,7 @@ test("dialog and drawer keep a scrolling page at the same width", async ({ page 
 test("Docs layout stays in place when its dialog and drawer open", async ({ page }) => {
   for (const [component, trigger, name] of [
     ["WlDialog", "Открыть диалог", "Сведения о материале"],
-    ["WlDrawer", "Открыть Drawer", "Детали материала"]
+    ["WlDrawer", "Открыть панель", "О материале"]
   ] as const) {
     await page.goto("/?view=docs&component=" + component);
     const guide = page.locator('[data-docs-component="' + component + '"]');

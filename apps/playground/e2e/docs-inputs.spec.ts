@@ -77,10 +77,10 @@ test("file documentation preserves cancelled batches and enforces local upload r
   await expect(picker.getByRole("status")).toContainText("Документов: 2");
   await expect(input).toHaveValue("");
   await input.dispatchEvent("cancel");
-  await expect(picker.getByRole("status")).toContainText("Выбор отменён; предыдущая партия сохранена");
+  await expect(picker.getByRole("status")).toContainText("Выбор отменён. Прежний список файлов сохранён");
   await expect(picker.getByRole("listitem")).toHaveCount(2);
   await input.setInputFiles(batch);
-  await expect(picker.getByRole("status")).toContainText("Получена новая партия: 2");
+  await expect(picker.getByRole("status")).toContainText("Выбрано файлов: 2");
   await expect(picker.getByRole("listitem")).toHaveCount(2);
   await expect(picker.getByRole("button", { name: "Недоступный выбор", exact: true })).toBeDisabled();
   await picker.getByRole("button", { name: "Очистить файлы", exact: true }).click();
@@ -94,9 +94,9 @@ test("file documentation preserves cancelled batches and enforces local upload r
   const docsInput = documents.locator('input[type="file"]');
   await docsInput.setInputFiles([...batch, { name: "unsafe.exe", mimeType: "application/octet-stream", buffer: Buffer.from("Rejected") }]);
   await expect(upload.getByRole("status")).toContainText("Документов: 2");
-  await expect(documents.getByRole("alert")).toContainText("неподдерживаемый тип");
+  await expect(documents.getByRole("alert")).toContainText("тип файла не поддерживается");
   await docsInput.setInputFiles({ name: "third.txt", mimeType: "text/plain", buffer: Buffer.from("Third") });
-  await expect(documents.getByRole("alert")).toContainText("лимит — не больше 2");
+  await expect(documents.getByRole("alert")).toContainText("лимит файлов: 2");
   await documents.getByRole("button", { name: "Удалить notes.txt", exact: true }).click();
   await expect(upload.getByRole("status")).toContainText("Документов: 1");
   await docsInput.setInputFiles({ name: "third.txt", mimeType: "text/plain", buffer: Buffer.from("Third") });

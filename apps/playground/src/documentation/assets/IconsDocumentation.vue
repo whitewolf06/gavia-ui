@@ -43,14 +43,14 @@ const code = consumerSource(playgroundSource);
     </section>
     <section class="wl-stack" data-space="lg" :aria-labelledby="headings.compatibility.id">
       <h2 :id="headings.compatibility.id" class="docs-assets-anchor wl-text-heading">{{ headings.compatibility.title }}</h2>
-      <p class="wl-text-body">Size принимает число в пикселях или CSS-строку. Resolver понимает каноническое имя и существующие синонимы, включая прежние pi-name и pi pi-name. При неизвестном имени WlIcon сохраняет default-слот.</p>
+      <p class="wl-text-body">Size принимает число в пикселях или CSS-строку. Resolver принимает каноническое имя или синоним, включая прежние pi-name и pi pi-name. При неизвестном имени WlIcon показывает default-слот.</p>
       <AssetExample name="icon-compatibility" title="Совместимые имена и резервный знак" :example="IconCompatibility" :source="compatibilitySource" />
     </section>
     <section class="wl-stack" data-space="md" :aria-labelledby="headings.pipeline.id">
       <h2 :id="headings.pipeline.id" class="docs-assets-anchor wl-text-heading">{{ headings.pipeline.title }}</h2>
-      <p class="wl-text-body">Исходники находятся в packages/ui-kit/icons/&lt;name&gt;.svg. Подготовьте недостающие рисунки одной партией в общем стиле; <code>pnpm icons:sync</code> проверит SVG и обновит реестр, <code>pnpm icons:check</code> проверит актуальность.</p>
+      <p class="wl-text-body">Исходники находятся в packages/ui-kit/icons/&lt;name&gt;.svg. Подготовьте новые иконки в общем стиле; <code>pnpm icons:sync</code> проверит SVG и обновит реестр, <code>pnpm icons:check</code> проверит актуальность.</p>
       <p class="wl-text-small wl-text-muted">Разборчивость проверяйте на 16, 20 и 24 px во всех темах. Размер и цвет задаёт компонент; внешние ресурсы и обработчики в SVG не используются.</p>
-      <a class="docs-assets-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/icons.md">Правила SVG и пакетное добавление иконок</a>
+      <a class="docs-assets-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/icons.md">Как подготовить и добавить SVG</a>
     </section>
   </div>
 </template>

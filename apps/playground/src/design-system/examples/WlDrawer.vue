@@ -7,6 +7,6 @@ const visible = ref(false);
 
 <template>
   <div class="wl-stack" data-space="md">
-    <WlButton @click="visible = true">Открыть Drawer</WlButton><WlDrawer v-model:visible="visible" header="Детали материала" v-bind="preview"><p class="wl-text-body">Панель сохраняет контекст страницы.</p><template #footer><WlButton @click="visible = false">Готово</WlButton></template></WlDrawer>
+    <WlButton @click="visible = true">Открыть панель</WlButton><WlDrawer v-model:visible="visible" header="О материале" v-bind="preview"><p class="wl-text-body">Сведения о материале открываются поверх страницы.</p><template #footer><WlButton @click="visible = false">Готово</WlButton></template></WlDrawer>
   </div>
 </template>

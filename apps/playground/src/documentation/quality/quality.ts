@@ -2,7 +2,7 @@ import type { DocumentationHeading } from "../catalog";
 import type { WlTableColumn, WlTableRow } from "../../../../../packages/ui-kit/src";
 
 export const qualityDocumentationHeadings = {
-  measurement: { id: "docs-quality-measurement", title: "Измерение покрытия" },
+  measurement: { id: "docs-quality-measurement", title: "Покрытие unit-тестами" },
   checks: { id: "docs-quality-checks", title: "Что проверяется" },
   environment: { id: "docs-quality-environment", title: "Браузеры и Vue" },
   accessibility: { id: "docs-quality-accessibility", title: "Доступность и SSR" },
@@ -12,7 +12,7 @@ export const qualityDocumentationHeadings = {
 export const documentationQualityPage = {
   key: "quality",
   label: "Качество и совместимость",
-  description: "Метрики unit-тестов, границы автоматических проверок и правила совместимости Gavia UI.",
+  description: "Покрытие unit-тестами, состав проверок и правила совместимости Gavia UI.",
   headings: Object.values(qualityDocumentationHeadings)
 } as const;
 
@@ -21,12 +21,12 @@ export const qualityCheckColumns: WlTableColumn[] = [
   { key: "scope", label: "Что она проверяет" }
 ];
 export const qualityCheckRows: WlTableRow[] = [
-  { name: "Vitest + Vue Test Utils", scope: "Контракты компонентов, состояния, события, утилиты и значимые ветки поведения. Проценты выше относятся к этому набору." },
+  { name: "Vitest + Vue Test Utils", scope: "Контракты компонентов, состояния, события, утилиты и ветки поведения. Проценты выше относятся к этим unit-тестам." },
   { name: "Playwright", scope: "Взаимодействия, клавиатура, фокус и оверлеи в Chromium, Firefox, WebKit и мобильном Chromium." },
-  { name: "Визуальные эталоны", scope: "Desktop и mobile в Gavia, Gavia Dark, Classic, Classic Dark и Newspaper. Для Gavia и Gavia Dark загружается настоящий Gavia Sans; классические эталоны используют Arial/Consolas." },
+  { name: "Визуальные эталоны", scope: "Desktop и mobile в Gavia, Gavia Dark, Classic, Classic Dark и Newspaper. Для Gavia и Gavia Dark загружается Gavia Sans; классические эталоны используют Arial/Consolas." },
   { name: "Axe", scope: "Видимые страницы и открытые списки/диалоги в пяти темах, правила WCAG 2.2 AA в Chromium. Клавиатурные сценарии проверяются отдельно." },
   { name: "Публичный контракт", scope: "Declarations и прежний Vue-потребитель сравниваются с сохранённым снимком: удаления и сужение контракта останавливают проверку." },
-  { name: "Архив пакета", scope: "Точный tarball: ESM-import, типы, копируемые SFC, SSR и гидратация, файлы и лицензии, размер приложения с одной кнопкой." }
+  { name: "Архив пакета", scope: "Собранный tarball: ESM-import, типы, SFC из примеров, SSR и гидратация, файлы и лицензии, размер приложения с одной кнопкой." }
 ];
 export const qualityEnvironmentColumns: WlTableColumn[] = [
   { key: "name", label: "Окружение", width: "38%" },

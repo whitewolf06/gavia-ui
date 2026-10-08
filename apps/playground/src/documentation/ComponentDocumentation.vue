@@ -47,18 +47,18 @@ defineExpose({ showHeading });
       <template #outline><slot name="outline" /></template>
     </DocumentationTabs>
     <div v-show="selectedTab === 'examples'" :id="prefix + '-panel-examples'" role="tabpanel" :aria-labelledby="prefix + '-tab-examples'" class="wl-stack" data-space="2xl">
-      <p class="wl-text-body wl-text-muted">Настройте props: пример и код используют один набор настроек. Сброс возвращает исходный пример.</p>
+      <p class="wl-text-body wl-text-muted">Измените props и посмотрите результат: настройки одинаковы для примера и кода. «Сбросить» возвращает исходные значения.</p>
       <ComponentExplorer :entry="entry" layout="documentation" :heading-prefix="prefix" />
       <section v-if="extra?.component" class="wl-stack" data-space="lg" :aria-labelledby="prefix + '-examples'" :data-docs-component-extra="entry.name">
         <h2 :id="prefix + '-examples'" class="wl-text-heading">{{ extra.title }}</h2>
         <p class="wl-text-body wl-text-muted">{{ extra.description }}</p>
         <div class="docs-component-extra-preview" data-testid="docs-component-extra-preview"><component :is="extra.component" /></div>
-        <div data-testid="docs-component-extra-source"><CodePanel :source="extra.source" title="Vue SFC · расширенный пример" /></div>
+        <div data-testid="docs-component-extra-source"><CodePanel :source="extra.source" title="Vue SFC · дополнительный пример" /></div>
       </section>
-      <p v-else class="docs-notice" role="alert">Расширенный пример не найден.</p>
+      <p v-else class="docs-notice" role="alert">Дополнительный пример не найден.</p>
       <section v-if="service" class="wl-stack" data-space="lg">
         <h2 :id="prefix + '-service'" class="wl-text-heading">Подключение сервиса</h2>
-        <p class="wl-text-body">Установите {{ service }} на экземпляр Vue-приложения и разместите один {{ entry.name }} в App.vue. Состояние одного приложения не передаётся другому. Стили подключаются явно, как описано в установке.</p>
+        <p class="wl-text-body">Подключите {{ service }} к Vue-приложению и добавьте один {{ entry.name }} в App.vue. У каждого приложения своё состояние сервиса. Стили подключите по инструкции в разделе установки.</p>
         <CodePanel :source="setupSource" title="main.ts · сервис и контейнер" />
       </section>
     </div>
@@ -68,8 +68,8 @@ defineExpose({ showHeading });
     <div v-show="selectedTab === 'accessibility'" :id="prefix + '-panel-accessibility'" role="tabpanel" :aria-labelledby="prefix + '-tab-accessibility'" class="wl-stack" data-space="lg">
       <h2 :id="prefix + '-accessibility'" class="wl-text-heading">Клавиатура и доступность</h2>
       <ul class="docs-component-rules"><li v-for="rule in accessibility" :key="rule">{{ rule }}</li></ul>
-      <p v-if="entry.model" class="wl-text-body">Изменения передаются через <code>v-model{{ entry.model.name === 'modelValue' ? '' : ':' + entry.model.name }}</code>. Подпись и состояние должны оставаться понятными после выбора, отмены и сброса.</p>
-      <p class="wl-text-body wl-text-muted">Проверьте клавиатуру, масштабирование и видимость фокуса в своей компоновке. Цвет дополняет подпись состояния; обязательная информация остаётся доступной во всех темах.</p>
+      <p v-if="entry.model" class="wl-text-body">Изменения передаются через <code>v-model{{ entry.model.name === 'modelValue' ? '' : ':' + entry.model.name }}</code>. После выбора, отмены и сброса подпись и состояние должны оставаться понятными.</p>
+      <p class="wl-text-body wl-text-muted">В своём приложении проверьте управление с клавиатуры, увеличение масштаба и видимость фокуса. Подпись состояния и обязательная информация должны читаться во всех темах.</p>
     </div>
   </div>
 </template>

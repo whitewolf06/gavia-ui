@@ -23,7 +23,7 @@ test.beforeEach(async ({ page }, testInfo) => {
       ? { width: 390, height: 844 } : { width: 1440, height: 900 });
   }
   await page.goto("/?view=system");
-  const heading = page.getByRole("heading", { name: "Единый язык интерфейсов" });
+  const heading = page.getByRole("heading", { name: "Дизайн-система" });
   // The view loads as an async chunk after the navigation load event.
   await heading.waitFor({ state: "visible" });
   await expect(heading).toBeVisible();
@@ -64,7 +64,7 @@ test("contract catalog shows all components and links to the gallery", async ({ 
   await expect(page.getByRole("heading", { name: "WlInput", exact: true })).toBeVisible();
   await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Документация");
   await page.goBack();
-  await expect(page.getByRole("heading", { name: "Единый язык интерфейсов" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Дизайн-система" })).toBeVisible();
 });
 
 test("form preserves input and connects errors to controls", async ({ page }) => {
@@ -226,7 +226,7 @@ test.describe("nested anchored portal interactions", () => {
       await expect(nested).toBeVisible();
       await expect(dialog).toBeVisible();
       await expect(nestedSelect).toBeFocused();
-      await nested.getByRole("button", { name: "Действие фильтра", exact: true }).click();
+      await nested.getByRole("button", { name: "Кнопка внутри фильтров", exact: true }).click();
       await page.keyboard.press("Escape");
       await expect(nested).toHaveCount(0);
       await expect(dialog).toBeVisible();

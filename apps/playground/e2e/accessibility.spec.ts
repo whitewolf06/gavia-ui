@@ -37,7 +37,7 @@ for (const theme of themes) {
 
   test(`${theme}: selection controls and dialog closed/open states meet automated WCAG 2.2 AA checks`, async ({ page, baseURL }, testInfo) => {
     await page.goto(showcaseUrl(baseURL, "system", theme));
-    await expect(page.getByRole("heading", { name: "Единый язык интерфейсов" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Дизайн-система" })).toBeVisible();
     const explorer = page.getByTestId("ds-explorer");
     const preview = page.getByTestId("ds-example-preview");
     for (const component of ["WlSelect", "WlMultiSelect", "WlAutocomplete", "WlDialog"]) {

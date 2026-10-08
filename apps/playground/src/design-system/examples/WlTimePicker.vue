@@ -7,7 +7,7 @@ const value = ref<string | null>("09:30");
 
 <template>
   <div class="wl-stack" data-space="md">
-    <WlField label="Время встречи" id="example-time" hint="С 08:00 до 18:00; пустое поле возвращает null." v-slot="field">
+    <WlField label="Время встречи" id="example-time" hint="С 08:00 до 18:00. Если очистить поле, значение модели — null." v-slot="field">
       <WlTimePicker v-model="value" :id="field.id" :aria-describedby="field.ariaDescribedby"
         min-time="08:00" max-time="18:00" v-bind="preview" />
     </WlField>

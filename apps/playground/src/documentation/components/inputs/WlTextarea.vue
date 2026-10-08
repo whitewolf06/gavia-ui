@@ -8,10 +8,10 @@ const comment = ref("");
 <template>
   <div class="wl-stack" data-space="xl" data-input-example="WlTextarea">
     <section class="wl-stack" data-space="md">
-      <h4 class="wl-text-title">Фиксированные строки и автовысота</h4>
+      <h4 class="wl-text-title">Фиксированные строки и высота по содержимому</h4>
       <div class="wl-grid" data-space="lg">
         <WlField id="docs-textarea-fixed" label="Описание, 4 строки" v-slot="{ id }"><WlTextarea :id="id" v-model="text" :rows="4" /></WlField>
-        <WlField id="docs-textarea-grow" label="Описание с автовысотой" hint="Добавьте строки: высота увеличится вместе с текстом." v-slot="{ id, ariaDescribedby }"><WlTextarea :id="id" v-model="text" :rows="2" auto-resize :aria-describedby="ariaDescribedby" /></WlField>
+        <WlField id="docs-textarea-grow" label="Описание с высотой по содержимому" hint="Добавьте строки: высота увеличится вместе с текстом." v-slot="{ id, ariaDescribedby }"><WlTextarea :id="id" v-model="text" :rows="2" auto-resize :aria-describedby="ariaDescribedby" /></WlField>
       </div>
     </section>
     <section class="wl-stack" data-space="md">

@@ -32,9 +32,9 @@ export const actionsManifest = /* @__PURE__ */ defineComponentManifest([
         type: "enum",
         default: "default",
         values: WL_DENSITIES,
-        description: "Плотность (compact уменьшает высоту)."
+        description: "В режиме compact высота кнопки меньше."
       },
-      { name: "loading", type: "boolean", default: false, description: "Спиннер вместо иконки, клик заблокирован." },
+      { name: "loading", type: "boolean", default: false, description: "Показывает загрузку вместо иконки и блокирует нажатие." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает кнопку." },
       { name: "block", type: "boolean", default: false, description: "Растянуть на всю ширину контейнера." },
       {
@@ -47,7 +47,7 @@ export const actionsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [
-      { name: "default", description: "Текст/содержимое кнопки." },
+      { name: "default", description: "Текст или другое содержимое кнопки." },
       { name: "icon", description: "Иконка слева (скрывается при loading)." }
     ],
     emits: [{ name: "click", payload: "MouseEvent", description: "Клик (не срабатывает при disabled/loading)." }]
@@ -55,7 +55,7 @@ export const actionsManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlIconButton",
     category: "actions",
-    description: "Квадратная кнопка-иконка с опциональным бейджем-счётчиком или точкой.",
+    description: "Квадратная кнопка с иконкой. Можно добавить счётчик или точку.",
     props: [
       {
         name: "variant",
@@ -73,13 +73,13 @@ export const actionsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "ariaLabel", type: "string", description: "aria-label кнопки." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
-    slots: [{ name: "default", description: "Кастомное содержимое вместо иконки." }],
+    slots: [{ name: "default", description: "Своё содержимое вместо иконки." }],
     emits: [{ name: "click", payload: "MouseEvent", description: "Клик (не срабатывает при disabled)." }]
   },
   {
     name: "WlButtonGroup",
     category: "actions",
-    description: "Группа кнопок (role=group), визуально склеенная.",
+    description: "Группа визуально объединённых кнопок (role=group).",
     props: [{ name: "ariaLabel", type: "string", description: "aria-label группы." }],
     slots: [{ name: "default", description: "Кнопки группы (WlButton / WlIconButton)." }],
     emits: []
@@ -106,7 +106,7 @@ export const actionsManifest = /* @__PURE__ */ defineComponentManifest([
     name: "WlMenu",
     category: "actions",
     description:
-      "Меню (в т.ч. popup) из плоского списка WlMenuItem с группами/разделителями. Экспонирует toggle/show/hide.",
+      "Меню из списка WlMenuItem с группами и разделителями. Всплывающий режим управляется через toggle/show/hide.",
     props: [
       {
         name: "items",
@@ -114,16 +114,16 @@ export const actionsManifest = /* @__PURE__ */ defineComponentManifest([
         default: [],
         description: "WlMenuItem[]: { key?, label?, icon?, shortcut?, danger?, disabled?, separator?, header?, command? }."
       },
-      { name: "popup", type: "boolean", default: false, description: "Popup-режим (открытие через toggle/show)." },
+      { name: "popup", type: "boolean", default: false, description: "Всплывающее меню; открывается через toggle/show." },
       { name: "ariaLabel", type: "string", description: "Доступное имя меню." },
-      { name: "ariaLabelledby", type: "string", description: "ID элемента, подписывающего меню." },
-      { name: "motion", type: "boolean", description: "Анимация popup-меню; по умолчанию WlConfig.motion (true)." },
+      { name: "ariaLabelledby", type: "string", description: "ID элемента с подписью меню." },
+      { name: "motion", type: "boolean", description: "Анимация всплывающего меню; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [],
     emits: [
-      { name: "open", description: "Popup-меню открылось." },
-      { name: "close", description: "Popup-меню закрылось." }
+      { name: "open", description: "Всплывающее меню открылось." },
+      { name: "close", description: "Всплывающее меню закрылось." }
     ]
   },
   {
@@ -136,7 +136,7 @@ export const actionsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "badge", type: "union", description: "Бейдж справа: number | string." },
       { name: "active", type: "boolean", default: false, description: "Текущий пункт (aria-current=page)." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает пункт." },
-      { name: "href", type: "string", description: "Если задан — рендерится <a>, иначе <button>." },
+      { name: "href", type: "string", description: "С href используется <a>, без него — <button>." },
       {
         name: "collapsed",
         type: "boolean",
@@ -145,7 +145,7 @@ export const actionsManifest = /* @__PURE__ */ defineComponentManifest([
       },
       { name: "ariaLabel", type: "string", description: "Переопределяет доступное имя пункта." }
     ],
-    slots: [{ name: "default", description: "Кастомный текст вместо label." }],
+    slots: [{ name: "default", description: "Свой текст вместо label." }],
     emits: [{ name: "click", payload: "MouseEvent", description: "Клик (не срабатывает при disabled)." }]
   }
 ]);

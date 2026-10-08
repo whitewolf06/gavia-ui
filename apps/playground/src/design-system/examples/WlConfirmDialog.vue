@@ -9,6 +9,6 @@ const removed = ref(false);
 <template>
   <div class="wl-stack" data-space="md">
     <!-- WlConfirmDialog монтируется один раз в App.vue. -->
-    <WlButton variant="danger" @click="confirm.confirmDanger({ header: 'Удалить материал?', message: 'Это действие нельзя отменить.', acceptLabel: 'Удалить', rejectLabel: 'Отмена', accept: () => removed = true })">Удалить материал</WlButton><p class="wl-text-small" role="status">{{ removed ? 'Материал удалён.' : 'Материал сохранён.' }}</p>
+    <WlButton variant="danger" @click="confirm.confirmDanger({ header: 'Удалить материал?', message: 'Удаление нельзя отменить.', acceptLabel: 'Удалить', rejectLabel: 'Отмена', accept: () => removed = true })">Удалить материал</WlButton><p class="wl-text-small" role="status">{{ removed ? 'Материал удалён.' : 'Материал не удалён.' }}</p>
   </div>
 </template>

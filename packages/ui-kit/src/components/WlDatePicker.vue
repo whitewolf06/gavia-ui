@@ -97,8 +97,8 @@ const days = computed(() => {
     };
   });
 });
-const rangeHint = computed(() => !range.value ? `Выберите дату «${props.startLabel}».`
-  : !range.value[1] ? `Выберите дату «${props.endLabel}».`
+const rangeHint = computed(() => !range.value ? `Выберите дату: ${props.startLabel}.`
+  : !range.value[1] ? `Выберите дату: ${props.endLabel}.`
   : `${props.startLabel}: ${display(range.value[0])}; ${props.endLabel}: ${display(range.value[1])}. Выберите начало нового диапазона.`);
 function pad2(value: number): string { return String(value).padStart(2, "0"); }
 function toIso(date: Date): string {

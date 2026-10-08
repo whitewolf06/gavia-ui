@@ -80,7 +80,7 @@ onBeforeUnmount(() => { cancelMenuFocus(); compactViewport?.removeEventListener(
       <b class="pg-title">Gavia UI</b>
       <span class="pg-kit-version" :aria-label="'Версия UI Kit ' + version">v{{ version }}</span>
     </a>
-    <nav ref="desktopNavigation" class="pg-views" aria-label="Режим витрины">
+    <nav ref="desktopNavigation" class="pg-views" aria-label="Основная навигация Gavia UI">
       <WlButton v-for="section in sections" :key="section.view" size="sm" variant="ghost"
         :aria-current="activeView === section.view ? 'page' : undefined" @click="navigate(section.view)">
         <template #icon><WlIcon :name="section.icon" :size="14" /></template>{{ section.label }}

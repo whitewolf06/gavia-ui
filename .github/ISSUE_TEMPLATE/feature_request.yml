@@ -11,11 +11,12 @@ body:
   - type: textarea
     id: proposal
     attributes:
-      label: Предлагаемое поведение и пример использования
+      label: Как должно работать?
+      description: Опишите поведение и приведите пример использования.
     validations:
       required: true
   - type: textarea
     id: compatibility
     attributes:
-      label: Совместимость и рассмотренные альтернативы
+      label: Что важно сохранить и какие варианты уже пробовали?
 

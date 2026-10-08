@@ -10,6 +10,6 @@ const count = ref(0);
     <div>
       <WlButton v-bind="preview" @click="count++"><template #icon><WlIcon name="plus" /></template>Добавить</WlButton>
     </div>
-    <p role="status" class="wl-text-small">Действий: {{ count }}</p>
+    <p role="status" class="wl-text-small">Нажатий: {{ count }}</p>
   </div>
 </template>

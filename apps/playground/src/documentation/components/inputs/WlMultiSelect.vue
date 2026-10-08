@@ -11,7 +11,7 @@ const options = [{ id: "design", label: "Дизайн" }, { id: "code", label: "
       <h4 class="wl-text-title">Чипы, фильтр и счётчик</h4>
       <div class="wl-grid" data-space="lg">
         <WlField id="docs-multi-chips" label="Направления с фильтром" hint="Наберите название в фильтре; выбранные чипы можно удалить отдельно." v-slot="{ id, ariaDescribedby }"><WlMultiSelect :id="id" v-model="selected" :options="options" option-label="label" option-value="id" display="chip" filter :aria-describedby="ariaDescribedby" placeholder="Выберите направления" /></WlField>
-        <WlField id="docs-multi-counter" label="Сводка выбранных" v-slot="{ id }"><WlMultiSelect :id="id" v-model="selected" :options="options" option-label="label" option-value="id" display="comma" :max-selected-labels="1" placeholder="Выберите направления" /></WlField>
+        <WlField id="docs-multi-counter" label="Выбранные направления" v-slot="{ id }"><WlMultiSelect :id="id" v-model="selected" :options="options" option-label="label" option-value="id" display="comma" :max-selected-labels="1" placeholder="Выберите направления" /></WlField>
       </div>
       <p class="wl-text-small wl-text-muted">Enter переключает выбранный пункт, список остаётся открытым для следующего выбора. Escape закрывает его.</p>
     </section>

@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
   // Fixed time and locally available fonts prevent unrelated machine/date changes.
   await page.clock.setFixedTime(new Date("2026-10-01T12:00:00Z"));
   await page.goto(showcaseUrl, { waitUntil: "domcontentloaded" });
-  await page.getByRole("heading", { name: "Единый язык интерфейсов" }).waitFor({ state: "visible" });
+  await page.getByRole("heading", { name: "Дизайн-система" }).waitFor({ state: "visible" });
   // Capture the example itself: the showcase header must not cover tall mobile screens.
   // Functional tests retain the actual sticky header and normal viewport.
   await page.addStyleTag({ content: 'html { --wl-font: Arial, sans-serif; --wl-mono: Consolas, monospace; scroll-behavior: auto; } .pg-top { position: static; }' });
@@ -89,10 +89,10 @@ for (const theme of themes) {
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog", { name: "Сведения о материале" })).toHaveCount(0);
     await select("WlDrawer");
-    await preview.getByRole("button", { name: "Открыть Drawer" }).press("Enter");
-    await expect(page.getByRole("dialog", { name: "Детали материала" })).toHaveScreenshot(`${theme.name}-drawer.png`);
+    await preview.getByRole("button", { name: "Открыть панель" }).press("Enter");
+    await expect(page.getByRole("dialog", { name: "О материале" })).toHaveScreenshot(`${theme.name}-drawer.png`);
     await page.keyboard.press("Escape");
-    await expect(page.getByRole("dialog", { name: "Детали материала" })).toHaveCount(0);
+    await expect(page.getByRole("dialog", { name: "О материале" })).toHaveCount(0);
     await page.locator(".pg-top").getByRole("button", { name: /^Поиск/ }).press("Enter");
     await expect(page.locator(".wl-command-palette")).toHaveScreenshot(`${theme.name}-palette-focus.png`);
   });

@@ -9,7 +9,7 @@ const footerItems: WlSidebarItem[] = [{ key: "settings", label: "Настрой�
 </script>
 <template>
   <div class="wl-stack" data-space="lg">
-    <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="pinned = !pinned">{{ pinned ? 'Открепить пример' : 'Закрепить пример' }}</WlButton><WlButton class="showcase-sidebar-mobile" size="sm" @click="mobileOpen = true">Открыть мобильную панель</WlButton></div>
+    <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="pinned = !pinned">{{ pinned ? 'Открепить панель' : 'Закрепить панель' }}</WlButton><WlButton class="showcase-sidebar-mobile" size="sm" @click="mobileOpen = true">Открыть мобильную панель</WlButton></div>
     <div class="showcase-sidebar-stage">
       <WlSidebar v-model="active" v-model:pinned="pinned" v-model:mobile-open="mobileOpen" :groups="groups" :footer-items="footerItems" brand="Команда" brand-mark="К" aria-label="Навигация примера команды"><template #brand-mark><span class="showcase-sidebar-mark"><WlIcon name="grid" :size="18" /></span></template><template #footer="{ expanded }"><p v-if="expanded" class="wl-text-small wl-text-muted">Локальный пример</p></template></WlSidebar>
       <div class="showcase-sidebar-content wl-stack" data-space="md"><h3 class="wl-text-subheading">Активный пункт: {{ active }}</h3><p class="wl-text-body">Hover раскрывает незакреплённую панель. На mobile кнопка открывает drawer; выбор пункта закрывает его.</p><p class="wl-text-small" role="status">Закреплена: {{ pinned ? 'да' : 'нет' }}. Мобильная панель: {{ mobileOpen ? 'открыта' : 'закрыта' }}.</p></div>

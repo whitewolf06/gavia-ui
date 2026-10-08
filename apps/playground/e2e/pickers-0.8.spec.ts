@@ -12,7 +12,7 @@ async function selectPicker(page: Page, name: "WlTimePicker" | "WlFilePicker") {
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/?view=system", { waitUntil: "domcontentloaded" });
-  await expect(page.getByRole("heading", { name: "Единый язык интерфейсов" })).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole("heading", { name: "Дизайн-система" })).toBeVisible({ timeout: 15000 });
   await page.addStyleTag({ content: "html { scroll-behavior: auto; }" });
 });
 
@@ -139,7 +139,7 @@ test("file picker opens from Enter and Space while the native input remains hidd
     await expect(button).toBeFocused();
   }
   await expect(input).toHaveValue("");
-  await expect(preview.getByRole("button", { name: "Очистить список приложения", exact: true })).toHaveCount(0);
+  await expect(preview.getByRole("button", { name: "Очистить список", exact: true })).toHaveCount(0);
 });
 
 test("file picker resets native selection so the application can select the same raw file again", async ({ page }) => {
@@ -150,7 +150,7 @@ test("file picker resets native selection so the application can select the same
 
   for (let attempt = 0; attempt < 2; attempt++) {
     if (attempt) {
-      await preview.getByRole("button", { name: "Очистить список приложения", exact: true }).click();
+      await preview.getByRole("button", { name: "Очистить список", exact: true }).click();
       await expect(preview.getByRole("status")).toHaveText("Можно выбрать файлы повторно.");
     }
     const opened = page.waitForEvent("filechooser");
@@ -159,7 +159,7 @@ test("file picker resets native selection so the application can select the same
     await expect(preview.getByRole("status")).toHaveText("Выбрано: same.txt");
     await expect(input).toHaveValue("");
     expect(await input.evaluate((element: HTMLInputElement) => element.files?.length)).toBe(0);
-    await expect(preview.getByRole("button", { name: "Очистить список приложения", exact: true })).toBeVisible();
+    await expect(preview.getByRole("button", { name: "Очистить список", exact: true })).toBeVisible();
   }
 });
 
@@ -174,8 +174,8 @@ test("file picker cancel preserves the application list and disabled state block
   // Playwright intercepts file choice but cannot cancel an OS dialog. Exercise the
   // browser DOM cancel path here; actual OS-dialog cancellation remains manual QA.
   await input.dispatchEvent("cancel");
-  await expect(preview.getByRole("status")).toHaveText("Выбор отменён; список сохранён.");
-  await expect(preview.getByRole("button", { name: "Очистить список приложения", exact: true })).toBeVisible();
+  await expect(preview.getByRole("status")).toHaveText("Выбор отменён. Список файлов не изменился.");
+  await expect(preview.getByRole("button", { name: "Очистить список", exact: true })).toBeVisible();
   await input.setInputFiles(file);
   await expect(preview.getByRole("status")).toHaveText("Выбрано: kept.txt");
 

@@ -6,9 +6,9 @@
 
 [![Покрытие строк unit-тестами — снимок репозитория](docs/quality-coverage.svg)](apps/playground/src/project/quality-report.generated.json)
 
-Ясный язык для ваших интерфейсов. Бесплатная библиотека компонентов и дизайн-система
-для Vue 3 + TypeScript: формы, данные, навигация и оверлеи с общими токенами,
-доступными состояниями и живыми примерами.
+Библиотека компонентов и дизайн-система для Vue 3 + TypeScript.
+Кнопки, поля, таблицы, навигация и оверлеи. Общие токены, пять тем
+и рабочие примеры с кодом.
 
 <p align="center">
   <a href="https://whitewolf06.github.io/gavia-ui/"><img src="docs/brand/playground-button.svg" alt="Открыть Playground" width="230" height="44"></a><br>
@@ -19,23 +19,23 @@
 
 [Качество и совместимость](https://whitewolf06.github.io/gavia-ui/?view=docs&section=quality):
 unit-тесты, покрытие Vitest/V8, браузеры, доступность, SSR и проверка установленного пакета.
-Доля успешных unit-тестов и покрытие показаны процентными шкалами 0–100%; это измерение, а не статус CI.
-Бейдж — сохранённый снимок покрытия строк в репозитории. Его дата, версия и источник —
-[в JSON-отчёте](apps/playground/src/project/quality-report.generated.json). Страница качества показывает измерение
-из CI последней опубликованной сборки Playground; оно может отличаться от снимка.
+Шкалы 0–100% показывают долю пройденных unit-тестов и покрытие.
+Бейдж хранит результат измерения покрытия строк. Дата, версия и источник —
+[в JSON-отчёте](apps/playground/src/project/quality-report.generated.json). В опубликованном playground страница качества показывает отчёт CI этой сборки.
+Он может отличаться от сохранённого снимка. Статус текущего CI проверяйте отдельно:
 [Текущие запуски CI](https://github.com/whitewolf06/gavia-ui/actions).
 
 <a href="https://whitewolf06.github.io/gavia-ui/">
   <img src="docs/brand/gavia-lake-hero-v2.webp" alt="Тихое озеро на рассвете, туманный хвойный берег и гагара — оформление темы Gavia" width="1200">
 </a>
 
-В составе **Gavia UI — 53 компонента, 113 SVG-иконок, 447 дизайн-токенов
-и пять тем:** Gavia, Gavia Dark, Classic, Classic Dark и Newspaper. Playground объединяет
-руководства по каждому компоненту, интерактивные настройки, копируемый Vue-код,
-готовые сценарии и подбор собственной палитры. В каталоге компонентов указана
-версия первой поставки каждого компонента.
+В Gavia UI **53 компонента, 113 SVG-иконок, 447 дизайн-токенов
+и пять тем:** Gavia, Gavia Dark, Classic, Classic Dark и Newspaper.
+В playground можно настроить компоненты, скопировать Vue-код, пройти готовые
+сценарии и подобрать свою палитру. У каждого компонента есть руководство
+и версия, в которой он впервые появился.
 
-**Gavia Sans 0.6** входит в UI Kit и служит основным шрифтом тем Gavia и Gavia Dark:
+**Gavia Sans 0.6** входит в пакет. Это основной шрифт тем Gavia и Gavia Dark:
 кириллица и латиница, шесть весов с прямым и наклонным начертанием, TTF и WOFF2.
 Classic, Classic Dark и Newspaper сохраняют свою типографику.
 [Подключение темы](docs/theme-gavia.md) · [Образцы и скачивание шрифта](https://whitewolf06.github.io/gavia-ui/?view=font).
@@ -46,10 +46,10 @@ Classic, Classic Dark и Newspaper сохраняют свою типограф�
 
 ## Публичные TypeScript-контракты
 
-В 0.11.0 добавлены связанные generics моделей выбора,
-строгие колонки таблицы, типы pt/слотов/событий/refs и безопасная нормализация
-входных значений. Для новых деклараций нужен TypeScript ≥ 5.4. Изменения
-опубликованы в 0.11.0; переход описан в руководстве миграции.
+В версии 0.11.0 тип модели выбора связан с вариантами, колонки таблицы
+проверяются по полям строки, а pt, слоты, события и refs получили точные типы.
+Некорректные входные значения нормализуются. Нужен TypeScript ≥ 5.4;
+при обновлении может потребоваться правка кода приложения.
 [Миграция 0.11](docs/migration-0.11.0.md) · [Контракты типов](docs/architecture.md#контракты-типов-данных) ·
 [Проверка API установленного пакета](docs/quality.md#проверка-новых-публичных-контрактов).
 
@@ -57,8 +57,8 @@ Classic, Classic Dark и Newspaper сохраняют свою типограф�
 
 ### Основные
 
-**Gavia** и **Gavia Dark** — фирменные светлая и тёмная темы Gavia UI:
-бирюзовый акцент, общая геометрия компонентов и шрифт **Gavia Sans**.
+**Gavia** и **Gavia Dark** — светлая и тёмная темы с озёрной палитрой,
+общими размерами компонентов и шрифтом **Gavia Sans**.
 
 | Тема | Режим | `data-wl-theme` | CSS из пакета |
 | --- | --- | --- | --- |
@@ -69,14 +69,15 @@ Gavia Dark добавлена в 0.10.0.
 
 ### Дополнительные
 
-Альтернативное оформление тех же компонентов: Classic и Classic Dark используют
-системный sans, Newspaper — системный основной текст и заголовки с засечками.
+Classic и Classic Dark используют системный шрифт без засечек.
+В Newspaper основной текст тоже системный, а заголовки — с засечками.
+Компоненты во всех темах общие.
 
 | Тема | Оформление | `data-wl-theme` | CSS из пакета |
 | --- | --- | --- | --- |
 | **Classic** | Светлая нейтральная | `white` | `gavia-ui/themes/white.css` |
 | **Classic Dark** | Тёмная нейтральная | `graphite` | `gavia-ui/themes/graphite.css` |
-| **Newspaper** | Бумажная, с редакционной типографикой | `newspaper` | `gavia-ui/themes/newspaper.css` |
+| **Newspaper** | Светлая, с заголовками с засечками | `newspaper` | `gavia-ui/themes/newspaper.css` |
 
 Выберите CSS темы и её идентификатор из таблицы. Для обеих основных тем также
 подключите `gavia-ui/styles/fonts/gavia.css`. Без явного выбора темы библиотека
@@ -125,7 +126,7 @@ import { WlButton } from "gavia-ui";
 и `data-wl-theme="gavia-dark"`, с тем же шрифтовым CSS. Для Classic, Classic Dark
 или Newspaper импортируйте `themes/white.css`, `themes/graphite.css` или
 `themes/newspaper.css` и выберите `white`, `graphite` или `newspaper` соответственно.
-Без шрифтового CSS обе Gavia используют системный fallback; без выбора темы
+Без CSS шрифта обе Gavia используют системный шрифт; без выбора темы
 библиотека сохраняет Classic (`white`). `WlConfig` для базового подключения не требуется.
 [Названия тем и совместимость](docs/migration-themes.md).
 [Подробное подключение, API и доступность](https://whitewolf06.github.io/gavia-ui/?view=docs).
@@ -140,11 +141,12 @@ import { WlButton } from "gavia-ui";
 - [Архитектура playground](docs/playground.md) и [публикация Pages](docs/hosting.md).
 
 Создатель и сопровождающий — [Gorbach Dmitry](https://github.com/whitewolf06).
-Идеи, ошибки и улучшения принимаются в [GitHub Issues](https://github.com/whitewolf06/gavia-ui/issues);
-порядок участия — [CONTRIBUTING.md](CONTRIBUTING.md).
+Об ошибках и предложениях пишите в [GitHub Issues](https://github.com/whitewolf06/gavia-ui/issues).
+Если хотите изменить код, прочитайте [руководство для участников](CONTRIBUTING.md).
 
-**Код UI Kit — MIT:** бесплатно для личных и коммерческих проектов, с сохранением
-текста лицензии и уведомления об авторских правах. Полные условия — [LICENSE](LICENSE).
+**Код UI Kit — MIT.** Библиотеку можно использовать, изменять и распространять,
+в том числе в коммерческих проектах. Сохраняйте текст лицензии и уведомление
+об авторских правах. Полные условия — [LICENSE](LICENSE).
 **Файлы шрифта — SIL OFL 1.1:** [лицензия гарнитуры](packages/ui-kit/fonts/gavia/OFL.txt).
 
 ## Разработка
@@ -176,8 +178,8 @@ pnpm verify:package     # проверка архива в изолирован�
 состояния, `class`/`style`, слоты и `data-wl`/`data-variant`/`data-size`.
 `WlConfig` необязателен; сервисы уведомлений и подтверждений подключаются
 отдельно и принадлежат конкретному Vue-приложению. Настройки `pt` объединяются
-в порядке default → `WlConfig.pt` → `pt` экземпляра; `class` и `style` мержатся.
-[API и интеграция](packages/ui-kit/README.md) · [Публичный DOM и pt](docs/architecture.md#pt-и-публичный-dom).
+в порядке default → `WlConfig.pt` → `pt` экземпляра; `class` и `style` объединяются.
+[API и интеграция](packages/ui-kit/README.md) · [Публичный DOM и pt](docs/architecture.md#темы-и-публичный-dom).
 
 Темы и локальные настройки используют CSS-переменные `--wl-*`:
 foundation → semantic → component. Слои `wl.reset`, `wl.tokens`,
@@ -188,4 +190,5 @@ foundation → semantic → component. Слои `wl.reset`, `wl.tokens`,
 [Токены, темы и готовые сценарии](docs/design-system.md).
 
 [Совместимость, браузеры, доступность и проверки](docs/quality.md).
-Потребители могут использовать pnpm, npm и Bun; разработка репозитория — pnpm.
+В приложении можно установить пакет через pnpm, npm или Bun.
+Для разработки этого репозитория используйте pnpm.

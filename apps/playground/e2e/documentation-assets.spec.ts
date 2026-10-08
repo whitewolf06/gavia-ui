@@ -125,7 +125,7 @@ test("colors resolve shipped themes, preserve alpha, copy exact CSS values and e
   const states = assets.locator('[data-asset-example="color-states"]').getByTestId("docs-asset-preview");
   await states.getByRole("group", { name: "Статус материала", exact: true }).getByRole("button", { name: "Ошибка", exact: true }).click();
   await expect(states.getByRole("alert")).toContainText("Не удалось сохранить");
-  await expect(states.getByRole("alert")).toContainText("Данные сохранены в форме. Повторите действие.");
+  await expect(states.getByRole("alert")).toContainText("Введённые данные остались в форме. Повторите сохранение.");
   await states.getByRole("button", { name: "Сохранить пример", exact: true }).click();
   await expect(states.getByRole("status")).toHaveText("Сохранено материалов: 1 · Состояние: Ошибка");
 });

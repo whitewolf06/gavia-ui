@@ -30,8 +30,8 @@ function readMessages(): void {
         <span class="button-slot-inline">Сообщения<strong>{{ unread }}</strong></span>
       </WlButton>
     </div>
-    <p class="wl-text-small wl-text-muted">icon размещает иконку слева. Default-слот допускает свою композицию: иконку справа или счётчик. Кнопка без текста получает aria-label.</p>
-    <p class="wl-text-small" role="status">{{ lastAction ? 'Последнее действие: ' + lastAction : 'Нажмите на кнопку, чтобы проверить её действие и доступное имя.' }}</p>
+    <p class="wl-text-small wl-text-muted">icon размещает иконку слева. В default-слот можно добавить иконку справа или счётчик. Кнопка без текста получает aria-label.</p>
+    <p class="wl-text-small" role="status">{{ lastAction ? 'Последнее действие: ' + lastAction : 'Нажмите кнопку и проверьте действие и доступное имя.' }}</p>
   </div>
 </template>
 

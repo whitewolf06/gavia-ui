@@ -14,9 +14,10 @@ Gavia Dark и новые подписи Classic / Classic Dark добавлен�
 | Classic Dark, прежде Graphite | `graphite` | `gavia-ui/themes/graphite.css` |
 | Newspaper | `newspaper` | `gavia-ui/themes/newspaper.css` |
 
-Classic / Classic Dark — новые отображаемые подписи. Строки `white` / `graphite`,
-пути CSS, параметры `theme=white` / `theme=graphite`, значения токенов и существующие
-позиции каталога сохранены. Не заменяйте их на `classic` / `classic-dark`.
+Classic / Classic Dark — названия для отображения. Идентификаторы
+`white` / `graphite`, пути CSS, параметры `theme=white` / `theme=graphite`,
+значения токенов и порядок существующих тем в каталоге сохраняются.
+Не заменяйте идентификаторы на `classic` / `classic-dark`.
 Базовые значения библиотеки и аргумент по умолчанию `resolveWlToken` /
 `getWlThemeTokens` остаются Classic (`white`); playground по умолчанию использует Gavia.
 

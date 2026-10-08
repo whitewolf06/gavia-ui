@@ -104,14 +104,14 @@ const tokenCode = `.page {
 
 <template>
   <main class="ds-main wl-container" id="ds-top">
-    <PlaygroundPageHeader class="ds-hero" title="Единый язык интерфейсов"
-      description="Спокойные поверхности, ясная иерархия и предсказуемое поведение. От значения токена до готового сценария — одна система в пяти темах."
+    <PlaygroundPageHeader class="ds-hero" title="Дизайн-система"
+      description="Правила для текста, цветов, отступов и состояний компонентов. Токены и примеры для пяти тем."
       :breadcrumbs="[{ label: 'Дизайн-система' }]">
       <template #meta><div class="ds-metrics wl-inline" data-space="xl">
         <span><strong>{{ wlManifest.length }}</strong> компонентов</span>
         <span><strong>{{ wlDesignTokens.length }}</strong> токенов</span>
         <span><strong>{{ WL_ICON_NAMES.length }}</strong> иконок</span>
-        <span><strong>{{ wlDesignThemes.length }}</strong> темы</span>
+        <span><strong>{{ wlDesignThemes.length }}</strong> тем</span>
       </div></template>
     </PlaygroundPageHeader>
     <div class="ds-shell">
@@ -122,12 +122,12 @@ const tokenCode = `.page {
         <section id="ds-foundations" class="ds-section wl-stack" data-space="xl">
           <div class="wl-stack" data-space="sm">
             <p class="ds-eyebrow">01 / Основы</p>
-            <h2 class="wl-text-title">Смысл важнее декора</h2>
-            <p class="wl-text-body wl-text-muted">Один основной акцент на сценарий. Цвет сообщает смысл вместе с текстом или иконкой. Группы объединяются отступами и поверхностями.</p>
+            <h2 class="wl-text-title">Действия, состояния и группы</h2>
+            <p class="wl-text-body wl-text-muted">Выделяйте одно основное действие. Обозначайте состояние текстом или иконкой вместе с цветом. Объединяйте связанные элементы отступами и общим фоном.</p>
           </div>
           <div class="wl-grid" data-space="lg">
-            <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">Ясность</h3><p class="wl-text-body wl-text-muted">Короткие подписи, видимые состояния, явное основное действие.</p></article>
-            <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">Последовательность</h3><p class="wl-text-body wl-text-muted">Размеры, отступы и интерактивность следуют общему контракту.</p></article>
+            <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">Подписи и состояния</h3><p class="wl-text-body wl-text-muted">Называйте действие прямо. Показывайте загрузку, ошибку и результат.</p></article>
+            <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">Размеры и поведение</h3><p class="wl-text-body wl-text-muted">Используйте общие размеры и отступы. Одинаковые элементы должны работать одинаково.</p></article>
             <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">Доступность</h3><p class="wl-text-body wl-text-muted">Клавиатура, видимый фокус, подписи полей и достаточный контраст.</p></article>
           </div>
           <div class="wl-stack ds-theme-groups" data-space="2xl">
@@ -160,7 +160,7 @@ const tokenCode = `.page {
         </section>
 
         <section id="ds-layout" class="ds-section wl-stack" data-space="xl">
-          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">03 / Сетка и отступы</p><h2 class="wl-text-title">Ритм без случайных чисел</h2><p class="wl-text-body wl-text-muted">Малая группа — 8 px, поля формы — 16 px, карточка — 24 px, разделы — 48–64 px. Компактная плотность подходит для насыщенных рабочих экранов.</p></div>
+          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">03 / Сетка и отступы</p><h2 class="wl-text-title">Шкала отступов</h2><p class="wl-text-body wl-text-muted">Малая группа — 8 px, поля формы — 16 px, карточка — 24 px, разделы — 48–64 px. Компактная плотность подходит для экранов с большим количеством данных.</p></div>
           <div class="wl-surface ds-spacing">
             <div v-for="(token, space) in wlSpacing" :key="space" class="ds-space-row">
               <code class="wl-text-code">{{ space }}</code><span class="ds-space-bar" :style="{ width: `var(${token})` }" /><span class="wl-text-small wl-text-muted">{{ resolved(token) }}</span>
@@ -199,7 +199,7 @@ const tokenCode = `.page {
         <section id="ds-components" class="ds-section wl-stack" data-space="xl">
           <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">05 / Компоненты</p><h2 class="wl-text-title">Публичные контракты</h2><p class="wl-text-body wl-text-muted">Props, модели, события и слоты берутся из манифеста библиотеки. Размер и плотность меняют геометрию; вариант передаёт смысл действия; состояния отражают его доступность.</p></div>
           <div class="wl-surface wl-stack" data-space="lg">
-            <div class="wl-inline" data-space="sm"><WlButton variant="primary">Основное</WlButton><WlButton variant="secondary">Дополнительное</WlButton><WlButton variant="ghost">Тихое</WlButton><WlButton variant="danger">Удалить</WlButton></div>
+            <div class="wl-inline" data-space="sm"><WlButton variant="primary">Основное</WlButton><WlButton variant="secondary">Дополнительное</WlButton><WlButton variant="ghost">Ghost</WlButton><WlButton variant="danger">Удалить</WlButton></div>
             <div class="wl-inline" data-space="sm"><WlButton size="sm">Маленькая</WlButton><WlButton size="md">Обычная</WlButton><WlButton size="lg">Крупная</WlButton><WlButton density="compact">Компактная</WlButton></div>
             <div class="wl-inline" data-space="sm"><WlButton disabled>Недоступно</WlButton><WlButton loading>Сохранение</WlButton><WlField label="Поле с ошибкой" id="ds-state-invalid" error="Проверьте значение." v-slot="field"><WlInput :id="field.id" model-value="Некорректное значение" :invalid="field.invalid" :aria-describedby="field.ariaDescribedby" /></WlField></div>
             <p class="wl-text-small wl-text-muted">Один primary на группу. Danger — для необратимого действия с подтверждением. Loading блокирует повторную отправку; disabled сопровождается объяснением причины рядом.</p>
@@ -216,14 +216,14 @@ const tokenCode = `.page {
         </section>
 
         <section id="ds-patterns" class="ds-section wl-stack" data-space="xl">
-          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">06 / Паттерны</p><h2 class="wl-text-title">Собираем целые сценарии</h2><p class="wl-text-body wl-text-muted">Библиотека задаёт представление и взаимодействие. Валидация, запросы и бизнес-правила принадлежат приложению. Эти примеры работают локально в витрине.</p></div>
+          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">06 / Паттерны</p><h2 class="wl-text-title">Формы, данные и панели</h2><p class="wl-text-body wl-text-muted">Компоненты отвечают за отображение и взаимодействие. Валидацию, запросы и бизнес-правила задаёт приложение. Примеры на этой странице работают без сервера.</p></div>
           <div class="wl-grid" data-space="xl">
             <form class="wl-surface wl-stack" data-space="lg" novalidate @submit.prevent="submitForm" aria-label="Пример формы">
               <h3 class="wl-text-heading">Форма с валидацией</h3>
               <WlField label="Имя" id="ds-name" required :error="nameError" hint="Как к вам обращаться" v-slot="field"><WlInput :id="field.id" v-model="name" :invalid="field.invalid" :aria-describedby="field.ariaDescribedby" required autocomplete="name" /></WlField>
               <WlField label="Email" id="ds-email" required :error="emailError" hint="Например: name@example.com" v-slot="field"><WlInput :id="field.id" v-model="email" :invalid="field.invalid" :aria-describedby="field.ariaDescribedby" type="email" required autocomplete="email" /></WlField>
               <WlButton variant="primary" type="submit">Сохранить пример</WlButton>
-              <WlAlert v-if="saved" variant="ok" title="Данные проверены">Пример сохранён локально.</WlAlert>
+              <WlAlert v-if="saved" variant="ok" title="Данные проверены">Поля заполнены корректно. Пример не отправляет и не сохраняет данные.</WlAlert>
             </form>
             <article class="wl-surface wl-stack" data-space="lg"><h3 class="wl-text-heading">Правила формы</h3><ol class="ds-list wl-text-body wl-text-muted"><li>Видимая подпись связана с контролом через id.</li><li>Подсказка и ошибка связаны через aria-describedby.</li><li>При отправке фокус переходит к первой ошибке.</li><li>Введённые данные сохраняются после ошибки.</li><li>Результат действия объясняется текстом.</li></ol><p class="wl-text-small wl-text-muted">WlField передаёт id, invalid и ariaDescribedby через scoped slot. Placeholder дополняет подпись.</p></article>
           </div>
@@ -232,29 +232,29 @@ const tokenCode = `.page {
             <WlSegmented v-model="contentState" :options="stateOptions" :pt="{ root: { style: { flexWrap: 'wrap', height: 'auto' } } }" aria-label="Состояние данных" />
             <div class="ds-data-preview" data-testid="ds-data-state">
               <div v-if="contentState === 'loading'" class="wl-stack" data-space="lg" role="status" aria-busy="true"><span class="wl-text-small wl-text-muted">Загружаем материалы…</span><WlSkeleton height="20px" /><WlSkeleton height="20px" width="80%" /><WlSkeleton height="20px" width="60%" /></div>
-              <WlEmpty v-else-if="contentState === 'empty'" icon="file" title="Материалов пока нет" description="Добавьте первый материал, чтобы начать работу."><template #action><WlButton @click="contentState = 'ready'">Добавить пример</WlButton></template></WlEmpty>
-              <WlAlert v-else-if="contentState === 'error'" variant="err" title="Не удалось загрузить материалы">Повторите попытку. Ваши данные сохранены.<template #action><WlButton size="sm" @click="contentState = 'ready'">Повторить</WlButton></template></WlAlert>
+              <WlEmpty v-else-if="contentState === 'empty'" icon="file" title="Материалов пока нет" description="Добавьте пример материала."><template #action><WlButton @click="contentState = 'ready'">Добавить пример</WlButton></template></WlEmpty>
+              <WlAlert v-else-if="contentState === 'error'" variant="err" title="Не удалось загрузить материалы">Повторите загрузку.<template #action><WlButton size="sm" @click="contentState = 'ready'">Повторить</WlButton></template></WlAlert>
               <WlTable v-else :columns="columns" :value="rows" />
             </div>
           </article>
-          <article class="wl-surface wl-stack" data-space="lg"><h3 class="wl-text-heading">Вторичное действие в панели</h3><p class="wl-text-body wl-text-muted">Drawer сохраняет контекст страницы. Escape закрывает панель, фокус возвращается к кнопке открытия. Анимация настраивается глобально и локально.</p><div class="wl-inline wl-text-body" data-space="sm"><WlSwitch v-model="motion" aria-label="Анимация примера панели">Анимация панели</WlSwitch></div><div><WlButton @click="drawerVisible = true">Открыть панель</WlButton></div></article>
+          <article class="wl-surface wl-stack" data-space="lg"><h3 class="wl-text-heading">Действие в боковой панели</h3><p class="wl-text-body wl-text-muted">Drawer открывается поверх страницы. Escape закрывает панель, фокус возвращается к кнопке открытия. Анимацию можно задать для приложения или отдельной панели.</p><div class="wl-inline wl-text-body" data-space="sm"><WlSwitch v-model="motion" aria-label="Анимация примера панели">Анимация панели</WlSwitch></div><div><WlButton @click="drawerVisible = true">Открыть панель</WlButton></div></article>
         </section>
 
         <section id="ds-recipes" class="ds-section wl-stack" data-space="xl">
-          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">07 / Рецепты</p><h2 class="wl-text-title">Готовые рабочие сценарии</h2><p class="wl-text-body wl-text-muted">Шесть связанных сценариев с кодом для копирования. Состояния, отмена, ошибки и повторные действия проверяются вместе с компонентами.</p></div>
+          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">07 / Рецепты</p><h2 class="wl-text-title">Примеры сценариев</h2><p class="wl-text-body wl-text-muted">Шесть примеров с кодом для копирования: состояния данных, отмена, ошибки и повторные действия. Сценарии проверяются вместе с компонентами.</p></div>
           <RecipeGallery />
         </section>
         <section id="ds-stress" class="ds-section wl-stack" data-space="xl">
-          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">08 / Сложный контент</p><h2 class="wl-text-title">Проверяем границы</h2><p class="wl-text-body wl-text-muted">Длинный русский текст, восемь тегов, 80 вариантов выбора, 20 строк таблицы, ограниченные даты и вложенные оверлеи. Изменяйте ширину окна и размер текста.</p></div>
+          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">08 / Сложный контент</p><h2 class="wl-text-title">Длинный текст и большие списки</h2><p class="wl-text-body wl-text-muted">Длинный русский текст, восемь тегов, 80 вариантов выбора, 20 строк таблицы, ограниченные даты и вложенные оверлеи. Изменяйте ширину окна и размер текста.</p></div>
           <ContentStress />
         </section>
         <section id="ds-accessibility" class="ds-section wl-stack" data-space="xl">
-          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">09 / Доступность</p><h2 class="wl-text-title">Проверяемые правила</h2><p class="wl-text-body wl-text-muted">Контраст текста — от 4.5:1, индикатора фокуса — от 3:1. Отчёт проверяет перечисленные пары токенов; пользовательские цвета и весь экран проверяются отдельно.</p></div>
+          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">09 / Доступность</p><h2 class="wl-text-title">Клавиатура, контраст и фокус</h2><p class="wl-text-body wl-text-muted">Контраст текста — от 4.5:1, индикатора фокуса — от 3:1. Отчёт проверяет перечисленные пары токенов; пользовательские цвета и весь экран проверяются отдельно.</p></div>
           <div class="wl-grid" data-space="lg"><article class="wl-surface"><h3 class="wl-text-subheading">Клавиатура</h3><p class="wl-text-body wl-text-muted">Tab — переход. Enter / Space — действие. Стрелки — выбор. Escape — закрытие оверлея. Фокус виден и возвращается после закрытия.</p></article><article class="wl-surface"><h3 class="wl-text-subheading">Движение</h3><p class="wl-text-body wl-text-muted">motion: false выключает переходы. Системное prefers-reduced-motion действует во всех темах. Анимация не меняет смысл или время жизни данных.</p></article><article class="wl-surface"><h3 class="wl-text-subheading">Текст и цель</h3><p class="wl-text-body wl-text-muted">Иконка действия получает aria-label. Ошибка объясняет следующий шаг. Цель на touch-экране: ориентир 44 × 44 px; выбирайте lg и достаточные интервалы.</p></article></div>
           <div class="ds-table-scroll" tabindex="0" role="region" aria-label="Контраст темы"><table class="ds-token-table"><thead><tr><th scope="col">Пара / {{ theme }}</th><th scope="col">Факт</th><th scope="col">Минимум</th></tr></thead><tbody><tr v-for="pair in themeContrast" :key="pair.name"><th scope="row">{{ pair.label }}</th><td class="ds-contrast-pass">{{ pair.ratio }}:1</td><td>{{ pair.minimum }}:1</td></tr></tbody></table></div>
           <p class="wl-text-small wl-text-muted">Новые токены проходят tokens:check. Паттерны проверяются в Chromium, Firefox, WebKit и мобильном Chromium. Перед релизом также проверяются типы, архив и изолированный потребитель.</p>
         </section>
-        <footer class="ds-footer wl-text-small wl-text-muted">Gavia UI · Vue 3 · открытые контракты · документация в docs/design-system.md</footer>
+        <footer class="ds-footer wl-text-small wl-text-muted">Gavia UI · Vue 3 · API компонентов · документация в docs/design-system.md</footer>
       </div>
     </div>
     <WlDrawer v-model:visible="drawerVisible" header="Настройка представления" :motion="motion">

@@ -28,12 +28,12 @@ export const colorDocumentationHeadings = {
 export const documentationAssetPages: Record<DocumentationAssetSection, DocumentationAssetPage> = {
   icons: {
     label: "Иконки",
-    description: "Встроенный SVG-каталог, выбор имени и размера, наследование currentColor и доступные действия. Иконки используют единый реестр Gavia UI.",
+    description: "Иконки из встроенного SVG-каталога: имена, размеры, currentColor и доступные подписи.",
     headings: Object.values(iconDocumentationHeadings)
   },
   colors: {
     label: "Цвета и темы",
-    description: "Поверхности, текст, акценты и состояния строятся на semantic токенах. Смена темы меняет значения; контракты компонентов и смысл интерфейса сохраняются.",
+    description: "Semantic токены задают цвета фона, текста, акцентов и состояний. При смене темы меняются значения токенов; контракты компонентов и смысл интерфейса сохраняются.",
     headings: Object.values(colorDocumentationHeadings)
   }
 };
@@ -51,27 +51,27 @@ export interface DocumentationColorGroup {
 export const documentationColorGroups: readonly DocumentationColorGroup[] = [
   {
     key: "surfaces",
-    description: "Основная и вторичная поверхности, hover и специализированные фоны. Текст размещайте с подходящей foreground-ролью.",
+    description: "Основная и вторичная поверхности, hover и специализированные фоны. Выбирайте подходящую foreground-роль для текста.",
     tokens: ["--wl-bg", "--wl-bg-soft", "--wl-bg-hover", "--wl-mask-bg", "--wl-avatar-bg", "--wl-tooltip-bg"]
   },
   {
     key: "text",
-    description: "Основной текст, пояснения, менее заметные подписи, ошибки и текст tooltip. Снижение внимания не должно скрывать обязательную инструкцию.",
+    description: "Основной текст, пояснения, менее заметные подписи, ошибки и текст tooltip. Обязательная инструкция должна оставаться читаемой.",
     tokens: ["--wl-text", "--wl-text-2", "--wl-text-3", "--wl-text-muted", "--wl-text-danger", "--wl-tooltip-text"]
   },
   {
     key: "accent",
-    description: "Акцент действия и его состояния. Мягкая поверхность и границы поддерживают выделение без сплошной заливки.",
+    description: "Акцент действия и его состояния. Для выделения без сплошной заливки используйте мягкий фон и границы.",
     tokens: ["--wl-accent", "--wl-accent-hover", "--wl-accent-soft", "--wl-accent-soft-hover", "--wl-accent-border", "--wl-accent-border-hover"]
   },
   {
     key: "status",
-    description: "Успех, предупреждение и ошибка сопровождаются понятным текстом. Мягкие поверхности, границы и foreground роли выбираются вместе.",
+    description: "Успех, предупреждение и ошибка сопровождаются понятным текстом. Подбирайте мягкий фон, границы и foreground роли вместе.",
     tokens: ["--wl-success", "--wl-success-soft", "--wl-success-border", "--wl-warn", "--wl-warn-soft", "--wl-warn-border", "--wl-danger", "--wl-danger-hover", "--wl-danger-soft", "--wl-danger-soft-hover", "--wl-danger-border", "--wl-info-text", "--wl-ok-text", "--wl-warn-text", "--wl-err-text"]
   },
   {
     key: "borders",
-    description: "Обычная и усиленная граница разделяют поверхности. Видимый фокус показывает положение клавиатуры и сохраняется в каждой теме.",
+    description: "Обычная и усиленная граница разделяют поверхности. Видимый фокус показывает выбранный с клавиатуры элемент во всех темах.",
     tokens: ["--wl-border", "--wl-border-2", "--wl-focus-color", "--wl-focus-invalid-color"]
   }
 ];

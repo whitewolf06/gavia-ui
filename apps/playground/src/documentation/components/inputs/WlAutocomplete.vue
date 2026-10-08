@@ -18,7 +18,7 @@ function reset() { person.value = ""; participants.value = []; singleSuggestions
 <template>
   <div class="wl-stack" data-space="xl" data-input-example="WlAutocomplete">
     <section class="wl-stack" data-space="md">
-      <h4 class="wl-text-title">Поиск по объектам и множественный выбор</h4>
+      <h4 class="wl-text-title">Поиск ответственного и выбор участников</h4>
       <div class="wl-grid" data-space="lg">
         <WlField id="docs-auto-single" label="Ответственный" hint="Введите имя. Приложение обновит suggestions по событию complete." v-slot="{ id, ariaDescribedby }"><WlAutocomplete :id="id" v-model="person" :suggestions="singleSuggestions" :option-label="label" dropdown dropdown-label="Показать ответственных" :aria-describedby="ariaDescribedby" @complete="searchSingle" /></WlField>
         <WlField id="docs-auto-multiple" label="Участники" v-slot="{ id }"><WlAutocomplete :id="id" v-model="participants" :suggestions="multipleSuggestions" :option-label="label" multiple dropdown dropdown-label="Показать участников" :min-length="0" @complete="searchMultiple" /></WlField>

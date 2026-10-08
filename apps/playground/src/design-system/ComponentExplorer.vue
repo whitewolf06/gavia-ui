@@ -107,7 +107,7 @@ async function focusPreview(): Promise<void> {
     <section class="ds-explorer-settings wl-stack" :class="{ 'docs-explorer-settings': documentationLayout }" data-space="lg" :aria-labelledby="documentationLayout ? headingPrefix + '-controls' : undefined">
       <div class="wl-inline" :data-space="documentationLayout ? 'sm' : 'md'">
         <h2 v-if="documentationLayout" :id="headingPrefix + '-controls'" class="wl-text-subheading">Настройки</h2>
-        <h4 v-else class="wl-text-subheading">Живой пример</h4>
+        <h4 v-else class="wl-text-subheading">Пример</h4>
         <WlButton size="sm" variant="ghost" aria-label="Сбросить пример" @click="reset">{{ documentationLayout ? 'Сбросить' : 'Сбросить пример' }}</WlButton>
       </div>
       <div v-if="controls.length" class="ds-explorer-controls">
@@ -123,38 +123,38 @@ async function focusPreview(): Promise<void> {
             <WlSelect v-else-if="control.editor === 'icon'" :model-value="selectValue(control, true)" :aria-label="'Пример: ' + control.name" placeholder="Не задано" :aria-describedby="control.description ? headingPrefix + '-control-' + control.name : undefined" :options="iconOptions(control)" option-label="label" option-value="value" @update:model-value="setValue(control, $event)" />
             <WlSelect v-else :model-value="selectValue(control)" :aria-label="'Пример: ' + control.name" :aria-describedby="documentationLayout && control.description ? headingPrefix + '-control-' + control.name : undefined" :options="[...(control.values ?? [])]" @update:model-value="setValue(control, $event)" />
           </template>
-          <WlButton v-if="documentationLayout && Object.prototype.hasOwnProperty.call(overrides, control.name)" size="sm" variant="ghost" :aria-label="'Сбросить ' + control.name" @click="clearOverride(control.name)">По примеру</WlButton>
+          <WlButton v-if="documentationLayout && Object.prototype.hasOwnProperty.call(overrides, control.name)" size="sm" variant="ghost" :aria-label="'Сбросить ' + control.name" @click="clearOverride(control.name)">Как в примере</WlButton>
           <p v-if="documentationLayout && control.description" :id="headingPrefix + '-control-' + control.name" class="wl-text-small wl-text-muted">{{ control.description }}</p>
         </div>
       </div>
-      <p v-else-if="documentationLayout" class="wl-text-small wl-text-muted">{{ entry.name === 'WlToast' || entry.name === 'WlConfirmDialog' ? 'Контейнер настраивается один раз в App.vue. На этой странице можно проверить вызовы сервиса.' : 'Данные и содержимое заданы в SFC-примере. Их структуру, параметры и слоты смотрите во вкладке API.' }}</p>
+      <p v-else-if="documentationLayout" class="wl-text-small wl-text-muted">{{ entry.name === 'WlToast' || entry.name === 'WlConfirmDialog' ? 'Настройте контейнер в App.vue. Здесь можно вызвать сервис и посмотреть результат.' : 'Данные и содержимое заданы в Vue SFC. Структура данных, параметры и слоты описаны во вкладке API.' }}</p>
       <div v-if="presets.length" class="wl-stack" data-space="xs">
         <span class="wl-text-small">Данные примера</span>
         <WlSelect :model-value="presetId" aria-label="Пример: данные" :options="[{ label: 'Исходные данные', value: 'default' }, ...presets.map((preset) => ({ label: preset.label, value: preset.id }))]" option-label="label" option-value="value" @update:model-value="choosePreset" />
-        <p class="wl-text-small wl-text-muted">Готовый набор сохраняет структуру данных; массив можно изменить в SFC ниже.</p>
+        <p class="wl-text-small wl-text-muted">Выберите набор данных или измените массив в SFC ниже.</p>
       </div>
-      <p v-if="documentationLayout && complexProps.length" class="wl-text-small wl-text-muted">Параметры <code>{{ complexProps.join(', ') }}</code>, модели, обработчики и слоты настраиваются в <a :href="'#' + headingPrefix + '-props'">API</a> и копируемом SFC. Составные данные не редактируются как произвольный JSON.</p>
-      <p v-if="documentationLayout && (entry.name === 'WlMenu' || entry.name === 'WlAutocomplete')" class="wl-text-small wl-text-muted">{{ entry.name === 'WlMenu' ? 'Popup-меню с кнопкой открытия' : 'Множественный выбор с массивом значений' }} показан в <a :href="'#' + headingPrefix + '-examples'">расширенном примере ниже</a>.</p>
+      <p v-if="documentationLayout && complexProps.length" class="wl-text-small wl-text-muted">Параметры <code>{{ complexProps.join(', ') }}</code>, модели, обработчики и слоты изменяйте в SFC. Их описание — в <a :href="'#' + headingPrefix + '-props'">API</a>. Редактора JSON здесь нет.</p>
+      <p v-if="documentationLayout && (entry.name === 'WlMenu' || entry.name === 'WlAutocomplete')" class="wl-text-small wl-text-muted">{{ entry.name === 'WlMenu' ? 'Popup-меню с кнопкой открытия' : 'Выбор нескольких значений' }} показан в <a :href="'#' + headingPrefix + '-examples'">примере ниже</a>.</p>
     </section>
     <div class="ds-explorer-output wl-stack" data-space="lg">
       <section class="wl-stack" :data-space="documentationLayout ? 'md' : 'lg'" :aria-labelledby="documentationLayout ? headingPrefix + '-preview' : undefined">
-        <h2 v-if="documentationLayout" :id="headingPrefix + '-preview'" class="wl-text-subheading">Живой пример</h2>
+        <h2 v-if="documentationLayout" :id="headingPrefix + '-preview'" class="wl-text-subheading">Пример</h2>
         <div ref="preview" class="ds-example-preview" data-testid="ds-example-preview" @focusin="focused = true" @focusout="focusOut" @mouseenter="hovered = true" @mouseleave="hovered = false">
           <component :is="example" v-if="example" :key="entry.name + '-' + revision" :preview="overrides" />
           <p v-else role="alert">Пример не найден.</p>
         </div>
         <div class="wl-inline" data-space="sm"><WlButton size="sm" variant="ghost" @click="focusPreview">Проверить фокус</WlButton><span class="wl-text-small wl-text-muted" role="status">{{ missingFocusTarget ? 'В примере нет доступного элемента для фокуса.' : 'Фокус: ' + (focused ? 'в примере' : 'вне примера') + ' · указатель: ' + (hovered ? 'в примере' : 'вне примера') }}</span></div>
-        <p class="wl-text-small wl-text-muted">Hover и нажатие проверяйте мышью; focus — клавиатурой. Выбор, открытие и закрытие работают через настоящий v-model. Переключатели {{ documentationLayout ? 'слева' : 'выше' }} можно сочетать.</p>
+        <p class="wl-text-small wl-text-muted">Hover и нажатие проверяйте мышью; focus — клавиатурой. Выбор, открытие и закрытие меняют v-model. Настройки {{ documentationLayout ? 'слева' : 'выше' }} можно сочетать.</p>
       </section>
       <section v-if="documentationLayout" class="wl-stack" data-space="md" :aria-labelledby="headingPrefix + '-source'" data-testid="ds-example-source">
         <h2 v-if="documentationLayout" :id="headingPrefix + '-source'" class="wl-text-subheading">Код для приложения</h2>
         <CodePanel :source="source" :expanded="documentationLayout" :title="documentationLayout ? 'Vue SFC · текущие настройки' : undefined" />
       </section>
       <details v-if="!documentationLayout" class="ds-state-matrix">
-        <summary>Матрица вариантов и состояний · {{ cases.length }}</summary>
+        <summary>Варианты и состояния · {{ cases.length }}</summary>
         <div class="wl-inline" data-space="sm"><WlButton v-for="item in cases" :key="item.id" size="sm" variant="secondary" :data-case="item.id" @click="chooseCase(item.props)">{{ item.label }}</WlButton></div>
       </details>
-      <p v-if="entry.name === 'WlToast' || entry.name === 'WlConfirmDialog'" class="wl-text-small wl-text-muted">Сервис использует единственный контейнер в App.vue. Его motion и pt задаются там; состояние изолировано по Vue-приложению.</p>
+      <p v-if="entry.name === 'WlToast' || entry.name === 'WlConfirmDialog'" class="wl-text-small wl-text-muted">Добавьте один контейнер в App.vue и задайте там motion и pt. У каждого Vue-приложения своё состояние сервиса.</p>
       <CodePanel v-if="!documentationLayout" :source="source" />
     </div>
   </div>

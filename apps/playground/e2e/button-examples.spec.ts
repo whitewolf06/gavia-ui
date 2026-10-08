@@ -69,9 +69,9 @@ test("button comparisons cover manifest variants and sizes, and every copied exa
   const normalHeight = await sizes.locator('[data-button-density="default"] button[data-size="md"]').evaluate((button) => button.getBoundingClientRect().height);
   const compactHeight = await sizes.locator('[data-button-density="compact"] button[data-size="md"]').evaluate((button) => button.getBoundingClientRect().height);
   expect(compactHeight).toBeLessThan(normalHeight);
-  await sizes.getByRole("checkbox", { name: "Показать компактную плотность", exact: true }).uncheck();
+  await sizes.getByRole("checkbox", { name: "Показать компактный ряд", exact: true }).uncheck();
   await expect(sizes.locator('[data-button-density="compact"]')).toHaveCount(0);
-  await sizes.getByRole("checkbox", { name: "Показать компактную плотность", exact: true }).check();
+  await sizes.getByRole("checkbox", { name: "Показать компактный ряд", exact: true }).check();
 
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", {
     configurable: true,

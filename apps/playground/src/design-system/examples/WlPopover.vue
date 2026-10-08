@@ -19,7 +19,7 @@ const options = [
     <WlButton @click="popover?.toggle($event)">Сведения</WlButton>
     <WlPopover ref="popover" aria-label="Сведения о материале" v-bind="preview">
       <div class="wl-stack" data-space="md">
-        <p class="wl-text-body">Содержимое привязано к кнопке.</p>
+        <p class="wl-text-body">Панель открывается рядом с кнопкой.</p>
         <div class="wl-inline" data-space="md">
           <WlSelect v-model="type" :options="options" option-label="label" option-value="value" aria-label="Тип материала" />
           <WlButton size="sm" @click="popover?.hide()">Закрыть</WlButton>
@@ -35,7 +35,7 @@ const options = [
           <div class="wl-stack" data-space="md">
             <WlSelect v-model="dialogType" :options="options" option-label="label" option-value="value" aria-label="Тип в диалоге" />
             <WlDatePicker v-model="dialogDate" aria-label="Дата в диалоге" />
-            <div><WlButton size="sm">Действие фильтра</WlButton></div>
+            <div><WlButton size="sm">Кнопка внутри фильтров</WlButton></div>
           </div>
         </WlPopover>
         <dl class="wl-inline" data-space="lg">

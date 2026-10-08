@@ -5,7 +5,7 @@ export const feedbackManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlAlert",
     category: "feedback",
-    description: "Встроенное уведомление с иконкой по варианту, опциональным заголовком и закрытием.",
+    description: "Уведомление внутри страницы. Иконка зависит от варианта; заголовок и кнопку закрытия можно добавить отдельно.",
     props: [
       { name: "variant", type: "enum", default: "info", values: WL_ALERT_VARIANTS, description: "Тип уведомления." },
       { name: "title", type: "string", description: "Заголовок." },
@@ -22,9 +22,9 @@ export const feedbackManifest = /* @__PURE__ */ defineComponentManifest([
     name: "WlToast",
     category: "feedback",
     description:
-      "Тост-контейнер (позиция bottom-center); показ — через useWlToast / WlToastService.",
+      "Toast-контейнер в позиции bottom-center. Показ — через useWlToast / WlToastService.",
     props: [
-      { name: "group", type: "string", description: "Группа тостов Gavia UI." },
+      { name: "group", type: "string", description: "Группа уведомлений." },
       { name: "motion", type: "boolean", description: "Анимация сообщений; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
@@ -35,9 +35,9 @@ export const feedbackManifest = /* @__PURE__ */ defineComponentManifest([
     name: "WlConfirmDialog",
     category: "feedback",
     description:
-      "Диалог подтверждения (кнопки accept/reject — wl-btn); показ — через useWlConfirm. Требует app.use(WlConfirmationService) и один <WlConfirmDialog /> в корне приложения.",
+      "Диалог подтверждения с кнопками accept/reject. Вызывается через useWlConfirm. Подключите app.use(WlConfirmationService) и один <WlConfirmDialog /> в корне приложения.",
     props: [
-      { name: "group", type: "string", description: "Группа диалога Gavia UI (обычно не нужна)." },
+      { name: "group", type: "string", description: "Группа диалога; обычно можно не задавать." },
       { name: "motion", type: "boolean", description: "Анимация окна; по умолчанию WlConfig.motion (true)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],

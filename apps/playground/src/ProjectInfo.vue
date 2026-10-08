@@ -28,7 +28,7 @@ onBeforeUnmount(() => {
 <template>
   <main ref="projectElement" class="project-main wl-container wl-stack" data-space="2xl" id="project-top" data-testid="changelog-page" aria-labelledby="project-title">
     <PlaygroundPageHeader title="Changelog" title-id="project-title"
-      description="История выпусков Gavia UI, подготовленные изменения и заметки о переходе между версиями."
+      description="Изменения в версиях Gavia UI и заметки по обновлению. Здесь же указано, что подготовлено к выпуску."
       :breadcrumbs="[{ label: 'Changelog' }]">
       <template #navigation>
         <nav class="wl-inline" data-space="lg" aria-label="Навигация по истории изменений">
@@ -41,7 +41,7 @@ onBeforeUnmount(() => {
       <header class="wl-stack" data-space="sm">
         <p class="project-eyebrow wl-text-small">Changelog</p>
         <h2 id="project-changelog-title" class="wl-text-title">История изменений</h2>
-        <p class="wl-text-small wl-text-muted">Тот же changelog, что в репозитории и архиве пакета. «Не выпущено» описывает подготовленные изменения; это не опубликованная версия.</p>
+        <p class="wl-text-small wl-text-muted">Changelog берётся из репозитория и входит в архив пакета. В разделе «Не выпущено» указаны подготовленные изменения. Они ещё не опубликованы.</p>
         <p class="wl-text-small"><a class="project-link" :href="project.changelogUrl">Открыть исходный changelog</a></p>
       </header>
       <nav class="project-history-nav wl-inline" data-space="md" aria-label="Версии в истории изменений">
@@ -58,7 +58,7 @@ onBeforeUnmount(() => {
         <header class="wl-stack" data-space="xs">
           <h3 :id="`${section.id}-title`" class="wl-text-heading">{{ section.version ? `Версия ${section.version}` : section.title }}</h3>
           <p v-if="section.date" class="wl-text-small wl-text-muted"><time :datetime="section.date">{{ section.date }}</time></p>
-          <p v-if="section.unreleased" class="wl-text-small wl-text-muted">Изменения следующего выпуска</p>
+          <p v-if="section.unreleased" class="wl-text-small wl-text-muted">Подготовленные изменения</p>
         </header>
         <template v-for="(block, index) in section.blocks" :key="index">
           <h4 v-if="block.kind === 'heading'" class="wl-text-subheading"><ChangelogInline :content="block.content" /></h4>
