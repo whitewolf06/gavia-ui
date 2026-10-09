@@ -8,6 +8,62 @@
 [Витрина GitHub Pages](https://whitewolf06.github.io/gavia-ui/) ·
 [Пакет npm](https://www.npmjs.com/package/gavia-ui). Первый npm-выпуск — 0.7.0.
 
+## Выпуск 0.11.1
+
+[gavia-ui@0.11.1](https://www.npmjs.com/package/gavia-ui/v/0.11.1) опубликован
+2026-10-09 (Москва) через OIDC по тегу `v0.11.1`. Тег указывает на
+`314ff975d63ea61781955369ac1c853e4e6fd5cf`.
+[Релизный CI](https://github.com/whitewolf06/gavia-ui/actions/runs/37869226103)
+прошёл: Node 18/24, 686 unit-тестов, 515 браузерных сценариев в четырёх проектах
+и 24 визуальных сценария desktop/mobile для пяти тем. Проверка axe страницы
+качества выполнена в desktop Chromium; в трёх остальных проектах она пропущена.
+Покрытие строк в CI — 98,44%, ветвлений — 89,25%, функций — 86,51%.
+
+В 0.11.1 исправлены отступы разделителей в хлебных крошках и выравнивание WlPill.
+Основной акцент светлой Gavia — `#3c7490`; обновлены оттенки наведения,
+нажатия и акцентного текста. Gavia Dark сохранена.
+Тексты playground и документации отредактированы; сохранённые ссылки на разделы
+документации сразу прокручивают страницу к нужному разделу.
+Props, события, slots, имена классов, токенов и пути импортов сохранены.
+Особенности обновления — в [миграции 0.11.1](migration-0.11.1.md).
+
+Реестр подтвердил 0.11.1 и latest=0.11.1. В метаданных npm указана
+[provenance-аттестация](https://registry.npmjs.org/-/npm/v1/attestations/gavia-ui@0.11.1);
+publish job подписал её. Integrity скачанного npm-архива совпадает с архивом,
+проверенным publish job:
+
+```text
+sha512-4jx4h3BFcn0H/LIrzGPLilG6YCl3UwLKXZOpF/605+814dNiUYtYexXMbvsjtnQ2i91P4Xbkb1WbFtqPQDa6Fg==
+```
+
+SHA256 npm-архива —
+`7ba2cc3efc5647727b5cad4751086190a71c746e10d6da44ed9c987f20050ccc`.
+Скачанный архив отдельно прошёл проверку через pnpm с Vue 3.4.38 и TypeScript 5.8.3:
+21 API fixture, 59 SFC-примеров, Node import/SSR и desktop/mobile-гидратацию
+со стабильными IDs и работающими событиями. В CI также проверены npm с Vue 3.4.0 /
+TypeScript 5.4.5 и Bun с Vue 3.5.40. Vue остаётся единственным обязательным peer;
+runtime-зависимостей нет.
+
+```bash
+pnpm add gavia-ui@0.11.1 vue
+# либо
+npm install gavia-ui@0.11.1 vue
+# либо
+bun add gavia-ui@0.11.1 vue
+```
+
+[GitHub Release](https://github.com/whitewolf06/gavia-ui/releases/tag/v0.11.1)
+содержит архив витрины и контрольную сумму. Скачанный архив проверен:
+версия 0.11.1, commit `314ff975d63ea61781955369ac1c853e4e6fd5cf` и относительные
+пути assets совпали. SHA256 архива витрины —
+`098f1630c65d1e2fd03c190d5750bde3ea972dfcf2289487c5234c4a5374e5ad`.
+[CI GitHub Pages](https://github.com/whitewolf06/gavia-ui/actions/runs/37869226619)
+на том же commit прошёл 18 сценариев проверки production-сборки и обновил
+[публичную витрину](https://whitewolf06.github.io/gavia-ui/).
+
+Команды установки и `publishedVersion` в репозитории обновлены после
+подтверждения npm; тег и опубликованный npm-архив сохранены.
+
 ## Выпуск 0.11.0
 
 [gavia-ui@0.11.0](https://www.npmjs.com/package/gavia-ui/v/0.11.0) опубликован
@@ -286,7 +342,7 @@ Publish job использует Node 24 и OIDC без постоянного n
 
 Версия исходников в заголовке и карточке проекта автоматически читается из
 манифеста библиотеки. `publishedVersion` в `project-info.ts` отдельно хранит
-последнюю подтверждённую npm-версию: сейчас `0.11.0`. Ссылка на npm и команда
+последнюю подтверждённую npm-версию: сейчас `0.11.1`. Ссылка на npm и команда
 установки используют именно её.
 
 Обновляйте `publishedVersion` только после проверки новой точной версии
@@ -301,12 +357,12 @@ Publish job использует Node 24 и OIDC без постоянного n
    следующей версии, например:
 
 ```bash
-git tag -a v0.11.1 -m "Gavia UI 0.11.1"
-git push origin v0.11.1
+git tag -a v0.11.2 -m "Gavia UI 0.11.2"
+git push origin v0.11.2
 ```
 
 Пример для следующего patch-выпуска. Используйте его после согласования
-версии 0.11.1 и обновления package.json.
+версии 0.11.2 и обновления package.json.
 Workflow повторяет проверки Node 18/24, браузеров и визуальных эталонов.
 Публикация разрешена только из `whitewolf06/gavia-ui`, только для тега,
 совпадающего с версией пакета, и после всех проверок. Обычный push и PR

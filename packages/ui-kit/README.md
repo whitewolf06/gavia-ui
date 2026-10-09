@@ -29,7 +29,8 @@ unit-тесты, покрытие Vitest/V8, браузеры, доступно�
 [Текущие запуски CI](https://github.com/whitewolf06/gavia-ui/actions).
 
 Версия исходников и архива пакета — **0.11.1**. [История изменений](CHANGELOG.md) ·
-[Миграция 0.11](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.11.0.md) ·
+[Обновление до 0.11.1](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.11.1.md) ·
+[Миграция типов 0.11](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.11.0.md) ·
 [Темы 0.10](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.10.0.md) ·
 [История ребрендинга](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-gavia.md).
 Код UI Kit — [MIT](LICENSE), файлы шрифта —
@@ -67,7 +68,7 @@ Classic и Classic Dark используют системный шрифт бе�
 
 ## Быстрый старт
 
-Установка 0.11.1 после публикации в npm:
+Установите библиотеку в Vue-приложение:
 
 ```bash
 pnpm add gavia-ui@0.11.1 vue

@@ -50,7 +50,7 @@ Classic, Classic Dark и Newspaper сохраняют свою типограф�
 проверяются по полям строки, а pt, слоты, события и refs получили точные типы.
 Некорректные входные значения нормализуются. Нужен TypeScript ≥ 5.4;
 при обновлении может потребоваться правка кода приложения.
-[Миграция 0.11](docs/migration-0.11.0.md) · [Контракты типов](docs/architecture.md#контракты-типов-данных) ·
+[Миграция типов 0.11](docs/migration-0.11.0.md) · [Контракты типов](docs/architecture.md#контракты-типов-данных) ·
 [Проверка API установленного пакета](docs/quality.md#проверка-новых-публичных-контрактов).
 
 ## Темы
@@ -88,11 +88,11 @@ Classic и Classic Dark используют системный шрифт бе�
 Установите библиотеку в Vue-приложение:
 
 ```bash
-pnpm add gavia-ui@0.11.0 vue
+pnpm add gavia-ui@0.11.1 vue
 # либо
-npm install gavia-ui@0.11.0 vue
+npm install gavia-ui@0.11.1 vue
 # либо
-bun add gavia-ui@0.11.0 vue
+bun add gavia-ui@0.11.1 vue
 ```
 
 Подключите стили и шрифт в точке входа, затем выберите тему Gavia:
@@ -137,7 +137,7 @@ import { WlButton } from "gavia-ui";
 - [Дизайн-система](docs/design-system.md) — токены, типографика, состояния и готовые сценарии.
 - [CSS-примитивы](docs/primitives.md) и [адаптивность](docs/responsiveness.md) — компоновка и правила размеров.
 - [Темы Gavia / Gavia Dark](docs/theme-gavia.md) и [шрифт Gavia Sans](docs/font-gavia.md) — палитра, подключение, образцы и лицензия.
-- [Changelog](CHANGELOG.md), [миграция 0.11](docs/migration-0.11.0.md), [темы 0.10](docs/migration-0.10.0.md), [история ребрендинга](docs/migration-gavia.md) и [проверенные выпуски](docs/releases.md) — история и обновление приложения.
+- [Changelog](CHANGELOG.md), [обновление до 0.11.1](docs/migration-0.11.1.md), [миграция типов 0.11](docs/migration-0.11.0.md), [темы 0.10](docs/migration-0.10.0.md), [история ребрендинга](docs/migration-gavia.md) и [проверенные выпуски](docs/releases.md) — история и обновление приложения.
 - [Архитектура playground](docs/playground.md) и [публикация Pages](docs/hosting.md).
 
 Создатель и сопровождающий — [Gorbach Dmitry](https://github.com/whitewolf06).
