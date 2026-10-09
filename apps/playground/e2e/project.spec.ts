@@ -21,12 +21,22 @@ const project = {
   npmPublished: true
 };
 import { parseChangelog } from "../src/project/changelog";
+import { localizeChangelogMarkdown } from "../src/project/changelog-localization";
+import { playgroundLocale, setPlaygroundLocale } from "../src/i18n";
 import type { ChangelogInline } from "../src/project/changelog";
 
-const history = parseChangelog(
-  readFileSync(fileURLToPath(new NodeURL("../../../CHANGELOG.md", import.meta.url)), "utf8"),
-  project.documentationBaseUrl
-);
+// Legacy RU scenarios assert the displayed Russian overlay over canonical Markdown.
+// Restore the Node-side locale before collecting other specs.
+const history = (() => {
+  const previousLocale = playgroundLocale.value;
+  try {
+    setPlaygroundLocale("ru");
+    const source = readFileSync(fileURLToPath(new NodeURL("../../../CHANGELOG.md", import.meta.url)), "utf8");
+    return parseChangelog(localizeChangelogMarkdown(source), project.documentationBaseUrl);
+  } finally {
+    setPlaygroundLocale(previousLocale);
+  }
+})();
 const inlineText = (content: ChangelogInline[]): string => content.map((part) => part.kind === "link" ? part.label : part.value).join("");
 
 test.beforeEach(async ({ page }) => {
@@ -58,7 +68,7 @@ test("home shows creator, source version, license and truthful package status wh
   await expect(packageStatus).toContainText("доступен в npm");
   await expect(packageStatus.getByRole("link", { name: `${project.packageName}@${publishedVersion}`, exact: true })).toHaveAttribute("href", project.packageUrl);
   await expect(packageStatus.locator("code")).toHaveText(`pnpm add ${project.packageName}@${publishedVersion}`);
-  await expect(page.locator(".pg-footer")).toContainText(`Автор: ${project.author.name}`);
+  await expect(page.locator(".pg-footer")).toContainText("Автор: Дмитрий Горбач");
   await expect(main.getByRole("link").filter({ has: page.getByRole("heading", { name: "Changelog", exact: true }) })).toHaveAttribute("href", "?view=changelog&theme=gavia&lang=ru");
 });
 
@@ -106,9 +116,11 @@ test("navigates from the design system, opens release anchors and restores the p
   await navigateMainView(page, "Дизайн-система");
   await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
   await page.goBack();
+  await expect(page).toHaveURL((url) => url.searchParams.get("view") === "changelog" && url.searchParams.get("lang") === "ru" && url.hash === `#${release.id}`);
   await expect(page.locator(".project-main")).toBeVisible();
-  await expectMainViewCurrent(page, "Changelog");
+  // Check restored scroll before header-menu interaction intentionally moves focus.
   await expect(page.locator(`#${release.id}-title`)).toBeInViewport();
+  await expectMainViewCurrent(page, "Changelog");
 });
 
 test("keeps Home information and Changelog readable with visible keyboard focus in all shipped themes", async ({ page }) => {

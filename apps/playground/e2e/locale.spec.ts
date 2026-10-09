@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { consumerSource } from "../../../scripts/example-source.mjs";
-import { chooseShowcaseLanguage, copyCodePanel } from "./select-helpers";
+import { chooseShowcaseLanguage, copyCodePanel, nativeReload } from "./select-helpers";
 
 const englishExamples = JSON.parse(readFileSync(new URL("../src/i18n/messages/examples.en.json", import.meta.url), "utf8")) as Record<string, string>;
 const russianExamples = JSON.parse(readFileSync(new URL("../src/i18n/messages/examples.ru.json", import.meta.url), "utf8")) as Record<string, string>;
@@ -101,7 +101,7 @@ test("the language selector preserves deep routes, themes and anchors through re
   await expectCopiedSource("ru");
   await chooseShowcaseLanguage(page, "en");
   await expectLanguage("en");
-  await page.reload();
+  await nativeReload(page);
   await expectLanguage("en");
   await page.goBack();
   await expectLanguage("ru");

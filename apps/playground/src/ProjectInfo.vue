@@ -1,31 +1,19 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "./i18n";
 const { t } = usePlaygroundI18n();
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import changelogSource from "../../../CHANGELOG.md?raw";
 import { gaviaProjectInfo as project } from "./project/project-info";
 import { localizeChangelogMarkdown } from "./project/changelog-localization";
 import { parseChangelog } from "./project/changelog";
 import ChangelogInline from "./project/ChangelogInline.vue";
 import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
+import { usePageAnchor } from "./usePageAnchor";
 
 const changelog = computed(() => parseChangelog(localizeChangelogMarkdown(changelogSource), project.documentationBaseUrl));
 const projectElement = ref<HTMLElement | null>(null);
 
-// Restore the anchor after the browser applies its history position and Vue mounts the lazy page.
-let anchorFrame: number | undefined;
-onMounted(() => {
-  if (!window.location.hash) return;
-  let id: string;
-  try { id = decodeURIComponent(window.location.hash.slice(1)); } catch { return; }
-  anchorFrame = window.requestAnimationFrame(() => {
-    const target = document.getElementById(id);
-    if (target && projectElement.value?.contains(target)) target.scrollIntoView({ block: "start" });
-  });
-});
-onBeforeUnmount(() => {
-  if (anchorFrame !== undefined) window.cancelAnimationFrame(anchorFrame);
-});
+usePageAnchor(projectElement);
 </script>
 
 <template>

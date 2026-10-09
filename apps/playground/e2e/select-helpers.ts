@@ -56,64 +56,86 @@ export async function copyCodePanel(panel: Locator, label = "Копироват�
   await button.click();
 }
 
+/** A closing overlay remains geometrically visible but is already inert. */
+async function openNavigationOverlay(trigger: Locator, overlay: Locator): Promise<void> {
+  if (await trigger.getAttribute("aria-expanded") !== "true") {
+    await expect(overlay).toHaveCount(0);
+    await trigger.click();
+  }
+  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+  await expect(overlay).toBeVisible();
+}
+
 /** Navigate through a visible desktop destination, its overflow menu, or the mobile drawer. */
 export async function navigateMainView(page: Page, label: string): Promise<void> {
   await expect(page.locator(".pg-header-inner")).toBeVisible();
   await page.evaluate(() => document.fonts.ready);
-  const desktopNavigation = page.locator(".pg-views");
-  if (await desktopNavigation.isVisible()) {
-    await expect.poll(() => desktopNavigation.evaluate((element) =>
-      element.scrollWidth - element.clientWidth
-    ), { message: "Desktop navigation fits after measuring its translated labels" }).toBeLessThanOrEqual(1);
-    const direct = desktopNavigation.getByRole("button", { name: label, exact: true });
-    if (await direct.isVisible()) await direct.click();
-    else {
-      const overflow = page.locator(".pg-views .pg-overflow-trigger");
-      const popup = page.locator(".pg-overflow-menu");
-      await expect(overflow).toBeVisible();
-      if (!await popup.isVisible()) await overflow.click();
-      await expect(overflow).toHaveAttribute("aria-expanded", "true");
-      await popup.getByRole("menuitem", { name: label, exact: true }).click();
-      await expect(overflow).toHaveAttribute("aria-expanded", "false");
-      await expect(popup).toHaveCount(0);
-    }
+  const mobileTrigger = page.locator(".pg-menu-trigger");
+  if (await mobileTrigger.isVisible()) {
+    const menu = page.getByRole("dialog", { name: "Разделы Gavia UI", exact: true });
+    await openNavigationOverlay(mobileTrigger, menu);
+    await menu.getByRole("navigation", { name: "Разделы Gavia UI", exact: true })
+      .getByRole("button", { name: label, exact: true }).click();
+    await expect(mobileTrigger).toHaveAttribute("aria-expanded", "false");
+    await expect(menu).toHaveCount(0);
     return;
   }
-
-  const trigger = page.getByRole("button", { name: "Открыть меню разделов", exact: true });
-  const menu = page.getByRole("dialog", { name: "Разделы Gavia UI", exact: true });
-  await expect(trigger).toBeVisible();
-  if (!await menu.isVisible()) await trigger.click();
-  await expect(trigger).toHaveAttribute("aria-expanded", "true");
-  await expect(menu).toBeVisible();
-  await menu.getByRole("navigation", { name: "Разделы Gavia UI", exact: true })
-    .getByRole("button", { name: label, exact: true }).click();
-  await expect(trigger).toHaveAttribute("aria-expanded", "false");
-  await expect(menu).toHaveCount(0);
+  const desktopNavigation = page.locator(".pg-views");
+  await expect(desktopNavigation).toBeVisible();
+  await expect.poll(() => desktopNavigation.evaluate((element) =>
+    element.scrollWidth - element.clientWidth
+  ), { message: "Desktop navigation fits after measuring its translated labels" }).toBeLessThanOrEqual(1);
+  const direct = desktopNavigation.getByRole("button", { name: label, exact: true });
+  if (await direct.isVisible()) await direct.click();
+  else {
+    const overflow = page.locator(".pg-views .pg-overflow-trigger");
+    const popup = page.locator(".pg-overflow-menu");
+    await expect(overflow).toBeVisible();
+    await openNavigationOverlay(overflow, popup);
+    await popup.getByRole("menuitem", { name: label, exact: true }).click();
+    await expect(overflow).toHaveAttribute("aria-expanded", "false");
+    await expect(popup).toHaveCount(0);
+  }
 }
 
 /** Hidden desktop destinations retain their current-page state on the overflow trigger and menu item. */
 export async function expectMainViewCurrent(page: Page, label: string): Promise<void> {
+  const markers: Record<string, string> = {
+    "Главная": '[data-testid="home-page"]', "Документация": '[data-testid="docs-page"]',
+    "Шрифт": '[data-testid="font-page"]', "Дизайн-система": "main#ds-top",
+    "Подбор темы": '[data-testid="theme-builder-page"]', Changelog: '[data-testid="changelog-page"]'
+  };
+  const marker = markers[label];
+  if (!marker) throw new Error("Unknown main-view destination: " + label);
+  // pushState precedes the Vue route flush, whose watcher closes the old menu.
+  // Wait for the actual destination before reopening More to inspect its state.
+  await expect(page.locator(marker)).toBeVisible();
+  await expect(page.locator(".pg-header-inner")).toBeVisible();
   const navigation = page.locator(".pg-views");
-  const direct = navigation.getByRole("button", { name: label, exact: true });
-  if (await navigation.isVisible() && !await direct.isVisible()) {
-    const trigger = page.locator(".pg-views .pg-overflow-trigger");
-    const popup = page.locator(".pg-overflow-menu");
-    await expect(trigger).toHaveAttribute("aria-current", "page");
-    if (!await popup.isVisible()) await trigger.click();
-    await expect(popup.getByRole("menuitem", { name: label, exact: true })).toHaveAttribute("aria-current", "page");
-    await page.keyboard.press("Escape");
-    await expect(popup).toHaveCount(0);
-    await expect(trigger).toBeFocused();
-  } else if (await navigation.isVisible()) await expect(direct).toHaveAttribute("aria-current", "page");
-  else {
-    const trigger = page.locator(".pg-menu-trigger");
+  const mobileTrigger = page.locator(".pg-menu-trigger");
+  // The desktop nav can appear after a lazy route finishes mounting. Only use
+  // the drawer branch when its actual trigger is visible at this viewport.
+  if (await mobileTrigger.isVisible()) {
     const drawer = page.getByRole("dialog", { name: "Разделы Gavia UI", exact: true });
-    if (!await drawer.isVisible()) await trigger.click();
+    await openNavigationOverlay(mobileTrigger, drawer);
     await expect(drawer.getByRole("navigation", { name: "Разделы Gavia UI", exact: true })
       .getByRole("button", { name: label, exact: true })).toHaveAttribute("aria-current", "page");
     await page.keyboard.press("Escape");
     await expect(drawer).toHaveCount(0);
+    await expect(mobileTrigger).toBeFocused();
+    return;
+  }
+  await expect(navigation).toBeVisible();
+  const direct = navigation.getByRole("button", { name: label, exact: true });
+  if (await direct.isVisible()) await expect(direct).toHaveAttribute("aria-current", "page");
+  else {
+    const trigger = page.locator(".pg-views .pg-overflow-trigger");
+    const popup = page.locator(".pg-overflow-menu");
+    await expect(trigger).toHaveAttribute("aria-current", "page");
+    await openNavigationOverlay(trigger, popup);
+    await expect(popup.getByRole("menuitem", { name: label, exact: true })).toHaveAttribute("aria-current", "page");
+    await page.keyboard.press("Escape");
+    await expect(popup).toHaveCount(0);
     await expect(trigger).toBeFocused();
   }
 }
@@ -140,4 +162,20 @@ export async function navigateDocumentationComponent(page: Page, name: string): 
   const workspace = docs.locator('[data-docs-component="' + name + '"]');
   await expect(workspace).toBeVisible();
   return workspace;
+}
+
+/** Native reload must preserve the browser history rather than add an entry. */
+export async function nativeReload(page: Page): Promise<void> {
+  const url = page.url();
+  const historyLength = await page.evaluate(() => history.length);
+  // Playwright's Firefox reload has injected history entries; exercise the
+  // browser's native operation: https://github.com/microsoft/playwright/issues/22640
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: "domcontentloaded" }),
+    page.evaluate(() => window.location.reload())
+  ]);
+  await expect(page).toHaveURL(url);
+  await expect.poll(() => page.evaluate(() => history.length), {
+    message: "Native reload preserves the existing history entries"
+  }).toBe(historyLength);
 }

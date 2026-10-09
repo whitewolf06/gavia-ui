@@ -70,6 +70,8 @@ test.beforeEach(async ({ page, baseURL }) => {
   // The former gallery URL remains a supported alias, including the Pages prefix.
   const docsUrl = new URL("?view=components", baseURL ?? "http://127.0.0.1:4173/").href;
   await page.goto(russianPlaygroundUrl(docsUrl), { waitUntil: "domcontentloaded" });
+  // The SPA bootstrap and Docs chunk can finish after the static document loads.
+  await page.getByTestId("docs-page").waitFor({ state: "visible" });
   await expect(page.getByTestId("docs-page").getByRole("heading", { level: 1 })).toHaveText("Документация");
   await expect.poll(() => new URL(page.url()).searchParams.get("view")).toBe("docs");
   await page.addStyleTag({ content: "html { scroll-behavior: auto; }" });
