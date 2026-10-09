@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "./i18n";
+const { t } = usePlaygroundI18n();
 import { computed, ref, watch } from "vue";
 import type { WlThemeName } from "../../../packages/ui-kit/src/types";
 import { withPlaygroundTheme } from "./themes";
@@ -23,7 +25,7 @@ import { consumerSource } from "./design-system/code";
 const props = defineProps<{ theme: WlThemeName }>();
 const isDarkTheme = computed(() => wlDesignThemes.find((item) => item.name === props.theme)?.colorScheme === "dark");
 const nightArtReady = ref(false);
-const themeToggleLabel = computed(() => isDarkTheme.value ? "Включить светлую тему" : "Включить тёмную тему");
+const themeToggleLabel = computed(() => isDarkTheme.value ? t('shell.HomePage.text54') : t('shell.HomePage.text55'));
 const themedHref = (href: string): string => withPlaygroundTheme(href, props.theme);
 const pageElement = ref<HTMLElement | null>(null);
 usePageAnchor(pageElement);
@@ -56,29 +58,19 @@ async function copyInstall(): Promise<void> {
   }
 }
 const sections = [
-  { view: "docs", number: "01", icon: "book", title: "Документация", description: "Подключение библиотеки и работа с компонентами: примеры, настройки, API и доступность." },
-  { view: "system", number: "02", icon: "image", title: "Дизайн-система", description: "Токены, типографика, состояния компонентов и примеры в пяти темах." },
-  { view: "project", number: "03", icon: "file", title: "Changelog", description: "Что изменилось в выпущенных версиях, что подготовлено и что учесть при обновлении." }
+  { view: "docs", number: "01", icon: "book", title: t('shell.HomePage.text56'), description: t('shell.HomePage.text57') },
+  { view: "system", number: "02", icon: "image", title: t('shell.HomePage.text58'), description: t('shell.HomePage.text59') },
+  { view: "project", number: "03", icon: "file", title: "Changelog", description: t('shell.HomePage.text60') }
 ] as const;
 const metrics = [
-  { label: "Компонентов", value: wlManifest.length, icon: "box", caption: "" },
-  { label: "Иконок", value: WL_ICON_NAMES.length, icon: "image", caption: "" },
-  { label: "Токенов", value: wlDesignTokens.length, icon: "database", caption: "Цвета, отступы, типографика" },
-  { label: "Темы", value: wlDesignThemes.length, icon: "grid", caption: "Светлые и тёмные темы" }
+  { label: t('shell.HomePage.text61'), value: wlManifest.length, icon: "box", caption: "" },
+  { label: t('shell.HomePage.text62'), value: WL_ICON_NAMES.length, icon: "image", caption: "" },
+  { label: t('shell.HomePage.text63'), value: wlDesignTokens.length, icon: "database", caption: t('shell.HomePage.text64') },
+  { label: t('shell.HomePage.text65'), value: wlDesignThemes.length, icon: "grid", caption: t('shell.HomePage.text66') }
 ] as const;
 const buttonPreview = { variant: "primary" } as const;
 const buttonSource = consumerSource(buttonExampleSource, buttonPreview);
-const setupSource = `import { createApp } from "vue";
-import App from "./App.vue";
-
-// Стили подключаются явно: reset → base → примитивы → тема.
-import "gavia-ui/styles/reset.css";
-import "gavia-ui/styles/base.css";
-import "gavia-ui/styles/primitives.css";
-import "gavia-ui/themes/white.css";
-
-document.documentElement.dataset.wlTheme = "white";
-createApp(App).mount("#app");`;
+const setupSource = t('shell.HomePage.text67');
 </script>
 
 <template>
@@ -104,20 +96,20 @@ createApp(App).mount("#app");`;
       <div class="home-intro wl-stack" data-space="lg">
         <div class="home-kicker wl-inline" data-space="sm">
           <span class="home-chip">Vue 3 + TypeScript</span>
-          <span class="wl-text-small wl-text-muted" title="Версия исходников">v<span data-testid="project-version">{{ project.version }}</span></span>
+          <span class="wl-text-small wl-text-muted" :title="t('shell.HomePage.text68')">v<span data-testid="project-version">{{ project.version }}</span></span>
         </div>
         <h1 id="home-title" class="home-title">Gavia UI</h1>
-        <p class="home-tagline">Библиотека компонентов для Vue&nbsp;3.</p>
-        <p class="home-lead wl-text-body wl-text-muted">Кнопки, поля, таблицы и иконки. Общие токены, пять тем оформления и примеры с кодом.</p>
-        <nav class="wl-inline" data-space="md" aria-label="Начать работу с Gavia UI">
-          <a class="home-action wl-btn wl-btn--primary wl-btn--md" data-wl="button" data-variant="primary" data-size="md" data-density="default" :href="themedHref('?view=docs')" @click.prevent="emit('navigate', 'docs')">Читать документацию <WlIcon name="arrow-right" :size="18" /></a>
-          <a class="home-action wl-btn wl-btn--secondary wl-btn--md" data-wl="button" data-variant="secondary" data-size="md" data-density="default" :href="themedHref('?view=docs#docs-components')" @click.prevent="emit('catalog')">Все компоненты</a>
+        <p class="home-tagline">{{ t('shell.HomePage.text69') }}</p>
+        <p class="home-lead wl-text-body wl-text-muted">{{ t('shell.HomePage.text70') }}</p>
+        <nav class="wl-inline" data-space="md" :aria-label="t('shell.HomePage.text71')">
+          <a class="home-action wl-btn wl-btn--primary wl-btn--md" data-wl="button" data-variant="primary" data-size="md" data-density="default" :href="themedHref('?view=docs')" @click.prevent="emit('navigate', 'docs')">{{ t('shell.HomePage.text72') }} <WlIcon name="arrow-right" :size="18" /></a>
+          <a class="home-action wl-btn wl-btn--secondary wl-btn--md" data-wl="button" data-variant="secondary" data-size="md" data-density="default" :href="themedHref('?view=docs#docs-components')" @click.prevent="emit('catalog')">{{ t('shell.HomePage.text73') }}</a>
         </nav>
         <div class="home-font-entry">
-          <WlButton size="sm" variant="soft" @click="emit('navigate', 'font')"><template #icon><WlIcon name="book" :size="16" /></template>Шрифт Gavia Sans</WlButton>
-          <span class="wl-text-small">6 весов · 12 начертаний</span>
+          <WlButton size="sm" variant="soft" @click="emit('navigate', 'font')"><template #icon><WlIcon name="book" :size="16" /></template>{{ t('shell.HomePage.text74') }}</WlButton>
+          <span class="wl-text-small">{{ t('shell.HomePage.text75') }}</span>
         </div>
-        <p class="home-credit wl-text-small wl-text-muted">Автор — <a class="home-text-link" :href="project.author.url">{{ project.author.name }}</a>. <a class="home-text-link" :href="project.licenseUrl">{{ project.license }}</a> · <a class="home-text-link" :href="project.repositoryUrl">GitHub <WlIcon name="external-link" :size="13" /></a></p>
+        <p class="home-credit wl-text-small wl-text-muted">{{ t('shell.HomePage.text76') }} <a class="home-text-link" :href="project.author.url">{{ project.author.name }}</a>. <a class="home-text-link" :href="project.licenseUrl">{{ project.license }}</a> · <a class="home-text-link" :href="project.repositoryUrl">GitHub <WlIcon name="external-link" :size="13" /></a></p>
       </div>
       </div>
     </header>
@@ -127,19 +119,19 @@ createApp(App).mount("#app");`;
       <section class="home-install-card wl-stack" data-space="lg" aria-labelledby="home-install-title" data-testid="project-npm-status">
         <div class="home-install-brand">
           <span class="home-mark home-mark-mask" aria-hidden="true" :style="{ maskImage: 'url(' + gaviaMarkUrl + ')', WebkitMaskImage: 'url(' + gaviaMarkUrl + ')' }" />
-          <div class="wl-stack" data-space="xs"><p v-if="project.npmPublished" class="wl-text-small wl-text-muted">Пакет <a class="home-text-link" :href="project.packageUrl">{{ project.packageName }}@{{ project.publishedVersion }}</a> доступен в npm.</p><p v-else class="wl-text-small wl-text-muted">{{ project.packageName }} ещё не опубликован в npm. Подключение из исходников описано ниже.</p></div>
+          <div class="wl-stack" data-space="xs"><p v-if="project.npmPublished" class="wl-text-small wl-text-muted">{{ t('shell.HomePage.text77') }} <a class="home-text-link" :href="project.packageUrl">{{ project.packageName }}@{{ project.publishedVersion }}</a> {{ t('shell.HomePage.text78') }}</p><p v-else class="wl-text-small wl-text-muted">{{ project.packageName }} {{ t('shell.HomePage.text79') }}</p></div>
         </div>
-        <h2 id="home-install-title" class="wl-text-heading">Добавьте Gavia UI в проект</h2>
-        <WlSegmented v-if="project.npmPublished" v-model="installManager" :options="installationManagers" aria-label="Менеджер пакетов для установки" />
+        <h2 id="home-install-title" class="wl-text-heading">{{ t('shell.HomePage.text80') }}</h2>
+        <WlSegmented v-if="project.npmPublished" v-model="installManager" :options="installationManagers" :aria-label="t('shell.HomePage.text81')" />
         <code v-if="project.npmPublished" class="home-install-command wl-text-code" data-testid="home-install">{{ installCommand }}</code>
         <div class="wl-inline" data-space="md">
-          <WlButton v-if="project.npmPublished" size="sm" variant="secondary" :loading="pending" @click="copyInstall"><template #icon><WlIcon :name="copied ? 'check' : 'copy'" :size="16" /></template>{{ copied ? 'Скопировано' : 'Копировать команду' }}</WlButton>
-          <a class="home-text-link wl-text-small" href="#home-quickstart">Пример подключения</a>
+          <WlButton v-if="project.npmPublished" size="sm" variant="secondary" :loading="pending" @click="copyInstall"><template #icon><WlIcon :name="copied ? 'check' : 'copy'" :size="16" /></template>{{ copied ? t('shell.HomePage.text82') : t('shell.HomePage.text83') }}</WlButton>
+          <a class="home-text-link wl-text-small" href="#home-quickstart">{{ t('shell.HomePage.text84') }}</a>
         </div>
-        <p class="home-copy-status wl-text-small wl-text-muted" role="status">{{ copied ? 'Команда установки скопирована.' : manual ? 'Буфер обмена недоступен. Скопируйте команду из поля ниже.' : 'Для работы библиотеки нужен Vue 3.' }}</p>
-        <textarea v-if="manual" class="home-manual-copy" readonly :value="installCommand" aria-label="Команда установки для ручного копирования" @focus="($event.target as HTMLTextAreaElement).select()" />
+        <p class="home-copy-status wl-text-small wl-text-muted" role="status">{{ copied ? t('shell.HomePage.text85') : manual ? t('shell.HomePage.text86') : t('shell.HomePage.text87') }}</p>
+        <textarea v-if="manual" class="home-manual-copy" readonly :value="installCommand" :aria-label="t('shell.HomePage.text88')" @focus="($event.target as HTMLTextAreaElement).select()" />
       </section>
-    <dl class="home-metrics" aria-label="Состав библиотеки">
+    <dl class="home-metrics" :aria-label="t('shell.HomePage.text89')">
       <div v-for="metric in metrics" :key="metric.label" class="home-metric">
         <dt class="home-metric-label"><span class="home-metric-icon" aria-hidden="true"><WlIcon :name="metric.icon" :size="25" /></span>{{ metric.label }}</dt>
         <dd class="home-metric-value">{{ metric.value }}</dd>
@@ -149,30 +141,39 @@ createApp(App).mount("#app");`;
     </div>
 
     <section class="wl-stack" data-space="lg" aria-labelledby="home-sections-title">
-      <div class="home-section-heading"><h2 id="home-sections-title" class="wl-text-title">Разделы</h2></div>
-      <nav class="home-sections" aria-label="Разделы Gavia UI">
+      <div class="home-section-heading"><h2 id="home-sections-title" class="wl-text-title">{{ t('shell.HomePage.text90') }}</h2></div>
+      <nav class="home-sections" :aria-label="t('shell.HomePage.text91')">
         <a v-for="section in sections" :key="section.view" class="home-section-card wl-stack" data-space="lg" :href="themedHref(`?view=${section.view === 'project' ? 'changelog' : section.view}`)" @click.prevent="emit('navigate', section.view)">
           <div class="home-card-top"><span class="home-card-icon"><WlIcon :name="section.icon" :size="22" /></span><span class="home-card-number wl-text-code">{{ section.number }}</span></div>
           <div class="wl-stack" data-space="sm"><h3 class="wl-text-heading">{{ section.title }}</h3><p class="wl-text-small wl-text-muted">{{ section.description }}</p></div>
           <span class="home-card-arrow" aria-hidden="true"><WlIcon name="arrow-right" :size="20" /></span>
         </a>
       </nav>
-      <p class="wl-text-small wl-text-muted">Настройте цвета в разделе <a class="home-text-link" :href="themedHref('?view=theme-builder')" @click.prevent="emit('navigate', 'theme-builder')">«Подбор темы» <WlIcon name="arrow-right" :size="14" /></a>.</p>
+      <p class="wl-text-small wl-text-muted">{{ t('shell.HomePage.text92') }} <a class="home-text-link" :href="themedHref('?view=theme-builder')" @click.prevent="emit('navigate', 'theme-builder')">{{ t('shell.HomePage.text93') }} <WlIcon name="arrow-right" :size="14" /></a>.</p>
+    </section>
+
+    <section id="home-author" class="home-author wl-stack" data-space="md" aria-labelledby="home-author-title">
+      <h2 id="home-author-title" class="wl-text-title">{{ t('shell.author.title') }}</h2>
+      <p class="wl-text-body">{{ t('shell.author.intro') }}</p>
+      <p class="wl-text-body">{{ t('shell.author.reason') }}</p>
+      <p class="wl-text-body">{{ t('shell.author.history') }}</p>
+      <p class="wl-text-body">{{ t('shell.author.interests') }}</p>
+      <p class="wl-text-body">{{ t('shell.author.contact') }} <a class="home-text-link" href="https://gorbach-dev.ru/">{{ t('shell.author.site') }}</a>.</p>
     </section>
 
     <section id="home-project" class="home-project wl-stack" data-space="lg" aria-labelledby="home-project-title" data-testid="home-project-info">
-      <h2 id="home-project-title" class="wl-text-title">Лицензия и участие в проекте</h2>
+      <h2 id="home-project-title" class="wl-text-title">{{ t('shell.HomePage.text94') }}</h2>
       <div class="home-project-grid">
         <article class="home-project-panel home-project-panel--forest">
           <img class="home-project-art" :class="{ 'home-project-art--dark': isDarkTheme }" :src="gaviaForestUrl" alt="" aria-hidden="true" width="2172" height="724" loading="lazy" decoding="async" />
           <span class="home-project-icon" aria-hidden="true"><WlIcon name="heart" :size="25" /></span>
           <div class="home-project-copy wl-stack" data-space="md">
-            <h3 class="wl-text-heading">Бесплатно для личных и коммерческих проектов</h3>
-            <p class="wl-text-body wl-text-muted">Gavia UI можно использовать, изменять и распространять, в том числе в коммерческих проектах. Сохраняйте текст лицензии MIT и уведомление об авторских правах.</p>
-            <nav class="wl-stack" data-space="sm" aria-label="Документация подключения">
-              <a class="home-text-link wl-text-small" :href="project.instructionsUrl" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">Подключение и <span class="home-external-link-tail">инструкции <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>
-              <a class="home-text-link wl-text-small" :href="project.documentationBaseUrl + 'docs/design-system.md'" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">Правила <span class="home-external-link-tail">дизайн-системы <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>
-              <a class="home-text-link wl-text-small" :href="project.documentationBaseUrl + 'docs/migration-gavia.md'" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">Переход на Gavia <span class="home-external-link-tail">UI <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>
+            <h3 class="wl-text-heading">{{ t('shell.HomePage.text95') }}</h3>
+            <p class="wl-text-body wl-text-muted">{{ t('shell.HomePage.text96') }}</p>
+            <nav class="wl-stack" data-space="sm" :aria-label="t('shell.HomePage.text97')">
+              <a class="home-text-link wl-text-small" :href="project.instructionsUrl" target="_blank" rel="noopener noreferrer" :title="t('shell.HomePage.text98')">{{ t('shell.HomePage.text99') }} <span class="home-external-link-tail">{{ t('shell.HomePage.text100') }} <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>
+              <a class="home-text-link wl-text-small" :href="project.documentationBaseUrl + 'docs/design-system.md'" target="_blank" rel="noopener noreferrer" :title="t('shell.HomePage.text101')">{{ t('shell.HomePage.text102') }} <span class="home-external-link-tail">{{ t('shell.HomePage.text103') }} <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>
+              <a class="home-text-link wl-text-small" :href="project.documentationBaseUrl + 'docs/migration-gavia.md'" target="_blank" rel="noopener noreferrer" :title="t('shell.HomePage.text104')">{{ t('shell.HomePage.text105') }} <span class="home-external-link-tail">UI <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>
             </nav>
           </div>
         </article>
@@ -180,19 +181,19 @@ createApp(App).mount("#app");`;
           <img class="home-project-art" :class="{ 'home-project-art--dark': isDarkTheme }" :src="gaviaReedsUrl" alt="" aria-hidden="true" width="2172" height="724" loading="lazy" decoding="async" />
           <span class="home-project-icon" aria-hidden="true"><WlIcon name="users" :size="25" /></span>
           <div class="home-project-copy wl-stack" data-space="md">
-            <h3 class="wl-text-heading">Ошибки и предложения</h3>
-            <p class="wl-text-body wl-text-muted">Об ошибках и предложениях пишите в <a class="home-text-link" :href="project.repositoryUrl + '/issues'" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">GitHub <span class="home-external-link-tail">Issues <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>. Если хотите внести изменения в код, прочитайте <a class="home-text-link" :href="project.contributingUrl" target="_blank" rel="noopener noreferrer" title="Откроется в новой вкладке">руководство для <span class="home-external-link-tail">участников <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>.</p>
-            <p class="wl-text-small wl-text-muted">Перед обновлением прочитайте Changelog и заметки о миграции.</p>
+            <h3 class="wl-text-heading">{{ t('shell.HomePage.text106') }}</h3>
+            <p class="wl-text-body wl-text-muted">{{ t('shell.HomePage.text107') }} <a class="home-text-link" :href="project.repositoryUrl + '/issues'" target="_blank" rel="noopener noreferrer" :title="t('shell.HomePage.text108')">GitHub <span class="home-external-link-tail">Issues <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>{{ t('shell.HomePage.text109') }} <a class="home-text-link" :href="project.contributingUrl" target="_blank" rel="noopener noreferrer" :title="t('shell.HomePage.text110')">{{ t('shell.HomePage.text111') }} <span class="home-external-link-tail">{{ t('shell.HomePage.text112') }} <WlIcon name="external-link" :size="13" aria-hidden="true" /></span></a>.</p>
+            <p class="wl-text-small wl-text-muted">{{ t('shell.HomePage.text113') }}</p>
           </div>
         </article>
       </div>
     </section>
 
     <section id="home-quickstart" class="home-quickstart wl-stack" data-space="lg" aria-labelledby="home-quickstart-title">
-      <div class="home-section-heading"><div class="wl-stack" data-space="xs"><h2 id="home-quickstart-title" class="wl-text-title">Подключение и пример кнопки</h2><p class="wl-text-small wl-text-muted">Подключите стили и тему, затем импортируйте компонент. В примере используется Classic. Для Gavia и Gavia Dark дополнительно подключите CSS шрифта и выберите тему gavia или gavia-dark. Gavia Dark доступна с версии 0.10.0.</p></div><a class="home-text-link wl-text-small" :href="themedHref('?view=docs&component=WlButton')" @click.prevent="emit('component', 'WlButton')">Документация WlButton <WlIcon name="arrow-right" :size="16" /></a></div>
+      <div class="home-section-heading"><div class="wl-stack" data-space="xs"><h2 id="home-quickstart-title" class="wl-text-title">{{ t('shell.HomePage.text114') }}</h2><p class="wl-text-small wl-text-muted">{{ t('shell.HomePage.text115') }}</p></div><a class="home-text-link wl-text-small" :href="themedHref('?view=docs&component=WlButton')" @click.prevent="emit('component', 'WlButton')">{{ t('shell.HomePage.text116') }} <WlIcon name="arrow-right" :size="16" /></a></div>
       <div class="home-quickstart-grid">
-        <article class="home-setup-panel wl-stack" data-space="lg" aria-labelledby="home-setup-title"><div class="wl-stack" data-space="sm"><p class="home-panel-label wl-text-small">01 / main.ts</p><h3 id="home-setup-title" class="wl-text-subheading">Стили и тема</h3><p class="wl-text-small wl-text-muted">Базовые компоненты работают без установки плагина.</p></div><CodePanel :source="setupSource" title="Показать main.ts" /></article>
-        <article class="home-button-panel wl-stack" data-space="lg" aria-labelledby="home-button-title"><div class="wl-stack" data-space="sm"><p class="home-panel-label wl-text-small">02 / App.vue</p><h3 id="home-button-title" class="wl-text-subheading">Пример кнопки</h3></div><div class="home-button-preview"><ButtonExample :preview="buttonPreview" /></div><CodePanel :source="buttonSource" title="Показать App.vue" /></article>
+        <article class="home-setup-panel wl-stack" data-space="lg" aria-labelledby="home-setup-title"><div class="wl-stack" data-space="sm"><p class="home-panel-label wl-text-small">01 / main.ts</p><h3 id="home-setup-title" class="wl-text-subheading">{{ t('shell.HomePage.text117') }}</h3><p class="wl-text-small wl-text-muted">{{ t('shell.HomePage.text118') }}</p></div><CodePanel :source="setupSource" :title="t('shell.HomePage.text119')" /></article>
+        <article class="home-button-panel wl-stack" data-space="lg" aria-labelledby="home-button-title"><div class="wl-stack" data-space="sm"><p class="home-panel-label wl-text-small">02 / App.vue</p><h3 id="home-button-title" class="wl-text-subheading">{{ t('shell.HomePage.text120') }}</h3></div><div class="home-button-preview"><ButtonExample :preview="buttonPreview" /></div><CodePanel :source="buttonSource" :title="t('shell.HomePage.text121')" /></article>
       </div>
     </section>
     <QualitySummary :href="themedHref('?view=docs&section=quality')" @navigate="emit('quality')" />
@@ -260,6 +261,7 @@ createApp(App).mount("#app");`;
 .home-section-card h3 { font-weight: 600; }
 .home-section-card p { padding-inline-end: 46px; }
 .home-card-arrow { position: absolute; inset-inline-end: var(--wl-space-md); inset-block-end: var(--wl-space-md); display: inline-flex; justify-content: center; align-items: center; width: 40px; height: 40px; border-radius: 50%; color: var(--wl-text); background: color-mix(in srgb, var(--wl-text) 6%, transparent); }
+.home-author { max-width: 76ch; }
 .home-project { scroll-margin-block-start: var(--wl-space-4xl); }
 .home-project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--wl-space-lg); }
 .home-project-panel { position: relative; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: 48px minmax(0, 1fr); align-items: start; gap: var(--wl-space-lg); min-width: 0; padding: var(--wl-space-xl); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg); }

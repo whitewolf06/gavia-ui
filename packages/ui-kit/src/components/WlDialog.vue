@@ -3,10 +3,11 @@ import type { WlPt } from "../pt-types";
 import type { WlNoModelModifiers } from "../model-types";
 import { useWlId } from "../utils/useWlId";
 import { computed, ref, useAttrs } from "vue";
-import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
+import { mergeWlAttrs, useWlMotion, useWlPt, useWlLocale } from "../config";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import WlIcon from "./WlIcon.vue";
+const locale = useWlLocale();
 
 defineOptions({ inheritAttrs: false });
 defineSlots<{ default?(props: {}): unknown; header?(props: {}): unknown; footer?(props: {}): unknown }>();
@@ -63,7 +64,7 @@ function onMask(event: MouseEvent): void {
             <span v-if="header" v-bind="section('title')" :id="titleId" class="wl-dialog__title">{{ header }}</span>
           </slot>
           <div v-if="closable" v-bind="section('headerActions')" class="wl-dialog__actions">
-            <button v-bind="section('pcCloseButton.root')" type="button" class="wl-overlay-close" aria-label="Закрыть"
+            <button v-bind="section('pcCloseButton.root')" type="button" class="wl-overlay-close" :aria-label="locale.close"
               @click="visible = false"><WlIcon v-bind="section('pcCloseButton.icon')" name="x" :size="14" /></button>
           </div>
         </header>

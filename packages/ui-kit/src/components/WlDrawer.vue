@@ -3,11 +3,12 @@ import type { WlPt } from "../pt-types";
 import type { WlNoModelModifiers } from "../model-types";
 import { useWlId } from "../utils/useWlId";
 import { computed, ref, useAttrs } from "vue";
-import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
+import { mergeWlAttrs, useWlMotion, useWlPt, useWlLocale } from "../config";
 import type { WlDrawerPosition } from "../types";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import WlIcon from "./WlIcon.vue";
+const locale = useWlLocale();
 
 defineOptions({ inheritAttrs: false });
 defineSlots<{ default?(props: {}): unknown; header?(props: {}): unknown; footer?(props: {}): unknown }>();
@@ -63,7 +64,7 @@ function onMask(event: MouseEvent): void {
             <span v-bind="section('title')" :id="titleId" class="wl-drawer__title">{{ header }}</span>
           </slot>
           <button v-bind="section('pcCloseButton.root')" type="button" class="wl-overlay-close"
-            aria-label="Закрыть" @click="visible = false"><WlIcon v-bind="section('pcCloseButton.icon')" name="x" :size="14" /></button>
+            :aria-label="locale.close" @click="visible = false"><WlIcon v-bind="section('pcCloseButton.icon')" name="x" :size="14" /></button>
         </header>
         <div v-bind="section('content')" class="wl-drawer__content"><slot /></div>
         <footer v-if="$slots.footer" v-bind="section('footer')" class="wl-drawer__footer"><slot name="footer" /></footer>

@@ -1,5 +1,72 @@
+/** Built-in control text. Explicit component props retain priority over these defaults. */
+export interface WlControlLocale {
+  localeCode?: string;
+  close?: string;
+  remove?: string;
+  loading?: string;
+  options?: string;
+  noOptions?: string;
+  filter?: string;
+  selectedItems?: string;
+  removeItem?: string;
+  breadcrumbs?: string;
+  showOptions?: string;
+  password?: string;
+  showPassword?: string;
+  hidePassword?: string;
+  colorPalette?: string;
+  colorHex?: string;
+  searchPlaceholder?: string;
+  noResults?: string;
+  searching?: string;
+  commandPalette?: string;
+  confirmation?: string;
+  datePlaceholder?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  chooseDateForLabel?: string;
+  newDateRange?: string;
+  chooseMonthCurrent?: string;
+  chooseYearCurrent?: string;
+  monthsOfYear?: string;
+  yearsRange?: string;
+  chooseFiles?: string;
+  fileDropLabel?: string;
+  dropFiles?: string;
+  fileByteUnit?: string;
+  fileKilobyteUnit?: string;
+  fileMegabyteUnit?: string;
+  decimalSeparator?: string;
+  fileUnsupportedType?: string;
+  fileTooLarge?: string;
+  fileSizeLimit?: string;
+  fileCountLimit?: string;
+  fileTooMany?: string;
+  filters?: string;
+  reset?: string;
+  apply?: string;
+  closeFilters?: string;
+  decrease?: string;
+  increase?: string;
+  pages?: string;
+  firstPage?: string;
+  prevPage?: string;
+  nextPage?: string;
+  lastPage?: string;
+  pageNumber?: string;
+  of?: string;
+  mainNavigation?: string;
+  pinSidebar?: string;
+  unpinSidebar?: string;
+  closeNavigation?: string;
+  noData?: string;
+  eventOne?: string;
+  eventFew?: string;
+  eventMany?: string;
+}
+
 /** Date-picker locale input accepts regular arrays and readonly application constants. */
-export interface WlDatePickerLocale {
+export interface WlDatePickerLocale extends WlControlLocale {
   firstDayOfWeek?: number;
   dayNames?: readonly string[];
   dayNamesShort?: readonly string[];
@@ -39,7 +106,7 @@ export interface WlLocale extends WlDatePickerLocale {
   nextMonth: string;
 }
 
-/** Resolved locale: every known field is available after normalization. */
+/** Retains the previous required date fields; added control text stays optional for consumers. */
 export interface WlResolvedLocale extends WlLocale {
   dayNames: string[];
   dayNamesShort: string[];

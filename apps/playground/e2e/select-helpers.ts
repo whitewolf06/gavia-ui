@@ -23,10 +23,16 @@ export async function chooseShowcaseTheme(page: Page, label: string): Promise<vo
 }
 
 
+/** The persistent language selector uses the same keyboard and dismissal contract as other selects. */
+export async function chooseShowcaseLanguage(page: Page, language: "en" | "ru"): Promise<void> {
+  await chooseDropdownOption(page, page.getByTestId("pg-language-selector"), language === "en" ? "EN" : "RU");
+  await expect(page.locator("html")).toHaveAttribute("lang", language);
+}
+
 /** Reveal the code-frame action through the public hover interaction before copying. */
-export async function copyCodePanel(panel: Locator): Promise<void> {
+export async function copyCodePanel(panel: Locator, label = "Копировать код"): Promise<void> {
   await panel.locator(".ds-source-frame").hover();
-  const button = panel.getByRole("button", { name: "Копировать код", exact: true });
+  const button = panel.getByRole("button", { name: label, exact: true });
   await button.scrollIntoViewIfNeeded();
   await button.focus();
   await expect(button).toBeFocused();
@@ -50,12 +56,27 @@ export async function copyCodePanel(panel: Locator): Promise<void> {
   await button.click();
 }
 
-/** Navigate through the visible desktop links or the compact drawer. */
+/** Navigate through a visible desktop destination, its overflow menu, or the mobile drawer. */
 export async function navigateMainView(page: Page, label: string): Promise<void> {
   await expect(page.locator(".pg-header-inner")).toBeVisible();
-  const desktopNavigation = page.getByRole("navigation", { name: "Основная навигация Gavia UI", exact: true });
+  await page.evaluate(() => document.fonts.ready);
+  const desktopNavigation = page.locator(".pg-views");
   if (await desktopNavigation.isVisible()) {
-    await desktopNavigation.getByRole("button", { name: label, exact: true }).click();
+    await expect.poll(() => desktopNavigation.evaluate((element) =>
+      element.scrollWidth - element.clientWidth
+    ), { message: "Desktop navigation fits after measuring its translated labels" }).toBeLessThanOrEqual(1);
+    const direct = desktopNavigation.getByRole("button", { name: label, exact: true });
+    if (await direct.isVisible()) await direct.click();
+    else {
+      const overflow = page.locator(".pg-views .pg-overflow-trigger");
+      const popup = page.locator(".pg-overflow-menu");
+      await expect(overflow).toBeVisible();
+      if (!await popup.isVisible()) await overflow.click();
+      await expect(overflow).toHaveAttribute("aria-expanded", "true");
+      await popup.getByRole("menuitem", { name: label, exact: true }).click();
+      await expect(overflow).toHaveAttribute("aria-expanded", "false");
+      await expect(popup).toHaveCount(0);
+    }
     return;
   }
 
@@ -69,6 +90,32 @@ export async function navigateMainView(page: Page, label: string): Promise<void>
     .getByRole("button", { name: label, exact: true }).click();
   await expect(trigger).toHaveAttribute("aria-expanded", "false");
   await expect(menu).toHaveCount(0);
+}
+
+/** Hidden desktop destinations retain their current-page state on the overflow trigger and menu item. */
+export async function expectMainViewCurrent(page: Page, label: string): Promise<void> {
+  const navigation = page.locator(".pg-views");
+  const direct = navigation.getByRole("button", { name: label, exact: true });
+  if (await navigation.isVisible() && !await direct.isVisible()) {
+    const trigger = page.locator(".pg-views .pg-overflow-trigger");
+    const popup = page.locator(".pg-overflow-menu");
+    await expect(trigger).toHaveAttribute("aria-current", "page");
+    if (!await popup.isVisible()) await trigger.click();
+    await expect(popup.getByRole("menuitem", { name: label, exact: true })).toHaveAttribute("aria-current", "page");
+    await page.keyboard.press("Escape");
+    await expect(popup).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+  } else if (await navigation.isVisible()) await expect(direct).toHaveAttribute("aria-current", "page");
+  else {
+    const trigger = page.locator(".pg-menu-trigger");
+    const drawer = page.getByRole("dialog", { name: "Разделы Gavia UI", exact: true });
+    if (!await drawer.isVisible()) await trigger.click();
+    await expect(drawer.getByRole("navigation", { name: "Разделы Gavia UI", exact: true })
+      .getByRole("button", { name: label, exact: true })).toHaveAttribute("aria-current", "page");
+    await page.keyboard.press("Escape");
+    await expect(drawer).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+  }
 }
 
 /** Open the compact Docs catalog without toggling an already open menu. */

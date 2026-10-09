@@ -1,11 +1,11 @@
-# Гарнитура Gavia Sans
+# Gavia Sans typeface
 
-Gavia Sans 0.6 входит в пакет. Это основной шрифт тем Gavia и Gavia Dark:
-кириллица и латиница, 780 символов, шесть весов:
-Thin 100, Light 300, Regular 400, Medium 500, SemiBold 600, Bold 700.
-Для каждого веса есть отдельные прямой и наклонный файлы.
+Gavia Sans 0.6 is included in the package. It is the primary font for Gavia and
+Gavia Dark: Cyrillic and Latin, 780 glyphs, six weights:
+Thin 100, Light 300, Regular 400, Medium 500, SemiBold 600 and Bold 700.
+Each weight has separate upright and italic files.
 
-## Подключение к теме
+## Theme setup
 
 ```ts
 import "gavia-ui/styles/reset.css";
@@ -14,37 +14,37 @@ import "gavia-ui/styles/base.css";
 import "gavia-ui/themes/gavia.css";
 ```
 
-Выберите `<html data-wl-theme="gavia">`; для Gavia Dark импортируйте
-`gavia-ui/themes/gavia-dark.css` и выберите `data-wl-theme="gavia-dark"`.
-Обе темы используют Gavia Sans через `--wl-font`; заголовки наследуют
-этот шрифт через `--wl-font-heading`. Подключите CSS явно:
-библиотека не загружает стили из JS. Без CSS шрифта браузер выберет системный.
-В Classic, Classic Dark и Newspaper типографика остаётся прежней.
-Имена токенов и `--wl-mono` не меняются.
+Select `<html data-wl-theme="gavia">`. For Gavia Dark, import
+`gavia-ui/themes/gavia-dark.css` and select `data-wl-theme="gavia-dark"`.
+Both themes use Gavia Sans through `--wl-font`; headings inherit it through
+`--wl-font-heading`. Import CSS explicitly: the library does not load styles
+from JS. Without font CSS, the browser uses a system font.
+Classic, Classic Dark and Newspaper keep their typography.
+Token names and `--wl-mono` are unchanged.
 
-Шрифт и светлая тема входят в Gavia UI начиная с 0.9.1; Gavia Dark добавлена
-в UI Kit начиная с 0.10.0. [Совместимость тем](migration-themes.md). Для самостоятельного
-использования скачайте ZIP со страницы шрифта.
+The font and light theme have been included since Gavia UI 0.9.1;
+Gavia Dark was added to the UI kit in 0.10.0.
+[Theme compatibility](migration-themes.md).
+Download the ZIP from the font page for standalone use.
 
-## Примеры и самостоятельное использование
+## Examples and standalone use
 
-Раздел «Шрифт» playground (`?view=font`) содержит заголовки, абзацы, числа,
-все веса, русский/английский набор и пробу собственного текста.
-Выбранная тема сохраняется в URL при переходах между разделами.
-Переключатели, выбор веса, слайдер, поле и кнопка демонстрации используют
-компоненты UI Kit. Заголовок первого экрана следует
-шрифту заголовков выбранной темы; образцы букв, текста, цифр и весов ниже
-сохраняют гарнитуру Gavia Sans во всех темах.
+The playground Font section (`?view=font`) includes headings, paragraphs,
+numerals, every weight, Russian/English specimens and custom text.
+The selected theme remains in the URL when moving between sections.
+Toggles, weight selection, slider, input and demonstration button use UI kit
+components. The hero heading follows the selected theme’s heading font;
+letter, text, numeral and weight specimens below keep Gavia Sans in every theme.
 
-На странице шрифта и в общем футере есть скачивание **Gavia-Sans-0.6.zip**.
-Архив содержит 12 TTF, 12 WOFF2, самостоятельный CSS, обе лицензии
-и краткую инструкцию. Vue для этого не нужен. Распакуйте архив,
-оставьте `gavia.css` рядом с WOFF2 и подключите `<link rel="stylesheet" href="./gavia.css">`.
-Архив собирается из проверенных файлов шрифта вместе с playground; отдельный
-бинарный ZIP в Git не хранится. Его URL учитывает подпуть GitHub Pages.
+The font page and shared footer offer **Gavia-Sans-0.6.zip**.
+It contains 12 TTFs, 12 WOFF2s, standalone CSS, both licenses and brief
+instructions. Vue is not required. Extract the archive, keep `gavia.css` beside
+WOFF2 files and add `<link rel="stylesheet" href="./gavia.css">`.
+The archive is built from verified font files with the playground;
+Git does not store a separate binary ZIP. Its URL respects the GitHub Pages subpath.
 
-WOFF2 и TTF доступны через `gavia-ui/fonts/gavia/<file>`.
-TTF можно установить в настольном приложении; WOFF2 можно подключать без Vue:
+WOFF2 and TTF files are available through `gavia-ui/fonts/gavia/<file>`.
+TTF can be installed for desktop applications; WOFF2 can be used without Vue:
 
 ```css
 @font-face {
@@ -60,26 +60,31 @@ body {
 }
 ```
 
-Для остальных начертаний укажите соответствующие веса и `font-style`.
-Цифры по умолчанию табличные; `font-variant-numeric: proportional-nums`
-переключает их пропорциональную ширину. `text-rendering: geometricPrecision`
-сохраняет равные интервалы табличных цифр в браузерах с пиксельным округлением
-шрифтов. Тема Gavia задаёт этот режим через `--wl-type-text-rendering`;
-остальные темы сохраняют `optimizeLegibility`.
+Set the appropriate weights and `font-style` for other faces.
+Numerals are tabular by default; `font-variant-numeric: proportional-nums`
+switches to proportional widths. `text-rendering: geometricPrecision` preserves
+equal tabular spacing in browsers with pixel-rounded font rendering.
+Gavia sets this mode through `--wl-type-text-rendering`;
+other themes keep `optimizeLegibility`.
 
-## Основа и лицензия
+## Source and license
 
-Код UI-кита остаётся MIT. Шрифтовые файлы отдельно распространяются под
-SIL Open Font License 1.1: сохраняйте `OFL.txt`, `Onest-OFL.txt` и copyright
-notices при распространении. Буквенная основа — производная Onest с шириной
-96%, сохранением вертикальных пропорций и доработанными окончаниями.
-Цифры Gavia Sans нарисованы отдельно. Наклонные файлы имеют геометрический наклон
-7°. Сборка, закреплённые исходники и проверки описаны в
-[документации шрифтов](../scripts/fonts/README.md).
+UI kit code remains MIT-licensed. Font files are distributed separately under
+SIL Open Font License 1.1: retain `OFL.txt`, `Onest-OFL.txt` and copyright notices
+when redistributing. The alphabet is derived from Onest at 96% width, preserving
+vertical proportions and refining terminals. Gavia Sans numerals are drawn
+separately. Italic files have a geometric 7° slant. Build tooling, pinned sources
+and verification are described in [font documentation](../scripts/fonts/README.md).
 
-## Имя семейства и совместимость
+## Family name and compatibility
 
-**Gavia Sans** — шрифт, **Gavia UI** — библиотека компонентов, **Gavia** — тема.
-В CSS и при установке TTF используйте имя `Gavia Sans`.
+**Gavia Sans** is the font, **Gavia UI** the component library, and **Gavia** a theme.
+Use `Gavia Sans` in CSS and when installing TTF.
 
-Переименование меняет только таблицу имён шрифта. Все контуры, размеры, интервалы и кернинг принятой версии 0.6 сохранены. Старые пути `styles/fonts/gavia.css`, `fonts/gavia/*` и имена файлов `Gavia-*.ttf` / `Gavia-*.woff2` остаются прежними. CSS также регистрирует совместимый алиас `Gavia`; существующие объявления `font-family: "Gavia"` продолжают работать. Новый архив называется `Gavia-Sans-0.6.zip`; прежнее имя скачивания относится к невыпущенной разработке.
+The rename changes only the font name table. All accepted 0.6 outlines, dimensions,
+spacing and kerning are preserved. Existing `styles/fonts/gavia.css`,
+`fonts/gavia/*` paths and `Gavia-*.ttf` / `Gavia-*.woff2` filenames remain unchanged.
+CSS also registers the compatible `Gavia` alias; existing
+`font-family: "Gavia"` declarations continue to work.
+The new download is `Gavia-Sans-0.6.zip`; the previous download name belongs
+to unreleased development.

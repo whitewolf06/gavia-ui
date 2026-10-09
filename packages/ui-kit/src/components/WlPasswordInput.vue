@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { useWlLocale, useWlLocaleText } from "../config";
 import { computed, ref, useAttrs } from "vue";
 import WlIcon from "./WlIcon.vue";
 import type { WlDensity, WlSizeSm } from "../types";
 import type { WlTextModelModifiers } from "../model-types";
 import { splitInputAttrs } from "../utils/inputAttrs";
+const localeText = useWlLocaleText();
+const locale = useWlLocale();
 
 defineOptions({ inheritAttrs: false });
 
@@ -55,7 +58,7 @@ const rootAttrs = computed(() => attrGroups.value.rootAttrs);
       ]"
       v-bind="innerAttrs"
       :type="visible ? 'text' : 'password'"
-      :placeholder="placeholder"
+      :placeholder="localeText('placeholder', placeholder, 'password')"
       :disabled="disabled"
       :aria-label="ariaLabel"
       :aria-invalid="invalid || undefined"
@@ -64,7 +67,7 @@ const rootAttrs = computed(() => attrGroups.value.rootAttrs);
       type="button"
       class="wl-input-wrap__btn"
       :disabled="disabled"
-      :aria-label="visible ? 'Скрыть пароль' : 'Показать пароль'"
+      :aria-label="visible ? locale.hidePassword : locale.showPassword"
       :aria-pressed="visible"
       @click="visible = !visible"
     >

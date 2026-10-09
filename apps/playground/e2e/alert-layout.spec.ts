@@ -1,3 +1,4 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
 import { chooseDropdownOption } from "./select-helpers";
@@ -49,7 +50,7 @@ for (const theme of wlDesignThemes) {
       await page.setViewportSize({ width, height: 844 });
       const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
       url.search = new URLSearchParams({ view: "system", theme: theme.name }).toString();
-      await page.goto(url.href, { waitUntil: "domcontentloaded" });
+      await page.goto(russianPlaygroundUrl(url.href), { waitUntil: "domcontentloaded" });
       await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
       await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme.name);
 

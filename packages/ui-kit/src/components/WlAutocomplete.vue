@@ -1,11 +1,12 @@
 <script setup lang="ts" generic="TOption = unknown, TMultiple extends boolean = false">
+import { formatWlLocaleText } from "../locale";
 import type { WlPt } from "../pt-types";
 import type { WlNoModelModifiers } from "../model-types";
 import { useWlId } from "../utils/useWlId";
 import { computed, nextTick, onBeforeUnmount, ref, useAttrs, watch, type Ref } from "vue";
 import Teleport from "../utils/templateTeleport.vue";
 import Transition from "../utils/templateTransition.vue";
-import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
+import { mergeWlAttrs, useWlMotion, useWlPt, useWlLocale, useWlLocaleText } from "../config";
 import type { WlDensity, WlSizeSm } from "../types";
 import type { WlAutocompleteCompleteEvent, WlAutocompleteModel, WlAutocompleteOptionLabel } from "../selection-types";
 import { getWlControlProps, splitInputAttrs } from "../utils/inputAttrs";
@@ -14,6 +15,8 @@ import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTran
 import { optionLabel as resolveOptionLabel, useListNavigation } from "../utils/options";
 
 import WlIcon from "./WlIcon.vue";
+const localeText = useWlLocaleText();
+const locale = useWlLocale();
 
 defineOptions({ inheritAttrs: false });
 // Read props.* in the template; Volar 2.x cannot reliably project this generic Boolean default into its generated instance.
@@ -52,7 +55,7 @@ const listAttrs = computed(() => {
     ? mergeWlAttrs(attrGroups.value.inputAttrs, section("input"), section("inputChip"))
     : mergeWlAttrs(attrGroups.value.inputAttrs, section("pcInputText.root"));
   const control = getWlControlProps(inputAttrs);
-  return mergeWlAttrs({ id: generatedListId, "aria-label": control.ariaLabel ?? props.placeholder ?? "Варианты", "aria-labelledby": control.ariaLabelledby }, section("list"));
+  return mergeWlAttrs({ id: generatedListId, "aria-label": control.ariaLabel ?? props.placeholder ?? locale.value.options, "aria-labelledby": control.ariaLabelledby }, section("list"));
 });
 const control = ref<HTMLInputElement | null>(null);
 const query = ref("");
@@ -126,7 +129,7 @@ onBeforeUnmount(() => { if (timer) clearTimeout(timer); });
       <span v-for="(item, index) in selected" :key="index"
         v-bind="mergeWlAttrs(section('chipItem'), section('pcChip.root'))" class="wl-multiselect__chip">
         <span v-bind="section('pcChip.label')" class="wl-multiselect__chip-label">{{ resolveOptionLabel(item, props.optionLabel) }}</span>
-        <button v-bind="section('pcChip.removeIcon')" type="button" class="wl-multiselect__chip-remove" :aria-label="`Удалить ${resolveOptionLabel(item, props.optionLabel)}`"
+        <button v-bind="section('pcChip.removeIcon')" type="button" class="wl-multiselect__chip-remove" :aria-label="formatWlLocaleText(locale.removeItem, { label: resolveOptionLabel(item, props.optionLabel) })"
           :disabled="props.disabled"
           @click="remove(index)">×</button>
       </span>
@@ -140,7 +143,7 @@ onBeforeUnmount(() => { if (timer) clearTimeout(timer); });
       :aria-invalid="props.invalid || undefined" role="combobox" :aria-expanded="visible" :aria-controls="visible ? String(listAttrs.id) : undefined"
       @input="onInput" @keydown="onKeydown" />
     <button v-if="props.dropdown" v-bind="section('dropdown')" type="button"
-      class="wl-autocomplete__dropdown" :aria-label="props.dropdownLabel" :disabled="props.disabled" @click="open">
+      class="wl-autocomplete__dropdown" :aria-label="localeText('dropdownLabel', props.dropdownLabel, 'showOptions')" :disabled="props.disabled" @click="open">
       <WlIcon v-bind="section('dropdownIcon')" class="wl-autocomplete__dropdown-icon" name="chevron-down" :size="14" />
     </button>
   </div>
@@ -155,7 +158,7 @@ onBeforeUnmount(() => { if (timer) clearTimeout(timer); });
             class="wl-select__option" :data-active="active === index" role="option" @pointerdown.prevent @click="choose(index)">
             {{ resolveOptionLabel(option, props.optionLabel) }}
           </div>
-          <div v-if="props.suggestions.length === 0" v-bind="section('emptyMessage')" class="wl-select__empty">Нет вариантов</div>
+          <div v-if="props.suggestions.length === 0" v-bind="section('emptyMessage')" class="wl-select__empty">{{ locale.noOptions }}</div>
         </div>
       </div>
     </div>

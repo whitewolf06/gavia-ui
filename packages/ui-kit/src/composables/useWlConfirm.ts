@@ -26,7 +26,7 @@ export function useWlConfirm(): WlConfirmApi {
   const locale = useWlLocale();
   const require = (options: WlConfirmOptions, danger: boolean): void => {
     store.require({
-      header: options.header ?? "Подтверждение",
+      header: options.header ?? locale.value.confirmation,
       message: options.message,
       group: options.group,
       acceptLabel: options.acceptLabel ?? locale.value.accept,

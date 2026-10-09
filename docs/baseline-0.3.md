@@ -1,22 +1,22 @@
-# База сравнения перед удалением PrimeVue
+# Baseline before removing PrimeVue
 
-База снята 27 сентября 2026 из локального `main` до переноса изменений в
-`codex/remove-primevue`. Исходный checkout остался без изменений.
+The baseline was captured on September 27, 2026 from local `main` before changes
+were moved to `codex/remove-primevue`. The original checkout remained unchanged.
 
-| Проверка старой реализации | Результат |
+| Previous implementation check | Result |
 | --- | --- |
-| `pnpm typecheck` | прошла |
-| `pnpm build` | прошла |
-| `pnpm test` | 25 файлов, 202 теста прошли |
-| `pnpm build:playground` | прошла |
-| `pnpm run pack` | прошла |
-| `pnpm verify:package` | прошла |
+| `pnpm typecheck` | passed |
+| `pnpm build` | passed |
+| `pnpm test` | 25 files, 202 tests passed |
+| `pnpm build:playground` | passed |
+| `pnpm run pack` | passed |
+| `pnpm verify:package` | passed |
 
-`packages/ui-kit/tests/fixtures/public-contract-0.3.json` фиксирует 51 запись
-публичного манифеста: имена, категории, props с типами/значениями/дефолтами,
-слоты, события, модели и `introducedIn`. Описательные тексты исключены.
-Контрактный тест сравнивает 0.5 с этим снимком; расширение набора иконок
-разрешено только при сохранении всех старых имён. Отдельный снимок
-`icons-0.3.json` проверяет исходные рисунки 32 прежних иконок. Единственная описанная
-миграция разметки потребителя — PrimeVue `<Column>` внутри `WlTable`:
-используйте `columns` и `cell-*` (см. `migration-0.5.md`).
+`packages/ui-kit/tests/fixtures/public-contract-0.3.json` records 51 public
+manifest entries: names, categories, props with types/values/defaults, slots,
+events, models and `introducedIn`. Descriptive text is excluded.
+The contract test compares 0.5 against this snapshot; icon additions are allowed
+only if every previous name remains. A separate `icons-0.3.json` snapshot checks
+the original drawings of 32 legacy icons. The only documented consumer markup
+migration is PrimeVue `<Column>` inside `WlTable`:
+use `columns` and `cell-*` (see `migration-0.5.md`).

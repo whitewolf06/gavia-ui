@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../i18n";
+const { t } = usePlaygroundI18n();
 import { computed, defineAsyncComponent, nextTick, ref, watch, type Component } from "vue";
 import { WlButton, WlCheckbox, WlInput, WlNumberInput, WlSelect } from "../../../../packages/ui-kit/src";
 import type { WlComponentManifest } from "../../../../packages/ui-kit/src/manifest";
@@ -76,7 +78,7 @@ function clearOverride(name: string): void {
   overrides.value = next;
 }
 function iconOptions(control: DocumentationControl): { label: string; value: string | number }[] {
-  return [{ label: "Без иконки", value: "" }, ...(control.values ?? []).map((value) => ({ label: String(value), value }))];
+  return [{ label: t('shell.design_system.ComponentExplorer.text374'), value: "" }, ...(control.values ?? []).map((value) => ({ label: String(value), value }))];
 }
 function choosePreset(value: unknown): void {
   if (typeof value !== "string" || value !== "default" && !presets.value.some((preset) => preset.id === value)) return;
@@ -106,55 +108,55 @@ async function focusPreview(): Promise<void> {
   <div class="ds-explorer" :class="documentationLayout ? 'docs-explorer-workspace' : 'wl-stack'" data-space="lg" data-testid="ds-explorer" :data-component="entry.name">
     <section class="ds-explorer-settings wl-stack" :class="{ 'docs-explorer-settings': documentationLayout }" data-space="lg" :aria-labelledby="documentationLayout ? headingPrefix + '-controls' : undefined">
       <div class="wl-inline" :data-space="documentationLayout ? 'sm' : 'md'">
-        <h2 v-if="documentationLayout" :id="headingPrefix + '-controls'" class="wl-text-subheading">Настройки</h2>
-        <h4 v-else class="wl-text-subheading">Пример</h4>
-        <WlButton size="sm" variant="ghost" aria-label="Сбросить пример" @click="reset">{{ documentationLayout ? 'Сбросить' : 'Сбросить пример' }}</WlButton>
+        <h2 v-if="documentationLayout" :id="headingPrefix + '-controls'" class="wl-text-subheading">{{ t('shell.design_system.ComponentExplorer.text375') }}</h2>
+        <h4 v-else class="wl-text-subheading">{{ t('shell.design_system.ComponentExplorer.text376') }}</h4>
+        <WlButton size="sm" variant="ghost" :aria-label="t('shell.design_system.ComponentExplorer.text377')" @click="reset">{{ documentationLayout ? t('shell.design_system.ComponentExplorer.text378') : t('shell.design_system.ComponentExplorer.text379') }}</WlButton>
       </div>
       <div v-if="controls.length" class="ds-explorer-controls">
         <div v-for="control in controls" :key="control.name" class="ds-explorer-control wl-stack" data-space="xs">
           <WlCheckbox v-if="control.editor === 'checkbox'" :model-value="Boolean(controlValue(control.name, control.default))" :aria-describedby="documentationLayout && control.description ? headingPrefix + '-control-' + control.name : undefined" @update:model-value="setValue(control, $event)">{{ control.name }}</WlCheckbox>
           <template v-else>
             <span class="wl-text-small">{{ control.name }}</span>
-            <WlInput v-if="control.editor === 'text'" :model-value="textValue(control)" :type="control.inputType ?? 'text'" :aria-label="'Пример: ' + control.name" :placeholder="controlValue(control.name, control.default) === undefined ? 'Не задано' : undefined" :aria-describedby="control.description ? headingPrefix + '-control-' + control.name : undefined" @update:model-value="setValue(control, $event)" />
+            <WlInput v-if="control.editor === 'text'" :model-value="textValue(control)" :type="control.inputType ?? 'text'" :aria-label="t('shell.design_system.ComponentExplorer.text380') + control.name" :placeholder="controlValue(control.name, control.default) === undefined ? t('shell.design_system.ComponentExplorer.text381') : undefined" :aria-describedby="control.description ? headingPrefix + '-control-' + control.name : undefined" @update:model-value="setValue(control, $event)" />
             <template v-else-if="control.editor === 'number'">
-              <WlNumberInput v-if="numericValue(control) !== undefined" :model-value="numericValue(control)!" :min="numberBounds(control).min" :max="numberBounds(control).max" :step="control.numberStep ?? 1" :aria-label="'Пример: ' + control.name" :aria-describedby="control.description ? headingPrefix + '-control-' + control.name : undefined" @update:model-value="setValue(control, $event)" />
-              <div v-else class="wl-inline" data-space="sm"><span class="wl-text-small wl-text-muted">Не задано</span><WlButton size="sm" variant="secondary" :aria-label="'Задать ' + control.name" @click="initializeNumber(control)">Задать</WlButton></div>
+              <WlNumberInput v-if="numericValue(control) !== undefined" :model-value="numericValue(control)!" :min="numberBounds(control).min" :max="numberBounds(control).max" :step="control.numberStep ?? 1" :aria-label="t('shell.design_system.ComponentExplorer.text382') + control.name" :aria-describedby="control.description ? headingPrefix + '-control-' + control.name : undefined" @update:model-value="setValue(control, $event)" />
+              <div v-else class="wl-inline" data-space="sm"><span class="wl-text-small wl-text-muted">{{ t('shell.design_system.ComponentExplorer.text383') }}</span><WlButton size="sm" variant="secondary" :aria-label="t('shell.design_system.ComponentExplorer.text384') + control.name" @click="initializeNumber(control)">{{ t('shell.design_system.ComponentExplorer.text385') }}</WlButton></div>
             </template>
-            <WlSelect v-else-if="control.editor === 'icon'" :model-value="selectValue(control, true)" :aria-label="'Пример: ' + control.name" placeholder="Не задано" :aria-describedby="control.description ? headingPrefix + '-control-' + control.name : undefined" :options="iconOptions(control)" option-label="label" option-value="value" @update:model-value="setValue(control, $event)" />
-            <WlSelect v-else :model-value="selectValue(control)" :aria-label="'Пример: ' + control.name" :aria-describedby="documentationLayout && control.description ? headingPrefix + '-control-' + control.name : undefined" :options="[...(control.values ?? [])]" @update:model-value="setValue(control, $event)" />
+            <WlSelect v-else-if="control.editor === 'icon'" :model-value="selectValue(control, true)" :aria-label="t('shell.design_system.ComponentExplorer.text386') + control.name" :placeholder="t('shell.design_system.ComponentExplorer.text387')" :aria-describedby="control.description ? headingPrefix + '-control-' + control.name : undefined" :options="iconOptions(control)" option-label="label" option-value="value" @update:model-value="setValue(control, $event)" />
+            <WlSelect v-else :model-value="selectValue(control)" :aria-label="t('shell.design_system.ComponentExplorer.text388') + control.name" :aria-describedby="documentationLayout && control.description ? headingPrefix + '-control-' + control.name : undefined" :options="[...(control.values ?? [])]" @update:model-value="setValue(control, $event)" />
           </template>
-          <WlButton v-if="documentationLayout && Object.prototype.hasOwnProperty.call(overrides, control.name)" size="sm" variant="ghost" :aria-label="'Сбросить ' + control.name" @click="clearOverride(control.name)">Как в примере</WlButton>
+          <WlButton v-if="documentationLayout && Object.prototype.hasOwnProperty.call(overrides, control.name)" size="sm" variant="ghost" :aria-label="t('shell.design_system.ComponentExplorer.text389') + control.name" @click="clearOverride(control.name)">{{ t('shell.design_system.ComponentExplorer.text390') }}</WlButton>
           <p v-if="documentationLayout && control.description" :id="headingPrefix + '-control-' + control.name" class="wl-text-small wl-text-muted">{{ control.description }}</p>
         </div>
       </div>
-      <p v-else-if="documentationLayout" class="wl-text-small wl-text-muted">{{ entry.name === 'WlToast' || entry.name === 'WlConfirmDialog' ? 'Настройте контейнер в App.vue. Здесь можно вызвать сервис и посмотреть результат.' : 'Данные и содержимое заданы в Vue SFC. Структура данных, параметры и слоты описаны во вкладке API.' }}</p>
+      <p v-else-if="documentationLayout" class="wl-text-small wl-text-muted">{{ entry.name === 'WlToast' || entry.name === 'WlConfirmDialog' ? t('shell.design_system.ComponentExplorer.text391') : t('shell.design_system.ComponentExplorer.text392') }}</p>
       <div v-if="presets.length" class="wl-stack" data-space="xs">
-        <span class="wl-text-small">Данные примера</span>
-        <WlSelect :model-value="presetId" aria-label="Пример: данные" :options="[{ label: 'Исходные данные', value: 'default' }, ...presets.map((preset) => ({ label: preset.label, value: preset.id }))]" option-label="label" option-value="value" @update:model-value="choosePreset" />
-        <p class="wl-text-small wl-text-muted">Выберите набор данных или измените массив в SFC ниже.</p>
+        <span class="wl-text-small">{{ t('shell.design_system.ComponentExplorer.text393') }}</span>
+        <WlSelect :model-value="presetId" :aria-label="t('shell.design_system.ComponentExplorer.text394')" :options="[{ label: t('shell.design_system.ComponentExplorer.text395'), value: 'default' }, ...presets.map((preset) => ({ label: preset.label, value: preset.id }))]" option-label="label" option-value="value" @update:model-value="choosePreset" />
+        <p class="wl-text-small wl-text-muted">{{ t('shell.design_system.ComponentExplorer.text396') }}</p>
       </div>
-      <p v-if="documentationLayout && complexProps.length" class="wl-text-small wl-text-muted">Параметры <code>{{ complexProps.join(', ') }}</code>, модели, обработчики и слоты изменяйте в SFC. Их описание — в <a :href="'#' + headingPrefix + '-props'">API</a>. Редактора JSON здесь нет.</p>
-      <p v-if="documentationLayout && (entry.name === 'WlMenu' || entry.name === 'WlAutocomplete')" class="wl-text-small wl-text-muted">{{ entry.name === 'WlMenu' ? 'Popup-меню с кнопкой открытия' : 'Выбор нескольких значений' }} показан в <a :href="'#' + headingPrefix + '-examples'">примере ниже</a>.</p>
+      <p v-if="documentationLayout && complexProps.length" class="wl-text-small wl-text-muted">{{ t('shell.design_system.ComponentExplorer.text397') }} <code>{{ complexProps.join(', ') }}</code>{{ t('shell.design_system.ComponentExplorer.text398') }} <a :href="'#' + headingPrefix + '-props'">API</a>{{ t('shell.design_system.ComponentExplorer.text399') }}</p>
+      <p v-if="documentationLayout && (entry.name === 'WlMenu' || entry.name === 'WlAutocomplete')" class="wl-text-small wl-text-muted">{{ entry.name === 'WlMenu' ? t('shell.design_system.ComponentExplorer.text400') : t('shell.design_system.ComponentExplorer.text401') }} {{ t('shell.design_system.ComponentExplorer.text402') }} <a :href="'#' + headingPrefix + '-examples'">{{ t('shell.design_system.ComponentExplorer.text403') }}</a>.</p>
     </section>
     <div class="ds-explorer-output wl-stack" data-space="lg">
       <section class="wl-stack" :data-space="documentationLayout ? 'md' : 'lg'" :aria-labelledby="documentationLayout ? headingPrefix + '-preview' : undefined">
-        <h2 v-if="documentationLayout" :id="headingPrefix + '-preview'" class="wl-text-subheading">Пример</h2>
+        <h2 v-if="documentationLayout" :id="headingPrefix + '-preview'" class="wl-text-subheading">{{ t('shell.design_system.ComponentExplorer.text404') }}</h2>
         <div ref="preview" class="ds-example-preview" data-testid="ds-example-preview" @focusin="focused = true" @focusout="focusOut" @mouseenter="hovered = true" @mouseleave="hovered = false">
           <component :is="example" v-if="example" :key="entry.name + '-' + revision" :preview="overrides" />
-          <p v-else role="alert">Пример не найден.</p>
+          <p v-else role="alert">{{ t('shell.design_system.ComponentExplorer.text405') }}</p>
         </div>
-        <div class="wl-inline" data-space="sm"><WlButton size="sm" variant="ghost" @click="focusPreview">Проверить фокус</WlButton><span class="wl-text-small wl-text-muted" role="status">{{ missingFocusTarget ? 'В примере нет доступного элемента для фокуса.' : 'Фокус: ' + (focused ? 'в примере' : 'вне примера') + ' · указатель: ' + (hovered ? 'в примере' : 'вне примера') }}</span></div>
-        <p class="wl-text-small wl-text-muted">Hover и нажатие проверяйте мышью; focus — клавиатурой. Выбор, открытие и закрытие меняют v-model. Настройки {{ documentationLayout ? 'слева' : 'выше' }} можно сочетать.</p>
+        <div class="wl-inline" data-space="sm"><WlButton size="sm" variant="ghost" @click="focusPreview">{{ t('shell.design_system.ComponentExplorer.text406') }}</WlButton><span class="wl-text-small wl-text-muted" role="status">{{ missingFocusTarget ? t('shell.design_system.ComponentExplorer.text407') : t('shell.design_system.ComponentExplorer.text408') + (focused ? t('shell.design_system.ComponentExplorer.text409') : t('shell.design_system.ComponentExplorer.text410')) + t('shell.design_system.ComponentExplorer.text411') + (hovered ? t('shell.design_system.ComponentExplorer.text412') : t('shell.design_system.ComponentExplorer.text413')) }}</span></div>
+        <p class="wl-text-small wl-text-muted">{{ t('shell.design_system.ComponentExplorer.text414') }} {{ documentationLayout ? t('shell.design_system.ComponentExplorer.text415') : t('shell.design_system.ComponentExplorer.text416') }} {{ t('shell.design_system.ComponentExplorer.text417') }}</p>
       </section>
       <section v-if="documentationLayout" class="wl-stack" data-space="md" :aria-labelledby="headingPrefix + '-source'" data-testid="ds-example-source">
-        <h2 v-if="documentationLayout" :id="headingPrefix + '-source'" class="wl-text-subheading">Код для приложения</h2>
-        <CodePanel :source="source" :expanded="documentationLayout" :title="documentationLayout ? 'Vue SFC · текущие настройки' : undefined" />
+        <h2 v-if="documentationLayout" :id="headingPrefix + '-source'" class="wl-text-subheading">{{ t('shell.design_system.ComponentExplorer.text418') }}</h2>
+        <CodePanel :source="source" :expanded="documentationLayout" :title="documentationLayout ? t('shell.design_system.ComponentExplorer.text419') : undefined" />
       </section>
       <details v-if="!documentationLayout" class="ds-state-matrix">
-        <summary>Варианты и состояния · {{ cases.length }}</summary>
+        <summary>{{ t('shell.design_system.ComponentExplorer.text420') }} {{ cases.length }}</summary>
         <div class="wl-inline" data-space="sm"><WlButton v-for="item in cases" :key="item.id" size="sm" variant="secondary" :data-case="item.id" @click="chooseCase(item.props)">{{ item.label }}</WlButton></div>
       </details>
-      <p v-if="entry.name === 'WlToast' || entry.name === 'WlConfirmDialog'" class="wl-text-small wl-text-muted">Добавьте один контейнер в App.vue и задайте там motion и pt. У каждого Vue-приложения своё состояние сервиса.</p>
+      <p v-if="entry.name === 'WlToast' || entry.name === 'WlConfirmDialog'" class="wl-text-small wl-text-muted">{{ t('shell.design_system.ComponentExplorer.text421') }}</p>
       <CodePanel v-if="!documentationLayout" :source="source" />
     </div>
   </div>

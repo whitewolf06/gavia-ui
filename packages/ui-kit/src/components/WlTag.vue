@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { WlPt } from "../pt-types";
 import { computed } from "vue";
-import { useWlPt } from "../config";
+import { useWlPt, useWlLocaleText } from "../config";
 import WlIcon from "./WlIcon.vue";
 import type { WlTagVariant } from "../types";
+const localeText = useWlLocaleText();
 
 const props = withDefaults(
   defineProps<{
@@ -34,7 +35,7 @@ const section = useWlPt("tag", computed(() => props.pt));
       v-if="removable"
       type="button"
       class="wl-tag__remove"
-      :aria-label="removeLabel"
+      :aria-label="localeText('removeLabel', removeLabel, 'remove')"
       @click.stop="emit('remove', $event)"
     >
       <WlIcon name="x" :size="10" />

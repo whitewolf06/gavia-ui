@@ -1,89 +1,104 @@
 # Changelog
 
-Что изменилось в Gavia UI и что учесть при обновлении.
-Версии до ребрендинга выходили под прежним именем пакета.
-История восстановлена по релизным Git-тегам и заметкам о миграции.
+What changed in Gavia UI and what to consider when upgrading.
+Versions before the rebrand used the previous package name.
+The history was reconstructed from release Git tags and migration notes.
 
-## Не выпущено
+## Unreleased
+
+## 0.12.0 — prepared
+
+- Added an optional wlLocaleEn preset and EN/RU Playground localization with English by default and language URLs; GitHub Markdown documentation now uses English.
+- Expanded the author story in the Playground and README, including the personal website.
+- Added route-specific titles, descriptions, canonical/hreflang links and a sitemap; public documentation remains a client-rendered SPA.
+- The Playground header keeps navigation links that fit and moves trailing links to More; mobile uses one row with 44 px Search/Theme controls with centered icons, a 68 px EN/RU selector and the Menu button at the far right. Desktop Search and Theme share a 120 px width, with Search text aligned left.
+
+### Changesets
+
+Add the optional wlLocaleEn preset and configurable built-in control text while preserving the Russian fallback and explicit component-prop priority.
+
+Make English the default Playground language, with EN/RU URL navigation, shared examples and API, and translated search and changelog. Publish GitHub Markdown documentation in English.
+
+Add route metadata and a sitemap for the client-rendered documentation SPA, expand the author story, and adapt header navigation to the available width with compact one-row mobile controls.
 
 ## 0.11.1 — 2026-10-09
 
-- Отредактированы тексты playground, README и документации: короче описания, понятнее инструкции и ограничения.
-- При открытии сохранённой ссылки на документацию playground сразу прокручивается к нужному разделу.
-- Исправлены отступы разделителей в хлебных крошках и выравнивание WlPill.
-- Основной акцент светлой Gavia изменён на `#3c7490`; обновлены оттенки наведения, нажатия и акцентного текста.
+- Revised playground, README and documentation copy: shorter descriptions, clearer instructions and limitations.
+- Opening a saved playground documentation link now scrolls to the requested section immediately.
+- Fixed breadcrumb separator spacing and WlPill alignment.
+- Changed the main accent in light Gavia to `#3c7490`; updated hover, active and accent text shades.
 
 ### Changesets
 
-Исправления оформления и документации. Публичный API, имена классов, токенов и пути импортов сохранены.
+Styling and documentation fixes. Public API, class names, tokens and import paths are preserved.
 
 ## 0.11.0 — 2026-10-08
 
-### Типизация публичного API
+### Public API typing
 
-- Select/MultiSelect связывают options, optionValue, модель и update-событие generics; any в резолверах убран, readonly-списки поддерживаются.
-- Autocomplete различает свободный single-ввод и массив подсказок; исправлены потеря текста при option-label с ключом и неочищенное поле после внешнего сброса null/undefined.
-- Table выводит Row из value и проверяет обычные колонки по ключам строки; виртуальные колонки требуют kind: "virtual". Cell-слоты сохраняют тип поля.
-- pt получает подсказки секций и контекстов; WlPtStrict / WlPtConfigStrict выявляют опечатки через satisfies без закрытия динамических настроек.
-- Radio/Segmented/Tabs связывают модель с доменом; Sidebar/CommandPalette сохраняют тип item/data в событиях и слотах. Добавлены Expose-типы методов ref и WlTooltipValue.
-- Публичные generic-экспорты требуют фактический resolver/mode prop при явно заданном non-default generic, включая DatePicker range.
-- Menu/Accordion связывают callbacks, ключи и slots с полным item; Sidebar/CommandPalette сохраняют дополнительные поля групп. Коллекции описаний принимают readonly.
-- DOM-атрибуты/events типизированы без новых runtime props; Field scoped-slot и ref-методы Menu/Popover/FilePicker/FilterBar получили публичные контракты.
-- Модели описывают модификаторы: trim только у текстовых полей и query CommandPalette. Locale нормализуется безопасно; известные ключи больше не unknown.
-- Confirm/Toast получили scoped group helpers; attrs Teleport-компонентов передаются на DOM. FilterBar использует SSR id.
-- Исправлены single FileUpload, сохранение выбора при отклонённой замене, обход disabled и NaN/Infinity в числовых UI.
-- Положительные и отрицательные API fixtures проверены в исходниках и устанавливаемом архиве на Vue 3.4 / TypeScript 5.4 и Vue 3.5; локальные результаты и границы проверок — в [документации качества](docs/quality.md).
+- Select/MultiSelect connect options, optionValue, model and update events through generics; resolvers no longer use any, and readonly lists are supported.
+- Autocomplete distinguishes free single input from suggestion arrays; fixed lost text when option-label uses a key and a stale field after an external null/undefined reset.
+- Table infers Row from value and checks regular columns against row keys; virtual columns require kind: "virtual". Cell slots retain the field type.
+- pt provides section and context suggestions; WlPtStrict / WlPtConfigStrict catch typos through satisfies while allowing dynamic configuration.
+- Radio/Segmented/Tabs connect the model to its domain; Sidebar/CommandPalette retain item/data types in events and slots. Added Expose types for ref methods and WlTooltipValue.
+- Public generic exports require the actual resolver/mode prop when an explicit non-default generic is used, including DatePicker range.
+- Menu/Accordion connect callbacks, keys and slots to the full item; Sidebar/CommandPalette retain extra group fields. Descriptor collections accept readonly.
+- DOM attributes/events are typed without new runtime props; Field scoped slots and Menu/Popover/FilePicker/FilterBar ref methods received public contracts.
+- Models describe modifiers: trim is supported only by text fields and CommandPalette query. Locale normalization is safe; known keys are no longer unknown.
+- Confirm/Toast received scoped group helpers; Teleport component attrs reach the DOM. FilterBar uses an SSR id.
+- Fixed single FileUpload, selection retention after a rejected replacement, disabled bypasses and NaN/Infinity in numeric UI.
+- Positive and negative API fixtures were checked against source and installed archives on Vue 3.4 / TypeScript 5.4 and Vue 3.5; local results and check boundaries are in the [quality documentation](docs/quality.md).
 
 ### Breaking changes
 
-- Unknown-модели и callback label без обработки свободного текста требуют явного типа данных. Коллекции навигационных описаний readonly; generic SFC могут потребовать замены InstanceType на Expose-контракт.
-- Явный generic range DatePicker требует фактический selectionMode="range"; остальные модели и обработчики сохраняются.
-- Виртуальные колонки помечаются явно; Menu/Accordion/Sidebar ключи и callbacks проверяются по данным. Для новых деклараций требуется TypeScript 5.4+.
-- Исторический fixture 0.9.1 сохраняется неизменным. Для 0.11 оформлен точечный контракт согласованной миграции; новые потери API продолжают блокировать gate. [Миграция 0.11](docs/migration-0.11.0.md).
+- Unknown models and callback labels without free-text handling require an explicit data type. Navigation descriptor collections are readonly; generic SFCs may require replacing InstanceType with an Expose contract.
+- An explicit generic range DatePicker requires the actual selectionMode="range"; other models and handlers are preserved.
+- Virtual columns must be marked explicitly; Menu/Accordion/Sidebar keys and callbacks are checked against data. The new declarations require TypeScript 5.4+.
+- The historical 0.9.1 fixture stays unchanged. A scoped contract records the agreed 0.11 migration; new API losses still block the gate. [0.11 migration](docs/migration-0.11.0.md).
 
 ### Changesets
 
-Уточнить публичные TypeScript-контракты всех компонентов: связанные модели выбора,
-ключи таблицы, payload/slots, нативные attrs/events, pt и exposed refs. Добавить
-безопасную нормализацию входных значений и проверки отключённых контролов.
+Refine public TypeScript contracts for all components: linked selection models,
+table keys, payload/slots, native attrs/events, pt and exposed refs. Add
+safe input normalization and checks for disabled controls.
 
-Breaking changes: TypeScript 5.4+, доменные модели вместо unknown, обработка
-свободной строки Autocomplete, явные virtual columns, readonly коллекции
-навигационных описаний, явный selectionMode для range DatePicker и проверка
-поддерживаемых v-model modifiers. Руководство
-перехода: [миграция 0.11](docs/migration-0.11.0.md).
+Breaking changes: TypeScript 5.4+, domain models instead of unknown, handling
+the Autocomplete free string, explicit virtual columns, readonly navigation
+descriptor collections, explicit selectionMode for range DatePicker and checks
+for supported v-model modifiers. Upgrade
+guide: [0.11 migration](docs/migration-0.11.0.md).
 
 ## 0.10.0 — 2026-10-08
 
-### Темы
+### Themes
 
-- README выделяет Gavia / Gavia Dark как основные темы и Classic / Classic Dark / Newspaper как дополнительные; для каждой указаны идентификатор и явный CSS-импорт.
-- В правом верхнем углу hero добавлена компактная ghost-кнопка солнца/луны на WlIconButton: цветная иконка 32 px, активная область 44 × 44 px, без фоновой коробки в обычном состоянии; клавиатурный фокус выделяет обводка. Gavia ↔ Gavia Dark, Classic ↔ Classic Dark; Newspaper переключается в Classic Dark и возвращается при повторном нажатии.
-- Дневной и ночной фон hero загружаются заранее и остаются двумя слоями одной композиции: светлые темы используют дневной, обе тёмные — ночной. При поддержке View Transitions API смена темы использует один временный переход всей страницы; в остальных браузерах сохраняется crossfade hero. Ночной слой появляется после загрузки; prefers-reduced-motion отключает переходы.
-- Лес и колоски в информационных карточках главной различимы в тёмных темах; карточки сохраняют тёмный фон. Ссылки на документы, Issues и руководство GitHub в этих карточках открываются в новой вкладке и отмечены иконкой внешнего перехода.
-- Gavia Dark получила ночной фон hero с луной на месте исходного солнца, лёгким голубоватым светом и той же гагарой; поверхности получили мягкий холодно-серый, слегка синеватый подтон, основной бирюзовый акцент стал насыщеннее и чуть ближе к голубому; блок установки сохраняет цветную границу и использует тёмный бирюзовый акцентный фон.
-- Холодный подтон уточнён только в шести фоновых заливках Gavia Dark: фон страницы, поднятая и вторичная поверхности, hover и два мягких акцентных фона.
-- Заголовок «Ясность в каждой детали» на странице шрифта следует гарнитуре выбранной темы; образцы Gavia Sans сохраняют свой шрифт.
-- Узкие WlAlert с действием и закрытием сохраняют читаемую ширину текста; действия переносятся по доступной ширине компонента.
-- Добавлена Gavia Dark (`gavia-dark`, `themes/gavia-dark.css`) с Gavia Sans; каталог содержит пять тем.
-- White / Graphite отображаются как Classic / Classic Dark. Идентификаторы `white` / `graphite`, CSS-пути, значения прежних тем и позиции каталога сохранены.
-- `wlDesignThemes` расширен с четырёх до пяти элементов; literal labels изменены. Используйте `WlDesignTheme` / `WlThemeName` и `name`, не фиксируйте старую длину tuple или подпись. [Миграция тем](docs/migration-themes.md).
+- README presents Gavia / Gavia Dark as the primary themes and Classic / Classic Dark / Newspaper as additional themes; each lists its identifier and explicit CSS import.
+- Added a compact ghost sun/moon WlIconButton in the hero’s upper right corner: a tinted 32 px icon, a 44 × 44 px interaction area, no background box in the normal state and a visible keyboard focus ring. Gavia ↔ Gavia Dark, Classic ↔ Classic Dark; Newspaper switches to Classic Dark and returns on the next click.
+- Day and night hero backgrounds are preloaded and remain two layers of the same composition: light themes use day and both dark themes use night. Theme switching uses one temporary full-page transition when View Transitions API is available; other browsers keep the hero crossfade. The night layer appears once loaded; prefers-reduced-motion disables transitions.
+- Forest and reeds in home information cards remain visible in dark themes; cards retain dark backgrounds. Links to documentation, Issues and the GitHub guide in these cards open in a new tab and have an external-link icon.
+- Gavia Dark received a night hero with the moon at the original sun position, soft blue light and the same loon; surfaces use cool gray with a slight blue undertone, and the main turquoise accent is stronger and slightly bluer. The installation card keeps its colored border and uses a dark turquoise accent background.
+- Refined the cool undertone in only six Gavia Dark fills: page background, raised and secondary surfaces, hover and two soft accent backgrounds.
+- The “Clarity in every detail” heading on the font page follows the selected theme’s typeface; Gavia Sans specimens keep their own font.
+- Narrow WlAlert messages with action and close controls retain a readable text width; actions wrap within the available component width.
+- Added Gavia Dark (`gavia-dark`, `themes/gavia-dark.css`) with Gavia Sans; the catalog contains five themes.
+- White / Graphite display as Classic / Classic Dark. Identifiers `white` / `graphite`, CSS paths, original theme values and catalog positions are preserved.
+- `wlDesignThemes` expanded from four to five entries; literal labels changed. Use `WlDesignTheme` / `WlThemeName` and `name` rather than fixing the old tuple length or label. [Theme migration](docs/migration-themes.md).
 
-### Проверки и совместимость
+### Checks and compatibility
 
-- Фактический публичный TypeScript/CSS/pt-контракт защищён снимком 0.9.1; проверяется прежний Vue-потребитель.
-- Добавлены визуальные эталоны Gavia с настоящим Gavia Sans и axe-проверки WCAG 2.2 AA.
-- Архив запускается в браузере на desktop/mobile; Node import, SSR/hydration и размер WlButton проверяются отдельно.
-- Исправлена поддержка Vue 3.4: declarations и SSR-идентификаторы совместимы с минимальным peer; Vue 3.5 сохраняет нативные идентификаторы.
-- Select/MultiSelect/Autocomplete связывают контролы и именованные списки через ARIA.
-- Добавлены --wl-text-accent/--wl-text-accent-hover и foundation-значение для контрастного текста; Graphite сохраняет прежний цвет основного действия.
-- Из сборки одной кнопки исключены неиспользуемые каталоги токенов/компонентов; публичные экспорты сохранены.
-- Coverage измеряется в CI с порогами по базовому результату; добавлены проверки отмены закрытия оверлея.
-- В playground добавлен раздел «Качество и совместимость», сводка на главной и ссылки из поиска/футера. Покрытие, дата и источник измерения формируются из реального отчёта; бейдж README использует сохранённый снимок репозитория, опубликованный playground — отчёт своей CI-сборки.
-- Подписи WlStatCard используют контрастный текстовый токен темы.
-- Покрытие в playground показано процентными полосами WlProgress со шкалой 0–100%; цвета, радиусы и анимация наследуются от темы.
-- Подготовка версий выполняется Changesets, prerelease использует npm next; витрины теговых выпусков сохраняются отдельно.
-- Установка через pnpm, npm и Bun доступна в playground и README; добавлены шаблоны Issues и политика браузеров/версий.
+- The actual public TypeScript/CSS/pt contract is protected by the 0.9.1 snapshot; the existing Vue consumer is checked.
+- Added Gavia visual baselines with real Gavia Sans and axe checks for WCAG 2.2 AA.
+- The archive runs in a browser on desktop/mobile; Node import, SSR/hydration and WlButton size are checked separately.
+- Fixed Vue 3.4 support: declarations and SSR ids work with the minimum peer; Vue 3.5 retains native ids.
+- Select/MultiSelect/Autocomplete connect controls and named lists through ARIA.
+- Added --wl-text-accent/--wl-text-accent-hover and a foundation value for readable accent text; Graphite retains its original primary action color.
+- Removed unused token/component catalogs from the single-button bundle; public exports are preserved.
+- CI measures coverage against baseline thresholds; added overlay close-cancellation checks.
+- Added “Quality and compatibility” in the playground, a home summary and search/footer links. Coverage, measurement date and source come from a real report; the README badge uses the saved repository snapshot, while the published playground uses its CI build report.
+- WlStatCard labels use the theme’s readable text token.
+- Playground coverage uses WlProgress percentage bars on a 0–100% scale; colors, radii and animation come from the theme.
+- Changesets prepares versions, prereleases use npm next, and tag-release previews are stored separately.
+- pnpm, npm and Bun installation options are available in the playground and README; added Issue templates and browser/version policy.
 
 ### Changesets
 
@@ -99,165 +114,165 @@ Keep narrow WlAlert messages readable by wrapping actions when an icon, action a
 
 Add a ghost sun/moon WlIconButton in the hero’s upper right corner, with a tinted 32 px icon, a 44 × 44 px interaction area and no boxed background in its normal state, for Gavia ↔ Gavia Dark and Classic ↔ Classic Dark; Newspaper switches to Classic Dark and back to Newspaper. Keep both day/night images mounted and preloaded with the same composition: all light themes use day and both dark themes use night. Use one temporary full-page transition when View Transitions API is available, with hero crossfade as the fallback. Show the night layer once loaded; prefers-reduced-motion disables the transitions.
 
-Проверки совместимости API 0.9.1, визуальные эталоны Gavia Sans, доступность WCAG 2.2 AA,
-браузерный запуск установленного архива, SSR/hydration, контроль размера и покрытия.
-Публичные имена и схема подключения сохранены.
+API 0.9.1 compatibility checks, Gavia Sans visual baselines, WCAG 2.2 AA accessibility,
+installed archive browser checks, SSR/hydration, size budgets and coverage.
+Public names and setup are preserved.
 
 
-Исправлена поддержка Vue 3.4: declarations и SSR-идентификаторы совместимы
-с минимальным peer. Списки получили доступные имена и связи ARIA. В Graphite
-акцентный текст стал контрастнее; цвет primary-кнопок сохранён. Сборка
-приложения с одной кнопкой больше не удерживает неиспользуемые каталоги.
-Установка через npm и Bun добавлена в playground и проверяется из архива.
+Fixed Vue 3.4 support: declarations and SSR ids work
+with the minimum peer. Lists received accessible names and ARIA connections. Graphite
+accent text is more readable; primary button colors are preserved. The
+single-button app bundle no longer retains unused catalogs.
+npm and Bun installation was added to the playground and is checked against the archive.
 
 ## 0.9.1 — 2026-10-07
 
-Выпуск включает изменения ветки 0.9 и исправленные браузерные проверки.
-Версия 0.9.0 не была опубликована в npm; переход выполняется с 0.8.1 сразу на 0.9.1.
+This release includes the 0.9 branch changes and corrected browser checks.
+Version 0.9.0 was not published to npm; upgrade directly from 0.8.1 to 0.9.1.
 
-### Добавлено
+### Added
 
-- Gavia Sans 0.6: кириллица и латиница, 6 весов, 12 прямых/наклонных начертаний, TTF/WOFF2. Явные exports для шрифтового CSS и файлов; лицензия SIL OFL 1.1. Прежнее CSS-семейство Gavia и пути импорта сохранены.
-- Тема Gavia с тёплым фоном, основным цветом #294451 и danger #ab4448. Gavia Sans используется только в Gavia; White, Graphite и Newspaper сохраняют свою типографику. Базовая тема библиотеки остаётся White.
-- Страница шрифта в playground: русский/английский текст, числа, все веса и проба собственного текста. Скачивание Gavia-Sans-0.6.zip со страницы и из футера: 12 TTF, 12 WOFF2, CSS и лицензии.
-- Подбор темы: 8 ключевых цветов, живые компоненты, проверка контраста, локальный черновик и экспорт JSON/CSS.
-- Полные руководства по 53 компонентам: интерактивные настройки, копируемые SFC, API, доступность и версия добавления. Иконки и темы собраны в документации; прежние URL галереи сохраняют переходы.
-- WlDatePicker: необязательный selectionMode="range" с ISO-диапазоном и общим календарём. Одиночный режим и строковая модель остаются прежними.
-- Документация основ: типографика, layout, тексты и адаптивность с рабочими примерами. CSS-примитивы дополнены вариантами контейнера, разделителем, локальной прокруткой и изоляцией слоёв.
-- Общие верхние блоки страниц на WlPageHeader/WlBreadcrumbs; фотографическая главная с установкой, метриками, разделами и автором. README с актуальным логотипом, графической шапкой и кратким подключением.
+- Gavia Sans 0.6: Cyrillic and Latin, 6 weights, 12 upright/oblique faces, TTF/WOFF2. Explicit exports for font CSS and files; SIL OFL 1.1 license. The previous Gavia CSS family and import paths are preserved.
+- Gavia theme with a warm background, primary color #294451 and danger #ab4448. Gavia Sans is used only in Gavia; White, Graphite and Newspaper retain their typography. The library’s base theme remains White.
+- Playground font page: Russian/English text, numbers, all weights and a custom text specimen. Download Gavia-Sans-0.6.zip from the page and footer: 12 TTF, 12 WOFF2, CSS and licenses.
+- Theme builder: 8 key colors, live components, contrast checks, local drafts and JSON/CSS export.
+- Full guides for 53 components: interactive controls, copyable SFCs, API, accessibility and introduced version. Icons and themes are grouped in documentation; previous gallery URLs retain their redirects.
+- WlDatePicker: optional selectionMode="range" with an ISO range and shared calendar. Single mode and the string model are preserved.
+- Foundations documentation: typography, layout, copy and responsiveness with working examples. CSS primitives gained container variants, a divider, local scrolling and layer isolation.
+- Shared page headers built with WlPageHeader/WlBreadcrumbs; a photographic home page with installation, metrics, sections and author. README uses the current logo, a graphic header and brief setup instructions.
 
-### Исправлено
+### Fixed
 
-- В Gavia и образцах шрифта сохранена точная ширина табличных цифр в Linux Chromium; настройка рендеринга вынесена в токены темы. Утверждённые файлы шрифта не изменялись.
-- Браузерные проверки документации ждут завершения перестройки мобильного меню; установка зависимостей предпочитает Ubuntu archive и имеет отдельный лимит времени.
+- Gavia and font specimens retain exact tabular number widths in Linux Chromium; rendering settings moved into theme tokens. Approved font files are unchanged.
+- Documentation browser checks wait for the mobile menu rebuild to finish; dependency installation prefers Ubuntu archive and has its own timeout.
 
-- Браузерный CI распределён по четырём заданиям; крупные проверки SVG разделены по темам с сохранением всех состояний. Тест чисел проверяет ширину набора и загрузку шрифта; исходные файлы Gavia Sans не менялись.
+- Browser CI is split into four jobs; large SVG checks are split by theme with all states preserved. The number test checks set width and font loading; Gavia Sans source files are unchanged.
 
-- Главная наследует шрифты, цвета, радиусы и состояния выбранной темы; изображения и расположение остаются общими. Установка и метрики 2×2 используют единую сетку и адаптивные отступы.
-- Шапка: название 20 px, выравнивание логотипа, разные иконки дизайн-системы и подбора темы, favicon в основном цвете Gavia. Компактное меню поддерживает клавиатуру и возврат фокуса.
-- Короткие вкладки API и «Доступность» больше не растягиваются по высоте sidebar. Боковой каталог закреплён под шапкой; иконки, категории и интервалы пунктов выровнены.
-- Активный подпункт оглавления отмечается небольшим шевроном и плавным сдвигом на 8 px; настройка уменьшения анимации учитывается, прокрутка не меняет адрес.
-- В примерах WlPopover разделены элементы управления и значения вложенного диалога; копируемый SFC сохраняет те же отступы. Фокус DatePicker охватывает поле вместе с календарной кнопкой.
-- Страница шрифта использует актуальные компоненты UI-кита; прежние версии, сравнения, дублирующая проба текста и глобальный перехват Ctrl+S убраны из презентации.
+- The home page inherits the selected theme’s fonts, colors, radii and states; images and layout are shared. Installation and the 2×2 metrics use one grid and responsive spacing.
+- Header: 20 px title, logo alignment, distinct design-system and theme-builder icons, favicon in Gavia’s primary color. The compact menu supports keyboard navigation and focus return.
+- Short API and “Accessibility” tabs no longer stretch to the sidebar’s height. The side catalog sticks below the header; icons, categories and item spacing are aligned.
+- The active table-of-contents item uses a small chevron and smooth 8 px shift; reduced motion is respected, and scrolling does not change the URL.
+- WlPopover examples separate controls from nested dialog values; the copyable SFC keeps the same spacing. DatePicker focus covers the field and calendar button together.
+- The font page uses current UI kit components; previous versions, comparisons, duplicate text specimens and the global Ctrl+S interception were removed from the presentation.
 
 ## 0.8.1 — 2026-10-06
 
-Выпуск включает изменения ветки 0.8 и исправление вложенных оверлеев.
-Версия 0.8.0 не была опубликована в npm; переход выполняется с 0.7.1 сразу на 0.8.1.
+This release includes the 0.8 branch changes and the nested overlay fix.
+Version 0.8.0 was not published to npm; upgrade directly from 0.7.1 to 0.8.1.
 
-### Добавлено
+### Added
 
-- `WlTimePicker`: локальное время HH:mm/null, минутная точность, границы и нативные атрибуты.
-- `WlFilePicker`: stateless выбор File[], trigger slot и синхронные choose()/clear(); upload и лимиты остаются у приложения.
-- `WlDatePicker.displayFormat`: русское представление по умолчанию и ISO-представление с согласованным ручным вводом; модель ISO сохраняется.
-- Расширенный SVG-каталог и типизированный `resolveWlIconName` для канонических и legacy имён.
+- `WlTimePicker`: local HH:mm/null time, minute precision, bounds and native attributes.
+- `WlFilePicker`: stateless File[] selection, a trigger slot and synchronous choose()/clear(); the app owns uploads and limits.
+- `WlDatePicker.displayFormat`: Russian display by default and ISO display with matching manual input; the ISO model is preserved.
+- Expanded the SVG catalog and added typed `resolveWlIconName` for canonical and legacy names.
 
-### Исправлено
-- Вложенные picker/menu внутри Popover и Dialog сохраняют родительский оверлей при выборе в телепортированном списке. Escape закрывает только верхний слой и возвращает фокус; локальная ловушка Tab в Dialog сохраняется.
-- `WlInput` сохраняет строковую модель при `type="number"`, включая очистку; нативная IME-композиция остаётся без преждевременного commit.
-- `WlTimePicker` показывает рамку фокуса и invalid-рамку при клавиатурном переходе во внутренние сегменты нативного time control.
+### Fixed
+- Nested pickers/menus inside Popover and Dialog preserve the parent overlay when an item is chosen in a teleported list. Escape closes only the top layer and returns focus; Dialog retains its local Tab trap.
+- `WlInput` retains a string model with `type="number"`, including clearing; native IME composition avoids premature commits.
+- `WlTimePicker` shows focus and invalid outlines when the keyboard moves into internal segments of the native time control.
 
-- Проверка `verify:package` учитывает переносы строк Windows и Linux в LICENSE, сохраняя строгое сравнение содержания лицензии.
-- Бесконечные границы `WlNumberInput` не попадают в aria-valuemin/aria-valuemax; default max=99 сохранён.
+- `verify:package` handles Windows and Linux line endings in LICENSE while comparing license content strictly.
+- Infinite `WlNumberInput` bounds do not reach aria-valuemin/aria-valuemax; default max=99 is preserved.
 
-[Переход потребителя](docs/migration-0.8.md). Существующие модели, классы,
-токены и defaults сохраняются; новые компоненты подключаются явно.
+[Consumer upgrade](docs/migration-0.8.md). Existing models, classes,
+tokens and defaults are preserved; new components are imported explicitly.
 
 ## 0.7.1 — 2026-10-05
 
-### Исправлено
+### Fixed
 
-- Отметки `WlCheckbox` в состояниях checked и indeterminate используют SVG-иконки вместо символов шрифта: рисунок и выравнивание одинаковы в трёх темах.
-- Отключённые `WlCheckbox` и `WlRadio` сохраняют своё оформление при наведении.
-- Стрелки раскрытия `WlSelect`, `WlMultiSelect` и `WlAutocomplete` заменены SVG-иконками с единым выравниванием вместо текстовых символов.
+- `WlCheckbox` checked and indeterminate marks use SVG icons instead of font characters: their shapes and alignment match across three themes.
+- Disabled `WlCheckbox` and `WlRadio` retain their appearance on hover.
+- `WlSelect`, `WlMultiSelect` and `WlAutocomplete` disclosure arrows use aligned SVG icons instead of text characters.
 
-### Изменено
+### Changed
 
-- Удалены девять завершённых HTML-прототипов; рабочие примеры остаются в Vue-витрине, а исходные иконки — в SVG-каталоге.
-- Дорожная карта и инструкции по добавлению иконок ссылаются на живые SFC-примеры и SVG-каталог. История прототипов сохранена в Git. В начале README размещена заметная ссылка на публичную демо-витрину.
+- Removed nine completed HTML prototypes; working examples remain in the Vue playground, and source icons remain in the SVG catalog.
+- The roadmap and icon instructions link to live SFC examples and the SVG catalog. Prototype history remains in Git. README starts with a prominent link to the public demo.
 
 ## 0.7.0 — 2026-10-05
 
-Первый выпуск нового имени для публичного npm. Инструкции подключения
-и состояние публикации — в [README](https://github.com/whitewolf06/gavia-ui/blob/main/README.md).
+The first release under the new name on public npm. Setup instructions
+and publication status are in [README](https://github.com/whitewolf06/gavia-ui/blob/main/README.md).
 
-### Добавлено
+### Added
 
-- В витрине появилась страница «О проекте»: создатель, лицензия, инструкции и полный changelog из единого исходника.
-- Добавлены сборка и браузерная проверка документации для GitHub Pages; публикация сайта зависит от всех проверок того же коммита.
-- Добавлен полный текст MIT в репозиторий и архив библиотеки.
-- Добавлены changelog и правила его ведения.
+- Added an “About the project” playground page: author, license, instructions and the full changelog from one source.
+- Added the documentation build and browser checks for GitHub Pages; site publication depends on all checks for the same commit.
+- Added the full MIT text to the repository and library archive.
+- Added the changelog and maintenance rules.
 
-### Изменено
+### Changed
 
-- Новое название проекта — Gavia UI; выбран знак гагары в форме G с глазом.
-- Документация и метаданные подготовлены для `whitewolf06/gavia-ui`.
-- Новое имя пакета `gavia-ui` и публичный npm: установка без GitHub-токена после первого выпуска.
-- Обновлены импорты, workspace, CI и [миграция имени пакета](docs/migration-gavia.md).
-- Из описаний, демоданных и прототипов убран прежний бренд.
-- Переменная локального стенда — `GAVIA_E2E_BASE_URL`; тексты ошибок каталога
-  используют Gavia UI. Изменения перечислены в миграции.
-- Локальные браузерные проверки поддерживают полный закреплённый Chromium через `GAVIA_E2E_CHROMIUM_CHANNEL`.
+- The new project name is Gavia UI; the mark is a loon shaped like a G with an eye.
+- Documentation and metadata were prepared for `whitewolf06/gavia-ui`.
+- New package name `gavia-ui` on public npm: installation without a GitHub token after the first release.
+- Updated imports, workspace, CI and the [package-name migration](docs/migration-gavia.md).
+- Removed the previous brand from descriptions, demo data and prototypes.
+- The local preview variable is `GAVIA_E2E_BASE_URL`; catalog error messages
+  use Gavia UI. The migration lists these changes.
+- Local browser checks support the full pinned Chromium through `GAVIA_E2E_CHROMIUM_CHANNEL`.
 
-### Совместимость
+### Compatibility
 
-- Публичные `Wl*`, props, события, модели, слоты, имена иконок, классы `wl-*`
-  и токены `--wl-*` сохраняются.
+- Public `Wl*` names, props, events, models, slots, icon names, `wl-*` classes
+  and `--wl-*` tokens are preserved.
 
-Обязательная смена пути пакета и проверка потребителя описаны в
-[миграции 0.7](docs/migration-0.7.md). Настройка приложения и дизайн-система
-0.6.0 сохраняются.
+The required package-path change and consumer checks are described in
+the [0.7 migration](docs/migration-0.7.md). Application setup and the
+0.6.0 design system are preserved.
 
 ## 0.6.0 — 2026-10-01
 
-### Добавлено
+### Added
 
-- Дизайн-система: 416 токенов, темы White / Graphite / Newspaper и проверки контраста.
-- Примитивы компоновки и типографики, JSON-каталог и типизированные API токенов.
-- Живые SFC-примеры для 51 компонента, 47 SVG-иконок и шесть UI-сценариев.
-- Контрактные, браузерные и визуальные проверки; consumer smoke на Node 18 и 24.
+- Design system: 416 tokens, White / Graphite / Newspaper themes and contrast checks.
+- Layout and typography primitives, a JSON catalog and typed token APIs.
+- Live SFC examples for 51 components, 47 SVG icons and six UI recipes.
+- Contract, browser and visual checks; consumer smoke on Node 18 and 24.
 
-### Изменено
+### Changed
 
-- PrimeVue и PrimeIcons полностью удалены. Vue 3 — единственный обязательный peer; runtime-зависимостей нет.
-- Конфигурация, tooltip, уведомления и подтверждения реализованы внутри библиотеки.
-- Опциональная анимация оверлеев учитывает `prefers-reduced-motion`.
-- Сохранены публичные контракты компонентов и прежние токены.
+- PrimeVue and PrimeIcons were fully removed. Vue 3 is the only required peer; there are no runtime dependencies.
+- Configuration, tooltip, toast and confirmation behavior is implemented within the library.
+- Optional overlay motion respects `prefers-reduced-motion`.
+- Public component contracts and previous tokens are preserved.
 
-### Исправлено
+### Fixed
 
-- Блокировка прокрутки при открытии Dialog/Drawer, возврат фокуса и слои вложенных оверлеев.
-- Фокус в поиске и контраст кнопок, текста подсказок и ошибок.
-- Чтение CSS-файлов в тестах на Node 18 и лимиты времени сценариев в CI.
+- Scroll blocking when opening Dialog/Drawer, focus return and nested overlay layers.
+- Search focus and contrast for buttons, hints and error text.
+- Reading CSS files in Node 18 tests and CI scenario timeouts.
 
-Изменения настройки приложения и таблицы описаны в
-[миграции 0.6](docs/migration-0.6.md) и [миграции с 0.3](docs/migration-0.5.md).
-Работа под номерами 0.4/0.5 вошла в 0.6.0; отдельных релизных тегов для неё нет.
+Application setup and table changes are described in the
+[0.6 migration](docs/migration-0.6.md) and [migration from 0.3](docs/migration-0.5.md).
+Work labeled 0.4/0.5 was included in 0.6.0; it has no separate release tags.
 
 ## 0.3.0 — 2026-08-09
 
-- Укреплены контракты компонентов и добавлены примитивы компоновки страниц.
+- Strengthened component contracts and added page layout primitives.
 
 ## 0.2.1 — 2026-07-30
 
-- Добавлена тема Newspaper.
-- Витрина переведена на отложенную загрузку демонстраций.
+- Added the Newspaper theme.
+- Switched the playground to lazy-loaded demos.
 
 ## 0.2.0 — 2026-07-27
 
-- Добавлен составной Sidebar и расширены примеры составных компонентов.
-- Добавлены command palette, навигация по версиям, API выбора, подтверждений и манифест.
+- Added the composite Sidebar and expanded composite examples.
+- Added command palette, version navigation, selection/confirmation APIs and the manifest.
 
 ## 0.1.0 — 2026-07-19
 
-- Первый Vue 3 + TypeScript workspace: пакет, playground, темы и токены.
-- Базовые компоненты, навигация, оверлеи, таблица, календарь, выбор даты и загрузка файлов.
-- Настроена публикация прежнего пакета в GitHub Packages.
+- First Vue 3 + TypeScript workspace: package, playground, themes and tokens.
+- Basic components, navigation, overlays, table, calendar, date selection and file upload.
+- Configured publication of the previous package to GitHub Packages.
 
-## Правила ведения
+## Maintenance rules
 
-Изменения сначала записываются в «Не выпущено». При выпуске переносите их под
-версию и фактическую дату публикации. Отмечайте возможности, исправления и
-обязательные действия при обновлении; несовместимость требует миграционной заметки.
-Корневая и пакетная копии changelog должны совпадать по содержанию; в пакете
-ссылки на документацию абсолютные. Проверяйте публикацию отдельно от отправки тега.
+Record changes under “Unreleased” first. At release, move them under the
+version and actual publication date. Record features, fixes and required
+upgrade steps; breaking changes require a migration note.
+Root and package changelogs must have the same content; package documentation
+links are absolute. Verify publication separately from pushing the tag.

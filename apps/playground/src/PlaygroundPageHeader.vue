@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "./i18n";
+const { t } = usePlaygroundI18n();
 import { computed, inject } from "vue";
 import WlBreadcrumbs from "../../../packages/ui-kit/src/components/WlBreadcrumbs.vue";
 import WlPageHeader from "../../../packages/ui-kit/src/components/WlPageHeader.vue";
@@ -16,7 +18,7 @@ const navigation = inject(playgroundNavigationKey, undefined);
 const items = computed<WlBreadcrumbItem[]>(() => {
   const current = new URL(typeof window === "undefined" ? "http://localhost/" : window.location.href);
   if (navigation) current.searchParams.set("theme", navigation.theme.value);
-  const routes = [{ label: "Главная", route: { view: "home" } as PlaygroundRoute }, ...props.breadcrumbs];
+  const routes = [{ label: t('shell.PlaygroundPageHeader.text140'), route: { view: "home" } as PlaygroundRoute }, ...props.breadcrumbs];
   return routes.map(({ label, route }, index) => {
     if (index === routes.length - 1 || !route) return { label };
     const target = createPlaygroundUrl(current, route);

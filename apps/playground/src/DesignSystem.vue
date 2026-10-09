@@ -1,10 +1,18 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "./i18n";
+const { t } = usePlaygroundI18n();
 import { computed, defineAsyncComponent, nextTick, ref, watch } from "vue";
 import {
-  resolveWlToken, wlDesignTokens, wlDesignThemes, wlTypography, wlSpacing,
-  wlBreakpoints, wlContrastReport, type WlDesignTokenName, type WlDesignTokenDefinition
+  resolveWlToken, wlSpacing,
+  wlBreakpoints, type WlDesignTokenName, type WlDesignTokenDefinition
 } from "../../../packages/ui-kit/src/design-system";
-import { wlManifest } from "../../../packages/ui-kit/src/manifest";
+import { getLocalizedDesignTokens, getLocalizedDesignThemes, getLocalizedTypography, getLocalizedContrastReport } from "./design-system/localized-tokens";
+const wlDesignTokens = getLocalizedDesignTokens();
+const wlDesignThemes = getLocalizedDesignThemes();
+const wlTypography = getLocalizedTypography();
+const wlContrastReport = getLocalizedContrastReport();
+import { getLocalizedManifest } from "./documentation/manifest";
+const wlManifest = getLocalizedManifest();
 import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
 import type { WlThemeName, WlTableColumn } from "../../../packages/ui-kit/src/types";
 import type { WlComponentManifest } from "../../../packages/ui-kit/src/manifest/types";
@@ -29,9 +37,9 @@ const WlDrawer = defineAsyncComponent(() => import("../../../packages/ui-kit/src
 const props = defineProps<{ theme: WlThemeName }>();
 const emit = defineEmits<{ (event: "component", name: string): void }>();
 const sections = [
-  ["foundations", "Основы"], ["typography", "Типографика"], ["layout", "Сетка и отступы"],
-  ["tokens", "Токены"], ["components", "Контракты"], ["patterns", "Паттерны"],
-  ["recipes", "Рецепты"], ["stress", "Сложный контент"], ["accessibility", "Доступность"]
+  ["foundations", t('shell.DesignSystem.text141')], ["typography", t('shell.DesignSystem.text142')], ["layout", t('shell.DesignSystem.text143')],
+  ["tokens", t('shell.DesignSystem.text144')], ["components", t('shell.DesignSystem.text145')], ["patterns", t('shell.DesignSystem.text146')],
+  ["recipes", t('shell.DesignSystem.text147')], ["stress", t('shell.DesignSystem.text148')], ["accessibility", t('shell.DesignSystem.text149')]
 ] as const;
 const themePreviewGroups = [
   { id: "gavia", themes: wlDesignThemes.filter((item) => item.name === "gavia" || item.name === "gavia-dark") },
@@ -42,11 +50,11 @@ const query = ref("");
 const layer = ref("semantic");
 const category = ref("all");
 const layerOptions = [
-  { label: "Все слои", value: "all" }, { label: "Foundation", value: "foundation" },
+  { label: t('shell.DesignSystem.text150'), value: "all" }, { label: "Foundation", value: "foundation" },
   { label: "Semantic", value: "semantic" }, { label: "Component", value: "component" }
 ];
 const categories = [...new Set(wlDesignTokens.map((token) => token.category))].sort();
-const categoryOptions = [{ label: "Все категории", value: "all" }, ...categories.map((value) => ({ label: value, value }))];
+const categoryOptions = [{ label: t('shell.DesignSystem.text151'), value: "all" }, ...categories.map((value) => ({ label: value, value }))];
 const tokenRows = computed(() => {
   const needle = query.value.toLowerCase().trim();
   return wlDesignTokens.filter((token) => (layer.value === "all" || token.layer === layer.value)
@@ -62,8 +70,8 @@ const email = ref("");
 const submitted = ref(false);
 const saved = ref(false);
 watch([name, email], () => { saved.value = false; });
-const nameError = computed(() => submitted.value && !name.value.trim() ? "Введите имя." : "");
-const emailError = computed(() => submitted.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value) ? "Введите адрес в формате name@example.com." : "");
+const nameError = computed(() => submitted.value && !name.value.trim() ? t('shell.DesignSystem.text152') : "");
+const emailError = computed(() => submitted.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value) ? t('shell.DesignSystem.text153') : "");
 async function submitForm(): Promise<void> {
   submitted.value = true;
   saved.value = false;
@@ -76,59 +84,46 @@ async function submitForm(): Promise<void> {
 }
 const contentState = ref<string | null>("ready");
 const stateOptions = [
-  { label: "Данные", value: "ready" }, { label: "Загрузка", value: "loading" },
-  { label: "Пусто", value: "empty" }, { label: "Ошибка", value: "error" }
+  { label: t('shell.DesignSystem.text154'), value: "ready" }, { label: t('shell.DesignSystem.text155'), value: "loading" },
+  { label: t('shell.DesignSystem.text156'), value: "empty" }, { label: t('shell.DesignSystem.text157'), value: "error" }
 ];
-const columns: WlTableColumn<{ name: string; status: string }>[] = [{ key: "name", label: "Материал" }, { key: "status", label: "Состояние" }];
-const rows = [{ name: "Правила типографики", status: "Готово" }, { name: "Каталог токенов", status: "Готово" }, { name: "Контракты компонентов", status: "Готово" }];
+const columns: WlTableColumn<{ name: string; status: string }>[] = [{ key: "name", label: t('shell.DesignSystem.text158') }, { key: "status", label: t('shell.DesignSystem.text159') }];
+const rows = [{ name: t('shell.DesignSystem.text160'), status: t('shell.DesignSystem.text161') }, { name: t('shell.DesignSystem.text162'), status: t('shell.DesignSystem.text163') }, { name: t('shell.DesignSystem.text164'), status: t('shell.DesignSystem.text165') }];
 const drawerVisible = ref(false);
 const motion = ref(true);
 const themeContrast = computed(() => wlContrastReport.filter((pair) => pair.theme === props.theme));
 const resolved = (name: WlDesignTokenName, theme = props.theme): string => resolveWlToken(name, theme);
-const layoutCode = `<section class="wl-container">
-  <div class="wl-stack" data-space="xl">
-    <h1 class="wl-text-title">Заголовок страницы</h1>
-    <div class="wl-grid" data-space="lg">
-      <article class="wl-surface">Содержимое</article>
-    </div>
-  </div>
-</section>`;
-const tokenCode = `.page {
-  color: var(--wl-text);
-  background: var(--wl-bg);
-  gap: var(--wl-space-lg);
-}
-/* Настройка конкретного компонента */
-.page-actions { --wl-btn-height: var(--wl-control-height-lg); }`;
+const layoutCode = t('shell.DesignSystem.text166');
+const tokenCode = t('shell.DesignSystem.text167');
 </script>
 
 <template>
   <main class="ds-main wl-container" id="ds-top">
-    <PlaygroundPageHeader class="ds-hero" title="Дизайн-система"
-      description="Правила для текста, цветов, отступов и состояний компонентов. Токены и примеры для пяти тем."
-      :breadcrumbs="[{ label: 'Дизайн-система' }]">
+    <PlaygroundPageHeader class="ds-hero" :title="t('shell.DesignSystem.text168')"
+      :description="t('shell.DesignSystem.text169')"
+      :breadcrumbs="[{ label: t('shell.DesignSystem.text170') }]">
       <template #meta><div class="ds-metrics wl-inline" data-space="xl">
-        <span><strong>{{ wlManifest.length }}</strong> компонентов</span>
-        <span><strong>{{ wlDesignTokens.length }}</strong> токенов</span>
-        <span><strong>{{ WL_ICON_NAMES.length }}</strong> иконок</span>
-        <span><strong>{{ wlDesignThemes.length }}</strong> тем</span>
+        <span><strong>{{ wlManifest.length }}</strong> {{ t('shell.DesignSystem.text171') }}</span>
+        <span><strong>{{ wlDesignTokens.length }}</strong> {{ t('shell.DesignSystem.text172') }}</span>
+        <span><strong>{{ WL_ICON_NAMES.length }}</strong> {{ t('shell.DesignSystem.text173') }}</span>
+        <span><strong>{{ wlDesignThemes.length }}</strong> {{ t('shell.DesignSystem.text174') }}</span>
       </div></template>
     </PlaygroundPageHeader>
     <div class="ds-shell">
-      <nav class="ds-nav" aria-label="Разделы дизайн-системы">
+      <nav class="ds-nav" :aria-label="t('shell.DesignSystem.text175')">
         <a v-for="[id, label] in sections" :key="id" :href="`#ds-${id}`">{{ label }}</a>
       </nav>
       <div class="ds-content wl-stack" data-space="4xl">
         <section id="ds-foundations" class="ds-section wl-stack" data-space="xl">
           <div class="wl-stack" data-space="sm">
-            <p class="ds-eyebrow">01 / Основы</p>
-            <h2 class="wl-text-title">Действия, состояния и группы</h2>
-            <p class="wl-text-body wl-text-muted">Выделяйте одно основное действие. Обозначайте состояние текстом или иконкой вместе с цветом. Объединяйте связанные элементы отступами и общим фоном.</p>
+            <p class="ds-eyebrow">{{ t('shell.DesignSystem.text176') }}</p>
+            <h2 class="wl-text-title">{{ t('shell.DesignSystem.text177') }}</h2>
+            <p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text178') }}</p>
           </div>
           <div class="wl-grid" data-space="lg">
-            <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">Подписи и состояния</h3><p class="wl-text-body wl-text-muted">Называйте действие прямо. Показывайте загрузку, ошибку и результат.</p></article>
-            <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">Размеры и поведение</h3><p class="wl-text-body wl-text-muted">Используйте общие размеры и отступы. Одинаковые элементы должны работать одинаково.</p></article>
-            <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">Доступность</h3><p class="wl-text-body wl-text-muted">Клавиатура, видимый фокус, подписи полей и достаточный контраст.</p></article>
+            <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">{{ t('shell.DesignSystem.text179') }}</h3><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text180') }}</p></article>
+            <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">{{ t('shell.DesignSystem.text181') }}</h3><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text182') }}</p></article>
+            <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">{{ t('shell.DesignSystem.text183') }}</h3><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text184') }}</p></article>
           </div>
           <div class="wl-stack ds-theme-groups" data-space="2xl">
             <div v-for="group in themePreviewGroups" :key="group.id" class="wl-grid ds-theme-grid" :class="{ 'ds-theme-grid--gavia': group.id === 'gavia' }" :data-theme-group="group.id" data-space="lg">
@@ -138,128 +133,128 @@ const tokenCode = `.page {
                 <div class="ds-palette">
                   <span v-for="color in semanticColors" :key="color" class="ds-color" :title="`--wl-${color}: ${resolved(`--wl-${color}`, item.name)}`" :style="{ background: `var(--wl-${color})` }" />
                 </div>
-                <WlButton variant="primary" size="sm">Основное действие</WlButton>
+                <WlButton variant="primary" size="sm">{{ t('shell.DesignSystem.text185') }}</WlButton>
               </article>
             </div>
           </div>
           <div class="wl-grid" data-space="lg">
-            <article class="wl-surface ds-elevation" :style="{ boxShadow: 'var(--wl-elevation-surface)' }"><h3 class="wl-text-subheading">Поверхность</h3><p class="wl-text-small wl-text-muted">Карточки и разделы / elevation-surface</p></article>
-            <article class="wl-surface ds-elevation" :style="{ boxShadow: 'var(--wl-elevation-floating)' }"><h3 class="wl-text-subheading">Всплывающий слой</h3><p class="wl-text-small wl-text-muted">Меню и панели / elevation-floating</p></article>
+            <article class="wl-surface ds-elevation" :style="{ boxShadow: 'var(--wl-elevation-surface)' }"><h3 class="wl-text-subheading">{{ t('shell.DesignSystem.text186') }}</h3><p class="wl-text-small wl-text-muted">{{ t('shell.DesignSystem.text187') }}</p></article>
+            <article class="wl-surface ds-elevation" :style="{ boxShadow: 'var(--wl-elevation-floating)' }"><h3 class="wl-text-subheading">{{ t('shell.DesignSystem.text188') }}</h3><p class="wl-text-small wl-text-muted">{{ t('shell.DesignSystem.text189') }}</p></article>
           </div>
         </section>
 
         <section id="ds-typography" class="ds-section wl-stack" data-space="xl">
-          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">02 / Типографика</p><h2 class="wl-text-title">Роли текста</h2><p class="wl-text-body wl-text-muted">Размер задаётся ролью. Семантические h1–h6 сохраняют структуру документа; класс определяет внешний вид. Newspaper использует свои шрифты через те же токены.</p></div>
+          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">{{ t('shell.DesignSystem.text190') }}</p><h2 class="wl-text-title">{{ t('shell.DesignSystem.text191') }}</h2><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text192') }}</p></div>
           <div class="wl-surface ds-type-list">
             <div v-for="role in wlTypography" :key="role.name" class="ds-type-row">
               <div><code class="wl-text-code">{{ role.name }}</code><p class="wl-text-small wl-text-muted">{{ resolved(role.fontSize) }} / {{ resolved(role.lineHeight) }} · {{ resolved(role.fontWeight) }}</p></div>
               <div><p :class="`wl-text-${role.name}`">{{ role.label }}</p><p class="wl-text-small wl-text-muted">{{ role.description }}</p></div>
             </div>
           </div>
-          <p class="wl-text-small wl-text-muted">Текст основного сценария — body, пояснения — small + text-muted. Ограничивайте длинную строку примерно 60–75 символами. --wl-text-3 оставлен для декоративных деталей.</p>
+          <p class="wl-text-small wl-text-muted">{{ t('shell.DesignSystem.text193') }}</p>
         </section>
 
         <section id="ds-layout" class="ds-section wl-stack" data-space="xl">
-          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">03 / Сетка и отступы</p><h2 class="wl-text-title">Шкала отступов</h2><p class="wl-text-body wl-text-muted">Малая группа — 8 px, поля формы — 16 px, карточка — 24 px, разделы — 48–64 px. Компактная плотность подходит для экранов с большим количеством данных.</p></div>
+          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">{{ t('shell.DesignSystem.text194') }}</p><h2 class="wl-text-title">{{ t('shell.DesignSystem.text195') }}</h2><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text196') }}</p></div>
           <div class="wl-surface ds-spacing">
             <div v-for="(token, space) in wlSpacing" :key="space" class="ds-space-row">
               <code class="wl-text-code">{{ space }}</code><span class="ds-space-bar" :style="{ width: `var(${token})` }" /><span class="wl-text-small wl-text-muted">{{ resolved(token) }}</span>
             </div>
           </div>
           <div class="wl-grid" data-space="lg">
-            <div class="wl-surface wl-stack" data-space="md"><h3 class="wl-text-subheading">Адаптивная сетка</h3><div class="wl-grid" data-space="sm"><div class="ds-grid-cell">Карточка A</div><div class="ds-grid-cell">Карточка B</div></div><p class="wl-text-small wl-text-muted">Карточки автоматически переходят в одну колонку. Контейнер: {{ resolved('--wl-layout-page-max') }}.</p></div>
-            <CodePanel :source="layoutCode" language="html" title="HTML · примитивы компоновки" :expanded="true" />
+            <div class="wl-surface wl-stack" data-space="md"><h3 class="wl-text-subheading">{{ t('shell.DesignSystem.text197') }}</h3><div class="wl-grid" data-space="sm"><div class="ds-grid-cell">{{ t('shell.DesignSystem.text198') }}</div><div class="ds-grid-cell">{{ t('shell.DesignSystem.text199') }}</div></div><p class="wl-text-small wl-text-muted">{{ t('shell.DesignSystem.text200') }} {{ resolved('--wl-layout-page-max') }}.</p></div>
+            <CodePanel :source="layoutCode" language="html" :title="t('shell.DesignSystem.text201')" :expanded="true" />
           </div>
           <div class="wl-inline wl-text-small wl-text-muted" data-space="lg"><span v-for="(width, key) in wlBreakpoints" :key="key">{{ key }}: {{ width }} px</span></div>
-          <p class="wl-text-small wl-text-muted">CSS подключается явно: styles/primitives.css. На узком экране сохраняйте логичный порядок чтения, переносите действия и используйте горизонтальную прокрутку только внутри таблиц.</p>
+          <p class="wl-text-small wl-text-muted">{{ t('shell.DesignSystem.text202') }}</p>
         </section>
 
         <section id="ds-tokens" class="ds-section wl-stack" data-space="xl">
-          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">04 / Токены</p><h2 class="wl-text-title">Каталог значений</h2><p class="wl-text-body wl-text-muted">Foundation → semantic → component. Каталог, CSS и типы генерируются из tokens/source.json. Значения ниже соответствуют теме {{ theme }}.</p></div>
-          <CodePanel :source="tokenCode" language="css" title="CSS · настройка токенов" :expanded="true" />
+          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">{{ t('shell.DesignSystem.text203') }}</p><h2 class="wl-text-title">{{ t('shell.DesignSystem.text204') }}</h2><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text205') }} {{ theme }}.</p></div>
+          <CodePanel :source="tokenCode" language="css" :title="t('shell.DesignSystem.text206')" :expanded="true" />
           <div class="ds-token-filters wl-grid" data-space="md">
-            <WlField label="Поиск токена" id="ds-token-search" v-slot="field"><WlInput :id="field.id" v-model="query" placeholder="Название, описание или значение" type="search" /></WlField>
-            <div class="wl-stack" data-space="sm"><span id="ds-token-layer-label" class="wl-text-label">Слой</span><WlSelect id="ds-token-layer" v-model="layer" aria-labelledby="ds-token-layer-label" :options="layerOptions" option-label="label" option-value="value" /></div>
-            <div class="wl-stack" data-space="sm"><span id="ds-token-category-label" class="wl-text-label">Категория</span><WlSelect id="ds-token-category" v-model="category" aria-labelledby="ds-token-category-label" :options="categoryOptions" option-label="label" option-value="value" /></div>
+            <WlField :label="t('shell.DesignSystem.text207')" id="ds-token-search" v-slot="field"><WlInput :id="field.id" v-model="query" :placeholder="t('shell.DesignSystem.text208')" type="search" /></WlField>
+            <div class="wl-stack" data-space="sm"><span id="ds-token-layer-label" class="wl-text-label">{{ t('shell.DesignSystem.text209') }}</span><WlSelect id="ds-token-layer" v-model="layer" aria-labelledby="ds-token-layer-label" :options="layerOptions" option-label="label" option-value="value" /></div>
+            <div class="wl-stack" data-space="sm"><span id="ds-token-category-label" class="wl-text-label">{{ t('shell.DesignSystem.text210') }}</span><WlSelect id="ds-token-category" v-model="category" aria-labelledby="ds-token-category-label" :options="categoryOptions" option-label="label" option-value="value" /></div>
           </div>
-          <p class="wl-text-small wl-text-muted" role="status">Найдено токенов: <strong data-testid="ds-token-count">{{ tokenRows.length }}</strong> / {{ wlDesignTokens.length }}</p>
-          <div class="ds-table-scroll ds-token-catalog" tabindex="0" role="region" aria-label="Каталог токенов">
+          <p class="wl-text-small wl-text-muted" role="status">{{ t('shell.DesignSystem.text211') }} <strong data-testid="ds-token-count">{{ tokenRows.length }}</strong> / {{ wlDesignTokens.length }}</p>
+          <div class="ds-table-scroll ds-token-catalog" tabindex="0" role="region" :aria-label="t('shell.DesignSystem.text212')">
             <table class="ds-token-table">
-              <thead><tr><th scope="col">Токен / роль</th><th scope="col">Ссылка</th><th scope="col">Значение</th></tr></thead>
+              <thead><tr><th scope="col">{{ t('shell.DesignSystem.text213') }}</th><th scope="col">{{ t('shell.DesignSystem.text214') }}</th><th scope="col">{{ t('shell.DesignSystem.text215') }}</th></tr></thead>
               <tbody><tr v-for="token in tokenRows" :key="token.name" :data-token="token.name">
                 <th scope="row"><code>{{ token.name }}</code><p class="wl-text-small wl-text-muted">{{ token.description }}</p><span class="ds-token-layer">{{ token.layer }}</span></th>
                 <td><code>{{ token.value }}</code></td>
                 <td><span v-if="token.type === 'color'" class="ds-value-color" :style="{ background: token.resolved }" /><code>{{ token.resolved }}</code></td>
               </tr></tbody>
             </table>
-            <p v-if="!tokenRows.length" class="ds-no-results wl-text-body">Токены не найдены. Измените запрос или фильтры.</p>
+            <p v-if="!tokenRows.length" class="ds-no-results wl-text-body">{{ t('shell.DesignSystem.text216') }}</p>
           </div>
         </section>
 
         <section id="ds-components" class="ds-section wl-stack" data-space="xl">
-          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">05 / Компоненты</p><h2 class="wl-text-title">Публичные контракты</h2><p class="wl-text-body wl-text-muted">Props, модели, события и слоты берутся из манифеста библиотеки. Размер и плотность меняют геометрию; вариант передаёт смысл действия; состояния отражают его доступность.</p></div>
+          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">{{ t('shell.DesignSystem.text217') }}</p><h2 class="wl-text-title">{{ t('shell.DesignSystem.text218') }}</h2><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text219') }}</p></div>
           <div class="wl-surface wl-stack" data-space="lg">
-            <div class="wl-inline" data-space="sm"><WlButton variant="primary">Основное</WlButton><WlButton variant="secondary">Дополнительное</WlButton><WlButton variant="ghost">Ghost</WlButton><WlButton variant="danger">Удалить</WlButton></div>
-            <div class="wl-inline" data-space="sm"><WlButton size="sm">Маленькая</WlButton><WlButton size="md">Обычная</WlButton><WlButton size="lg">Крупная</WlButton><WlButton density="compact">Компактная</WlButton></div>
-            <div class="wl-inline" data-space="sm"><WlButton disabled>Недоступно</WlButton><WlButton loading>Сохранение</WlButton><WlField label="Поле с ошибкой" id="ds-state-invalid" error="Проверьте значение." v-slot="field"><WlInput :id="field.id" model-value="Некорректное значение" :invalid="field.invalid" :aria-describedby="field.ariaDescribedby" /></WlField></div>
-            <p class="wl-text-small wl-text-muted">Один primary на группу. Danger — для необратимого действия с подтверждением. Loading блокирует повторную отправку; disabled сопровождается объяснением причины рядом.</p>
+            <div class="wl-inline" data-space="sm"><WlButton variant="primary">{{ t('shell.DesignSystem.text220') }}</WlButton><WlButton variant="secondary">{{ t('shell.DesignSystem.text221') }}</WlButton><WlButton variant="ghost">Ghost</WlButton><WlButton variant="danger">{{ t('shell.DesignSystem.text222') }}</WlButton></div>
+            <div class="wl-inline" data-space="sm"><WlButton size="sm">{{ t('shell.DesignSystem.text223') }}</WlButton><WlButton size="md">{{ t('shell.DesignSystem.text224') }}</WlButton><WlButton size="lg">{{ t('shell.DesignSystem.text225') }}</WlButton><WlButton density="compact">{{ t('shell.DesignSystem.text226') }}</WlButton></div>
+            <div class="wl-inline" data-space="sm"><WlButton disabled>{{ t('shell.DesignSystem.text227') }}</WlButton><WlButton loading>{{ t('shell.DesignSystem.text228') }}</WlButton><WlField :label="t('shell.DesignSystem.text229')" id="ds-state-invalid" :error="t('shell.DesignSystem.text230')" v-slot="field"><WlInput :id="field.id" :model-value="t('shell.DesignSystem.text231')" :invalid="field.invalid" :aria-describedby="field.ariaDescribedby" /></WlField></div>
+            <p class="wl-text-small wl-text-muted">{{ t('shell.DesignSystem.text232') }}</p>
           </div>
-          <WlField label="Компонент" id="ds-component-picker" v-slot="field"><WlSelect :id="field.id" aria-label="Компонент" v-model="selectedComponent" :options="componentOptions" option-label="label" option-value="value" /></WlField>
+          <WlField :label="t('shell.DesignSystem.text233')" id="ds-component-picker" v-slot="field"><WlSelect :id="field.id" :aria-label="t('shell.DesignSystem.text234')" v-model="selectedComponent" :options="componentOptions" option-label="label" option-value="value" /></WlField>
           <article class="wl-surface wl-stack" data-space="lg" data-testid="ds-contract">
-            <div class="wl-inline" data-space="sm"><h3 class="wl-text-heading">{{ contract.name }}</h3><span class="wl-text-small wl-text-muted">С версии {{ contract.introducedIn }}</span><WlButton size="sm" @click="emit('component', contract.name)">Открыть руководство</WlButton></div>
+            <div class="wl-inline" data-space="sm"><h3 class="wl-text-heading">{{ contract.name }}</h3><span class="wl-text-small wl-text-muted">{{ t('shell.DesignSystem.text235') }} {{ contract.introducedIn }}</span><WlButton size="sm" @click="emit('component', contract.name)">{{ t('shell.DesignSystem.text236') }}</WlButton></div>
             <p class="wl-text-body wl-text-muted">{{ contract.description }}</p>
             <div v-if="contract.model" class="ds-contract-model wl-text-code">v-model{{ contract.model.name === 'modelValue' ? '' : `:${contract.model.name}` }}: {{ contract.model.type }}</div>
-            <div class="ds-table-scroll" tabindex="0" role="region" :aria-label="`Props ${contract.name}`"><table class="ds-token-table"><thead><tr><th scope="col">Prop</th><th scope="col">Тип / значения</th><th scope="col">Назначение</th></tr></thead><tbody><tr v-for="prop in contract.props" :key="prop.name"><th scope="row"><code>{{ prop.name }}{{ prop.required ? ' *' : '' }}</code></th><td><code>{{ prop.values?.join(' | ') ?? prop.type }}</code></td><td class="wl-text-small">{{ prop.description }}<p v-if="prop.default !== undefined" class="wl-text-muted">По умолчанию: {{ JSON.stringify(prop.default) }}</p></td></tr></tbody></table></div>
-            <div class="wl-grid" data-space="lg"><div><h4 class="wl-text-label">Слоты</h4><ul class="ds-list wl-text-small"><li v-for="slot in contract.slots" :key="slot.name"><code>{{ slot.name }}</code> — {{ slot.description }}</li><li v-if="!contract.slots.length">Нет</li></ul></div><div><h4 class="wl-text-label">События</h4><ul class="ds-list wl-text-small"><li v-for="event in contract.emits" :key="event.name"><code>{{ event.name }}</code> — {{ event.payload ?? event.description }}</li><li v-if="!contract.emits.length">Нет дополнительных событий</li></ul></div></div>
+            <div class="ds-table-scroll" tabindex="0" role="region" :aria-label="`Props ${contract.name}`"><table class="ds-token-table"><thead><tr><th scope="col">Prop</th><th scope="col">{{ t('shell.DesignSystem.text237') }}</th><th scope="col">{{ t('shell.DesignSystem.text238') }}</th></tr></thead><tbody><tr v-for="prop in contract.props" :key="prop.name"><th scope="row"><code>{{ prop.name }}{{ prop.required ? ' *' : '' }}</code></th><td><code>{{ prop.values?.join(' | ') ?? prop.type }}</code></td><td class="wl-text-small">{{ prop.description }}<p v-if="prop.default !== undefined" class="wl-text-muted">{{ t('shell.DesignSystem.text239') }} {{ JSON.stringify(prop.default) }}</p></td></tr></tbody></table></div>
+            <div class="wl-grid" data-space="lg"><div><h4 class="wl-text-label">{{ t('shell.DesignSystem.text240') }}</h4><ul class="ds-list wl-text-small"><li v-for="slot in contract.slots" :key="slot.name"><code>{{ slot.name }}</code> — {{ slot.description }}</li><li v-if="!contract.slots.length">{{ t('shell.DesignSystem.text241') }}</li></ul></div><div><h4 class="wl-text-label">{{ t('shell.DesignSystem.text242') }}</h4><ul class="ds-list wl-text-small"><li v-for="event in contract.emits" :key="event.name"><code>{{ event.name }}</code> — {{ event.payload ?? event.description }}</li><li v-if="!contract.emits.length">{{ t('shell.DesignSystem.text243') }}</li></ul></div></div>
             <ComponentExplorer :entry="contract" />
           </article>
         </section>
 
         <section id="ds-patterns" class="ds-section wl-stack" data-space="xl">
-          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">06 / Паттерны</p><h2 class="wl-text-title">Формы, данные и панели</h2><p class="wl-text-body wl-text-muted">Компоненты отвечают за отображение и взаимодействие. Валидацию, запросы и бизнес-правила задаёт приложение. Примеры на этой странице работают без сервера.</p></div>
+          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">{{ t('shell.DesignSystem.text244') }}</p><h2 class="wl-text-title">{{ t('shell.DesignSystem.text245') }}</h2><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text246') }}</p></div>
           <div class="wl-grid" data-space="xl">
-            <form class="wl-surface wl-stack" data-space="lg" novalidate @submit.prevent="submitForm" aria-label="Пример формы">
-              <h3 class="wl-text-heading">Форма с валидацией</h3>
-              <WlField label="Имя" id="ds-name" required :error="nameError" hint="Как к вам обращаться" v-slot="field"><WlInput :id="field.id" v-model="name" :invalid="field.invalid" :aria-describedby="field.ariaDescribedby" required autocomplete="name" /></WlField>
-              <WlField label="Email" id="ds-email" required :error="emailError" hint="Например: name@example.com" v-slot="field"><WlInput :id="field.id" v-model="email" :invalid="field.invalid" :aria-describedby="field.ariaDescribedby" type="email" required autocomplete="email" /></WlField>
-              <WlButton variant="primary" type="submit">Сохранить пример</WlButton>
-              <WlAlert v-if="saved" variant="ok" title="Данные проверены">Поля заполнены корректно. Пример не отправляет и не сохраняет данные.</WlAlert>
+            <form class="wl-surface wl-stack" data-space="lg" novalidate @submit.prevent="submitForm" :aria-label="t('shell.DesignSystem.text247')">
+              <h3 class="wl-text-heading">{{ t('shell.DesignSystem.text248') }}</h3>
+              <WlField :label="t('shell.DesignSystem.text249')" id="ds-name" required :error="nameError" :hint="t('shell.DesignSystem.text250')" v-slot="field"><WlInput :id="field.id" v-model="name" :invalid="field.invalid" :aria-describedby="field.ariaDescribedby" required autocomplete="name" /></WlField>
+              <WlField label="Email" id="ds-email" required :error="emailError" :hint="t('shell.DesignSystem.text251')" v-slot="field"><WlInput :id="field.id" v-model="email" :invalid="field.invalid" :aria-describedby="field.ariaDescribedby" type="email" required autocomplete="email" /></WlField>
+              <WlButton variant="primary" type="submit">{{ t('shell.DesignSystem.text252') }}</WlButton>
+              <WlAlert v-if="saved" variant="ok" :title="t('shell.DesignSystem.text253')">{{ t('shell.DesignSystem.text254') }}</WlAlert>
             </form>
-            <article class="wl-surface wl-stack" data-space="lg"><h3 class="wl-text-heading">Правила формы</h3><ol class="ds-list wl-text-body wl-text-muted"><li>Видимая подпись связана с контролом через id.</li><li>Подсказка и ошибка связаны через aria-describedby.</li><li>При отправке фокус переходит к первой ошибке.</li><li>Введённые данные сохраняются после ошибки.</li><li>Результат действия объясняется текстом.</li></ol><p class="wl-text-small wl-text-muted">WlField передаёт id, invalid и ariaDescribedby через scoped slot. Placeholder дополняет подпись.</p></article>
+            <article class="wl-surface wl-stack" data-space="lg"><h3 class="wl-text-heading">{{ t('shell.DesignSystem.text255') }}</h3><ol class="ds-list wl-text-body wl-text-muted"><li>{{ t('shell.DesignSystem.text256') }}</li><li>{{ t('shell.DesignSystem.text257') }}</li><li>{{ t('shell.DesignSystem.text258') }}</li><li>{{ t('shell.DesignSystem.text259') }}</li><li>{{ t('shell.DesignSystem.text260') }}</li></ol><p class="wl-text-small wl-text-muted">{{ t('shell.DesignSystem.text261') }}</p></article>
           </div>
           <article class="wl-surface wl-stack" data-space="lg">
-            <h3 class="wl-text-heading">Четыре состояния данных</h3>
-            <WlSegmented v-model="contentState" :options="stateOptions" :pt="{ root: { style: { flexWrap: 'wrap', height: 'auto' } } }" aria-label="Состояние данных" />
+            <h3 class="wl-text-heading">{{ t('shell.DesignSystem.text262') }}</h3>
+            <WlSegmented v-model="contentState" :options="stateOptions" :pt="{ root: { style: { flexWrap: 'wrap', height: 'auto' } } }" :aria-label="t('shell.DesignSystem.text263')" />
             <div class="ds-data-preview" data-testid="ds-data-state">
-              <div v-if="contentState === 'loading'" class="wl-stack" data-space="lg" role="status" aria-busy="true"><span class="wl-text-small wl-text-muted">Загружаем материалы…</span><WlSkeleton height="20px" /><WlSkeleton height="20px" width="80%" /><WlSkeleton height="20px" width="60%" /></div>
-              <WlEmpty v-else-if="contentState === 'empty'" icon="file" title="Материалов пока нет" description="Добавьте пример материала."><template #action><WlButton @click="contentState = 'ready'">Добавить пример</WlButton></template></WlEmpty>
-              <WlAlert v-else-if="contentState === 'error'" variant="err" title="Не удалось загрузить материалы">Повторите загрузку.<template #action><WlButton size="sm" @click="contentState = 'ready'">Повторить</WlButton></template></WlAlert>
+              <div v-if="contentState === 'loading'" class="wl-stack" data-space="lg" role="status" aria-busy="true"><span class="wl-text-small wl-text-muted">{{ t('shell.DesignSystem.text264') }}</span><WlSkeleton height="20px" /><WlSkeleton height="20px" width="80%" /><WlSkeleton height="20px" width="60%" /></div>
+              <WlEmpty v-else-if="contentState === 'empty'" icon="file" :title="t('shell.DesignSystem.text265')" :description="t('shell.DesignSystem.text266')"><template #action><WlButton @click="contentState = 'ready'">{{ t('shell.DesignSystem.text267') }}</WlButton></template></WlEmpty>
+              <WlAlert v-else-if="contentState === 'error'" variant="err" :title="t('shell.DesignSystem.text268')">{{ t('shell.DesignSystem.text269') }}<template #action><WlButton size="sm" @click="contentState = 'ready'">{{ t('shell.DesignSystem.text270') }}</WlButton></template></WlAlert>
               <WlTable v-else :columns="columns" :value="rows" />
             </div>
           </article>
-          <article class="wl-surface wl-stack" data-space="lg"><h3 class="wl-text-heading">Действие в боковой панели</h3><p class="wl-text-body wl-text-muted">Drawer открывается поверх страницы. Escape закрывает панель, фокус возвращается к кнопке открытия. Анимацию можно задать для приложения или отдельной панели.</p><div class="wl-inline wl-text-body" data-space="sm"><WlSwitch v-model="motion" aria-label="Анимация примера панели">Анимация панели</WlSwitch></div><div><WlButton @click="drawerVisible = true">Открыть панель</WlButton></div></article>
+          <article class="wl-surface wl-stack" data-space="lg"><h3 class="wl-text-heading">{{ t('shell.DesignSystem.text271') }}</h3><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text272') }}</p><div class="wl-inline wl-text-body" data-space="sm"><WlSwitch v-model="motion" :aria-label="t('shell.DesignSystem.text273')">{{ t('shell.DesignSystem.text274') }}</WlSwitch></div><div><WlButton @click="drawerVisible = true">{{ t('shell.DesignSystem.text275') }}</WlButton></div></article>
         </section>
 
         <section id="ds-recipes" class="ds-section wl-stack" data-space="xl">
-          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">07 / Рецепты</p><h2 class="wl-text-title">Примеры сценариев</h2><p class="wl-text-body wl-text-muted">Шесть примеров с кодом для копирования: состояния данных, отмена, ошибки и повторные действия. Сценарии проверяются вместе с компонентами.</p></div>
+          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">{{ t('shell.DesignSystem.text276') }}</p><h2 class="wl-text-title">{{ t('shell.DesignSystem.text277') }}</h2><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text278') }}</p></div>
           <RecipeGallery />
         </section>
         <section id="ds-stress" class="ds-section wl-stack" data-space="xl">
-          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">08 / Сложный контент</p><h2 class="wl-text-title">Длинный текст и большие списки</h2><p class="wl-text-body wl-text-muted">Длинный русский текст, восемь тегов, 80 вариантов выбора, 20 строк таблицы, ограниченные даты и вложенные оверлеи. Изменяйте ширину окна и размер текста.</p></div>
+          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">{{ t('shell.DesignSystem.text279') }}</p><h2 class="wl-text-title">{{ t('shell.DesignSystem.text280') }}</h2><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text281') }}</p></div>
           <ContentStress />
         </section>
         <section id="ds-accessibility" class="ds-section wl-stack" data-space="xl">
-          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">09 / Доступность</p><h2 class="wl-text-title">Клавиатура, контраст и фокус</h2><p class="wl-text-body wl-text-muted">Контраст текста — от 4.5:1, индикатора фокуса — от 3:1. Отчёт проверяет перечисленные пары токенов; пользовательские цвета и весь экран проверяются отдельно.</p></div>
-          <div class="wl-grid" data-space="lg"><article class="wl-surface"><h3 class="wl-text-subheading">Клавиатура</h3><p class="wl-text-body wl-text-muted">Tab — переход. Enter / Space — действие. Стрелки — выбор. Escape — закрытие оверлея. Фокус виден и возвращается после закрытия.</p></article><article class="wl-surface"><h3 class="wl-text-subheading">Движение</h3><p class="wl-text-body wl-text-muted">motion: false выключает переходы. Системное prefers-reduced-motion действует во всех темах. Анимация не меняет смысл или время жизни данных.</p></article><article class="wl-surface"><h3 class="wl-text-subheading">Текст и цель</h3><p class="wl-text-body wl-text-muted">Иконка действия получает aria-label. Ошибка объясняет следующий шаг. Цель на touch-экране: ориентир 44 × 44 px; выбирайте lg и достаточные интервалы.</p></article></div>
-          <div class="ds-table-scroll" tabindex="0" role="region" aria-label="Контраст темы"><table class="ds-token-table"><thead><tr><th scope="col">Пара / {{ theme }}</th><th scope="col">Факт</th><th scope="col">Минимум</th></tr></thead><tbody><tr v-for="pair in themeContrast" :key="pair.name"><th scope="row">{{ pair.label }}</th><td class="ds-contrast-pass">{{ pair.ratio }}:1</td><td>{{ pair.minimum }}:1</td></tr></tbody></table></div>
-          <p class="wl-text-small wl-text-muted">Новые токены проходят tokens:check. Паттерны проверяются в Chromium, Firefox, WebKit и мобильном Chromium. Перед релизом также проверяются типы, архив и изолированный потребитель.</p>
+          <div class="wl-stack" data-space="sm"><p class="ds-eyebrow">{{ t('shell.DesignSystem.text282') }}</p><h2 class="wl-text-title">{{ t('shell.DesignSystem.text283') }}</h2><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text284') }}</p></div>
+          <div class="wl-grid" data-space="lg"><article class="wl-surface"><h3 class="wl-text-subheading">{{ t('shell.DesignSystem.text285') }}</h3><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text286') }}</p></article><article class="wl-surface"><h3 class="wl-text-subheading">{{ t('shell.DesignSystem.text287') }}</h3><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text288') }}</p></article><article class="wl-surface"><h3 class="wl-text-subheading">{{ t('shell.DesignSystem.text289') }}</h3><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text290') }}</p></article></div>
+          <div class="ds-table-scroll" tabindex="0" role="region" :aria-label="t('shell.DesignSystem.text291')"><table class="ds-token-table"><thead><tr><th scope="col">{{ t('shell.DesignSystem.text292') }} {{ theme }}</th><th scope="col">{{ t('shell.DesignSystem.text293') }}</th><th scope="col">{{ t('shell.DesignSystem.text294') }}</th></tr></thead><tbody><tr v-for="pair in themeContrast" :key="pair.name"><th scope="row">{{ pair.label }}</th><td class="ds-contrast-pass">{{ pair.ratio }}:1</td><td>{{ pair.minimum }}:1</td></tr></tbody></table></div>
+          <p class="wl-text-small wl-text-muted">{{ t('shell.DesignSystem.text295') }}</p>
         </section>
-        <footer class="ds-footer wl-text-small wl-text-muted">Gavia UI · Vue 3 · API компонентов · документация в docs/design-system.md</footer>
+        <footer class="ds-footer wl-text-small wl-text-muted">{{ t('shell.DesignSystem.text296') }}</footer>
       </div>
     </div>
-    <WlDrawer v-model:visible="drawerVisible" header="Настройка представления" :motion="motion">
-      <div class="wl-stack" data-space="lg"><h2 class="wl-text-heading">Сохранённый контекст</h2><p class="wl-text-body wl-text-muted">Настройки отображаются поверх страницы. Закройте панель клавишей Escape и проверьте возврат фокуса.</p><p class="wl-text-small wl-text-muted">Длительность: {{ resolved('--wl-motion-slow') }} · easing: {{ resolved('--wl-motion-ease') }}</p></div>
-      <template #footer><WlButton variant="primary" @click="drawerVisible = false">Готово</WlButton></template>
+    <WlDrawer v-model:visible="drawerVisible" :header="t('shell.DesignSystem.text297')" :motion="motion">
+      <div class="wl-stack" data-space="lg"><h2 class="wl-text-heading">{{ t('shell.DesignSystem.text298') }}</h2><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text299') }}</p><p class="wl-text-small wl-text-muted">{{ t('shell.DesignSystem.text300') }} {{ resolved('--wl-motion-slow') }} · easing: {{ resolved('--wl-motion-ease') }}</p></div>
+      <template #footer><WlButton variant="primary" @click="drawerVisible = false">{{ t('shell.DesignSystem.text301') }}</WlButton></template>
     </WlDrawer>
   </main>
 </template>

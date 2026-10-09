@@ -35,6 +35,14 @@ test("approved migration pins the release and performs one exact consumer change
     validateMigrationPolicy({ ...input, currentVersion, changesetText: undefined });
   }
 });
+test("migration notes accept the current English and historical Russian headings", () => {
+  const input = approvalInput();
+  for (const title of ["Upgrade to", "Upgrading to", "Обновление до"]) {
+    validateMigrationPolicy({ ...input, migrationNoteText: "# " + title + " Gavia UI 0.11.0\r\n\r\nReviewed migration.\r\n" });
+    assert.throws(() => validateMigrationPolicy({ ...input, migrationNoteText: "# " + title + " Gavia UI 0.12.0\n" }), /0.11 migration note is missing/);
+  }
+});
+
 test("migration approval cannot be widened by versions, edits, missing notes or a patch changeset", () => {
   const input = approvalInput();
   const cases = [

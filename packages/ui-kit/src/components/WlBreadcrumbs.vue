@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { WlPt } from "../pt-types";
 import { computed } from "vue";
-import { useWlPt } from "../config";
+import { useWlPt, useWlLocale } from "../config";
 import WlIcon from "./WlIcon.vue";
 import type { WlBreadcrumbItem } from "../types";
+const locale = useWlLocale();
 
 const props = withDefaults(
   defineProps<{
@@ -34,7 +35,7 @@ const section = useWlPt("breadcrumb", computed(() => props.pt));
 </script>
 
 <template>
-  <nav v-bind="section('root')" class="wl-breadcrumbs" aria-label="Хлебные крошки" data-wl="breadcrumbs">
+  <nav v-bind="section('root')" class="wl-breadcrumbs" :aria-label="locale.breadcrumbs" data-wl="breadcrumbs">
     <ol v-bind="section('list')" class="wl-breadcrumbs__list">
       <li v-for="(item, index) in model" :key="index" v-bind="section('item')" class="wl-breadcrumbs__item">
         <span v-if="item.current" class="wl-breadcrumbs__link is-current" aria-current="page">

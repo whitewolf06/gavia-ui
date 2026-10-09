@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../i18n";
+const { t, locale } = usePlaygroundI18n();
 import { computed, ref } from "vue";
 import WlSegmented from "../../../../packages/ui-kit/src/components/WlSegmented.vue";
 import WlInput from "../../../../packages/ui-kit/src/components/WlInput.vue";
@@ -23,36 +25,22 @@ const weights = gaviaWeights;
 
 const copy = {
   ru: {
-    eyebrow: "05 / Семейство Gavia Sans",
-    title: "Шесть весов",
-    description: "Сравните шесть весов на одинаковых заголовках, тексте и цифрах. Можно ввести свою строку и переключить начертание.",
-    normal: "Прямое",
-    italic: "Курсив",
-    styleLabel: "Стиль начертаний",
-    customTextLabel: "Своя строка",
-    sampleHeading: "Заголовки, текст и цифры.",
-    sampleParagraph: "Один и тот же текст показан в шести весах. Сравните буквы, знаки препинания и цифры. Проверьте, как выглядит короткая подпись, длинное предложение, дата или сумма. Для каждого веса есть прямое и наклонное начертание.",
-    numeralLabel: "Цифры / Gavia Sans",
-    refinement: "Кириллица и латиница — во всех шести весах.",
-    collection: "6 весов × 2 стиля / 12 начертаний"
-  },
-  en: {
-    eyebrow: "05 / Gavia Sans family",
-    title: "Six weights",
-    description: "Compare six weights using the same headings, text and numbers. Enter your own heading and switch between styles.",
-    normal: "Upright",
-    italic: "Italic",
-    styleLabel: "Typeface style",
-    customTextLabel: "Your text",
-    sampleHeading: "Headings, text and numbers.",
-    sampleParagraph: "The same text appears in six weights. Compare letters, punctuation and numerals. Check a short label, a longer sentence, a date or an amount. Each weight has an upright and an oblique style.",
-    numeralLabel: "Numbers / Gavia Sans",
-    refinement: "Cyrillic and Latin across all six weights.",
-    collection: "6 weights × 2 styles / 12 faces"
+    eyebrow: t('shell.type_study.WeightSpecimens.text573'),
+    title: t('shell.type_study.WeightSpecimens.text574'),
+    description: t('shell.type_study.WeightSpecimens.text575'),
+    normal: t('shell.type_study.WeightSpecimens.text576'),
+    italic: t('shell.type_study.WeightSpecimens.text577'),
+    styleLabel: t('shell.type_study.WeightSpecimens.text578'),
+    customTextLabel: t('shell.type_study.WeightSpecimens.text579'),
+    sampleHeading: t('shell.type_study.WeightSpecimens.text580'),
+    sampleParagraph: t('shell.type_study.WeightSpecimens.text581'),
+    numeralLabel: t('shell.type_study.WeightSpecimens.text582'),
+    refinement: t('shell.type_study.WeightSpecimens.text583'),
+    collection: t('shell.type_study.WeightSpecimens.text584')
   }
 } as const;
 
-const content = computed(() => copy[props.language]);
+const content = computed(() => copy.ru);
 const styleOptions = computed(() => [{ label: content.value.normal, value: "normal" }, { label: content.value.italic, value: "italic" }]);
 function chooseStyle(value: string | null): void { if (value === "normal" || value === "italic") emit("update:fontStyle", value); }
 const sampleHeading = computed(() => customHeading.value.trim() ? customHeading.value : content.value.sampleHeading);
@@ -60,7 +48,7 @@ const styleName = computed(() => fontStyle.value === "normal" ? content.value.no
 </script>
 
 <template>
-  <section id="wl-type-weights" class="wl-weights-section" :lang="props.language" :style="{ '--wl-weights-sample-family': props.fontFamily, '--wl-weights-sample-style': fontStyle }" aria-labelledby="wl-weights-title" data-wl="gavia-weight-specimens">
+  <section id="wl-type-weights" class="wl-weights-section" :lang="locale" :style="{ '--wl-weights-sample-family': props.fontFamily, '--wl-weights-sample-style': fontStyle }" aria-labelledby="wl-weights-title" data-wl="gavia-weight-specimens">
     <header class="wl-weights-header">
       <div class="wl-weights-heading-group">
         <p class="wl-weights-eyebrow">{{ content.eyebrow }}</p>
@@ -82,7 +70,7 @@ const styleName = computed(() => fontStyle.value === "normal" ? content.value.no
       <article v-for="weight in weights" :key="weight.value" class="wl-weights-row" :style="{ '--wl-weights-sample-weight': weight.value }" :data-weight="weight.value" :data-font-style="fontStyle" :aria-labelledby="`wl-weights-name-${weight.value}`">
         <div class="wl-weights-label">
           <span class="wl-weights-weight-value">{{ weight.value }}</span>
-          <h3 :id="`wl-weights-name-${weight.value}`" class="wl-weights-name">{{ props.language === 'ru' ? weight.ru : weight.name }}</h3>
+          <h3 :id="`wl-weights-name-${weight.value}`" class="wl-weights-name">{{ weight.ru }}</h3>
           <span class="wl-weights-name-english">{{ weight.name }}<span v-if="fontStyle === 'italic'"> Italic</span></span>
         </div>
         <div class="wl-weights-text-samples">

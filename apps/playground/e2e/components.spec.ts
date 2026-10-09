@@ -1,3 +1,4 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import { expect, test, type Page } from "@playwright/test";
 import { chooseShowcaseTheme, chooseDropdownOption } from "./select-helpers";
@@ -137,7 +138,7 @@ test("Docs layout stays in place when its dialog and drawer open", async ({ page
     ["WlDialog", "Открыть диалог", "Сведения о материале"],
     ["WlDrawer", "Открыть панель", "О материале"]
   ] as const) {
-    await page.goto("/?view=docs&component=" + component);
+    await page.goto(russianPlaygroundUrl("/?view=docs&component=" + component));
     const guide = page.locator('[data-docs-component="' + component + '"]');
     const preview = guide.getByTestId("ds-example-preview");
     await expect(preview).toBeVisible();
@@ -374,7 +375,7 @@ test("all themes render without runtime errors", async ({ page, browserName }, t
 });
 
 test("the complete icon batch renders at three sizes in each theme", async ({ page, browserName }, testInfo) => {
-  await page.goto("/?view=docs&section=icons");
+  await page.goto(russianPlaygroundUrl("/?view=docs&section=icons"));
   await expect(page.locator(".pg-brand .pg-kit-version")).toHaveText(`v${uiKitVersion}`);
   const catalog = page.getByTestId("docs-icon-catalog");
   await expect(catalog.locator("li")).toHaveCount(WL_ICON_NAMES.length);

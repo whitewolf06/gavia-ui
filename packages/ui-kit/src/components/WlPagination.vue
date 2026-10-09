@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { WlPt } from "../pt-types";
 import { computed, ref, watch } from "vue";
-import { useWlPt } from "../config";
+import { useWlPt, useWlLocale } from "../config";
 import WlIcon from "./WlIcon.vue";
+const locale = useWlLocale();
 
 const props = withDefaults(
   defineProps<{
@@ -91,7 +92,7 @@ function commit(changePage: (page: number) => void): void {
 <template>
   <nav
     v-bind="section('root')"
-    aria-label="Страницы"
+    :aria-label="locale.pages"
     class="wl-pagination"
     :class="{ 'wl-pagination--compact': compact }"
     data-wl="pagination"
@@ -102,7 +103,7 @@ function commit(changePage: (page: number) => void): void {
           type="button"
           class="wl-pager__btn wl-pager__nav"
           :disabled="disabled || currentPage <= 1"
-          aria-label="Первая страница"
+          :aria-label="locale.firstPage"
           @click="changePageCallback(0)"
         >
           <WlIcon name="chevron-left" :size="14" />
@@ -112,7 +113,7 @@ function commit(changePage: (page: number) => void): void {
           type="button"
           class="wl-pager__btn wl-pager__nav"
           :disabled="disabled || currentPage <= 1"
-          aria-label="Предыдущая страница"
+          :aria-label="locale.prevPage"
           @click="changePageCallback(currentPage - 2)"
         >
           <WlIcon name="chevron-left" :size="14" />
@@ -135,7 +136,7 @@ function commit(changePage: (page: number) => void): void {
           type="button"
           class="wl-pager__btn wl-pager__nav"
           :disabled="disabled || currentPage >= count"
-          aria-label="Следующая страница"
+          :aria-label="locale.nextPage"
           @click="changePageCallback(currentPage)"
         >
           <WlIcon name="chevron-right" :size="14" />
@@ -144,7 +145,7 @@ function commit(changePage: (page: number) => void): void {
           type="button"
           class="wl-pager__btn wl-pager__nav"
           :disabled="disabled || currentPage >= count"
-          aria-label="Последняя страница"
+          :aria-label="locale.lastPage"
           @click="changePageCallback(count - 1)"
         >
           <WlIcon name="chevron-right" :size="14" />
@@ -157,7 +158,7 @@ function commit(changePage: (page: number) => void): void {
           type="button"
           class="wl-pager__btn wl-pager__nav"
           :disabled="disabled || currentPage <= 1"
-          aria-label="Предыдущая страница"
+          :aria-label="locale.prevPage"
           @click="changePageCallback(currentPage - 2)"
         >
           <WlIcon name="chevron-left" :size="14" />
@@ -167,16 +168,16 @@ function commit(changePage: (page: number) => void): void {
           class="wl-pager__input"
           :disabled="disabled"
           inputmode="numeric"
-          aria-label="Номер страницы"
+          :aria-label="locale.pageNumber"
           @keydown.enter="commit(changePageCallback)"
           @blur="commit(changePageCallback)"
         />
-        <span class="wl-pager__total">из {{ count }}</span>
+        <span class="wl-pager__total">{{ locale.of }} {{ count }}</span>
         <button
           type="button"
           class="wl-pager__btn wl-pager__nav"
           :disabled="disabled || currentPage >= count"
-          aria-label="Следующая страница"
+          :aria-label="locale.nextPage"
           @click="changePageCallback(currentPage)"
         >
           <WlIcon name="chevron-right" :size="14" />

@@ -1,239 +1,243 @@
-# Релизы Gavia UI
+# Gavia UI releases
 
-Здесь собраны опубликованные версии, результаты проверок и порядок выпуска.
-Изменения — в [changelog](../CHANGELOG.md), версия исходников — в package.json
-корня и `packages/ui-kit/package.json`. Репозиторий: `whitewolf06/gavia-ui`.
-Пакет: `gavia-ui`; реестр: `https://registry.npmjs.org`.
-Создатель и сопровождающий — [Gorbach Dmitry](https://github.com/whitewolf06).
-[Витрина GitHub Pages](https://whitewolf06.github.io/gavia-ui/) ·
-[Пакет npm](https://www.npmjs.com/package/gavia-ui). Первый npm-выпуск — 0.7.0.
+Published versions, check results and release procedure.
+Changes are in the [changelog](../CHANGELOG.md); source versions are in root
+package.json and `packages/ui-kit/package.json`. Repository: `whitewolf06/gavia-ui`.
+Package: `gavia-ui`; registry: `https://registry.npmjs.org`.
+Creator and maintainer: [Dmitry Gorbach](https://github.com/whitewolf06).
+[GitHub Pages playground](https://whitewolf06.github.io/gavia-ui/) ·
+[npm package](https://www.npmjs.com/package/gavia-ui). First npm release: 0.7.0.
 
-## Выпуск 0.11.1
+## Release 0.11.1
 
-[gavia-ui@0.11.1](https://www.npmjs.com/package/gavia-ui/v/0.11.1) опубликован
-2026-10-09 (Москва) через OIDC по тегу `v0.11.1`. Тег указывает на
+[gavia-ui@0.11.1](https://www.npmjs.com/package/gavia-ui/v/0.11.1) was published
+on 2026-10-09 (Moscow) through OIDC from tag `v0.11.1`. The tag points to
 `314ff975d63ea61781955369ac1c853e4e6fd5cf`.
-[Релизный CI](https://github.com/whitewolf06/gavia-ui/actions/runs/37869226103)
-прошёл: Node 18/24, 686 unit-тестов, 515 браузерных сценариев в четырёх проектах
-и 24 визуальных сценария desktop/mobile для пяти тем. Проверка axe страницы
-качества выполнена в desktop Chromium; в трёх остальных проектах она пропущена.
-Покрытие строк в CI — 98,44%, ветвлений — 89,25%, функций — 86,51%.
+[Release CI](https://github.com/whitewolf06/gavia-ui/actions/runs/37869226103)
+passed: Node 18/24, 686 unit tests, 515 browser scenarios in four projects
+and 24 desktop/mobile visual scenarios across five themes. The quality-page
+axe check ran in desktop Chromium and was skipped in the other three projects.
+CI line coverage was 98.44%, branches 89.25%, functions 86.51%.
 
-В 0.11.1 исправлены отступы разделителей в хлебных крошках и выравнивание WlPill.
-Основной акцент светлой Gavia — `#3c7490`; обновлены оттенки наведения,
-нажатия и акцентного текста. Gavia Dark сохранена.
-Тексты playground и документации отредактированы; сохранённые ссылки на разделы
-документации сразу прокручивают страницу к нужному разделу.
-Props, события, slots, имена классов, токенов и пути импортов сохранены.
-Особенности обновления — в [миграции 0.11.1](migration-0.11.1.md).
+0.11.1 fixes breadcrumb separator spacing and WlPill alignment.
+The main light Gavia accent is `#3c7490`; hover,
+active and accent text shades were updated. Gavia Dark is preserved.
+Playground and documentation copy was revised; saved documentation section
+links scroll to the requested section immediately.
+Props, events, slots, class/token names and import paths are preserved.
+Upgrade details: [0.11.1 migration](migration-0.11.1.md).
 
-Реестр подтвердил 0.11.1 и latest=0.11.1. В метаданных npm указана
-[provenance-аттестация](https://registry.npmjs.org/-/npm/v1/attestations/gavia-ui@0.11.1);
-publish job подписал её. Integrity скачанного npm-архива совпадает с архивом,
-проверенным publish job:
+The registry confirmed 0.11.1 and latest=0.11.1. npm metadata includes
+a [provenance attestation](https://registry.npmjs.org/-/npm/v1/attestations/gavia-ui@0.11.1)
+signed by the publish job. The downloaded npm archive integrity matches the archive
+checked by that job:
 
 ```text
 sha512-4jx4h3BFcn0H/LIrzGPLilG6YCl3UwLKXZOpF/605+814dNiUYtYexXMbvsjtnQ2i91P4Xbkb1WbFtqPQDa6Fg==
 ```
 
-SHA256 npm-архива —
+npm archive SHA256:
 `7ba2cc3efc5647727b5cad4751086190a71c746e10d6da44ed9c987f20050ccc`.
-Скачанный архив отдельно прошёл проверку через pnpm с Vue 3.4.38 и TypeScript 5.8.3:
-21 API fixture, 59 SFC-примеров, Node import/SSR и desktop/mobile-гидратацию
-со стабильными IDs и работающими событиями. В CI также проверены npm с Vue 3.4.0 /
-TypeScript 5.4.5 и Bun с Vue 3.5.40. Vue остаётся единственным обязательным peer;
-runtime-зависимостей нет.
+The downloaded archive separately passed pnpm consumer checks with Vue 3.4.38 and TypeScript 5.8.3:
+21 API fixtures, 59 SFC examples, Node import/SSR and desktop/mobile hydration
+with stable IDs and working events. CI also checked npm with Vue 3.4.0 /
+TypeScript 5.4.5 and Bun with Vue 3.5.40. Vue remains the only required peer;
+there are no runtime dependencies.
 
 ```bash
 pnpm add gavia-ui@0.11.1 vue
-# либо
+# or
 npm install gavia-ui@0.11.1 vue
-# либо
+# or
 bun add gavia-ui@0.11.1 vue
 ```
 
 [GitHub Release](https://github.com/whitewolf06/gavia-ui/releases/tag/v0.11.1)
-содержит архив витрины и контрольную сумму. Скачанный архив проверен:
-версия 0.11.1, commit `314ff975d63ea61781955369ac1c853e4e6fd5cf` и относительные
-пути assets совпали. SHA256 архива витрины —
+contains the playground archive and checksum. The downloaded archive was verified:
+version 0.11.1, commit `314ff975d63ea61781955369ac1c853e4e6fd5cf` and relative
+asset paths matched. Playground archive SHA256:
 `098f1630c65d1e2fd03c190d5750bde3ea972dfcf2289487c5234c4a5374e5ad`.
-[CI GitHub Pages](https://github.com/whitewolf06/gavia-ui/actions/runs/37869226619)
-на том же commit прошёл 18 сценариев проверки production-сборки и обновил
-[публичную витрину](https://whitewolf06.github.io/gavia-ui/).
+[GitHub Pages CI](https://github.com/whitewolf06/gavia-ui/actions/runs/37869226619)
+on the same commit passed 18 production-build scenarios and updated
+the [public playground](https://whitewolf06.github.io/gavia-ui/).
 
-Команды установки и `publishedVersion` в репозитории обновлены после
-подтверждения npm; тег и опубликованный npm-архив сохранены.
+Repository installation commands and `publishedVersion` were updated after
+npm confirmation; the tag and published npm archive remain unchanged.
 
-## Выпуск 0.11.0
+<a id="выпуск-0110"></a>
 
-[gavia-ui@0.11.0](https://www.npmjs.com/package/gavia-ui/v/0.11.0) опубликован
-2026-10-08 (Москва) через OIDC по тегу `v0.11.0`. Тег указывает на
+## Release 0.11.0
+
+[gavia-ui@0.11.0](https://www.npmjs.com/package/gavia-ui/v/0.11.0) was published
+on 2026-10-08 (Moscow) through OIDC from tag `v0.11.0`. The tag points to
 `9d736240a285ec1be2f07b5b6f294af300c88cd2`.
-[Релизный CI](https://github.com/whitewolf06/gavia-ui/actions/runs/37815367172)
-прошёл: Node 18/24, 686 unit-тестов, 515 браузерных сценариев в четырёх проектах
-и 24 визуальных сценария desktop/mobile для пяти тем. Три проверки axe
-пропущены вне Chromium; падений и повторных прогонов тестов нет. Покрытие строк
-в CI — 98,44%, ветвлений — 89,25%, функций — 86,51%.
+[Release CI](https://github.com/whitewolf06/gavia-ui/actions/runs/37815367172)
+passed: Node 18/24, 686 unit tests, 515 browser scenarios in four projects
+and 24 desktop/mobile visual scenarios across five themes. Three axe checks
+were skipped outside Chromium; there were no failures or test retries. CI line
+coverage was 98.44%, branches 89.25%, functions 86.51%.
 
-В 0.11.0 уточнены публичные TypeScript-контракты всех 53 компонентов:
-модели, options и резолверы, колонки и слоты таблицы, payload событий навигации, pt,
-DOM-атрибуты, локаль и exposed refs. Нужен TypeScript 5.4+.
-Изменения, требующие правки кода, описаны в [миграции 0.11](migration-0.11.0.md).
-Классы, CSS-токены, пути тем и имена компонентов сохранены.
+0.11.0 refines public TypeScript contracts for all 53 components:
+models, options/resolvers, table columns/slots, navigation event payloads, pt,
+DOM attributes, locale and exposed refs. TypeScript 5.4+ is required.
+Changes requiring code updates are described in the [0.11 migration](migration-0.11.0.md).
+Classes, CSS tokens, theme paths and component names are preserved.
 
-Реестр подтвердил 0.11.0 и latest=0.11.0; опубликованный пакет содержит provenance.
-Integrity скачанного npm-архива совпало с архивом, проверенным publish job:
+The registry confirmed 0.11.0 and latest=0.11.0; the published package includes provenance.
+The downloaded npm archive integrity matched the archive checked by the publish job:
 
 ```text
 sha512-4VPUdfQevTLW/yt1CrmwWlqQBPlTfyV/TcJB8duvBpMWJ0fRbZBdZ1LrCIO/27NOa1uaYJ/1PZuq2xkpu8sLeg==
 ```
 
-SHA256 npm-архива — `044c5690cef325241e6163dfd17848f8348ca931bb7a0e8d883fca2a0bf4b894`. Архив до публикации прошёл строгую
-компиляцию 21 API fixture и 59 SFC, Node import/SSR и desktop/mobile-гидратацию.
-Минимальные Vue 3.4.0 / TypeScript 5.4.5 проверены через npm, Vue 3.5.40 —
-через Bun; локально также проверен pnpm. Vue — единственный обязательный peer;
-runtime-зависимостей и встроенного Vue/PrimeVue нет.
+npm archive SHA256: `044c5690cef325241e6163dfd17848f8348ca931bb7a0e8d883fca2a0bf4b894`. Before publication, the archive passed strict
+compilation of 21 API fixtures and 59 SFCs, Node import/SSR and desktop/mobile hydration.
+Minimum Vue 3.4.0 / TypeScript 5.4.5 were checked through npm; Vue 3.5.40 through
+Bun. pnpm was also checked locally. Vue is the only required peer;
+there are no runtime dependencies or bundled Vue/PrimeVue.
 
 ```bash
 pnpm add gavia-ui@0.11.0 vue
-# либо
+# or
 npm install gavia-ui@0.11.0 vue
-# либо
+# or
 bun add gavia-ui@0.11.0 vue
 ```
 
 [GitHub Release](https://github.com/whitewolf06/gavia-ui/releases/tag/v0.11.0)
-содержит архив витрины и контрольную сумму. SHA256 архива витрины —
-`5c5c1e095b0761a2bb81348d9e744f2112433bd320e1e71dcc74845e4b877d69`. Публичный статус и команды установки обновлены после
-подтверждения npm; тег и опубликованный пакет сохранены.
+contains the playground archive and checksum. Playground archive SHA256:
+`5c5c1e095b0761a2bb81348d9e744f2112433bd320e1e71dcc74845e4b877d69`. Public status and installation commands were updated after
+npm confirmation; the tag and published package remain unchanged.
 
-## Выпуск 0.10.0
+## Release 0.10.0
 
-[gavia-ui@0.10.0](https://www.npmjs.com/package/gavia-ui/v/0.10.0) опубликован
-2026-10-08 (Москва) через OIDC по новому аннотированному тегу `v0.10.0`.
-Тег указывает на `0a51fdd6c6c061c4c4184355f2f71d0cb2401794`;
-[CI и публикация](https://github.com/whitewolf06/gavia-ui/actions/runs/37760199005)
-завершились успешно: Node 18/24, 617 unit-тестов, 515 браузерных сценариев
-и 24 визуальных сценария desktop/mobile для пяти тем. Три браузерных
-проверки axe намеренно пропущены вне Chromium; повторных падений нет.
-Покрытие строк в CI — 98,28%; это измерение unit-тестов, отдельно от browser/visual.
+[gavia-ui@0.10.0](https://www.npmjs.com/package/gavia-ui/v/0.10.0) was published
+on 2026-10-08 (Moscow) through OIDC from the new annotated tag `v0.10.0`.
+The tag points to `0a51fdd6c6c061c4c4184355f2f71d0cb2401794`;
+[CI and publication](https://github.com/whitewolf06/gavia-ui/actions/runs/37760199005)
+completed successfully: Node 18/24, 617 unit tests, 515 browser scenarios
+and 24 desktop/mobile visual scenarios across five themes. Three browser
+axe checks were intentionally skipped outside Chromium; there were no repeated failures.
+CI line coverage was 98.28%; this is a unit measurement, separate from browser/visual checks.
 
-Основные темы — Gavia и новая Gavia Dark с Gavia Sans. Дополнительные —
-Classic, Classic Dark и Newspaper; прежние идентификаторы `white` / `graphite`
-и пути CSS сохранены. Изменения публичного каталога тем и подключение описаны
-в [миграции 0.10](migration-0.10.0.md).
+Primary themes are Gavia and new Gavia Dark with Gavia Sans. Additional themes are
+Classic, Classic Dark and Newspaper; previous `white` / `graphite` identifiers
+and CSS paths are preserved. Public theme catalog changes and setup are described
+in the [0.10 migration](migration-0.10.0.md).
 
-Реестр подтвердил точную версию 0.10.0 и latest=0.10.0. Integrity скачанного
-npm-архива совпадает с архивом, проверенным publish job:
+The registry confirmed exact version 0.10.0 and latest=0.10.0. The downloaded
+npm archive integrity matches the archive checked by the publish job:
 
 ```text
 sha512-pUIS8m9NyksMtVfwT+1R1a4n4aMMQ+S4s/EgCXhsIWS34r3xgJiT7HsT/HhlSPase81eGq9zm+93lXGCizhO4w==
 ```
 
-SHA256 npm-архива — `11e0c7fbe80ba84526590a81f9dfee5e45b6ddaec34f8813da3fcbc326cc05cf`.
-Опубликованный архив отдельно прошёл typecheck и build в чистом Vue-потребителе,
-включая 59 SFC-примеров, Node import, SSR/hydration и Chromium desktop/mobile.
-Проверены 24 файла Gavia Sans 0.6 и лицензии MIT / SIL OFL 1.1.
-Vue остаётся единственным обязательным peer; runtime-зависимостей и встроенного
-Vue/PrimeVue нет. Сценарий WlButton — 24 685 байт gzip с Vue, в пределах бюджета.
+npm archive SHA256: `11e0c7fbe80ba84526590a81f9dfee5e45b6ddaec34f8813da3fcbc326cc05cf`.
+The published archive separately passed typecheck and build in a clean Vue consumer,
+including 59 SFC examples, Node import, SSR/hydration and Chromium desktop/mobile.
+All 24 Gavia Sans 0.6 files and MIT / SIL OFL 1.1 licenses were checked.
+Vue remains the only required peer; there are no runtime dependencies or bundled
+Vue/PrimeVue. The WlButton scenario was 24,685 gzip bytes with Vue, within budget.
 
 ```bash
 pnpm add gavia-ui@0.10.0 vue
-# либо
+# or
 npm install gavia-ui@0.10.0 vue
-# либо
+# or
 bun add gavia-ui@0.10.0 vue
 ```
 
 [GitHub Release](https://github.com/whitewolf06/gavia-ui/releases/tag/v0.10.0)
-содержит архив витрины `gavia-ui-playground-0.10.0.tgz` и контрольную сумму.
-SHA256 архива витрины — `61465f239e809d31c47c9e736aadfd6756e96585d3ccc3e78375edfa380e1500`.
-Тег и опубликованный пакет не изменяются. Статус npm и команда установки в
-Playground обновлены отдельным commit после подтверждения публичного реестра
-и проверки скачанного архива. Публичная витрина проверена в пяти темах на
-ширинах 1280 и 390 px: шрифты, фон, переключатель, отсутствие переполнения и
-ошибок браузера. Её последующее обновление проходит отдельный Pages job.
+contains `gavia-ui-playground-0.10.0.tgz` and its checksum.
+Playground archive SHA256: `61465f239e809d31c47c9e736aadfd6756e96585d3ccc3e78375edfa380e1500`.
+The tag and published package remain unchanged. Playground npm status and installation
+commands were updated in a separate commit after public registry confirmation
+and downloaded archive checks. The public playground was reviewed across five themes at
+1280 and 390 px: fonts, backgrounds, toggle, overflow and
+browser errors. Subsequent updates run through a separate Pages job.
 
-## Выпуск 0.9.1
+## Release 0.9.1
 
-[gavia-ui@0.9.1](https://www.npmjs.com/package/gavia-ui/v/0.9.1) опубликован
-2026-10-07 (Москва) через OIDC по новому аннотированному тегу `v0.9.1`.
-Тег указывает на `ccb4634b3b74995e4e0a2776ab81dbc4bf874064`;
-[CI и публикация](https://github.com/whitewolf06/gavia-ui/actions/runs/37666981278)
-завершились успешно: Node 18/24, 591 unit-тест, 416 браузерных сценариев
-и 12 визуальных сценариев desktop/mobile для White, Graphite и Newspaper.
+[gavia-ui@0.9.1](https://www.npmjs.com/package/gavia-ui/v/0.9.1) was published
+on 2026-10-07 (Moscow) through OIDC from the new annotated tag `v0.9.1`.
+The tag points to `ccb4634b3b74995e4e0a2776ab81dbc4bf874064`;
+[CI and publication](https://github.com/whitewolf06/gavia-ui/actions/runs/37666981278)
+completed successfully: Node 18/24, 591 unit tests, 416 browser scenarios
+and 12 desktop/mobile visual scenarios for White, Graphite and Newspaper.
 
-Реестр подтвердил точную версию 0.9.1 и latest=0.9.1. Integrity скачанного
-npm-архива совпадает с архивом, проверенным publish job:
+The registry confirmed exact version 0.9.1 and latest=0.9.1. The downloaded
+npm archive integrity matches the archive checked by the publish job:
 
 ```text
 sha512-2EjRy64x9eKcxXJPupR3TKFDxQ/9NmNNz/HaPNIFaFThJzRdpTZ50fvplC//D8/f7QIY3ERWFuI/MPoK+GnvrQ==
 ```
 
-SHA256 npm-архива — `9aa5f3ace3b4bb893a85660c007cb136bfb9a4b74508d20f05c18f25d654733e`.
-Опубликованный архив отдельно прошёл typecheck и build в чистом Vue-потребителе,
-включая 59 SFC-примеров и 24 принятых файла Gavia Sans 0.6. Vue остаётся
-единственным обязательным peer; runtime-зависимостей и встроенного Vue/PrimeVue нет.
-В архиве сохранены MIT для UI-кита и SIL OFL 1.1 с copyright notices шрифта.
+npm archive SHA256: `9aa5f3ace3b4bb893a85660c007cb136bfb9a4b74508d20f05c18f25d654733e`.
+The published archive separately passed typecheck and build in a clean Vue consumer,
+including 59 SFC examples and 24 accepted Gavia Sans 0.6 files. Vue remains
+the only required peer; there are no runtime dependencies or bundled Vue/PrimeVue.
+The archive retains MIT for the UI kit and SIL OFL 1.1 with font copyright notices.
 
 ```bash
 pnpm add gavia-ui@0.9.1 vue
 ```
 
-[Миграция 0.9](migration-0.9.md) · [Шрифт](font-gavia.md) ·
-[Изменения](../CHANGELOG.md).
-Статус npm и команда установки в playground обновлены только после проверки
-реестра и consumer smoke; документы опубликованного архива не изменяются.
-Успех npm-выпуска не заменяет отдельную проверку GitHub Pages.
-Перед выпуском проверены документация и изображения: явно устаревших
-бесхозных артефактов не обнаружено; исходники бренда, лицензии и история сохранены.
+[0.9 migration](migration-0.9.md) · [Font](font-gavia.md) ·
+[Changelog](../CHANGELOG.md).
+Playground npm status and installation commands were updated only after registry
+and consumer smoke checks; published archive documents remain unchanged.
+Successful npm publication does not replace a separate GitHub Pages check.
+Documentation and images were reviewed before release: no clearly obsolete
+unowned artifacts were found; brand sources, licenses and history are preserved.
 
-## Выпуск 0.8.1
+<a id="выпуск-081"></a>
 
-[gavia-ui@0.8.1](https://www.npmjs.com/package/gavia-ui) опубликован 2026-10-06
-(Москва) через OIDC по новому тегу `v0.8.1`. Тег указывает на release commit
+## Release 0.8.1
+
+[gavia-ui@0.8.1](https://www.npmjs.com/package/gavia-ui) was published on 2026-10-06
+(Moscow) through OIDC from new tag `v0.8.1`. The tag points to release commit
 `b9bb7c0b9ad5fb17969380dbeb2c912ded1e131e`;
-[CI и publish job](https://github.com/whitewolf06/gavia-ui/actions/runs/37393295542)
-завершились успешно: Node 18/24, 426 unit-тестов, 236 браузерных сценариев
-и 12 визуальных сценариев desktop/mobile в трёх темах.
+[CI and publish job](https://github.com/whitewolf06/gavia-ui/actions/runs/37393295542)
+completed successfully: Node 18/24, 426 unit tests, 236 browser scenarios
+and 12 desktop/mobile visual scenarios across three themes.
 
-Публичный реестр подтвердил точную версию `0.8.1` и `latest=0.8.1`.
-Integrity скачанного npm-архива совпадает с архивом, проверенным publish job:
+The public registry confirmed exact version `0.8.1` and `latest=0.8.1`.
+The downloaded npm archive integrity matches the archive checked by the publish job:
 
 ```text
 sha512-Z06BySdUXD9H57QW9txzwybIsDhqz5sZT9sj++XZm9yTZlB94UzNz28j1kn15rGAFrZVv2hui4r8m5ydnpMj1w==
 ```
 
-SHA256 npm-архива — `737b03a12c2a64af8f2b0d348536c78f8899bcbfde1d2086e7c389a0fb157f24`.
-Опубликованный архив отдельно прошёл typecheck и build в чистом Vue-потребителе,
-включая все 59 исходников примеров. Vue остаётся единственным обязательным peer;
-runtime-зависимостей и PrimeVue/PrimeIcons нет. npm предоставляет provenance
-attestation; её криптографическая проверка этим отчётом не заявляется.
+npm archive SHA256: `737b03a12c2a64af8f2b0d348536c78f8899bcbfde1d2086e7c389a0fb157f24`.
+The published archive separately passed typecheck and build in a clean Vue consumer,
+including all 59 example sources. Vue remains the only required peer;
+there are no runtime dependencies or PrimeVue/PrimeIcons. npm provides a provenance
+attestation; this record does not claim cryptographic verification of it.
 
 ```bash
 pnpm add gavia-ui@0.8.1 vue
 ```
 
-Версия 0.8.0 не была опубликована в npm, её прежний тег не изменяется.
-Повторная публикация 0.8.1 и перенос тега не выполняются. Актуальный статус
-в canonical README и витрине обновляется отдельным commit после проверки npm;
-документы внутри уже опубликованного архива остаются неизменными.
-Успех npm-выпуска не заменяет отдельную проверку GitHub Pages.
+Version 0.8.0 was not published to npm; its previous tag remains unchanged.
+There is no republication of 0.8.1 or tag movement. Current status
+in the canonical README and playground is updated in a separate commit after npm checks;
+documents inside the published archive remain unchanged.
+Successful npm publication does not replace a separate GitHub Pages check.
 
-## Выпуск 0.7.1
+## Release 0.7.1
 
-[gavia-ui@0.7.1](https://www.npmjs.com/package/gavia-ui) опубликован 2026-10-05
-(Москва) по тегу `v0.7.1`. Это первый подтверждённый выпуск через OIDC:
-[CI и publish job](https://github.com/whitewolf06/gavia-ui/actions/runs/37240730020) завершились успешно.
+[gavia-ui@0.7.1](https://www.npmjs.com/package/gavia-ui) was published on 2026-10-05
+(Moscow) from tag `v0.7.1`. This is the first confirmed OIDC release:
+[CI and publish job](https://github.com/whitewolf06/gavia-ui/actions/runs/37240730020) completed successfully.
 
-Анонимная проверка публичного реестра подтвердила точную версию 0.7.1 и
-`latest=0.7.1`. Integrity скачанного npm-архива совпадает с проверенным
-архивом из CI; чистый Vue-потребитель без npm-токенов прошёл typecheck и build.
+An anonymous public registry check confirmed exact version 0.7.1 and
+`latest=0.7.1`. The downloaded npm archive integrity matches the checked
+CI archive; a clean Vue consumer without npm tokens passed typecheck and build.
 
-Полный текст LICENSE при межплатформенной проверке сравнивается строго после
-нормализации CRLF → LF; остальные символы сохраняются.
+Cross-platform checks compare the full LICENSE text strictly after
+normalizing CRLF → LF; every other character is preserved.
 
-Полный SRI проверенного CI-архива и опубликованного пакета:
+Full SRI of the checked CI archive and published package:
 
 ```text
 sha512-NhO0dWe0EBPLm1vxlfX81DID75FEC27xJvmDzNPeCDiDr11zUtlHBKPx+ry8iDaHs/QkBFlm4H0xykb+JmeH/Q==
@@ -243,197 +247,197 @@ sha512-NhO0dWe0EBPLm1vxlfX81DID75FEC27xJvmDzNPeCDiDr11zUtlHBKPx+ry8iDaHs/QkBFlm4
 pnpm add gavia-ui@0.7.1 vue
 ```
 
-Повторная публикация 0.7.1 не выполняется. История ручного выпуска 0.7.0
-сохранена. Успех npm-выпуска не заменяет отдельную проверку GitHub Pages.
+0.7.1 is not republished. The manual 0.7.0 release history
+is preserved. Successful npm publication does not replace a separate GitHub Pages check.
 
-## Первый выпуск 0.7.0
+## First release 0.7.0
 
-Первый публичный npm-выпуск **gavia-ui@0.7.0** опубликован вручную
-2026-10-05 (Москва). Реестр подтвердил точную версию и integrity проверенного архива,
-MIT, автора и единственный обязательный peer Vue. Установка в Vue-приложении:
+The first public npm release, **gavia-ui@0.7.0**, was published manually
+on 2026-10-05 (Moscow). The registry confirmed the exact version and checked archive integrity,
+MIT, author and Vue as the only required peer. Installation in a Vue app:
 
 ```bash
 pnpm add gavia-ui@0.7.0
 ```
 
-Запись 0.7.0 от 2026-10-05 описывает согласованный набор изменений.
-Историческая запись 0.6.0 от 2026-10-01 и прежний тег `v0.6.0` сохраняются.
+The 0.7.0 entry dated 2026-10-05 describes the agreed changes.
+The historical 0.6.0 entry dated 2026-10-01 and previous `v0.6.0` tag are preserved.
 
-## Проверки перед первым выпуском
+## Checks before the first release
 
-Перед первой публикацией выполнялись следующие проверки:
+These checks were performed before the first publication:
 
-1. Версии корня и библиотеки совпадают и равны `0.7.0`; коммит отправлен
-   в канонический публичный репозиторий. Локально прошли сборки, typecheck,
-   310 unit-тестов, проверки архива, иконок и токенов. CI релизного коммита
-   `0b7d4cc` прошёл проверки Node 18/24, 176 браузерных сценариев,
-   78 сравнений снимков и проверку production-сборки Pages.
-2. Архив `packages/ui-kit/gavia-ui-0.7.0.tgz` проверен:
-   MIT и changelog включены, Vue не встроен, runtime-зависимостей нет,
-   изолированный потребитель с одним Vue проходит typecheck и сборку.
-3. Непосредственно перед отправкой проверить имя и версию в npm.
-   Если `gavia-ui@0.7.0` уже существует, не выполнять повторную публикацию:
-   сначала выяснить владельца и происхождение опубликованного архива.
-4. Первый пакет публикуется из npm-аккаунта сопровождающего: нужен вход
-   `npm login --registry=https://registry.npmjs.org` и включённая 2FA.
-   GitHub-аккаунт не заменяет npm-аккаунт.
-5. Опубликовать именно проверенный архив с `--access public`.
-   При локальной публикации не добавлять `--provenance`: для неё нужен cloud runner.
+1. Root/library versions matched `0.7.0`; the commit was pushed
+   to the canonical public repository. Local builds, typecheck,
+   310 unit tests, archive/icon/token checks passed. CI for release commit
+   `0b7d4cc` passed Node 18/24, 176 browser scenarios,
+   78 screenshot comparisons and production Pages build checks.
+2. `packages/ui-kit/gavia-ui-0.7.0.tgz` was checked:
+   MIT and changelog included, no bundled Vue or runtime dependencies,
+   isolated consumer with one Vue passed typecheck and build.
+3. Immediately before publishing, check the npm name and version.
+   If `gavia-ui@0.7.0` already exists, do not republish:
+   first establish its owner and the published archive’s origin.
+4. The first package is published from the maintainer’s npm account: use
+   `npm login --registry=https://registry.npmjs.org` with 2FA enabled.
+   A GitHub account does not replace an npm account.
+5. Publish the exact checked archive with `--access public`.
+   Do not add `--provenance` to a local publication: it needs a cloud runner.
 
-Установка зависимостей и сборка выполняются pnpm. npm CLI используется только
-для аутентификации и отправки проверенного архива:
+Dependencies and builds use pnpm. npm CLI is used only
+for authentication and publishing the checked archive:
 
 ```bash
-# Команда первого ручного выпуска, уже выполнена:
+# The first manual release command, already completed:
 npm publish ./gavia-ui-0.7.0.tgz --registry=https://registry.npmjs.org --access public
 ```
 
-Integrity опубликованной 0.7.0 совпадает с проверенным архивом:
+Published 0.7.0 integrity matches the checked archive:
 
 ```
 sha512-a2ZP8NFBJ+gAZ17MNNJ0yrhmYyO1lK7Q0FJBs7ST0+oUYSCF4KpCsDPi1TneljKCb4kl5evngr/GpXfzI9FmrQ==
 ```
 
-Повторная публикация 0.7.0 не выполняется. README и changelog опубликованного
-архива остаются неизменными; актуальный статус находится в canonical README
-репозитория и этих документах. Установка в чистом потребителе проверяется отдельно
-от успешного выполнения publish.
+0.7.0 is not republished. Published archive README and changelog
+remain unchanged; current status lives in the repository’s canonical README
+and these documents. Installation in a clean consumer is checked separately
+from successful publish execution.
 
-## Первый выпуск и теги
+## First release and tags
 
-Проверенный `gavia-ui@0.7.0` уже опубликован вручную. Для следующих выпусков
-настроен Trusted Publisher через OIDC. Для первого выпуска согласовано
-отдельное исключение: publish job
-пропускает тег **`v0.7.0`**, потому что эта версия выпускается вручную.
-После подтверждения npm-публикации тег можно отправить для истории:
+Checked `gavia-ui@0.7.0` has already been published manually. Subsequent releases
+use Trusted Publisher through OIDC. The first release has a separate
+agreed exception: the publish job
+skips tag **`v0.7.0`**, because that version is released manually.
+After npm confirmation, the tag can be pushed for history:
 
 ```bash
 git tag -a v0.7.0 -m "Gavia UI 0.7.0"
 git push origin v0.7.0
 ```
 
-Перед отправкой убедитесь, что исключение первого тега присутствует в workflow
-помеченного коммита. Проверки на теге сохраняются, но повторного `npm publish`
-0.7.0 не происходит. Одна версия в одном реестре публикуется только один раз.
-Прежний `v0.6.0` не перемещайте и не удаляйте.
+Before pushing, confirm that the first-tag exception exists in the tagged commit’s
+workflow. Tag checks still run, but `npm publish`
+does not repeat 0.7.0. One version in one registry is published once.
+Do not move or delete previous `v0.6.0`.
 
-Следующий выпуск получает новый тег и публикуется через CI.
-Публикация сайта в GitHub Pages и библиотеки в npm — отдельные операции;
-успех одной не подтверждает другую. Сайт описан в [hosting.md](hosting.md).
+The next release receives a new tag and is published through CI.
+GitHub Pages site publication and npm package publication are separate operations;
+success in one does not confirm the other. Site details: [hosting.md](hosting.md).
 
-## Trusted publisher для следующих выпусков
+## Trusted publisher for subsequent releases
 
-Trusted Publisher настроен для канонического репозитория и workflow:
+Trusted Publisher is configured for the canonical repository and workflow:
 
 - GitHub owner: `whitewolf06`.
 - Repository: `gavia-ui`.
 - Workflow: `publish.yml`.
-- Разрешение: прямой `npm publish`.
+- Permission: direct `npm publish`.
 
-Настройка подтверждена успешным созданием связи на стороне npm.
-Trusted publishing требует npm CLI >=11.5.1 и Node >=22.14.0.
-Publish job использует Node 24 и OIDC без постоянного npm-токена.
-Первый выпуск через OIDC — 0.7.1 — подтверждён успешным
-[publish job](https://github.com/whitewolf06/gavia-ui/actions/runs/37240730020) и совпадением integrity в публичном npm.
-Последующие выпуски проходят те же проверки; успех 0.7.1 не подтверждает
-заранее успешность будущей публикации.
+Configuration was confirmed by successfully creating the npm-side link.
+Trusted publishing requires npm CLI >=11.5.1 and Node >=22.14.0.
+The publish job uses Node 24 and OIDC without a persistent npm token.
+The first OIDC release, 0.7.1, was confirmed by a successful
+[publish job](https://github.com/whitewolf06/gavia-ui/actions/runs/37240730020) and matching public npm integrity.
+Subsequent releases follow the same checks; 0.7.1 success does not establish
+future publication success in advance.
 
-## Версия в витрине
+## Playground version
 
-Версия исходников в заголовке и карточке проекта автоматически читается из
-манифеста библиотеки. `publishedVersion` в `project-info.ts` отдельно хранит
-последнюю подтверждённую npm-версию: сейчас `0.11.1`. Ссылка на npm и команда
-установки используют именно её.
+Source version in the header and project card is read automatically from
+the library manifest. `publishedVersion` in `project-info.ts` separately stores
+the last confirmed npm version: currently `0.11.1`. npm links and installation
+commands use that version.
 
-Обновляйте `publishedVersion` только после проверки новой точной версии
-и integrity архива в npm. Подготовка следующей версии в package.json
-сама по себе не меняет подтверждённую версию установки.
+Update `publishedVersion` only after checking the new exact version
+and archive integrity in npm. Preparing the next package.json version
+does not change the confirmed installation version.
 
-## Следующие выпуски
+## Subsequent releases
 
-1. Обновите версию, changelog и миграцию; выполните проверки.
-2. После одобрения коммита отправьте main.
-3. После явной команды на публикацию создайте новый аннотированный тег
-   следующей версии, например:
+1. Update version, changelog and migration; run checks.
+2. After commit approval, push main.
+3. After explicit publication authorization, create a new annotated tag
+   for the next version, for example:
 
 ```bash
 git tag -a v0.11.2 -m "Gavia UI 0.11.2"
 git push origin v0.11.2
 ```
 
-Пример для следующего patch-выпуска. Используйте его после согласования
-версии 0.11.2 и обновления package.json.
-Workflow повторяет проверки Node 18/24, браузеров и визуальных эталонов.
-Публикация разрешена только из `whitewolf06/gavia-ui`, только для тега,
-совпадающего с версией пакета, и после всех проверок. Обычный push и PR
-выполняют проверки без выпуска пакета.
+This is an example for the next patch release. Use it after agreeing
+on 0.11.2 and updating package.json.
+The workflow repeats Node 18/24, browser and visual baseline checks.
+Publication is allowed only from `whitewolf06/gavia-ui`, only for a tag
+matching the package version, and after all checks. Regular pushes and PRs
+run checks without publishing the package.
 
-Для CI-релиза кроме доступной точной версии, архива и установки потребителя
-нужен успешный publish job. Отправленный тег сам по себе
-не подтверждает публикацию.
+A CI release requires a successful publish job in addition to an available exact
+version, archive and consumer installation. Pushing a tag
+alone does not confirm publication.
 
-## Совместимость и лицензия
+## Compatibility and license
 
-Переход на первое публичное имя описан в [миграции 0.7](migration-0.7.md).
-Публичные `Wl*`, классы и токены сохраняются. Подробности ребрендинга —
-[миграция Gavia UI](migration-gavia.md).
-Обе LICENSE должны совпадать; changelog пакета отличается только абсолютными
-ссылками на документацию.
+The first public-name upgrade is described in the [0.7 migration](migration-0.7.md).
+Public `Wl*` names, classes and tokens are preserved. Rebrand details:
+[Gavia UI migration](migration-gavia.md).
+Both LICENSE files must match; the package changelog differs only in absolute
+documentation links.
 
-Прежний пакет остаётся самостоятельным пакетом в GitHub Packages.
-При переносе GitHub npm-пакеты сохраняют прежний scope и могут потерять связь
-и наследованные разрешения репозитория. Проверьте доступ старых потребителей;
-не удаляйте прежние версии и не отзывайте их токены.
+The previous package remains a separate GitHub Packages package.
+GitHub repository transfers preserve old npm scopes and may break repository links
+and inherited permissions. Check existing consumer access;
+do not delete earlier versions or revoke their tokens.
 
-Источники:
+Sources:
 [MIT](https://opensource.org/license/mit),
 [GitHub repository transfer](https://docs.github.com/en/repositories/creating-and-managing-repositories/transferring-a-repository),
 [GitHub Packages permissions](https://docs.github.com/en/packages/learn-github-packages/about-permissions-for-github-packages),
 [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/).
 
-## Контракты API 0.11
+## API 0.11 contracts
 
-Выпуск 0.11.0 опубликован. Согласованные изменения типов проверяются отдельным
-контрактом миграции: baseline 0.9.1 сохраняется, дополнительные потери API
-останавливают gate. Контракт ограничен веткой 0.11.x и не переносится
-автоматически на следующие minor. Результаты — в [quality.md](quality.md).
+0.11.0 is published. Agreed type changes are checked through a separate
+migration contract: baseline 0.9.1 is preserved, and additional API losses
+block the gate. The contract is scoped to 0.11.x and does not automatically
+apply to later minors. Results: [quality.md](quality.md).
 
-## Подготовка с Changesets
+## Preparation with Changesets
 
-1. `pnpm changeset`: пакет gavia-ui, patch/minor и описание изменения.
-2. `pnpm changeset:status`: проверить план без изменения версий.
-3. `pnpm release:version`: применить план, синхронизировать root/package и оба
-   changelog. Заполнить созданное руководство migration-VERSION.md; убрать TODO,
-   описать действия и отметить Breaking changes, если они есть. Ничего не публикуется.
-4. Выполнить проверки, просмотреть diff и согласовать конкретный релиз. Новый тег
-   `vVERSION` запускает существующий OIDC workflow для точного проверенного архива.
+1. `pnpm changeset`: select gavia-ui, patch/minor and describe the change.
+2. `pnpm changeset:status`: inspect the plan without changing versions.
+3. `pnpm release:version`: apply the plan and synchronize root/package versions and
+   both changelogs. Complete the generated migration-VERSION.md; remove TODO,
+   describe required steps and mark Breaking changes if present. Nothing is published.
+4. Run checks, review the diff and agree on the specific release. New tag
+   `vVERSION` starts the existing OIDC workflow for the exact checked archive.
 
-Предварительный выпуск готовьте в отдельной ветке: `pnpm changeset pre enter beta`,
-затем `pnpm release:version`. Версии alpha/beta/rc.N публикуются workflow только под
-тегом npm `next`; стабильные — `latest`. Команда выхода —
-`pnpm changeset pre exit`, затем подготовка стабильной версии и полные проверки.
-Не запускайте `changeset publish`: публикация остаётся в проверяющем архив OIDC job.
-Исходники не меняют publishedVersion автоматически.
+Prepare prereleases on a separate branch: `pnpm changeset pre enter beta`,
+then `pnpm release:version`. The workflow publishes alpha/beta/rc.N only under npm
+`next`; stable versions use `latest`. Exit with
+`pnpm changeset pre exit`, then prepare the stable version and run full checks.
+Do not run `changeset publish`: publication stays in the archive-checking OIDC job.
+Source preparation does not update publishedVersion automatically.
 
-Заголовки `#` и `##` в Changeset автоматически сдвигаются ниже заголовка выпуска;
-вложенность сохраняется, код в fenced blocks не меняется. Setext-заголовки
-(подчёркивание `===` / `---`), незакрытые code fences и вложенность, которая
-не помещается в шесть уровней Markdown, отклоняются до изменения версий.
-Используйте ATX-заголовки с `#` и закройте code fences перед подготовкой.
+Changeset `#` and `##` headings automatically shift below the release heading;
+nesting is preserved, and fenced code is unchanged. Setext headings
+(`===` / `---` underlines), unclosed fences and nesting exceeding six
+Markdown levels are rejected before version changes.
+Use ATX `#` headings and close fences before preparing a version.
 
-## Витрины выпусков
+## Release previews
 
-После успешного npm job теговый CI собирает playground с относительным base,
-создаёт gavia-ui-playground-VERSION.tgz и SHA256, сохраняет артефакт и прикладывает
-архив к GitHub Release (предварительные выпуски помечаются prerelease). Архив позволяет
-сравнить витрины разных выпусков. Pages при этом не обновляется.
-Распакуйте архив, запустите локальный HTTP-сервер и откройте витрину:
-переходы через query и выбор темы работают.
-Локально: `pnpm --filter gavia-ui-playground build --base=./`,
-`pnpm release:preview`. Контрактную совместимость по-прежнему проверяет CI.
+After a successful npm job, tag CI builds the playground with a relative base,
+creates gavia-ui-playground-VERSION.tgz and SHA256, saves an artifact and attaches
+the archive to GitHub Release; prereleases are marked accordingly. The archive allows
+comparison of different releases. Pages is not updated by this step.
+Extract the archive, start a local HTTP server and open the preview:
+query navigation and theme selection work.
+Locally: `pnpm --filter gavia-ui-playground build --base=./`,
+`pnpm release:preview`. CI still checks contract compatibility.
 
-Ссылки на документацию в GitHub Release указывают на тег `vVERSION`, включая
-предварительные выпуски из отдельной ветки. Changelog внутри npm-пакета сохраняет
-ссылки на актуальную документацию в `main`. Метаданные архива содержат commit и
-`dirty`: этот флаг отмечает незакоммиченные tracked / nonignored untracked файлы;
-игнорируемые результаты сборки на него не влияют.
+GitHub Release documentation links point to `vVERSION`, including
+prereleases from separate branches. The npm package changelog links
+to current `main` documentation. Archive metadata contains commit and
+`dirty`: this flag marks uncommitted tracked / nonignored untracked files;
+ignored build results do not affect it.

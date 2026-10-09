@@ -1,70 +1,66 @@
-# Иконки Gavia UI
+# Gavia UI icons
 
-Источник каждого рисунка — `packages/ui-kit/icons/<name>.svg`. Генератор
-`pnpm icons:sync` одним запуском проверяет все файлы и обновляет
-`src/icons.generated.ts`: реестр рисунков, `WlIconName` и `WL_ICON_NAMES` для
-витрины. `pnpm icons:check` выполняет те же проверки и завершается ошибкой,
-если сгенерированный файл устарел. Ручное редактирование реестра запрещено.
+Each drawing comes from `packages/ui-kit/icons/<name>.svg`. A single
+`pnpm icons:sync` run validates every file and updates `src/icons.generated.ts`:
+the drawing registry, `WlIconName` and `WL_ICON_NAMES` for the showcase.
+`pnpm icons:check` runs the same validation and fails if the generated file is stale.
+Do not edit the registry manually.
 
-Начальная партия перенесена из прежних рисунков `WlIcon` и 46 SVG-символов
-исторического HTML-прототипа. Прототип сохранён в истории Git; действующий
-источник рисунков — [SVG-каталог](../packages/ui-kit/icons).
-Стабильные публичные имена сохранены. Например, `i-cal` соответствует
-`calendar`, `i-clip` —
-`paperclip`, `i-mic` — `microphone`, `i-msg` — `message`, `i-zap` —
-`lightning`, `i-chev-*` — `chevron-*`. В playground показаны все иконки из `WL_ICON_NAMES`.
+The initial batch came from previous `WlIcon` drawings and 46 SVG symbols
+in the historical HTML prototype. Git retains that prototype; the current
+drawing source is the [SVG catalog](../packages/ui-kit/icons).
+Stable public names are preserved. For example, `i-cal` maps to `calendar`,
+`i-clip` to `paperclip`, `i-mic` to `microphone`, `i-msg` to `message`,
+`i-zap` to `lightning` and `i-chev-*` to `chevron-*`.
+The playground shows all icons from `WL_ICON_NAMES`.
 
-В версии 0.8 каталог расширен собственными рисунками Gavia до 113 имён:
-состояния, документы, медиа, справочники и навигация. Рисунки предыдущего
-каталога сохранены; шрифты, внешние каталоги и сетевые ресурсы не используются.
+Version 0.8 expanded the catalog to 113 names with original Gavia drawings:
+states, documents, media, catalogs and navigation. Earlier drawings are preserved;
+no fonts, external catalogs or network resources are used.
 
-## Имена потребителя
+## Consumer names
 
-`resolveWlIconName(value?: string | null): WlIconName | undefined` — чистая
-функция для отображения. Она принимает каноническое имя, известный синоним,
-`pi-name` и прежнюю запись `pi pi-name`. Например, `pencil` и `pi pi-pencil`
-разрешаются в `edit`, `sparkles` — в `sparkle`, `zap` — в `lightning`.
-Неизвестные имена и произвольные CSS-классы возвращают `undefined`.
-Функция не изменяет сохранённое значение: нормализация имени при загрузке
-или сохранении данных остаётся решением приложения.
+`resolveWlIconName(value?: string | null): WlIconName | undefined` is a pure
+display function. It accepts a canonical name, a known alias, `pi-name` and
+the legacy `pi pi-name` notation. For example, `pencil` and `pi pi-pencil`
+resolve to `edit`, `sparkles` to `sparkle` and `zap` to `lightning`.
+Unknown names and arbitrary CSS classes return `undefined`.
+The function does not change stored values: the application decides whether
+to normalize names when loading or saving data.
 
-`WlIcon` и публичные icon props используют `WlIconInput`, поэтому прежнее
-строковое значение можно передать без приведения к каноническому union.
-Для известного имени `WlIcon` рисует SVG; для неизвестного сохраняет default
-slot. Если имя не распознано, приложение может выбрать запасную иконку
-по результату `resolveWlIconName`.
-Индикатор загрузки — `WlSpinner` или `WlButton.loading`; `spin` не является
-именем рисунка. Размер задаётся `size`, цвет наследуется как `currentColor`.
+`WlIcon` and public icon props accept `WlIconInput`, so a legacy string can be
+passed without casting to the canonical union. `WlIcon` renders SVG for known names
+and keeps its default slot for unknown names. Applications can choose a fallback
+icon based on the result of `resolveWlIconName`.
+Use `WlSpinner` or `WlButton.loading` for loading indicators; `spin` is not a drawing
+name. `size` sets the dimensions; color is inherited through `currentColor`.
 
-## Правила рисунка
+## Drawing rules
 
-- Холст и `viewBox`: `0 0 24 24`. Внешний `<svg>` содержит только
-  `xmlns="http://www.w3.org/2000/svg"` и `viewBox`; размеры задаёт `WlIcon`.
-- Штрих по умолчанию: `currentColor`, толщина `1.5`, круглые концы и соединения.
-  Делайте линии разборчивыми при 16, 20 и 24 px. Цвет не зашивайте в SVG.
-- Допустимы `path`, `circle`, `rect`, `line`, `polyline`, `polygon`, `ellipse`,
-  `g` и геометрические атрибуты из `scripts/validate-icon.mjs`. Скрипты, стили,
-  `<use>`, изображения, внешние ссылки, `url(...)` и обработчики запрещены.
-- Имя файла: строчные латинские буквы, цифры и дефисы, начинается с буквы.
-  Переименование уже опубликованного имени требует миграционной заметки.
+- Canvas and `viewBox`: `0 0 24 24`. The outer `<svg>` contains only
+  `xmlns="http://www.w3.org/2000/svg"` and `viewBox`; `WlIcon` sets its size.
+- Default stroke: `currentColor`, width `1.5`, round caps and joins.
+  Keep lines legible at 16, 20 and 24 px. Do not hardcode colors in SVG.
+- Allowed elements: `path`, `circle`, `rect`, `line`, `polyline`, `polygon`,
+  `ellipse`, `g` and geometry attributes from `scripts/validate-icon.mjs`.
+  Scripts, styles, `<use>`, images, external links, `url(...)` and handlers are forbidden.
+- Filenames use lowercase Latin letters, digits and hyphens and start with a letter.
+  Renaming an already published name requires a migration note.
 
-## Работа партией
+## Batch workflow
 
-1. Сравните требуемые названия с `WL_ICON_NAMES` или файлами `icons/*.svg`.
-   Составьте один список недостающих имен, удалите дубли и проверьте, нет ли
-   уже подходящего синонима.
-2. Подготовьте всю партию SVG в едином стиле, используя существующий
-   SVG-каталог и живой [пример WlIcon](../apps/playground/src/design-system/examples/WlIcon.vue)
-   как образец. Не генерируйте отдельный файл на каждый запуск агента.
-3. Поместите файлы в `packages/ui-kit/icons`, запустите `pnpm icons:sync`,
-   затем `pnpm icons:check` и `pnpm typecheck`.
-4. Откройте секцию «Иконки» playground: проверьте всю партию во всех пяти темах
-   при 16, 20 и 24 px. Проверьте контраст,
-   выравнивание и читаемость на мобильной ширине.
-5. Если при работе над новым компонентом возникло недостающее имя, добавьте
-   его SVG в эту же папку и повторите шаги 3–4; генератор принимает новые файлы
-   без правки исходного кода.
+1. Compare requested names with `WL_ICON_NAMES` or `icons/*.svg` files.
+   Make one list of missing names, remove duplicates and check for existing aliases.
+2. Prepare the entire SVG batch in a consistent style, using the existing
+   SVG catalog and live [WlIcon example](../apps/playground/src/design-system/examples/WlIcon.vue).
+   Do not generate one file per agent run.
+3. Put files in `packages/ui-kit/icons`, run `pnpm icons:sync`,
+   then `pnpm icons:check` and `pnpm typecheck`.
+4. Open the playground Icons section and review the whole batch in all five themes
+   at 16, 20 and 24 px. Check contrast, alignment and legibility at mobile width.
+5. If a new component needs a missing name, add its SVG to the same directory and
+   repeat steps 3–4. The generator accepts new files without source-code changes.
 
-`WlIcon` рендерит внутренний SVG через `v-html` только из сгенерированного
-реестра. Поэтому проверка допустимых элементов и атрибутов в `icons:sync`
-является частью границы безопасности пакета.
+`WlIcon` renders its internal SVG through `v-html` only from the generated
+registry. Element and attribute validation in `icons:sync` is therefore part
+of the package security boundary.

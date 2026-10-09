@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useWlLocaleText } from "../config";
 import {
   computed,
   onBeforeUnmount,
@@ -13,6 +14,7 @@ import { useOverlayLifecycle } from "../utils/overlayLifecycle";
 import WlButton from "./WlButton.vue";
 import WlIcon from "./WlIcon.vue";
 import WlIconButton from "./WlIconButton.vue";
+const localeText = useWlLocaleText();
 
 const props = withDefaults(
   defineProps<{
@@ -120,7 +122,7 @@ defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } sa
       disabled && 'is-disabled',
       density === 'compact' && 'wl-filter-bar--compact'
     ]"
-    :aria-label="ariaLabel"
+    :aria-label="localeText('ariaLabel', ariaLabel, 'filters')"
     data-wl="filter-bar"
     :data-density="density"
     :data-open="open"
@@ -135,7 +137,7 @@ defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } sa
         @click="toggle"
       >
         <template #icon><WlIcon name="filter" :size="15" /></template>
-        {{ toggleLabel }}
+        {{ localeText('toggleLabel', toggleLabel, 'filters') }}
         <span v-if="count" class="wl-filter-bar__count">{{ count }}</span>
       </WlButton>
     </div>
@@ -150,12 +152,12 @@ defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } sa
       tabindex="-1"
     >
       <div class="wl-filter-bar__mobile-head">
-        <strong class="wl-filter-bar__title">{{ panelTitle }}</strong>
+        <strong class="wl-filter-bar__title">{{ localeText('panelTitle', panelTitle, 'filters') }}</strong>
         <WlIconButton
           icon="x"
           size="sm"
           variant="ghost"
-          :aria-label="closeLabel"
+          :aria-label="localeText('closeLabel', closeLabel, 'closeFilters')"
           @click="requestClose"
         />
       </div>
@@ -172,7 +174,7 @@ defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } sa
         <div v-if="hasActions" class="wl-filter-bar__actions">
           <slot name="actions" :clear="clear" :close="requestClose">
             <WlButton v-if="showClear && count > 0" variant="ghost" size="sm" @click="clear">
-              {{ clearLabel }}
+              {{ localeText('clearLabel', clearLabel, 'reset') }}
             </WlButton>
           </slot>
         </div>
@@ -181,7 +183,7 @@ defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } sa
       <div v-if="hasFooter" class="wl-filter-bar__footer">
         <slot name="footer" :apply="apply" :clear="clear" :close="requestClose">
           <WlButton class="wl-filter-bar__apply" variant="primary" size="sm" @click="apply">
-            {{ applyLabel }}
+            {{ localeText('applyLabel', applyLabel, 'apply') }}
           </WlButton>
         </slot>
       </div>
@@ -195,7 +197,7 @@ defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } sa
       v-if="open"
       type="button"
       class="wl-filter-bar__backdrop"
-      :aria-label="closeLabel"
+      :aria-label="localeText('closeLabel', closeLabel, 'closeFilters')"
       @click="requestClose"
     />
   </section>

@@ -1,3 +1,4 @@
+import { playgroundLocale } from "./i18n";
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import type { WlThemeName } from "../../../packages/ui-kit/src/types";
 
@@ -33,6 +34,7 @@ export function withPlaygroundTheme(href: string, theme: WlThemeName): string {
   const path = queryIndex < 0 ? route : route.slice(0, queryIndex);
   const query = new URLSearchParams(queryIndex < 0 ? "" : route.slice(queryIndex + 1));
   query.set("theme", theme);
+  query.set("lang", playgroundLocale.value);
   return path + "?" + query.toString() + fragment;
 }
 

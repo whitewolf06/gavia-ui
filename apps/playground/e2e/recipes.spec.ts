@@ -1,3 +1,4 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import { expect, test, type Page, type Locator } from "@playwright/test";
 import { copyCodePanel, chooseDropdownOption, chooseShowcaseTheme } from "./select-helpers";
@@ -17,7 +18,7 @@ async function recipe(page: Page, id: string) {
   return preview;
 }
 test.beforeEach(async ({ page }) => {
-  await page.goto("/?view=system", { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl("/?view=system"), { waitUntil: "domcontentloaded" });
   await page.getByRole("heading", { name: "Дизайн-система" }).waitFor({ state: "visible" });
   // Workflow assertions target settled controls; overlay motion has its own suite.
   await page.addStyleTag({ content: "html { scroll-behavior: auto; }" });

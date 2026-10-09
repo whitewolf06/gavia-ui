@@ -1,67 +1,69 @@
-# Архитектура Gavia UI
+# Gavia UI architecture
 
-## Границы пакета
+## Package boundaries
 
-`packages/ui-kit` содержит Vue 3-компоненты, типы, манифест, темы и CSS.
-`apps/playground` показывает их работу и используется для браузерных проверок.
-Маршруты, API, хранилище и бизнес-правила остаются в приложении.
-Единственный обязательный peer — `vue`; он не включается в ESM-бандл.
+`packages/ui-kit` contains Vue 3 components, types, manifest, themes and CSS.
+`apps/playground` demonstrates them and supports browser checks.
+Routes, API, state management and business rules belong to the app.
+The only required peer is `vue`; it is not bundled into ESM.
 
-Точка входа `src/index.ts` экспортирует стабильные `Wl*` имена. Все 53
-компонента описаны в `src/manifest`. Относительные импорты связывают файлы
-внутри пакета; alias `@/` внутри пакета не используется. Стили импортирует
-потребитель явно: `styles/reset.css`, `styles/base.css`, файл темы.
+Entry point `src/index.ts` exports stable `Wl*` names. All 53
+components are described in `src/manifest`. Relative imports connect files
+inside the package; `@/` aliases are not used there. Consumers import styles
+explicitly: `styles/reset.css`, `styles/base.css` and a theme file.
 
-## Разделение ответственности и SOLID
+## Responsibility boundaries and SOLID
 
-- **Single responsibility.** Компонент обрабатывает props, события, слоты и
-  разметку. `utils/options.ts` отвечает за выбор и клавиатуру,
-  `utils/anchoredOverlay.ts` — за привязку панели и закрытие,
-  `utils/overlayLifecycle.ts` — за модальный фокус и прокрутку. Сервисы хранят
-  состояние уведомлений/подтверждений на уровне Vue-приложения.
-- **Open/closed.** Варианты задаются props, содержимое — слотами, DOM-атрибуты
-  внутренних разделов — `pt`, внешний вид — `--wl-*` токенами. Для новой темы
-  переопределяют токены, не копируют компоненты.
-- **Liskov substitution.** При замене реализации компонента сохраняют его
-  публичный `v-model`, props, emits, слоты, классы `wl-*`, `data-wl` и состояния.
-  Контрактные тесты и манифест проверяют эту границу.
-- **Interface segregation.** Компонент принимает только нужные ему props;
-  необязательные `WlConfig`, `WlToastService` и `WlConfirmationService`
-  подключаются отдельно. Не заставляйте простое поле зависеть от оверлеев.
-- **Dependency inversion.** Composables получают состояние через `provide`/
-  `inject` Vue и типизированный контракт сервиса. Общее поведение не импортирует
-  конкретный компонент. Поэтому два Vue-приложения на странице не делят очередь
-  уведомлений или подтверждение.
+- **Single responsibility.** A component handles props, events, slots and
+  markup. `utils/options.ts` handles selection and keyboard behavior;
+  `utils/anchoredOverlay.ts` handles panel anchoring and dismissal;
+  `utils/overlayLifecycle.ts` handles modal focus and scrolling. Services store
+  toast/confirmation state per Vue app.
+- **Open/closed.** Props define variants, slots define content, `pt` configures
+  internal DOM sections, and `--wl-*` tokens define appearance. New themes
+  override tokens rather than copy components.
+- **Liskov substitution.** Replacing an implementation preserves its
+  public `v-model`, props, emits, slots, `wl-*` classes, `data-wl` and states.
+  Contract tests and the manifest check this boundary.
+- **Interface segregation.** Components accept only the props they need;
+  optional `WlConfig`, `WlToastService` and `WlConfirmationService`
+  are installed separately. Simple fields should not depend on overlays.
+- **Dependency inversion.** Composables receive state through Vue `provide`/
+  `inject` and typed service contracts. Shared behavior does not import
+  concrete components. Two Vue apps on the same page therefore do not share
+  toast queues or confirmation requests.
 
-При импорте компоненты не обращаются к `window`/`document`, поэтому пакет
-можно импортировать на сервере. DOM используется после монтирования
-или в обработчиках. Для нового компонента сначала опишите публичный контракт
-в манифесте, затем напишите реализацию и проверки: props и модель, события
-и слоты, клавиатура и фокус, мобильный экран, при необходимости — SSR.
+Components do not access `window`/`document` on import, so the package
+can be imported on a server. DOM access occurs after mounting
+or in handlers. For a new component, first describe its public contract
+in the manifest, then implement and check props/model, events/slots,
+keyboard/focus, mobile screens and SSR when applicable.
 
-## Контракты типов данных
+<a id="контракты-типов-данных"></a>
 
-Изменения типов выпущены в 0.11.0. При подготовке выпуска локально проверены
-исходники, playground и установленный архив с Vue 3.4.0 / TypeScript 5.4.5
-и Vue 3.5.40 / TypeScript 5.8.3. Также прошли unit-тесты, SSR и браузерный
-потребитель. Совместимость с прежним API проверяется отдельно от новых типов.
+## Data type contracts
 
-### Выбор значений и подсказки
+Type changes were released in 0.11.0. Release preparation locally checked
+source, playground and installed archives with Vue 3.4.0 / TypeScript 5.4.5
+and Vue 3.5.40 / TypeScript 5.8.3. Unit tests, SSR and a browser
+consumer also passed. Compatibility with the previous API is checked separately from new types.
 
-`WlSelect` / `WlMultiSelect` выводят тип модели из `options` и `optionValue`.
-Без резолвера модель хранит `TOption`, с ключом — тип поля,
-с функцией — тип её результата. `NoInfer` не позволяет неподходящей модели
-расширить тип вариантов. Можно передать readonly-список: библиотека его не меняет.
+### Selection and suggestions
 
-`WlSelectModel<Option, Resolver>` включает `null` для очищенного выбора; `WlMultiSelectModel<Option, Resolver>` — массив значений. Непереданная модель Select допустима, MultiSelect сохраняет default `[]`.
+`WlSelect` / `WlMultiSelect` infer model types from `options` and `optionValue`.
+Without a resolver, the model stores `TOption`; with a key, the field type;
+with a function, its result type. `NoInfer` prevents an incompatible model
+from widening option types. Readonly lists are accepted and never mutated.
 
-`WlAutocompleteModel<Option>` — `Option | string | null`: свободный ввод возвращает строку, выбор — подсказку. В `multiple` используется `WlAutocompleteModel<Option, true>` — `Option[] | null`. Динамический boolean-режим требует модели обоих вариантов. Функция `optionLabel` в single обрабатывает и строку; ключ поля применяется к объектным подсказкам, свободный текст отображается напрямую. В single внешний `null` / `undefined` очищает текст; в multiple `[]` / `null` очищает выбор. `forceSelection` и пользовательские option-слоты не реализованы.
+`WlSelectModel<Option, Resolver>` includes `null` for cleared selection; `WlMultiSelectModel<Option, Resolver>` is an array. Omitting a Select model is allowed; MultiSelect retains its `[]` default.
+
+`WlAutocompleteModel<Option>` is `Option | string | null`: free input returns a string, selection returns a suggestion. `multiple` uses `WlAutocompleteModel<Option, true>` — `Option[] | null`. A dynamic boolean mode requires both model branches. Single `optionLabel` functions also handle strings; a field key applies to object suggestions, while free text displays directly. In single mode, external `null` / `undefined` clears text; in multiple, `[]` / `null` clears selection. `forceSelection` and custom option slots are not implemented.
 
 ```ts
 import { ref } from "vue";
 import type { WlAutocompleteModel, WlSelectModel } from "gavia-ui";
 interface Material { id: number; label: string; }
-const options: readonly Material[] = [{ id: 1, label: "Дерево" }];
+const options: readonly Material[] = [{ id: 1, label: "Wood" }];
 const selected = ref<WlSelectModel<Material, "id">>(null);
 const suggested = ref<WlAutocompleteModel<Material>>(null);
 const label = (item: Material | string) => typeof item === "string" ? item : item.label;
@@ -72,29 +74,29 @@ const label = (item: Material | string) => typeof item === "string" ? item : ite
 <WlAutocomplete v-model="suggested" :suggestions="options" :option-label="label" />
 ```
 
-Явный generic не задаёт runtime-режим. Публичные экспорты требуют `optionValue` при явном типе резолвера, `multiple` при режиме, отличном от default false, и `selectionMode` для DatePicker range. Типовой facade ссылается на тот же компонент, без обёртки рендера; сохраняет контекст Vue, события, слоты и expose. Обычные шаблоны выводят generics из props.
+An explicit generic does not set runtime mode. Public exports require `optionValue` for an explicit resolver type, `multiple` for a mode other than default false, and `selectionMode` for DatePicker range. The type facade references the same component without a render wrapper; Vue context, events, slots and expose are preserved. Regular templates infer generics from props.
 
-### Таблица
+### Table
 
-`WlTable<Row>` принимает readonly-массив объектов. Интерфейсу строки
-не нужна index signature. Слот `cell-<field>` получает `row: Row`
-и `value: Row[field]`. Значение виртуальной колонки остаётся `unknown`:
-проверьте его тип или используйте известные поля `row`.
+`WlTable<Row>` accepts a readonly object array. The row interface
+needs no index signature. Slot `cell-<field>` receives `row: Row`
+and `value: Row[field]`. Virtual-column values remain `unknown`:
+narrow them or use known `row` fields.
 
 ```ts
 import type { WlTableColumn } from "gavia-ui";
 interface Material { id: number; label: string; }
 const columns = [
-  { key: "label", label: "Название" },
-  { key: "actions", label: "Действия", kind: "virtual" }
+  { key: "label", label: "Name" },
+  { key: "actions", label: "Actions", kind: "virtual" }
 ] as const satisfies readonly WlTableColumn<Material, "actions">[];
 ```
 
-WlTableColumn<Row> — поле строки либо явно помеченная виртуальная колонка. Второй generic ограничивает имена виртуальных колонок; обычные поля всегда проверяются по keyof Row. Компонент выводит Row из value, а колонки не расширяют его: опечатка не становится виртуальным полем. При типизированных строках замените широкий WlTableColumn[] на readonly WlTableColumn<MyRow>[] или satisfies. Для старых словарей WlTableRow ключи остаются широкими.
+WlTableColumn<Row> is a row field or an explicitly marked virtual column. The second generic limits virtual-column names; regular fields are always checked against keyof Row. The component infers Row from value, and columns do not widen it: a typo does not become a virtual field. For typed rows, replace broad WlTableColumn[] with readonly WlTableColumn<MyRow>[] or satisfies. Legacy WlTableRow dictionaries retain broad keys.
 
-### Секции pt
+### pt sections
 
-`WlPt<"select">` и соответствующие типы остальных компонентов добавляют подсказки известных секций, сохраняя динамические расширения. Для проверки опечаток в именах и вложенных узлах используйте `WlPtStrict` / `WlPtConfigStrict` через `satisfies`.
+`WlPt<"select">` and equivalent component types suggest known sections while allowing dynamic extensions. Use `WlPtStrict` / `WlPtConfigStrict` through `satisfies` to check section names and nested nodes for typos.
 
 ```ts
 import type { WlPtStrict } from "gavia-ui";
@@ -104,86 +106,88 @@ const selectPt = {
 } satisfies WlPtStrict<"select">;
 ```
 
-`WlPtConfig` сохраняет открытые динамические записи и произвольные extension-значения; известные секции получают точные типы. Результат `createWlPt()` больше не обещает, что любой неизвестный ключ содержит дерево DOM-атрибутов: пользовательские расширения остаются unknown и требуют проверки при чтении.
+`WlPtConfig` retains open dynamic entries and arbitrary extension values; known sections have precise types. `createWlPt()` no longer promises that every unknown key contains a DOM-attribute tree: custom extensions remain unknown and must be narrowed before reading.
 
-Leaf-секция принимает атрибуты или функцию, возвращающую атрибуты. Вложенные `pcChip`, `pcInputText` и подобные узлы — объекты секций, не функции. Колбэк получает только `{ context }` с фактически переданными флагами; props и внутреннее состояние не предоставляются. `class` / `style` и порядок слияния не меняются. У tooltip директива применяет class/style и примитивные атрибуты; DOM-события и vnode hooks в её pt не подключаются, в отличие от секций Vue-компонентов.
+A leaf section accepts attributes or a function returning attributes. Nested `pcChip`, `pcInputText` and similar nodes are section objects, not functions. A callback receives only `{ context }` with the actual supplied flags; props and internal state are not exposed. `class` / `style` and merge order are unchanged. The tooltip directive applies class/style and primitive attributes; unlike Vue component sections, its pt does not attach DOM events or vnode hooks.
 
-### Связанные модели и навигация
+### Linked models and navigation
 
-`WlRadio<Value>` выводит домен из модели группы, а `value` должен ему соответствовать. Непереданная модель сохраняет `undefined`; update передаёт Value, не добавляя undefined к домену. `null` / `undefined` допустимы в update, если явно включены в Value. `WlSegmented<Value>` выводит домен из options и сохраняет `null` default; `WlTabs<Item>` выводит ключи из items и сохраняет пустой default `""`. Узкие модели учитывают эти исходные состояния.
+`WlRadio<Value>` infers the domain from the group model; `value` must match it. An omitted model retains `undefined`; update emits Value without adding undefined to the domain. `null` / `undefined` are valid updates when explicitly included in Value. `WlSegmented<Value>` infers its domain from options and keeps a `null` default; `WlTabs<Item>` infers keys from items and keeps an empty `""` default. Narrow models account for these initial states.
 
-`WlSidebarItem<Data>` / `WlCommandPaletteItem<Data>` и generics компонентов сохраняют данные и дополнительные поля item в select-событиях и слотах. Группы принимают readonly items, `keywords` также readonly. Sidebar связывает active key с Item["key"]; optional вход не добавляет undefined к update-событию ключа. Второй generic Sidebar/CommandPalette сохраняет дополнительные поля группы в событиях и слотах; обычное использование выводит их из groups. Старые поля key в Sidebar item/footer-item слотах сохранены. Бизнес-данные `unknown` проверяйте на входе приложения.
+`WlSidebarItem<Data>` / `WlCommandPaletteItem<Data>` and component generics retain data and extra item fields in select events and slots. Groups accept readonly items; `keywords` is also readonly. Sidebar connects the active key to Item["key"]; an optional input does not add undefined to key updates. The second Sidebar/CommandPalette generic retains extra group fields in events and slots; regular use infers them from groups. Existing key fields in Sidebar item/footer-item slots are preserved. Narrow unknown business data at the application boundary.
 
-WlAccordion<Item> сохраняет дополнительные поля item в слоте, а openKeys принимает ключи items. WlMenu<Item> передаёт полный item в command. Для строгого callback используйте интерфейс, расширяющий WlMenuItem<MyItem>. Описания Menu, Accordion, Breadcrumbs, Steps, Calendar и палитры цветов принимают readonly-массивы.
+WlAccordion<Item> retains extra item fields in slots, and openKeys accepts item keys. WlMenu<Item> passes the full item to command. For a strict callback, use an interface extending WlMenuItem<MyItem>. Menu, Accordion, Breadcrumbs, Steps, Calendar and color-palette descriptors accept readonly arrays.
 
-Для refs используйте WlMenuExpose, WlPopoverExpose, WlFilePickerExpose, WlFilterBarExpose, WlSidebarExpose / WlCommandPaletteExpose с документированными методами. Generic SFC — callable-контракт; прежний `InstanceType<typeof Component>` может перестать подходить. Имена компонентов, DOM, CSS и runtime-сервисы остаются прежними.
+For refs, use WlMenuExpose, WlPopoverExpose, WlFilePickerExpose, WlFilterBarExpose, WlSidebarExpose / WlCommandPaletteExpose with their documented methods. Generic SFCs expose callable contracts; existing `InstanceType<typeof Component>` may no longer fit. Component names, DOM, CSS and runtime services are unchanged.
 
-### Нативные атрибуты, события и модели
+### Native attributes, events and models
 
-Публичные type-only представления сохраняют исходные props, slots, events и методы ref. Они не создают runtime-обёртки и не превращают DOM-атрибуты в props. Текстовые поля принимают name/form/required/maxlength, textarea — также rows/cols/wrap. События ввода и клавиатуры получают Event/KeyboardEvent, а не значение модели. Kit size, value и checked остаются под контролем компонента. Class/style/data-атрибуты полей идут на оболочку, id/ARIA и listeners — на контрол. `WlFieldSlotProps` описывает связь подписи, подсказки и ошибки: связывайте inputId с id и ariaDescribedby с aria-describedby явно.
+Public type-only facades preserve original props, slots, events and ref methods. They create no runtime wrappers and do not turn DOM attributes into props. Text fields accept name/form/required/maxlength; textarea also accepts rows/cols/wrap. Input and keyboard events receive Event/KeyboardEvent, not a model value. Components control kit size, value and checked. Field class/style/data attributes reach the wrapper; id/ARIA and listeners reach the control. `WlFieldSlotProps` describes label, hint and error connections: explicitly connect inputId to id and ariaDescribedby to aria-describedby.
 
-Select/MultiSelect — proxy-контролы: их атрибуты не обещают native required/readonly/text validation. name сохраняет существующую сериализацию: Select — строковое значение hidden input, MultiSelect — текст отображаемого выбора. Для отправки типизированных значений используйте v-model приложения. Атрибуты target/rel/download у NavItem допустимы вместе с href, когда он рендерит ссылку. FilePicker не обещает autofocus скрытого input; choose() вызывается из пользовательского действия. TimePicker сохраняет точность до минуты, поэтому native step не переопределяет 60 секунд.
+Select/MultiSelect are proxy controls: their attributes do not promise native required/readonly/text validation. name preserves existing serialization: Select uses the hidden input’s string value, MultiSelect uses displayed selection text. Submit typed values through application v-model. NavItem accepts target/rel/download with href when it renders a link. FilePicker does not promise autofocus for its hidden input; choose() is called from a user action. TimePicker retains minute precision, so native step does not override 60 seconds.
 
-Input/PasswordInput/Textarea поддерживают строковый `.trim`; query CommandPalette также допускает `.trim`. `.number` нарушает их string-контракт, а `.lazy` не реализован. Модели дат, выбора, массивов, чисел, файлов, boolean и ключей не поддерживают встроенные модификаторы. Используйте `WlTextModelModifiers` / `WlNoModelModifiers`, а преобразование доменных значений выполняйте в приложении. Неподдерживаемые варианты проверяются compile-only fixtures, включая реальные v-model в Vue.
+Input/PasswordInput/Textarea support string `.trim`; CommandPalette query also supports `.trim`. `.number` breaks their string contract, and `.lazy` is not implemented. Date, selection, array, number, file, boolean and key models do not support built-in modifiers. Use `WlTextModelModifiers` / `WlNoModelModifiers` and convert domain values in your app. Compile-only fixtures check unsupported cases, including actual Vue v-model usage.
 
-### Локаль, сервисы и оверлеи
+### Locale, services and overlays
 
-`WlLocaleInput` принимает частичную локаль с readonly names. Известные подписи имеют тип string, расширения приложения остаются unknown. `normalizeWlLocale()` игнорирует undefined и неверные известные значения, проверяет семь названий дней, двенадцать месяцев и firstDayOfWeek 0–6. Результат `WlResolvedLocale` содержит все известные поля; прежний минимальный `WlLocale` остаётся допустимым.
+`WlLocaleInput` accepts a partial locale with readonly names. Known labels are string; application extensions remain unknown. `normalizeWlLocale()` ignores undefined and invalid known values, checks seven weekday names, twelve months and firstDayOfWeek 0–6. `WlResolvedLocale` contains all known fields; the previous minimal `WlLocale` remains valid. The Russian fallback is preserved for compatibility; choose English explicitly through `WlConfig` with `locale: wlLocaleEn`.
 
-`useWlToast({ group: "editor" })` адресует сообщения соответствующему WlToast; clear() очищает только эту группу. Confirm принимает group в options; closeGroup(group) закрывает только соответствующий запрос. Прежний close() остаётся глобальным. У Drawer/Popover/Menu/Toast consumer class/style/data/ARIA явно передаются на существующий DOM-root внутри Teleport. FilterBar использует общий SSR-совместимый генератор id.
+`useWlToast({ group: "editor" })` targets the matching WlToast; clear() clears only that group. Confirm accepts group in options; closeGroup(group) closes only its request. Existing close() remains global. Drawer/Popover/Menu/Toast consumer class/style/data/ARIA are explicitly forwarded to their existing DOM root inside Teleport. FilterBar uses the shared SSR-compatible id generator.
 
-### Защита значений во время выполнения
+### Runtime value protection
 
-Отключённые Select/MultiSelect/Autocomplete не меняют модель через открытый список, chip или отложенный complete. NumberInput/Pagination блокируют отложенный commit после отключения. FileUpload в single принимает один файл и отклоняет остальные с reason=count; недопустимая замена сохраняет прежний выбор. Компонент не удаляет файлы с диска и не загружает их в сеть.
+Disabled Select/MultiSelect/Autocomplete do not change models through open lists, chips or delayed complete events. NumberInput/Pagination block delayed commits after disabling. Single FileUpload accepts one file and rejects others with reason=count; an invalid replacement retains the previous selection. The component neither deletes disk files nor uploads them.
 
-Pagination нормализует номера/количество страниц до целых, окно siblings ограничено 100. NumberInput сохраняет ±Infinity как отсутствие границы, заменяет NaN и неверное направление бесконечной границы, а step ≤ 0 / nonfinite — на 1. Обратный диапазон схлопывается к minimum. Slider, Progress, StatCard и счётчик FilterBar не выводят NaN/Infinity в CSS/ARIA. TimePicker игнорирует неверные HH:mm bounds и сохраняет диапазон через полночь. Тип number сам по себе этих ограничений не гарантирует.
+Pagination normalizes page numbers/count to integers; siblings is capped at 100. NumberInput keeps ±Infinity as an absent bound, replaces NaN and incorrectly directed infinite bounds, and changes step ≤ 0 / nonfinite to 1. Reversed ranges collapse to minimum. Slider, Progress, StatCard and FilterBar counts do not emit NaN/Infinity into CSS/ARIA. TimePicker ignores invalid HH:mm bounds and retains overnight ranges. The number type alone does not guarantee these constraints.
 
-### Совместимость и миграция
+### Compatibility and migration
 
-Сужение unknown-моделей, callback label с поддержкой свободной строки, явные virtual columns, домены ключей, модификаторы и callable generics — изменения TypeScript-контракта. Они требуют отдельного minor в 0.x и отметки Breaking changes; включать их в patch как «только типы» нельзя.
+Narrowing unknown models, callback labels handling free strings, explicit virtual columns, key domains, modifiers and callable generics change the TypeScript contract. They require a separate minor release in 0.x and a Breaking changes note; they cannot be included in a patch as “types only”.
 
-Новые декларации используют встроенный NoInfer и требуют TypeScript 5.4 или новее ([официальные release notes](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-4.html#the-noinfer-utility-type)). Архив локально прошёл строгую компиляцию с Vue 3.4.0 + TypeScript 5.4.5 и Vue 3.5.40 + TypeScript 5.8.3: strictTemplates и TSX включены, skipLibCheck отключён. На Vue 3.5.40 проверены desktop/mobile и SSR-гидратация.
+New declarations use built-in NoInfer and require TypeScript 5.4 or newer ([official release notes](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-4.html#the-noinfer-utility-type)). The archive passed local strict compilation with Vue 3.4.0 + TypeScript 5.4.5 and Vue 3.5.40 + TypeScript 5.8.3: strictTemplates and TSX enabled, skipLibCheck disabled. Vue 3.5.40 was checked on desktop/mobile and SSR hydration.
 
-Замените `ref<unknown>(null)` на домен поля, например `ref<number | null>(null)`; MultiSelect — на `ref<number[]>([])`. Для изменения коллекций храните mutable-массив приложения отдельно от readonly-описания компонента. Не скрывайте ошибки приведением к `any`.
+Replace `ref<unknown>(null)` with the field domain, such as `ref<number | null>(null)`; use `ref<number[]>([])` for MultiSelect. Keep mutable application arrays separate from readonly component descriptors. Do not hide errors by casting to `any`.
 
-Снимок 0.9.1 и его потребитель сохраняются неизменными. Для перехода на 0.11 согласован отдельный контракт миграции: модель multiple Autocomplete, конкретные readonly-поля select-payload навигации, unknown-тип произвольных расширений createWlPt, обязательный selectionMode для range DatePicker и единственная замена Select ref<unknown> на ref<number | null> в копии примера. Gate сравнивает полный адаптированный контракт; исходные расхождения остаются в отчёте. Остальные props/events/slots/expose и весь CSS/exports/tokens/pt inventory проверяются без исключений. Generic-режимы сравниваются по соответствующим веткам, Table — в прежнем словарном домене WlTableRow. Разрешение ограничено baseline и версией 0.11, не распространяется на будущие выпуски. [Практические действия потребителя](migration-0.11.0.md).
+The 0.9.1 snapshot and consumer remain unchanged. The agreed 0.11 migration contract covers only the multiple Autocomplete model, specific readonly navigation selection-payload fields, unknown arbitrary createWlPt extensions, required selectionMode for range DatePicker and one replacement of Select ref<unknown> with ref<number | null> in the copied example. The gate compares the full adapted contract; original differences stay in the report. Other props/events/slots/expose and the complete CSS/exports/tokens/pt inventory are checked without exceptions. Generic modes are compared by corresponding branches; Table uses the previous WlTableRow dictionary domain. Permission is scoped to the baseline and 0.11 version, not future releases. [Practical consumer steps](migration-0.11.0.md).
 
-## Темы и публичный DOM
+<a id="темы-и-публичный-dom"></a>
 
-Дизайн-система описана в [design-system.md](design-system.md). Её источник —
-`tokens/source.json`; генератор проверяет ссылочную модель и контраст и создаёт
-CSS, типизированный каталог и JSON. `src/design-system` содержит только данные
-и чистые функции разрешения значений: DOM и Vue-состояние ему не нужны.
-Необязательные CSS-примитивы типографики/компоновки импортируются явно.
-Playground читает те же каталоги и манифест, сохраняя собственную ответственность
-за демонстрационные сценарии. Бизнес-правила паттернов не входят в пакет.
+## Themes and public DOM
 
-Foundation → semantic → component — направление ссылок CSS-токенов. Все
-переменные начинаются с `--wl-`. Слои `wl.reset`, `wl.tokens`, `wl.components`
-сохраняют предсказуемый каскад. `wl-*` классы и `data-wl`, `data-size`,
-`data-variant` являются частью контракта. Новое публичное имя требует
-миграционной заметки.
+The design system is described in [design-system.md](design-system.md). Its source is
+`tokens/source.json`; the generator checks references and contrast and creates
+CSS, a typed catalog and JSON. `src/design-system` contains only data
+and pure resolution functions: it needs no DOM or Vue state.
+Optional typography/layout CSS primitives are imported explicitly.
+The playground reads the same catalogs and manifest while owning
+its demo scenarios. Pattern business rules are excluded from the package.
 
-`pt` настраивает атрибуты конкретных DOM-разделов. Для каждого раздела
-порядок: `createWlPt()` → `WlConfig.pt` → `pt` экземпляра. `class` и `style`
-объединяются, остальные атрибуты последнего уровня заменяют предыдущие.
-Колбэк раздела получает `{ context }` с состоянием элемента. Оставшиеся имена
-`pc*` сохранены для совместимости с прежними `pt`-настройками, хотя элементы
-теперь создаёт Gavia UI.
+Foundation → semantic → component is the CSS-token reference direction. All
+variables start with `--wl-`. Layers `wl.reset`, `wl.tokens` and `wl.components`
+keep the cascade predictable. `wl-*` classes and `data-wl`, `data-size`,
+`data-variant` are part of the contract. New public names require
+migration notes.
 
-Переходы оверлеев используют Vue `Transition`/`TransitionGroup` и токены
-`--wl-dur-*`. `WlConfig.motion` задаёт общий режим для Vue-приложения,
-локальный `motion` prop имеет приоритет; подсказка принимает тот же параметр
-в объекте директивы. Анимация не должна менять модель, события открытия/закрытия,
-стек фокуса или срок жизни сервисного сообщения. После закрытия элемент
-удаляется из DOM; при `prefers-reduced-motion: reduce` длительность почти нулевая.
-`utils/bodyScrollLock.ts` держит общий счётчик модальных блокировок и резервирует
-место существующей полосы прокрутки; последний закрытый оверлей возвращает
-исходные inline-стили страницы.
+`pt` configures attributes of specific DOM sections. Each section follows
+`createWlPt()` → `WlConfig.pt` → instance `pt`. `class` and `style`
+merge; other attributes at the last level replace previous values.
+Section callbacks receive `{ context }` with element state. Existing
+`pc*` names remain for compatibility with previous `pt` configuration,
+although Gavia UI now creates those elements.
 
-Разделы, имеющие стандартные значения в `createWlPt()`:
+Overlay transitions use Vue `Transition`/`TransitionGroup` and
+`--wl-dur-*` tokens. `WlConfig.motion` sets the Vue app default;
+local `motion` takes priority. The tooltip accepts the same parameter
+in its directive object. Motion must not change models, open/close events,
+focus stack or service-message lifetime. After closing, the element
+leaves the DOM; with `prefers-reduced-motion: reduce`, duration is nearly zero.
+`utils/bodyScrollLock.ts` maintains a shared modal lock count and reserves
+existing scrollbar space; closing the last overlay restores
+the original inline page styles.
 
-| Ключ конфигурации | Разделы |
+Sections with standard values in `createWlPt()`:
+
+| Configuration key | Sections |
 | --- | --- |
 | `checkbox` | `input`, `box`, `icon` |
 | `radiobutton` | `input`, `box`, `icon` |
@@ -209,47 +213,47 @@ Foundation → semantic → component — направление ссылок CS
 | `datatable` | `table`, `thead`, `tbody`, `bodyRow`, `emptyMessage`, `emptyMessageCell`, `mask`, `loadingIcon` |
 | `datepicker` | `pcInputText.root`, `startLabel`, `endLabel`, `endInput`, `rangeHint`, `dropdown`, `dropdownIcon`, `panel`, `calendarContainer`, `calendar`, `header`, `title`, `selectMonth`, `selectYear`, `pcPrevButton.root`, `pcPrevButton.icon`, `pcNextButton.root`, `pcNextButton.icon`, `dayView`, `monthView`, `month`, `yearView`, `year`, `tableHeaderCell`, `weekDay`, `dayCell`, `day` |
 
-Разделы применяются там, где соответствующий DOM существует. Например,
-`footer` диалога появляется при наличии слота `footer`. Исторические default-записи `clearIcon` у Select/MultiSelect сохранены для совместимости конфигурации, но эти DOM-секции компонентами сейчас не разрешаются и не входят в строгий тип секций.
+Sections apply where the matching DOM exists. For example,
+dialog `footer` appears when the `footer` slot exists. Historical Select/MultiSelect default `clearIcon` entries remain for configuration compatibility, but components currently do not resolve those DOM sections, and they are excluded from strict section types.
 
-## Проверка изменения
+## Checking a change
 
-`@playwright/test` закреплён на `1.58.2`: Vitest проверяет контракт и логику,
-а браузерные сценарии проверяют фокус, позиционирование оверлеев, мобильную
-ширину, пять тем и всю партию иконок. `vue-tsc` в playground проверяет
-потребительские шаблоны на этапе разработки.
+`@playwright/test` is pinned to `1.58.2`: Vitest checks contracts and logic;
+browser scenarios check focus, overlay positioning, mobile
+width, five themes and the complete icon set. Playground `vue-tsc` checks
+consumer templates during development.
 
-В тестах jsdom пути для `node:fs` получайте через `fileURLToPath` и `URL`
-из `node:url`. Глобальный `URL` в этом окружении принадлежит jsdom и не
-принимается файловыми API Node 18; передавайте в них строковый путь.
+In jsdom tests, get `node:fs` paths through `fileURLToPath` and `URL`
+from `node:url`. This environment’s global `URL` belongs to jsdom and is not
+accepted by Node 18 file APIs; pass a string path.
 
 `pnpm build`, `pnpm typecheck`, `pnpm test`, `pnpm build:playground`,
 `pnpm run pack`, `pnpm verify:package`, `pnpm verify:dependencies`,
 `pnpm icons:check`, `pnpm test:e2e`.
-Дополнительно `pnpm tokens:check` проверяет пять тем и актуальность генерации.
-`verify:package` устанавливает архив в изолированного потребителя с одним Vue,
-проверяет типы и сборку, включая все копируемые SFC-примеры и рецепты из витрины.
-Их источник общий с кодом для копирования, без отдельной копии разметки.
-Браузерные тесты проверяют Chromium, Firefox, WebKit,
-мобильный Chromium и снимки тем. Прохождение статической сборки не заменяет
-проверку взаимодействия.
+Additionally, `pnpm tokens:check` checks five themes and generated output.
+`verify:package` installs the archive into an isolated consumer with one Vue,
+checks types and builds, including every copyable SFC example and recipe.
+These share the copy source rather than keeping separate markup.
+Browser tests cover Chromium, Firefox, WebKit,
+mobile Chromium and theme snapshots. A passing static build does not replace
+interaction checks.
 
-В чистом checkout сборка предшествует проверке типов и запуску браузеров:
-playground использует публичные типы и точку входа пакета из `dist`.
-В тестах демонстрационных запросов и прогресса устанавливайте Playwright Clock
-перед сценарием и приостанавливайте его после загрузки примера. Время продвигайте
-явно; отмена должна проверять и промежуточный прогресс, и отсутствие позднего
-результата. Клик не должен соревноваться с коротким таймером загрузки.
-Бюджет пакетной проверки витрины учитывает загрузку страницы и три действия
-для каждого ленивого примера. Таймаут отдельных проверок состояния остаётся
-5 секунд; добавление примеров увеличивает только общий бюджет пакета.
+In a clean checkout, build before type checks and browsers:
+the playground uses public package types and entry points from `dist`.
+For demo request/progress tests, install Playwright Clock
+before the scenario and pause it after the example loads. Advance time
+explicitly; cancellation must check intermediate progress and the absence of late
+results. A click must not race a short loading timer.
+The grouped playground check budget covers page loading and three actions
+per lazy example. Individual state checks retain a
+5-second timeout; new examples increase only the overall group budget.
 
-`pnpm test:visual` сравнивает PNG с принятыми эталонами в пяти темах на desktop/mobile;
-эталоны и окружение Windows/Chromium описаны в `docs/design-system.md`.
-Витрина разделяет обязанности: ComponentExplorer получает контракт и управляет
-его применимыми props; SFC-пример содержит интеграцию компонента; RecipeGallery
-выбирает сценарий; каждый рецепт владеет своим черновиком и демонстрационными
-данными; CodePanel отвечает только за показ/копирование кода. Запросы и
-бизнес-правила рецептов не попадают в runtime библиотеки.
+`pnpm test:visual` compares PNGs against accepted five-theme baselines on desktop/mobile;
+Windows/Chromium baselines and environment are described in `docs/design-system.md`.
+The playground separates responsibilities: ComponentExplorer reads contracts and controls
+applicable props; an SFC example contains component integration; RecipeGallery
+selects recipes; each recipe owns its draft and demo
+data; CodePanel only displays/copies code. Recipe requests and
+business rules are excluded from library runtime.
 
-Дополнительные проверки контрактов, архива, SSR, покрытия и размеров описаны в [quality.md](quality.md).
+Additional contract, archive, SSR, coverage and size checks are described in [quality.md](quality.md).

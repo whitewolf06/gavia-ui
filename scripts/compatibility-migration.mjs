@@ -42,7 +42,7 @@ export function validateMigrationPolicy({ policy, baseline, contractText, consum
   guard(normalizedHash(contractText) === policy.baseline.contractSha256, "released contract changed");
   guard(declarationInventoryHash(baseline) === policy.baseline.inventorySha256, "released declaration inventory changed");
   guard(normalizedHash(consumerText) === policy.baseline.consumerSha256, "released Vue consumer changed");
-  guard(typeof migrationNoteText === "string" && /^# Обновление до Gavia UI 0\.11\.0$/m.test(migrationNoteText.replaceAll("\r\n", "\n")), "0.11 migration note is missing");
+  guard(typeof migrationNoteText === "string" && /^# (?:Upgrade to|Upgrading to|Обновление до) Gavia UI 0\.11\.0$/m.test(migrationNoteText.replaceAll("\r\n", "\n")), "0.11 migration note is missing");
   const prepared = currentVersion === policy.prepareVersion;
   guard(prepared || /^0\.11\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(currentVersion), `version ${currentVersion} is outside approved minor 0.11`);
   if (prepared) {

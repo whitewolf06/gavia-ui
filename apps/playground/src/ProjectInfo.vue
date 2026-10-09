@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { usePlaygroundI18n } from "./i18n";
+const { t } = usePlaygroundI18n();
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import changelogSource from "../../../CHANGELOG.md?raw";
 import { gaviaProjectInfo as project } from "./project/project-info";
+import { localizeChangelogMarkdown } from "./project/changelog-localization";
 import { parseChangelog } from "./project/changelog";
 import ChangelogInline from "./project/ChangelogInline.vue";
 import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
 
-const changelog = parseChangelog(changelogSource, project.documentationBaseUrl);
+const changelog = computed(() => parseChangelog(localizeChangelogMarkdown(changelogSource), project.documentationBaseUrl));
 const projectElement = ref<HTMLElement | null>(null);
 
 // Restore the anchor after the browser applies its history position and Vue mounts the lazy page.
@@ -28,11 +31,11 @@ onBeforeUnmount(() => {
 <template>
   <main ref="projectElement" class="project-main wl-container wl-stack" data-space="2xl" id="project-top" data-testid="changelog-page" aria-labelledby="project-title">
     <PlaygroundPageHeader title="Changelog" title-id="project-title"
-      description="Изменения в версиях Gavia UI и заметки по обновлению. Здесь же указано, что подготовлено к выпуску."
+      :description="t('shell.ProjectInfo.text356')"
       :breadcrumbs="[{ label: 'Changelog' }]">
       <template #navigation>
-        <nav class="wl-inline" data-space="lg" aria-label="Навигация по истории изменений">
-          <a class="project-link" href="#project-changelog">История изменений</a>
+        <nav class="wl-inline" data-space="lg" :aria-label="t('shell.ProjectInfo.text357')">
+          <a class="project-link" href="#project-changelog">{{ t('shell.ProjectInfo.text358') }}</a>
         </nav>
       </template>
     </PlaygroundPageHeader>
@@ -40,11 +43,11 @@ onBeforeUnmount(() => {
     <section id="project-changelog" data-testid="project-changelog" aria-labelledby="project-changelog-title" class="wl-stack" data-space="xl">
       <header class="wl-stack" data-space="sm">
         <p class="project-eyebrow wl-text-small">Changelog</p>
-        <h2 id="project-changelog-title" class="wl-text-title">История изменений</h2>
-        <p class="wl-text-small wl-text-muted">Changelog берётся из репозитория и входит в архив пакета. В разделе «Не выпущено» указаны подготовленные изменения. Они ещё не опубликованы.</p>
-        <p class="wl-text-small"><a class="project-link" :href="project.changelogUrl">Открыть исходный changelog</a></p>
+        <h2 id="project-changelog-title" class="wl-text-title">{{ t('shell.ProjectInfo.text359') }}</h2>
+        <p class="wl-text-small wl-text-muted">{{ t('shell.ProjectInfo.text360') }}</p>
+        <p class="wl-text-small"><a class="project-link" :href="project.changelogUrl">{{ t('shell.ProjectInfo.text361') }}</a></p>
       </header>
-      <nav class="project-history-nav wl-inline" data-space="md" aria-label="Версии в истории изменений">
+      <nav class="project-history-nav wl-inline" data-space="md" :aria-label="t('shell.ProjectInfo.text362')">
         <a v-for="section in changelog.sections" :key="section.id" class="project-link" :href="`#${section.id}`">{{ section.title }}</a>
       </nav>
       <div class="wl-stack" data-space="md">
@@ -56,9 +59,9 @@ onBeforeUnmount(() => {
       </div>
       <article v-for="section in changelog.sections" :key="section.id" :id="section.id" class="project-release wl-surface wl-stack" data-space="lg" :aria-labelledby="`${section.id}-title`" data-testid="project-changelog-section">
         <header class="wl-stack" data-space="xs">
-          <h3 :id="`${section.id}-title`" class="wl-text-heading">{{ section.version ? `Версия ${section.version}` : section.title }}</h3>
+          <h3 :id="`${section.id}-title`" class="wl-text-heading">{{ section.version ? t('shell.ProjectInfo.text363', { arg0: section.version }) : section.title }}</h3>
           <p v-if="section.date" class="wl-text-small wl-text-muted"><time :datetime="section.date">{{ section.date }}</time></p>
-          <p v-if="section.unreleased" class="wl-text-small wl-text-muted">Подготовленные изменения</p>
+          <p v-if="section.unreleased" class="wl-text-small wl-text-muted">{{ t('shell.ProjectInfo.text364') }}</p>
         </header>
         <template v-for="(block, index) in section.blocks" :key="index">
           <h4 v-if="block.kind === 'heading'" class="wl-text-subheading"><ChangelogInline :content="block.content" /></h4>

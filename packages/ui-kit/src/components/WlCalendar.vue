@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { useWlLocale } from "../config";
 import { computed, nextTick, ref, watch } from "vue";
 import WlIcon from "./WlIcon.vue";
 import type { WlCalendarEvent } from "../types";
 import type { WlNoModelModifiers } from "../model-types";
+const locale = useWlLocale();
 
 const props = withDefaults(
   defineProps<{
@@ -22,21 +24,7 @@ const props = withDefaults(
 const selected = defineModel<string, never>({ default: "" });
 const viewMonth = defineModel<string, never>("month", { default: "" });
 
-const MONTHS_RU = [
-  "Январь",
-  "Февраль",
-  "Март",
-  "Апрель",
-  "Май",
-  "Июнь",
-  "Июль",
-  "Август",
-  "Сентябрь",
-  "Октябрь",
-  "Ноябрь",
-  "Декабрь"
-];
-const WEEKDAYS_RU = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+const weekdays = computed(() => Array.from({ length: 7 }, (_, index) => locale.value.dayNamesMin[(index + 1) % 7]));
 
 const pad2 = (n: number): string => String(n).padStart(2, "0");
 const toIso = (y: number, mo: number, d: number): string => `${y}-${pad2(mo + 1)}-${pad2(d)}`;
@@ -56,7 +44,7 @@ const monthParts = computed(() => {
   return { y: y!, mo: m! - 1 };
 });
 
-const title = computed(() => `${MONTHS_RU[monthParts.value.mo]} ${monthParts.value.y}`);
+const title = computed(() => `${locale.value.monthNames[monthParts.value.mo]} ${monthParts.value.y}`);
 
 const now = new Date();
 const todayIso = toIso(now.getFullYear(), now.getMonth(), now.getDate());
@@ -172,12 +160,12 @@ function dateFromIso(iso: string): Date {
 }
 
 function cellLabel(cell: CalCell): string {
-  const date = new Intl.DateTimeFormat("ru-RU", { dateStyle: "long" }).format(
+  const date = new Intl.DateTimeFormat(locale.value.localeCode, { dateStyle: "long" }).format(
     dateFromIso(cell.iso)
   );
   const events = cell.events.length;
   if (!events) return date;
-  const suffix = events === 1 ? "событие" : events < 5 ? "события" : "событий";
+  const suffix = events === 1 ? locale.value.eventOne : events < 5 ? locale.value.eventFew : locale.value.eventMany;
   return `${date}, ${events} ${suffix}`;
 }
 
@@ -236,17 +224,17 @@ function onDayKeydown(event: KeyboardEvent, cell: CalCell): void {
 <template>
   <div class="wl-cal" data-wl="calendar">
     <div class="wl-cal__head">
-      <button type="button" class="wl-cal__nav" aria-label="Предыдущий месяц" @click="shift(-1)">
+      <button type="button" class="wl-cal__nav" :aria-label="locale.prevMonth" @click="shift(-1)">
         <WlIcon name="chevron-left" :size="15" />
       </button>
       <span class="wl-cal__title" aria-live="polite">{{ title }}</span>
-      <button type="button" class="wl-cal__nav" aria-label="Следующий месяц" @click="shift(1)">
+      <button type="button" class="wl-cal__nav" :aria-label="locale.nextMonth" @click="shift(1)">
         <WlIcon name="chevron-right" :size="15" />
       </button>
     </div>
     <div class="wl-cal__body" role="grid" :aria-label="title">
       <div class="wl-cal__week" role="row">
-        <span v-for="wd in WEEKDAYS_RU" :key="wd" class="wl-cal__wd" role="columnheader">
+        <span v-for="wd in weekdays" :key="wd" class="wl-cal__wd" role="columnheader">
           {{ wd }}
         </span>
       </div>

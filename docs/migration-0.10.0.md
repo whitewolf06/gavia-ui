@@ -1,22 +1,22 @@
-# Обновление до Gavia UI 0.10.0
+# Upgrade to Gavia UI 0.10.0
 
-В 0.10.0 добавлена пятая тема Gavia Dark, White и Graphite получили названия
-Classic и Classic Dark. Обновлены проверки совместимости и качества,
-playground и отображение узких уведомлений. Публикация и результаты проверок
-описаны в [истории релизов](releases.md).
+Version 0.10.0 adds a fifth theme, Gavia Dark, and renames White and Graphite
+to Classic and Classic Dark. It updates compatibility and quality checks,
+the playground and narrow alert layouts. Publication and check results
+are recorded in the [release history](releases.md).
 
-## Breaking changes: типы каталога тем
+## Breaking changes: theme catalog types
 
-`wlDesignThemes` — публичный readonly tuple. В 0.10.0 он содержит пять элементов
-вместо четырёх; literal labels `"White"` / `"Graphite"` заменены на `"Classic"` /
-`"Classic Dark"`. Код с точной длиной tuple, типом старой подписи или проверкой
-подписи как идентификатора требует изменения. В исчерпывающих ветвлениях по
-`WlThemeName` добавьте `gavia-dark`.
+`wlDesignThemes` is a public readonly tuple. In 0.10.0 it has five entries
+instead of four; literal labels `"White"` / `"Graphite"` changed to `"Classic"` /
+`"Classic Dark"`. Code relying on the exact tuple length, an old label type or
+using a label as an identifier needs changes. Add `gavia-dark` to exhaustive
+`WlThemeName` branches.
 
-Идентификаторы `white` / `graphite`, прежние CSS-пути и позиции четырёх тем
-сохранены. Gavia Dark добавлена в конец публичного каталога; группировка тем
-в playground не меняет его порядок. Выбирайте тему через `name`, а `label`
-используйте для отображения:
+Identifiers `white` / `graphite`, previous CSS paths and the four themes’ positions
+are preserved. Gavia Dark is appended to the public catalog; playground grouping
+does not change its order. Select themes through `name` and
+use `label` for display:
 
 ```ts
 import { wlDesignThemes, type WlDesignTheme, type WlThemeName } from "gavia-ui";
@@ -26,25 +26,25 @@ const selectedTheme: WlThemeName = "gavia-dark";
 const selected = themes.find((theme) => theme.name === selectedTheme);
 ```
 
-[Подробная миграция каталога](migration-themes.md). Старые query-ссылки и черновики
-с `white` / `graphite` переименовывать не требуется. Исторические снимки
-контрактов сохраняются.
+[Detailed catalog migration](migration-themes.md). Old query links and drafts
+using `white` / `graphite` need no renaming. Historical
+contract snapshots are preserved.
 
-## Установка и подключение
+## Installation and setup
 
-Vue `^3.4.0` остаётся единственным обязательным peer. Runtime-зависимостей у
-UI-кита нет; PrimeVue и PrimeIcons для подключения не нужны. Менеджер установки
-потребителя не меняет API:
+Vue `^3.4.0` remains the only required peer. The UI kit has no
+runtime dependencies; setup needs neither PrimeVue nor PrimeIcons. The consumer’s
+package manager does not change the API:
 
 ```bash
 pnpm add gavia-ui@0.10.0 vue
-# либо
+# or
 npm install gavia-ui@0.10.0 vue
-# либо
+# or
 bun add gavia-ui@0.10.0 vue
 ```
 
-Reset, CSS и шрифт подключаются явно. Для переключения всех пяти тем:
+Reset, CSS and fonts are imported explicitly. To switch among all five themes:
 
 ```ts
 import { createApp } from "vue";
@@ -62,44 +62,44 @@ document.documentElement.dataset.wlTheme = "gavia";
 createApp(App).mount("#app");
 ```
 
-| Тема | `data-wl-theme` | CSS из пакета |
+| Theme | `data-wl-theme` | Package CSS |
 | --- | --- | --- |
 | Gavia | `gavia` | `gavia-ui/themes/gavia.css` |
 | Gavia Dark | `gavia-dark` | `gavia-ui/themes/gavia-dark.css` |
-| Classic, прежде White | `white` | `gavia-ui/themes/white.css` |
-| Classic Dark, прежде Graphite | `graphite` | `gavia-ui/themes/graphite.css` |
+| Classic, formerly White | `white` | `gavia-ui/themes/white.css` |
+| Classic Dark, formerly Graphite | `graphite` | `gavia-ui/themes/graphite.css` |
 | Newspaper | `newspaper` | `gavia-ui/themes/newspaper.css` |
 
-Для одной темы достаточно её CSS. При нескольких темах импортируйте `white.css`
-первым: он задаёт fallback на `:root`. Выбор на `html` применяется и к
-телепортированным оверлеям. Без явного выбора библиотека сохраняет Classic
-(`white`); defaults `resolveWlToken` / `getWlThemeTokens` также прежние.
+For one theme, its CSS is enough. With several themes, import `white.css`
+first: it sets a `:root` fallback. Selection on `html` also applies to
+teleported overlays. Without explicit selection, the library keeps Classic
+(`white`); `resolveWlToken` / `getWlThemeTokens` defaults are also preserved.
 
-Основные Gavia / Gavia Dark используют Gavia Sans 0.6 и общую геометрию;
-без `styles/fonts/gavia.css` доступен системный fallback. Classic / Classic Dark
-сохраняют системный sans, Newspaper — системный текст и заголовки с засечками.
-Код использует моноширинный стек `--wl-mono`. [Шрифт](font-gavia.md) ·
-[Палитра и подключение](theme-gavia.md).
+Primary Gavia / Gavia Dark themes use Gavia Sans 0.6 and shared geometry;
+without `styles/fonts/gavia.css`, a system fallback applies. Classic / Classic Dark
+keep system sans; Newspaper uses system text and serif headings.
+Code uses the monospaced `--wl-mono` stack. [Font](font-gavia.md) ·
+[Palette and setup](theme-gavia.md).
 
-## Исправления и качество
+## Fixes and quality
 
-- Поддержка Vue 3.4 уточнена в declarations и SSR-идентификаторах; Vue 3.5
-  использует нативные идентификаторы. Для Vue 3.4 порядок синхронного SSR-дерева
-  и гидратации должен совпадать; асинхронные ветви отдельно не гарантируются.
-- Select, MultiSelect и Autocomplete получили имена и связи ARIA для списков.
-  WlAlert переносит действия по доступной ширине, сохраняя читаемость текста.
-- Playground показывает основные и дополнительные темы, дневной/ночной hero,
-  быстрый переключатель и внешние ссылки информационных карточек. View Transitions
-  даёт единый временный переход страницы; fallback использует crossfade hero,
-  `prefers-reduced-motion` отключает переходы.
-- Раздел «Качество и совместимость» показывает фактические unit-тесты,
-  покрытие, время, версию и источник измерения. Эти показатели не заменяют
-  результаты browser/visual/axe или подтверждение публикации.
-- В процесс выпуска включены проверки прежнего TypeScript/CSS/pt-контракта,
-  установленного архива, Node import, SSR/hydration, размера и покрытия;
-  Changesets готовит версии, а CI хранит витрины теговых выпусков.
+- Refined Vue 3.4 support in declarations and SSR ids; Vue 3.5
+  uses native ids. Vue 3.4 requires matching synchronous SSR tree order
+  and hydration; asynchronous branches are not separately guaranteed.
+- Select, MultiSelect and Autocomplete received list names and ARIA connections.
+  WlAlert wraps actions within the available width while keeping text readable.
+- The playground shows primary/additional themes, a day/night hero,
+  a quick toggle and external information-card links. View Transitions
+  provides one temporary page transition; the fallback uses hero crossfade,
+  and `prefers-reduced-motion` disables transitions.
+- “Quality and compatibility” shows actual unit tests,
+  coverage, time, version and measurement source. These metrics do not replace
+  browser/visual/axe results or publication confirmation.
+- The release process checks the previous TypeScript/CSS/pt contract,
+  installed archive, Node import, SSR/hydration, size and coverage;
+  Changesets prepares versions, and CI retains tag-release previews.
 
-После обновления проверьте темы и собственные overrides, шрифты, ARIA/фокус,
-оверлеи и узкие уведомления в приложении. Для SSR вставляйте
-`context.teleports.body` перед корнем приложения; подробности и ограничения —
-[совместимость и проверки](quality.md). [Изменения выпуска](../CHANGELOG.md).
+After upgrading, check themes and custom overrides, fonts, ARIA/focus,
+overlays and narrow alerts in your app. For SSR, insert
+`context.teleports.body` before the app root; details and limitations:
+[compatibility and checks](quality.md). [Release changes](../CHANGELOG.md).

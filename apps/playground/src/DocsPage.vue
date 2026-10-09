@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "./i18n";
+const { t } = usePlaygroundI18n();
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { WlButton, WlIcon, WlSegmented, type WlThemeName } from "../../../packages/ui-kit/src";
-import { wlManifest } from "../../../packages/ui-kit/src/manifest";
+import { getLocalizedManifest } from "./documentation/manifest";
+const wlManifest = getLocalizedManifest();
 import CodePanel from "./design-system/CodePanel.vue";
 import { usePageAnchor } from "./usePageAnchor";
 import ButtonDocumentation from "./documentation/ButtonDocumentation.vue";
@@ -47,12 +50,12 @@ const pageIntroduction = computed(() => {
   const metadata = qualitySection.value ? documentationQualityPage
     : assetSection.value ? documentationAssetPages[assetSection.value]
     : foundationSection.value ? documentationFoundationPages[foundationSection.value] : undefined;
-  const title = metadata?.label ?? entry.value?.name ?? "Документация";
+  const title = metadata?.label ?? entry.value?.name ?? t('documentation.strings.s0827');
   const description = metadata?.description ?? entry.value?.description
-    ?? "Подключение библиотеки, работа с компонентами, тексты, цвета и иконки. У компонентов есть примеры с настройками и кодом для копирования.";
+    ?? t('documentation.strings.s0828');
   return { title, description, breadcrumbs: metadata || entry.value
-    ? [{ label: "Документация", route: { view: "docs" as const } }, { label: title }]
-    : [{ label: "Документация" }] };
+    ? [{ label: t('documentation.strings.s0827'), route: { view: "docs" as const } }, { label: title }]
+    : [{ label: t('documentation.strings.s0827') }] };
 });
 const groups = documentationCategories.map((category) => ({
   ...category,
@@ -111,51 +114,51 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 </script>
 
 <template>
-  <main ref="pageElement" class="docs-page" data-testid="docs-page" aria-label="Документация Gavia UI">
+  <main ref="pageElement" class="docs-page" data-testid="docs-page" :aria-label="t('documentation.strings.s0829')">
     <div class="docs-layout">
       <PlaygroundPageHeader class="docs-page-header" :title="pageIntroduction.title" :description="pageIntroduction.description" :breadcrumbs="pageIntroduction.breadcrumbs">
-        <template v-if="entry" #meta><span>Компоненты / {{ categoryLabel }}</span><span class="docs-version">С версии {{ entry.introducedIn }}</span></template>
+        <template v-if="entry" #meta><span>{{ t('documentation.strings.s0830') }} {{ categoryLabel }}</span><span class="docs-version">{{ t('documentation.strings.s0831') }} {{ entry.introducedIn }}</span></template>
         <template v-if="entry" #actions>
-          <WlButton v-if="entry.name === 'WlIcon'" size="sm" @click="emit('section', 'icons')">Каталог иконок</WlButton>
-          <WlButton class="docs-design-rules" size="sm" variant="secondary" @click="emit('navigate', 'system')">Правила дизайн-системы</WlButton>
+          <WlButton v-if="entry.name === 'WlIcon'" size="sm" @click="emit('section', 'icons')">{{ t('documentation.strings.s0004') }}</WlButton>
+          <WlButton class="docs-design-rules" size="sm" variant="secondary" @click="emit('navigate', 'system')">{{ t('documentation.strings.s0832') }}</WlButton>
         </template>
       </PlaygroundPageHeader>
-      <aside class="docs-sidebar" aria-label="Навигация документации">
+      <aside class="docs-sidebar" :aria-label="t('documentation.strings.s0833')">
         <details ref="menuElement" class="docs-menu" :open="!isMobile || mobileMenuOpen" @toggle="toggleMenu">
-          <summary class="docs-menu-summary">Навигация документации</summary>
+          <summary class="docs-menu-summary">{{ t('documentation.strings.s0833') }}</summary>
           <div class="docs-menu-content wl-stack" data-space="lg">
-            <section class="docs-nav-section wl-stack" data-space="sm" aria-label="Начало работы">
-              <h2 class="docs-sidebar-heading"><span class="docs-sidebar-mark docs-sidebar-book"><WlIcon class="docs-sidebar-icon docs-sidebar-icon--book" name="book" :size="16" /></span>Начало работы</h2>
-              <nav class="docs-subnav" aria-label="Разделы начала работы"><ul class="docs-toc-list"><li v-for="heading in overviewSections" :key="heading.id"><a class="docs-anchor-link" :href="overviewHref(heading)" :aria-current="!component && !section && activeId === heading.id ? 'location' : undefined" @click="navigateOverview($event, heading)"><span class="docs-toc-indicator" aria-hidden="true"><WlIcon name="chevron-right" :size="10" /></span>{{ heading.title }}</a></li></ul></nav>
+            <section class="docs-nav-section wl-stack" data-space="sm" :aria-label="t('documentation.strings.s0834')">
+              <h2 class="docs-sidebar-heading"><span class="docs-sidebar-mark docs-sidebar-book"><WlIcon class="docs-sidebar-icon docs-sidebar-icon--book" name="book" :size="16" /></span>{{ t('documentation.strings.s0834') }}</h2>
+              <nav class="docs-subnav" :aria-label="t('documentation.strings.s0835')"><ul class="docs-toc-list"><li v-for="heading in overviewSections" :key="heading.id"><a class="docs-anchor-link" :href="overviewHref(heading)" :aria-current="!component && !section && activeId === heading.id ? 'location' : undefined" @click="navigateOverview($event, heading)"><span class="docs-toc-indicator" aria-hidden="true"><WlIcon name="chevron-right" :size="10" /></span>{{ heading.title }}</a></li></ul></nav>
               <div class="docs-foundation-nav">
                 <a class="docs-component-link docs-quality-link" :href="qualityHref" :aria-current="qualitySection ? 'page' : undefined" @click="navigateQuality">{{ documentationQualityPage.label }}</a>
-                <nav v-if="qualitySection" class="docs-subnav" aria-label="На этой странице"><ul class="docs-toc-list"><li v-for="heading in documentationQualityPage.headings" :key="heading.id"><a class="docs-anchor-link" :href="'#' + heading.id" :aria-current="activeId === heading.id ? 'location' : undefined" @click="navigateAnchor(heading)"><span class="docs-toc-indicator" aria-hidden="true"><WlIcon name="chevron-right" :size="10" /></span>{{ heading.title }}</a></li></ul></nav>
+                <nav v-if="qualitySection" class="docs-subnav" :aria-label="t('documentation.strings.s0836')"><ul class="docs-toc-list"><li v-for="heading in documentationQualityPage.headings" :key="heading.id"><a class="docs-anchor-link" :href="'#' + heading.id" :aria-current="activeId === heading.id ? 'location' : undefined" @click="navigateAnchor(heading)"><span class="docs-toc-indicator" aria-hidden="true"><WlIcon name="chevron-right" :size="10" /></span>{{ heading.title }}</a></li></ul></nav>
               </div>
             </section>
-            <nav class="docs-nav-section wl-stack" data-space="xs" aria-label="Основы">
-              <h2 class="docs-sidebar-heading"><span class="docs-sidebar-mark"><WlIcon class="docs-sidebar-icon" name="grid" :size="16" /></span>Основы</h2>
+            <nav class="docs-nav-section wl-stack" data-space="xs" :aria-label="t('documentation.strings.s0837')">
+              <h2 class="docs-sidebar-heading"><span class="docs-sidebar-mark"><WlIcon class="docs-sidebar-icon" name="grid" :size="16" /></span>{{ t('documentation.strings.s0837') }}</h2>
               <div v-for="foundation in documentationFoundations" :key="foundation.key" class="docs-foundation-nav">
                 <button type="button" class="docs-component-link" :aria-current="section === foundation.key ? 'page' : undefined" @click="emit('section', foundation.key)">{{ foundation.label }}</button>
-                <nav v-if="section === foundation.key" class="docs-subnav" aria-label="На этой странице"><ul class="docs-toc-list"><li v-for="heading in foundationHeadings(foundation.key)" :key="heading.id"><a class="docs-anchor-link" :href="'#' + heading.id" :aria-current="activeId === heading.id ? 'location' : undefined" @click="navigateAnchor(heading)"><span class="docs-toc-indicator" aria-hidden="true"><WlIcon name="chevron-right" :size="10" /></span>{{ heading.title }}</a></li></ul></nav>
+                <nav v-if="section === foundation.key" class="docs-subnav" :aria-label="t('documentation.strings.s0836')"><ul class="docs-toc-list"><li v-for="heading in foundationHeadings(foundation.key)" :key="heading.id"><a class="docs-anchor-link" :href="'#' + heading.id" :aria-current="activeId === heading.id ? 'location' : undefined" @click="navigateAnchor(heading)"><span class="docs-toc-indicator" aria-hidden="true"><WlIcon name="chevron-right" :size="10" /></span>{{ heading.title }}</a></li></ul></nav>
               </div>
             </nav>
-            <nav class="docs-nav-section wl-stack" data-space="xs" aria-label="Оформление">
-              <h2 class="docs-sidebar-heading"><span class="docs-sidebar-mark"><WlIcon class="docs-sidebar-icon" name="image" :size="16" /></span>Оформление</h2>
+            <nav class="docs-nav-section wl-stack" data-space="xs" :aria-label="t('documentation.strings.s0838')">
+              <h2 class="docs-sidebar-heading"><span class="docs-sidebar-mark"><WlIcon class="docs-sidebar-icon" name="image" :size="16" /></span>{{ t('documentation.strings.s0838') }}</h2>
               <div v-for="asset in documentationAssets" :key="asset.key" class="docs-foundation-nav">
                 <button type="button" class="docs-component-link" :aria-current="section === asset.key ? 'page' : undefined" @click="emit('section', asset.key)">{{ asset.label }}</button>
-                <nav v-if="section === asset.key" class="docs-subnav" aria-label="На этой странице"><ul class="docs-toc-list"><li v-for="heading in asset.headings" :key="heading.id"><a class="docs-anchor-link" :href="'#' + heading.id" :aria-current="activeId === heading.id ? 'location' : undefined" @click="navigateAnchor(heading)"><span class="docs-toc-indicator" aria-hidden="true"><WlIcon name="chevron-right" :size="10" /></span>{{ heading.title }}</a></li></ul></nav>
+                <nav v-if="section === asset.key" class="docs-subnav" :aria-label="t('documentation.strings.s0836')"><ul class="docs-toc-list"><li v-for="heading in asset.headings" :key="heading.id"><a class="docs-anchor-link" :href="'#' + heading.id" :aria-current="activeId === heading.id ? 'location' : undefined" @click="navigateAnchor(heading)"><span class="docs-toc-indicator" aria-hidden="true"><WlIcon name="chevron-right" :size="10" /></span>{{ heading.title }}</a></li></ul></nav>
               </div>
             </nav>
-            <section class="docs-nav-section wl-stack" data-space="md" aria-label="Компоненты">
-              <h2 class="docs-sidebar-heading"><span class="docs-sidebar-mark"><WlIcon class="docs-sidebar-icon" name="box" :size="16" /></span>Компоненты</h2>
-              <nav class="docs-catalog" aria-label="Каталог компонентов">
+            <section class="docs-nav-section wl-stack" data-space="md" :aria-label="t('documentation.strings.s0839')">
+              <h2 class="docs-sidebar-heading"><span class="docs-sidebar-mark"><WlIcon class="docs-sidebar-icon" name="box" :size="16" /></span>{{ t('documentation.strings.s0839') }}</h2>
+              <nav class="docs-catalog" :aria-label="t('documentation.strings.s0840')">
                 <section v-for="group in groups" :key="group.key" class="docs-catalog-group">
                   <h3 class="docs-category-label">{{ group.label }}</h3>
                   <ul class="docs-catalog-list">
                     <li v-for="item in group.entries" :key="item.name">
                       <button type="button" class="docs-component-link" :aria-label="item.name" :aria-describedby="'docs-catalog-version-' + item.name" :aria-current="component === item.name ? 'page' : undefined" @click="emit('component', item.name)">
                         <span class="docs-component-name">{{ item.name }}</span>
-                        <span :id="'docs-catalog-version-' + item.name" class="docs-component-version" :title="'С версии ' + item.introducedIn">С {{ item.introducedIn }}</span>
+                        <span :id="'docs-catalog-version-' + item.name" class="docs-component-version" :title="t('documentation.strings.s0841') + item.introducedIn">{{ t('documentation.strings.s0842') }} {{ item.introducedIn }}</span>
                       </button>
                     </li>
                   </ul>
@@ -174,56 +177,56 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 
           <component :is="entry.name === 'WlButton' ? ButtonDocumentation : ComponentDocumentation" :key="entry.name" :entry="entry">
             <template #outline>
-              <nav v-if="currentHeadings.length" class="docs-section-links docs-component-outline" aria-label="На этой странице"><a v-for="heading in currentHeadings" :key="heading.id" class="docs-anchor-link" :href="'#' + heading.id" @click="navigateAnchor(heading)">{{ heading.title }}</a></nav>
+              <nav v-if="currentHeadings.length" class="docs-section-links docs-component-outline" :aria-label="t('documentation.strings.s0836')"><a v-for="heading in currentHeadings" :key="heading.id" class="docs-anchor-link" :href="'#' + heading.id" @click="navigateAnchor(heading)">{{ heading.title }}</a></nav>
             </template>
           </component>
         </template>
 
         <template v-else>
-          <p v-if="component" class="docs-notice wl-text-small" role="alert">Компонент «{{ component }}» не найден. Выберите компонент в каталоге.</p>
-          <nav class="docs-section-links" aria-label="Разделы документации"><a v-for="section in overviewSections" :key="section.id" class="docs-anchor-link" :href="'#' + section.id">{{ section.title }}</a></nav>
+          <p v-if="component" class="docs-notice wl-text-small" role="alert">{{ t('documentation.strings.s0843') }}{{ component }}{{ t('documentation.strings.s0844') }}</p>
+          <nav class="docs-section-links" :aria-label="t('documentation.strings.s0845')"><a v-for="section in overviewSections" :key="section.id" class="docs-anchor-link" :href="'#' + section.id">{{ section.title }}</a></nav>
           <section class="docs-overview-section wl-stack" data-space="lg">
-            <div class="wl-stack" data-space="sm"><p class="docs-eyebrow">01 / Начало</p><h2 :id="installHeading.id" class="wl-text-heading">{{ installHeading.title }}</h2><p class="wl-text-body wl-text-muted">Vue 3 — единственная обязательная peer-зависимость. Установите пакет, подключите стили и выберите тему. WlConfig нужен для общих настроек pt, локали и анимаций.</p></div>
-            <WlSegmented v-model="installManager" :options="installationManagers" aria-label="Менеджер пакетов для установки" />
-            <CodePanel :source="installationCommand" :title="`Установка через ${installManager}`" :expanded="true" />
-            <CodePanel :source="installationSource" title="main.ts · подключение приложения" :expanded="true" />
-            <p class="wl-text-small wl-text-muted">В примере подключена Classic. Для Classic Dark, Newspaper, Gavia или Gavia Dark импортируйте соответствующий CSS из <code>gavia-ui/themes/</code> и установите <code>data-wl-theme</code> на корневом элементе. Gavia и её шрифт доступны с 0.9.1; Gavia Dark — с 0.10.0. Для обеих тем Gavia дополнительно подключите <code>gavia-ui/styles/fonts/gavia.css</code>.</p>
+            <div class="wl-stack" data-space="sm"><p class="docs-eyebrow">{{ t('documentation.strings.s0846') }}</p><h2 :id="installHeading.id" class="wl-text-heading">{{ installHeading.title }}</h2><p class="wl-text-body wl-text-muted">{{ t('documentation.strings.s0847') }}</p></div>
+            <WlSegmented v-model="installManager" :options="installationManagers" :aria-label="t('documentation.strings.s0848')" />
+            <CodePanel :source="installationCommand" :title="t('documentation.strings.s1280', { manager: installManager ?? 'pnpm' })" :expanded="true" />
+            <CodePanel :source="installationSource" :title="t('documentation.strings.s0849')" :expanded="true" />
+            <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0850') }} <code>gavia-ui/themes/</code> {{ t('documentation.strings.s0851') }} <code>data-wl-theme</code> {{ t('documentation.strings.s0852') }} <code>gavia-ui/styles/fonts/gavia.css</code>.</p>
           </section>
 
           <section class="docs-overview-section wl-stack" data-space="lg">
-            <div class="wl-stack" data-space="sm"><h2 :id="foundationsHeading.id" class="wl-text-heading">{{ foundationsHeading.title }}</h2><p class="wl-text-body wl-text-muted">Типографика, layout и тексты интерфейса. Правила и примеры с кодом.</p></div>
+            <div class="wl-stack" data-space="sm"><h2 :id="foundationsHeading.id" class="wl-text-heading">{{ foundationsHeading.title }}</h2><p class="wl-text-body wl-text-muted">{{ t('documentation.strings.s0853') }}</p></div>
             <div class="wl-grid" data-space="lg">
               <article v-for="foundation in documentationFoundations" :key="foundation.key" class="wl-surface wl-stack" data-space="md">
                 <h3 class="wl-text-subheading">{{ foundation.label }}</h3><p class="wl-text-body wl-text-muted">{{ foundation.description }}</p>
-                <div><WlButton size="sm" @click="emit('section', foundation.key)">К разделу «{{ foundation.label }}»</WlButton></div>
+                <div><WlButton size="sm" @click="emit('section', foundation.key)">{{ t('documentation.strings.s1281', { section: foundation.label }) }}</WlButton></div>
               </article>
             </div>
           </section>
           <section class="docs-overview-section wl-stack" data-space="lg">
-            <div class="wl-stack" data-space="sm"><p class="docs-eyebrow">02 / Компоненты</p><h2 :id="componentsHeading.id" class="wl-text-heading">{{ componentsHeading.title }}</h2><p class="wl-text-body wl-text-muted">В каталоге {{ wlManifest.length }} компонента. Для каждого есть пример с настройками, дополнительные сценарии, API и правила доступности. Props, значения по умолчанию, события, слоты и v-model взяты из манифеста.</p></div>
+            <div class="wl-stack" data-space="sm"><p class="docs-eyebrow">{{ t('documentation.strings.s0855') }}</p><h2 :id="componentsHeading.id" class="wl-text-heading">{{ componentsHeading.title }}</h2><p class="wl-text-body wl-text-muted">{{ t('documentation.strings.s0856') }} {{ wlManifest.length }} {{ t('documentation.strings.s0857') }}</p></div>
             <article class="docs-pilot-card wl-stack" data-space="md">
-              <p class="docs-eyebrow">Примеры, API и доступность</p><h3 class="wl-text-heading">WlButton</h3>
-              <p class="wl-text-body wl-text-muted">Варианты, размеры, disabled/loading, pt и правила доступности. Код Vue SFC совпадает с примером на странице.</p>
-              <div class="wl-inline" data-space="sm"><WlButton variant="primary" @click="emit('component', 'WlButton')">Открыть WlButton</WlButton><WlButton variant="ghost" @click="emit('component', 'WlInput')">Поля и формы</WlButton><WlButton variant="ghost" @click="emit('component', 'WlDialog')">Диалоги и оверлеи</WlButton></div>
+              <p class="docs-eyebrow">{{ t('documentation.strings.s0858') }}</p><h3 class="wl-text-heading">WlButton</h3>
+              <p class="wl-text-body wl-text-muted">{{ t('documentation.strings.s0859') }}</p>
+              <div class="wl-inline" data-space="sm"><WlButton variant="primary" @click="emit('component', 'WlButton')">{{ t('documentation.strings.s0860') }}</WlButton><WlButton variant="ghost" @click="emit('component', 'WlInput')">{{ t('documentation.strings.s0861') }}</WlButton><WlButton variant="ghost" @click="emit('component', 'WlDialog')">{{ t('documentation.strings.s0862') }}</WlButton></div>
             </article>
           </section>
 
           <section class="docs-overview-section wl-stack" data-space="md">
-            <p class="docs-eyebrow">03 / Оформление</p><h2 :id="tokensHeading.id" class="wl-text-heading">{{ tokensHeading.title }}</h2>
-            <p class="wl-text-body wl-text-muted">Токены разделены на foundation → semantic → component и используют namespace <code>--wl-*</code>. Подключите CSS темы и выберите её через <code>data-wl-theme</code>. Доступно пять тем; при переключении DOM и поведение компонентов сохраняются.</p>
-            <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="emit('section', 'colors')">Цвета и темы</WlButton><WlButton size="sm" variant="ghost" @click="emit('navigate', 'system')">Каталог токенов и правила</WlButton><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md">Руководство по дизайн-системе</a></div>
+            <p class="docs-eyebrow">{{ t('documentation.strings.s0863') }}</p><h2 :id="tokensHeading.id" class="wl-text-heading">{{ tokensHeading.title }}</h2>
+            <p class="wl-text-body wl-text-muted">{{ t('documentation.strings.s0864') }} <code>--wl-*</code>{{ t('documentation.strings.s0865') }} <code>data-wl-theme</code>{{ t('documentation.strings.s0866') }}</p>
+            <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="emit('section', 'colors')">{{ t('documentation.strings.s0018') }}</WlButton><WlButton size="sm" variant="ghost" @click="emit('navigate', 'system')">{{ t('documentation.strings.s0867') }}</WlButton><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md">{{ t('documentation.strings.s0868') }}</a></div>
           </section>
 
           <section class="docs-overview-section wl-stack" data-space="md">
-            <p class="docs-eyebrow">04 / Иконки</p><h2 :id="iconsHeading.id" class="wl-text-heading">{{ iconsHeading.title }}</h2>
-            <p class="wl-text-body wl-text-muted">Передайте в <code>name</code> имя иконки из встроенного SVG-каталога. Для добавления иконок используйте <code>icons:sync</code> и <code>icons:check</code>.</p>
-            <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="emit('section', 'icons')">Открыть каталог иконок</WlButton><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/icons.md">Правила создания SVG</a></div>
+            <p class="docs-eyebrow">{{ t('documentation.strings.s0869') }}</p><h2 :id="iconsHeading.id" class="wl-text-heading">{{ iconsHeading.title }}</h2>
+            <p class="wl-text-body wl-text-muted">{{ t('documentation.strings.s0870') }} <code>name</code> {{ t('documentation.strings.s0871') }} <code>icons:sync</code> {{ t('documentation.strings.s0089') }} <code>icons:check</code>.</p>
+            <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="emit('section', 'icons')">{{ t('documentation.strings.s0872') }}</WlButton><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/icons.md">{{ t('documentation.strings.s0873') }}</a></div>
           </section>
 
           <section class="docs-overview-section wl-stack" data-space="md">
-            <p class="docs-eyebrow">05 / Обновление</p><h2 :id="migrationHeading.id" class="wl-text-heading">{{ migrationHeading.title }}</h2>
-            <p class="wl-text-body wl-text-muted">Имена exports Wl*, классов wl-* и токенов --wl-* сохраняются. Перед обновлением прочитайте заметки к нужной версии и проверьте своё приложение.</p>
-            <ul class="docs-migration-links"><li><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-gavia.md">Переход на имя gavia-ui</a></li><li><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.8.md">Миграция 0.8: pickers и иконки</a></li><li><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.5.md">Миграция 0.5: настройка WlConfig</a></li></ul>
+            <p class="docs-eyebrow">{{ t('documentation.strings.s0874') }}</p><h2 :id="migrationHeading.id" class="wl-text-heading">{{ migrationHeading.title }}</h2>
+            <p class="wl-text-body wl-text-muted">{{ t('documentation.strings.s0875') }}</p>
+            <ul class="docs-migration-links"><li><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-gavia.md">{{ t('documentation.strings.s0876') }}</a></li><li><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.8.md">{{ t('documentation.strings.s0877') }}</a></li><li><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.5.md">{{ t('documentation.strings.s0878') }}</a></li></ul>
             <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="emit('navigate', 'project')">Changelog</WlButton></div>
           </section>
         </template>

@@ -1,3 +1,4 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { expect, test, type Page } from "@playwright/test";
 import { chooseShowcaseTheme } from "./select-helpers";
 
@@ -28,7 +29,7 @@ async function openHome(page: Page, baseURL: string | undefined, theme = "gavia"
   const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
   url.search = "?view=home&theme=" + theme + "&example=theme-switch";
   url.hash = "home-title";
-  await page.goto(url.href, { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(url.href), { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("home-page")).toBeVisible();
   await expect.poll(() => page.locator(".home-hero-layer").evaluateAll((elements) =>
     elements.length === 2 && elements.every((element) => {

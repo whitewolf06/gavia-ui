@@ -1,3 +1,4 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { expect, test, type Page } from "@playwright/test";
 
 function docsUrl(baseURL: string | undefined, component: string): string {
@@ -15,7 +16,7 @@ test.beforeEach(async ({ page }) => {
 test.afterEach(async ({ page }) => { expect(errors.get(page), "Input documentation has no runtime errors").toEqual([]); });
 
 test("checkbox documentation demonstrates a real mixed group, labels, validation and disabled state", async ({ page, baseURL }) => {
-  await page.goto(docsUrl(baseURL, "WlCheckbox"), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(docsUrl(baseURL, "WlCheckbox")), { waitUntil: "domcontentloaded" });
   const example = page.locator('[data-input-example="WlCheckbox"]');
   await expect(example).toBeVisible();
   const parent = example.getByRole("checkbox", { name: "Все доступные уведомления", exact: true });
@@ -43,7 +44,7 @@ test("checkbox documentation demonstrates a real mixed group, labels, validation
 });
 
 test("multiselect documentation filters and selects with the keyboard, removes chips and clears its model", async ({ page, baseURL }) => {
-  await page.goto(docsUrl(baseURL, "WlMultiSelect"), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(docsUrl(baseURL, "WlMultiSelect")), { waitUntil: "domcontentloaded" });
   const example = page.locator('[data-input-example="WlMultiSelect"]');
   await expect(example).toBeVisible();
   const control = example.getByRole("combobox", { name: "Направления с фильтром", exact: true });
@@ -68,7 +69,7 @@ test("multiselect documentation filters and selects with the keyboard, removes c
 });
 
 test("file documentation preserves cancelled batches and enforces local upload rejection, removal and replacement", async ({ page, baseURL }) => {
-  await page.goto(docsUrl(baseURL, "WlFilePicker"), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(docsUrl(baseURL, "WlFilePicker")), { waitUntil: "domcontentloaded" });
   const picker = page.locator('[data-input-example="WlFilePicker"]');
   await expect(picker).toBeVisible();
   const input = picker.locator('input[type="file"]').first();
@@ -87,7 +88,7 @@ test("file documentation preserves cancelled batches and enforces local upload r
   await expect(picker.getByRole("listitem")).toHaveCount(0);
   await expect(picker.getByRole("status")).toContainText("Документов: 0");
 
-  await page.goto(docsUrl(baseURL, "WlFileUpload"), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(docsUrl(baseURL, "WlFileUpload")), { waitUntil: "domcontentloaded" });
   const upload = page.locator('[data-input-example="WlFileUpload"]');
   await expect(upload).toBeVisible();
   const documents = upload.getByRole("region", { name: "Документы: тип, размер и количество", exact: true });
@@ -115,7 +116,7 @@ test("file documentation preserves cancelled batches and enforces local upload r
   await expect(upload.getByRole("status")).toHaveText("Документов: 0. Изображений: 0.");
 });
 test("autocomplete object examples preserve typed text, update complete suggestions and select objects", async ({ page, baseURL }) => {
-  await page.goto(docsUrl(baseURL, "WlAutocomplete"), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(docsUrl(baseURL, "WlAutocomplete")), { waitUntil: "domcontentloaded" });
   const example = page.locator('[data-input-example="WlAutocomplete"]');
   await expect(example).toBeVisible();
   const control = example.getByRole("combobox", { name: "Ответственный", exact: true });

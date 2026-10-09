@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { computed, defineComponent, h, reactive } from "vue";
-import { mount } from "@vue/test-utils";
-import { normalizeWlLocale, wlLocaleRu, WlConfig, type WlLocaleInput } from "../src";
+import { flushPromises, mount } from "@vue/test-utils";
+import { normalizeWlLocale, wlLocaleEn, wlLocaleRu, WlConfig, WlDatePicker, WlFilePicker, WlPasswordInput, type WlLocaleInput, type WlResolvedLocale } from "../src";
+import { formatWlLocaleText } from "../src/locale";
 import { useWlLocale } from "../src/config";
 
 describe("locale input contract", () => {
@@ -70,5 +71,91 @@ describe("locale input contract", () => {
     await wrapper.vm.$nextTick();
     expect(wrapper.text()).toBe(`${wlLocaleRu.accept}: ${wlLocaleRu.dayNamesMin[0]}`);
     wrapper.unmount();
+  });
+});
+
+
+describe("localized built-in controls", () => {
+  it("fills new control text when a consumer supplies a complete previous resolved base", () => {
+    const base: WlResolvedLocale = {
+      firstDayOfWeek: 0, dayNames: [...wlLocaleRu.dayNames], dayNamesShort: [...wlLocaleRu.dayNamesShort],
+      dayNamesMin: [...wlLocaleRu.dayNamesMin], monthNames: [...wlLocaleRu.monthNames],
+      monthNamesShort: [...wlLocaleRu.monthNamesShort], today: "Today", clear: "Clear", accept: "OK",
+      reject: "Cancel", chooseDate: "Date", chooseMonth: "Month", chooseYear: "Year",
+      prevMonth: "Previous month", nextMonth: "Next month", prevYear: "Previous year", nextYear: "Next year",
+      prevDecade: "Previous decade", nextDecade: "Next decade", weekHeader: "Week"
+    };
+    const locale = normalizeWlLocale({ accept: "Proceed" }, base);
+    expect(locale).toMatchObject({ firstDayOfWeek: 0, accept: "Proceed", chooseDate: "Date", close: "Закрыть", dateFrom: "От", localeCode: "ru-RU" });
+    expect(base).not.toHaveProperty("close");
+    expect(locale.dayNames).not.toBe(base.dayNames);
+  });
+
+  it("uses English accessible controls while preserving explicit application text", async () => {
+    const localeOptions = { locale: wlLocaleEn, motion: false };
+    const password = mount(WlPasswordInput, { global: { plugins: [[WlConfig, localeOptions]] } });
+    const files = mount(WlFilePicker, { global: { plugins: [[WlConfig, localeOptions]] } });
+    try {
+      expect(password.get("input").attributes("placeholder")).toBe("Password");
+      expect(password.get("button").attributes("aria-label")).toBe("Show password");
+      await password.get("button").trigger("click");
+      expect(password.get("input").attributes("type")).toBe("text");
+      expect(password.get("button").attributes("aria-label")).toBe("Hide password");
+      expect(files.get("button").attributes("aria-label")).toBe("Choose files");
+      await files.setProps({ chooseLabel: "Выбрать файлы" });
+      expect(files.get("button").text()).toBe("Выбрать файлы");
+      expect(files.get("button").attributes("aria-label")).toBe("Выбрать файлы");
+      await files.setProps({ chooseLabel: undefined });
+      expect(files.get("button").attributes("aria-label")).toBe("Choose files");
+    } finally {
+      password.unmount();
+      files.unmount();
+    }
+  });
+
+  it("keeps date labels and live hints aligned when explicit props equal the old defaults", async () => {
+    const wrapper = mount(WlDatePicker<"range">, {
+      attachTo: document.body,
+      props: { selectionMode: "range", modelValue: null, showIcon: true, motion: false },
+      global: { plugins: [[WlConfig, { locale: wlLocaleEn }]] }
+    });
+    const hint = () => document.querySelector(".wl-dp__range-hint")?.textContent;
+    try {
+      expect(wrapper.findAll("label").map((label) => label.text())).toEqual(["From", "To"]);
+      await wrapper.get(".wl-dp__trigger").trigger("click");
+      await flushPromises();
+      expect(document.querySelector('[role="dialog"]')?.getAttribute("aria-label")).toBe("Choose date");
+      expect(hint()).toBe("Choose a date: From.");
+      await wrapper.setProps({ startLabel: "От" });
+      expect(wrapper.findAll("label")[0]!.text()).toBe("От");
+      expect(hint()).toBe("Choose a date: От.");
+      await wrapper.setProps({ startLabel: undefined });
+      expect(wrapper.findAll("label")[0]!.text()).toBe("From");
+      expect(hint()).toBe("Choose a date: From.");
+      await wrapper.setProps({ modelValue: ["2026-10-15", null], endLabel: "До" });
+      expect(wrapper.findAll("label")[1]!.text()).toBe("До");
+      expect(hint()).toBe("Choose a date: До.");
+      await wrapper.setProps({ endLabel: undefined });
+      expect(wrapper.findAll("label")[1]!.text()).toBe("To");
+      expect(hint()).toBe("Choose a date: To.");
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
+  it("canonicalizes valid locale codes and falls back safely for invalid overrides and bases", () => {
+    expect(normalizeWlLocale({ localeCode: "EN-us" }).localeCode).toBe("en-US");
+    for (const localeCode of ["", "not_a_locale", undefined]) {
+      expect(normalizeWlLocale({ localeCode }, wlLocaleEn).localeCode).toBe("en-US");
+    }
+    const invalid = { localeCode: 42 } as unknown as WlLocaleInput;
+    expect(normalizeWlLocale(invalid).localeCode).toBe("ru-RU");
+    expect(normalizeWlLocale(undefined, { ...wlLocaleEn, localeCode: "not_a_locale" }).localeCode).toBe("ru-RU");
+  });
+
+  it("substitutes named parameters once without interpreting markup or message syntax", () => {
+    const label = '<img src=x onerror=alert(1)> @mail | {count} "quoted" & text';
+    expect(formatWlLocaleText("Remove {label}; count={count}; {missing}", { label, count: 2 }))
+      .toBe('Remove <img src=x onerror=alert(1)> @mail | {count} "quoted" & text; count=2; {missing}');
   });
 });

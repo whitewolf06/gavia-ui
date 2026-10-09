@@ -1,15 +1,17 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../i18n";
+const { t } = usePlaygroundI18n();
 import { computed, defineAsyncComponent, ref, type Component } from "vue";
 import { WlButton } from "../../../../packages/ui-kit/src";
 import CodePanel from "./CodePanel.vue";
 import { consumerSource } from "./code";
 const recipes = [
-  { id: "MaterialList", label: "Список и CRUD", description: "Поиск, фильтры, сортировка и страницы. Создание и редактирование в Drawer, подтверждение удаления и Toast." },
-  { id: "ProfileForm", label: "Форма", description: "Подписи и ошибки связаны с полями. Первая ошибка получает фокус, при сохранении показана загрузка. После ошибки запроса можно повторить сохранение — введённые данные остаются." },
-  { id: "Preferences", label: "Настройки", description: "Зависимые поля, сохранение и отмена изменений. Форма показывает, есть ли несохранённые изменения." },
-  { id: "MaterialDetail", label: "Страница материала", description: "Заголовок, автор, статус и вкладки. Описание редактируется в Dialog с отменой изменений; после закрытия фокус возвращается к кнопке." },
-  { id: "ProjectWizard", label: "Пошаговая форма", description: "Валидация шага, переходы вперёд и назад. Ввод сохраняется между шагами; перед созданием проекта можно проверить все данные." },
-  { id: "AttachmentUpload", label: "Вложения", description: "Ограничения типов, размера и количества файлов. Прогресс загрузки, отмена и повтор после ошибки." }
+  { id: "MaterialList", label: t('shell.design_system.RecipeGallery.text447'), description: t('shell.design_system.RecipeGallery.text448') },
+  { id: "ProfileForm", label: t('shell.design_system.RecipeGallery.text449'), description: t('shell.design_system.RecipeGallery.text450') },
+  { id: "Preferences", label: t('shell.design_system.RecipeGallery.text451'), description: t('shell.design_system.RecipeGallery.text452') },
+  { id: "MaterialDetail", label: t('shell.design_system.RecipeGallery.text453'), description: t('shell.design_system.RecipeGallery.text454') },
+  { id: "ProjectWizard", label: t('shell.design_system.RecipeGallery.text455'), description: t('shell.design_system.RecipeGallery.text456') },
+  { id: "AttachmentUpload", label: t('shell.design_system.RecipeGallery.text457'), description: t('shell.design_system.RecipeGallery.text458') }
 ] as const;
 const modules = import.meta.glob<{ default: Component }>("./recipes/*.vue");
 const sources = import.meta.glob<string>("./recipes/*.vue", { eager: true, query: "?raw", import: "default" });
@@ -20,41 +22,18 @@ const recipe = computed(() => recipes.find((item) => item.id === selected.value)
 const source = computed(() => consumerSource(sources[`./recipes/${selected.value}.vue`] ?? ""));
 const component = computed(() => components[`./recipes/${selected.value}.vue`]);
 function select(id: string): void { selected.value = id; revision.value++; }
-const setupSource = `// main.ts — CSS подключается явно; тему задаёт data-wl-theme на html.
-import { createApp } from "vue";
-import { WlConfig, WlToastService, WlConfirmationService, createWlPt, wlLocaleRu } from "gavia-ui";
-import "gavia-ui/styles/reset.css";
-import "gavia-ui/styles/base.css";
-import "gavia-ui/styles/primitives.css";
-import "gavia-ui/themes/white.css";
-import "gavia-ui/themes/graphite.css";
-import "gavia-ui/themes/newspaper.css";
-import "gavia-ui/styles/fonts/gavia.css";
-import "gavia-ui/themes/gavia.css";
-import "gavia-ui/themes/gavia-dark.css";
-import App from "./App.vue";
-
-document.documentElement.dataset.wlTheme = "white";
-
-// WlConfig merges application pt with defaults; local component pt is applied last.
-const pt = createWlPt({ button: { root: { "data-ui": "action" } } });
-createApp(App).use(WlConfig, { locale: wlLocaleRu, motion: true, pt })
-  .use(WlToastService).use(WlConfirmationService).mount("#app");
-
-// App.vue: импортируйте WlToast/WlConfirmDialog и смонтируйте по одному
-// контейнеру рядом со страницей. Уведомления и подтверждения используют их.
-// <template><YourPage /><WlToast /><WlConfirmDialog /></template>`;
+const setupSource = t('shell.design_system.RecipeGallery.text459');
 </script>
 
 <template>
   <div class="wl-stack" data-space="lg" data-testid="ds-recipes">
-    <div class="wl-inline" data-space="sm" role="group" aria-label="Готовые сценарии"><WlButton v-for="item in recipes" :key="item.id" :variant="selected === item.id ? 'primary' : 'secondary'" :aria-pressed="selected === item.id" :data-recipe="item.id" @click="select(item.id)">{{ item.label }}</WlButton></div>
+    <div class="wl-inline" data-space="sm" role="group" :aria-label="t('shell.design_system.RecipeGallery.text460')"><WlButton v-for="item in recipes" :key="item.id" :variant="selected === item.id ? 'primary' : 'secondary'" :aria-pressed="selected === item.id" :data-recipe="item.id" @click="select(item.id)">{{ item.label }}</WlButton></div>
     <p class="wl-text-body wl-text-muted">{{ recipe.description }}</p>
     <div class="ds-recipe-preview wl-surface" data-testid="ds-recipe-preview" :data-recipe="recipe.id"><component :is="component" :key="`${selected}-${revision}`" /></div>
-    <div><WlButton size="sm" variant="ghost" @click="revision++">Начать сценарий заново</WlButton></div>
+    <div><WlButton size="sm" variant="ghost" @click="revision++">{{ t('shell.design_system.RecipeGallery.text461') }}</WlButton></div>
     <CodePanel :source="source" />
-    <p class="wl-text-small wl-text-muted">В примерах тестовые данные. Сохранение и загрузка имитируются в браузере. В своём приложении подключите запросы к серверу. Сценарий и код для копирования берутся из одного Vue-файла.</p>
-    <CodePanel :source="setupSource" title="Подключение стилей, темы и сервисов" />
+    <p class="wl-text-small wl-text-muted">{{ t('shell.design_system.RecipeGallery.text462') }}</p>
+    <CodePanel :source="setupSource" :title="t('shell.design_system.RecipeGallery.text463')" />
   </div>
 </template>
 

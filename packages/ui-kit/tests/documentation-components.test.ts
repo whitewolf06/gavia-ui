@@ -29,7 +29,7 @@ describe("every component has copyable documentation and individual accessibilit
     const parsed = parse(source, { filename: example.sourceName });
     expect(parsed.errors).toEqual([]);
     expect(source).toContain('from "gavia-ui"');
-    expect(source).not.toMatch(/packages\/ui-kit|v-bind="preview"|defineProps<\{ preview/);
+    expect(source).not.toMatch(/packages\/ui-kit|v-bind="preview"|defineProps<\{ preview|usePlaygroundI18n|\bt\(['"]examples\./);
     const script = compileScript(parsed.descriptor, { id: name });
     const template = compileTemplate({ source: parsed.descriptor.template!.content, filename: example.sourceName, id: name, compilerOptions: { bindingMetadata: script.bindings } });
     expect(template.errors).toEqual([]);

@@ -1,87 +1,87 @@
-# Gavia UI 0.7.0: переход на публичное имя
+# Gavia UI 0.7.0: migration to the public name
 
-Версия [gavia-ui@0.7.0](https://www.npmjs.com/package/gavia-ui) опубликована
-2026-10-05 (Москва) как первый выпуск нового имени в публичном npm.
-[Витрина GitHub Pages](https://whitewolf06.github.io/gavia-ui/) опубликована.
-Исходники находятся в [личном публичном репозитории](https://github.com/whitewolf06/gavia-ui).
-Создатель и сопровождающий — [Gorbach Dmitry](https://github.com/whitewolf06).
+[gavia-ui@0.7.0](https://www.npmjs.com/package/gavia-ui) was published
+on 2026-10-05 (Moscow) as the first release under the new name on public npm.
+The [GitHub Pages playground](https://whitewolf06.github.io/gavia-ui/) is published.
+Source is in the [personal public repository](https://github.com/whitewolf06/gavia-ui).
+Creator and maintainer: [Dmitry Gorbach](https://github.com/whitewolf06).
 
-## Обязательное изменение пути пакета
+## Required package-path change
 
-`@whitelife-core/ui-kit` и `gavia-ui` — отдельные пакеты в разных реестрах.
-После переноса репозитория установленную зависимость нужно заменить вручную.
+`@whitelife-core/ui-kit` and `gavia-ui` are separate packages in different registries.
+After the repository move, replace the installed dependency manually.
 
-В приложении-потребителе:
+In the consumer app:
 
 ```bash
 pnpm remove @whitelife-core/ui-kit
 pnpm add gavia-ui@0.7.0 vue
 ```
 
-Замените прежний идентификатор во всех JS/TS-импортах, CSS subpaths,
-тестах и настройках alias. Не оставляйте обе библиотеки одновременно
-в зависимостях одного приложения.
+Replace the previous identifier in all JS/TS imports, CSS subpaths,
+tests and alias settings. Do not keep both libraries
+in one app’s dependencies.
 
 ```ts
 import { WlButton, WlInput, WlConfig, wlLocaleRu } from "gavia-ui";
 
-// Стили по-прежнему подключаются явно, в том же порядке.
+// Styles remain explicit imports, in the same order.
 import "gavia-ui/styles/reset.css";
 import "gavia-ui/styles/base.css";
 import "gavia-ui/themes/white.css";
 
-// Необязательные примитивы компоновки и типографики.
+// Optional layout and typography primitives.
 import "gavia-ui/styles/primitives.css";
 ```
 
-Прежний scope mapping для GitHub Packages и его PAT можно убрать из настройки
-приложения, если они не используются другими пакетами. Новое имя устанавливается
-из `https://registry.npmjs.org` без GitHub-аутентификации.
+Remove the old GitHub Packages scope mapping and PAT from app configuration
+if other packages do not use them. The new name installs
+from `https://registry.npmjs.org` without GitHub authentication.
 
-При необходимости архив можно собрать из исходников:
+You can also build an archive from source:
 
 ```bash
-# В checkout Gavia UI:
+# In the Gavia UI checkout:
 pnpm install
 pnpm build
 pnpm run pack
-# В приложении-потребителе:
+# In the consumer app:
 pnpm add /absolute/path/to/gavia-ui/packages/ui-kit/gavia-ui-0.7.0.tgz vue
 ```
 
-## Что сохраняется
+## Preserved contracts
 
-- Публичные `Wl*` exports, имена типов, props, события, модели и слоты.
-- `WlConfig`, `createWlPt`, локаль, tooltip, сервисы и composables.
-- Имена SVG-иконок, классы `wl-*`, токены `--wl-*`, `data-wl` и `data-size`.
-- Темы White, Graphite и Newspaper; Vue 3 — единственный обязательный peer
-  (`^3.4.0`), runtime-зависимостей нет.
-- Явное подключение CSS, порядок `pt` и настройка анимации.
+- Public `Wl*` exports, type names, props, events, models and slots.
+- `WlConfig`, `createWlPt`, locale, tooltip, services and composables.
+- SVG icon names, `wl-*` classes, `--wl-*` tokens, `data-wl` and `data-size`.
+- White, Graphite and Newspaper themes; Vue 3 is the only required peer
+  (`^3.4.0`), with no runtime dependencies.
+- Explicit CSS imports, `pt` order and motion configuration.
 
-При обновлении с API 0.6.0 дополнительной настройки компонентов не требуется.
-Дизайн-система, удаление PrimeVue и прежние изменения инициализации
-описаны в [миграции 0.6](migration-0.6.md). Для потребителя на версии 0.3
-также примените [руководство удаления PrimeVue](migration-0.5.md):
-PrimeVue `<Column>` заменяется на `columns` и слоты `cell-*`.
+Upgrading from API 0.6.0 needs no additional component configuration.
+The design system, PrimeVue removal and previous initialization changes
+are described in the [0.6 migration](migration-0.6.md). For a 0.3 consumer,
+also follow the [PrimeVue removal guide](migration-0.5.md):
+replace PrimeVue `<Column>` with `columns` and `cell-*` slots.
 
-## Документация и диагностика
+## Documentation and diagnostics
 
-Витрина включает страницу «О проекте» с автором, лицензией и changelog из
-корневого исходника. Опубликованная витрина доступна в
+The playground includes “About the project” with author, license and the changelog
+from the root source. The published playground is available on
 [GitHub Pages](https://whitewolf06.github.io/gavia-ui/?view=project);
-[руководство размещения](hosting.md) описывает её сборку и обновление.
+the [hosting guide](hosting.md) explains its build and updates.
 
-Переменная локальных браузерных проверок — `GAVIA_E2E_BASE_URL`.
-Диагностические строки каталога используют название Gavia UI. Если приложение
-проверяет полный текст ошибки или использует прежнюю переменную окружения,
-обновите эти проверки. Подробности — [миграция имени](migration-gavia.md).
+The local browser check variable is `GAVIA_E2E_BASE_URL`.
+Catalog diagnostics use Gavia UI. If your app
+checks full error strings or uses the old environment variable,
+update those checks. See the [name migration](migration-gavia.md).
 
-## Проверка приложения
+## Application checks
 
-1. Проверьте lockfile, отсутствие прежней зависимости, typecheck и production build.
-2. Проверьте явные импорты стилей, выбранную тему и собственные токены.
-3. Проверьте формы и модели, клавиатуру, фокус, вложенные оверлеи и прокрутку.
-4. Проверьте даты, таблицы, уведомления и подтверждения.
+1. Check the lockfile, absence of the previous dependency, typecheck and production build.
+2. Check explicit style imports, selected theme and custom tokens.
+3. Check forms and models, keyboard, focus, nested overlays and scrolling.
+4. Check dates, tables, toasts and confirmations.
 
-Тег `v0.6.0` и его исторический коммит сохраняются. Первый ручной npm-выпуск
-0.7.0 и следующие выпуски через OIDC описаны в [releases.md](releases.md).
+Tag `v0.6.0` and its historical commit are preserved. The first manual npm release,
+0.7.0, and subsequent OIDC releases are described in [releases.md](releases.md).

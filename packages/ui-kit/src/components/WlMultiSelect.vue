@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="TOption = unknown, TResolver extends WlOptionValueResolver<NoInfer<TOption>> | undefined = undefined">
+import { formatWlLocaleText } from "../locale";
 import { useWlId } from "../utils/useWlId";
 import { computed, nextTick, ref, useAttrs, watch } from "vue";
-import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
+import { mergeWlAttrs, useWlMotion, useWlPt, useWlLocale } from "../config";
 import type { WlDensity, WlMultiSelectDisplay, WlSizeSm } from "../types";
 import type { WlPt } from "../pt-types";
 import type { WlNoModelModifiers } from "../model-types";
@@ -11,6 +12,7 @@ import { useAnchoredOverlay } from "../utils/anchoredOverlay";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import { optionLabel as resolveOptionLabel, optionValue as resolveOptionValue, useListNavigation } from "../utils/options";
 import WlIcon from "./WlIcon.vue";
+const locale = useWlLocale();
 
 defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<{
@@ -44,7 +46,7 @@ const motion = useWlMotion(computed(() => props.motion));
 const generatedListId = `wl-multiselect-list-${useWlId()}`;
 const listAttrs = computed(() => {
   const control = getWlControlProps(mergeWlAttrs(attrGroups.value.inputAttrs, section("hiddenInput")));
-  return mergeWlAttrs({ id: generatedListId, "aria-label": control.ariaLabel ?? props.placeholder ?? "Варианты", "aria-labelledby": control.ariaLabelledby }, section("list"));
+  return mergeWlAttrs({ id: generatedListId, "aria-label": control.ariaLabel ?? props.placeholder ?? locale.value.options, "aria-labelledby": control.ariaLabelledby }, section("list"));
 });
 const { visible, panel, style, show, hide } = useAnchoredOverlay();
 watch(() => props.disabled, (disabled) => { if (disabled) hide(); });
@@ -56,7 +58,7 @@ const filtered = computed(() => props.options.filter((option) => !query.value ||
 const labels = computed(() => selectedOptions.value.map((option) => resolveOptionLabel(option, props.optionLabel)));
 const label = computed(() => {
   if (!labels.value.length) return props.placeholder ?? "";
-  if (props.maxSelectedLabels !== undefined && labels.value.length > props.maxSelectedLabels) return `${labels.value.length} выбрано`;
+  if (props.maxSelectedLabels !== undefined && labels.value.length > props.maxSelectedLabels) return formatWlLocaleText(locale.value.selectedItems, { count: labels.value.length });
   return labels.value.join(", ");
 });
 function choose(index: number): void {
@@ -100,7 +102,7 @@ function onKeydown(event: KeyboardEvent): void {
           <span v-bind="section('pcChip.label')" class="wl-multiselect__chip-label">{{ resolveOptionLabel(option, props.optionLabel) }}</span>
           <button v-bind="section('pcChip.removeIcon')" type="button" class="wl-multiselect__chip-remove"
             :disabled="disabled"
-            :aria-label="`Удалить ${resolveOptionLabel(option, props.optionLabel)}`"
+            :aria-label="formatWlLocaleText(locale.removeItem, { label: resolveOptionLabel(option, props.optionLabel) })"
             @click.stop="remove(valueOf(option))">×</button>
         </span>
       </div>
@@ -122,7 +124,7 @@ function onKeydown(event: KeyboardEvent): void {
       <div v-if="filter" v-bind="section('header')" class="wl-multiselect__header">
         <WlIcon v-bind="section('filterIcon')" name="search" :size="14" />
         <input ref="filterInput" v-bind="section('pcFilter.root')" v-model="query"
-          class="wl-input wl-input--sm wl-multiselect__filter" type="search" aria-label="Фильтр"
+          class="wl-input wl-input--sm wl-multiselect__filter" type="search" :aria-label="locale.filter"
           @keydown="navigate" />
       </div>
       <div v-bind="section('listContainer')" class="wl-select__list-container">
@@ -131,7 +133,7 @@ function onKeydown(event: KeyboardEvent): void {
             class="wl-select__option" role="option" :data-active="active === index"
             :aria-selected="model.some((value) => Object.is(value, valueOf(option)))"
             @pointerdown.prevent @click="choose(index)"><span v-bind="section('optionLabel')">{{ resolveOptionLabel(option, props.optionLabel) }}</span></div>
-          <div v-if="filtered.length === 0" v-bind="section('emptyMessage')" class="wl-select__empty">Нет вариантов</div>
+          <div v-if="filtered.length === 0" v-bind="section('emptyMessage')" class="wl-select__empty">{{ locale.noOptions }}</div>
         </div>
       </div>
     </div>

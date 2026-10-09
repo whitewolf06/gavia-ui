@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../../i18n";
+const { t } = usePlaygroundI18n();
+import { translateDocumentationText } from "../localize";
 import { computed, ref } from "vue";
 import { WlButton, wlDesignThemes, wlDesignTokens, resolveWlToken, type WlThemeName } from "../../../../../packages/ui-kit/src";
 import CodePanel from "../../design-system/CodePanel.vue";
@@ -18,7 +21,7 @@ const groups = computed(() => documentationColorGroups.map((group) => ({
   tokens: group.tokens.map((name) => {
     const definition = semanticTokens.get(name);
     if (!definition) throw new Error("Missing semantic colour token: " + name);
-    return { ...definition, variable: "var(" + name + ")", resolved: resolveWlToken(name, props.theme) };
+    return { ...definition, description: translateDocumentationText(definition.description), variable: "var(" + name + ")", resolved: resolveWlToken(name, props.theme) };
   })
 })));
 const tokenCount = computed(() => groups.value.reduce((count, group) => count + group.tokens.length, 0));
@@ -43,9 +46,9 @@ async function copyToken(token: string, value: string): Promise<void> {
   feedback.value = null;
   try {
     await navigator.clipboard.writeText(value);
-    if (request === copyRequest) feedback.value = { token, value, message: "Скопировано: " + value, failed: false };
+    if (request === copyRequest) feedback.value = { token, value, message: t('documentation.strings.s0025') + value, failed: false };
   } catch {
-    if (request === copyRequest) feedback.value = { token, value, message: "Буфер обмена недоступен. Скопируйте значение из поля ниже.", failed: true };
+    if (request === copyRequest) feedback.value = { token, value, message: t('documentation.strings.s0026'), failed: true };
   } finally {
     if (request === copyRequest) pendingToken.value = null;
   }
@@ -56,40 +59,40 @@ async function copyToken(token: string, value: string): Promise<void> {
   <div class="docs-colors wl-stack" data-space="2xl">
     <section class="wl-stack" data-space="lg" :aria-labelledby="headings.themes.id">
       <h2 :id="headings.themes.id" class="docs-assets-anchor wl-text-heading">{{ headings.themes.title }}</h2>
-      <p class="wl-text-body" data-testid="docs-color-theme">Текущая тема: {{ currentTheme?.label ?? theme }}. Поменяйте тему в шапке: значения всех ролей ниже обновятся.</p>
+      <p class="wl-text-body" data-testid="docs-color-theme">{{ t('documentation.strings.s0027') }} {{ currentTheme?.label ?? theme }}{{ t('documentation.strings.s0028') }}</p>
       <div class="docs-theme-grid">
         <article v-for="definition in wlDesignThemes" :key="definition.name" class="docs-theme-preview wl-stack" data-space="md" :data-wl-theme="definition.name" :data-asset-theme="definition.name">
-          <h3 class="wl-text-subheading">{{ definition.label }}</h3><p class="wl-text-small wl-text-muted">{{ definition.description }}</p>
-          <div class="docs-theme-accent wl-text-label">Основное действие</div>
+          <h3 class="wl-text-subheading">{{ definition.label }}</h3><p class="wl-text-small wl-text-muted">{{ translateDocumentationText(definition.description) }}</p>
+          <div class="docs-theme-accent wl-text-label">{{ t('documentation.strings.s0029') }}</div>
           <p class="wl-text-code">bg: {{ resolveWlToken('--wl-bg', definition.name) }}</p><p class="wl-text-code">text: {{ resolveWlToken('--wl-text', definition.name) }}</p>
         </article>
       </div>
-      <p class="wl-text-small wl-text-muted">Foundation хранит исходные значения, semantic определяет их назначение, component применяет их к элементу. Для оформления приложения используйте semantic переменные.</p>
+      <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0030') }}</p>
     </section>
     <section class="wl-stack" data-space="lg" :aria-labelledby="headings.setup.id">
       <h2 :id="headings.setup.id" class="docs-assets-anchor wl-text-heading">{{ headings.setup.title }}</h2>
-      <p class="wl-text-body">Импортируйте стили явно и задайте data-wl-theme на корневом элементе. Для переключения между несколькими темами импортируйте их CSS один раз и меняйте атрибут.</p>
-      <div data-testid="docs-color-setup"><CodePanel :source="setupCode" title="main.ts · текущая тема" language="ts" :expanded="true" /></div>
+      <p class="wl-text-body">{{ t('documentation.strings.s0031') }}</p>
+      <div data-testid="docs-color-setup"><CodePanel :source="setupCode" :title="t('documentation.strings.s0032')" language="ts" :expanded="true" /></div>
     </section>
-    <p class="wl-text-small wl-text-muted" data-testid="docs-color-count">Semantic токенов на странице: {{ tokenCount }}. Значения взяты из текущего каталога темы; локальные CSS-переопределения приложения могут отличаться.</p>
+    <p class="wl-text-small wl-text-muted" data-testid="docs-color-count">{{ t('documentation.strings.s0033') }} {{ tokenCount }}{{ t('documentation.strings.s0034') }}</p>
     <section v-for="group in groups" :key="group.key" class="wl-stack" data-space="lg" :aria-labelledby="group.heading.id" :data-color-group="group.key">
       <h2 :id="group.heading.id" class="docs-assets-anchor wl-text-heading">{{ group.heading.title }}</h2><p class="wl-text-body wl-text-muted">{{ group.description }}</p>
       <div class="docs-color-grid">
         <article v-for="token in group.tokens" :key="token.name" class="docs-color-card wl-stack" data-space="md" :data-color-token="token.name" :data-resolved-value="token.resolved">
           <div class="docs-color-swatch" aria-hidden="true"><span :style="{ backgroundColor: token.resolved }" /></div>
           <code class="wl-text-code">{{ token.variable }}</code><p class="wl-text-small wl-text-muted">{{ token.description }}</p>
-          <dl class="docs-color-values"><div><dt>Значение</dt><dd><code data-testid="docs-color-resolved">{{ token.resolved }}</code></dd></div><div><dt>Источник</dt><dd><code>{{ token.value }}</code></dd></div></dl>
-          <div class="wl-inline" data-space="xs"><WlButton size="sm" variant="ghost" :disabled="pendingToken === token.name" :aria-label="'Копировать переменную ' + token.name" @click="copyToken(token.name, token.variable)">Переменная</WlButton><WlButton size="sm" variant="ghost" :disabled="pendingToken === token.name" :aria-label="'Копировать значение ' + token.name" @click="copyToken(token.name, token.resolved)">Значение</WlButton></div>
+          <dl class="docs-color-values"><div><dt>{{ t('documentation.strings.s0035') }}</dt><dd><code data-testid="docs-color-resolved">{{ token.resolved }}</code></dd></div><div><dt>{{ t('documentation.strings.s0036') }}</dt><dd><code>{{ token.value }}</code></dd></div></dl>
+          <div class="wl-inline" data-space="xs"><WlButton size="sm" variant="ghost" :disabled="pendingToken === token.name" :aria-label="t('documentation.strings.s0037') + token.name" @click="copyToken(token.name, token.variable)">{{ t('documentation.strings.s0038') }}</WlButton><WlButton size="sm" variant="ghost" :disabled="pendingToken === token.name" :aria-label="t('documentation.strings.s0039') + token.name" @click="copyToken(token.name, token.resolved)">{{ t('documentation.strings.s0035') }}</WlButton></div>
           <p v-if="feedback?.token === token.name" class="wl-text-small" :role="feedback.failed ? 'alert' : 'status'">{{ feedback.message }}</p>
-          <textarea v-if="feedback?.token === token.name && feedback.failed" class="docs-color-manual" readonly :aria-label="'Значение для ручного копирования ' + token.name" :value="feedback.value" @focus="($event.target as HTMLTextAreaElement).select()" />
+          <textarea v-if="feedback?.token === token.name && feedback.failed" class="docs-color-manual" readonly :aria-label="t('documentation.strings.s0040') + token.name" :value="feedback.value" @focus="($event.target as HTMLTextAreaElement).select()" />
         </article>
       </div>
     </section>
     <section class="wl-stack" data-space="xl" :aria-labelledby="headings.examples.id">
       <h2 :id="headings.examples.id" class="docs-assets-anchor wl-text-heading">{{ headings.examples.title }}</h2>
-      <p class="wl-text-body">Название состояния, число и сообщение должны быть понятны независимо от цвета. Проверяйте читаемость на нужной поверхности и сохраняйте видимый фокус.</p>
-      <AssetExample name="color-roles" title="Поверхности и текстовые роли" :example="ColorRoles" :source="rolesSource" />
-      <AssetExample name="color-states" title="Состояние, сообщение и счётчик" :example="ColorStates" :source="statesSource" />
+      <p class="wl-text-body">{{ t('documentation.strings.s0041') }}</p>
+      <AssetExample name="color-roles" :title="t('documentation.strings.s0042')" :example="ColorRoles" :source="rolesSource" />
+      <AssetExample name="color-states" :title="t('documentation.strings.s0043')" :example="ColorStates" :source="statesSource" />
     </section>
   </div>
 </template>

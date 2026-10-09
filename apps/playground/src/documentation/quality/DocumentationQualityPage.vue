@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../../i18n";
+const { t, locale } = usePlaygroundI18n();
 import { WlCard, WlStatCard, WlTable } from "../../../../../packages/ui-kit/src";
 import QualityMeter from "../../project/QualityMeter.vue";
 import qualityReport from "../../project/quality-report.generated.json";
@@ -10,20 +12,20 @@ import {
 
 const report = qualityReport;
 function formatRevision(revision: string | null): string {
-  return revision?.slice(0, 8) ?? "не указана";
+  return revision?.slice(0, 8) ?? t('documentation.strings.s0768');
 }
-const percentages = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 2 });
+const percentages = new Intl.NumberFormat(locale.value === "ru" ? "ru-RU" : "en-US", { maximumFractionDigits: 2 });
 const metrics = [
-  { key: "lines", icon: "file", label: "Строки", description: "Выполненные строки кода" },
-  { key: "statements", icon: "code", label: "Инструкции", description: "Выполненные инструкции" },
-  { key: "branches", icon: "sliders-h", label: "Ветвления", description: "Проверенные исходы условий" },
-  { key: "functions", icon: "task", label: "Функции", description: "Вызванные функции" }
+  { key: "lines", icon: "file", label: t('documentation.strings.s0769'), description: t('documentation.strings.s0770') },
+  { key: "statements", icon: "code", label: t('documentation.strings.s0771'), description: t('documentation.strings.s0772') },
+  { key: "branches", icon: "sliders-h", label: t('documentation.strings.s0773'), description: t('documentation.strings.s0774') },
+  { key: "functions", icon: "task", label: t('documentation.strings.s0775'), description: t('documentation.strings.s0776') }
 ] as const;
 const measuredAt = new Date(report.measuredAt);
-const measuredLabel = new Intl.DateTimeFormat("ru-RU", {
+const measuredLabel = new Intl.DateTimeFormat(locale.value === "ru" ? "ru-RU" : "en-US", {
   dateStyle: "long", timeStyle: "short", timeZone: "UTC"
 }).format(measuredAt) + " (UTC)";
-const reportSource = report.source.environment === "ci" ? "Отчёт CI" : "Локальный отчёт";
+const reportSource = report.source.environment === "ci" ? t('documentation.strings.s0777') : t('documentation.strings.s0778');
 const qualitySourceUrl = gaviaProjectInfo.documentationBaseUrl + "docs/quality.md";
 const workflowUrl = gaviaProjectInfo.repositoryUrl + "/actions/workflows/publish.yml";
 </script>
@@ -33,20 +35,20 @@ const workflowUrl = gaviaProjectInfo.repositoryUrl + "/actions/workflows/publish
     <section class="wl-stack" data-space="lg" :aria-labelledby="headings.measurement.id">
       <div class="wl-stack" data-space="sm">
         <h2 :id="headings.measurement.id" class="quality-anchor wl-text-heading">{{ headings.measurement.title }}</h2>
-        <p class="wl-text-body wl-text-muted">Покрытие показывает, какую часть кода выполнили unit-тесты в этом прогоне.</p>
+        <p class="wl-text-body wl-text-muted">{{ t('documentation.strings.s0779') }}</p>
       </div>
-      <div class="quality-metrics" role="group" aria-label="Покрытие unit-тестами" data-testid="quality-coverage">
+      <div class="quality-metrics" role="group" :aria-label="t('documentation.strings.s0780')" data-testid="quality-coverage">
         <WlStatCard v-for="metric in metrics" :key="metric.key" :icon="metric.icon" :label="metric.label" :value="percentages.format(report.coverage[metric.key]) + '%'" :description="metric.description" :data-coverage-metric="metric.key">
-          <template #footer><QualityMeter :value="report.coverage[metric.key]" :label="'Покрытие unit-тестами: ' + metric.label" /></template>
+          <template #footer><QualityMeter :value="report.coverage[metric.key]" :label="t('documentation.strings.s0781') + metric.label" /></template>
         </WlStatCard>
       </div>
       <WlCard>
         <div class="wl-stack" data-space="sm">
-          <p class="wl-text-body"><strong data-testid="quality-unit-count">{{ report.tests.passed }} / {{ report.tests.total }}</strong> unit-тестов прошли в этом прогоне.</p>
-          <p class="wl-text-small wl-text-muted" data-testid="quality-report-source">{{ reportSource }} · версия {{ report.version }} · <time :datetime="report.measuredAt" :title="report.measuredAt">{{ measuredLabel }}</time></p>
-          <p class="wl-text-small wl-text-muted">Ревизия <code>{{ formatRevision(report.source.revision) }}</code><span v-if="report.source.dirty"> · в рабочей копии есть незакоммиченные изменения</span>.</p>
-          <p class="wl-text-small">В расчёт входят компоненты, утилиты, разрешение имён иконок и токенов. E2E, визуальные сравнения и Axe выполняются отдельно. Декларации типов, сгенерированные каталоги, метаданные manifest и точки реэкспорта исключены.</p>
-          <div class="wl-inline" data-space="lg"><a class="quality-link" :href="workflowUrl">Запуски и артефакты GitHub Actions</a><a class="quality-link" :href="qualitySourceUrl">Методика проверок</a></div>
+          <p class="wl-text-body"><strong data-testid="quality-unit-count">{{ report.tests.passed }} / {{ report.tests.total }}</strong> {{ t('documentation.strings.s0782') }}</p>
+          <p class="wl-text-small wl-text-muted" data-testid="quality-report-source">{{ reportSource }} {{ t('documentation.strings.s0783') }} {{ report.version }} · <time :datetime="report.measuredAt" :title="report.measuredAt">{{ measuredLabel }}</time></p>
+          <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0784') }} <code>{{ formatRevision(report.source.revision) }}</code><span v-if="report.source.dirty"> {{ t('documentation.strings.s0785') }}</span>.</p>
+          <p class="wl-text-small">{{ t('documentation.strings.s0786') }}</p>
+          <div class="wl-inline" data-space="lg"><a class="quality-link" :href="workflowUrl">{{ t('documentation.strings.s0787') }}</a><a class="quality-link" :href="qualitySourceUrl">{{ t('documentation.strings.s0788') }}</a></div>
         </div>
       </WlCard>
     </section>
@@ -54,31 +56,31 @@ const workflowUrl = gaviaProjectInfo.repositoryUrl + "/actions/workflows/publish
     <section class="wl-stack" data-space="md" :aria-labelledby="headings.checks.id">
       <h2 :id="headings.checks.id" class="quality-anchor wl-text-heading">{{ headings.checks.title }}</h2>
       <WlTable class="quality-table" :columns="qualityCheckColumns" :value="qualityCheckRows" :pt="{ table: { 'aria-labelledby': headings.checks.id } }" />
-      <p class="wl-text-small wl-text-muted">В таблице указан состав проверок. Результат конкретного прогона смотрите в GitHub Actions. Локальный отчёт покрытия не подтверждает результат CI. Изменения PNG принимаются после просмотра expected/actual/diff.</p>
+      <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0789') }}</p>
     </section>
 
     <section class="wl-stack" data-space="md" :aria-labelledby="headings.environment.id">
       <h2 :id="headings.environment.id" class="quality-anchor wl-text-heading">{{ headings.environment.title }}</h2>
       <WlTable class="quality-table" :columns="qualityEnvironmentColumns" :value="qualityEnvironmentRows" :pt="{ table: { 'aria-labelledby': headings.environment.id } }" />
-      <p class="wl-text-body">Диапазон браузеров определён по поддержке ES2020, CSS Layers, :has(), color-mix и container queries. Автоматические проверки используют закреплённые версии Playwright; полный набор на каждой исторической минимальной версии отдельно не запускался.</p>
-      <p class="wl-text-small wl-text-muted">WebKit проверяет движок и не заменяет отдельный Safari/iOS-прогон. IE и старые WebView не поддерживаются. CSS подключается явно; библиотека не устанавливает глобальные полифиллы.</p>
+      <p class="wl-text-body">{{ t('documentation.strings.s0790') }}</p>
+      <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0791') }}</p>
     </section>
 
     <section class="wl-stack" data-space="lg" :aria-labelledby="headings.accessibility.id">
       <h2 :id="headings.accessibility.id" class="quality-anchor wl-text-heading">{{ headings.accessibility.title }}</h2>
       <div class="quality-cards">
         <WlCard>
-          <template #title><h3 class="wl-text-subheading">Доступность в приложении</h3></template>
+          <template #title><h3 class="wl-text-subheading">{{ t('documentation.strings.s0792') }}</h3></template>
           <div class="wl-stack" data-space="sm">
-            <p class="wl-text-body">Целевой уровень — WCAG 2.2 AA. Axe проверяет имена и связи ARIA, контраст и видимый DOM, включая открытые списки и диалоги в пяти темах.</p>
-            <p class="wl-text-small wl-text-muted">Автоматический скан не подтверждает полное соответствие WCAG. При интеграции нужны ручные проверки клавиатуры, масштабирования, NVDA и VoiceOver. Эти прогоны не входят в приведённое unit-покрытие.</p>
+            <p class="wl-text-body">{{ t('documentation.strings.s0793') }}</p>
+            <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0794') }}</p>
           </div>
         </WlCard>
         <WlCard>
-          <template #title><h3 class="wl-text-subheading">SSR и оверлеи</h3></template>
+          <template #title><h3 class="wl-text-subheading">{{ t('documentation.strings.s0795') }}</h3></template>
           <div class="wl-stack" data-space="sm">
-            <p class="wl-text-body">Проверяется Vue SSR и гидратация с сохранением DOM и идентификаторов. В Vue 3.4 порядок синхронного серверного дерева и гидратации должен совпадать; порядок асинхронных ветвей отдельно не гарантируется.</p>
-            <p class="wl-text-small wl-text-muted">Оверлеи используют Teleport в body: сервер вставляет <code>context.teleports.body</code> в начало body перед корнем приложения. Если фреймворк обслуживает только собственный teleport-target, используйте его ClientOnly для оверлеев и проверьте интеграцию. Интеграцию с Nuxt и его модулями проверяйте в приложении.</p>
+            <p class="wl-text-body">{{ t('documentation.strings.s0796') }}</p>
+            <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0797') }} <code>context.teleports.body</code> {{ t('documentation.strings.s0798') }}</p>
           </div>
         </WlCard>
       </div>
@@ -86,13 +88,13 @@ const workflowUrl = gaviaProjectInfo.repositoryUrl + "/actions/workflows/publish
 
     <section class="wl-stack" data-space="lg" :aria-labelledby="headings.versions.id">
       <h2 :id="headings.versions.id" class="quality-anchor wl-text-heading">{{ headings.versions.title }}</h2>
-      <p class="wl-text-body">Все компоненты выпускаются одной версией Gavia UI. «С версии» в каталоге означает первый выпуск компонента; последующие изменения перечислены в changelog.</p>
+      <p class="wl-text-body">{{ t('documentation.strings.s0799') }}</p>
       <div class="quality-cards">
-        <WlCard><template #title><h3 class="wl-text-subheading">Patch</h3></template><p class="wl-text-body">Исправления сохраняют публичный контракт и прежний код потребителя.</p></WlCard>
-        <WlCard><template #title><h3 class="wl-text-subheading">Minor и major</h3></template><p class="wl-text-body">Minor добавляет возможности. В 0.x необходимое несовместимое изменение допускается только в minor с явной отметкой Breaking changes и руководством миграции. После 1.0 оно требует major.</p></WlCard>
+        <WlCard><template #title><h3 class="wl-text-subheading">Patch</h3></template><p class="wl-text-body">{{ t('documentation.strings.s0800') }}</p></WlCard>
+        <WlCard><template #title><h3 class="wl-text-subheading">{{ t('documentation.strings.s0801') }}</h3></template><p class="wl-text-body">{{ t('documentation.strings.s0802') }}</p></WlCard>
       </div>
-      <p class="wl-text-small wl-text-muted">Публичный контракт включает props, события и payload, slots, v-model, exposed-методы, exports, CSS-классы, data-wl, токены и pt-секции. Проверка типов защищает форму API; unit/E2E проверяют поведение. Миграционная заметка сама по себе не отключает проверку совместимости.</p>
-      <div class="wl-inline" data-space="lg"><a class="quality-link" :href="gaviaProjectInfo.changelogUrl">Changelog</a><a class="quality-link" :href="qualitySourceUrl">Политика совместимости</a></div>
+      <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0803') }}</p>
+      <div class="wl-inline" data-space="lg"><a class="quality-link" :href="gaviaProjectInfo.changelogUrl">Changelog</a><a class="quality-link" :href="qualitySourceUrl">{{ t('documentation.strings.s0804') }}</a></div>
     </section>
   </article>
 </template>

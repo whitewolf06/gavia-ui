@@ -1,5 +1,6 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { expect, test, type Page } from "@playwright/test";
-import { chooseDropdownOption, chooseShowcaseTheme } from "./select-helpers";
+import { chooseDropdownOption, chooseShowcaseTheme, expectMainViewCurrent } from "./select-helpers";
 import { resolveWlToken, wlDesignTokens, wlDesignThemes, wlContrastReport } from "../../../packages/ui-kit/src/design-system";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 
@@ -22,7 +23,7 @@ test.beforeEach(async ({ page }, testInfo) => {
     await page.setViewportSize(testInfo.project.use.isMobile
       ? { width: 390, height: 844 } : { width: 1440, height: 900 });
   }
-  await page.goto("/?view=system");
+  await page.goto(russianPlaygroundUrl("/?view=system"));
   const heading = page.getByRole("heading", { name: "Дизайн-система" });
   // The view loads as an async chunk after the navigation load event.
   await heading.waitFor({ state: "visible" });
@@ -62,7 +63,7 @@ test("contract catalog shows all components and links to the gallery", async ({ 
   await expect(page.getByTestId("ds-contract").getByRole("heading", { name: "WlInput", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Открыть руководство" }).click();
   await expect(page.getByRole("heading", { name: "WlInput", exact: true })).toBeVisible();
-  await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Документация");
+  await expectMainViewCurrent(page, "Документация");
   await page.goBack();
   await expect(page.getByRole("heading", { name: "Дизайн-система" })).toBeVisible();
 });

@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { useWlLocaleText } from "../config";
 import { computed, ref, useAttrs, watch } from "vue";
 import WlIcon from "./WlIcon.vue";
 import type { WlDensity, WlSizeSm } from "../types";
 import type { WlNoModelModifiers } from "../model-types";
 import { splitInputAttrs } from "../utils/inputAttrs";
+const localeText = useWlLocaleText();
 
 defineOptions({ inheritAttrs: false });
 
@@ -106,7 +108,7 @@ function onKeydown(event: KeyboardEvent): void {
       type="button"
       class="wl-stepper__btn"
       :disabled="disabled"
-      :aria-label="decrementLabel"
+      :aria-label="localeText('decrementLabel', decrementLabel, 'decrease')"
       @click="bump(-1)"
     >
       <WlIcon name="minus" :size="14" />
@@ -138,7 +140,7 @@ function onKeydown(event: KeyboardEvent): void {
       type="button"
       class="wl-stepper__btn"
       :disabled="disabled"
-      :aria-label="incrementLabel"
+      :aria-label="localeText('incrementLabel', incrementLabel, 'increase')"
       @click="bump(1)"
     >
       <WlIcon name="plus" :size="14" />

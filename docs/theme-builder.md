@@ -1,55 +1,55 @@
-# Подбор темы
+# Theme builder
 
-Откройте «Подбор темы» через меню, поиск или ссылку на главной.
-Прямой адрес — `?view=theme-builder`. На GitHub Pages сохраняется подпуть `/gavia-ui/`.
+Open Theme Builder from the menu, search or a home-page link.
+Its direct URL is `?view=theme-builder`. GitHub Pages keeps the `/gavia-ui/` subpath.
 
-## Работа с палитрой
+## Editing the palette
 
-1. Выберите Gavia, Gavia Dark, Classic, Classic Dark или Newspaper как основу. Выбор основы сбрасывает
-   цвета; «Сбросить цвета» возвращает палитру текущей основы, сохраняя имя.
-2. Задайте новое имя: 1–32 символа, первая буква латинская строчная, далее строчные
-   буквы, цифры и дефис. Идентификаторы пяти поставляемых тем
-   (`gavia`, `gavia-dark`, `white`, `graphite`, `newspaper`) заняты.
-3. Настройте восемь ролей: фон страницы, карточки, мягкая поверхность, основной и
-   вспомогательный текст, границы, основное действие, ссылки/фокус.
-   Доступны системный выбор цвета и HEX-поля `#rgb` / `#rrggbb`.
-4. Попробуйте кнопки, ввод, Select, Checkbox и Switch в живом примере, включая
-   disabled и invalid. Незавершённый HEX не применяется: пример сохраняет последний
-   корректный цвет, экспорт блокируется до исправления.
-5. Посмотрите контраст. В каждой строке показаны отношение и её порог. Проверяются
-   выбранные пары текста и фокуса, а не доступность всей темы. Низкий контраст
-   отмечается, выбранные цвета автоматически не заменяются.
+1. Choose Gavia, Gavia Dark, Classic, Classic Dark or Newspaper as a base.
+   Changing the base resets colors; Reset colors restores the current base palette and keeps the name.
+2. Enter a new name: 1–32 characters, beginning with a lowercase Latin letter,
+   followed by lowercase letters, digits or hyphens. The five shipped identifiers
+   (`gavia`, `gavia-dark`, `white`, `graphite`, `newspaper`) are reserved.
+3. Set eight roles: page background, cards, soft surface, primary and muted text,
+   borders, primary action, and links/focus. Native color pickers and HEX inputs
+   support `#rgb` / `#rrggbb`.
+4. Try buttons, inputs, Select, Checkbox and Switch in the live preview, including
+   disabled and invalid states. Incomplete HEX input is not applied: the preview
+   keeps the last valid color and export stays blocked until the input is fixed.
+5. Review contrast. Each row shows its ratio and threshold. Selected text and
+   focus pairs are checked, not the accessibility of the entire theme. Low contrast
+   is flagged; selected colors are not replaced automatically.
 
-Выбранный основной цвет сохраняется без изменения. Для кнопки автоматически
-подбираются контрастный текст и цвет наведения. Цвет ссылок настраивается отдельно.
-Мягкие состояния и усиленные границы вычисляются из палитры;
-статусы, размеры, типографика и анимации берутся из основы.
+The selected primary color is preserved. The button text and hover color
+are chosen automatically for contrast. Link color is configured separately.
+Soft states and stronger borders are derived from the palette;
+status colors, dimensions, typography and motion come from the base.
 
-Пример изолирован через `data-wl-theme` и локальные token overrides. Для
-teleported-панели Select используется такой же атрибут и стиль через `pt.overlay`.
-Оформление шапки и других страниц не меняется от редактирования палитры.
-Переключение темы в шапке сохраняет настройки примера.
+The preview is isolated with `data-wl-theme` and local token overrides.
+The teleported Select panel receives the same attribute and styles through
+`pt.overlay`. Editing the palette does not change the header or other pages.
+Changing the header theme preserves the preview settings.
 
-Черновик с корректными значениями сохраняется только в этом браузере:
-имя, основа и цвета — в `localStorage`, ключ `gavia-ui.theme-builder.v1`.
-При восстановлении проверяются версия схемы, имя, основа и каждый HEX.
-Некорректные данные пропускаются. Если хранилище браузера недоступно,
-настройки остаются в памяти до закрытия страницы.
+A draft with valid values is saved only in this browser:
+name, base and colors are stored in `localStorage` under `gavia-ui.theme-builder.v1`.
+Restoration validates the schema version, name, base and each HEX value.
+Invalid data is skipped. If browser storage is unavailable,
+settings remain in memory until the page is closed.
 
-## Экспорт
+## Export
 
-- **Для агента** — готовое задание со спецификацией JSON и порядком создания темы
-  через канонический `packages/ui-kit/tokens/source.json`.
+- **For an agent** — a ready task with a JSON specification and steps for creating
+  a theme through canonical `packages/ui-kit/tokens/source.json`.
 - **JSON** — `schemaVersion`, `name`, `baseTheme`, `colorScheme`, `palette`,
-  foundation `overrides` и отдельно `semanticBindings` для основного действия.
-  Это формат playground, он не загружается автоматически публичной библиотекой.
-- **CSS** — полный снимок основы с изменениями, слой `wl.tokens`, безопасный
-  selector нового имени и `prefers-reduced-motion`. Полный снимок нужен, чтобы
-  алиасы всех слоёв пересчитывались на корне темы, включая портал компонентов.
+  foundation `overrides` and separate `semanticBindings` for the primary action.
+  This playground format is not loaded automatically by the public library.
+- **CSS** — a complete base snapshot with changes, the `wl.tokens` layer, a safe
+  selector for the new name and `prefers-reduced-motion`. The full snapshot lets
+  aliases in every layer resolve at the theme root, including component portals.
 
-Выберите формат и нажмите «Копировать». Если буфер обмена недоступен,
-появится поле для ручного копирования. Подключите CSS после стилей библиотеки
-и укажите новое имя темы на `html`:
+Choose a format and click Copy. If clipboard access is unavailable,
+a field appears for manual copying. Import the CSS after library styles
+and set the new theme name on `html`:
 
 ```ts
 import 'gavia-ui/styles/base.css';
@@ -57,9 +57,9 @@ import './my-gavia.css';
 document.documentElement.dataset.wlTheme = 'my-gavia';
 ```
 
-Для постоянной темы в репозитории агент сначала копирует значения каждого токена
-из `themes[baseTheme] ?? value` в новый снимок, затем применяет foundation overrides
-и указанные semantic bindings. После регистрации имени и метаданных темы запускает
-`pnpm tokens:sync` / `pnpm tokens:check`, проверяет контраст и компоненты. Новая тема
-расширяет существующую систему; прежние темы и публичные имена сохраняются.
-Редактор не публикует пакет и не меняет файлы репозитория из браузера.
+For a permanent repository theme, the agent first copies each token value from
+`themes[baseTheme] ?? value` into a new snapshot, then applies foundation overrides
+and the specified semantic bindings. After registering the theme name and metadata,
+run `pnpm tokens:sync` / `pnpm tokens:check` and check contrast and components.
+The new theme extends the existing system; previous themes and public names remain.
+The editor does not publish packages or change repository files from the browser.

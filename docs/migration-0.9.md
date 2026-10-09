@@ -1,15 +1,15 @@
-# Gavia UI 0.9: шрифт и новая тема
+# Gavia UI 0.9: font and new theme
 
-Обновите зависимость до опубликованной версии 0.9.1:
+Update the dependency to published version 0.9.1:
 
 ```bash
 pnpm add gavia-ui@0.9.1 vue
 ```
 
-Имена Wl-компонентов, CSS-классы, токены и пути импорта сохранены.
-Vue — единственный обязательный peer; runtime-зависимостей нет.
-White остаётся базовой темой этого выпуска. Для Gavia подключите CSS
-и выберите тему явно:
+Wl component names, CSS classes, tokens and import paths are preserved.
+Vue is the only required peer; there are no runtime dependencies.
+White remains this release’s base theme. For Gavia, import CSS
+and choose the theme explicitly:
 
 ```ts
 import "gavia-ui/styles/reset.css";
@@ -21,26 +21,26 @@ import "gavia-ui/themes/gavia.css";
 document.documentElement.dataset.wlTheme = "gavia";
 ```
 
-Gavia Sans меняет типографику только темы Gavia. Для White, Graphite или
-Newspaper сохраните соответствующий импорт темы и data-wl-theme.
-Шрифтовой CSS не импортируется автоматически из JavaScript. Тема Gavia
-также выбирает точный рендеринг через новый `--wl-type-text-rendering`
-(основан на `--wl-font-text-rendering`); настройки остальных тем сохранены.
-Прежнее имя CSS-семейства Gavia остаётся alias для Gavia Sans; файловые
-пути gavia-ui/styles/fonts/gavia.css и gavia-ui/fonts/gavia/* сохранены.
-Файлы шрифта лицензированы отдельно под SIL OFL 1.1; код UI-кита — MIT.
+Gavia Sans changes typography only in Gavia. For White, Graphite or
+Newspaper, keep the corresponding theme import and data-wl-theme.
+Font CSS is not imported automatically from JavaScript. Gavia
+also selects precise rendering through new `--wl-type-text-rendering`
+(based on `--wl-font-text-rendering`); other theme settings are preserved.
+The previous Gavia CSS family remains an alias for Gavia Sans; paths
+gavia-ui/styles/fonts/gavia.css and gavia-ui/fonts/gavia/* are preserved.
+Font files use the separate SIL OFL 1.1 license; UI kit code uses MIT.
 
-WlDatePicker по умолчанию сохраняет строковую модель YYYY-MM-DD|null.
-Для нового режима selectionMode="range" используйте тип WlDateRange
-([start, end|null]) и не передавайте диапазон в одиночный режим.
+WlDatePicker retains its default YYYY-MM-DD|null string model.
+For new selectionMode="range", use WlDateRange
+([start, end|null]) and do not pass a range into single mode.
 
-[Подключение шрифта](font-gavia.md) · [Изменения](../CHANGELOG.md) ·
-[Проверка публикации](releases.md)
+[Font setup](font-gavia.md) · [Changelog](../CHANGELOG.md) ·
+[Publication checks](releases.md)
 
-## Следующие совместимые исправления 0.9.x
+## Subsequent compatible 0.9.x fixes
 
-Новые семантические токены --wl-text-accent/--wl-text-accent-hover отделяют цвет
-текста от фона primary-кнопки. Если переопределяете собственную палитру, проверьте
-их контраст на bg/bg-raised/accent-soft; прежние имена токенов сохранены.
-В Graphite текст акцента светлее для читаемости на мягких поверхностях.
-Управление стилями по --wl-accent остаётся действующим для фоновых акцентов.
+New semantic tokens --wl-text-accent/--wl-text-accent-hover separate text color
+from the primary button background. If you override a custom palette, check
+their contrast on bg/bg-raised/accent-soft; previous token names are preserved.
+Graphite accent text is lighter for readability on soft surfaces.
+Styling through --wl-accent still applies to background accents.

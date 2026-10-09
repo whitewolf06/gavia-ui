@@ -1,3 +1,4 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { expect, test } from "@playwright/test";
 import { expectGaviaFontDownload } from "./font-download-helpers";
 import { chooseDropdownOption, chooseShowcaseTheme, navigateMainView } from "./select-helpers";
@@ -12,7 +13,7 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
   });
   const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
   url.search = "?view=font&theme=gavia";
-  await page.goto(url.href);
+  await page.goto(russianPlaygroundUrl(url.href));
   const fontPage = page.getByTestId("font-page");
   await expect(fontPage).toBeVisible();
   await expect(fontPage.getByRole("heading", { level: 1, name: "Gavia Sans", exact: true })).toBeVisible();
@@ -49,8 +50,9 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
   await expect(proof).toHaveAttribute("data-weight", "600");
   await expect(proof).toHaveAttribute("data-size", "72");
   await fontPage.getByRole("button", { name: "English", exact: true }).click();
-  await expect(fontPage).toHaveAttribute("lang", "en");
-  await fontPage.getByRole("group", { name: "Sample style", exact: true }).getByRole("button", { name: "Italic", exact: true }).click();
+  await expect(fontPage).toHaveAttribute("lang", "ru");
+  await expect(fontPage.locator(".wl-type-body-copy")).toHaveAttribute("lang", "en");
+  await fontPage.getByRole("group", { name: "Начертание образцов", exact: true }).getByRole("button", { name: "Курсив", exact: true }).click();
   await expect(proof).toHaveAttribute("data-font-style", "italic");
   await expect(proof).toHaveCSS("font-weight", "600");
   await expect(proof).toHaveCSS("font-style", "italic");
@@ -96,7 +98,7 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
 test("tabular and proportional numbers use different spacing without changing the glyphs", async ({ page, baseURL }) => {
   const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
   url.search = "?view=font&theme=white";
-  await page.goto(url.href);
+  await page.goto(russianPlaygroundUrl(url.href));
   const fontPage = page.getByTestId("font-page");
   await expect(fontPage).toBeVisible();
   const samples = await fontPage.locator(".wl-type-number-sample").evaluateAll(async (cards) => {
@@ -187,7 +189,7 @@ test("tabular and proportional numbers use different spacing without changing th
     finally { theme.remove(); }
   });
   expect(nestedRendering).toEqual({ gavia: "geometricprecision", white: "optimizelegibility" });
-  await expect(fontPage.getByRole("link", { name: "К документации UI Kit", exact: false })).toHaveAttribute("href", "?view=docs&theme=white");
+  await expect(fontPage.getByRole("link", { name: "К документации UI Kit", exact: false })).toHaveAttribute("href", "?view=docs&theme=white&lang=ru");
   await fontPage.getByRole("link", { name: "К документации UI Kit", exact: false }).click();
   await expect(page.getByTestId("docs-page")).toBeVisible();
   expect(new URL(page.url()).pathname).toBe(url.pathname);
@@ -198,7 +200,7 @@ test("tabular and proportional numbers use different spacing without changing th
 test("font download contains the approved family, standalone CSS and OFL licenses", async ({ page, baseURL }) => {
   const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
   url.search = "?view=font&theme=gavia";
-  await page.goto(url.href);
+  await page.goto(russianPlaygroundUrl(url.href));
   const font = page.getByTestId("font-page");
   await expect(font).toBeVisible();
   await expect(font.locator("[data-wl=segmented]")).toHaveCount(3);

@@ -1,932 +1,933 @@
+import { localizeDocumentation } from "../localize";
 import type { DocumentationPtSection } from "../catalog";
 
 /** Named DOM sections currently used by each component. */
-export const documentationPtSections: Readonly<Record<string, readonly DocumentationPtSection[]>> = {
+export const documentationPtSections: Readonly<Record<string, readonly DocumentationPtSection[]>> = localizeDocumentation({
   "WlAutocomplete": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0323"
     },
     {
       "name": "inputMultiple",
-      "element": "DOM-секция",
-      "description": "Секция inputMultiple в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0324"
     },
     {
       "name": "chipItem",
-      "element": "DOM-секция",
-      "description": "Секция chipItem в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0325"
     },
     {
       "name": "pcChip.root",
-      "element": "DOM-секция",
-      "description": "Секция pcChip.root в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0326"
     },
     {
       "name": "pcChip.label",
-      "element": "DOM-секция",
-      "description": "Секция pcChip.label в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0327"
     },
     {
       "name": "pcChip.removeIcon",
-      "element": "DOM-секция",
-      "description": "Секция pcChip.removeIcon в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0328"
     },
     {
       "name": "input",
-      "element": "DOM-секция",
-      "description": "Секция input в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0329"
     },
     {
       "name": "inputChip",
-      "element": "DOM-секция",
-      "description": "Секция inputChip в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0330"
     },
     {
       "name": "pcInputText.root",
-      "element": "DOM-секция",
-      "description": "Секция pcInputText.root в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0331"
     },
     {
       "name": "dropdown",
-      "element": "DOM-секция",
-      "description": "Секция dropdown в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0332"
     },
     {
       "name": "dropdownIcon",
-      "element": "DOM-секция",
-      "description": "Секция dropdownIcon в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0333"
     },
     {
       "name": "overlay",
-      "element": "DOM-секция",
-      "description": "Секция overlay в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0334"
     },
     {
       "name": "listContainer",
-      "element": "DOM-секция",
-      "description": "Секция listContainer в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0335"
     },
     {
       "name": "list",
-      "element": "DOM-секция",
-      "description": "Секция list в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0336"
     },
     {
       "name": "option",
-      "element": "DOM-секция",
-      "description": "Секция option в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0337"
     },
     {
       "name": "emptyMessage",
-      "element": "DOM-секция",
-      "description": "Секция emptyMessage в конфигурации WlConfig.pt.autocomplete."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0338"
     }
   ],
   "WlAvatar": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.avatar."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0339"
     },
     {
       "name": "image",
-      "element": "DOM-секция",
-      "description": "Секция image в конфигурации WlConfig.pt.avatar."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0340"
     },
     {
       "name": "label",
-      "element": "DOM-секция",
-      "description": "Секция label в конфигурации WlConfig.pt.avatar."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0341"
     }
   ],
   "WlBadge": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.badge."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0342"
     }
   ],
   "WlBreadcrumbs": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.breadcrumb."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0343"
     },
     {
       "name": "list",
-      "element": "DOM-секция",
-      "description": "Секция list в конфигурации WlConfig.pt.breadcrumb."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0344"
     },
     {
       "name": "item",
-      "element": "DOM-секция",
-      "description": "Секция item в конфигурации WlConfig.pt.breadcrumb."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0345"
     },
     {
       "name": "separator",
-      "element": "DOM-секция",
-      "description": "Секция separator в конфигурации WlConfig.pt.breadcrumb."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0346"
     }
   ],
   "WlButton": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.button."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0347"
     },
     {
       "name": "loadingIcon",
-      "element": "DOM-секция",
-      "description": "Секция loadingIcon в конфигурации WlConfig.pt.button."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0348"
     },
     {
       "name": "label",
-      "element": "DOM-секция",
-      "description": "Секция label в конфигурации WlConfig.pt.button."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0349"
     }
   ],
   "WlCard": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.card."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0350"
     },
     {
       "name": "header",
-      "element": "DOM-секция",
-      "description": "Секция header в конфигурации WlConfig.pt.card."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0351"
     },
     {
       "name": "body",
-      "element": "DOM-секция",
-      "description": "Секция body в конфигурации WlConfig.pt.card."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0352"
     },
     {
       "name": "caption",
-      "element": "DOM-секция",
-      "description": "Секция caption в конфигурации WlConfig.pt.card."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0353"
     },
     {
       "name": "title",
-      "element": "DOM-секция",
-      "description": "Секция title в конфигурации WlConfig.pt.card."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0354"
     },
     {
       "name": "subtitle",
-      "element": "DOM-секция",
-      "description": "Секция subtitle в конфигурации WlConfig.pt.card."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0355"
     },
     {
       "name": "content",
-      "element": "DOM-секция",
-      "description": "Секция content в конфигурации WlConfig.pt.card."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0356"
     },
     {
       "name": "footer",
-      "element": "DOM-секция",
-      "description": "Секция footer в конфигурации WlConfig.pt.card."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0357"
     }
   ],
   "WlCheckbox": [
     {
       "name": "input",
-      "element": "DOM-секция",
-      "description": "Секция input в конфигурации WlConfig.pt.checkbox."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0358"
     },
     {
       "name": "box",
-      "element": "DOM-секция",
-      "description": "Секция box в конфигурации WlConfig.pt.checkbox."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0359"
     },
     {
       "name": "icon",
-      "element": "DOM-секция",
-      "description": "Секция icon в конфигурации WlConfig.pt.checkbox."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0360"
     }
   ],
   "WlConfirmDialog": [
     {
       "name": "content",
-      "element": "DOM-секция",
-      "description": "Секция content в конфигурации WlConfig.pt.confirmdialog."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0361"
     },
     {
       "name": "icon",
-      "element": "DOM-секция",
-      "description": "Секция icon в конфигурации WlConfig.pt.confirmdialog."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0362"
     },
     {
       "name": "message",
-      "element": "DOM-секция",
-      "description": "Секция message в конфигурации WlConfig.pt.confirmdialog."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0363"
     }
   ],
   "WlDatePicker": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0364"
     },
     {
       "name": "pcInputText.root",
-      "element": "DOM-секция",
-      "description": "Секция pcInputText.root в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0365"
     },
     {
       "name": "dropdown",
-      "element": "DOM-секция",
-      "description": "Секция dropdown в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0366"
     },
     {
       "name": "dropdownIcon",
-      "element": "DOM-секция",
-      "description": "Секция dropdownIcon в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0367"
     },
     {
       "name": "panel",
-      "element": "DOM-секция",
-      "description": "Секция panel в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0368"
     },
     {
       "name": "calendarContainer",
-      "element": "DOM-секция",
-      "description": "Секция calendarContainer в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0369"
     },
     {
       "name": "calendar",
-      "element": "DOM-секция",
-      "description": "Секция calendar в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0370"
     },
     {
       "name": "header",
-      "element": "DOM-секция",
-      "description": "Секция header в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0371"
     },
     {
       "name": "pcPrevButton.root",
-      "element": "DOM-секция",
-      "description": "Секция pcPrevButton.root в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0372"
     },
     {
       "name": "pcPrevButton.icon",
-      "element": "DOM-секция",
-      "description": "Секция pcPrevButton.icon в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0373"
     },
     {
       "name": "title",
-      "element": "DOM-секция",
-      "description": "Секция title в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0374"
     },
     {
       "name": "selectMonth",
-      "element": "DOM-секция",
-      "description": "Секция selectMonth в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0375"
     },
     {
       "name": "selectYear",
-      "element": "DOM-секция",
-      "description": "Секция selectYear в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0376"
     },
     {
       "name": "pcNextButton.root",
-      "element": "DOM-секция",
-      "description": "Секция pcNextButton.root в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0377"
     },
     {
       "name": "pcNextButton.icon",
-      "element": "DOM-секция",
-      "description": "Секция pcNextButton.icon в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0378"
     },
     {
       "name": "dayView",
-      "element": "DOM-секция",
-      "description": "Секция dayView в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0379"
     },
     {
       "name": "tableHeaderCell",
-      "element": "DOM-секция",
-      "description": "Секция tableHeaderCell в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0380"
     },
     {
       "name": "weekDay",
-      "element": "DOM-секция",
-      "description": "Секция weekDay в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0381"
     },
     {
       "name": "dayCell",
-      "element": "DOM-секция",
-      "description": "Секция dayCell в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0382"
     },
     {
       "name": "day",
-      "element": "DOM-секция",
-      "description": "Секция day в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0383"
     },
     {
       "name": "monthView",
-      "element": "DOM-секция",
-      "description": "Секция monthView в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0384"
     },
     {
       "name": "month",
-      "element": "DOM-секция",
-      "description": "Секция month в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0385"
     },
     {
       "name": "yearView",
-      "element": "DOM-секция",
-      "description": "Секция yearView в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0386"
     },
     {
       "name": "year",
-      "element": "DOM-секция",
-      "description": "Секция year в конфигурации WlConfig.pt.datepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0387"
     },
     {
       "name": "startLabel",
-      "element": "Подпись начала диапазона",
-      "description": "Видимая подпись startLabel в режиме range."
+      "element": "documentation.strings.s0388",
+      "description": "documentation.strings.s0389"
     },
     {
       "name": "endLabel",
-      "element": "Подпись конца диапазона",
-      "description": "Видимая подпись endLabel в режиме range."
+      "element": "documentation.strings.s0390",
+      "description": "documentation.strings.s0391"
     },
     {
       "name": "endInput",
-      "element": "Ввод конца диапазона",
-      "description": "Второе текстовое поле в режиме range; первое сохраняет pcInputText.root."
+      "element": "documentation.strings.s0392",
+      "description": "documentation.strings.s0393"
     },
     {
       "name": "rangeHint",
-      "element": "Подсказка в календаре",
-      "description": "Текущий шаг выбора диапазона, aria-live=polite."
+      "element": "documentation.strings.s0394",
+      "description": "documentation.strings.s0395"
     }
   ],
   "WlDialog": [
     {
       "name": "mask",
-      "element": "DOM-секция",
-      "description": "Секция mask в конфигурации WlConfig.pt.dialog."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0396"
     },
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.dialog."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0397"
     },
     {
       "name": "header",
-      "element": "DOM-секция",
-      "description": "Секция header в конфигурации WlConfig.pt.dialog."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0398"
     },
     {
       "name": "title",
-      "element": "DOM-секция",
-      "description": "Секция title в конфигурации WlConfig.pt.dialog."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0399"
     },
     {
       "name": "headerActions",
-      "element": "DOM-секция",
-      "description": "Секция headerActions в конфигурации WlConfig.pt.dialog."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0400"
     },
     {
       "name": "pcCloseButton.root",
-      "element": "DOM-секция",
-      "description": "Секция pcCloseButton.root в конфигурации WlConfig.pt.dialog."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0401"
     },
     {
       "name": "pcCloseButton.icon",
-      "element": "DOM-секция",
-      "description": "Секция pcCloseButton.icon в конфигурации WlConfig.pt.dialog."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0402"
     },
     {
       "name": "content",
-      "element": "DOM-секция",
-      "description": "Секция content в конфигурации WlConfig.pt.dialog."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0403"
     },
     {
       "name": "footer",
-      "element": "DOM-секция",
-      "description": "Секция footer в конфигурации WlConfig.pt.dialog."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0404"
     }
   ],
   "WlDivider": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.divider."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0405"
     },
     {
       "name": "content",
-      "element": "DOM-секция",
-      "description": "Секция content в конфигурации WlConfig.pt.divider."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0406"
     }
   ],
   "WlDrawer": [
     {
       "name": "mask",
-      "element": "DOM-секция",
-      "description": "Секция mask в конфигурации WlConfig.pt.drawer."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0407"
     },
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.drawer."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0408"
     },
     {
       "name": "header",
-      "element": "DOM-секция",
-      "description": "Секция header в конфигурации WlConfig.pt.drawer."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0409"
     },
     {
       "name": "title",
-      "element": "DOM-секция",
-      "description": "Секция title в конфигурации WlConfig.pt.drawer."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0410"
     },
     {
       "name": "pcCloseButton.root",
-      "element": "DOM-секция",
-      "description": "Секция pcCloseButton.root в конфигурации WlConfig.pt.drawer."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0411"
     },
     {
       "name": "pcCloseButton.icon",
-      "element": "DOM-секция",
-      "description": "Секция pcCloseButton.icon в конфигурации WlConfig.pt.drawer."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0412"
     },
     {
       "name": "content",
-      "element": "DOM-секция",
-      "description": "Секция content в конфигурации WlConfig.pt.drawer."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0413"
     },
     {
       "name": "footer",
-      "element": "DOM-секция",
-      "description": "Секция footer в конфигурации WlConfig.pt.drawer."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0414"
     }
   ],
   "WlFilePicker": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.filepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0415"
     },
     {
       "name": "trigger",
-      "element": "DOM-секция",
-      "description": "Секция trigger в конфигурации WlConfig.pt.filepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0416"
     },
     {
       "name": "input",
-      "element": "DOM-секция",
-      "description": "Секция input в конфигурации WlConfig.pt.filepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0417"
     }
   ],
   "WlIconButton": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.button."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0347"
     }
   ],
   "WlInput": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.inputtext."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0418"
     }
   ],
   "WlMenu": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.menu."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0419"
     },
     {
       "name": "list",
-      "element": "DOM-секция",
-      "description": "Секция list в конфигурации WlConfig.pt.menu."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0420"
     },
     {
       "name": "item",
-      "element": "DOM-секция",
-      "description": "Секция item в конфигурации WlConfig.pt.menu."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0421"
     },
     {
       "name": "submenuLabel",
-      "element": "DOM-секция",
-      "description": "Секция submenuLabel в конфигурации WlConfig.pt.menu."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0422"
     },
     {
       "name": "separator",
-      "element": "DOM-секция",
-      "description": "Секция separator в конфигурации WlConfig.pt.menu."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0423"
     },
     {
       "name": "itemContent",
-      "element": "DOM-секция",
-      "description": "Секция itemContent в конфигурации WlConfig.pt.menu."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0424"
     },
     {
       "name": "itemLink",
-      "element": "DOM-секция",
-      "description": "Секция itemLink в конфигурации WlConfig.pt.menu."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0425"
     }
   ],
   "WlMultiSelect": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0426"
     },
     {
       "name": "labelContainer",
-      "element": "DOM-секция",
-      "description": "Секция labelContainer в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0427"
     },
     {
       "name": "chipItem",
-      "element": "DOM-секция",
-      "description": "Секция chipItem в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0428"
     },
     {
       "name": "pcChip.root",
-      "element": "DOM-секция",
-      "description": "Секция pcChip.root в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0429"
     },
     {
       "name": "pcChip.label",
-      "element": "DOM-секция",
-      "description": "Секция pcChip.label в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0430"
     },
     {
       "name": "pcChip.removeIcon",
-      "element": "DOM-секция",
-      "description": "Секция pcChip.removeIcon в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0431"
     },
     {
       "name": "label",
-      "element": "DOM-секция",
-      "description": "Секция label в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0432"
     },
     {
       "name": "hiddenInput",
-      "element": "DOM-секция",
-      "description": "Секция hiddenInput в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0433"
     },
     {
       "name": "dropdown",
-      "element": "DOM-секция",
-      "description": "Секция dropdown в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0434"
     },
     {
       "name": "dropdownIcon",
-      "element": "DOM-секция",
-      "description": "Секция dropdownIcon в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0435"
     },
     {
       "name": "overlay",
-      "element": "DOM-секция",
-      "description": "Секция overlay в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0436"
     },
     {
       "name": "header",
-      "element": "DOM-секция",
-      "description": "Секция header в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0437"
     },
     {
       "name": "filterIcon",
-      "element": "DOM-секция",
-      "description": "Секция filterIcon в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0438"
     },
     {
       "name": "pcFilter.root",
-      "element": "DOM-секция",
-      "description": "Секция pcFilter.root в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0439"
     },
     {
       "name": "listContainer",
-      "element": "DOM-секция",
-      "description": "Секция listContainer в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0440"
     },
     {
       "name": "list",
-      "element": "DOM-секция",
-      "description": "Секция list в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0441"
     },
     {
       "name": "option",
-      "element": "DOM-секция",
-      "description": "Секция option в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0442"
     },
     {
       "name": "optionLabel",
-      "element": "DOM-секция",
-      "description": "Секция optionLabel в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0443"
     },
     {
       "name": "emptyMessage",
-      "element": "DOM-секция",
-      "description": "Секция emptyMessage в конфигурации WlConfig.pt.multiselect."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0444"
     }
   ],
   "WlPagination": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.paginator."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0445"
     }
   ],
   "WlPopover": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.popover."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0446"
     },
     {
       "name": "content",
-      "element": "DOM-секция",
-      "description": "Секция content в конфигурации WlConfig.pt.popover."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0447"
     }
   ],
   "WlProgress": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.progressbar."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0448"
     },
     {
       "name": "value",
-      "element": "DOM-секция",
-      "description": "Секция value в конфигурации WlConfig.pt.progressbar."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0449"
     },
     {
       "name": "label",
-      "element": "DOM-секция",
-      "description": "Секция label в конфигурации WlConfig.pt.progressbar."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0450"
     }
   ],
   "WlRadio": [
     {
       "name": "input",
-      "element": "DOM-секция",
-      "description": "Секция input в конфигурации WlConfig.pt.radiobutton."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0451"
     },
     {
       "name": "box",
-      "element": "DOM-секция",
-      "description": "Секция box в конфигурации WlConfig.pt.radiobutton."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0452"
     },
     {
       "name": "icon",
-      "element": "DOM-секция",
-      "description": "Секция icon в конфигурации WlConfig.pt.radiobutton."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0453"
     }
   ],
   "WlSegmented": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.selectbutton."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0454"
     },
     {
       "name": "pcToggleButton.root",
-      "element": "DOM-секция",
-      "description": "Секция pcToggleButton.root в конфигурации WlConfig.pt.selectbutton."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0455"
     },
     {
       "name": "pcToggleButton.content",
-      "element": "DOM-секция",
-      "description": "Секция pcToggleButton.content в конфигурации WlConfig.pt.selectbutton."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0456"
     }
   ],
   "WlSelect": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.select."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0457"
     },
     {
       "name": "label",
-      "element": "DOM-секция",
-      "description": "Секция label в конфигурации WlConfig.pt.select."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0458"
     },
     {
       "name": "dropdown",
-      "element": "DOM-секция",
-      "description": "Секция dropdown в конфигурации WlConfig.pt.select."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0459"
     },
     {
       "name": "dropdownIcon",
-      "element": "DOM-секция",
-      "description": "Секция dropdownIcon в конфигурации WlConfig.pt.select."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0460"
     },
     {
       "name": "overlay",
-      "element": "DOM-секция",
-      "description": "Секция overlay в конфигурации WlConfig.pt.select."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0461"
     },
     {
       "name": "listContainer",
-      "element": "DOM-секция",
-      "description": "Секция listContainer в конфигурации WlConfig.pt.select."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0462"
     },
     {
       "name": "list",
-      "element": "DOM-секция",
-      "description": "Секция list в конфигурации WlConfig.pt.select."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0463"
     },
     {
       "name": "option",
-      "element": "DOM-секция",
-      "description": "Секция option в конфигурации WlConfig.pt.select."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0464"
     },
     {
       "name": "optionLabel",
-      "element": "DOM-секция",
-      "description": "Секция optionLabel в конфигурации WlConfig.pt.select."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0465"
     },
     {
       "name": "emptyMessage",
-      "element": "DOM-секция",
-      "description": "Секция emptyMessage в конфигурации WlConfig.pt.select."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0466"
     }
   ],
   "WlSkeleton": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.skeleton."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0467"
     }
   ],
   "WlSwitch": [
     {
       "name": "input",
-      "element": "DOM-секция",
-      "description": "Секция input в конфигурации WlConfig.pt.toggleswitch."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0468"
     },
     {
       "name": "slider",
-      "element": "DOM-секция",
-      "description": "Секция slider в конфигурации WlConfig.pt.toggleswitch."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0469"
     },
     {
       "name": "handle",
-      "element": "DOM-секция",
-      "description": "Секция handle в конфигурации WlConfig.pt.toggleswitch."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0470"
     }
   ],
   "WlTable": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.datatable."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0471"
     },
     {
       "name": "table",
-      "element": "DOM-секция",
-      "description": "Секция table в конфигурации WlConfig.pt.datatable."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0472"
     },
     {
       "name": "thead",
-      "element": "DOM-секция",
-      "description": "Секция thead в конфигурации WlConfig.pt.datatable."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0473"
     },
     {
       "name": "tbody",
-      "element": "DOM-секция",
-      "description": "Секция tbody в конфигурации WlConfig.pt.datatable."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0474"
     },
     {
       "name": "bodyRow",
-      "element": "DOM-секция",
-      "description": "Секция bodyRow в конфигурации WlConfig.pt.datatable."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0475"
     },
     {
       "name": "emptyMessage",
-      "element": "DOM-секция",
-      "description": "Секция emptyMessage в конфигурации WlConfig.pt.datatable."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0476"
     },
     {
       "name": "emptyMessageCell",
-      "element": "DOM-секция",
-      "description": "Секция emptyMessageCell в конфигурации WlConfig.pt.datatable."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0477"
     },
     {
       "name": "mask",
-      "element": "DOM-секция",
-      "description": "Секция mask в конфигурации WlConfig.pt.datatable."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0478"
     },
     {
       "name": "loadingIcon",
-      "element": "DOM-секция",
-      "description": "Секция loadingIcon в конфигурации WlConfig.pt.datatable."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0479"
     }
   ],
   "WlTabs": [
     {
       "name": "tablist.content",
-      "element": "DOM-секция",
-      "description": "Секция content в конфигурации WlConfig.pt.tablist."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0480"
     },
     {
       "name": "tablist.tabList",
-      "element": "DOM-секция",
-      "description": "Секция tabList в конфигурации WlConfig.pt.tablist."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0481"
     },
     {
       "name": "tablist.activeBar",
-      "element": "DOM-секция",
-      "description": "Секция activeBar в конфигурации WlConfig.pt.tablist."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0482"
     },
     {
       "name": "tabpanels.root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.tabpanels."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0483"
     },
     {
       "name": "tabpanel.root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.tabpanel."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0484"
     }
   ],
   "WlTag": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.tag."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0485"
     },
     {
       "name": "label",
-      "element": "DOM-секция",
-      "description": "Секция label в конфигурации WlConfig.pt.tag."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0486"
     }
   ],
   "WlTextarea": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.textarea."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0487"
     }
   ],
   "WlTimePicker": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.timepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0488"
     },
     {
       "name": "input",
-      "element": "DOM-секция",
-      "description": "Секция input в конфигурации WlConfig.pt.timepicker."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0489"
     }
   ],
   "WlToast": [
     {
       "name": "root",
-      "element": "DOM-секция",
-      "description": "Секция root в конфигурации WlConfig.pt.toast."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0490"
     },
     {
       "name": "message",
-      "element": "DOM-секция",
-      "description": "Секция message в конфигурации WlConfig.pt.toast."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0491"
     },
     {
       "name": "messageContent",
-      "element": "DOM-секция",
-      "description": "Секция messageContent в конфигурации WlConfig.pt.toast."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0492"
     },
     {
       "name": "messageIcon",
-      "element": "DOM-секция",
-      "description": "Секция messageIcon в конфигурации WlConfig.pt.toast."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0493"
     },
     {
       "name": "messageText",
-      "element": "DOM-секция",
-      "description": "Секция messageText в конфигурации WlConfig.pt.toast."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0494"
     },
     {
       "name": "summary",
-      "element": "DOM-секция",
-      "description": "Секция summary в конфигурации WlConfig.pt.toast."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0495"
     },
     {
       "name": "detail",
-      "element": "DOM-секция",
-      "description": "Секция detail в конфигурации WlConfig.pt.toast."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0496"
     },
     {
       "name": "closeButton",
-      "element": "DOM-секция",
-      "description": "Секция closeButton в конфигурации WlConfig.pt.toast."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0497"
     },
     {
       "name": "closeIcon",
-      "element": "DOM-секция",
-      "description": "Секция closeIcon в конфигурации WlConfig.pt.toast."
+      "element": "documentation.strings.s0322",
+      "description": "documentation.strings.s0498"
     }
   ]
-};
+});

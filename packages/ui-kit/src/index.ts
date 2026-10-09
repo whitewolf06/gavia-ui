@@ -9,7 +9,7 @@ export { createWlPt } from "./theme";
 export type { WlPtConfig, WlPtSection, WlPtCallbackOptions } from "./theme";
 export { WlConfig } from "./config";
 export type { WlConfigOptions } from "./config";
-export { wlLocaleRu, normalizeWlLocale } from "./locale";
+export { wlLocaleRu, wlLocaleEn, normalizeWlLocale } from "./locale";
 export type { WlLocale, WlResolvedLocale, WlLocaleInput } from "./locale";
 export { WlTooltip } from "./directives/tooltip";
 export { useWlConfirm } from "./composables/useWlConfirm";

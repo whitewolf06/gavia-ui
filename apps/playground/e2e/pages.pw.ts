@@ -1,7 +1,8 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { publishedVersion } from "./project-version";
 import { resolveWlToken, wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
 import { expect, test, type Page } from "@playwright/test";
-import { chooseDropdownOption, copyCodePanel, chooseShowcaseTheme, navigateDocumentationComponent, navigateMainView, openDocumentationMenu } from "./select-helpers";
+import { chooseDropdownOption, copyCodePanel, chooseShowcaseTheme, navigateDocumentationComponent, expectMainViewCurrent, navigateMainView, openDocumentationMenu } from "./select-helpers";
 import { readFileSync } from "node:fs";
 import { expectGaviaFontDownload } from "./font-download-helpers";
 import { fileURLToPath, URL as NodeURL } from "node:url";
@@ -61,7 +62,7 @@ test.afterEach(async ({ page }) => {
 });
 
 test("Home metadata and the old project query survive refresh with production assets under the Pages prefix", async ({ page }) => {
-  await page.goto(pagesPath);
+  await page.goto(russianPlaygroundUrl(pagesPath));
   await expect(page.getByTestId("home-page").getByRole("heading", { level: 1 })).toHaveText("Gavia UI");
   expectPagesLocation(page);
   // Detect a named theme overridden by a later :root fallback stylesheet.
@@ -102,9 +103,9 @@ test("Home metadata and the old project query survive refresh with production as
   }
 
   // Keep the historical query as a tested alias; new navigation uses changelog.
-  await page.goto(`${pagesPath}?view=project`);
+  await page.goto(russianPlaygroundUrl(`${pagesPath}?view=project`));
   await expect(page.getByRole("heading", { name: projectTitle, exact: true })).toBeVisible();
-  await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Changelog");
+  await expectMainViewCurrent(page, "Changelog");
   expectPagesLocation(page, "project");
   await page.reload();
   await expect(page.getByRole("heading", { name: projectTitle, exact: true })).toBeVisible();
@@ -122,7 +123,7 @@ test("Home metadata and the old project query survive refresh with production as
 });
 
 test("navigation, Back and Forward preserve the repository subpath", async ({ page }) => {
-  await page.goto(`${pagesPath}?view=changelog`);
+  await page.goto(russianPlaygroundUrl(`${pagesPath}?view=changelog`));
   await expect(page.getByRole("heading", { name: projectTitle, exact: true })).toBeVisible();
 
   await navigateMainView(page, "Дизайн-система");
@@ -138,13 +139,13 @@ test("navigation, Back and Forward preserve the repository subpath", async ({ pa
   expectPagesLocation(page, "changelog");
 
   await page.goBack();
-  await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Документация");
+  await expectMainViewCurrent(page, "Документация");
   expectPagesLocation(page, "docs");
   await page.goBack();
   await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
   expectPagesLocation(page, "system");
   await page.goForward();
-  await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Документация");
+  await expectMainViewCurrent(page, "Документация");
   expectPagesLocation(page, "docs");
 
   await page.reload();
@@ -154,7 +155,7 @@ test("navigation, Back and Forward preserve the repository subpath", async ({ pa
 });
 
 test("Changelog history links point to repository documents and all themes fit the viewport", async ({ page }) => {
-  await page.goto(`${pagesPath}?view=changelog`);
+  await page.goto(russianPlaygroundUrl(`${pagesPath}?view=changelog`));
   await expect(page.getByRole("heading", { name: projectTitle, exact: true })).toBeVisible();
   const historyHeading = page.getByRole("heading", { name: "История изменений", exact: true });
   await expect(historyHeading).toBeVisible();
@@ -182,7 +183,7 @@ test("Changelog history links point to repository documents and all themes fit t
 
 test("production lazy examples, recipes and copied source work beneath the Pages prefix", async ({ page, context }) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-  await page.goto(`${pagesPath}?view=system`);
+  await page.goto(russianPlaygroundUrl(`${pagesPath}?view=system`));
   await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
 
   await page.getByRole("combobox", { name: "Компонент", exact: true }).click();
@@ -219,7 +220,7 @@ test("production lazy examples, recipes and copied source work beneath the Pages
 });
 
 test("picker documentation examples work beneath the Pages prefix", async ({ page }) => {
-  await page.goto(pagesPath + "?view=docs");
+  await page.goto(russianPlaygroundUrl(pagesPath + "?view=docs"));
   const docs = page.getByTestId("docs-page");
   await expect(docs.getByRole("heading", { level: 1 })).toHaveText("Документация");
 
@@ -251,7 +252,7 @@ test("picker documentation examples work beneath the Pages prefix", async ({ pag
 
 test("Theme builder scopes live colors, restores its draft and exports a working CSS theme", async ({ page, context }) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-  await page.goto(`${pagesPath}?theme=gavia`);
+  await page.goto(russianPlaygroundUrl(`${pagesPath}?theme=gavia`));
   const headerSearch = page.locator(".pg-search");
   await expect(headerSearch).toHaveText("Поиск");
   await expect(headerSearch).toHaveAttribute("title", "Поиск");
@@ -341,7 +342,7 @@ test("Theme builder scopes live colors, restores its draft and exports a working
 });
 
 test("font presentation preserves theme, faces and anchors under the Pages subpath", async ({ page }) => {
-  await page.goto(`${pagesPath}?view=font&theme=graphite#wl-type-proof`);
+  await page.goto(russianPlaygroundUrl(`${pagesPath}?view=font&theme=graphite#wl-type-proof`));
   const fontPage = page.getByTestId("font-page");
   const proof = fontPage.locator("#wl-type-proof-title");
   await expect(fontPage).toBeVisible();
@@ -372,7 +373,7 @@ test("font presentation preserves theme, faces and anchors under the Pages subpa
 
 
 test("standalone font ZIP downloads from the Pages subpath and footer", async ({ page }) => {
-  await page.goto(pagesPath + "?view=font&theme=gavia");
+  await page.goto(russianPlaygroundUrl(pagesPath + "?view=font&theme=gavia"));
   const font = page.getByTestId("font-page");
   await expect(font).toBeVisible();
   const link = font.getByRole("link", { name: "Скачать Gavia Sans 0.6", exact: true }).first();
@@ -383,7 +384,7 @@ test("standalone font ZIP downloads from the Pages subpath and footer", async ({
 });
 
 test("quality documentation keeps bookmarked anchors and theme links under the Pages prefix", async ({ page }) => {
-  await page.goto(pagesPath + "?view=docs&section=quality&theme=graphite#docs-quality-environment");
+  await page.goto(russianPlaygroundUrl(pagesPath + "?view=docs&section=quality&theme=graphite#docs-quality-environment"));
   const quality = page.getByTestId("docs-quality-page");
   await expect(quality).toBeVisible();
   await expect(page.getByTestId("docs-page").getByRole("heading", { level: 1 })).toHaveText("Качество и совместимость");

@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="188" height="24" viewBox="0 0 188 24" role="img" aria-labelledby="unit-coverage-title">
-  <title id="unit-coverage-title">unit coverage: 98.44%</title>
+  <title id="unit-coverage-title">unit coverage: 98.55%</title>
   <rect x="0.5" y="0.5" width="187" height="23" rx="3" fill="#eef0f2" stroke="#c5cbd1"/>
   <path d="M119 1v22" stroke="#c5cbd1"/>
   <g fill="#26323d" font-family="Verdana, DejaVu Sans, sans-serif" font-size="11" text-anchor="middle">
     <text x="60" y="16">unit coverage</text>
-    <text x="153" y="16" font-weight="600">98.44%</text>
+    <text x="153" y="16" font-weight="600">98.55%</text>
   </g>
 </svg>

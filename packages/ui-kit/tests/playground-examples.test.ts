@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { describe, expect, it } from "vitest";
+import { beforeEach, afterEach, describe, expect, it } from "vitest";
 import { readdirSync, readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { parse, compileScript, compileTemplate } from "vue/compiler-sfc";
@@ -7,6 +7,16 @@ import { wlManifest } from "../src/manifest";
 import { documentationControls, stateCases } from "../../../apps/playground/src/design-system/states";
 import { acceptsDocumentationValue, documentationControlSamples, documentationDefaults, documentationPresets } from "../../../apps/playground/src/design-system/documentation-controls";
 import { consumerSource } from "../../../scripts/example-source.mjs";
+import { playgroundI18n } from "../../../apps/playground/src/i18n";
+
+let previousLocale = playgroundI18n.global.locale.value;
+beforeEach(() => {
+  previousLocale = playgroundI18n.global.locale.value;
+  playgroundI18n.global.locale.value = "en";
+});
+afterEach(() => {
+  playgroundI18n.global.locale.value = previousLocale;
+});
 const examples = resolve("..", "..", "apps", "playground", "src", "design-system", "examples");
 const recipes = resolve("..", "..", "apps", "playground", "src", "design-system", "recipes");
 
@@ -16,7 +26,7 @@ function assertCompiles(source: string, filename: string): void {
   const script = compileScript(parsed.descriptor, { id: filename });
   const template = compileTemplate({ source: parsed.descriptor.template!.content, id: filename, filename, compilerOptions: { bindingMetadata: script.bindings } });
   expect(template.errors, filename).toEqual([]);
-  expect(source, filename).not.toMatch(/packages\/ui-kit|v-bind="preview"|defineProps<\{ preview/);
+  expect(source, filename).not.toMatch(/packages\/ui-kit|v-bind="preview"|defineProps<\{ preview|usePlaygroundI18n|\bt\(['"]examples\./);
 }
 
 describe("copyable examples are public package consumers", () => {
@@ -66,7 +76,7 @@ describe("copyable examples are public package consumers", () => {
   });
   it("reads actual canonical scalar defaults rather than replacing them with manifest defaults", () => {
     const expected: Record<string, Record<string, unknown>> = {
-      WlInput: { placeholder: "Название", type: "text" },
+      WlInput: { placeholder: "Title", type: "text" },
       WlNumberInput: { min: 1, max: 10, step: 1 },
       WlFilePicker: { accept: ".pdf,.txt", multiple: true },
       WlFileUpload: { maxFiles: 3, maxSize: 1048576 },
@@ -74,7 +84,7 @@ describe("copyable examples are public package consumers", () => {
       WlProgress: { value: 65, showValue: true },
       WlStatCard: { value: "24", progress: 75 },
       WlPageHeader: { headingLevel: 2 },
-      WlSidebar: { brand: "Команда", brandMark: "К", pinned: true },
+      WlSidebar: { brand: "Team", brandMark: "T", pinned: true },
       WlSteps: { current: 1 }
     };
     for (const [name, defaults] of Object.entries(expected)) {
@@ -174,8 +184,8 @@ describe("copyable examples are public package consumers", () => {
     const select = wlManifest.find((entry) => entry.name === "WlSelect")!;
     const presets = documentationPresets(select);
     expect(presets[0]!.props.options).toEqual([
-      { label: "Команда", value: "team" }, { label: "Личное", value: "personal" },
-      { label: "Архив", value: "archive", disabled: true }
+      { label: "Team", value: "team" }, { label: "Personal", value: "personal" },
+      { label: "Archive", value: "archive", disabled: true }
     ]);
     expect(presets[1]!.props.options).toEqual([]);
     const table = wlManifest.find((entry) => entry.name === "WlTable")!;

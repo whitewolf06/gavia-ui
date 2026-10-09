@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../../../i18n";
+const { t } = usePlaygroundI18n();
 import { ref } from "vue";
 import { WlButton } from "../../../../../../packages/ui-kit/src";
-const projects = ["Исследование", "Проектирование", "Проверка"];
+const projects = [t("examples.research_0979"), t("examples.design_0980"), t("examples.review_0129")];
 const selected = ref("");
 </script>
 
@@ -10,15 +12,15 @@ const selected = ref("");
     <div class="responsive-example-grid wl-grid" data-space="lg">
       <article v-for="project in projects" :key="project" class="wl-surface wl-stack" data-space="md">
         <h3 class="wl-text-subheading">{{ project }}</h3>
-        <p class="wl-text-body wl-text-muted">Карточки перестраиваются по доступной ширине, сохраняя порядок чтения.</p>
-        <div><WlButton size="sm" :aria-label="'Выбрать ' + project" @click="selected = project">Выбрать</WlButton></div>
+        <p class="wl-text-body wl-text-muted">{{ t("examples.cards_adapt_to_the_available_width_and_preserve_reading_order_0981") }}</p>
+        <div><WlButton size="sm" :aria-label="t('examples.select_0982') + project" @click="selected = project">{{ t("examples.select_0983") }}</WlButton></div>
       </article>
     </div>
     <div class="wl-inline" data-space="sm">
-      <WlButton variant="primary" @click="selected = 'Новый проект'">Добавить проект</WlButton>
-      <WlButton @click="selected = ''">Сбросить выбор</WlButton>
+      <WlButton variant="primary" @click="selected = t('examples.new_project_0241')">{{ t("examples.add_project_0984") }}</WlButton>
+      <WlButton @click="selected = ''">{{ t("examples.reset_selection_0985") }}</WlButton>
     </div>
-    <p class="wl-text-small wl-text-muted" role="status">{{ selected ? 'Выбрано: ' + selected : 'Выберите карточку. Действия переносятся на следующую строку.' }}</p>
+    <p class="wl-text-small wl-text-muted" role="status">{{ selected ? t("examples.selected_0059") + selected : t("examples.select_a_card_actions_wrap_to_the_next_line_0986") }}</p>
   </section>
 </template>
 

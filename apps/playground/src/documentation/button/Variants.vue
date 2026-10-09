@@ -1,16 +1,18 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../../i18n";
+const { t } = usePlaygroundI18n();
 import { ref } from "vue";
 import { WlButton, type WlButtonVariant } from "../../../../../packages/ui-kit/src";
 // The public union makes a missing or unsupported variant a type error.
 const labels = {
-  primary: "Создать",
-  secondary: "Черновик",
-  ghost: "Отмена",
-  soft: "Поделиться",
-  danger: "Удалить",
-  "danger-quiet": "Удалить тихо",
-  "soft-danger": "Архив",
-  link: "Подробнее"
+  primary: t("examples.create_0290"),
+  secondary: t("examples.draft_0291"),
+  ghost: t("examples.cancel_0038"),
+  soft: t("examples.share_0292"),
+  danger: t("examples.delete_0037"),
+  "danger-quiet": t("examples.delete_quietly_0293"),
+  "soft-danger": t("examples.archive_0113"),
+  link: t("examples.learn_more_0294")
 } satisfies Record<WlButtonVariant, string>;
 const variants = Object.keys(labels) as WlButtonVariant[];
 const lastAction = ref("");
@@ -24,7 +26,7 @@ const lastAction = ref("");
         <code class="wl-text-small">{{ variant }}</code>
       </div>
     </div>
-    <p class="wl-text-small wl-text-muted" role="status">{{ lastAction ? 'Последнее действие: ' + lastAction : 'Выберите любой вариант: все восемь кнопок выполняют локальное действие.' }}</p>
+    <p class="wl-text-small wl-text-muted" role="status">{{ lastAction ? t("examples.last_action_0277") + lastAction : t("examples.choose_any_variant_all_eight_buttons_perform_a_local_action_0295") }}</p>
   </div>
 </template>
 

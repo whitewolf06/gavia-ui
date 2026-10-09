@@ -89,12 +89,14 @@ function publicTypes(ts, entry) {
     const target = symbol.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(symbol) : symbol;
     const declarations = target.declarations ?? [];
     const typeDeclaration = declarations.find((node) => ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node));
-    return { name: symbol.name, type: !!(target.flags & ts.SymbolFlags.Type), value: !!(target.flags & ts.SymbolFlags.Value), callable: declarations.some((node) => ts.isFunctionDeclaration(node)), requiredParameters: (typeDeclaration?.typeParameters ?? []).filter((parameter) => !parameter.default).length };
+    const valueType = target.flags & ts.SymbolFlags.Value ? checker.getTypeOfSymbolAtLocation(target, declarations[0]) : undefined;
+    const genericParameters = Math.max(0, ...(valueType?.getCallSignatures() ?? []).map((signature) => signature.typeParameters?.length ?? 0));
+    return { name: symbol.name, type: !!(target.flags & ts.SymbolFlags.Type), value: !!(target.flags & ts.SymbolFlags.Value), callable: declarations.some((node) => ts.isFunctionDeclaration(node)), requiredParameters: (typeDeclaration?.typeParameters ?? []).filter((parameter) => !parameter.default).length, ...(genericParameters ? { genericParameters } : {}) };
   }).sort((a, b) => a.name.localeCompare(b.name, "en"));
 }
-// Released-fixture self-checks compare two pre-generic data APIs; the real
-// candidate gate keeps generic specialization enabled by default. DatePicker
-// was already generic in the frozen release and is checked in both cases.
+// Historical self-checks can disable candidate data generics. New baselines
+// record callable generic parameters from the released declarations, so each
+// side is specialized in the same runtime domain without migration approval.
 export function typeSource(baseline, migration = null, { currentHasGenericDataContracts = true } = {}) {
   if (migration && !isApprovedMigration(migration)) throw new Error("Typed migration projections require validated approval");
   const lines = [
@@ -124,6 +126,7 @@ export function typeSource(baseline, migration = null, { currentHasGenericDataCo
   if (migration) lines.push(...migrationTypeHelpers(migration));
   for (const name of baseline.components) {
     const previous = `typeof Previous.${name}`;
+    const previousGeneric = baseline.declarationExports.some((item) => item.name === name && item.genericParameters > 0);
     let branches = [{ old: previous, current: `typeof Current.${name}`, props: `Props<${previous}>` }];
     if (name === "WlDatePicker") {
       branches = ['"single"', '"range"'].map((mode) => ({
@@ -132,17 +135,23 @@ export function typeSource(baseline, migration = null, { currentHasGenericDataCo
     } else if (currentHasGenericDataContracts && name === "WlTable") {
       // Generic erasure uses Row=object instead of the declared dictionary default.
       branches[0].current += "<Current.WlTableRow>";
+      if (previousGeneric) {
+        branches[0].old += "<Previous.WlTableRow>";
+        branches[0].props = `Props<${branches[0].old}>`;
+      }
     } else if (currentHasGenericDataContracts && name === "WlAutocomplete") {
-      branches = ["false", "true", "boolean"].map((mode, index) => ({
-        old: previous, current: `typeof Current.${name}<unknown, ${mode}>`,
-        props: `RuntimeDomain<Props<${previous}>, "multiple", ${mode}, ${index !== 0}>`
-      }));
+      branches = ["false", "true", "boolean"].map((mode, index) => {
+        const old = previousGeneric ? `${previous}<unknown, ${mode}>` : previous;
+        return { old, current: `typeof Current.${name}<unknown, ${mode}>`,
+          props: `RuntimeDomain<Props<${old}>, "multiple", ${mode}, ${index !== 0}>` };
+      });
     } else if (currentHasGenericDataContracts && (name === "WlSelect" || name === "WlMultiSelect")) {
       const resolver = `NonNullable<Props<${previous}>["optionValue"]>`;
-      branches = ["undefined", resolver].map((mode, index) => ({
-        old: previous, current: `typeof Current.${name}<unknown, ${mode}>`,
-        props: `RuntimeDomain<Props<${previous}>, "optionValue", ${mode}, ${index !== 0}>`
-      }));
+      branches = ["undefined", resolver].map((mode, index) => {
+        const old = previousGeneric ? `${previous}<unknown, ${mode}>` : previous;
+        return { old, current: `typeof Current.${name}<unknown, ${mode}>`,
+          props: `RuntimeDomain<Props<${old}>, "optionValue", ${mode}, ${index !== 0}>` };
+      });
     }
     // Compare every matching runtime domain. The unapproved path specializes
     // only the mode prop; approved migrations replace exact reviewed fields.
@@ -179,6 +188,12 @@ export function typeSource(baseline, migration = null, { currentHasGenericDataCo
   return `${lines.join("\n")}\n`;
 }
 
+export function capturedConsumer(sourceRoot, previousBaselineDir, previousBaseline, releaseVersion) {
+  const consumer = readFileSync(join(previousBaselineDir, "consumer.vue"), "utf8").replaceAll("\r\n", "\n");
+  const migration = loadMigrationPolicy(sourceRoot, previousBaselineDir, previousBaseline, releaseVersion);
+  return migration ? migration.migratedConsumer : consumer;
+}
+
 async function main() {
   const args = process.argv.slice(2);
   if (args.length === 1 && args[0] === "--help") {
@@ -189,14 +204,17 @@ async function main() {
   }
   if (args[0] === "--capture-baseline") {
     if (args.length !== 3 || !/^\d+\.\d+\.\d+$/.test(args[1])) throw new Error("Usage: node scripts/check-compatibility.mjs --capture-baseline <stable version> <built release checkout>");
-    const previousConsumer = join(baselineDir, "consumer.vue");
+    const previousBaselineDir = baselineDir;
+    const previousBaseline = readJson(join(previousBaselineDir, "contract.json"));
     baselineDir = join(fixtureDir, `compatibility-${args[1]}`);
-    if (existsSync(join(baselineDir, "contract.json"))) throw new Error(`A release baseline is immutable; refusing to overwrite ${args[1]}`);
+    if (existsSync(baselineDir)) throw new Error(`A release baseline is immutable; refusing to overwrite ${args[1]}`);
     const sourceRoot = resolve(args[2]);
     const releaseRef = `v${args[1]}`;
     const releaseCommit = execFileSync("git", ["rev-parse", `${releaseRef}^{commit}`], { cwd: sourceRoot, encoding: "utf8" }).trim();
-    // A baseline must come from the tagged public API, never from candidate edits.
-    const publicPaths = ["packages/ui-kit/src", "packages/ui-kit/styles", "packages/ui-kit/themes", "packages/ui-kit/tokens", "packages/ui-kit/package.json"];
+    const sourceCommit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: sourceRoot, encoding: "utf8" }).trim();
+    if (sourceCommit !== releaseCommit) throw new Error("Release baseline source must be checked out at the exact release tag");
+    // Pin API source and the reviewed policy used to freeze its consumer.
+    const publicPaths = ["packages/ui-kit/src", "packages/ui-kit/styles", "packages/ui-kit/themes", "packages/ui-kit/tokens", "packages/ui-kit/package.json", "packages/ui-kit/tests/fixtures", "scripts/migrations", "docs/migration-0.11.0.md"];
     execFileSync("git", ["diff", "--quiet", releaseRef, "--", ...publicPaths], { cwd: sourceRoot });
     const dirty = execFileSync("git", ["status", "--porcelain", "--untracked-files=all", "--", ...publicPaths], { cwd: sourceRoot, encoding: "utf8" }).trim();
     if (dirty) throw new Error("Release baseline source must have no uncommitted public API files");
@@ -204,6 +222,7 @@ async function main() {
     if (snapshot.version !== args[1]) throw new Error("Source checkout must match the released version");
     const ts = createRequire(join(sourceRoot, "packages/ui-kit/package.json"))("typescript");
     snapshot.declarationExports = publicTypes(ts, join(sourceRoot, "packages/ui-kit/dist/index.d.ts"));
+    const consumer = capturedConsumer(sourceRoot, previousBaselineDir, previousBaseline, snapshot.version);
     snapshot.schemaVersion = 1;
     snapshot.releaseCommit = releaseCommit;
     snapshot.declarationHashes = {};
@@ -215,7 +234,7 @@ async function main() {
       writeFileSync(destination, contents);
       snapshot.declarationHashes[name] = createHash("sha256").update(contents).digest("hex");
     }
-    if (existsSync(previousConsumer)) writeFileSync(join(baselineDir, "consumer.vue"), readFileSync(previousConsumer));
+    writeFileSync(join(baselineDir, "consumer.vue"), consumer);
     writeFileSync(join(baselineDir, "contract.json"), `${JSON.stringify(snapshot, null, 2)}\n`);
     console.log(`Captured released ${snapshot.version}: ${snapshot.components.length} components, ${snapshot.tokens.length} tokens, ${snapshot.declarationExports.length} public declarations.`);
     return;

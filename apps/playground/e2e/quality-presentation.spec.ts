@@ -1,3 +1,4 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
@@ -16,7 +17,7 @@ const percent = new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 2 });
 
 test("quality summary, footer and documentation preserve themes and show the measured unit report", async ({ page }) => {
   for (const theme of themes) {
-    await page.goto("/?theme=" + theme);
+    await page.goto(russianPlaygroundUrl("/?theme=" + theme));
     const summary = page.getByTestId("home-quality");
     await expect(summary).toContainText(percent.format(report.coverage.lines) + "%");
     await expect(summary).toContainText(report.version);
@@ -55,7 +56,7 @@ test("quality home summary and documentation pass automated WCAG checks in five 
   test.skip(testInfo.project.name !== "chromium", "Axe runs once; routing and layout use all browser projects.");
   for (const theme of themes) {
     for (const view of ["home", "docs"]) {
-      await page.goto("/?theme=" + theme + (view === "docs" ? "&view=docs&section=quality" : ""));
+      await page.goto(russianPlaygroundUrl("/?theme=" + theme + (view === "docs" ? "&view=docs&section=quality" : "")));
       const selector = view === "home" ? '[data-testid="home-quality"]' : '[data-testid="docs-page"]';
       await expect(page.locator(selector)).toBeVisible();
       await page.evaluate(() => document.fonts.ready);

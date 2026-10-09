@@ -1,10 +1,13 @@
 <script setup lang="ts" generic="Item extends WlSidebarItem = WlSidebarItem, Group extends WlSidebarGroup<Item> = WlSidebarGroup<Item>">
 import { computed, ref, useAttrs, type PropType, type Ref } from "vue";
+import { useWlLocale, useWlLocaleText } from "../config";
 import type { WlDensity } from "../types";
 import type { WlSidebarGroup, WlSidebarItem, WlSidebarExpose } from "../navigation-types";
 import type { WlNoModelModifiers } from "../model-types";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
 import WlNavItem from "./WlNavItem.vue";
+const localeText = useWlLocaleText();
+const locale = useWlLocale();
 
 defineOptions({ inheritAttrs: false });
 
@@ -107,7 +110,7 @@ defineExpose({
     @mouseenter="expandOnHover && (hovered = true)"
     @mouseleave="hovered = false"
   >
-    <aside ref="asideRef" class="wl-sidebar" :aria-label="ariaLabel" tabindex="-1">
+    <aside ref="asideRef" class="wl-sidebar" :aria-label="localeText('ariaLabel', ariaLabel, 'mainNavigation')" tabindex="-1">
       <div class="wl-sidebar__inner">
         <div v-if="brand || brandMark || $slots.brand || $slots['brand-mark']" class="wl-sidebar__brand">
           <slot name="brand-mark">
@@ -174,7 +177,7 @@ defineExpose({
 
           <WlNavItem
             v-if="collapsible && showPin"
-            :label="pinned ? unpinLabel : pinLabel"
+            :label="pinned ? localeText('unpinLabel', unpinLabel, 'unpinSidebar') : localeText('pinLabel', pinLabel, 'pinSidebar')"
             icon="panel"
             :collapsed="!expanded"
             @click="togglePinned"
@@ -187,7 +190,7 @@ defineExpose({
       v-if="mobileOpen"
       type="button"
       class="wl-sidebar__backdrop"
-      aria-label="Закрыть навигацию"
+      :aria-label="locale.closeNavigation"
       @click="closeMobile"
     />
   </div>

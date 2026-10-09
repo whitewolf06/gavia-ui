@@ -1,24 +1,24 @@
-# Gavia Sans — страница шрифта
+# Gavia Sans — font page
 
-`?view=font` — отдельный раздел основного playground, доступный из общей
-шапки, мобильного меню и командной палитры. Прямая ссылка работает и в
-GitHub Pages: `/gavia-ui/?view=font&theme=gavia#wl-type-weights`.
-Навигация сохраняет выбранную тему и подпуть; тема хранится в query URL.
+`?view=font` is a separate section of the main playground, accessible from
+the shared header, mobile menu and command palette. Direct links also work
+on GitHub Pages: `/gavia-ui/?view=font&theme=gavia#wl-type-weights`.
+Navigation preserves the theme and subpath; the theme is stored in the URL query.
 
-На странице Gavia Sans 0.6: три заголовка, два абзаца,
-пример интерфейсных подписей и сумм, цифры, алфавиты и все шесть весов.
-Заголовок первого экрана использует шрифт заголовков выбранной
-темы: Gavia Sans в Gavia / Gavia Dark, системный sans в Classic / Classic Dark
-и Georgia в Newspaper. Образцы букв, текста, цифр и весов ниже сохраняют
-Gavia Sans во всех темах. Оформление и окружающие элементы следуют токенам темы.
-Gavia Sans — основная гарнитура тем Gavia и Gavia Dark; кодовые примеры сохраняют `--wl-mono`.
+The page shows Gavia Sans 0.6: three headings, two paragraphs,
+interface labels and amounts, numerals, alphabets and all six weights.
+The hero heading uses the selected theme’s heading font: Gavia Sans in
+Gavia / Gavia Dark, system sans in Classic / Classic Dark and Georgia in Newspaper.
+Letter, text, numeral and weight specimens below keep Gavia Sans in all themes.
+The presentation and surrounding elements follow the theme tokens.
+Gavia Sans is the primary family for Gavia and Gavia Dark; code examples keep `--wl-mono`.
 
-Верхние переключатели выбирают русский/английский и прямое/наклонное
-начертание. Язык и стиль применяются к образцам; свой текст сохраняется.
-Интерактивная проба позволяет выбрать вес, размер 12–72 px и свой текст.
-Отдельный пример показывает табличные `tnum` и пропорциональные `pnum` цифры.
+The top controls select Russian/English and upright/italic styles.
+Language and style apply to the specimens; custom text is preserved.
+The interactive sample supports weight, a size of 12–72 px and custom text.
+A separate example shows tabular `tnum` and proportional `pnum` numerals.
 
-| Вес | Имя | Прямое | Наклонное |
+| Weight | Name | Upright | Italic |
 | --- | --- | --- | --- |
 | 100 | Thin | Gavia-Thin.woff2 | Gavia-ThinItalic.woff2 |
 | 300 | Light | Gavia-Light.woff2 | Gavia-LightItalic.woff2 |
@@ -27,31 +27,31 @@ Gavia Sans — основная гарнитура тем Gavia и Gavia Dark; �
 | 600 | SemiBold | Gavia-SemiBold.woff2 | Gavia-SemiBoldItalic.woff2 |
 | 700 | Bold | Gavia-Bold.woff2 | Gavia-BoldItalic.woff2 |
 
-Основной `src/main.ts` явно подключает `gavia-ui/styles/fonts/gavia.css`.
-Этот CSS регистрирует 12 начертаний из файлов пакета.
-`GaviaTypeStudy.vue` загружается асинхронно вместе со стилями страницы;
-общую шапку и навигацию предоставляет основное приложение.
+The main `src/main.ts` explicitly imports `gavia-ui/styles/fonts/gavia.css`.
+That CSS registers 12 faces from package files.
+`GaviaTypeStudy.vue` loads asynchronously with its page styles;
+the main application provides the shared header and navigation.
 
-Общие тексты находятся в `samples.ts`; шрифтовые параметры — в `font.ts`.
-Приложения-потребители добавляют импорт шрифтового CSS рядом со стилями
-кита. Библиотека не загружает CSS автоматически из JavaScript.
-Без CSS с `@font-face` используется системный шрифт; `--wl-font` и
-`--wl-font-heading` можно переопределить в приложении.
-Файлы WOFF2/TTF можно использовать независимо от Vue и компонентов.
+Shared sample text is in `samples.ts`; font parameters are in `font.ts`.
+Consumer applications import the font CSS alongside kit styles.
+The library never loads CSS automatically from JavaScript.
+Without CSS containing `@font-face`, a system font is used; applications may
+override `--wl-font` and `--wl-font-heading`.
+WOFF2/TTF files can be used independently of Vue and the components.
 
-Происхождение, требования OFL и инструменты сборки описаны в
-[документации шрифтов](../../../../scripts/fonts/README.md) и
-[README пакета](../../../../packages/ui-kit/README.md).
+Font provenance, OFL requirements and build tools are covered by
+[font documentation](../../../../scripts/fonts/README.md) and
+[package README](../../../../packages/ui-kit/README.md).
 
-## Локальный просмотр
+## Local preview
 
-Из корня изолированного worktree: `pnpm dev --host 127.0.0.1 --port 5178`.
-Открыть `http://127.0.0.1:5178/?view=font`.
+From the isolated worktree root: `pnpm dev --host 127.0.0.1 --port 5178`.
+Open `http://127.0.0.1:5178/?view=font`.
 
-## Проверки
+## Checks
 
-Навигация: `packages/ui-kit/tests/playground-navigation.test.ts`.
-Интерактивность и шрифтовые файлы: `apps/playground/e2e/font-page.spec.ts`.
-Проверяются русский/английский, оба стиля, вес и размер пробы,
-шесть пар начертаний, пять тем, обычная и мобильная навигация,
-отсутствие старых версий и горизонтального переполнения.
+Navigation: `packages/ui-kit/tests/playground-navigation.test.ts`.
+Interaction and font files: `apps/playground/e2e/font-page.spec.ts`.
+Checks cover Russian/English, both styles, sample weight and size,
+six pairs of faces, five themes, regular and mobile navigation,
+absence of old versions and horizontal overflow.

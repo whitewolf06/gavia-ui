@@ -1,142 +1,142 @@
-# План разработки Gavia UI
+# Gavia UI roadmap
 
-План и история разработки `gavia-ui`: от HTML-прототипа до дизайн-системы.
-Статусы: ✅ реализовано · 🚧 в работе · ⬜ запланировано · ⛔ остаётся в приложении.
+The plan and development history of `gavia-ui`, from an HTML prototype to a design system.
+Status: ✅ implemented · 🚧 in progress · ⬜ planned · ⛔ belongs in the application.
 
-Результаты проверок ниже относятся к моменту завершения каждого этапа.
-Перед новым выпуском выполняются проверки из `agents.md` §6.
+The results below describe each stage when it was completed.
+Run the checks from `agents.md` section 6 before a new release.
 
 ---
 
-## Этап 0. Прототип дизайн-системы — ✅
+## Stage 0. Design system prototype — ✅
 
-- ✅ Исходный HTML-каталог (токены, 12 секций, ванильный JS) перенесён в
-  библиотеку и живые Vue-примеры. Завершённые HTML-прототипы удалены из
-  рабочего дерева; история исходных макетов сохранена в Git.
-- ✅ Расширение вариациями: soft/link/lg/xs-кнопки, button group, пароль,
-  степпер, счётчик, съёмные теги, presence-аватары, алерты с действием,
-  типы тостов, поповер, аккордеон, слайдер, шаги, 46 иконок.
+- ✅ The original HTML catalog (tokens, 12 sections, vanilla JS) was moved into
+  the library and live Vue examples. Completed HTML prototypes were removed
+  from the working tree; Git retains the original layout history.
+- ✅ More variants: soft/link/lg/xs buttons, button group, password input,
+  stepper, counter, removable tags, presence avatars, alerts with actions,
+  toast types, popover, accordion, slider, steps and 46 icons.
 
-Текущий источник примеров — [живые SFC](apps/playground/src/design-system/examples)
-и [готовые сценарии](apps/playground/src/design-system/recipes).
-Иконки развиваются в [SVG-каталоге](packages/ui-kit/icons).
-Колонка «Прототип» ниже сохраняет историческое соответствие ранним макетам.
+Current examples are [live SFCs](apps/playground/src/design-system/examples)
+and [complete flows](apps/playground/src/design-system/recipes).
+Icons are maintained in the [SVG catalog](packages/ui-kit/icons).
+The “Prototype” column below preserves the mapping to early layouts.
 
-## Этап 1. Техническая основа — ✅
+## Stage 1. Technical foundation — ✅
 
 - ✅ pnpm workspace: `packages/ui-kit` + `apps/playground`.
 - ✅ Vite library mode: ESM + TypeScript declarations, strict TS.
-- ✅ Vue 3 — единственный peer; компоненты и сервисы реализованы внутри kit.
-- ✅ Токены `--wl-*`: foundation → semantic → component; CSS Layers
+- ✅ Vue 3 is the only peer; components and services are implemented in the kit.
+- ✅ `--wl-*` tokens: foundation → semantic → component; CSS Layers
   (`wl.reset`, `wl.tokens`, `wl.components`).
-- ✅ Темы `white` + `graphite` через `data-wl-theme` / явный импорт.
+- ✅ `white` + `graphite` themes through `data-wl-theme` / explicit imports.
 - ✅ Subpath exports: `.`, `styles/base.css`, `styles/reset.css`, `themes/*.css`.
-- ✅ `createWlPt()` — расширяемая pt-карта; `WlConfig` — конфигурация приложения.
-- ✅ README (интеграция, темизация, контракт) и agents.md (правила репозитория).
+- ✅ `createWlPt()` — extensible pt map; `WlConfig` — application configuration.
+- ✅ README (integration, theming, contracts) and agents.md (repository rules).
 
-## Этап 2. Базовые компоненты — ✅ (21 + директива)
+## Stage 2. Basic components — ✅ (21 + a directive)
 
-| Компонент | Статус | Прототип |
+| Component | Status | Prototype |
 | --- | --- | --- |
-| `WlButton` (8 вариантов, xs–lg, loading, block) | ✅ | `.btn` |
-| `WlIcon` (встроенный SVG-набор) | ✅ | `.ic` |
-| `WlInput` (размеры, invalid, prefix/suffix) | ✅ | `.input` |
+| `WlButton` (8 variants, xs–lg, loading, block) | ✅ | `.btn` |
+| `WlIcon` (built-in SVG set) | ✅ | `.ic` |
+| `WlInput` (sizes, invalid, prefix/suffix) | ✅ | `.input` |
 | `WlTextarea` | ✅ | `.textarea` |
 | `WlSelect` | ✅ | `.select` |
 | `WlCheckbox` (+ indeterminate) | ✅ | `.checkline` |
 | `WlRadio` | ✅ | `.box.rnd` |
 | `WlSwitch` (sm/md) | ✅ | `.switch` |
-| `WlTag` (5 цветов, removable) | ✅ | `.tag` |
-| `WlChip` (фильтр, счётчик) | ✅ | `.chip` |
+| `WlTag` (5 colors, removable) | ✅ | `.tag` |
+| `WlChip` (filter, counter) | ✅ | `.chip` |
 | `WlBadge` (+ dot) | ✅ | `.nav-badge`, `.bell-dot` |
 | `WlAvatar` (24–48, presence) | ✅ | `.avatar` |
 | `WlCard` (title/content/footer, hoverable) | ✅ | `.card` |
-| `WlTabs` (items, счётчики, панели) | ✅ | `.tabs` |
-| `WlAlert` (4 типа, action, closable) | ✅ | `.alert` |
+| `WlTabs` (items, counters, panels) | ✅ | `.tabs` |
+| `WlAlert` (4 types, action, closable) | ✅ | `.alert` |
 | `WlProgress` (+ thin, ok) | ✅ | `.progress` |
 | `WlSkeleton` | ✅ | `.skel` |
 | `WlSpinner` (+ light) | ✅ | `.spinner` |
 | `WlDialog` | ✅ | `.modal` |
 | `WlDrawer` | ✅ | `.drawer` |
 | `WlDivider` | ✅ | `.divider` |
-| `WlTooltip` (директива) | ✅ | `[data-tip]` |
+| `WlTooltip` (directive) | ✅ | `[data-tip]` |
 
-Проверки этапа: build ✓ · typecheck ✓ · 30/30 тестов ✓ · playground ✓ ·
-pack ✓ (Vue вне бандла).
+Stage validation: build ✓ · typecheck ✓ · 30/30 tests ✓ · playground ✓ ·
+pack ✓ (Vue outside the bundle).
 
-## Этап 3. Навигация и оверлеи — ✅ (11 компонентов + composable)
+## Stage 3. Navigation and overlays — ✅ (11 components + a composable)
 
-| Компонент | Статус | Прототип |
+| Component | Status | Prototype |
 | --- | --- | --- |
-| `WlIconButton` (sm/md, счётчик/точка) | ✅ | `.icb` |
+| `WlIconButton` (sm/md, counter/dot) | ✅ | `.icb` |
 | `WlButtonGroup` | ✅ | `.btn-group` |
 | `WlSegmented` | ✅ | `.seg` |
-| `WlNavItem` (рейк с бейджем, width: 100%) | ✅ | `.nav-item` |
-| `WlBreadcrumbs` (последний — `aria-current`) | ✅ | `.crumbs` |
+| `WlNavItem` (navigation row with a badge, width: 100%) | ✅ | `.nav-item` |
+| `WlBreadcrumbs` (last item has `aria-current`) | ✅ | `.crumbs` |
 | `WlPagination` (1-based `v-model:page` + compact) | ✅ | `.pager` |
-| `WlMenu` (static + popup, заголовки, danger) | ✅ | `.menu` |
+| `WlMenu` (static + popup, headings, danger) | ✅ | `.menu` |
 | `WlPopover` | ✅ | `.popover` |
-| `WlToast` + `useWlToast()` + `WlToastService` (4 типа) | ✅ | `.toast` |
+| `WlToast` + `useWlToast()` + `WlToastService` (4 types) | ✅ | `.toast` |
 | `WlEmpty` | ✅ | `.empty` |
-| `WlPill` (статус с точкой, 5 вариантов) | ✅ | `.pill` |
+| `WlPill` (status with a dot, 5 variants) | ✅ | `.pill` |
 
-Проверки этапа: build ✓ · typecheck ✓ · 59/59 тестов ✓ · playground ✓ ·
-pack ✓ (в архиве только dist/styles/themes/README/package.json).
+Stage validation: build ✓ · typecheck ✓ · 59/59 tests ✓ · playground ✓ ·
+pack ✓ (only dist/styles/themes/README/package.json in the archive).
 
-## Этап 4. Формы и данные — ✅ (8 компонентов)
+## Stage 4. Forms and data — ✅ (8 components)
 
-Политика реализации: формы и таблица реализованы внутри kit.
+Implementation policy: forms and the table are implemented in the kit.
 
-| Компонент | Статус | Прототип |
+| Component | Status | Prototype |
 | --- | --- | --- |
-| `WlNumberInput` (степпер, клавиатура, clamp) | ✅ | `.stepper` |
-| `WlPasswordInput` (глазок, aria-pressed) | ✅ | `.input-wrap` + `#pw-toggle` |
-| `WlSlider` (заливка через `--wl-slider-pct`) | ✅ | `.slider` |
+| `WlNumberInput` (stepper, keyboard, clamp) | ✅ | `.stepper` |
+| `WlPasswordInput` (visibility toggle, aria-pressed) | ✅ | `.input-wrap` + `#pw-toggle` |
+| `WlSlider` (fill through `--wl-slider-pct`) | ✅ | `.slider` |
 | `WlAccordion` (details/summary, single, controlled) | ✅ | `.acc` |
 | `WlSteps` (done/current/pending) | ✅ | `.steps` |
-| `WlField` (label + hint + error, useId-связка) | ✅ | `.field` |
-| `WlTable` (columns, cell-слоты, numeric, empty) | ✅ | `.table` |
-| `WlStatCard` (label + value + focus-bar) | ✅ | `.stat-card` |
+| `WlField` (label + hint + error, useId relationships) | ✅ | `.field` |
+| `WlTable` (columns, cell slots, numeric, empty) | ✅ | `.table` |
+| `WlStatCard` (label + value + focus bar) | ✅ | `.stat-card` |
 
-В части 4a добавлены формы, в 4b — таблица и stat-card.
-Также `id`/aria передаются во внутренние поля у
-`WlInput`/`WlPasswordInput`/`WlNumberInput`. Проверки: build ✓ · typecheck ✓ ·
-93/93 тестов ✓ · playground ✓ · pack ✓ (в kit 40 компонентов).
+Part 4a added forms; 4b added the table and stat card.
+`WlInput`/`WlPasswordInput`/`WlNumberInput` also forward `id`/aria to their
+internal inputs. Validation: build ✓ · typecheck ✓ · 93/93 tests ✓ ·
+playground ✓ · pack ✓ (40 components in the kit).
 
-## Этап 5. Foundation-витрина и дополнительные компоненты — ✅
+## Stage 5. Foundation showcase and additional components — ✅
 
-| Задача | Статус | Примечание |
+| Task | Status | Notes |
 | --- | --- | --- |
-| Playground: секция «Цвета» (свотчи токенов, копирование hex) | ✅ | getComputedStyle — корректно в обеих темах |
-| Playground: секция «Типографика» (шкала, mono, ссылки) | ✅ | playground-стили с `pg-` префиксом, не в библиотеке |
-| `WlColorPicker` (свотчи + hex-инпут) | ✅ | свой, нормализация в `#rrggbb` |
-| `WlCalendar` (месячная сетка: today/selected/события) | ✅ | свой, `v-model` = ISO `YYYY-MM-DD` |
-| `WlDatePicker` (ISO v-model, ru-locale, panel в стиле kit) | ✅ | собственный календарь |
-| `WlFileUpload` (dropzone + список файлов + reject-события) | ✅ | свой, файлы не загружаются — отдаёт потребителю |
+| Playground: Colors section (token swatches, copy hex) | ✅ | getComputedStyle — correct in both themes |
+| Playground: Typography section (scale, mono, links) | ✅ | playground styles use the `pg-` prefix, outside the library |
+| `WlColorPicker` (swatches + hex input) | ✅ | custom, normalizes to `#rrggbb` |
+| `WlCalendar` (monthly grid: today/selected/events) | ✅ | custom, `v-model` = ISO `YYYY-MM-DD` |
+| `WlDatePicker` (ISO v-model, ru locale, kit-style panel) | ✅ | custom calendar |
+| `WlFileUpload` (dropzone + file list + reject events) | ✅ | custom; returns files to the consumer, does not upload them |
 
-Проверки этапа: build ✓ · typecheck ✓ · 115/115 тестов ✓ · playground ✓ ·
-pack ✓ (в kit 44 компонента).
+Stage validation: build ✓ · typecheck ✓ · 115/115 tests ✓ · playground ✓ ·
+pack ✓ (44 components in the kit).
 
-## Этап 5b. Независимость от PrimeVue — ✅ в ветке `codex/remove-primevue`
+## Stage 5b. Independence from PrimeVue — ✅ in `codex/remove-primevue`
 
-- ✅ Собственные реализации всех 51 компонентов; Vue 3 остаётся peer.
-- ✅ `WlConfig` и сервисы с состоянием каждого Vue-приложения.
-- ✅ SVG-каталог, пакетные `icons:sync` и `icons:check`.
-- ✅ Контрактные, браузерные и пакетные проверки; миграция 0.5.
+- ✅ Custom implementations of all 51 components; Vue 3 remains a peer.
+- ✅ `WlConfig` and services with state per Vue application.
+- ✅ SVG catalog and batch `icons:sync` / `icons:check`.
+- ✅ Contract, browser and package checks; migration 0.5.
 
-## Этап 6. Прикладной слой приложений — ⛔ не в kit
+## Stage 6. Application layer — ⛔ outside the kit
 
-Эти элементы приложения собираются из компонентов библиотеки.
-Их бизнес-логика остаётся в приложении (agents.md §2):
+Applications compose these elements from library components.
+Their business logic stays in the application (agents.md section 2):
 
-- ⛔ строка задачи (`.task`), строка заметки (`.note-row`)
-- ⛔ таймлайн (`.tl-items`), agenda (`.ag-row`), строки настроек (`.set-row`)
-- ⛔ прикладные команды палитры (`.palette`)
-- ⛔ календарные ячейки (`.cal-day`), мини-график недели (`.week-bars`)
-- ⛔ мини-карточки контента (`.note-mini`, `.tile`)
+- ⛔ task row (`.task`), note row (`.note-row`)
+- ⛔ timeline (`.tl-items`), agenda (`.ag-row`), settings rows (`.set-row`)
+- ⛔ application-specific palette commands (`.palette`)
+- ⛔ calendar cells (`.cal-day`), weekly mini chart (`.week-bars`)
+- ⛔ content mini cards (`.note-mini`, `.tile`)
 
-## Non-goals (зафиксировано)
+## Non-goals (agreed)
 
-- Pinia, Vue Router, API-клиенты, Markdown/Mermaid — никогда в runtime deps.
-- Публикация пакета — только по отдельной явной команде.
-- Tailwind / CSS-in-JS — не используются.
+- Pinia, Vue Router, API clients, Markdown/Mermaid — never in runtime deps.
+- Package publication requires a separate explicit instruction.
+- Tailwind / CSS-in-JS are not used.

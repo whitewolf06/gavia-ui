@@ -1,21 +1,22 @@
-# Участие в Gavia UI
+# Contributing to Gavia UI
 
-Перед изменениями прочитайте [правила репозитория](agents.md)
-и [архитектуру](docs/architecture.md). Проект использует Vue 3,
-strict TypeScript, обычный CSS и pnpm.
+Before making changes, read the [repository rules](agents.md)
+and [architecture](docs/architecture.md). The project uses Vue 3,
+strict TypeScript, plain CSS and pnpm.
 
-1. Создайте ветку от актуального main.
-2. Сохраните публичные props, emits, slots, v-model, `Wl*`, классы, токены и data-атрибуты.
-3. Если меняется поведение, добавьте рабочий пример в playground и проверки этого поведения.
-4. Иконки добавляйте SVG-партией через `icons:sync`; токены — через `tokens:sync`.
-5. Запишите заметное пользователю изменение в «Не выпущено» в обеих копиях changelog и добавьте `pnpm changeset` для версии/заметки выпуска.
-6. Выполните проверки из `agents.md`. Визуальные эталоны обновляйте после просмотра diff.
-7. В PR опишите результат, проверки и обязательные действия при обновлении.
+1. Create a branch from the current main.
+2. Preserve public props, emits, slots, v-model, `Wl*`, classes, tokens and data attributes.
+3. When behavior changes, add a working playground example and checks for that behavior.
+4. Add icons in SVG batches through `icons:sync`; update tokens through `tokens:sync`.
+5. Record user-visible changes under “Unreleased” in both changelog copies and add a `pnpm changeset` for the release version and notes.
+6. Run the checks required by `agents.md`. Update visual baselines after reviewing the diff.
+7. Describe the result, validation and required upgrade actions in the PR.
 
-MIT хранится в корне и в пакете; тексты должны совпадать. При релизе обновляйте
-версии корня и библиотеки, changelog и миграцию. Публикация требует отдельной
-явной команды; успешный push ещё не подтверждает релиз.
+MIT is stored at the root and in the package; both license texts must match.
+For a release, update the root and library versions, changelog and migration.
+Publication requires a separate explicit instruction; a successful push
+does not confirm a release.
 
-Правила patch/minor, поддерживаемые браузеры и ограничения проверок описаны
-в [quality.md](docs/quality.md). Changesets, браузерный axe и V8 coverage
-используются при разработке и проверках. В runtime пакета они не входят.
+Patch/minor rules, supported browsers and validation limits are described
+in [quality.md](docs/quality.md). Changesets, browser axe and V8 coverage
+are development and validation tools. They are not included in package runtime.

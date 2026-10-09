@@ -1,217 +1,285 @@
-# Playground и документация
+# Playground and documentation
 
-## Качество и совместимость
+## Languages and shared sources
 
-Раздел `?view=docs&section=quality` показывает unit-покрытие, поддерживаемые
-окружения, SSR и правила версий. У него общие заголовок, хлебные крошки
-и меню документации. На главной — краткая сводка того же измерения;
-ссылки в футере и поиск ведут к подробному отчёту.
-На главной показаны доля успешных unit-тестов и покрытие строк; в Docs —
-покрытие строк, инструкций, ветвлений и функций. Процентные полосы WlProgress
-имеют шкалу 0–100%, текстовое значение и доступную подпись. Цвета и радиусы
-наследуются от темы; появление полос уважает prefers-reduced-motion.
+Public GitHub Markdown, including README, guides and the root CHANGELOG.md,
+is English-only. The Playground defaults to English and supports a complete
+Russian interface through `lang=en` and `lang=ru`. Missing or invalid language
+values use English. Switching language preserves the current route, theme,
+query parameters and hash; Back/Forward restores the language from the URL.
 
-Источник цифр — `apps/playground/src/project/quality-report.generated.json`.
-Запустите `pnpm test:coverage`, затем `pnpm quality:update`: счётчик и проценты
-берутся из JSON-отчётов Vitest/V8, дата — из времени запуска тестов. SVG-бейдж
-README формируется из этих же данных. Метрики относятся к unit-покрытию
-исходников; browser/visual/axe проверки перечислены отдельно. Локальный отчёт
-с изменённым checkout обозначается как рабочая сборка и не выдаётся за опубликованный выпуск.
+EN and RU use the same SFCs, API contracts, examples and recipes. Localised
+presentation metadata does not rename props, events, slots, exports, CSS classes,
+tokens or route identifiers. The Playground reads the English root changelog
+and applies a Russian prose overlay when RU is selected; release versions,
+dates, links and code remain shared.
 
-Node24 в CI формирует JSON после успешных тестов. Pages и архив playground
-восстанавливают его из artifact того же workflow; версия пакета и Git revision
-проверяются до сборки. Повторять тесты ради отображения отчёта не требуется.
+The library keeps its Russian fallback locale for compatibility. English
+applications explicitly configure `wlLocaleEn` through `WlConfig`. The
+Playground's language selection configures the library locale as well as site
+copy; it does not change the library's default for other consumers.
+See [localization](localization.md) for preset availability and consumer setup.
 
-## Страницы и маршруты
+## Quality and compatibility
 
-На главной (`/`) есть команда установки, текущая версия, разделы и автор.
-Docs (`?view=docs`) объединяет основы, оформление и руководства по всем
-публичным компонентам. Дизайн-система (`?view=system`) содержит токены,
-контракты и составные сценарии. Changelog (`?view=changelog`) читается
-из корневого CHANGELOG.md; прежний `?view=project` остаётся совместимым.
-Страница «Подбор темы» (`?view=theme-builder`) позволяет собрать свою палитру и
-проверить её на живых компонентах. Черновик сохраняется только в текущем браузере.
-Выбор основы сбрасывает цвета; изменение темы в шапке меняет оформление страницы,
-сохраняя палитру примера. Подробности — [подбор темы](theme-builder.md).
+The `?view=docs&section=quality` section shows unit coverage, supported
+environments, SSR and version rules. It uses the shared documentation heading,
+breadcrumbs and menu. The home page summarises the same measurement; footer
+links and search lead to the detailed report.
 
-Разделы Docs:
+Home shows the fraction of successful unit tests and line coverage. Docs shows
+line, statement, branch and function coverage. WlProgress percentage bars use
+a 0–100% scale, a text value and an accessible label. Colours and radii come
+from the theme; bar entrance motion respects `prefers-reduced-motion`.
 
-- `section=typography` — роли, иерархия и структура текста;
-- `section=layout` — контейнеры, колонки, отступы, адаптация и слои;
-- `section=responsive` — брейкпоинты, локальная настройка, container queries и поведение;
-- `section=content` — подписи, инструкции и состояния содержимого;
-- `section=icons` — полный SVG-каталог, размеры и доступность;
-- `section=colors` — семантические цвета, темы и alpha;
-- `component=WlButton` и остальные имена манифеста — руководства компонентов.
+The data source is `apps/playground/src/project/quality-report.generated.json`.
+Run `pnpm test:coverage`, then `pnpm quality:update`: counts and percentages
+come from Vitest/V8 JSON reports, and the date comes from the test start time.
+The README SVG badge uses the same data. Metrics describe unit coverage of
+source code; browser, visual and Axe checks are listed separately. A local
+report from a modified checkout is labelled as a working build rather than a
+published release.
 
-Отдельная страница «Компоненты» удалена после переноса всех 53 руководств.
-Старый `?view=components` открывает Docs; `#component-WlTimePicker` и другие
-имена открывают соответствующий компонент. `#pg-colors` и `#pg-icons`
-переводятся в оформление. Query-маршруты сохраняют подпуть GitHub Pages
-`/gavia-ui/` и не требуют Vue Router. Публичная директория компонентов
-в packages/ui-kit остаётся частью библиотеки.
+Node 24 in CI generates the JSON after successful tests. Pages and the
+Playground archive restore it from an artifact of the same workflow; package
+version and Git revision are checked before building. Tests do not need to be
+repeated just to display the report.
 
-## Тема витрины
+## Pages and routes
 
-По умолчанию используется светлая Gavia с почти белыми поверхностями
-и основным действием цвета озёрного сланца. В селекторе пять тем: Gavia,
-Gavia Dark, Classic, Classic Dark и Newspaper. Список и подписи берутся из публичного каталога `wlDesignThemes`.
+Home (`/`) contains the installation command, current version, sections and
+author information. Docs (`?view=docs`) combines foundations, appearance and
+guides for every public component. The design system (`?view=system`) contains
+tokens, contracts and composite scenarios. Changelog (`?view=changelog`) reads
+the root CHANGELOG.md; the previous `?view=project` route remains compatible.
 
-Параметр `theme` сохраняет прямые ссылки: например,
-`/gavia-ui/?view=docs&section=colors&theme=white` показывает Classic при загрузке;
-`theme=graphite` — Classic Dark, `theme=gavia-dark` — Gavia Dark. Отображаемые
-названия Classic / Classic Dark не переименовывают прежние query/CSS-идентификаторы.
-Выбор темы обновляет этот параметр, сохраняя раздел, якорь и другие параметры;
-Back/Forward восстанавливает тему соответствующей страницы. Некорректное значение
-использует Gavia. Все CSS-файлы импортируются явно до запуска Vue.
+Theme builder (`?view=theme-builder`) lets you create a palette and check it on
+live components. The draft stays in the current browser. Choosing a base resets
+colours; changing the header theme changes page appearance while preserving
+the example palette. See [theme builder](theme-builder.md).
 
-В правом верхнем углу первого экрана — ghost-кнопка `WlIconButton`
-с иконкой солнца или луны 32 px и областью нажатия 44 × 44 px.
-В обычном состоянии у кнопки нет фона; фокус выделяется обводкой.
-Кнопка переключает Gavia ↔ Gavia Dark и Classic ↔ Classic Dark.
-Из Newspaper кнопка включает Classic Dark, повторное нажатие возвращает
-Newspaper. Иконка обозначает переход к светлой или тёмной теме.
+Docs sections:
 
-Библиотека сохраняет Classic как базовые значения `styles/base.css` и значение
-по умолчанию JavaScript-резолвера. Для Gavia в приложении нужен явный импорт
-`themes/gavia.css` и `data-wl-theme="gavia"` на `html`; для Gavia Dark —
-`themes/gavia-dark.css` и `data-wl-theme="gavia-dark"`. Обе используют Gavia Sans.
-Это показано в [руководстве темы](theme-gavia.md). Установка Docs использует
-Classic (`white`) и подтверждённую npm-версию. Gavia Dark входит в 0.10.0; [совместимость каталога](migration-themes.md).
+- `section=typography` — text roles, hierarchy and structure;
+- `section=layout` — containers, columns, spacing, adaptation and layers;
+- `section=responsive` — breakpoints, local configuration, container queries and behaviour;
+- `section=content` — labels, instructions and content states;
+- `section=icons` — full SVG catalogue, sizes and accessibility;
+- `section=colors` — semantic colours, themes and alpha;
+- `section=quality` — coverage, supported environments and compatibility;
+- `component=WlButton` and other manifest names — component guides.
 
-Главная использует два заранее загружаемых изображения одной панорамы озера
-с гагарой: дневное для Gavia, Classic и Newspaper, ночное для Gavia Dark
-и Classic Dark. Оба слоя остаются в DOM. При поддержке View Transitions API
-на время смены темы создаётся один переход всей страницы. В остальных браузерах
-цветовые токены применяются сразу, а изображение hero меняется через crossfade.
-Ночной слой появляется после загрузки изображения.
-`prefers-reduced-motion: reduce` отключает переход страницы и crossfade.
-Вводный текст расположен на чёткой карточке цвета фона выбранной темы. Установка и метрики 2×2
-идут ниже в общей сетке, которая перестраивается на узком экране. Фон панелей
-про использование и участие — декоративные светлые изображения леса и колосков.
-Во всех темах содержимое, ссылки, команда установки и счётчики берутся из тех же
-источников; изображения не содержат текст и скрыты от скринридеров.
+The separate Components page was removed after all 53 guides moved to Docs.
+The old `?view=components` route opens Docs; `#component-WlTimePicker` and other
+component names open their respective guide. `#pg-colors` and `#pg-icons` map
+to the appearance sections. Query routes preserve the GitHub Pages subpath
+`/gavia-ui/` and require no Vue Router. The public component directory in
+`packages/ui-kit` remains part of the library.
 
-В теме Gavia текст поверх фотографий использует основной тёмный цвет.
-Фоновые изображения проектных карточек имеют прозрачность 0.5; ссылки
-сохраняют подчёркивание. Это сохраняет читаемость текста на тёмных участках
-леса и колосков; отдельной белой плашки поверх первого экрана нет.
+## Playground theme
 
-## Страница компонента
+The default is light Gavia, with near-white surfaces and a lake-slate primary
+action. The selector offers five themes: Gavia, Gavia Dark, Classic, Classic
+Dark and Newspaper. Its list and labels come from the public `wlDesignThemes`
+catalogue.
 
-Все руководства имеют вкладки «Примеры», «API» и «Доступность».
-Ссылки на разделы стоят сразу под вкладками и относятся к видимой панели.
-Сайдбар начинается с «Начало работы» и постоянных ссылок на шесть разделов:
-установка, основы интерфейса, компоненты, токены, иконки и миграция.
-Переходы ведут к нужному якорю вводной страницы с любого руководства;
-nav имеет имя «Разделы начала работы», иконка книги использует семантический акцент темы. Основные категории
-отмечены SVG-иконками существующего набора. Каталог компонентов использует
-компактные строки, сохраняя видимый фокус и область нажатия на touch.
+The `theme` parameter preserves direct links. For example,
+`/gavia-ui/?view=docs&section=colors&theme=white` loads Classic;
+`theme=graphite` loads Classic Dark, and `theme=gavia-dark` loads Gavia Dark.
+The displayed Classic / Classic Dark names do not rename legacy query or CSS
+identifiers. Selecting a theme updates this parameter while preserving the
+section, hash and other parameters. Back/Forward restores the page's theme.
+Invalid values use Gavia. All CSS files are imported explicitly before Vue
+starts.
 
-- Первый пример имеет настройки слева и живой SFC с раскрытым кодом справа;
-  на узком экране колонки складываются. ComponentExplorer в режиме
-  documentation использует те же канонические примеры и consumerSource.
-  Переключатели, enum и важные строковые/числовые настройки отражают
-  фактические props примера;
-  режимы Menu.popup и Autocomplete.multiple показаны отдельными
-  рабочими сценариями. Сброс возвращает исходные настройки и модель.
-  В дизайн-системе Explorer сохраняет компактную раскладку.
-- Далее сравниваются варианты, размеры и состояния; показываются слоты
-  и реальные сценарии компонента. Каждый пример — отдельный рабочий SFC,
-  который одновременно служит исходником копируемого кода.
-- Коллекции, callbacks, сложные модели и pt изменяются в копируемом SFC;
-  панель явно поясняет, какие параметры относятся к этому сценарию.
-  Для scalar-полей используются компоненты Gavia UI, число не превращается
-  в строку, а код получает те же значения, что и живой пример.
-- Props, defaults, events, slots и v-model читаются из публичного манифеста.
-  Секции pt перечислены по фактическим вызовам useWlPt в компоненте.
-- Доступность описывает фактическую модель, клавиши, подписи и ошибки;
-  unsupported props не добавляются ради одинаковой формы документации.
-- Вкладки поддерживают стрелки/Home/End и сохраняют состояние примеров.
-  Именованный якорь API/доступности открывает нужную вкладку.
-- На странице WlCommandPalette глобальный Ctrl K витрины отключён,
-  чтобы настройка shortcut управляла только демонстрируемым компонентом.
-  Кнопка поиска в шапке продолжает работать.
-- Toast и ConfirmDialog используют один сервисный контейнер в App.vue;
-  примеры вызывают composable, а инструкция показывает установку сервиса.
+The top right of the first screen has a ghost `WlIconButton` with a 32 px sun
+or moon icon and a 44 × 44 px hit area. Its regular state has no background;
+a visible outline marks focus. It switches Gavia ↔ Gavia Dark and Classic ↔
+Classic Dark. From Newspaper it switches to Classic Dark; selecting it again
+returns to Newspaper. The icon indicates the destination light or dark theme.
 
-## Границы модулей
+The library retains Classic as the base values in `styles/base.css` and the
+JavaScript resolver default. To use Gavia in an application, explicitly import
+`themes/gavia.css` and set `data-wl-theme="gavia"` on `html`. For Gavia Dark,
+use `themes/gavia-dark.css` and `data-wl-theme="gavia-dark"`. Both use Gavia
+Sans. See the [theme guide](theme-gavia.md). The Docs installation example uses
+Classic (`white`) and the confirmed npm version. Gavia Dark is included in
+0.10.0; see [catalogue compatibility](migration-themes.md).
 
-- HomePage.vue — главная и установка из метаданных пакета.
-- App.vue — History API, тема, поиск, общая шапка и сервисные контейнеры.
-- DocsPage.vue — правый sidebar, категории, выбор руководства и якоря.
-  Каталог компонентов остаётся простым списком без поиска и счётчика.
-- documentation/catalog.ts — группы манифеста и метаданные основ.
-- documentation/ComponentDocumentation.vue — общая обвязка руководства;
-  DocumentationTabs.vue — доступные вкладки; DocumentationContract.vue — API.
-- documentation/components/registry.ts — ленивые живые SFC и их raw-исходники;
-  inputs.ts/showcase.ts — названия, описания и правила доступности.
-- documentation/components/inputs и showcase — 52 расширенных SFC;
-  documentation/button — пять подробных сценариев WlButton.
-- documentation/components/pt-sections.ts — перечисление реальных pt-секций.
-  При изменении DOM/useWlPt обновляйте соответствующую запись и документацию.
-- design-system/examples — 53 канонических управляемых примера. Explorer
-  и Docs переиспользуют их; реализации библиотеки не копируются.
-- documentation/foundations — основные страницы и 18 рабочих SFC.
-  Layout объясняет контейнеры, пропорции, вложенность и stacking context.
-  [Контракт примитивов](primitives.md). Отдельная [адаптивность](responsiveness.md)
-  показывает viewport, локальные токены, container queries и matchMedia с SSR/cleanup.
-- documentation/assets — иконки и цвета. Единственный источник списка —
-  реестр иконок/токенов. Каталог SVG показывает выбранный размер, цвета
-  читаются с учётом темы и сохраняют alpha.
-- CodeHighlight.vue — небольшой lossless tokenizer без HTML-вставок;
-  CodePanel копирует исходный consumerSource. Кнопка в правом верхнем углу
-  появляется при hover/focus и видна постоянно на touch.
-- navigation.ts — чтение query и legacy-якорей, создание canonical URL.
-  usePageAnchor.ts восстанавливает якорь после загрузки страницы.
+Home uses two preloaded images of the same lake panorama with a loon: daytime
+for Gavia, Classic and Newspaper; nighttime for Gavia Dark and Classic Dark.
+Both layers remain in the DOM. When the View Transitions API is available,
+theme switching creates one transition for the whole page. Otherwise colour
+tokens apply immediately and the hero image crossfades. The night layer appears
+after its image loads. `prefers-reduced-motion: reduce` disables the page
+transition and crossfade.
 
-Горизонтальные ссылки под вкладками служат для перехода по странице и не
-подсвечиваются при прокрутке. Общие вкладки не имеют нижней разделительной
-линии; выбранная вкладка отмечается только фоном и цветом.
+Introductory text sits on a clear card using the selected theme's background
+colour. Installation and the 2×2 metric grid follow below, adapting to narrow
+screens. Usage and participation panels have decorative light images of a
+forest and grain heads. Content, links, installation commands and counts use
+the same sources in every theme. Images contain no text and are hidden from
+screen readers.
 
-## Активный подпункт
+In Gavia, text over photographs uses the primary dark colour. Project-card
+background images have 0.5 opacity, and links keep their underline. This keeps
+text readable over dark areas of the forest and grain images; there is no
+separate white panel over the first screen.
 
-useDocumentationScrollspy наблюдает только колонку содержимого. Он собирает
-видимые h2 с id, учитывает scroll-padding-top корня и активную вкладку.
-До следующего заголовка сохраняется предыдущий; у конца документа выделяется
-последний видимый раздел. MutationObserver/ResizeObserver обновляют геометрию
-после ленивой загрузки, изменения кода и переключения вкладки. Scroll/resize
-объединяются через requestAnimationFrame; observers/listeners удаляются при
-закрытии страницы. Боковое оглавление основ и оформления использует aria-current="location" и заметные
-цвет темы и небольшой шеврон слева с плавным смещением текста без фона. Подпункты
-выровнены с разделом; prefers-reduced-motion отключает движение. URL изменяется
-при выборе ссылки, прокрутка адрес не меняет.
+## Component page
 
-## Адаптивная шапка
+Every guide has Examples, API and Accessibility tabs. Section links sit
+immediately below the tabs and refer to the visible panel. The sidebar starts
+with Getting started and permanent links to six sections: installation,
+interface foundations, components, tokens, icons and migration. These links
+reach the corresponding overview anchor from any guide. The nav is named
+Getting started sections; the book icon uses the theme's semantic accent.
+Main categories use SVG icons from the existing set. Component catalogue rows
+stay compact while retaining visible focus and a touch hit area.
 
-Четыре раздела показаны горизонтально на широком экране. До 1180 px их
-заменяет кнопка «Меню» справа; до 700 px поиск, тема и меню — иконки с
-областью 44 × 44 px. Версия остаётся видимой. Иконка темы остаётся WlSelect,
-сохраняя открытие списка и клавиатуру. WlDrawer управляет Escape, маской
-и возвратом фокуса. При расширении окна панель закрывается, фокус переходит
-в видимую горизонтальную навигацию.
+- The first example has controls on the left and a live SFC with expanded code
+  on the right; columns stack on narrow screens. ComponentExplorer in
+  documentation mode uses the same canonical examples and `consumerSource`.
+  Toggles, enum controls and important string/number settings reflect the
+  example's actual props. Menu.popup and Autocomplete.multiple have separate
+  working scenarios. Reset restores initial settings and the model. In the
+  design system, Explorer keeps its compact layout.
+- Further examples compare variants, sizes and states, demonstrate slots and
+  show real component scenarios. Each is a separate working SFC that also
+  supplies the copyable source.
+- Collections, callbacks, complex models and pt are edited in the copyable
+  SFC; the panel explains which parameters belong to that scenario. Scalar
+  fields use Gavia UI controls, numbers remain numbers, and code receives the
+  same values as the live example.
+- Props, defaults, events, slots and v-model come from the public manifest.
+  Pt sections are listed from the component's actual `useWlPt` calls.
+- Accessibility guidance describes the actual model, keys, labels and errors;
+  unsupported props are not added just to make every guide look alike.
+- Tabs support arrows/Home/End and retain example state. A named API or
+  accessibility anchor opens the corresponding tab.
+- On the WlCommandPalette page, the Playground's global Ctrl K is disabled so
+  the shortcut setting controls only the demonstrated component. Header
+  search still works by clicking its button.
+- Toast and ConfirmDialog use one service container each in App.vue. Examples
+  call the composable; instructions show how to register the service.
 
-## Добавление и проверки примеров
+## Module boundaries
 
-1. Сверить исходный компонент, публичный манифест и реальные pt-секции.
-2. Добавить канонический пример и расширенный SFC в подходящую категорию;
-   consumerSource заменяет только внутренний импорт и preview-binding.
-3. Добавить описание и индивидуальные правила доступности в metadata.
-4. Проверить код после копирования как SFC-потребитель gavia-ui.
-5. После отдельной команды на предрелизные проверки запустить typecheck,
-   сборку playground, проверки изменённого раздела, регрессию и визуальные эталоны.
+- `HomePage.vue` — home and installation from package metadata.
+- `App.vue` — History API, theme, language, search, shared header and service containers.
+- `DocsPage.vue` — right sidebar, categories, guide selection and anchors. The
+  component catalogue remains a plain list without search or a count.
+- `documentation/catalog.ts` — manifest groups and foundation metadata.
+- `documentation/ComponentDocumentation.vue` — shared guide structure;
+  `DocumentationTabs.vue` — accessible tabs; `DocumentationContract.vue` — API.
+- `documentation/components/registry.ts` — lazy live SFCs and their raw sources;
+  `inputs.ts`/`showcase.ts` — titles, descriptions and accessibility rules.
+- `documentation/components/inputs` and `showcase` — 52 extended SFCs;
+  `documentation/button` — five detailed WlButton scenarios.
+- `documentation/components/pt-sections.ts` — actual pt sections. Update the
+  relevant entry and documentation when DOM/`useWlPt` changes.
+- `design-system/examples` — 53 canonical controlled examples. Explorer and
+  Docs share them; library implementations are not copied.
+- `documentation/foundations` — foundation pages and 18 working SFCs. Layout
+  explains containers, proportions, nesting and stacking contexts. See the
+  [primitive contract](primitives.md). The separate [responsive guide](responsiveness.md)
+  covers viewport, local tokens, container queries and matchMedia with SSR/cleanup.
+- `documentation/assets` — icons and colours. Icon/token registries are the
+  only list sources. The SVG catalogue shows the selected size; colours are
+  resolved for the current theme and preserve alpha.
+- `i18n/index.ts` and `i18n/messages` — shared Vue I18n and EN/RU message
+  catalogues. Technical code fragments remain literal; named parameters are
+  interpolated. Documentation metadata translates at read time.
+- `documentation/manifest.ts` — localised presentation descriptions for the
+  shared manifest, without changing package API names, types or defaults.
+- `CodeHighlight.vue` — small lossless tokenizer without HTML injection.
+  CodePanel copies the original `consumerSource`. Its top-right button appears
+  on hover/focus and stays visible on touch.
+- `scripts/example-source.mjs` — shared export transformation for the
+  Playground and isolated package consumer. It resolves literal example
+  translation keys to EN/RU text and removes the private Playground hook, so
+  exported SFCs do not depend on the site's i18n implementation.
+- `navigation.ts` — query and legacy-anchor parsing, canonical URL creation.
+  `usePageAnchor.ts` restores anchors after loading a page.
 
-Целевые Vitest-проверки фиксируют покрытие манифеста, компиляцию consumer-кода,
-legacy-маршруты и выбор активного заголовка. E2E проверяют настоящие переходы
-по всем 53 компонентам, файлы/даты/оверлеи, 320 px, пять тем и scrollspy.
-[Контракт DatePicker: одиночная дата и диапазон](date-picker.md).
+Horizontal links below tabs navigate within the page and do not highlight on
+scroll. Shared tabs have no bottom divider; the selected tab uses background
+and text colour only.
 
-Изменения Docs записывайте в «Не выпущено» обоих changelog.
-Новые зависимости, версия, коммит и публикация согласуются отдельно.
+## Active subsection
 
-При подключении нескольких тем импортируйте `themes/white.css` первым:
-он также задаёт fallback на `:root`. Gavia и остальные именованные темы должны
-идти после Classic, чтобы выбранный атрибут переопределял базовую палитру.
+`useDocumentationScrollspy` observes only the content column. It collects
+visible h2 elements with id and accounts for root `scroll-padding-top` and the
+active tab. The previous heading remains active until the next; the final
+visible section is highlighted near the document end. MutationObserver and
+ResizeObserver update geometry after lazy loading, code changes and tab
+switches. Scroll/resize events are batched through requestAnimationFrame;
+observers and listeners are removed when the page closes.
 
-Главная и вводная документация предлагают pnpm/npm/Bun. Команда использует последнюю
-подтверждённую npm-версию; копирование соответствует выбранному менеджеру.
+Foundation and appearance side outlines use `aria-current="location"`, a
+visible theme colour and a small left chevron with a smooth text shift and no
+background. Subsections align with their parent; `prefers-reduced-motion`
+disables motion. Selecting a link changes the URL; scrolling does not.
+
+## Responsive header
+
+On desktop, navigation adapts to the actual available width. Visible links
+keep their original order; trailing links move into a WlMenu popup under
+“More” (“Ещё” in Russian), starting with Changelog, then Theme builder.
+Search and theme controls each use 120 px; Search text is left-aligned like
+an input label.
+
+At viewport widths of 760 px or less, navigation uses a WlDrawer menu.
+The header stays in one row with the brand, Search and Theme controls,
+language selector and menu button. Search and Theme use 44 × 44 px
+icon-only controls with centered icons. The menu button stays at the far right;
+the language selector is immediately before it.
+
+Language selection uses a 68 px WlSelect with the short labels EN/RU.
+WlDrawer handles Escape, the backdrop and focus restoration. When the viewport
+returns to desktop layout, the drawer closes and focus moves to visible navigation.
+
+## SEO
+
+The runtime updates title, description, Open Graph/Twitter metadata, canonical
+URL and EN/RU/x-default hreflang links for the current route and language.
+Static HTML provides an English home-page fallback, JSON-LD and Open
+Graph/Twitter tags. The Playground build generates `sitemap.xml` with EN/RU
+home, section and component URLs and their language alternates.
+
+There is no prerender or SSR for Playground pages. Query routes receive the
+same static English home HTML; route-specific metadata is applied only after
+JavaScript starts. Social bots that do not execute JavaScript therefore see
+the English home preview, including when following a Russian or component URL.
+
+## Adding and checking examples
+
+1. Compare the source component, public manifest and actual pt sections.
+2. Add a canonical example and extended SFC in the appropriate category.
+   `consumerSource` replaces the internal import and preview binding, resolves
+   the documented literal `t('examples.key')` pattern, and removes
+   `usePlaygroundI18n` from exported code. Keep exportable examples within that
+   pattern; their default export language is English, and the Playground
+   clipboard follows the selected EN/RU language.
+3. Add descriptions and component-specific accessibility rules to metadata,
+   with matching EN/RU messages.
+4. Check copied code as a gavia-ui SFC consumer.
+5. After a separate command authorising pre-release checks, run typecheck,
+   the Playground build, affected-section checks, regression and visual baselines.
+
+Targeted Vitest checks cover the manifest, consumer-code compilation, legacy
+routes and active-heading selection. E2E checks real navigation through all
+53 components, files/dates/overlays, 320 px, five themes and scrollspy. See the
+[DatePicker contract: single date and range](date-picker.md).
+
+Record Docs changes under Unreleased in both changelogs. Keep the public root
+changelog in English and update its Russian Playground overlay when needed.
+New dependencies, version changes, commits and publishing require separate
+agreement.
+
+When importing multiple themes, import `themes/white.css` first: it also sets
+the `:root` fallback. Gavia and other named themes must follow Classic so the
+selected attribute overrides the base palette.
+
+Home and the documentation overview offer pnpm/npm/Bun. The command uses the
+latest confirmed npm version; copying follows the selected package manager.

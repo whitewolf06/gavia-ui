@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../i18n";
+const { t } = usePlaygroundI18n();
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import type { WlComponentManifest } from "../../../../packages/ui-kit/src/manifest";
 import ComponentExplorer from "../design-system/ComponentExplorer.vue";
@@ -23,7 +25,7 @@ const setupSource = computed(() => service.value ? [
   'app.use(' + service.value + ');',
   'app.mount("#app");',
   '',
-  '// В корневом App.vue один контейнер ' + props.entry.name + '.',
+  t('documentation.strings.s0207') + props.entry.name + '.',
   '// import { ' + props.entry.name + ' } from "gavia-ui";',
   '// <' + props.entry.name + ' />'
 ].join("\n") : "");
@@ -47,29 +49,29 @@ defineExpose({ showHeading });
       <template #outline><slot name="outline" /></template>
     </DocumentationTabs>
     <div v-show="selectedTab === 'examples'" :id="prefix + '-panel-examples'" role="tabpanel" :aria-labelledby="prefix + '-tab-examples'" class="wl-stack" data-space="2xl">
-      <p class="wl-text-body wl-text-muted">Измените props и посмотрите результат: настройки одинаковы для примера и кода. «Сбросить» возвращает исходные значения.</p>
+      <p class="wl-text-body wl-text-muted">{{ t('documentation.strings.s0208') }}</p>
       <ComponentExplorer :entry="entry" layout="documentation" :heading-prefix="prefix" />
       <section v-if="extra?.component" class="wl-stack" data-space="lg" :aria-labelledby="prefix + '-examples'" :data-docs-component-extra="entry.name">
         <h2 :id="prefix + '-examples'" class="wl-text-heading">{{ extra.title }}</h2>
         <p class="wl-text-body wl-text-muted">{{ extra.description }}</p>
         <div class="docs-component-extra-preview" data-testid="docs-component-extra-preview"><component :is="extra.component" /></div>
-        <div data-testid="docs-component-extra-source"><CodePanel :source="extra.source" title="Vue SFC · дополнительный пример" /></div>
+        <div data-testid="docs-component-extra-source"><CodePanel :source="extra.source" :title="t('documentation.strings.s0209')" /></div>
       </section>
-      <p v-else class="docs-notice" role="alert">Дополнительный пример не найден.</p>
+      <p v-else class="docs-notice" role="alert">{{ t('documentation.strings.s0210') }}</p>
       <section v-if="service" class="wl-stack" data-space="lg">
-        <h2 :id="prefix + '-service'" class="wl-text-heading">Подключение сервиса</h2>
-        <p class="wl-text-body">Подключите {{ service }} к Vue-приложению и добавьте один {{ entry.name }} в App.vue. У каждого приложения своё состояние сервиса. Стили подключите по инструкции в разделе установки.</p>
-        <CodePanel :source="setupSource" title="main.ts · сервис и контейнер" />
+        <h2 :id="prefix + '-service'" class="wl-text-heading">{{ t('documentation.strings.s0211') }}</h2>
+        <p class="wl-text-body">{{ t('documentation.strings.s0212') }} {{ service }} {{ t('documentation.strings.s0213') }} {{ entry.name }} {{ t('documentation.strings.s0214') }}</p>
+        <CodePanel :source="setupSource" :title="t('documentation.strings.s0215')" />
       </section>
     </div>
     <div v-show="selectedTab === 'api'" :id="prefix + '-panel-api'" role="tabpanel" :aria-labelledby="prefix + '-tab-api'">
       <DocumentationContract :entry="entry" :anchors="anchors" :pt-sections="ptSections" />
     </div>
     <div v-show="selectedTab === 'accessibility'" :id="prefix + '-panel-accessibility'" role="tabpanel" :aria-labelledby="prefix + '-tab-accessibility'" class="wl-stack" data-space="lg">
-      <h2 :id="prefix + '-accessibility'" class="wl-text-heading">Клавиатура и доступность</h2>
+      <h2 :id="prefix + '-accessibility'" class="wl-text-heading">{{ t('documentation.strings.s0216') }}</h2>
       <ul class="docs-component-rules"><li v-for="rule in accessibility" :key="rule">{{ rule }}</li></ul>
-      <p v-if="entry.model" class="wl-text-body">Изменения передаются через <code>v-model{{ entry.model.name === 'modelValue' ? '' : ':' + entry.model.name }}</code>. После выбора, отмены и сброса подпись и состояние должны оставаться понятными.</p>
-      <p class="wl-text-body wl-text-muted">В своём приложении проверьте управление с клавиатуры, увеличение масштаба и видимость фокуса. Подпись состояния и обязательная информация должны читаться во всех темах.</p>
+      <p v-if="entry.model" class="wl-text-body">{{ t('documentation.strings.s0217') }} <code>v-model{{ entry.model.name === 'modelValue' ? '' : ':' + entry.model.name }}</code>{{ t('documentation.strings.s0218') }}</p>
+      <p class="wl-text-body wl-text-muted">{{ t('documentation.strings.s0219') }}</p>
     </div>
   </div>
 </template>

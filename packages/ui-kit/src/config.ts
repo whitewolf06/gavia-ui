@@ -1,5 +1,6 @@
-import { computed, inject, type App, type ComputedRef, type DirectiveBinding } from "vue";
-import { normalizeWlLocale, type WlResolvedLocale, type WlLocaleInput } from "./locale";
+import { computed, getCurrentInstance, inject, type App, type ComputedRef, type DirectiveBinding } from "vue";
+import { normalizeWlLocale, type WlLocaleInput } from "./locale";
+import type { WlControlLocale } from "./locale-types";
 import { createWlPt } from "./theme";
 import type { WlPtCallbackOptions, WlPtConfig } from "./pt-types";
 
@@ -83,7 +84,7 @@ export function wlConfigForDirective(instance: DirectiveBinding["instance"]): Wl
   return publicInstance?.$?.appContext?.provides?.[configKey] as WlConfigOptions | undefined ?? {};
 }
 
-export function useWlLocale(): ComputedRef<WlResolvedLocale> {
+export function useWlLocale(): ComputedRef<ReturnType<typeof normalizeWlLocale>> {
   const config = inject<WlConfigOptions>(configKey, {});
   return computed(() => normalizeWlLocale(config.locale));
 }
@@ -92,4 +93,16 @@ export function useWlLocale(): ComputedRef<WlResolvedLocale> {
 export function useWlMotion(local: ComputedRef<boolean | undefined>): ComputedRef<boolean> {
   const config = inject<WlConfigOptions>(configKey, {});
   return computed(() => local.value ?? config.motion ?? true);
+}
+
+/** Resolve a rendered default while retaining public prop defaults and explicit overrides. */
+export function useWlLocaleText(): (propName: string, value: string | undefined, key: keyof WlControlLocale) => string {
+  const instance = getCurrentInstance();
+  const locale = useWlLocale();
+  return (propName, value, key) => {
+    const raw = instance?.vnode.props;
+    const kebabName = propName.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+    const supplied = raw?.[propName] !== undefined || raw?.[kebabName] !== undefined;
+    return supplied && value !== undefined ? value : locale.value[key];
+  };
 }

@@ -1,89 +1,91 @@
-# Gavia UI: исходники бренда
+# Gavia UI brand sources
 
-Знак Gavia UI — [gavia-ui-mark-lake.svg](gavia-ui-mark-lake.svg): гагара в форме G,
-круглый прозрачный глаз, основной цвет #294451.
-Силуэт совпадает с [gavia-ui-mark-v2.png](gavia-ui-mark-v2.png).
-В шапке playground цвет знака берётся из темы, favicon использует основной цвет Gavia.
-Логотип с названием — [gavia-ui-logo-v2-eye.png](gavia-ui-logo-v2-eye.png).
+The Gavia UI mark is [gavia-ui-mark-lake.svg](gavia-ui-mark-lake.svg): a loon
+forming a G, a round transparent eye and primary color #294451.
+Its silhouette matches [gavia-ui-mark-v2.png](gavia-ui-mark-v2.png).
+The playground header takes the mark color from the theme; the favicon uses
+Gavia’s primary color. The wordmark is [gavia-ui-logo-v2-eye.png](gavia-ui-logo-v2-eye.png).
 
-Изображения созданы встроенным imagegen с прозрачным фоном и отверстиями знака.
-Запросы сохранены в `*-prompts.txt` и `gavia-ui-mark-v2-prompt.txt`.
-Варианты v1 и preview оставлены для истории.
+Images were made with built-in imagegen, with a transparent background and
+cutouts in the mark. Prompts are saved in `*-prompts.txt` and
+`gavia-ui-mark-v2-prompt.txt`. v1 and preview variants are kept for history.
 
-При изменении знака сохраняйте силуэт G, клюв и прозрачный глаз. Проверьте
-читаемость в 26 px рядом с названием и версией во всех темах.
+When changing the mark, preserve the G silhouette, bill and transparent eye.
+Check legibility at 26 px beside the name and version in every theme.
 
-## Фон первого экрана
+<a id="фон-первого-экрана"></a>
 
-Дневной [gavia-lake-hero-v2.webp](gavia-lake-hero-v2.webp) — фотографический
-фон тихого озера на рассвете: серо-голубая вода, туманный хвойный берег и гагара
-справа. Мягкий свет в левой части оставляет место для текста. На изображении
-нет надписей, интерфейса или искусственной белой плашки.
+## Hero background
 
-PNG-исходник: [gavia-lake-hero-v2.png](gavia-lake-hero-v2.png).
-Изображение создано встроенным imagegen (builtin), без CLI. Сначала создан
-собственный пейзаж, затем в нём скорректировано положение птицы. Набросок
-пользователя использован как ориентир для цвета и композиции; его пиксели,
-текст и интерфейс не переносились.
-Точный запрос и уточнение: [gavia-lake-hero-v2-prompt.txt](gavia-lake-hero-v2-prompt.txt).
+The daytime [gavia-lake-hero-v2.webp](gavia-lake-hero-v2.webp) is a photographic
+background of a quiet lake at dawn: gray-blue water, a misty conifer shore and
+a loon on the right. Soft light on the left leaves space for text.
+The image contains no lettering, UI or artificial white panel.
 
-Размер — 2172 × 724, соотношение 3:1. Кончик клюва находится примерно на
-79% ширины, голова — на 82%, тело — в области 83–95%; по вертикали птица
-занимает около 43–67%, ниже остаётся отражение. При обрезке фона проверяйте
-клюв, глаз и силуэт, видимость рядом с панелью установки и читаемость текста.
+PNG source: [gavia-lake-hero-v2.png](gavia-lake-hero-v2.png).
+Built-in imagegen was used without a CLI. An original landscape was generated
+first, then the bird’s position was adjusted. The user’s sketch guided color
+and composition; its pixels, text and interface were not copied.
+Exact prompt and revision:
+[gavia-lake-hero-v2-prompt.txt](gavia-lake-hero-v2-prompt.txt).
 
-[gavia-lake-hero-v1.png](gavia-lake-hero-v1.png), 1774 × 887, — исторический
-рисованный вариант с закатным светом и серо-оливковой водой.
-Запрос: [gavia-lake-hero-v1-prompt.txt](gavia-lake-hero-v1-prompt.txt).
-Новые варианты сохраняйте рядом с новым суффиксом версии.
+Size: 2172 × 724, ratio 3:1. The bill tip is around 79% of the width, the head
+at 82% and the body at 83–95%; vertically, the bird occupies roughly 43–67%,
+with its reflection below. When cropping, check the bill, eye, silhouette,
+visibility beside the installation panel and text legibility.
 
-Для Gavia Dark и Classic Dark используется [gavia-lake-night-v2.webp](gavia-lake-night-v2.webp):
-та же локация, берег и гагара в лунную ночь с лёгким голубоватым светом.
-Луна занимает место исходного солнца слева у горизонта, частично скрываясь
-за тем же хребтом. Серебристое отражение остаётся на исходной оси солнечного
-света. Расположение луны не подстраивается под интерфейс.
-[PNG-исходник](gavia-lake-night-v2.png) и
-[точные запросы](gavia-lake-night-v2-prompt.txt). Встроенный imagegen (builtin),
-без CLI; размер 2172 × 724. WebP: quality 86, без изменения кадрирования
-и цвета при экспорте. Дневное изображение используется во всех светлых темах
-(Gavia, Classic и Newspaper), ночное — в обеих тёмных. Общая компоновка hero сохраняется.
+[gavia-lake-hero-v1.png](gavia-lake-hero-v1.png), 1774 × 887, is the historical
+illustrated variant with sunset lighting and gray-olive water.
+Prompt: [gavia-lake-hero-v1-prompt.txt](gavia-lake-hero-v1-prompt.txt).
+Save new variants beside it with a new version suffix.
 
-Оба изображения загружаются заранее и остаются двумя слоями hero. Ночной слой
-появляется после загрузки. При поддержке View Transitions API смена темы
-использует один временный переход всей страницы. В остальных браузерах цветовые
-токены применяются сразу, а hero сохраняет crossfade изображений.
-`prefers-reduced-motion: reduce` отключает оба перехода.
-В правом верхнем углу hero ghost-кнопка `WlIconButton` с цветной иконкой
-солнца или луны размером 32 px и активной областью 44 × 44 px переключает
-Gavia ↔ Gavia Dark и Classic ↔ Classic Dark; Newspaper переключается
-в Classic Dark и возвращается при повторном нажатии. В обычном состоянии
-иконка отображается без фоновой коробки; клавиатурный фокус выделяет обводка.
+Gavia Dark and Classic Dark use [gavia-lake-night-v2.webp](gavia-lake-night-v2.webp):
+the same location, shore and loon on a moonlit night with soft blue light.
+The moon replaces the original sun on the left horizon, partly hidden by the
+same ridge. Its silver reflection follows the original sunlight axis.
+The moon’s position is not adjusted to fit the interface.
+[PNG source](gavia-lake-night-v2.png) and
+[exact prompts](gavia-lake-night-v2-prompt.txt).
+Built-in imagegen, no CLI; 2172 × 724. WebP quality 86, with no crop or color
+changes during export. Daytime art is used in all light themes
+(Gavia, Classic and Newspaper); nighttime art in both dark themes.
+The shared hero layout is preserved.
 
-Предыдущий [ночной вариант v1](gavia-lake-night-v1.webp) сохранён как история.
+Both images are preloaded and remain two hero layers. The night layer appears
+after loading. Where View Transitions API is supported, changing the theme uses
+one temporary whole-page transition. Other browsers apply color tokens immediately
+while the hero keeps its image crossfade. `prefers-reduced-motion: reduce`
+disables both transitions.
+A ghost `WlIconButton` in the hero’s upper-right corner has a colored 32 px sun
+or moon icon and a 44 × 44 px hit area. It switches Gavia ↔ Gavia Dark and
+Classic ↔ Classic Dark; Newspaper switches to Classic Dark and returns on the
+next click. The idle icon has no background box; keyboard focus adds an outline.
 
-## Фоны информационных карточек
+The previous [v1 night variant](gavia-lake-night-v1.webp) is kept for history.
 
-- [gavia-forest-card-v1.webp](gavia-forest-card-v1.webp) — светлый туманный лес
-  у нижнего и правого краёв. [PNG-исходник](gavia-forest-card-v1.png) и
-  [точный запрос](gavia-forest-card-v1-prompt.txt).
-- [gavia-reeds-card-v1.webp](gavia-reeds-card-v1.webp) — бежевые колоски и
-  прибрежные травы справа на тёплом светлом фоне.
-  [PNG-исходник](gavia-reeds-card-v1.png) и
-  [точный запрос](gavia-reeds-card-v1-prompt.txt).
+## Information card backgrounds
 
-Оба изображения созданы встроенным imagegen, без CLI, имеют размер
-2172 × 724 (3:1). Левые две трети оставлены свободными под текст.
-В светлых темах используется мягкое смешение multiply. В тёмных темах
-CSS-инверсия в оттенках серого, screen и плавная маска сохраняют различимые
-силуэты на тёмной поверхности; исходные изображения и композиция общие.
-WebP-файлы — версии для загрузки в playground: тот же размер, quality 86,
-без изменения кадрирования, композиции или цвета. PNG оставлены как исходники.
+- [gavia-forest-card-v1.webp](gavia-forest-card-v1.webp): a light misty forest
+  along the lower and right edges. [PNG source](gavia-forest-card-v1.png) and
+  [exact prompt](gavia-forest-card-v1-prompt.txt).
+- [gavia-reeds-card-v1.webp](gavia-reeds-card-v1.webp): beige seed heads and shore
+  grasses on the right of a warm light background.
+  [PNG source](gavia-reeds-card-v1.png) and
+  [exact prompt](gavia-reeds-card-v1-prompt.txt).
 
-Фоны декоративные: `alt=""`, `aria-hidden="true"`; содержимое карточек и
-hero остаётся HTML. Размер блоков определяется содержимым. Проверяйте
-контраст текста и мобильную обрезку во всех темах.
+Both were made with built-in imagegen, without a CLI, at 2172 × 724 (3:1).
+The left two-thirds are left clear for text.
+Light themes use soft multiply blending. In dark themes, grayscale CSS inversion,
+screen blending and a gradual mask retain visible silhouettes on the dark surface;
+source images and composition are shared.
+WebP files are the playground loading versions: same dimensions, quality 86,
+with no crop, composition or color changes. PNG files remain the sources.
 
-Цветовая схема и контраст: [тема Gavia](../theme-gavia.md).
+Backgrounds are decorative: `alt=""`, `aria-hidden="true"`. Card and hero content
+remains HTML. Content determines block size. Review text contrast and mobile
+cropping in every theme.
 
-Кнопка в GitHub README — [playground-button.svg](playground-button.svg):
-самостоятельный SVG с основным цветом Gavia и текстом «Открыть Playground».
+Palette and contrast: [Gavia theme](../theme-gavia.md).
+
+The GitHub README button is [playground-button.svg](playground-button.svg):
+a standalone SVG with Gavia’s primary color and the text “Open Playground”.

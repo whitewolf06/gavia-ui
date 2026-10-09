@@ -1,217 +1,218 @@
+import { localizeDocumentation } from "../localize";
 /** Additional canonical SFC scenarios; primary prop controls stay in the shared preview. */
-export const showcaseDocumentationExamples: Record<string, { title: string; description: string; sourceName: string }> = {
-  WlIconButton: { title: "Варианты, счётчики и иконки", description: "Ghost, secondary, soft, маленький размер, active, disabled, count/dot и собственный default-слот.", sourceName: "showcase/WlIconButton.vue" },
-  WlButtonGroup: { title: "Группы действий и навигации", description: "Связанные кнопки периода и группа иконок с блокировкой крайних страниц; состояние хранит приложение.", sourceName: "showcase/WlButtonGroup.vue" },
-  WlSegmented: { title: "Период, иконки и disabled", description: "Контролируемый выбор, недоступная опция, варианты с иконками и полностью отключённая группа.", sourceName: "showcase/WlSegmented.vue" },
-  WlMenu: { title: "Статическое и popup-меню", description: "Заголовок, разделитель, иконки, подпись сочетания, disabled и danger; команды дают локальный результат.", sourceName: "showcase/WlMenu.vue" },
-  WlNavItem: { title: "Активные пункты и свёрнутые подписи", description: "Кнопки разделов, счётчики, disabled, реальная ссылка и collapsed с сохранением доступного имени.", sourceName: "showcase/WlNavItem.vue" },
-  WlPageHeader: { title: "Все секции заголовка страницы", description: "Breadcrumbs, eyebrow/title/description/meta/actions/navigation, три размера и compact без дополнительного h1.", sourceName: "showcase/WlPageHeader.vue" },
-  WlFilterBar: { title: "Поиск, фильтры и мобильная панель", description: "Leading, controls, actions, summary, удаление активных фильтров, clear/apply и именованная модель open.", sourceName: "showcase/WlFilterBar.vue" },
-  WlSidebar: { title: "Группы, закрепление и mobile", description: "Основные/нижние пункты, brand-mark/footer, disabled, hover/pinned и контролируемый мобильный drawer.", sourceName: "showcase/WlSidebar.vue" },
-  WlCommandPalette: { title: "Быстрые действия, поиск и состояния", description: "Две группы, ключевые слова, disabled, локальная фильтрация, загрузка, empty и footer. Глобальный shortcut в этом примере выключен.", sourceName: "showcase/WlCommandPalette.vue" },
-  WlCard: { title: "Обычная и hoverable-карточка", description: "Header, title/subtitle, содержимое и footer на адаптивной сетке; отдельные доступные действия.", sourceName: "showcase/WlCard.vue" },
-  WlAccordion: { title: "Режимы раскрытия и scoped-слот", description: "Controlled через openKeys, single, disabled, item-слот и отдельный uncontrolled-аккордеон.", sourceName: "showcase/WlAccordion.vue" },
-  WlTabs: { title: "Вкладки с иконками и панелями", description: "Контролируемая модель, счётчик заметок, scoped panel и клавиатурное переключение разделов.", sourceName: "showcase/WlTabs.vue" },
-  WlDialog: { title: "Редактирование в диалоге", description: "Поле с label/hint, footer с сохранением/отменой, настройки motion/dismissable и afterLeave.", sourceName: "showcase/WlDialog.vue" },
-  WlDrawer: { title: "Положения панели", description: "Right/left/top/bottom/full, управляемая анимация, подробности и действия в footer.", sourceName: "showcase/WlDrawer.vue" },
-  WlPopover: { title: "Панель рядом с кнопкой", description: "Toggle/hide, содержимое и действие, ariaLabel, motion и события открытия/закрытия.", sourceName: "showcase/WlPopover.vue" },
-  WlDivider: { title: "Линия и подпись разделителя", description: "Простой разделитель, текст «или» и собственное содержимое default-слота между частями страницы.", sourceName: "showcase/WlDivider.vue" },
-  WlBreadcrumbs: { title: "Полный и короткий путь", description: "Ссылки на родительские страницы, иконка, текущая страница без перехода и путь из одного уровня.", sourceName: "showcase/WlBreadcrumbs.vue" },
-  WlSteps: { title: "Пройденный, текущий и будущий шаг", description: "Все состояния сразу, назад/вперёд, ограничения крайних шагов и перезапуск локального сценария.", sourceName: "showcase/WlSteps.vue" },
-  WlAlert: { title: "Четыре варианта и повтор действия", description: "Info/ok/warn/err, action-слот, closable с понятной подписью и восстановление скрытой ошибки.", sourceName: "showcase/WlAlert.vue" },
-  WlToast: { title: "Четыре вида уведомлений", description: "useWlToast показывает ok/info/warn/err с detail через один уже установленный контейнер приложения.", sourceName: "showcase/WlToast.vue" },
-  WlConfirmDialog: { title: "Подтверждение действия и удаления", description: "Confirm/confirmDanger, собственные подписи accept/reject, отмена, локальный результат и повтор примера.", sourceName: "showcase/WlConfirmDialog.vue" },
-  WlSpinner: { title: "Размеры, светлый вариант и загрузка", description: "Sm/md/lg, light на тёмной поверхности, понятные label и контролируемое завершение/повтор.", sourceName: "showcase/WlSpinner.vue" },
-  WlTable: { title: "Ячейки, пустое состояние и загрузка", description: "Columns, numeric, cell-title/cell-status, empty-слот, loading, доступная прокрутка и собственная таблица в default.", sourceName: "showcase/WlTable.vue" },
-  WlPagination: { title: "Список страниц и компактный ввод", description: "Многоточия, две именованные навигации, Enter/blur для компактного номера и disabled.", sourceName: "showcase/WlPagination.vue" },
-  WlBadge: { title: "Числа, тексты и точки", description: "Все пять вариантов, dot с текстовым контекстом, нулевой счётчик и локальная отметка прочитанного.", sourceName: "showcase/WlBadge.vue" },
-  WlTag: { title: "Варианты и удаляемые теги", description: "Все пять цветов, removable с уникальным removeLabel, controlled-массив и восстановление фокуса/тегов.", sourceName: "showcase/WlTag.vue" },
-  WlChip: { title: "Независимые фильтры", description: "Active, count включая ноль, disabled, именованные модели и снятие всех фильтров.", sourceName: "showcase/WlChip.vue" },
-  WlPill: { title: "Пять статусов", description: "Neutral/info/ok/warn/err, label и собственный default-слот с декоративной иконкой.", sourceName: "showcase/WlPill.vue" },
-  WlAvatar: { title: "Размеры, presence, image и слот", description: "24/28/32/36/48, три статуса присутствия, безопасное локальное изображение/инициалы и собственная иконка.", sourceName: "showcase/WlAvatar.vue" },
-  WlStatCard: { title: "Метрики, tone и прогресс", description: "Accent/success, подпись/описание, прогресс, значение через default-слот, footer и обновление метрики.", sourceName: "showcase/WlStatCard.vue" },
-  WlProgress: { title: "Обычный, тонкий и завершённый прогресс", description: "Default/ok, thin, showValue, доступные имена, изменение значения и перезапуск.", sourceName: "showcase/WlProgress.vue" },
-  WlSkeleton: { title: "Карточка во время загрузки", description: "Rectangle/circle, размеры и радиус, aria-busy с пояснением и переход к реальному содержимому.", sourceName: "showcase/WlSkeleton.vue" },
-  WlEmpty: { title: "Нет данных, нет результатов и свой слот", description: "Добавление первого материала, сброс поиска, повтор пустого состояния, icon/default/action.", sourceName: "showcase/WlEmpty.vue" },
-  WlField: { title: "Подпись поля, подсказка и ошибка", description: "Required, error/hint, slot id/ariaDescribedby/invalid, email/readonly/textarea и локальная проверка.", sourceName: "showcase/WlField.vue" },
-  WlIcon: { title: "Размеры, совместимые имена и SVG-слот", description: "Имена из каталога, размеры 14/18/24/32 и 1em, alias pi pi-search и собственный безопасный SVG.", sourceName: "showcase/WlIcon.vue" }
-};
+export const showcaseDocumentationExamples: Record<string, { title: string; description: string; sourceName: string }> = localizeDocumentation({
+  WlIconButton: { title: "documentation.strings.s0499", description: "documentation.strings.s0500", sourceName: "showcase/WlIconButton.vue" },
+  WlButtonGroup: { title: "documentation.strings.s0501", description: "documentation.strings.s0502", sourceName: "showcase/WlButtonGroup.vue" },
+  WlSegmented: { title: "documentation.strings.s0503", description: "documentation.strings.s0504", sourceName: "showcase/WlSegmented.vue" },
+  WlMenu: { title: "documentation.strings.s0505", description: "documentation.strings.s0506", sourceName: "showcase/WlMenu.vue" },
+  WlNavItem: { title: "documentation.strings.s0507", description: "documentation.strings.s0508", sourceName: "showcase/WlNavItem.vue" },
+  WlPageHeader: { title: "documentation.strings.s0509", description: "documentation.strings.s0510", sourceName: "showcase/WlPageHeader.vue" },
+  WlFilterBar: { title: "documentation.strings.s0511", description: "documentation.strings.s0512", sourceName: "showcase/WlFilterBar.vue" },
+  WlSidebar: { title: "documentation.strings.s0513", description: "documentation.strings.s0514", sourceName: "showcase/WlSidebar.vue" },
+  WlCommandPalette: { title: "documentation.strings.s0515", description: "documentation.strings.s0516", sourceName: "showcase/WlCommandPalette.vue" },
+  WlCard: { title: "documentation.strings.s0517", description: "documentation.strings.s0518", sourceName: "showcase/WlCard.vue" },
+  WlAccordion: { title: "documentation.strings.s0519", description: "documentation.strings.s0520", sourceName: "showcase/WlAccordion.vue" },
+  WlTabs: { title: "documentation.strings.s0521", description: "documentation.strings.s0522", sourceName: "showcase/WlTabs.vue" },
+  WlDialog: { title: "documentation.strings.s0523", description: "documentation.strings.s0524", sourceName: "showcase/WlDialog.vue" },
+  WlDrawer: { title: "documentation.strings.s0525", description: "documentation.strings.s0526", sourceName: "showcase/WlDrawer.vue" },
+  WlPopover: { title: "documentation.strings.s0527", description: "documentation.strings.s0528", sourceName: "showcase/WlPopover.vue" },
+  WlDivider: { title: "documentation.strings.s0529", description: "documentation.strings.s0530", sourceName: "showcase/WlDivider.vue" },
+  WlBreadcrumbs: { title: "documentation.strings.s0531", description: "documentation.strings.s0532", sourceName: "showcase/WlBreadcrumbs.vue" },
+  WlSteps: { title: "documentation.strings.s0533", description: "documentation.strings.s0534", sourceName: "showcase/WlSteps.vue" },
+  WlAlert: { title: "documentation.strings.s0535", description: "documentation.strings.s0536", sourceName: "showcase/WlAlert.vue" },
+  WlToast: { title: "documentation.strings.s0537", description: "documentation.strings.s0538", sourceName: "showcase/WlToast.vue" },
+  WlConfirmDialog: { title: "documentation.strings.s0539", description: "documentation.strings.s0540", sourceName: "showcase/WlConfirmDialog.vue" },
+  WlSpinner: { title: "documentation.strings.s0541", description: "documentation.strings.s0542", sourceName: "showcase/WlSpinner.vue" },
+  WlTable: { title: "documentation.strings.s0543", description: "documentation.strings.s0544", sourceName: "showcase/WlTable.vue" },
+  WlPagination: { title: "documentation.strings.s0545", description: "documentation.strings.s0546", sourceName: "showcase/WlPagination.vue" },
+  WlBadge: { title: "documentation.strings.s0547", description: "documentation.strings.s0548", sourceName: "showcase/WlBadge.vue" },
+  WlTag: { title: "documentation.strings.s0549", description: "documentation.strings.s0550", sourceName: "showcase/WlTag.vue" },
+  WlChip: { title: "documentation.strings.s0551", description: "documentation.strings.s0552", sourceName: "showcase/WlChip.vue" },
+  WlPill: { title: "documentation.strings.s0553", description: "documentation.strings.s0554", sourceName: "showcase/WlPill.vue" },
+  WlAvatar: { title: "documentation.strings.s0555", description: "documentation.strings.s0556", sourceName: "showcase/WlAvatar.vue" },
+  WlStatCard: { title: "documentation.strings.s0557", description: "documentation.strings.s0558", sourceName: "showcase/WlStatCard.vue" },
+  WlProgress: { title: "documentation.strings.s0559", description: "documentation.strings.s0560", sourceName: "showcase/WlProgress.vue" },
+  WlSkeleton: { title: "documentation.strings.s0561", description: "documentation.strings.s0562", sourceName: "showcase/WlSkeleton.vue" },
+  WlEmpty: { title: "documentation.strings.s0563", description: "documentation.strings.s0564", sourceName: "showcase/WlEmpty.vue" },
+  WlField: { title: "documentation.strings.s0565", description: "documentation.strings.s0566", sourceName: "showcase/WlField.vue" },
+  WlIcon: { title: "documentation.strings.s0567", description: "documentation.strings.s0568", sourceName: "showcase/WlIcon.vue" }
+});
 
 /** Rules reflect each component's actual native DOM and public contract. */
-export const showcaseDocumentationAccessibility: Record<string, readonly string[]> = {
+export const showcaseDocumentationAccessibility: Record<string, readonly string[]> = localizeDocumentation({
   WlIconButton: [
-    "Каждая кнопка без текста получает понятный ariaLabel; декоративный SVG скрыт от вспомогательных технологий.",
-    "Tab, Enter и Space используют нативный button; disabled блокирует действие и исключает кнопку из Tab-порядка.",
-    "Active задаёт оформление. Для настоящего переключателя передавайте aria-pressed и храните состояние в приложении; dot дополняйте текстовым смыслом."
+    "documentation.strings.s0569",
+    "documentation.strings.s0570",
+    "documentation.strings.s0571"
   ],
   WlButtonGroup: [
-    "Задавайте ariaLabel группы, описывающий общую задачу её кнопок.",
-    "У каждой кнопки остаются отдельные имя, Tab-фокус и обработчик; группа сама не управляет выбором.",
-    "Если кнопки переключают режим, передавайте им aria-pressed; крайние действия навигации отключайте явно."
+    "documentation.strings.s0572",
+    "documentation.strings.s0573",
+    "documentation.strings.s0574"
   ],
   WlSegmented: [
-    "Назовите группу через aria-label; текст каждой опции остаётся доступным именем нативной кнопки.",
-    "V-model хранит value, а aria-pressed сообщает выбранную опцию. Disabled работает и на группе, и на отдельной опции.",
-    "Переходите между кнопками по Tab и активируйте Enter/Space; компонент не объявляет tablist и не реализует стрелочную навигацию вкладок."
+    "documentation.strings.s0575",
+    "documentation.strings.s0576",
+    "documentation.strings.s0577"
   ],
   WlMenu: [
-    "Для статического и popup-меню задавайте разные ariaLabel; пункты используют роли menu/menuitem.",
-    "ArrowDown/ArrowUp, Home и End перемещают фокус и пропускают disabled. Escape закрывает popup и возвращает фокус открывшему элементу.",
-    "Shortcut является только подписью. Команды, сочетания клавиш и необходимость подтверждения опасного действия определяет приложение."
+    "documentation.strings.s0578",
+    "documentation.strings.s0579",
+    "documentation.strings.s0580"
   ],
   WlNavItem: [
-    "Label или ariaLabel описывает цель пункта. Collapsed сохраняет имя, хотя подпись визуально скрыта.",
-    "Href создаёт настоящую ссылку; без href создаётся нативный button. Active задаёт aria-current=page.",
-    "Недоступные ссылки не имеют href и исключены из Tab-порядка; disabled-кнопки блокируются нативно."
+    "documentation.strings.s0581",
+    "documentation.strings.s0582",
+    "documentation.strings.s0583"
   ],
   WlPageHeader: [
-    "Выбирайте headingLevel по структуре страницы: внутри страницы документации используется 2, отдельная страница может использовать 1.",
-    "Слоты actions и navigation должны содержать доступные кнопки/ссылки с понятными именами.",
-    "Порядок breadcrumbs, контекста, заголовка и описания сохраняет смысл на узком экране; не заменяйте важный текст одной цветной меткой."
+    "documentation.strings.s0584",
+    "documentation.strings.s0585",
+    "documentation.strings.s0586"
   ],
   WlFilterBar: [
-    "Задавайте ariaLabel, toggleLabel и panelTitle, соответствующие назначению фильтров; все вложенные поля получают свои имена.",
-    "На mobile закрытая панель inert; открытие переводит фокус в неё, Escape/закрытие возвращает к открывшей кнопке.",
-    "Clear сообщает событие: значения фильтров сбрасывает приложение. Apply не выполняет сетевой запрос сам; активные фильтры объясняйте текстом или удаляемыми tags."
+    "documentation.strings.s0587",
+    "documentation.strings.s0588",
+    "documentation.strings.s0589"
   ],
   WlSidebar: [
-    "AriaLabel именует область навигации; label/ariaLabel каждого пункта сохраняется в collapsed-режиме.",
-    "V-model хранит активный key; v-model:pinned и v-model:mobile-open управляют закреплением и мобильной панелью.",
-    "Мобильная панель удерживает фокус, закрывается Escape/подложкой и после выбора. В собственном item-слоте сохраняйте доступное имя и вызывайте scoped select."
+    "documentation.strings.s0590",
+    "documentation.strings.s0591",
+    "documentation.strings.s0592"
   ],
   WlCommandPalette: [
-    "AriaLabel именует диалог и поисковый combobox; disabled-элементы не участвуют в выборе.",
-    "ArrowUp/ArrowDown меняют активный элемент, Enter выбирает его, Escape закрывает окно и возвращает фокус.",
-    "Visible и query являются отдельными моделями. Включайте глобальный shortcut только у одной палитры; loading/empty должны объяснять состояние поиска."
+    "documentation.strings.s0593",
+    "documentation.strings.s0594",
+    "documentation.strings.s0595"
   ],
   WlCard: [
-    "Title-слот сам не создаёт заголовок: используйте подходящий h2/h3 и при необходимости aria-labelledby карточки.",
-    "Hoverable меняет оформление при наведении. Для перехода или действия добавьте в карточку ссылку или кнопку.",
-    "Сохраняйте логичный порядок header, title/subtitle, содержимого и footer; не делайте вложенные интерактивные области одной кнопкой."
+    "documentation.strings.s0596",
+    "documentation.strings.s0597",
+    "documentation.strings.s0598"
   ],
   WlAccordion: [
-    "Нативные details/summary предоставляют раскрытие через клавиатуру; disabled-пункт получает aria-disabled и не меняет openKeys.",
-    "В контролируемом режиме обновляйте openKeys из update:openKeys. Single ограничивает раскрытие при переключении пункта.",
-    "Кнопки и ссылки в item-слоте размещайте в теле, сохраняя понятные подписи summary и последовательность фокуса."
+    "documentation.strings.s0599",
+    "documentation.strings.s0600",
+    "documentation.strings.s0601"
   ],
   WlTabs: [
-    "Aria-label tablist можно передать через pt.tabList; подпись каждой вкладки объясняет содержимое её панели.",
-    "ArrowLeft/ArrowRight, Home и End одновременно выбирают вкладку и перемещают фокус; в Tab-порядке находится активная вкладка.",
-    "Каждый key должен быть уникальным на странице: он участвует в id и aria-labelledby панели. Scoped panel содержит содержимое выбранного key."
+    "documentation.strings.s0602",
+    "documentation.strings.s0603",
+    "documentation.strings.s0604"
   ],
   WlDialog: [
-    "Передавайте header либо ariaLabel/ariaLabelledby, особенно если используете собственный header-слот.",
-    "Модальный диалог удерживает фокус; Escape и явная отмена закрывают окно и восстанавливают фокус открывшей кнопки.",
-    "Связывайте Label и текст ошибки с полем. Motion учитывает reduced-motion; после afterLeave разметка закрытого окна удаляется."
+    "documentation.strings.s0605",
+    "documentation.strings.s0606",
+    "documentation.strings.s0607"
   ],
   WlDrawer: [
-    "У панели должно быть доступное имя через header либо ariaLabel/ariaLabelledby; сторона открытия не меняет её смысл.",
-    "Модальная панель удерживает фокус; Escape, кнопка закрытия и разрешённая подложка возвращают к странице.",
-    "Сохранение и отмена — явные действия footer. Управляйте visible в приложении и проверяйте повторное открытие во всех нужных позициях."
+    "documentation.strings.s0608",
+    "documentation.strings.s0609",
+    "documentation.strings.s0610"
   ],
   WlPopover: [
-    "Передайте ariaLabel/ariaLabelledby и открывайте панель от настоящей кнопки, передавая событие в toggle/show.",
-    "Поповер немодальный и не создаёт ловушку фокуса. Его интерактивное содержимое должно иметь понятные имена и порядок Tab.",
-    "Escape закрывает панель и возвращает фокус открывшему элементу; dismissable управляет закрытием кликом снаружи."
+    "documentation.strings.s0611",
+    "documentation.strings.s0612",
+    "documentation.strings.s0613"
   ],
   WlDivider: [
-    "Разделитель использует role=separator; default-слот может добавить краткую подпись.",
-    "Не используйте разделитель вместо заголовка раздела или интерактивного элемента.",
-    "Проверьте, что подпись не является единственным объяснением действия и читается в каждой теме."
+    "documentation.strings.s0614",
+    "documentation.strings.s0615",
+    "documentation.strings.s0616"
   ],
   WlBreadcrumbs: [
-    "Промежуточные пункты получают реальные href/to; последний пункт остаётся текстом с aria-current=page.",
-    "Иконка дополняет текст ссылки. Разделители скрыты от вспомогательных технологий.",
-    "Если на странице несколько путей, именуйте их по-разному через pt.root aria-label; сохраняйте родительскую иерархию и на mobile."
+    "documentation.strings.s0617",
+    "documentation.strings.s0618",
+    "documentation.strings.s0619"
   ],
   WlSteps: [
-    "Current является индексом с нуля; текущий элемент получает aria-current=step.",
-    "Индикатор не является набором кнопок: назад/вперёд реализуйте отдельными именованными действиями приложения.",
-    "Сообщайте текущий шаг текстом, проверяйте границы индекса и не передавайте завершение только цветом или галочкой."
+    "documentation.strings.s0620",
+    "documentation.strings.s0621",
+    "documentation.strings.s0622"
   ],
   WlAlert: [
-    "Сообщение использует role=alert: текст должен объяснять проблему и следующий шаг, не только её цвет.",
-    "Для closable задавайте конкретный closeLabel. Close сообщает событие; скрывает и восстанавливает сообщение приложение.",
-    "Action-слот должен содержать понятную кнопку. После исчезновения сфокусированного действия обеспечьте разумное восстановление фокуса в потребителе."
+    "documentation.strings.s0623",
+    "documentation.strings.s0624",
+    "documentation.strings.s0625"
   ],
   WlToast: [
-    "Установите WlToastService и один WlToast на Vue-приложение; useWlToast обращается к его изолированному состоянию.",
-    "Контейнер использует aria-live=polite; summary/detail должны быть короткими и понятными без цветовой подсказки.",
-    "Не оставляйте критическую ошибку только в исчезающем toast: продублируйте её рядом с соответствующим полем или действием."
+    "documentation.strings.s0626",
+    "documentation.strings.s0627",
+    "documentation.strings.s0628"
   ],
   WlConfirmDialog: [
-    "Установите WlConfirmationService и один WlConfirmDialog в корне приложения; повторные контейнеры показывают одно состояние сервиса.",
-    "Объясняйте последствие в header/message и используйте конкретные acceptLabel/rejectLabel вместо неопределённого «Да».",
-    "Accept/reject вызывают обработчики приложения; Escape и отмена сохраняют безопасный исход, модальный фокус возвращается к открывшему действию."
+    "documentation.strings.s0629",
+    "documentation.strings.s0630",
+    "documentation.strings.s0631"
   ],
   WlSpinner: [
-    "Label задаёт доступное имя role=status; укажите, что именно загружается.",
-    "Light предназначен для тёмного фона, а размер не должен быть единственным носителем смысла.",
-    "Рядом сообщайте результат и доступные действия при завершении или ошибке; спиннер сам не управляет запросом."
+    "documentation.strings.s0632",
+    "documentation.strings.s0633",
+    "documentation.strings.s0634"
   ],
   WlTable: [
-    "Columns создают нативные table/th scope=col. Имя таблицы передавайте через pt.table aria-label или caption собственной таблицы.",
-    "В Cell-слотах сохраняйте смысл строки и колонки. Кнопкам в ячейках задавайте понятные имена и disabled, когда действие недоступно.",
-    "Loading задаёт aria-busy. Empty объясняет отсутствие данных; на узком экране предоставьте доступную по Tab область горизонтальной прокрутки."
+    "documentation.strings.s0635",
+    "documentation.strings.s0636",
+    "documentation.strings.s0637"
   ],
   WlPagination: [
-    "Page использует нумерацию с 1; актуальная кнопка получает aria-current=page.",
-    "Обычные кнопки поддерживают управление с клавиатуры и имеют доступные подписи переходов. Компактный ввод применяет номер по Enter или blur.",
-    "Disabled блокирует кнопки и поле. Для нескольких пагинаторов задавайте разные pt.root aria-label и сообщайте номер/общее число текстом."
+    "documentation.strings.s0638",
+    "documentation.strings.s0639",
+    "documentation.strings.s0640"
   ],
   WlBadge: [
-    "Value остаётся текстом; dot не содержит текста и не должен в одиночку объяснять состояние.",
-    "Числовой счётчик связывайте с объектом рядом, например «Непрочитанных: 3».",
-    "Для декоративной точки используйте aria-hidden и соседнюю текстовую подпись; цвет варианта не заменяет смысл."
+    "documentation.strings.s0641",
+    "documentation.strings.s0642",
+    "documentation.strings.s0643"
   ],
   WlTag: [
-    "Обычный tag является текстовой меткой; только removable добавляет нативную кнопку.",
-    "У каждого удаляемого тега задавайте уникальный removeLabel с его названием.",
-    "Remove сообщает событие: обновите список и после удаления сфокусированного тега переведите фокус к следующему действию."
+    "documentation.strings.s0644",
+    "documentation.strings.s0645",
+    "documentation.strings.s0646"
   ],
   WlChip: [
-    "Chip является нативным button-переключателем; active отражается в aria-pressed.",
-    "V-model:active обновляет независимое булево состояние; приложение определяет, может ли быть выбрано несколько чипов.",
-    "Текст слота должен объяснять фильтр. Count дополняет текст, а disabled блокирует действие и Tab-фокус."
+    "documentation.strings.s0647",
+    "documentation.strings.s0648",
+    "documentation.strings.s0649"
   ],
   WlPill: [
-    "Label или default-слот объясняет статус независимо от цвета варианта.",
-    "Pill является статическим текстом; для действия используйте отдельную кнопку или ссылку.",
-    "Декоративные иконки оставляйте скрытыми от вспомогательных технологий; изменение важных статусов сообщайте в уместной live-области приложения."
+    "documentation.strings.s0650",
+    "documentation.strings.s0651",
+    "documentation.strings.s0652"
   ],
   WlAvatar: [
-    "У image alt берётся из label. Для смысловых инициалов/слота добавьте роль и доступное имя либо имя человека рядом.",
-    "Presence является декоративной точкой aria-hidden; онлайн/занят/офлайн объясняйте текстом.",
-    "Размер не заменяет семантику. При замене изображения на инициалы сохраняйте имя пользователя; ошибку загрузки изображения обрабатывает приложение."
+    "documentation.strings.s0653",
+    "documentation.strings.s0654",
+    "documentation.strings.s0655"
   ],
   WlStatCard: [
-    "Label, value и description должны объяснять единицу измерения и период метрики.",
-    "Default-слот заменяет значение, footer добавляет контекст; не используйте только цвет tone для сравнения.",
-    "Progress задаёт внутренний progressbar со значением 0–100. Проверьте его доступное имя и пояснение в своём приложении."
+    "documentation.strings.s0656",
+    "documentation.strings.s0657",
+    "documentation.strings.s0658"
   ],
   WlProgress: [
-    "Передавайте aria-label корневому progressbar, объясняющий конкретную операцию.",
-    "Value ограничивается диапазоном 0–100 и задаёт aria-valuenow; showValue добавляет видимый процент.",
-    "Thin и ok меняют оформление. Завершение/ошибку и следующую доступную операцию поясняйте текстом приложения."
+    "documentation.strings.s0659",
+    "documentation.strings.s0660",
+    "documentation.strings.s0661"
   ],
   WlSkeleton: [
-    "Скелетоны скрыты через aria-hidden и не должны попадать в порядок фокуса.",
-    "На содержащем блоке передавайте aria-busy и текстом сообщайте, что загружается.",
-    "После загрузки замените заглушку содержимым. При ошибке покажите сообщение и кнопку повтора."
+    "documentation.strings.s0662",
+    "documentation.strings.s0663",
+    "documentation.strings.s0664"
   ],
   WlEmpty: [
-    "Title/description/default объясняют отсутствие данных, фильтра или выбора; title сам не создаёт HTML-заголовок.",
-    "Action-слот даёт конкретный следующий шаг: добавить данные, сбросить фильтр или выбрать объект.",
-    "Кастомная icon-иллюстрация остаётся декоративной, если смысл уже указан текстом; Empty сам не изменяет данные."
+    "documentation.strings.s0665",
+    "documentation.strings.s0666",
+    "documentation.strings.s0667"
   ],
   WlField: [
-    "Из default-слота передавайте id, ariaDescribedby и invalid на настоящий input/textarea; label связывается через for.",
-    "Required в WlField показывает маркер обязательного поля. Передайте required самому полю из scope.",
-    "Error имеет приоритет над hint и role=alert. Валидатор и сохранение принадлежат приложению; readonly/disabled назначайте самому контролу."
+    "documentation.strings.s0668",
+    "documentation.strings.s0669",
+    "documentation.strings.s0670"
   ],
   WlIcon: [
-    "Встроенный SVG имеет aria-hidden=true; смысловую подпись задавайте на кнопке или внешнем role=img.",
-    "Name выбирает проверенный реестр; default-слот используется без name. Размер number задаётся в px, string может использовать 1em.",
-    "Кастомный SVG слота должен быть безопасным статическим рисунком и наследовать currentColor; полный каталог и совместимые имена доступны отдельно."
+    "documentation.strings.s0671",
+    "documentation.strings.s0672",
+    "documentation.strings.s0673"
   ]
-};
+});

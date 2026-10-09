@@ -9,13 +9,14 @@ import {
   useAttrs,
   watch
 } from "vue";
-import { useWlMotion } from "../config";
+import { useWlMotion, useWlLocaleText } from "../config";
 import type { WlDensity, WlSizeSm } from "../types";
 import type { WlCommandPaletteGroup, WlCommandPaletteItem, WlCommandPaletteExpose } from "../navigation-types";
 import type { WlNoModelModifiers, WlTextModelModifiers } from "../model-types";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import WlIcon from "./WlIcon.vue";
+const localeText = useWlLocaleText();
 
 defineOptions({ inheritAttrs: false });
 
@@ -244,7 +245,7 @@ defineExpose({
       ]"
       role="dialog"
       aria-modal="true"
-      :aria-label="ariaLabel"
+      :aria-label="localeText('ariaLabel', ariaLabel, 'commandPalette')"
       data-wl="command-palette"
       :data-size="size"
       :data-density="density"
@@ -260,11 +261,11 @@ defineExpose({
             type="search"
             role="combobox"
             aria-autocomplete="list"
-            :aria-label="ariaLabel"
+            :aria-label="localeText('ariaLabel', ariaLabel, 'commandPalette')"
             :aria-controls="listboxId"
             :aria-activedescendant="activeDescendant()"
             :aria-expanded="visible"
-            :placeholder="placeholder"
+            :placeholder="localeText('placeholder', placeholder, 'searchPlaceholder')"
             :disabled="disabled"
             autocomplete="off"
           />
@@ -319,10 +320,10 @@ defineExpose({
 
           <div v-else-if="loading" class="wl-command-palette__status" role="status">
             <span class="wl-command-palette__spinner" aria-hidden="true" />
-            <span>{{ loadingText }}</span>
+            <span>{{ localeText('loadingText', loadingText, 'searching') }}</span>
           </div>
           <div v-else class="wl-command-palette__status">
-            <slot name="empty" :query="query">{{ emptyText }}</slot>
+            <slot name="empty" :query="query">{{ localeText('emptyText', emptyText, 'noResults') }}</slot>
           </div>
         </div>
 

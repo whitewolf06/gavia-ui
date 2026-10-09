@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { useWlLocaleText } from "../config";
 import { computed, nextTick, ref, watch } from "vue";
 import type { WlColorPickerSize } from "../types";
+const localeText = useWlLocaleText();
 
 /** Kit accent / success / warn / danger + gray ramp (foundation hexes).
  *  Inlined into withDefaults — defineProps cannot reference local variables. */
@@ -143,7 +145,7 @@ async function onSwatchKeydown(event: KeyboardEvent, index: number): Promise<voi
     <div
       class="wl-color-picker__grid"
       role="listbox"
-      :aria-label="paletteLabel"
+      :aria-label="localeText('paletteLabel', paletteLabel, 'colorPalette')"
       :aria-disabled="disabled || undefined"
     >
       <button
@@ -169,7 +171,7 @@ async function onSwatchKeydown(event: KeyboardEvent, index: number): Promise<voi
       class="wl-color-picker__hex"
       :class="{ 'is-invalid': isInvalid }"
       :aria-invalid="isInvalid || undefined"
-      :aria-label="inputLabel"
+      :aria-label="localeText('inputLabel', inputLabel, 'colorHex')"
       :disabled="disabled"
       placeholder="#000000"
       spellcheck="false"

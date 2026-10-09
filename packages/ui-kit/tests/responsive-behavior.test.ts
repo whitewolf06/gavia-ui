@@ -1,7 +1,21 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import { mount } from "@vue/test-utils";
-import { nextTick } from "vue";
+import { nextTick, type Plugin } from "vue";
 import MediaBehavior from "../../../apps/playground/src/documentation/foundations/examples/MediaBehavior.vue";
+import { playgroundI18n } from "../../../apps/playground/src/i18n";
+
+// Playground uses Vue 3.5 and kit tests Vue 3.4. Bridge only their Plugin types;
+// the same real plugin is still installed and exercised at runtime.
+const playgroundI18nPlugin = playgroundI18n as unknown as Plugin;
+
+let previousLocale = playgroundI18n.global.locale.value;
+beforeEach(() => {
+  previousLocale = playgroundI18n.global.locale.value;
+  playgroundI18n.global.locale.value = "en";
+});
+afterEach(() => {
+  playgroundI18n.global.locale.value = previousLocale;
+});
 afterEach(() => { vi.unstubAllGlobals(); });
 describe("responsive example media lifecycle", () => {
   it("updates the mode, preserves the model and removes its change listener", async () => {
@@ -10,10 +24,10 @@ describe("responsive example media lifecycle", () => {
     const media = { matches: true, addEventListener: vi.fn((type: string, callback: () => void) => { expect(type).toBe("change"); listener = callback; }), removeEventListener: remove };
     const match = vi.fn(() => media);
     vi.stubGlobal("matchMedia", match);
-    const wrapper = mount(MediaBehavior);
+    const wrapper = mount(MediaBehavior, { global: { plugins: [playgroundI18nPlugin] } });
     await nextTick();
     expect(match).toHaveBeenCalledWith("(min-width: 900px)");
-    expect(wrapper.text()).toContain("Широкий режим");
+    expect(wrapper.text()).toContain("Wide mode");
     await wrapper.get("input").setValue("сохранённый запрос");
     media.matches = false;
     listener!();
@@ -33,7 +47,7 @@ describe("responsive example media lifecycle", () => {
     let listener: (() => void) | undefined;
     const media = { matches: true, addEventListener: (_type: string, callback: () => void) => { listener = callback; }, removeEventListener: vi.fn() };
     vi.stubGlobal("matchMedia", () => media);
-    const wrapper = mount(MediaBehavior, { attachTo: document.body });
+    const wrapper = mount(MediaBehavior, { attachTo: document.body, global: { plugins: [playgroundI18nPlugin] } });
     try {
       await nextTick();
       const input = wrapper.get<HTMLInputElement>("input");

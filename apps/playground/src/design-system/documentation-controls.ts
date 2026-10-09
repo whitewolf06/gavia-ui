@@ -1,3 +1,4 @@
+import { translate as t } from "../i18n";
 import type { WlComponentManifest, WlPropManifest } from "../../../../packages/ui-kit/src/manifest";
 
 export type DocumentationEditor = "select" | "checkbox" | "text" | "number" | "icon";
@@ -17,6 +18,8 @@ const namedModelProps: Record<string, readonly string[]> = { WlSidebar: ["pinned
 /** Read literals only: documentation must never execute an example to discover defaults. */
 function literal(expression: string): Scalar | undefined {
   const text = expression.trim();
+  const message = /^t\((['"])(examples\.[a-zA-Z0-9_.-]+)\1\)$/.exec(text);
+  if (message) return t(message[2]!);
   if (text === "true" || text === "false") return text === "true";
   if (/^-?(?:\d+\.?\d*|\.\d+)$/.test(text)) return Number(text);
   const quote = text[0];
@@ -100,10 +103,10 @@ export function createDocumentationControls(entry: WlComponentManifest, source?:
     if (prop.values?.length) return [{ ...prop, editor: "select" }];
     if (prop.type === "number") return [numericControl(entry, prop)];
     if (entry.name === "WlIcon" && prop.name === "size") return [numericControl(entry, {
-      ...prop, description: (prop.description ?? "") + " Здесь укажите размер в пикселях. CSS-значение можно задать в SFC."
+      ...prop, description: (prop.description ?? "") + t("shell.design_system.documentation_controls.text471")
     })];
     if (entry.name === "WlBadge" && prop.name === "value" || entry.name === "WlNavItem" && prop.name === "badge") return [numericControl(entry, {
-      ...prop, description: (prop.description ?? "") + " Здесь укажите число. Текстовую подпись можно задать в SFC."
+      ...prop, description: (prop.description ?? "") + t("shell.design_system.documentation_controls.text472")
     })];
     if (prop.type === "string") return [{
       ...prop, editor: "text",
@@ -127,13 +130,13 @@ export function documentationComplexProps(entry: WlComponentManifest, controls: 
 /** Known literal data keeps option keys and selected models compatible with the primary SFC. */
 export function documentationPresets(entry: WlComponentManifest): DocumentationPreset[] {
   if (entry.name === "WlSelect") return [{
-    id: "with-archive", label: "С недоступным архивом", props: { options: [
-      { label: "Команда", value: "team" }, { label: "Личное", value: "personal" },
-      { label: "Архив", value: "archive", disabled: true }
+    id: "with-archive", get label() { return t("shell.design_system.documentation_controls.text473"); }, props: { options: [
+      { get label() { return t("shell.design_system.documentation_controls.text474"); }, value: "team" }, { get label() { return t("shell.design_system.documentation_controls.text475"); }, value: "personal" },
+      { get label() { return t("shell.design_system.documentation_controls.text476"); }, value: "archive", disabled: true }
     ] }
-  }, { id: "empty-options", label: "Пустой список", props: { options: [] } }];
-  if (entry.name === "WlTable") return [{ id: "empty-rows", label: "Пустая таблица", props: { value: [] } }];
-  if (entry.name === "WlColorPicker") return [{ id: "compact-palette", label: "Три цвета", props: { swatches: ["#2563eb", "#2e9e68", "#bf8615"] } }];
+  }, { id: "empty-options", get label() { return t("shell.design_system.documentation_controls.text477"); }, props: { options: [] } }];
+  if (entry.name === "WlTable") return [{ id: "empty-rows", get label() { return t("shell.design_system.documentation_controls.text478"); }, props: { value: [] } }];
+  if (entry.name === "WlColorPicker") return [{ id: "compact-palette", get label() { return t("shell.design_system.documentation_controls.text479"); }, props: { swatches: ["#2563eb", "#2e9e68", "#bf8615"] } }];
   return [];
 }
 export function documentationControlSamples(control: DocumentationControl): readonly Scalar[] {
@@ -143,7 +146,7 @@ export function documentationControlSamples(control: DocumentationControl): read
   if (control.editor === "number") return [Math.max(control.numberMin ?? -1e12, Math.min(control.numberMax ?? 1e12, 7))];
   if (control.inputType === "date") return ["", "2026-10-15"];
   if (control.inputType === "time") return ["", "09:45"];
-  return ["", 'Название "A" & B\'s <C>'];
+  return ["", t("shell.design_system.documentation_controls.text480")];
 }
 function validDate(value: string): boolean {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);

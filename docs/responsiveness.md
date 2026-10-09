@@ -1,36 +1,36 @@
-# Адаптивность
+# Responsiveness
 
-Адаптивность настраивается обычным CSS для конкретной страницы или компонента.
-В Docs (`?view=docs&section=responsive`) есть четыре рабочих Vue-примера:
-ширина окна, auto-fit, container queries и изменение поведения через matchMedia.
-Код для копирования берётся из тех же SFC.
+Use ordinary CSS to adapt a particular page or component.
+Docs (`?view=docs&section=responsive`) contains four working Vue examples:
+viewport width, auto-fit, container queries and behavior changes through matchMedia.
+Copyable code comes from the same SFCs.
 
-## Выбор условия
+## Choosing a condition
 
-| Задача | Механизм |
+| Requirement | Mechanism |
 | --- | --- |
-| Меняется компоновка всей страницы | Mobile-first `@media (min-width: …)` |
-| Равные карточки занимают доступное место | `wl-grid` с auto-fit и минимумом колонки |
-| Одна карточка используется в разных областях | Именованный CSS query container |
-| Меняется поведение: раскрытие, доступность, lifecycle | `matchMedia` после монтирования |
+| The whole page layout changes | Mobile-first `@media (min-width: …)` |
+| Equal cards fill available space | `wl-grid` with auto-fit and a column minimum |
+| One card appears in different regions | A named CSS query container |
+| Behavior changes: expansion, accessibility, lifecycle | `matchMedia` after mounting |
 
-Начинайте с одной колонки и порядка DOM, который подходит для чтения.
-Добавляйте колонки, когда для них хватает места. Ориентируйтесь на ширину
-содержимого: карточка в боковой панели может оставаться узкой на большом экране.
-Расположение меняйте через CSS. JavaScript нужен, если меняется поведение.
+Start with one column and a readable DOM order.
+Add columns when there is room. Follow content width: a sidebar card may remain
+narrow on a large screen. Use CSS for positioning; use JavaScript for behavior changes.
 
-## Каталог брейкпоинтов
+## Breakpoint catalog
 
-| Экспорт `wlBreakpoints` | Ширина |
+| `wlBreakpoints` export | Width |
 | --- | --- |
 | `sm` | 640 px |
 | `md` | 900 px |
 | `lg` | 1200 px |
 
-Это числовой каталог, экспортируемый из `gavia-ui`. Его источник —
-`packages/ui-kit/tokens/source.json → breakpoints`, производный файл —
-`src/design-system/tokens.generated.ts`. Каталог не переписывает готовый CSS.
-В примере ширины viewport соответствуют одной, двум, трём и четырём колонкам.
+This numeric catalog is exported from `gavia-ui`.
+Its source is `packages/ui-kit/tokens/source.json → breakpoints`;
+the derived file is `src/design-system/tokens.generated.ts`.
+The catalog does not rewrite existing CSS. The viewport example uses
+one, two, three and four columns.
 
 ```css
 .page-grid { display: grid; grid-template-columns: minmax(0, 1fr); }
@@ -42,14 +42,14 @@
 }
 ```
 
-`var()` работает в значениях свойств, а не в условиях размеров `@media` или
-`@container`. Числовую границу нужно записать в CSS явно. Например,
-`@media (min-width: var(--wl-breakpoint-md))` не является рабочей настройкой.
+`var()` works in property values, not size conditions in `@media` or `@container`.
+Write numeric thresholds explicitly. For example,
+`@media (min-width: var(--wl-breakpoint-md))` is not a working configuration.
 [CSS custom properties — MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Cascading_variables/Using_custom_properties).
 
-## Локальное переопределение
+## Local overrides
 
-Токены композиции можно задать на корне конкретной страницы:
+Set composition tokens at a particular page root:
 
 ```css
 .project-page {
@@ -60,30 +60,30 @@
 }
 ```
 
-- `page-max` ограничивает контейнер, `page-gutter` задаёт боковые отступы;
-- `grid-min` задаёт целевой минимум колонки auto-fit;
-- `grid-gap` задаёт промежуток `wl-grid` без `data-space`;
-- `data-space` выбирает gap из общей шкалы и имеет приоритет над grid-gap.
+- `page-max` limits the container; `page-gutter` sets side padding.
+- `grid-min` sets the target minimum for an auto-fit column.
+- `grid-gap` sets the `wl-grid` gap without `data-space`.
+- `data-space` selects a gap from the shared scale and overrides grid-gap.
 
-Токены наследуются потомками страницы. Они меняют размеры и доступное место,
-а не пороги media queries. `min(100%, …)` в примитиве не даёт целевому минимуму
-колонки вытолкнуть сетку за узкий контейнер.
+Page descendants inherit these tokens. They change dimensions and available
+space, not media-query thresholds. `min(100%, …)` in the primitive prevents
+the target column minimum from pushing a grid beyond a narrow container.
 
-Если конкретной композиции нужен переход при 820 px, напишите локальное
-`@media (min-width: 820px)`. Не обязательно двигать общую шкалу. Если одновременно
-меняется поведение, `matchMedia` должен получить то же число.
+If a particular layout needs an 820 px transition, write local
+`@media (min-width: 820px)`. There is no need to change the shared scale.
+If behavior also changes, give `matchMedia` the same number.
 
-Для изменения каталога **в исходниках библиотеки** поменяйте `breakpoints` в
-`tokens/source.json` и выполните `pnpm tokens:sync`, затем `pnpm tokens:check`.
-Генератор обновляет каталог, но не ручные media queries. Согласуйте CSS и JS
-отдельно. Глобального runtime-переключателя брейкпоинтов у библиотеки нет.
+To change the catalog **in library source**, edit `breakpoints` in
+`tokens/source.json` and run `pnpm tokens:sync`, then `pnpm tokens:check`.
+The generator updates the catalog, not handwritten media queries.
+Align CSS and JS separately. The library has no global runtime breakpoint switch.
 
 ## Container queries
 
-Контейнер задаёт `container-type: inline-size` и имя; условия применяются к его
-потомкам. В живом примере WlSelect меняет запрошенную ширину 280/420/640 px,
-она ограничивается реальным родителем. Две колонки появляются от 420 px фактической
-ширины, размер заголовка меняется от 560 px.
+A container sets `container-type: inline-size` and a name; conditions apply
+to its descendants. In the live example, WlSelect changes the requested width
+between 280/420/640 px, bounded by the real parent. Two columns appear at an
+actual width of 420 px; the heading size changes at 560 px.
 
 ```css
 .card-host { container-type: inline-size; container-name: project-card; }
@@ -95,50 +95,49 @@
 
 [Container queries — MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries).
 
-## MatchMedia, SSR и очистка
+## MatchMedia, SSR and cleanup
 
-В примере `MediaBehavior.vue` граница берётся из `wlBreakpoints.md`. `window`
-читается только в `onMounted`; исходное значение `null` одинаково для SSR и
-первого клиентского рендера. Подписка на `change` пересчитывает режим, а
-`onBeforeUnmount` удаляет именно тот listener. Значение поля сохраняется в
-модели вне условной разметки. При сужении фильтр остаётся открытым, если
-внутри него находится фокус; при расширении фокус с исчезающей кнопки переносится
-в поле после обновления DOM. Устаревший callback не выполняется после смены
-режима или размонтирования.
+`MediaBehavior.vue` takes its threshold from `wlBreakpoints.md`.
+It reads `window` only in `onMounted`; the initial `null` value is the same
+for SSR and the first client render. A `change` subscription recalculates
+the mode, and `onBeforeUnmount` removes that exact listener. The input value
+stays in a model outside conditional markup. On narrowing, the filter stays
+open if it contains focus; on widening, focus moves from a disappearing button
+to the input after the DOM update. Stale callbacks do not run after a mode
+change or unmount.
 
 [matchMedia — MDN](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia),
 [MediaQueryList: change — MDN](https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList/change_event).
 
-CSS и matchMedia согласовываются по одной границе, если они управляют одним
-режимом. Не добавляйте обработчик каждого `resize` для сетки, которая может
-перестроиться средствами CSS. При скрытии области проверьте активный фокус,
-сохранение введённых данных и доступность переключателя.
+Align CSS and matchMedia at the same threshold when they control one mode.
+Do not add a listener for every `resize` to a grid that CSS can reflow.
+When hiding a region, check active focus, preserved input and access to the toggle.
 
-## Встроенные границы компонентов
+## Built-in component thresholds
 
-| Элемент | Условие | Поведение |
+| Element | Condition | Behavior |
 | --- | --- | --- |
-| WlPageHeader | До 720 px | Перестройка расположения через CSS |
-| WlFilterBar | До 720 px | CSS + matchMedia; мобильная панель, inert/aria-hidden и scroll lock |
-| WlSidebar | До 900 px | Мобильная раскладка CSS; приложение управляет mobileOpen/pinned/collapsible |
+| WlPageHeader | Below 720 px | CSS layout reflow |
+| WlFilterBar | Below 720 px | CSS + matchMedia; mobile panel, inert/aria-hidden and scroll lock |
+| WlSidebar | Below 900 px | Mobile CSS layout; the application controls mobileOpen/pinned/collapsible |
 
-Изменить эти границы через публичный prop пока нельзя. Токены ширины drawer
-и sidebar задают размер панели. У WlFilterBar вместе с CSS-порогом должны
-переключаться режим панели, доступность и блокировка прокрутки.
-Диалоги ограничивают размер относительно viewport, длинные интерактивные группы
-имеют локальную прокрутку. Композиция шапки и Docs playground использует собственные
-условия по месту для содержимого — это не универсальная шкала библиотеки.
+These thresholds currently have no public prop override. Drawer and sidebar
+width tokens control panel size. WlFilterBar must switch panel mode,
+accessibility and scroll locking along with its CSS threshold.
+Dialogs constrain their size against the viewport; long interactive groups
+have local scrolling. Playground header and Docs layouts use content-specific
+conditions rather than a universal library scale.
 
-## Проверка композиции
+## Reviewing a layout
 
-- Узкий экран, точная граница и размер сразу до/после неё.
-- Узкий родитель независимо от ширины окна.
-- Длинные подписи, локализация, масштаб и перенос действий.
-- Нет горизонтальной прокрутки всей страницы ради одной таблицы.
-- Порядок Tab совпадает с DOM; фокус и модель сохраняются при перестройке.
-- Оверлеи, маска, inert/aria-hidden и scroll lock переключаются вместе.
-- Проверены Escape и возврат фокуса.
-- Слушатели создаются в lifecycle и удаляются при размонтировании.
+- A narrow screen, the exact threshold and widths immediately before/after it.
+- A narrow parent, independent of viewport width.
+- Long labels, localization, zoom and wrapping actions.
+- No whole-page horizontal scrolling for one table.
+- Tab order matches DOM order; focus and models survive reflow.
+- Overlays, masks, inert/aria-hidden and scroll lock switch together.
+- Escape and focus restoration are checked.
+- Listeners are created in lifecycle and removed on unmount.
 
-Связанные руководства: [CSS-примитивы](primitives.md),
-[устройство playground](playground.md), [дизайн-система](design-system.md).
+Related guides: [CSS primitives](primitives.md),
+[playground architecture](playground.md), [design system](design-system.md).

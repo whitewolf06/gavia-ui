@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../i18n";
+const { t } = usePlaygroundI18n();
 import { ref, watch } from "vue";
 import { WlButton, WlIcon } from "../../../../packages/ui-kit/src";
 import CodeHighlight from "./CodeHighlight.vue";
@@ -29,19 +31,19 @@ defineExpose({ copy });
   <div class="ds-source wl-stack" data-space="sm">
     <div class="ds-source-frame">
       <details :open="expanded">
-        <summary class="ds-source-summary">{{ title ?? 'Показать Vue-код' }}</summary>
-        <pre class="ds-source-code" tabindex="0" role="region" :aria-label="title ?? 'Исходный код'"><CodeHighlight :source="source" :language="language" /></pre>
+        <summary class="ds-source-summary">{{ title ?? t('shell.design_system.CodePanel.text365') }}</summary>
+        <pre class="ds-source-code" tabindex="0" role="region" :aria-label="title ?? t('shell.design_system.CodePanel.text366')"><CodeHighlight :source="source" :language="language" /></pre>
       </details>
       <!-- Keep copy reachable when details are collapsed; the button belongs to the code frame. -->
       <div class="ds-source-copy" :class="{ 'is-pending': pending }">
         <WlButton class="ds-source-copy-button" size="sm" variant="ghost" :loading="pending"
-          :aria-label="copied ? 'Скопировано' : 'Копировать код'" :title="copied ? 'Скопировано' : 'Копировать код'" @click="copy">
+          :aria-label="copied ? t('shell.design_system.CodePanel.text367') : t('shell.design_system.CodePanel.text368')" :title="copied ? t('shell.design_system.CodePanel.text369') : t('shell.design_system.CodePanel.text370')" @click="copy">
           <template #icon><WlIcon :name="copied ? 'check' : 'copy'" :size="16" /></template>
         </WlButton>
       </div>
     </div>
-    <span class="wl-text-small wl-text-muted" role="status">{{ copied ? 'Код скопирован.' : manual ? 'Буфер обмена недоступен. Скопируйте код из поля ниже.' : '' }}</span>
-    <textarea v-if="manual" class="ds-source-manual" readonly :value="source" aria-label="Код для ручного копирования" @focus="($event.target as HTMLTextAreaElement).select()" />
+    <span class="wl-text-small wl-text-muted" role="status">{{ copied ? t('shell.design_system.CodePanel.text371') : manual ? t('shell.design_system.CodePanel.text372') : '' }}</span>
+    <textarea v-if="manual" class="ds-source-manual" readonly :value="source" :aria-label="t('shell.design_system.CodePanel.text373')" @focus="($event.target as HTMLTextAreaElement).select()" />
   </div>
 </template>
 

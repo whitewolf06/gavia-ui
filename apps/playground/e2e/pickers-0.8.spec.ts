@@ -1,3 +1,4 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { expect, test, type Page } from "@playwright/test";
 
 async function selectPicker(page: Page, name: "WlTimePicker" | "WlFilePicker") {
@@ -11,7 +12,7 @@ async function selectPicker(page: Page, name: "WlTimePicker" | "WlFilePicker") {
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/?view=system", { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl("/?view=system"), { waitUntil: "domcontentloaded" });
   await expect(page.getByRole("heading", { name: "Дизайн-система" })).toBeVisible({ timeout: 15000 });
   await page.addStyleTag({ content: "html { scroll-behavior: auto; }" });
 });

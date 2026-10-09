@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../../i18n";
+const { t } = usePlaygroundI18n();
 import { computed, type Component } from "vue";
 import { WlButton, wlBreakpoints, resolveWlToken } from "../../../../../packages/ui-kit/src";
 import type { DocumentationFoundationSection } from "../../navigation";
@@ -62,15 +64,15 @@ const examples = computed(() => metadata.value.examples.map((sample) => {
   return { ...sample, ...implementation };
 }));
 const layers = [
-  { name: "Базовое содержимое", token: "--wl-layer-base", purpose: "Локальный базовый слой страницы." },
-  { name: "Sticky", token: "--wl-layer-sticky", purpose: "Прикреплённые области страницы." },
-  { name: "Sidebar", token: "--wl-layer-navigation", purpose: "Основная навигация на desktop." },
-  { name: "Маска", token: "--wl-layer-mask", purpose: "Диалог и подложка модального оверлея." },
-  { name: "Popover", token: "--wl-layer-popover", purpose: "Drawer, меню и всплывающая панель." },
-  { name: "Мобильная навигация", token: "--wl-layer-navigation-modal", purpose: "Sidebar в мобильном модальном режиме." },
-  { name: "Command palette", token: "--wl-layer-command", purpose: "Поиск и быстрые переходы." },
-  { name: "Панель фильтров", token: "--wl-layer-filter", purpose: "Оверлей фильтров." },
-  { name: "Toast", token: "--wl-layer-toast", purpose: "Уведомления над остальными слоями библиотеки." }
+  { name: t('documentation.strings.s0697'), token: "--wl-layer-base", purpose: t('documentation.strings.s0698') },
+  { name: "Sticky", token: "--wl-layer-sticky", purpose: t('documentation.strings.s0699') },
+  { name: "Sidebar", token: "--wl-layer-navigation", purpose: t('documentation.strings.s0700') },
+  { name: t('documentation.strings.s0701'), token: "--wl-layer-mask", purpose: t('documentation.strings.s0702') },
+  { name: "Popover", token: "--wl-layer-popover", purpose: t('documentation.strings.s0703') },
+  { name: t('documentation.strings.s0704'), token: "--wl-layer-navigation-modal", purpose: t('documentation.strings.s0705') },
+  { name: "Command palette", token: "--wl-layer-command", purpose: t('documentation.strings.s0706') },
+  { name: t('documentation.strings.s0707'), token: "--wl-layer-filter", purpose: t('documentation.strings.s0708') },
+  { name: "Toast", token: "--wl-layer-toast", purpose: t('documentation.strings.s0709') }
 ] as const;
 </script>
 
@@ -80,27 +82,27 @@ const layers = [
     <section class="wl-stack" data-space="md" :aria-labelledby="metadata.rulesHeading.id">
       <h2 :id="metadata.rulesHeading.id" class="docs-foundation-anchor wl-text-heading">{{ metadata.rulesHeading.title }}</h2>
       <ul class="docs-foundation-rules"><li v-for="rule in metadata.rules" :key="rule">{{ rule }}</li></ul>
-      <p class="wl-text-small wl-text-muted">Подключите <code>gavia-ui/styles/primitives.css</code> после base.css. Примеры и код для копирования используют один SFC. Оформление берётся из выбранной темы.</p>
+      <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s1282') }} <code>gavia-ui/styles/primitives.css</code> {{ t('documentation.strings.s0710') }}</p>
     </section>
     <section v-if="metadata.breakpointsHeading" class="docs-foundation-breakpoints wl-stack" data-space="sm" :aria-labelledby="metadata.breakpointsHeading.id">
       <h2 :id="metadata.breakpointsHeading.id" class="docs-foundation-anchor wl-text-subheading">{{ metadata.breakpointsHeading.title }}</h2>
       <div class="wl-inline" data-space="lg"><code v-for="(width, name) in wlBreakpoints" :key="name" class="wl-text-code">{{ name }}: {{ width }} px</code></div>
-      <p class="wl-text-body">Начинайте с одной колонки. Добавляйте две или три там, где достаточно места для содержимого; media queries описывают ширину viewport, auto-fit — доступную ширину сетки.</p>
-      <p class="wl-text-small wl-text-muted">В media queries используйте числовую границу из wlBreakpoints; CSS custom properties не подставляются в условия. Для локального CSS достаточно обычного media query, слушатель resize не нужен.</p>
+      <p class="wl-text-body">{{ t('documentation.strings.s0711') }}</p>
+      <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0712') }}</p>
     </section>
     <FoundationExample v-for="sample in examples" :key="sample.name" v-bind="sample" />
     <section v-if="metadata.layersHeading" class="wl-stack" data-space="md" :aria-labelledby="metadata.layersHeading.id">
       <h2 :id="metadata.layersHeading.id" class="docs-foundation-anchor wl-text-heading">{{ metadata.layersHeading.title }}</h2>
-      <p class="wl-text-body">Уровни ниже вычислены из текущего каталога токенов Gavia UI. Для своего sticky-блока используйте <code>--wl-layer-sticky</code>; общий слой меняйте токеном, локальное перекрытие ограничивайте <code>wl-isolate</code>.</p>
-      <div class="docs-table-scroll" tabindex="0" role="region" aria-label="Уровни z-index Gavia UI">
-        <table class="docs-contract-table"><thead><tr><th scope="col">Роль</th><th scope="col">Токен</th><th scope="col">Уровень</th><th scope="col">Назначение</th></tr></thead><tbody><tr v-for="layer in layers" :key="layer.token"><th scope="row">{{ layer.name }}</th><td><code>{{ layer.token }}</code></td><td>{{ resolveWlToken(layer.token) }}</td><td>{{ layer.purpose }}</td></tr></tbody></table>
+      <p class="wl-text-body">{{ t('documentation.strings.s0713') }} <code>--wl-layer-sticky</code>{{ t('documentation.strings.s0714') }} <code>wl-isolate</code>.</p>
+      <div class="docs-table-scroll" tabindex="0" role="region" :aria-label="t('documentation.strings.s0715')">
+        <table class="docs-contract-table"><thead><tr><th scope="col">{{ t('documentation.strings.s0716') }}</th><th scope="col">{{ t('documentation.strings.s0717') }}</th><th scope="col">{{ t('documentation.strings.s0718') }}</th><th scope="col">{{ t('documentation.strings.s0677') }}</th></tr></thead><tbody><tr v-for="layer in layers" :key="layer.token"><th scope="row">{{ layer.name }}</th><td><code>{{ layer.token }}</code></td><td>{{ resolveWlToken(layer.token) }}</td><td>{{ layer.purpose }}</td></tr></tbody></table>
       </div>
-      <p class="wl-text-small wl-text-muted">Большое значение внутри дочернего stacking context не выводит элемент выше его родителя. Transform, opacity меньше 1 и isolation создают такие контексты. Оверлейные компоненты управляют своим позиционированием и слоями; не повышайте всё приложение до произвольного z-index.</p>
+      <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0719') }}</p>
     </section>
     <footer class="docs-foundation-footer wl-stack" data-space="md">
       <h2 :id="metadata.continueHeading.id" class="docs-foundation-anchor wl-text-subheading">{{ metadata.continueHeading.title }}</h2>
-      <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="emit('component', undefined)">Обзор компонентов</WlButton><WlButton size="sm" @click="emit('navigate', 'components')">Галерея компонентов</WlButton><WlButton size="sm" variant="ghost" @click="emit('navigate', 'system')">Дизайн-система и токены</WlButton></div>
-      <a class="docs-text-link wl-text-small" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md">Все правила дизайн-системы</a>
+      <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="emit('component', undefined)">{{ t('documentation.strings.s0720') }}</WlButton><WlButton size="sm" @click="emit('navigate', 'components')">{{ t('documentation.strings.s0721') }}</WlButton><WlButton size="sm" variant="ghost" @click="emit('navigate', 'system')">{{ t('documentation.strings.s0722') }}</WlButton></div>
+      <a class="docs-text-link wl-text-small" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md">{{ t('documentation.strings.s0723') }}</a>
     </footer>
   </article>
 </template>

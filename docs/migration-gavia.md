@@ -1,23 +1,23 @@
-# Переход на Gavia UI
+# Migration to Gavia UI
 
-Gavia UI — библиотека компонентов и дизайн-система для Vue 3.
-Репозиторий — `https://github.com/whitewolf06/gavia-ui`.
-Первый пакет [gavia-ui@0.7.0](https://www.npmjs.com/package/gavia-ui) опубликован
-в публичном npm 2026-10-05 (Москва).
-Переход на новое имя описан в [миграции 0.7](migration-0.7.md),
-документация доступна в [GitHub Pages](https://whitewolf06.github.io/gavia-ui/).
+Gavia UI is a component library and design system for Vue 3.
+Repository: `https://github.com/whitewolf06/gavia-ui`.
+The first package, [gavia-ui@0.7.0](https://www.npmjs.com/package/gavia-ui), was published
+to public npm on 2026-10-05 (Moscow).
+The new-name upgrade is described in the [0.7 migration](migration-0.7.md);
+documentation is available on [GitHub Pages](https://whitewolf06.github.io/gavia-ui/).
 
-## Обновление зависимости из npm
+## Updating the npm dependency
 
-1. Удалите прежнюю зависимость библиотеки из приложения и добавьте `gavia-ui`.
-2. Замените прежний идентификатор пакета в импортах на `gavia-ui`:
-   имена компонентов и типов сохранены.
-3. Обновите CSS subpaths тем же способом.
-4. Удалите прежний scope mapping и GitHub PAT из настройки этого пакета,
-   если они не нужны другим GitHub Packages зависимостям.
+1. Remove the previous library dependency from the app and add `gavia-ui`.
+2. Replace the previous package identifier in imports with `gavia-ui`:
+   component and type names are preserved.
+3. Update CSS subpaths the same way.
+4. Remove the previous scope mapping and GitHub PAT for this package
+   if other GitHub Packages dependencies do not need them.
 
 ```bash
-# Сначала удалите прежнюю зависимость командой pnpm remove <имя-пакета>.
+# Remove the previous dependency with pnpm remove <package-name> first.
 pnpm add gavia-ui@0.7.0 vue
 ```
 
@@ -26,42 +26,42 @@ import { WlButton, WlConfig } from "gavia-ui";
 import "gavia-ui/styles/base.css";
 ```
 
-Компоненты `Wl*`, props, события, модели, слоты, `WlConfig`, сервисы,
-`createWlPt`, имена SVG-иконок, классы `wl-*`, CSS-токены `--wl-*`,
-`data-wl`, `data-size` и ключи тем остаются прежними. Настройка приложения,
-объединение `pt`, анимация и явное подключение CSS не меняются.
+`Wl*` components, props, events, models, slots, `WlConfig`, services,
+`createWlPt`, SVG icon names, `wl-*` classes, `--wl-*` CSS tokens,
+`data-wl`, `data-size` and theme keys are preserved. Application setup,
+`pt` merging, motion and explicit CSS imports do not change.
 
-Старые опубликованные версии принадлежат прежнему GitHub Packages scope.
-Перенос репозитория не переименовывает пакет и не делает его автоматически
-публичным. Его установка требует GitHub-аутентификации; после переноса
-отдельно проверьте права доступа к прежнему пакету. Существующие теги
-сохраняют исходные коммиты и не перевешиваются.
+Old published versions belong to the previous GitHub Packages scope.
+Moving a repository does not rename a package or automatically make it
+public. Installation still requires GitHub authentication; after the move,
+check access to the previous package separately. Existing tags
+retain their original commits and are not moved.
 
-## Названия в инструментах и диагностике
+## Tool and diagnostic names
 
-Переменная локальной проверки работающего стенда — `GAVIA_E2E_BASE_URL`.
-Обновите её в своих командах запуска браузерных тестов.
+The local running-preview check variable is `GAVIA_E2E_BASE_URL`.
+Update it in your browser-test commands.
 
-Диагностические ошибки каталога используют тексты `Unknown Gavia UI token`,
-`Unknown Gavia UI theme` и `Circular Gavia UI token` с именем токена или темы.
-Тип ошибок и условия их возникновения сохраняются. Если приложение проверяло
-полный текст ошибки, обновите эту проверку.
+Catalog errors use `Unknown Gavia UI token`,
+`Unknown Gavia UI theme` and `Circular Gavia UI token` with the token or theme name.
+Error types and triggering conditions are preserved. If your app checked
+the full error text, update that check.
 
-## Из более ранних версий
+## From earlier versions
 
-Изменения инициализации и PrimeVue Column описаны в
-[миграции с 0.3](migration-0.5.md); возможности дизайн-системы —
-в [миграции 0.6](migration-0.6.md). Они нужны дополнительно, если ваш потребитель
-ещё использует версию до 0.6. Примеры используют актуальный путь `gavia-ui`;
-перенос поведения и смену идентификатора пакета выполняйте вместе.
+Initialization and PrimeVue Column changes are described in
+the [migration from 0.3](migration-0.5.md); design system features are
+in the [0.6 migration](migration-0.6.md). Apply these as well if your consumer
+still uses a pre-0.6 version. Examples use the current `gavia-ui` path;
+migrate behavior and the package identifier together.
 
-## Проверка потребителя
+## Consumer checks
 
-Проверьте TypeScript, production build, темы и локальные токены.
-Проверьте модели форм, клавиатуру, возврат фокуса, вложенные оверлеи,
-прокрутку, даты, таблицы и уведомления. Peer Vue 3 предоставляется приложением;
-других UI-пакетов не требуется.
+Check TypeScript, production build, themes and local tokens.
+Check form models, keyboard, focus return, nested overlays,
+scrolling, dates, tables and toasts. The app supplies the Vue 3 peer;
+no other UI packages are required.
 
-## Имя гарнитуры
+## Typeface name
 
-Шрифт называется **Gavia Sans**, тема — **Gavia**, пакет — **Gavia UI**. Новые стили используют `font-family: "Gavia Sans", sans-serif`. Публичные пути `gavia-ui/styles/fonts/gavia.css` и `gavia-ui/fonts/gavia/*` сохранены; прежнее CSS-имя `Gavia` зарегистрировано как совместимый алиас. Внутренние имена TTF/WOFF2 изменены на Gavia Sans без изменения контуров, метрик и кернинга. Архив самостоятельного скачивания: `Gavia-Sans-0.6.zip`.
+The font is **Gavia Sans**, the theme is **Gavia**, and the package is **Gavia UI**. New styles use `font-family: "Gavia Sans", sans-serif`. Public paths `gavia-ui/styles/fonts/gavia.css` and `gavia-ui/fonts/gavia/*` are preserved; the previous CSS name `Gavia` is registered as a compatibility alias. Internal TTF/WOFF2 names changed to Gavia Sans without changing outlines, metrics or kerning. Standalone download: `Gavia-Sans-0.6.zip`.

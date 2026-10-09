@@ -1,6 +1,7 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import { expect, test, type Locator, type Page } from "@playwright/test";
-import { chooseDropdownOption, chooseShowcaseTheme, navigateDocumentationComponent, navigateMainView, openDocumentationMenu } from "./select-helpers";
+import { chooseDropdownOption, chooseShowcaseTheme, navigateDocumentationComponent, expectMainViewCurrent, navigateMainView, openDocumentationMenu } from "./select-helpers";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 
 const pickerNames = ["WlTimePicker", "WlFilePicker"] as const;
@@ -29,7 +30,7 @@ async function setDocumentationViewport(page: Page, viewport: { width: number; h
 }
 
 async function expectPickerDestination(page: Page, name: PickerName): Promise<Locator> {
-  await expect(page.locator('.pg-views [aria-current="page"]')).toHaveText("Документация");
+  await expectMainViewCurrent(page, "Документация");
   const docs = page.getByTestId("docs-page");
   const heading = docs.getByRole("heading", { level: 1, name, exact: true });
   await expect(heading).toBeVisible();
@@ -68,7 +69,7 @@ test.beforeEach(async ({ page, baseURL }) => {
   page.on("pageerror", (error) => errors.push(error.message));
   // The former gallery URL remains a supported alias, including the Pages prefix.
   const docsUrl = new URL("?view=components", baseURL ?? "http://127.0.0.1:4173/").href;
-  await page.goto(docsUrl, { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(docsUrl), { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("docs-page").getByRole("heading", { level: 1 })).toHaveText("Документация");
   await expect.poll(() => new URL(page.url()).searchParams.get("view")).toBe("docs");
   await page.addStyleTag({ content: "html { scroll-behavior: auto; }" });
@@ -139,7 +140,7 @@ test("Docs catalog reaches the time picker and its model clears to null in all t
   }
 
   const legacy = new URL("?view=components#component-WlTimePicker", baseURL ?? "http://127.0.0.1:4173/");
-  await page.goto(legacy.href, { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(legacy.href), { waitUntil: "domcontentloaded" });
   await expectPickerDestination(page, "WlTimePicker");
   await page.reload();
   await expectPickerDestination(page, "WlTimePicker");

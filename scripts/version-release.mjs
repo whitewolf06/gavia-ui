@@ -23,7 +23,7 @@ function changesetNotes() {
 export function prepareChangelog(source, version, notes, promotedNotes = "") {
   const normalized = source.replaceAll("\r\n", "\n");
   const headings = markdownHeadings(normalized).filter((heading) => heading.level === 2);
-  const pending = headings.filter((heading) => heading.title === "Не выпущено");
+  const pending = headings.filter((heading) => heading.title === "Unreleased" || heading.title === "Не выпущено");
   if (pending.length > 1) throw new Error("Changelog has duplicate unreleased sections");
   const section = pending[0];
   const start = section?.index ?? headings[0]?.index ?? -1;
@@ -35,7 +35,7 @@ export function prepareChangelog(source, version, notes, promotedNotes = "") {
   const changeNotes = [...new Set(notes)].join("\n\n");
   const content = [current, promotedNotes, changeNotes && "### Changesets\n\n" + changeNotes].filter(Boolean).join("\n\n");
   if (!content) throw new Error("A release must have human-readable notes");
-  const replacement = "## Не выпущено\n\n## " + version + " — подготовлено\n\n" + content + "\n\n";
+  const replacement = "## Unreleased\n\n## " + version + " — prepared\n\n" + content + "\n\n";
   const prefix = normalized.slice(0, insertion).trimEnd();
   const suffix = normalized.slice(end).trimStart();
   return (prefix ? prefix + "\n\n" : "") + replacement + suffix;
@@ -81,8 +81,8 @@ function main() {
   mkdirSync(join(root, "docs"), { recursive: true });
   const migration = join(root, "docs/migration-" + version + ".md");
   if (!existsSync(migration)) {
-    writeFileSync(migration, "# Обновление до Gavia UI " + version
-      + "\n\nTODO: перечислите изменения, совместимость и действия потребителя.\n");
+    writeFileSync(migration, "# Upgrading to Gavia UI " + version
+      + "\n\nTODO: describe changes, compatibility and consumer migration steps.\n");
   }
   console.log("Prepared " + version + ". Review changelog/migration before creating a release tag. No publication performed.");
 }

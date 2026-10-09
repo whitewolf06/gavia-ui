@@ -1,84 +1,84 @@
-# Gavia UI 0.8: полная замена внешних контролов
+# Gavia UI 0.8: completing the replacement of external controls
 
-Версия 0.8.1 опубликована в npm 2026-10-06 (Москва). Версия 0.8.0 не была
-опубликована в npm; переход с 0.7.1 выполняется сразу на 0.8.1. Точная версия,
-integrity и установка опубликованного архива в Vue-потребителе проверены:
-[подтверждённый выпуск](releases.md#выпуск-081).
-Существующие Wl* модели, классы, CSS-токены и defaults сохраняются.
+Version 0.8.1 was published to npm on 2026-10-06 (Moscow). Version 0.8.0 was not
+published to npm; upgrade directly from 0.7.1 to 0.8.1. The exact version,
+integrity and installed archive in a Vue consumer were verified:
+[confirmed release](releases.md#release-081).
+Existing Wl* models, classes, CSS tokens and defaults are preserved.
 
 ```bash
 pnpm add gavia-ui@0.8.1 vue
 ```
 
-## Время и даты
+## Time and dates
 
-`WlTimePicker` работает с локальным временем `HH:mm | null`, без Date,
-секунд и часового пояса. Поле ввода — нативный `input type="time"`;
-его вид зависит от браузера. `minTime`/`maxTime` используют HH:mm, включая
-ночной диапазон (22:00–02:00). Очистка возвращает null; ввод вне диапазона
-не меняет модель и восстанавливается при blur/Enter. `disabled`, `invalid`,
-`size`, `density`, `pt` и нативные атрибуты доступны, как у остальных полей.
+`WlTimePicker` uses local `HH:mm | null` time without Date,
+seconds or a time zone. Its control is native `input type="time"`;
+appearance depends on the browser. `minTime`/`maxTime` use HH:mm, including
+overnight ranges (22:00–02:00). Clearing returns null; out-of-range input
+does not change the model and resets on blur/Enter. `disabled`, `invalid`,
+`size`, `density`, `pt` and native attributes work as with other fields.
 
 ```vue
 <WlTimePicker v-model="time" id="start-time" min-time="08:00" max-time="18:00" />
 ```
 
-`WlDatePicker` по-прежнему хранит ISO YYYY-MM-DD. Новый `displayFormat`
-выбирает представление и parser ручного ввода: `dd.mm.yyyy` (старый default)
-либо `yyyy-mm-dd`. Для ISO-представления передайте подходящий placeholder:
+`WlDatePicker` still stores ISO YYYY-MM-DD. New `displayFormat`
+selects display and manual-input parsing: `dd.mm.yyyy` (the previous default)
+or `yyyy-mm-dd`. For ISO display, pass a matching placeholder:
 
 ```vue
-<WlDatePicker v-model="date" display-format="yyyy-mm-dd" placeholder="гггг-мм-дд" />
+<WlDatePicker v-model="date" display-format="yyyy-mm-dd" placeholder="yyyy-mm-dd" />
 ```
 
-При адаптации Date используйте локальные getFullYear/getMonth/getDate;
-`toISOString().slice(0, 10)` может сдвинуть день. Серверная конверсия дат
-и времени остаётся ответственностью приложения.
+When adapting Date, use local getFullYear/getMonth/getDate;
+`toISOString().slice(0, 10)` may shift the day. Server-side date
+and time conversion belongs to the app.
 
-## Выбор файлов без собственного списка
+## File selection without an internal list
 
-`WlFilePicker` — stateless control: не хранит список файлов. Событие `select` возвращает File[]
-из одного выбора. `accept` помогает браузеру отфильтровать окно выбора.
-Типы, размеры, количество, дедупликацию, предпросмотр, загрузку и повторную попытку
-контролирует приложение. Отмена не создаёт `select` и не изменяет список приложения.
-Нативный input сбрасывается после события, поэтому один файл выбирается повторно.
+`WlFilePicker` is stateless: it does not store a file list. The `select` event returns File[]
+from one selection. `accept` helps the browser filter the picker dialog.
+The app controls types, sizes, count, deduplication, previews, uploads and retries.
+Cancellation emits no `select` and does not change the app’s list.
+The native input resets after the event, allowing the same file to be chosen again.
 
 ```vue
 <WlFilePicker ref="picker" multiple accept="image/*" @select="receiveFiles" />
 ```
 
-Методы ref `choose()`/`clear()` синхронные. Вызывайте choose прямо
-в обработчике нажатия: await перед вызовом может привести к потере browser activation.
-`clear()` очищает только native input. Можно заменить кнопку слотом
-`trigger` с `{ choose, clear, disabled, attrs }` (attrs передайте на кнопку
-для унаследованных id/aria/обработчиков фокуса) либо скрыть компонент атрибутом
-`hidden` и вызывать choose внешней кнопкой. Native input всегда hidden и
-tabindex=-1; доступное имя внешней кнопки задаёт приложение.
+Ref methods `choose()`/`clear()` are synchronous. Call choose directly
+from a click handler: an await before it may lose browser activation.
+`clear()` resets only the native input. Replace the button through the
+`trigger` slot with `{ choose, clear, disabled, attrs }`; forward attrs to the button
+for inherited id/aria/focus handlers. Or hide the component with
+`hidden` and call choose from an external button. The native input is always hidden and
+tabindex=-1; the app provides the external button’s accessible name.
 
-Прежний `WlFileUpload` сохраняет дропзону, File[] модель, лимиты, reject
-и дедупликацию. Это другой сценарий: не используйте его одновременно
-с прикладной политикой накопления файлов, если нужен только picker.
+Existing `WlFileUpload` retains its drop zone, File[] model, limits, reject
+and deduplication. It serves a different use case: do not combine it
+with application file-accumulation policy when you need only a picker.
 
-## Числа и иконки
+## Numbers and icons
 
-У `WlNumberInput` старые min=0/max=99 сохраняются. Для открытой верхней
-границы явно передайте `:max="Infinity"`; бесконечная граница не попадает
-в aria-valuemax. Остальные бизнес-ограничения определяет приложение.
+`WlNumberInput` keeps the previous min=0/max=99. For an open upper
+bound, pass `:max="Infinity"` explicitly; infinite bounds do not appear
+in aria-valuemax. Other business limits belong to the app.
 
-`resolveWlIconName` возвращает каноническое типизированное имя из известного
-имени или legacy icon-строки; неизвестное значение возвращает undefined.
-Новые SVG входят в общий генерируемый каталог. Прежние рисунки и имена
-сохранены; CSS и icon fonts для новых SVG не требуются.
+`resolveWlIconName` returns a canonical typed name from a known
+name or legacy icon string; unknown input returns undefined.
+New SVGs are included in the shared generated catalog. Previous shapes and names
+are preserved; new SVGs need no CSS or icon fonts.
 
-## Проверка потребителя
+## Consumer checks
 
-Проверьте typecheck/build, Date/ISO без сдвига дня, очистку времени, диапазоны,
-числа больше 99, синхронный file picker из скрытого компонента, отмену и повтор
-выбора. Затем проверьте upload/retry/лимиты приложения, модели форм,
-клавиатуру/фокус, вложенные оверлеи, прокрутку и иконки на desktop/mobile
-во всех используемых темах. Backend-контракты менять не требуется.
+Check typecheck/build, Date/ISO without day shifts, time clearing, ranges,
+numbers above 99, synchronous file selection from a hidden component, cancellation and repeated
+selection. Then check application upload/retry/limits, form models,
+keyboard/focus, nested overlays, scrolling and icons on desktop/mobile
+in every theme you use. Backend contracts need no changes.
 
-`WlInput` всегда отдаёт строку, в том числе для native `type="number"`:
-оценка `120` остаётся строкой до прикладного преобразования, очистка — пустой
-строкой. Для числовой модели используйте `WlNumberInput`. Native IME-композиция
-сохраняется; ввод обновляет модель после завершения композиции.
+`WlInput` always emits a string, including native `type="number"`:
+a value of `120` stays a string until the app converts it; clearing yields
+an empty string. Use `WlNumberInput` for a numeric model. Native IME composition
+is preserved; input updates the model after composition ends.

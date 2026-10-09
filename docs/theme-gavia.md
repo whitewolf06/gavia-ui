@@ -1,114 +1,114 @@
-# Темы Gavia и Gavia Dark
+# Gavia and Gavia Dark themes
 
-Gavia — светлая тема с озёрным сине-серым цветом основного действия,
-серо-голубыми выбранными состояниями и тёплыми декоративными оттенками.
-Gavia Dark использует холодно-серые поверхности с лёгким синим подтоном
-и бирюзовый акцент. В обеих темах — Gavia Sans.
-Также доступны Classic, Classic Dark и Newspaper.
-Идентификаторы Classic / Classic Dark — `white` / `graphite`.
-[Названия и совместимость каталога](migration-themes.md).
+Gavia is a light theme with a lake blue-gray primary action,
+blue-gray selected states and warm decorative shades.
+Gavia Dark uses cool-gray surfaces with a slight blue undertone
+and a turquoise accent. Both use Gavia Sans.
+Classic, Classic Dark and Newspaper are also available.
+Classic / Classic Dark identifiers are `white` / `graphite`.
+[Names and catalog compatibility](migration-themes.md).
 
-## Цветовая схема светлой Gavia
+## Light Gavia palette
 
-| Роль | Токен | Цвет Gavia |
+| Role | Token | Gavia color |
 | --- | --- | --- |
-| Фон страницы | `--wl-bg` | `#faf9f6` |
-| Поднятая поверхность | `--wl-bg-raised` | `#fefdfb` |
-| Вторичная поверхность | `--wl-bg-soft` | `#eef2f3` |
-| Основной текст | `--wl-text` | `#0f1a23` |
-| Вспомогательный текст | `--wl-text-muted` | `#5b6470` |
-| Разделители | `--wl-border` | `#d5dfe3` |
-| Усиленные границы | `--wl-border-2` | `#b8c7ce` |
-| Основное действие | `--wl-action-primary-bg` | `#3c7490` |
-| Наведение основного действия | `--wl-action-primary-hover` | `#376b84` |
-| Нажатие основного действия | `--wl-action-primary-active` | `#326179` |
-| Текст основного действия | `--wl-action-primary-text` | `#ffffff` |
-| Акцент, фокус и компактный выбранный элемент | `--wl-accent` | `#3c7490` |
-| Акцентный текст и ссылки | `--wl-text-accent` | `#326179` |
-| Наведение акцента | `--wl-accent-hover` | `#326179` |
-| Фон выбранного пункта | `--wl-accent-soft` | `#dfe8eb` |
-| Наведение выбранного пункта | `--wl-accent-soft-hover` | `#d3dfe4` |
-| Текст на тёмном акценте | `--wl-on-accent` | `#ffffff` |
-| Тёплый декоративный accent | `--wl-accent-warm` | `#948775` |
-| Мягкий тёплый accent | `--wl-accent-warm-soft` | `#efebe3` |
-| Опасное действие, ошибки и статусная иконка | `--wl-danger` | `#ab4448` |
-| Наведение опасного действия | `--wl-danger-hover` | `#963c3f` |
-| Мягкая опасная поверхность | `--wl-danger-soft` | `#f7eeed` |
-| Наведение мягкой опасной поверхности | `--wl-danger-soft-hover` | `#f3e5e4` |
-| Граница мягкой опасной поверхности | `--wl-danger-border` | `#e5c6c5` |
+| Page background | `--wl-bg` | `#faf9f6` |
+| Raised surface | `--wl-bg-raised` | `#fefdfb` |
+| Secondary surface | `--wl-bg-soft` | `#eef2f3` |
+| Main text | `--wl-text` | `#0f1a23` |
+| Muted text | `--wl-text-muted` | `#5b6470` |
+| Dividers | `--wl-border` | `#d5dfe3` |
+| Strong borders | `--wl-border-2` | `#b8c7ce` |
+| Primary action | `--wl-action-primary-bg` | `#3c7490` |
+| Primary action hover | `--wl-action-primary-hover` | `#376b84` |
+| Primary action active | `--wl-action-primary-active` | `#326179` |
+| Primary action text | `--wl-action-primary-text` | `#ffffff` |
+| Accent, focus and compact selection | `--wl-accent` | `#3c7490` |
+| Accent text and links | `--wl-text-accent` | `#326179` |
+| Accent hover | `--wl-accent-hover` | `#326179` |
+| Selected item background | `--wl-accent-soft` | `#dfe8eb` |
+| Selected item hover | `--wl-accent-soft-hover` | `#d3dfe4` |
+| Text on dark accent | `--wl-on-accent` | `#ffffff` |
+| Warm decorative accent | `--wl-accent-warm` | `#948775` |
+| Soft warm accent | `--wl-accent-warm-soft` | `#efebe3` |
+| Destructive action, errors and status icon | `--wl-danger` | `#ab4448` |
+| Destructive action hover | `--wl-danger-hover` | `#963c3f` |
+| Soft danger surface | `--wl-danger-soft` | `#f7eeed` |
+| Soft danger surface hover | `--wl-danger-soft-hover` | `#f3e5e4` |
+| Soft danger surface border | `--wl-danger-border` | `#e5c6c5` |
 
-Основные поверхности имеют лёгкий тёплый подтон; текст и тени используют
-тёмный сине-серый цвет. Карточки можно отделять от страницы через
-`--wl-bg-raised`, сохраняя мягкие тени.
+Main surfaces have a slight warm undertone; text and shadows use
+dark blue-gray. Cards can be separated from the page with
+`--wl-bg-raised` while keeping soft shadows.
 
-Основное действие использует озёрный синий `#3c7490` и белый текст. При наведении
-цвет меняется на `#376b84`, при нажатии — на `#326179`. Фокус использует `#3c7490`,
-ссылки и акцентный текст — более тёмный `#326179`, который читается и на мягких
-выбранных поверхностях `#dfe8eb` и `#d3dfe4`.
-Используйте `--wl-action-primary-*` для кнопок и `--wl-text-accent` для ссылок.
+The primary action uses lake blue `#3c7490` with white text. On hover,
+it changes to `#376b84`; on press, to `#326179`. Focus uses `#3c7490`.
+Links and accent text use darker `#326179`, which remains readable on soft
+selected surfaces `#dfe8eb` and `#d3dfe4`.
+Use `--wl-action-primary-*` for buttons and `--wl-text-accent` for links.
 
-Приглушённый оттенок сухих трав `#948775` предназначен для небольших декоративных деталей и иллюстраций,
-ориентировочно 5–10% оформления. Это не цвет основного действия и не цвет мелкого
-текста. На `--wl-accent-warm-soft` используйте обычный тёмный `--wl-text`.
-Вводный badge, выбранный пункт и декоративные иконки используют мягкий
-сине-серый `--wl-accent-soft`; тёплая роль подходит для фоновых иллюстраций.
+The muted dry-grass shade `#948775` is for small decorative details and illustrations,
+roughly 5–10% of the design. Do not use it for primary actions or small
+text. Use regular dark `--wl-text` on `--wl-accent-warm-soft`.
+Intro badges, selected items and decorative icons use soft
+blue-gray `--wl-accent-soft`; the warm role suits background illustrations.
 
-Синие foundation-токены `--wl-blue-*` сохраняют свой цвет: смена бренда
-не меняет значение именованного цвета. Успех и предупреждение используют независимые зелёные и янтарные роли;
-ошибка согласована с danger #ab4448. Любой статус следует передавать
-также текстом или иконкой.
+Blue foundation tokens `--wl-blue-*` retain their color: a brand change
+does not alter named colors. Success and warning use independent green and amber roles;
+errors match danger #ab4448. Communicate every status
+with text or an icon too.
 
-Основа палитры — светлый озёрный референс.
-Фон страницы `#faf9f6` имеет небольшой тёплый подтон.
+The palette is based on a light lake reference.
+Page background `#faf9f6` has a slight warm undertone.
 
-## Тёмная Gavia Dark
+## Gavia Dark
 
-Gavia Dark выбирается через `data-wl-theme="gavia-dark"` и отдельный CSS-файл
-`gavia-ui/themes/gavia-dark.css`. Она задаёт тёмные поверхности и контрастные роли
-текста, действий и статусов через тот же источник токенов. Светлая палитра из
-таблицы выше относится к `gavia`; значения тёмной темы доступны в каталоге
-`getWlThemeTokens("gavia-dark")`. Компоненты и их DOM-контракт общие.
+Choose Gavia Dark with `data-wl-theme="gavia-dark"` and the separate CSS file
+`gavia-ui/themes/gavia-dark.css`. It defines dark surfaces and readable
+text, action and status roles through the same token source. The light palette
+above belongs to `gavia`; dark theme values are available through
+`getWlThemeTokens("gavia-dark")`. Components and their DOM contract are shared.
 
-| Роль | Токен | Gavia Dark |
+| Role | Token | Gavia Dark |
 | --- | --- | --- |
-| Фон страницы | `--wl-bg` | `#18191b` |
-| Поднятая поверхность | `--wl-bg-raised` | `#222325` |
-| Вторичная поверхность | `--wl-bg-soft` | `#2c2d30` |
-| Фон при наведении | `--wl-bg-hover` | `#3c3d41` |
-| Мягкий акцентный фон | `--wl-accent-soft` | `#293c3f` |
-| Наведение мягкого акцентного фона | `--wl-accent-soft-hover` | `#33484c` |
-| Граница | `--wl-border` | `#4b4a46` |
-| Основной текст | `--wl-text` | `#eceee8` |
-| Вспомогательный текст | `--wl-text-muted` | `#b7bfc1` |
-| Основное действие | `--wl-action-primary-bg` | `#5faaab` |
-| Ссылки и фокус | `--wl-text-accent` / `--wl-focus-color` | `#67bbbc` |
-| Опасное действие | `--wl-action-danger-bg` | `#ab4448` |
+| Page background | `--wl-bg` | `#18191b` |
+| Raised surface | `--wl-bg-raised` | `#222325` |
+| Secondary surface | `--wl-bg-soft` | `#2c2d30` |
+| Hover background | `--wl-bg-hover` | `#3c3d41` |
+| Soft accent background | `--wl-accent-soft` | `#293c3f` |
+| Soft accent background hover | `--wl-accent-soft-hover` | `#33484c` |
+| Border | `--wl-border` | `#4b4a46` |
+| Main text | `--wl-text` | `#eceee8` |
+| Muted text | `--wl-text-muted` | `#b7bfc1` |
+| Primary action | `--wl-action-primary-bg` | `#5faaab` |
+| Links and focus | `--wl-text-accent` / `--wl-focus-color` | `#67bbbc` |
+| Destructive action | `--wl-action-danger-bg` | `#ab4448` |
 
-Фон страницы и обычных карточек холодно-серый с лёгким синим подтоном.
-Мягкие акцентные фоны используют приглушённую тёмную бирюзу.
-Бирюзовый акцент применяется к кнопкам, ссылкам, логотипу, фокусу
-и акцентным границам. Тёмный акцентный фон и бирюзовая граница выделяют блок установки.
-Успех, предупреждение и ошибка сохраняют свои цвета и сопровождаются
-текстом или иконкой. На главной — ночной вариант озера с луной и гагарой;
-[исходник и запросы](brand/README.md#фон-первого-экрана).
+Page and regular card backgrounds are cool gray with a slight blue undertone.
+Soft accent backgrounds use muted dark turquoise.
+The turquoise accent appears on buttons, links, the logo, focus
+and accent borders. A dark accent background and turquoise border distinguish the installation card.
+Success, warning and error keep their colors and include
+text or an icon. The home page uses a night lake with the moon and loon;
+[source and prompts](brand/README.md#hero-background).
 
-Gavia Dark добавлена в 0.10.0. Основной шрифт обеих Gavia — Gavia Sans,
-код использует `--wl-mono`. [Переход на 0.10.0](migration-0.10.0.md).
+Gavia Dark was added in 0.10.0. Gavia Sans is the main font in both Gavia themes;
+code uses `--wl-mono`. [Upgrade to 0.10.0](migration-0.10.0.md).
 
-## Основной шрифт
+## Main font
 
-Темы Gavia и Gavia Dark используют гарнитуру Gavia Sans 0.6 для текста, заголовков и элементов
-интерфейса через `--wl-font`; `--wl-font-heading` наследует этот стек.
-Подключите отдельный CSS с `@font-face`, чтобы браузер загрузил WOFF2.
-Без него браузер использует системный шрифт. Код сохраняет моноширинный `--wl-mono`.
+Gavia and Gavia Dark use Gavia Sans 0.6 for text, headings and
+controls through `--wl-font`; `--wl-font-heading` inherits this stack.
+Import the separate `@font-face` CSS so the browser loads WOFF2.
+Without it, the browser uses a system font. Code retains monospaced `--wl-mono`.
 
-В гарнитуре шесть весов (100, 300, 400, 500, 600, 700), каждый с прямым и
-наклонным начертанием. [Образцы, подключение и лицензия](font-gavia.md).
-Playground показывает гарнитуру в разделе «Шрифт» (`?view=font`).
+There are six weights (100, 300, 400, 500, 600, 700), each with upright and
+oblique faces. [Specimens, setup and license](font-gavia.md).
+The playground shows the typeface on the “Font” page (`?view=font`).
 
-## Подключение
+## Setup
 
-Светлая Gavia и гарнитура входят в Gavia UI начиная с 0.9.1. Пример для неё:
+Light Gavia and the typeface have been included in Gavia UI since 0.9.1:
 
 ```ts
 import 'gavia-ui/styles/reset.css';
@@ -118,21 +118,21 @@ import 'gavia-ui/themes/gavia.css';
 ```
 
 ```html
-<html lang="ru" data-wl-theme="gavia">
+<html lang="en" data-wl-theme="gavia">
 ```
 
-Для Gavia Dark замените импорт темы на `gavia-ui/themes/gavia-dark.css` и
-атрибут на `data-wl-theme="gavia-dark"`. Импорт `styles/fonts/gavia.css` общий.
+For Gavia Dark, change the theme import to `gavia-ui/themes/gavia-dark.css` and
+the attribute to `data-wl-theme="gavia-dark"`. Both use `styles/fonts/gavia.css`.
 
-Оба CSS-файла работают в `wl.tokens` и применяются через свои `data-wl-theme`.
-Импорт остаётся явным. Чтобы переключать темы, импортируйте нужные CSS-файлы и
-меняйте атрибут на корневом элементе страницы. Тогда teleported-оверлеи получают
-ту же тему. Локальный атрибут на секции подходит для обычных вложенных компонентов,
-но оверлей, перенесённый в `body`, наследует тему страницы.
+Both CSS files use `wl.tokens` and apply through their `data-wl-theme`.
+Imports remain explicit. For theme switching, import the relevant CSS files and
+change the attribute on the page root. Teleported overlays then receive
+the same theme. A local section attribute works for regular nested components,
+but an overlay teleported to `body` inherits the page theme.
 
-Внутри библиотеки `base.css` и значения по умолчанию
-`resolveWlToken(name)` / `getWlThemeTokens()` по-прежнему соответствуют Classic.
-Для Gavia или Gavia Dark укажите тему явно.
+Within the library, `base.css` and default
+`resolveWlToken(name)` / `getWlThemeTokens()` values still correspond to Classic.
+Specify Gavia or Gavia Dark explicitly.
 
 ```ts
 import { getWlThemeTokens, resolveWlToken } from 'gavia-ui';
@@ -141,8 +141,8 @@ const page = resolveWlToken('--wl-bg', 'gavia');
 const snapshot = getWlThemeTokens('gavia');
 ```
 
-Эти функции возвращают снимок поставляемой темы без чтения DOM и пользовательских
-переопределений. Для карточки в собственном приложении:
+These functions return a shipped theme snapshot without reading the DOM or custom
+overrides. A card in your own app can use:
 
 ```css
 .feature-card {
@@ -152,72 +152,72 @@ const snapshot = getWlThemeTokens('gavia');
 }
 ```
 
-## Контраст и проверка
+## Contrast and checks
 
-Для обычного текста проверяется минимум 4.5:1, для видимых границ фокуса — 3:1
-с соседней поверхностью. Это проверки цветовых пар, а не гарантия доступности
-всей страницы. Основания: [WCAG 2.2 — контраст текста](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)
-и [контраст интерфейсных элементов](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html).
+Regular text is checked against a minimum 4.5:1 ratio; visible focus boundaries
+against 3:1 on the adjacent surface. These are color-pair checks, not a guarantee
+of whole-page accessibility. References: [WCAG 2.2 text contrast](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)
+and [non-text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html).
 
-| Пара Gavia | Контраст |
+| Gavia pair | Contrast |
 | --- | --- |
-| Основной текст / страница | 16.73:1 |
-| Вспомогательный текст / страница | 5.70:1 |
-| Белый текст / основное действие | 10.29:1 |
-| Белый текст / hover действия | 12.61:1 |
-| Белый текст / active действия | 14.81:1 |
-| Ссылка / страница | 9.78:1 |
-| Ссылка / поднятая поверхность | 10.13:1 |
-| Фокус / вторичная поверхность | 9.13:1 |
-| Основной текст / мягкий тёплый accent | 14.81:1 |
+| Main text / page | 16.73:1 |
+| Muted text / page | 5.70:1 |
+| White text / primary action | 5.13:1 |
+| White text / action hover | 5.84:1 |
+| White text / action active | 6.73:1 |
+| Link / page | 6.39:1 |
+| Link / raised surface | 6.62:1 |
+| Focus / secondary surface | 4.55:1 |
+| Main text / soft warm accent | 14.81:1 |
 
-Значения в таблице округлены для чтения. Валидатор сравнивает исходные отношения
-с порогом до округления. Утверждённые пары проверяются в каждой из пяти
-тем; отдельные тесты защищают ссылки и текст на декоративной
-поверхности Gavia. После изменения цвета, прозрачности текста или мягкой
-поверхности повторите расчёт контраста.
+Table values are rounded for reading. The validator compares raw ratios
+with thresholds before rounding. Approved pairs are checked in all five
+themes; separate tests protect Gavia links and text on decorative
+surfaces. Recalculate contrast after changing colors, text opacity or soft
+surfaces.
 
-[Исходная спецификация](../packages/ui-kit/tests/fixtures/gavia-palette.json)
-защищает точные значения палитры и semantic bindings.
-Идентификаторы тем в библиотеке — `gavia` и `gavia-dark`; светлая тема сохраняет прежний `gavia`.
+The [source specification](../packages/ui-kit/tests/fixtures/gavia-palette.json)
+protects exact palette values and semantic bindings.
+Library theme identifiers are `gavia` and `gavia-dark`; the light theme retains `gavia`.
 
-## Скругление кнопок
+## Button radii
 
-В Gavia и Gavia Dark радиусы кнопок одинаковы: xs/sm — 3 px, md — 4 px, lg — 5 px.
-То же правило применяется к кнопкам с иконкой. Радиус полей обеих Gavia — 6 px,
-радиус карточек — 8 px.
-В Classic, Classic Dark и Newspaper остаются прежние значения каждой темы.
+Gavia and Gavia Dark share button radii: xs/sm — 3 px, md — 4 px, lg — 5 px.
+Icon buttons follow the same rule. Fields in both themes use 6 px;
+cards use 8 px.
+Classic, Classic Dark and Newspaper keep their existing theme values.
 
-Foundation `--wl-dimension-btn-radius`, `--wl-dimension-btn-radius-sm` и
-`--wl-dimension-btn-radius-lg` передают значения через semantic `--wl-corner-button*`
-в component `--wl-btn-radius*`. Для точечной настройки кнопки переопределите
-`--wl-btn-radius`, `--wl-btn-radius-sm` или `--wl-btn-radius-lg`.
+Foundation `--wl-dimension-btn-radius`, `--wl-dimension-btn-radius-sm` and
+`--wl-dimension-btn-radius-lg` pass values through semantic `--wl-corner-button*`
+to component `--wl-btn-radius*`. Override
+`--wl-btn-radius`, `--wl-btn-radius-sm` or `--wl-btn-radius-lg` for a specific button.
 
-## Скругление полей
+## Field radii
 
-Поля Gavia и Gavia Dark используют радиус 6 px во всех размерах через существующую цепочку
+Gavia and Gavia Dark fields use 6 px at every size through the existing chain
 `--wl-dimension-input-radius` → `--wl-corner-input` → `--wl-input-radius`.
-Она общая для input, textarea, select и составных полей. Для локальной настройки
-переопределите `--wl-input-radius`. Прежние значения других тем сохраняются.
+It is shared by input, textarea, select and composite fields. Override
+`--wl-input-radius` locally. Existing values in other themes are preserved.
 
-## Изменение темы
+## Editing the theme
 
-Единственный источник значений — `packages/ui-kit/tokens/source.json`. Gavia
-переопределяет foundation-палитру, тени и размеры. Semantic-роли ссылаются на
-foundation, а компонентные — на semantic. Четыре foundation-роли
+The only value source is `packages/ui-kit/tokens/source.json`. Gavia
+overrides foundation palette, shadows and dimensions. Semantic roles reference
+foundation, and component roles reference semantic. Four foundation roles,
 `--wl-palette-action-primary-bg`, `--wl-palette-action-primary-hover`,
-`--wl-palette-action-primary-active` и `--wl-palette-action-primary-text` позволяют
-настраивать действие независимо от цвета ссылок. В Gavia существующие
-semantic-роли `--wl-action-primary-*` ссылаются на эти foundation-роли.
-В Classic, Classic Dark и Newspaper их прежние semantic-алиасы сохраняются;
-новое active-состояние использует прежний semantic hover-цвет.
+`--wl-palette-action-primary-active` and `--wl-palette-action-primary-text`, let you
+configure actions independently of link colors. Gavia’s existing
+semantic `--wl-action-primary-*` roles reference these foundation roles.
+Classic, Classic Dark and Newspaper retain their earlier semantic aliases;
+the new active state uses the previous semantic hover color.
 
-Поднятая поверхность добавлена через
-`--wl-palette-bg-raised` → `--wl-bg-raised`. В остальных темах она разрешается
-в прежний `--wl-bg`. Тёплые декоративные роли используют отдельные foundation-токены
-`--wl-palette-accent-warm` и `--wl-palette-accent-warm-soft`.
+The raised surface follows
+`--wl-palette-bg-raised` → `--wl-bg-raised`. In other themes, it resolves
+to the existing `--wl-bg`. Warm decorative roles use separate foundation tokens
+`--wl-palette-accent-warm` and `--wl-palette-accent-warm-soft`.
 
-После правок запускайте из корня:
+After editing, run from the root:
 
 ```sh
 pnpm tokens:sync
@@ -225,11 +225,11 @@ pnpm tokens:check
 pnpm --filter gavia-ui exec vitest run tests/design-system.test.ts tests/token-validation.test.mjs
 ```
 
-Синхронизация обновляет тему, типизированный каталог и отчёт контраста.
-`tests/fixtures/tokens-0.5.json` по-прежнему защищает 165 прежних значений
-Classic, Classic Dark и Newspaper. Новый файл темы входит в существующий экспорт
-`gavia-ui/themes/*.css`.
+Synchronization updates the theme, typed catalog and contrast report.
+`tests/fixtures/tokens-0.5.json` still protects 165 previous values
+in Classic, Classic Dark and Newspaper. The new theme file is covered by the existing
+`gavia-ui/themes/*.css` export.
 
-При подключении нескольких тем импортируйте `themes/white.css` первым:
-он также задаёт fallback на `:root`. Gavia и остальные именованные темы должны
-идти после Classic, чтобы выбранный атрибут переопределял базовую палитру.
+When importing multiple themes, import `themes/white.css` first:
+it also defines the `:root` fallback. Gavia and other named themes should
+follow Classic so the selected attribute overrides the base palette.

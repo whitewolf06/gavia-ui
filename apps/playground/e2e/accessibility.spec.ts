@@ -1,3 +1,4 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
 import { chooseDropdownOption } from "./select-helpers";
@@ -28,7 +29,7 @@ async function audit(page: Page, testInfo: TestInfo, name: string, include?: str
 for (const theme of themes) {
   test(`${theme}: home and font page meet automated WCAG 2.2 AA checks`, async ({ page, baseURL }, testInfo) => {
     for (const view of ["home", "font"]) {
-      await page.goto(showcaseUrl(baseURL, view, theme));
+      await page.goto(russianPlaygroundUrl(showcaseUrl(baseURL, view, theme)));
       await expect(page.getByTestId(`${view === "home" ? "home" : "font"}-page`)).toBeVisible();
       await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme);
       await audit(page, testInfo, `${theme}-${view}`);
@@ -36,7 +37,7 @@ for (const theme of themes) {
   });
 
   test(`${theme}: selection controls and dialog closed/open states meet automated WCAG 2.2 AA checks`, async ({ page, baseURL }, testInfo) => {
-    await page.goto(showcaseUrl(baseURL, "system", theme));
+    await page.goto(russianPlaygroundUrl(showcaseUrl(baseURL, "system", theme)));
     await expect(page.getByRole("heading", { name: "Дизайн-система" })).toBeVisible();
     const explorer = page.getByTestId("ds-explorer");
     const preview = page.getByTestId("ds-example-preview");

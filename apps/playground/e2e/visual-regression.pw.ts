@@ -1,3 +1,4 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { expect, test, type Locator } from "@playwright/test";
 import { chooseDropdownOption, chooseShowcaseTheme } from "./select-helpers";
 const themes = [{ name: "white", label: "Classic" }, { name: "graphite", label: "Classic Dark" }, { name: "newspaper", label: "Newspaper" }];
@@ -12,7 +13,7 @@ async function review(target: Locator, name: string): Promise<void> {
 test.beforeEach(async ({ page }) => {
   // Fixed time and locally available fonts prevent unrelated machine/date changes.
   await page.clock.setFixedTime(new Date("2026-10-01T12:00:00Z"));
-  await page.goto(showcaseUrl, { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(showcaseUrl), { waitUntil: "domcontentloaded" });
   await page.getByRole("heading", { name: "Дизайн-система" }).waitFor({ state: "visible" });
   // Capture the example itself: the showcase header must not cover tall mobile screens.
   // Functional tests retain the actual sticky header and normal viewport.

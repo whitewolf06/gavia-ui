@@ -25,6 +25,15 @@ export function overlayLocaleConsumerTypes(
     chooseDate: "Date", prevMonth: "Previous", nextMonth: "Next"
   };
   legacyLocale.dayNamesMin.push("Legacy mutable locale constant");
+  // A complete pre-localization resolved object does not require the new control labels.
+  const legacyResolvedLocale: WlResolvedLocale = {
+    ...legacyLocale, dayNames: [...days], dayNamesShort: [...days], monthNamesShort: [],
+    today: "Today", clear: "Clear", chooseMonth: "Month", chooseYear: "Year",
+    prevYear: "Previous year", nextYear: "Next year", prevDecade: "Previous decade",
+    nextDecade: "Next decade", weekHeader: "Week"
+  };
+  const optionalControl: string | undefined = legacyResolvedLocale.close;
+  const normalizedControl: string = normalizeWlLocale(undefined, legacyResolvedLocale).close;
   if (typeof input.customMessage === "object" && input.customMessage !== null) void input.customMessage;
   const exposedPopover: WlPopoverExpose = popover;
   const exposedFilters: WlFilterBarExpose = filters;
@@ -70,6 +79,6 @@ export function overlayLocaleConsumerTypes(
   // @ts-expect-error Filter-bar visibility is not an input event's lazy model.
   const lazyBar: FilterProps = { openModifiers: { lazy: true } };
 
-  void [input, calendar, knownText, legacyLocale, slots, dialog, drawer, bar,
+  void [input, calendar, knownText, legacyLocale, legacyResolvedLocale, optionalControl, normalizedControl, slots, dialog, drawer, bar,
     wrongLocale, wrongGroup, trimmedDialog, numberedDrawer, lazyBar];
 }

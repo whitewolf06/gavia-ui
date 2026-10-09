@@ -1,6 +1,6 @@
 {
   "name": "gavia-ui-workspace",
-  "version": "0.11.1",
+  "version": "0.12.0",
   "private": true,
   "description": "Gavia UI workspace: an independent Vue 3 design system and component library",
   "packageManager": "pnpm@10.34.5",

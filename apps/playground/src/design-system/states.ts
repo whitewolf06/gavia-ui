@@ -1,3 +1,4 @@
+import { translate as t } from "../i18n";
 import { createDocumentationControls, type DocumentationControl } from "./documentation-controls";
 import type { WlComponentManifest, WlPropManifest } from "../../../../packages/ui-kit/src/manifest";
 export interface StateCase { id: string; label: string; props: Record<string, unknown> }
@@ -11,15 +12,15 @@ export function stateControls(entry: WlComponentManifest): WlPropManifest[] {
     || flags.has(prop.name) && prop.type === "boolean");
 }
 export function stateCases(entry: WlComponentManifest): StateCase[] {
-  const cases: StateCase[] = [{ id: "default", label: "По умолчанию", props: {} }];
+  const cases: StateCase[] = [{ id: "default", get label() { return t("shell.design_system.states.text464"); }, props: {} }];
   for (const prop of stateControls(entry)) {
     const values = prop.type === "boolean" ? [true, false] : prop.values ?? [];
     for (const value of values) cases.push({ id: `${prop.name}-${value}`, label: `${prop.name}: ${value}`, props: { [prop.name]: value } });
   }
-  if (entry.name === "WlField") cases.push({ id: "error", label: "Поле с ошибкой", props: { error: "Введите название материала." } });
-  if (entry.name === "WlTable") cases.push({ id: "empty", label: "Пустая таблица", props: { value: [], emptyMessage: "Ничего не найдено" } });
-  if (entry.name === "WlProgress") for (const value of [0, 100]) cases.push({ id: `value-${value}`, label: `Прогресс: ${value}%`, props: { value } });
-  if (entry.name === "WlSteps") for (const current of [0, 1, 2]) cases.push({ id: `step-${current}`, label: `Шаг: ${current + 1}`, props: { current } });
+  if (entry.name === "WlField") cases.push({ id: "error", get label() { return t("shell.design_system.states.text465"); }, props: { get error() { return t("shell.design_system.states.text466"); } } });
+  if (entry.name === "WlTable") cases.push({ id: "empty", get label() { return t("shell.design_system.states.text467"); }, props: { value: [], get emptyMessage() { return t("shell.design_system.states.text468"); } } });
+  if (entry.name === "WlProgress") for (const value of [0, 100]) cases.push({ id: `value-${value}`, label: t("shell.design_system.states.text469", { arg0: value }), props: { value } });
+  if (entry.name === "WlSteps") for (const current of [0, 1, 2]) cases.push({ id: `step-${current}`, label: t("shell.design_system.states.text470", { arg0: current + 1 }), props: { current } });
   if (entry.name === "WlIcon") for (const size of [12, 16, 24, 32]) cases.push({ id: `size-${size}`, label: `size: ${size}`, props: { size } });
   return cases;
 }

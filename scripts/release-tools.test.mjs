@@ -28,7 +28,7 @@ test("malformed and unknown prerelease versions fail before publication", () => 
 });
 
 test("release notes select the exact version without leaking adjacent releases", () => {
-  const source = "# Changelog\n\n## Не выпущено\nDraft\n\n## 0.9.2 — подготовлено\nNew release\n\n## 0.9.1 — 2026-10-07\nOld release\n";
+  const source = "# Changelog\n\n## Unreleased\nDraft\n\n## 0.9.2 — prepared\nNew release\n\n## 0.9.1 — 2026-10-07\nOld release\n";
   assert.equal(releaseNotes(source, "0.9.2"), "New release");
   assert.throws(() => releaseNotes(source, "0.9.20"));
   assert.equal(releaseNotes("## [0.9.2] — prepared\nChecked notes\n", "0.9.2"), "Checked notes");
@@ -44,10 +44,10 @@ test("preparation preserves introduction/history and rejects duplicate unrelease
   const source = "# Changelog\n\nProject introduction.\n\n## 0.9.1\nPrevious.\n";
   const prepared = prepareChangelog(source, "0.9.2", ["New fix."]);
   assert.equal(prepared.match(/^# Changelog$/gm).length, 1);
-  assert.match(prepared, /Project introduction\.\n\n## Не выпущено/);
+  assert.match(prepared, /Project introduction\.\n\n## Unreleased/);
   assert.equal(releaseNotes(prepared, "0.9.2"), "### Changesets\n\nNew fix.");
   assert.equal(releaseNotes(prepared, "0.9.1"), "Previous.");
-  assert.throws(() => prepareChangelog("## Не выпущено\nA\n## Не выпущено\nB\n", "0.9.2", ["Notes."]));
+  assert.throws(() => prepareChangelog("## Unreleased\nA\n## Unreleased\nB\n", "0.9.2", ["Notes."]));
 });
 
 test("portable preview rejects root-relative assets for root and GitHub Pages bases", () => {
@@ -76,7 +76,7 @@ function versionFixture(callback) {
     put("pnpm-workspace.yaml", 'packages:\n  - "packages/*"\n  - "apps/*"\n');
     put("packages/ui-kit/package.json", { name: "gavia-ui", version: "0.9.1" });
     put("apps/playground/package.json", { name: "gavia-ui-playground", private: true, version: "0.1.0" });
-    const changelog = "# Changelog\n\n## Не выпущено\n\n- Consumer-facing note: [guide](docs/quality.md).\n\n## 0.9.1 — 2026-10-07\n\n- Previous release: [migration](docs/migration-0.9.md).\n";
+    const changelog = "# Changelog\n\n## Unreleased\n\n- Consumer-facing note: [guide](docs/quality.md).\n\n## 0.9.1 — 2026-10-07\n\n- Previous release: [migration](docs/migration-0.9.md).\n";
     put("CHANGELOG.md", changelog);
     put("packages/ui-kit/CHANGELOG.md", packageChangelog(changelog));
     put(".changeset/fixture.md", '---\n"gavia-ui": patch\n---\n\nA checked fix with [docs](docs/design-system.md).\n');
@@ -112,12 +112,12 @@ for (const prerelease of [false, true]) {
       assert.match(packaged, /\(https:\/\/github\.com\/whitewolf06\/gavia-ui\/blob\/main\/docs\/quality\.md\)/);
       assert.match(packaged, /\/docs\/design-system\.md\)/);
       assert.match(packaged, /\/docs\/migration-0\.9\.md\)/);
-      assert.match(result, /## Не выпущено\n\n## 0\.9\.2/);
+      assert.match(result, /## Unreleased\n\n## 0\.9\.2/);
       assert.match(releaseNotes(result, kit.version), /Consumer-facing note/);
       assert.match(releaseNotes(result, kit.version), /A checked fix/);
       assert.match(readFileSync(join(fixture, "docs/migration-" + kit.version + ".md"), "utf8"), /TODO/);
       if (prerelease) {
-        const secondPreview = result.replace("## Не выпущено\n\n", "## Не выпущено\n\n- Editorial note for the second preview.\n\n");
+        const secondPreview = result.replace("## Unreleased\n\n", "## Unreleased\n\n- Editorial note for the second preview.\n\n");
         put("CHANGELOG.md", secondPreview);
         put("packages/ui-kit/CHANGELOG.md", packageChangelog(secondPreview));
         put(".changeset/second.md", '---\n"gavia-ui": patch\n---\n\nSecond checked fix.\n');
@@ -157,6 +157,9 @@ test("unfinished migration blocks release-notes publication check", () => {
     const rendered = run([join(fixture, "scripts/release-notes.mjs")]).stdout;
     assert.match(rendered, /\(https:\/\/github\.com\/whitewolf06\/gavia-ui\/blob\/v0\.9\.2\/docs\/quality\.md\)/);
     assert.doesNotMatch(rendered, /\(docs\//);
+    assert.match(rendered, /### Release playground\n\nExtract gavia-ui-playground-0\.9\.2\.tgz/);
+    assert.match(rendered, /current public documentation is on GitHub Pages\./);
+    assert.doesNotMatch(rendered, /Витрина этого выпуска|Распакуйте/);
     assert.match(readFileSync(join(fixture, "CHANGELOG.md"), "utf8"), /\(docs\/quality\.md\)/);
   });
 });
@@ -223,7 +226,7 @@ test("Markdown notes preserve heading hierarchy and code fences through release 
   assert.match(normalized, /^#### Details\n/m);
   assert.match(normalized, /^##### Nested\n/m);
   assert.ok(normalized.includes(code), "fenced and indented code must be preserved verbatim");
-  const source = "# Changelog\n\n## Не выпущено\n\nManual note.\n\n```md\n## Не выпущено\n```\n\nManual ending.\n\n## 0.9.1\nOld release.\n";
+  const source = "# Changelog\n\n## Unreleased\n\nManual note.\n\n```md\n## Unreleased\n```\n\nManual ending.\n\n## 0.9.1\nOld release.\n";
   const prepared = prepareChangelog(source, "0.9.2", [normalized]);
   const rendered = releaseNotes(prepared, "0.9.2");
   for (const text of ["Manual note.", "Manual ending.", "Important migration step.", "Nested step.", "After all code.", code]) {
@@ -272,7 +275,7 @@ test("GitHub Release docs use the exact stable or prerelease tag while package d
 test("beta promotion deduplicates whole fenced blocks without dropping delimiters or code", () => {
   const firstCode = "```md\n\nFirst snippet.\n\n```";
   const secondCode = "```md\n\nSecond snippet.\n\n```";
-  const source = "# Changelog\n\n## Не выпущено\n\n## 0.9.2-beta.1\n\n" + secondCode
+  const source = "# Changelog\n\n## Unreleased\n\n## 0.9.2-beta.1\n\n" + secondCode
     + "\n\n### Changesets\n\nChecked fix.\n\n## 0.9.2-beta.0\n\n" + firstCode + "\n\n### Changesets\n\nChecked fix.\n";
   const promoted = promotionNotes(source, "0.9.2", ["Checked fix."]);
   assert.ok(promoted.includes(firstCode));

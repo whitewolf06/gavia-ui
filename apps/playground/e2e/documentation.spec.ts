@@ -1,8 +1,23 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { chooseDropdownOption, chooseShowcaseTheme, copyCodePanel, navigateMainView, openDocumentationMenu } from "./select-helpers";
 import { writeFile } from "node:fs/promises";
-import { documentationOverviewHeadings } from "../src/documentation/catalog";
+import { readFileSync } from "node:fs";
+import { documentationOverviewHeadings as localizedOverviewHeadings } from "../src/documentation/catalog";
+import { documentationMetadataSource } from "../src/documentation/localize";
+
+const russianDocumentation = JSON.parse(readFileSync(new URL("../src/i18n/messages/documentation.ru.json", import.meta.url), "utf8")) as { strings: Record<string, string> };
+
+// Node-side expectations use the same RU catalog without mutating the application locale.
+function russianDocumentationTitle(key: string): string {
+  const title = russianDocumentation.strings[key.slice("documentation.strings.".length)];
+  if (typeof title !== "string") throw new Error("Missing Russian documentation title: " + key);
+  return title;
+}
+const documentationOverviewHeadings = documentationMetadataSource(localizedOverviewHeadings).map((heading) => ({
+  ...heading, title: russianDocumentationTitle(heading.title)
+}));
 
 const defaultStand = "http://127.0.0.1:4173/";
 const pageErrors = new WeakMap<Page, string[]>();
@@ -90,7 +105,7 @@ test.afterEach(async ({ page }) => {
 });
 
 test("home opens WlButton documentation and controls update the live button, consumer code and API", async ({ page, baseURL }, testInfo) => {
-  await page.goto(pageUrl(baseURL), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(pageUrl(baseURL)), { waitUntil: "domcontentloaded" });
   const home = page.getByTestId("home-page");
   await expect(home.getByRole("heading", { level: 1 })).toHaveText("Gavia UI");
   await expect(home.getByTestId("home-install")).toContainText("pnpm add gavia-ui@");
@@ -257,7 +272,7 @@ test("home opens WlButton documentation and controls update the live button, con
 });
 
 test("direct WlButton documentation survives reload, Back and Forward beneath the current base path", async ({ page, baseURL }) => {
-  await page.goto(pageUrl(baseURL, "?view=docs&component=WlButton"), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(pageUrl(baseURL, "?view=docs&component=WlButton")), { waitUntil: "domcontentloaded" });
   await expect(buttonWorkspace(page)).toBeVisible();
   await expectRoute(page, baseURL, "docs", "WlButton");
   await page.reload();
@@ -278,7 +293,7 @@ test("direct WlButton documentation survives reload, Back and Forward beneath th
 
   const installationUrl = new URL(pageUrl(baseURL, "?view=docs"));
   installationUrl.hash = "docs-install";
-  await page.goto(installationUrl.href, { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(installationUrl.href), { waitUntil: "domcontentloaded" });
   const installationHeading = page.getByTestId("docs-page").locator("h2#docs-install");
   await expect(installationHeading).toBeInViewport();
   await expectRoute(page, baseURL, "docs");
@@ -290,7 +305,7 @@ test("direct WlButton documentation survives reload, Back and Forward beneath th
 
   const quickstartUrl = new URL(pageUrl(baseURL));
   quickstartUrl.hash = "home-quickstart";
-  await page.goto(quickstartUrl.href, { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(quickstartUrl.href), { waitUntil: "domcontentloaded" });
   const quickstartHeading = page.getByTestId("home-page").locator("#home-quickstart").getByRole("heading", { level: 2 });
   await expect(quickstartHeading).toBeInViewport();
   await expectRoute(page, baseURL, null);
@@ -303,7 +318,7 @@ test("direct WlButton documentation survives reload, Back and Forward beneath th
 
 test("getting-started links persist across Docs pages and preserve native links, SPA history and mobile closure", async ({ page, baseURL }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
-  await page.goto(pageUrl(baseURL, "?view=docs&component=WlButton"), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(pageUrl(baseURL, "?view=docs&component=WlButton")), { waitUntil: "domcontentloaded" });
   const docs = page.getByTestId("docs-page");
   const overview = docs.getByRole("navigation", { name: "Разделы начала работы", exact: true, includeHidden: true });
   await expect(buttonWorkspace(page)).toBeVisible();
@@ -403,7 +418,7 @@ test("history restores Docs anchors after an interrupted smooth overview transit
   await page.setViewportSize({ width: 1280, height: 800 });
   const initial = new URL(pageUrl(baseURL, "?view=docs&section=responsive"));
   initial.hash = "docs-responsive-breakpoints";
-  await page.goto(initial.href, { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(initial.href), { waitUntil: "domcontentloaded" });
   const docs = page.getByTestId("docs-page");
   const source = docs.locator("#docs-responsive-breakpoints");
   await expect(source).toBeInViewport();
@@ -429,7 +444,7 @@ test("history restores Docs anchors after an interrupted smooth overview transit
 
 test("home and interactive WlButton documentation remain usable at 320px", async ({ page, baseURL }, testInfo) => {
   await page.setViewportSize({ width: 320, height: 740 });
-  await page.goto(pageUrl(baseURL), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(pageUrl(baseURL)), { waitUntil: "domcontentloaded" });
   const home = page.getByTestId("home-page");
   await expect(home.getByRole("heading", { level: 1 })).toHaveText("Gavia UI");
   await expectNoHorizontalOverflow(page, home);
@@ -466,7 +481,7 @@ test("home and interactive WlButton documentation remain usable at 320px", async
 
 
 test("foundations navigation preserves live examples and highlighted copy across themes and at 320px", async ({ page, baseURL }, testInfo) => {
-  await page.goto(pageUrl(baseURL, "?view=docs"), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(pageUrl(baseURL, "?view=docs")), { waitUntil: "domcontentloaded" });
   const docs = page.getByTestId("docs-page");
   const navigation = docs.getByRole("navigation", { name: "Основы", exact: true });
   const foundation = docs.getByTestId("docs-foundation-page");
@@ -587,7 +602,7 @@ test("foundations navigation preserves live examples and highlighted copy across
 
 test("documentation scrollspy follows real Layout and icon scrolling without rewriting anchor history", async ({ page, baseURL }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
-  await page.goto(pageUrl(baseURL, "?view=docs"), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(pageUrl(baseURL, "?view=docs")), { waitUntil: "domcontentloaded" });
   await page.addStyleTag({ content: "html { scroll-behavior: auto; }" });
   const docs = page.getByTestId("docs-page");
   const content = docs.locator(".docs-content");
@@ -641,7 +656,7 @@ test("documentation scrollspy follows real Layout and icon scrolling without rew
 
 test("generic documentation keeps controls beside live code, preserves tab state and stacks at 320px", async ({ page, baseURL }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
-  await page.goto(pageUrl(baseURL, "?view=docs&component=WlInput"), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(pageUrl(baseURL, "?view=docs&component=WlInput")), { waitUntil: "domcontentloaded" });
   const docs = page.getByTestId("docs-page");
   const workspace = docs.locator('[data-docs-component="WlInput"]');
   await expect(workspace).toBeVisible();
@@ -772,7 +787,7 @@ test("documentation tabs keep header spacing stable and preserve sidebar placeme
     await page.setViewportSize(viewport);
     const mobile = viewport.width <= 760;
     for (const component of ["WlTimePicker", "WlButton"]) {
-      await page.goto(pageUrl(baseURL, "?view=docs&component=" + component), { waitUntil: "domcontentloaded" });
+      await page.goto(russianPlaygroundUrl(pageUrl(baseURL, "?view=docs&component=" + component)), { waitUntil: "domcontentloaded" });
       const docs = page.getByTestId("docs-page");
       const workspace = docs.locator('[data-docs-component="' + component + '"]');
       const tabs = workspace.getByRole("tablist", { name: component === "WlButton" ? "Разделы WlButton" : "Руководство " + component, exact: true });

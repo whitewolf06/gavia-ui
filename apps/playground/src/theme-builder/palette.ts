@@ -1,3 +1,5 @@
+import { translate as t } from "../i18n";
+import { localizeContrastLabel } from "../design-system/localized-tokens";
 import {
   resolveWlToken, wlContrastPairs, wlDesignThemes, wlDesignTokens,
   type WlDesignTokenName, type WlDesignTokenDefinition
@@ -7,14 +9,14 @@ import type { WlThemeName } from "../../../../packages/ui-kit/src/types";
 export const THEME_DRAFT_SCHEMA_VERSION = 1 as const;
 
 export const themePaletteFields = [
-  { key: "background", label: "Основной фон", description: "Фон страницы." },
-  { key: "surface", label: "Карточки и панели", description: "Фон карточек и панелей." },
-  { key: "softSurface", label: "Soft surface", description: "Фон групп и состояний hover и disabled." },
-  { key: "text", label: "Основной текст", description: "Заголовки и основной текст интерфейса." },
-  { key: "mutedText", label: "Вспомогательный текст", description: "Подписи, пояснения и текст placeholder." },
-  { key: "border", label: "Границы", description: "Рамки полей, карточек и разделители." },
-  { key: "primary", label: "Основное действие", description: "Фон основной кнопки. Цвет текста и цвета состояний hover и active подбираются автоматически." },
-  { key: "link", label: "Ссылки и фокус", description: "Ссылки, выделение выбора и клавиатурный фокус." }
+  { key: "background", get label() { return t("shell.theme_builder.palette.text595"); }, get description() { return t("shell.theme_builder.palette.text596"); } },
+  { key: "surface", get label() { return t("shell.theme_builder.palette.text597"); }, get description() { return t("shell.theme_builder.palette.text598"); } },
+  { key: "softSurface", label: "Soft surface", get description() { return t("shell.theme_builder.palette.text599"); } },
+  { key: "text", get label() { return t("shell.theme_builder.palette.text600"); }, get description() { return t("shell.theme_builder.palette.text601"); } },
+  { key: "mutedText", get label() { return t("shell.theme_builder.palette.text602"); }, get description() { return t("shell.theme_builder.palette.text603"); } },
+  { key: "border", get label() { return t("shell.theme_builder.palette.text604"); }, get description() { return t("shell.theme_builder.palette.text605"); } },
+  { key: "primary", get label() { return t("shell.theme_builder.palette.text606"); }, get description() { return t("shell.theme_builder.palette.text607"); } },
+  { key: "link", get label() { return t("shell.theme_builder.palette.text608"); }, get description() { return t("shell.theme_builder.palette.text609"); } }
 ] as const;
 
 export type ThemePaletteKey = (typeof themePaletteFields)[number]["key"];
@@ -76,7 +78,7 @@ const definitions = new Map<WlDesignTokenName, WlDesignTokenDefinition>(wlDesign
 
 function getBaseTheme(baseTheme: WlThemeName) {
   const theme = wlDesignThemes.find((item) => item.name === baseTheme);
-  if (!theme) throw new Error("Неизвестная базовая тема.");
+  if (!theme) throw new Error(t("shell.theme_builder.palette.text610"));
   return theme;
 }
 
@@ -93,7 +95,7 @@ export function normalizeHex(value: string): string | null {
 function normalizedPalette(palette: ThemePalette): ThemePalette {
   return Object.fromEntries(themePaletteFields.map(({ key }) => {
     const value = typeof palette[key] === "string" ? normalizeHex(palette[key]) : null;
-    if (!value) throw new Error(`Некорректный цвет: ${key}.`);
+    if (!value) throw new Error(t("shell.theme_builder.palette.text611", { arg0: key }));
     return [key, value];
   })) as ThemePalette;
 }
@@ -118,7 +120,7 @@ function luminance(color: string): number {
 export function getContrastRatio(foreground: string, background: string): number {
   const fg = normalizeHex(foreground);
   const bg = normalizeHex(background);
-  if (!fg || !bg) throw new Error("Контраст доступен для цветов #rgb и #rrggbb.");
+  if (!fg || !bg) throw new Error(t("shell.theme_builder.palette.text612"));
   const first = luminance(fg);
   const second = luminance(bg);
   return (Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05);
@@ -194,9 +196,9 @@ export function createThemeOverrides(input: ThemePalette, baseTheme: WlThemeName
 
 function resolveWithOverrides(name: WlDesignTokenName, baseTheme: WlThemeName, overrides: ThemeOverrides): string {
   function resolve(reference: WlDesignTokenName, trail: WlDesignTokenName[]): string {
-    if (trail.includes(reference)) throw new Error("Цикл в токенах темы.");
+    if (trail.includes(reference)) throw new Error(t("shell.theme_builder.palette.text613"));
     const token = definitions.get(reference);
-    if (!token) throw new Error(`Неизвестный токен: ${reference}.`);
+    if (!token) throw new Error(t("shell.theme_builder.palette.text614", { arg0: reference }));
     const value = overrides[reference] ?? token.themes?.[baseTheme] ?? token.value;
     return value.replace(/var\((--wl-[a-z0-9-]+)\)/g, (_, dependency: WlDesignTokenName) =>
       resolve(dependency, [...trail, reference]));
@@ -208,14 +210,14 @@ export function getThemeContrast(palette: ThemePalette, baseTheme: WlThemeName):
   const overrides = createThemeOverrides(palette, baseTheme);
   const rows: Omit<ThemeContrast, "ratio" | "passes">[] = wlContrastPairs.map((pair) => ({
     key: pair.name,
-    label: pair.label,
+    label: localizeContrastLabel(pair.name, pair.label),
     foreground: resolveWithOverrides(pair.foreground, baseTheme, overrides),
     background: resolveWithOverrides(pair.background, baseTheme, overrides),
     minimum: pair.minimum
   }));
   rows.push({
     key: "checked",
-    label: "Отметка выбора на акценте",
+    get label() { return t("shell.theme_builder.palette.text615"); },
     foreground: resolveWithOverrides("--wl-on-accent", baseTheme, overrides),
     background: resolveWithOverrides("--wl-accent", baseTheme, overrides),
     minimum: 3
@@ -248,7 +250,7 @@ export function parseThemeDraft(value: unknown): ThemeDraft | null {
 }
 
 export function createThemeExport(name: string, baseTheme: WlThemeName, palette: ThemePalette): ThemeExport {
-  if (!isThemeNameValid(name)) throw new Error("Название темы: 1–32 латинских символа, цифры и дефисы; имя существующей темы занято.");
+  if (!isThemeNameValid(name)) throw new Error(t("shell.theme_builder.palette.text616"));
   const theme = getBaseTheme(baseTheme);
   const values = normalizedPalette(palette);
   const delta = createThemeOverrides(values, baseTheme);
@@ -284,14 +286,14 @@ export function createThemeExport(name: string, baseTheme: WlThemeName, palette:
     ""
   ].join("\n");
   const prompt = [
-    `Создай тему Gavia UI «${name}» на основе «${baseTheme}» по спецификации ниже.`,
-    "Источник: packages/ui-kit/tokens/source.json. Добавь тему с указанным colorScheme в themes и контракт WlThemeName.",
-    "Для каждого токена сначала скопируй его themes[baseTheme] ?? value в themes[name]; это сохраняет полный снимок основы, включая семантические отличия.",
-    "Затем применяй overrides только к foundation-токенам и semanticBindings только к указанным семантическим ролям основного действия.",
-    "Не меняй существующие темы, имена Wl* и --wl-*. Не подменяй выбранные background/primary/link автоматически.",
-    "Запусти pnpm tokens:sync и pnpm tokens:check. Проверь контраст и показ компонентов с data-wl-theme нового имени, включая портал Select.",
-    "CSS для быстрого просмотра содержит полный снимок базы, а JSON ниже — переносимые изменения источника.",
-    "Спецификация JSON:",
+    t("shell.theme_builder.palette.text617", { arg0: name, arg1: baseTheme }),
+    t("shell.theme_builder.palette.text618"),
+    t("shell.theme_builder.palette.text619"),
+    t("shell.theme_builder.palette.text620"),
+    t("shell.theme_builder.palette.text621"),
+    t("shell.theme_builder.palette.text622"),
+    t("shell.theme_builder.palette.text623"),
+    t("shell.theme_builder.palette.text624"),
     json
   ].join("\n\n");
   return { spec, json, css, prompt };

@@ -13,7 +13,7 @@ describe("public changelog rendering", () => {
   it("reads the actual history including unreleased, dates, older releases and multiline items", () => {
     const source = readFileSync(fileURLToPath(new NodeURL("../../../CHANGELOG.md", import.meta.url)), "utf8");
     const document = parseChangelog(source, docsBase);
-    expect(document.sections[0]).toMatchObject({ title: "Не выпущено", id: "project-unreleased", unreleased: true });
+    expect(document.sections[0]).toMatchObject({ title: "Unreleased", id: "project-unreleased", unreleased: true });
     const versions = document.sections.filter((section) => section.version).map((section) => section.version);
     // New releases precede the immutable historical tail; publishing must not drop it.
     expect(versions.slice(versions.indexOf("0.9.1"))).toEqual(["0.9.1", "0.8.1", "0.7.1", "0.7.0", "0.6.0", "0.3.0", "0.2.1", "0.2.0", "0.1.0"]);
@@ -32,24 +32,23 @@ describe("public changelog rendering", () => {
     const release = document.sections.find((section) => section.version === "0.8.1")!;
     expect(release).toMatchObject({ date: "2026-10-06", id: "project-release-0-8-1", unreleased: false });
     expect(release.blocks).toEqual(expect.arrayContaining([
-      { kind: "heading", content: [{ kind: "text", value: "Исправлено" }] },
+      { kind: "heading", content: [{ kind: "text", value: "Fixed" }] },
       expect.objectContaining({ kind: "list", items: expect.arrayContaining([[
-        { kind: "text", value: "Проверка " },
         { kind: "code", value: "verify:package" },
-        { kind: "text", value: " учитывает переносы строк Windows и Linux в LICENSE, сохраняя строгое сравнение содержания лицензии." }
+        { kind: "text", value: " handles Windows and Linux line endings in LICENSE while comparing license content strictly." }
       ]]) })
     ]));
     const patch = document.sections.find((section) => section.version === "0.7.1")!;
     expect(patch).toMatchObject({ date: "2026-10-05", id: "project-release-0-7-1", unreleased: false });
     expect(patch.blocks.filter((block) => block.kind === "heading").map((block) => text(block.content)))
-      .toEqual(["Исправлено", "Изменено"]);
+      .toEqual(["Fixed", "Changed"]);
     const patchBullets = patch.blocks.flatMap((block) => block.kind === "list" ? block.items : []);
     expect(patchBullets.map(text)).toEqual([
-      "Отметки WlCheckbox в состояниях checked и indeterminate используют SVG-иконки вместо символов шрифта: рисунок и выравнивание одинаковы в трёх темах.",
-      "Отключённые WlCheckbox и WlRadio сохраняют своё оформление при наведении.",
-      "Стрелки раскрытия WlSelect, WlMultiSelect и WlAutocomplete заменены SVG-иконками с единым выравниванием вместо текстовых символов.",
-      "Удалены девять завершённых HTML-прототипов; рабочие примеры остаются в Vue-витрине, а исходные иконки — в SVG-каталоге.",
-      "Дорожная карта и инструкции по добавлению иконок ссылаются на живые SFC-примеры и SVG-каталог. История прототипов сохранена в Git. В начале README размещена заметная ссылка на публичную демо-витрину."
+      "WlCheckbox checked and indeterminate marks use SVG icons instead of font characters: their shapes and alignment match across three themes.",
+      "Disabled WlCheckbox and WlRadio retain their appearance on hover.",
+      "WlSelect, WlMultiSelect and WlAutocomplete disclosure arrows use aligned SVG icons instead of text characters.",
+      "Removed nine completed HTML prototypes; working examples remain in the Vue playground, and source icons remain in the SVG catalog.",
+      "The roadmap and icon instructions link to live SFC examples and the SVG catalog. Prototype history remains in Git. README starts with a prominent link to the public demo."
     ]);
     expect(patchBullets[0]).toContainEqual({ kind: "code", value: "WlCheckbox" });
     expect(patchBullets[1]).toContainEqual({ kind: "code", value: "WlRadio" });
@@ -58,11 +57,11 @@ describe("public changelog rendering", () => {
     }
     expect(current).toMatchObject({ date: "2026-10-01", id: "project-release-0-6-0", unreleased: false });
     expect(current.blocks.filter((block) => block.kind === "heading").map((block) => text(block.content)))
-      .toEqual(["Добавлено", "Изменено", "Исправлено"]);
+      .toEqual(["Added", "Changed", "Fixed"]);
     const bullets = firstPublic.blocks.flatMap((block) => block.kind === "list" ? block.items.map(text) : []);
-    expect(bullets).toContain("Переменная локального стенда — GAVIA_E2E_BASE_URL; тексты ошибок каталога используют Gavia UI. Изменения перечислены в миграции.");
-    expect(bullets).toContain("Публичные Wl*, props, события, модели, слоты, имена иконок, классы wl-* и токены --wl-* сохраняются.");
-    expect(document.sections.some((section) => section.title === "Правила ведения")).toBe(true);
+    expect(bullets).toContain("The local preview variable is GAVIA_E2E_BASE_URL; catalog error messages use Gavia UI. The migration lists these changes.");
+    expect(bullets).toContain("Public Wl* names, props, events, models, slots, icon names, wl-* classes and --wl-* tokens are preserved.");
+    expect(document.sections.some((section) => section.title === "Maintenance rules")).toBe(true);
   });
 
   it("distinguishes the prepared source version from dated published releases", () => {
@@ -70,7 +69,7 @@ describe("public changelog rendering", () => {
     const document = parseChangelog(source, docsBase);
     const manifest = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../package.json", import.meta.url)), "utf8")) as { version: string };
     expect(gaviaProjectInfo.version).toBe(manifest.version);
-    const preparedTitle = `${manifest.version} — подготовлено`;
+    const preparedTitle = `${manifest.version} — prepared`;
     const prepared = document.sections.filter((section) => section.title === preparedTitle);
     if (manifest.version !== gaviaProjectInfo.publishedVersion) {
       expect(prepared).toHaveLength(1);
@@ -113,6 +112,7 @@ describe("public changelog rendering", () => {
   it("preserves paragraph/list boundaries, CRLF and the final item without a trailing blank line", () => {
     const document = parseChangelog("# Changelog\r\n\r\nОписание\r\nпродолжение\r\n\r\n## Не выпущено\r\n- Первый\r\n  пункт\r\n- Второй\r\n\r\nПояснение\r\n\r\n### Исправлено\r\n- Последний", docsBase);
     expect(document.introduction).toEqual([{ kind: "paragraph", content: [{ kind: "text", value: "Описание продолжение" }] }]);
+    expect(document.sections[0]).toMatchObject({ title: "Не выпущено", id: "project-unreleased", unreleased: true });
     expect(document.sections[0]!.blocks).toEqual([
       { kind: "list", items: [[{ kind: "text", value: "Первый пункт" }], [{ kind: "text", value: "Второй" }]] },
       { kind: "paragraph", content: [{ kind: "text", value: "Пояснение" }] },

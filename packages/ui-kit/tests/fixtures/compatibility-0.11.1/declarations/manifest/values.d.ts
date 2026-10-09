@@ -1,0 +1,20 @@
+export { WL_ICON_NAMES } from '../icons.generated';
+/** Рантайм-списки допустимых значений enum-пропсов (зеркало union-типов из types.ts). */
+export declare const WL_SIZES: readonly ["xs", "sm", "md", "lg"];
+export declare const WL_SIZES_SM: readonly ["sm", "md", "lg"];
+export declare const WL_DENSITIES: readonly ["default", "compact"];
+export declare const WL_MULTISELECT_DISPLAYS: readonly ["comma", "chip"];
+export declare const WL_BUTTON_VARIANTS: readonly ["primary", "secondary", "ghost", "soft", "danger", "danger-quiet", "soft-danger", "link"];
+export declare const WL_ICON_BUTTON_VARIANTS: readonly ["ghost", "secondary", "soft"];
+export declare const WL_TAG_VARIANTS: readonly ["gray", "blue", "green", "amber", "red"];
+export declare const WL_BADGE_VARIANTS: readonly ["gray", "accent", "success", "warn", "danger"];
+export declare const WL_ALERT_VARIANTS: readonly ["info", "ok", "warn", "err"];
+export declare const WL_PROGRESS_VARIANTS: readonly ["default", "ok"];
+export declare const WL_PILL_VARIANTS: readonly ["neutral", "info", "ok", "warn", "err"];
+export declare const WL_SWITCH_SIZES: readonly ["sm", "md"];
+export declare const WL_SPINNER_SIZES: readonly ["sm", "md", "lg"];
+export declare const WL_DRAWER_POSITIONS: readonly ["left", "right", "top", "bottom", "full"];
+export declare const WL_STAT_CARD_TONES: readonly ["accent", "success"];
+export declare const WL_COLOR_PICKER_SIZES: readonly ["sm", "md"];
+export declare const WL_AVATAR_SIZES: readonly [24, 28, 32, 36, 48];
+export declare const WL_AVATAR_PRESENCES: readonly ["online", "busy", "offline"];

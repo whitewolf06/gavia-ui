@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../../i18n";
+const { t } = usePlaygroundI18n();
 import { ref } from "vue";
 import { WlDialog, WlButton } from "../../../../../packages/ui-kit/src";
 defineProps<{ preview?: Record<string, unknown> }>();
@@ -7,6 +9,6 @@ const visible = ref(false);
 
 <template>
   <div class="wl-stack" data-space="md">
-    <WlButton @click="visible = true">Открыть диалог</WlButton><WlDialog v-model:visible="visible" header="Сведения о материале" width="480px" v-bind="preview"><p class="wl-text-body">Escape закрывает окно и возвращает фокус.</p><template #footer><WlButton @click="visible = false">Готово</WlButton></template></WlDialog>
+    <WlButton @click="visible = true">{{ t("examples.open_dialog_0044") }}</WlButton><WlDialog v-model:visible="visible" :header="t('examples.material_details_0045')" width="480px" v-bind="preview"><p class="wl-text-body">{{ t("examples.escape_closes_the_dialog_and_restores_focus_0046") }}</p><template #footer><WlButton @click="visible = false">{{ t("examples.done_0047") }}</WlButton></template></WlDialog>
   </div>
 </template>

@@ -94,7 +94,7 @@ export function parseChangelog(source: string, documentationBaseUrl: string): Ch
       flush();
       const title = sectionMatch[1]!.trim();
       const release = /^(\d+\.\d+\.\d+)(?:\s+[—-]\s+(\d{4}-\d{2}-\d{2}))?$/.exec(title);
-      const unreleased = title === "Не выпущено";
+      const unreleased = title === "Unreleased" || title === "Не выпущено";
       const preferredId = release
         ? `project-release-${release[1]!.replace(/\./g, "-")}`
         : unreleased ? "project-unreleased" : `project-history-${document.sections.length + 1}`;

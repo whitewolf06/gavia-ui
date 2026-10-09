@@ -1,3 +1,4 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { chooseDropdownOption } from "./select-helpers";
 
@@ -74,7 +75,7 @@ test.beforeEach(async ({ page }) => {
 for (const theme of ["gavia", "gavia-dark"]) {
 
 test(`${theme}: home hero, installation grid and project panels`, async ({ page, baseURL }) => {
-  await page.goto(gaviaUrl(baseURL, "home", theme), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(gaviaUrl(baseURL, "home", theme)), { waitUntil: "domcontentloaded" });
   const home = page.getByTestId("home-page");
   await expect(home).toBeVisible();
   await readyForDrawing(page, theme);
@@ -88,7 +89,7 @@ test(`${theme}: home hero, installation grid and project panels`, async ({ page,
 });
 
 test(`${theme}: Cyrillic, Latin, numeral spacing and all six weights`, async ({ page, baseURL }) => {
-  await page.goto(gaviaUrl(baseURL, "font", theme), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(gaviaUrl(baseURL, "font", theme)), { waitUntil: "domcontentloaded" });
   const font = page.getByTestId("font-page");
   await expect(font).toBeVisible();
   await readyForDrawing(page, theme);
@@ -100,7 +101,7 @@ test(`${theme}: Cyrillic, Latin, numeral spacing and all six weights`, async ({ 
 });
 
 test(`${theme}: form, selected control and dialog with actual font`, async ({ page, baseURL }) => {
-  await page.goto(gaviaUrl(baseURL, "system", theme), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(gaviaUrl(baseURL, "system", theme)), { waitUntil: "domcontentloaded" });
   await expect(page.getByRole("heading", { name: "Дизайн-система" })).toBeVisible();
   await readyForDrawing(page, theme);
   await prepareSectionCrops(page);

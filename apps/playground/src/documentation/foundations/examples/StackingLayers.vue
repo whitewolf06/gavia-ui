@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../../../i18n";
+const { t } = usePlaygroundI18n();
 import { resolveWlToken } from "../../../../../../packages/ui-kit/src";
 const layers = [
   { label: "Base", token: "--wl-layer-base" },
@@ -9,13 +11,13 @@ const layers = [
 
 <template>
   <section class="wl-stack" data-space="lg">
-    <div class="layers-example wl-isolate" role="img" aria-label="Локальное перекрытие слоёв: base снизу, sticky посередине, popover сверху">
+    <div class="layers-example wl-isolate" role="img" :aria-label="t('examples.local_layer_overlap_base_at_the_bottom_sticky_in_the_middle_po_0987')">
       <div v-for="(layer, index) in layers" :key="layer.token" class="layers-example-card" :style="{ zIndex: 'var(' + layer.token + ')', insetInlineStart: 'calc(var(--wl-space-lg) * ' + index + ')', top: 'calc(var(--wl-space-2xl) * ' + index + ')' }">
         <h3 class="wl-text-label">{{ layer.label }} · {{ resolveWlToken(layer.token) }}</h3>
         <code class="wl-text-code">{{ layer.token }}</code>
       </div>
     </div>
-    <p class="wl-text-small wl-text-muted">Иллюстрация изолирована с isolation: isolate. Порядок действует внутри неё; элементы не перекрывают меню или другие части документации.</p>
+    <p class="wl-text-small wl-text-muted">{{ t("examples.the_illustration_uses_isolation_isolate_ordering_applies_withi_0988") }}</p>
   </section>
 </template>
 

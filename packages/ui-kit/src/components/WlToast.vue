@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { WlPt } from "../pt-types";
 import { computed, useAttrs } from "vue";
-import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
+import { mergeWlAttrs, useWlMotion, useWlPt, useWlLocale } from "../config";
 import { useToastStore } from "../services/toast";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import WlIcon from "./WlIcon.vue";
+const locale = useWlLocale();
 
 defineOptions({ inheritAttrs: false });
 defineSlots<{}>();
@@ -36,7 +37,7 @@ const iconName = { success: "check", info: "info", warn: "warn", error: "x" } as
             <div v-if="message.detail" v-bind="section('detail')" class="wl-toast__detail">{{ message.detail }}</div>
           </div>
           <button v-bind="section('closeButton')" type="button" class="wl-toast__close"
-            aria-label="Закрыть" @click="store.remove(message.id)">
+            :aria-label="locale.close" @click="store.remove(message.id)">
             <WlIcon v-bind="section('closeIcon')" name="x" :size="14" />
           </button>
         </div>

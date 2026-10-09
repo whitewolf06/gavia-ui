@@ -1,10 +1,13 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, URL as NodeURL } from "node:url";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
-import { consumerSource } from "../src/design-system/code";
+import { consumerSource } from "../../../scripts/example-source.mjs";
 import { chooseShowcaseTheme, copyCodePanel } from "./select-helpers";
+
+const russianExamples = JSON.parse(readFileSync(new URL("../src/i18n/messages/examples.ru.json", import.meta.url), "utf8")) as Record<string, string>;
 
 const buttonManifest = wlManifest.find((entry) => entry.name === "WlButton")!;
 const sourceFiles = {
@@ -24,13 +27,13 @@ function preview(page: Page, name: ExampleName): Locator {
   return example(page, name).getByTestId("docs-button-example-preview");
 }
 function canonicalSource(name: ExampleName): string {
-  return consumerSource(readFileSync(fileURLToPath(new NodeURL("../src/documentation/button/" + sourceFiles[name], import.meta.url)), "utf8"));
+  return consumerSource(readFileSync(fileURLToPath(new NodeURL("../src/documentation/button/" + sourceFiles[name], import.meta.url)), "utf8"), {}, russianExamples);
 }
 async function openDocumentation(page: Page, baseURL?: string): Promise<void> {
   const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
   url.search = "?view=docs&component=WlButton";
   url.hash = "";
-  await page.goto(url.href, { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(url.href), { waitUntil: "domcontentloaded" });
   await expect(workspace(page).getByRole("tab", { name: "Примеры", exact: true })).toHaveAttribute("aria-selected", "true");
   await expect(workspace(page).locator("[data-docs-button-example]")).toHaveCount(5);
 }

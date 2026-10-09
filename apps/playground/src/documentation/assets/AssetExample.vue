@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../../i18n";
+const { t } = usePlaygroundI18n();
 import { computed, type Component } from "vue";
 import CodePanel from "../../design-system/CodePanel.vue";
 import { consumerSource } from "../../design-system/code";
@@ -9,8 +11,8 @@ const consumerCode = computed(() => consumerSource(props.source));
 <template>
   <section class="docs-asset-example wl-stack" data-space="lg" :data-asset-example="name">
     <h3 class="wl-text-subheading">{{ title }}</h3>
-    <div class="docs-asset-preview" data-testid="docs-asset-preview" role="region" :aria-label="title + ' — живой пример'"><component :is="example" /></div>
-    <div data-testid="docs-asset-source"><CodePanel :source="consumerCode" title="Vue SFC · пример для приложения" :expanded="true" /></div>
+    <div class="docs-asset-preview" data-testid="docs-asset-preview" role="region" :aria-label="title + t('documentation.strings.s0001')"><component :is="example" /></div>
+    <div data-testid="docs-asset-source"><CodePanel :source="consumerCode" :title="t('documentation.strings.s0002')" :expanded="true" /></div>
   </section>
 </template>
 

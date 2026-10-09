@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { usePlaygroundI18n, playgroundLocale, parsePlaygroundLocale, setPlaygroundLocale, createPlaygroundLocaleUrl, type PlaygroundLocale } from "./i18n";
+import { updatePlaygroundSeo } from "./seo";
+import { getLocalizedManifest } from "./documentation/manifest";
+const { t, locale } = usePlaygroundI18n();
 import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } from "vue";
 import { createPlaygroundUrl, isDocumentationSection, parsePlaygroundRoute, type DocumentationSection, type PlaygroundRoute, type PlaygroundView } from "./navigation";
-import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import type { WlCommandPaletteGroup, WlCommandPaletteItem, WlThemeName } from "../../../packages/ui-kit/src";
 import PlaygroundHeader from "./PlaygroundHeader.vue";
 import FontDownloadLink from "./project/FontDownloadLink.vue";
@@ -38,6 +41,7 @@ const globalSearchShortcut = computed(() => !(activeRoute.value.view === "docs" 
 function readView(): void {
   cancelPendingThemeChange();
   cancelHistoryAnchor();
+  setPlaygroundLocale(parsePlaygroundLocale(window.location.search));
   activeRoute.value = routeFromLocation();
   const locationTheme = parsePlaygroundTheme(window.location.search);
   classicLightTheme = rememberClassicLightTheme(locationTheme, theme.value, classicLightTheme);
@@ -125,99 +129,99 @@ onBeforeUnmount(() => {
 });
 const commandPaletteVisible = ref(false);
 const commandPaletteQuery = ref("");
-const commandPaletteGroups: WlCommandPaletteGroup[] = [
+const commandPaletteGroups = computed<WlCommandPaletteGroup[]>(() => [
   {
     id: "pages",
-    label: "Быстрые переходы",
+    label: t('shell.App.text1'),
     showWhenEmpty: true,
     items: [
       {
         id: "page-home",
-        label: "Главная Gavia UI",
-        description: "Установка, версия и разделы библиотеки",
+        label: t('shell.App.text2'),
+        description: t('shell.App.text3'),
         icon: "home",
-        keywords: ["начало", "установка"],
+        keywords: [t('shell.App.text4'), t('shell.App.text5')],
         data: { view: "home" }
       },
       {
         id: "page-docs",
-        label: "Документация",
-        description: "Компоненты, API и интерактивные примеры",
+        label: t('shell.App.text6'),
+        description: t('shell.App.text7'),
         icon: "file",
-        keywords: ["docs", "параметры", "api", "код"],
+        keywords: ["docs", t('shell.App.text8'), "api", t('shell.App.text9')],
         data: { view: "docs" }
       },
       {
         id: "page-components",
-        label: "Все компоненты",
-        description: "Примеры и API всех компонентов",
+        label: t('shell.App.text10'),
+        description: t('shell.App.text11'),
         icon: "file",
-        keywords: ["страницы", "каталог"],
+        keywords: [t('shell.App.text12'), t('shell.App.text13')],
         data: { catalog: true }
       },
       {
         id: "page-quality",
-        label: "Качество и совместимость",
-        description: "Тесты, покрытие, браузеры и поддержка Vue",
+        label: t('shell.App.text14'),
+        description: t('shell.App.text15'),
         icon: "check",
-        keywords: ["quality", "coverage", "тесты", "проверки", "доступность", "ssr", "совместимость"],
+        keywords: ["quality", "coverage", t('shell.App.text16'), t('shell.App.text17'), t('shell.App.text18'), "ssr", t('shell.App.text19')],
         data: { view: "docs", section: "quality" }
       },
       {
         id: "page-font",
-        label: "Шрифт Gavia Sans",
-        description: "Гарнитура 0.6: шесть весов, курсив, кириллица и латиница",
+        label: t('shell.App.text20'),
+        description: t('shell.App.text21'),
         icon: "book",
-        keywords: ["font", "шрифт", "цифры", "начертания", "типографика"],
+        keywords: ["font", t('shell.App.text22'), t('shell.App.text23'), t('shell.App.text24'), t('shell.App.text25')],
         data: { view: "font" }
       },
       {
         id: "page-design-system",
-        label: "Дизайн-система",
-        description: "Основы, типографика, токены и паттерны",
+        label: t('shell.App.text26'),
+        description: t('shell.App.text27'),
         icon: "image",
-        keywords: ["правила", "стиль", "дизайн"],
+        keywords: [t('shell.App.text28'), t('shell.App.text29'), t('shell.App.text30')],
         data: { view: "system" }
       },
       {
         id: "page-colors",
-        label: "Цвета и токены",
-        description: "Семантические цвета и подключение пяти тем",
+        label: t('shell.App.text31'),
+        description: t('shell.App.text32'),
         icon: "image",
-        keywords: ["страницы", "тема", "палитра"],
+        keywords: [t('shell.App.text33'), t('shell.App.text34'), t('shell.App.text35')],
         data: { view: "docs", section: "colors" }
       },
       {
         id: "page-icons",
-        label: "Иконки",
-        description: "Полный SVG-каталог, размеры и доступность",
+        label: t('shell.App.text36'),
+        description: t('shell.App.text37'),
         icon: "image",
-        keywords: ["svg", "иконография", "каталог", "icons"],
+        keywords: ["svg", t('shell.App.text38'), t('shell.App.text39'), "icons"],
         data: { view: "docs", section: "icons" }
       },
       {
         id: "page-theme-builder",
-        label: "Подбор темы",
-        description: "Цвета темы, примеры компонентов и экспорт настроек",
+        label: t('shell.App.text40'),
+        description: t('shell.App.text41'),
         icon: "sliders-h",
-        keywords: ["редактор", "цвет", "theme", "палитра"],
+        keywords: [t('shell.App.text42'), t('shell.App.text43'), "theme", t('shell.App.text44')],
         data: { view: "theme-builder" }
       },
       {
         id: "page-project",
         label: "Changelog",
-        description: "Версии, исправления и заметки по обновлению",
+        description: t('shell.App.text45'),
         icon: "history",
-        keywords: ["версия", "история", "изменения", "changelog"],
+        keywords: [t('shell.App.text46'), t('shell.App.text47'), t('shell.App.text48'), "changelog"],
         data: { view: "project" }
       }
     ]
   },
   {
     id: "components",
-    label: "Компоненты",
+    label: t('shell.App.text49'),
     showWhenEmpty: false,
-    items: wlManifest.map((entry) => ({
+    items: getLocalizedManifest().map((entry) => ({
       id: `component-${entry.name}`,
       label: entry.name,
       description: entry.description,
@@ -226,7 +230,15 @@ const commandPaletteGroups: WlCommandPaletteGroup[] = [
       data: { component: entry.name }
     }))
   }
-];
+]);
+
+function chooseLocale(value: PlaygroundLocale): void {
+  cancelPendingThemeChange();
+  const target = createPlaygroundLocaleUrl(new URL(window.location.href), value);
+  if (target.href !== window.location.href) window.history.pushState(null, "", target);
+  setPlaygroundLocale(value);
+}
+watch([activeRoute, playgroundLocale], () => updatePlaygroundSeo(activeRoute.value), { immediate: true });
 
 async function onCommandPaletteSelect(item: WlCommandPaletteItem): Promise<void> {
   const data = item.data as { component?: string; catalog?: boolean; view?: PlaygroundView; section?: DocumentationSection } | undefined;
@@ -283,27 +295,27 @@ watch(theme, (value) => {
 </script>
 <template>
   <header ref="headerElement" class="pg-top">
-    <PlaygroundHeader :active-view="activeView" :theme="theme" :theme-options="themeOptions"
+    <PlaygroundHeader :active-view="activeView" :route="activeRoute" :theme="theme" :theme-options="themeOptions"
       :version="project.version" :logo="gaviaMarkUrl" @navigate="showView"
-      @theme="chooseTheme" @search="commandPaletteVisible = true" />
+      @locale="chooseLocale" @theme="chooseTheme" @search="commandPaletteVisible = true" />
   </header>
   <WlCommandPalette v-model:visible="commandPaletteVisible" v-model:query="commandPaletteQuery"
     :groups="commandPaletteGroups" :shortcut="globalSearchShortcut" @select="onCommandPaletteSelect">
-    <template #footer>Введите название раздела или компонента</template>
+    <template #footer>{{ t('shell.App.text50') }}</template>
   </WlCommandPalette>
-  <HomePage v-if="activeView === 'home'" :theme="theme" @navigate="showView" @component="openDocs" @catalog="openDocsCatalog" @quality="openDocsSection('quality')" @toggle-theme="toggleThemeVariant" />
-  <DocsPage v-else-if="activeView === 'docs'" :component="activeRoute.component" :section="activeRoute.section" :theme="theme"
+  <HomePage :key="locale" v-if="activeView === 'home'" :theme="theme" @navigate="showView" @component="openDocs" @catalog="openDocsCatalog" @quality="openDocsSection('quality')" @toggle-theme="toggleThemeVariant" />
+  <DocsPage :key="locale" v-else-if="activeView === 'docs'" :component="activeRoute.component" :section="activeRoute.section" :theme="theme"
     @section="openDocsSection" @component="openDocs" @overview="openDocsOverview" @navigate="showView" />
-  <FontPage v-else-if="activeView === 'font'" :theme="theme" @navigate="showView" />
-  <DesignSystem v-else-if="activeView === 'system'" :theme="theme" @component="openDocs" />
-  <ThemeBuilderPage v-else-if="activeView === 'theme-builder'" :theme="theme" />
-  <ProjectInfo v-else-if="activeView === 'project'" />
+  <FontPage :key="locale" v-else-if="activeView === 'font'" :theme="theme" @navigate="showView" />
+  <DesignSystem :key="locale" v-else-if="activeView === 'system'" :theme="theme" @component="openDocs" />
+  <ThemeBuilderPage :key="locale" v-else-if="activeView === 'theme-builder'" :theme="theme" />
+  <ProjectInfo :key="locale" v-else-if="activeView === 'project'" />
   <footer class="pg-footer">
     <span>Gavia UI · v{{ project.version }} · <a :href="project.licenseUrl">MIT</a></span>
-    <span>Автор: <a :href="project.author.url">{{ project.author.name }}</a></span>
+    <span>{{ t('shell.App.text51') }} <a :href="project.author.url">{{ t('shell.author.name') }}</a></span>
     <a :href="project.repositoryUrl">GitHub</a>
-    <a :href="qualityRouteHref()" @click="openQualityLink">Качество и совместимость</a>
-    <FontDownloadLink variant="secondary">Скачать шрифт Gavia Sans</FontDownloadLink>
+    <a :href="qualityRouteHref()" @click="openQualityLink">{{ t('shell.App.text52') }}</a>
+    <FontDownloadLink variant="secondary">{{ t('shell.App.text53') }}</FontDownloadLink>
   </footer>
   <WlToast />
   <WlConfirmDialog />

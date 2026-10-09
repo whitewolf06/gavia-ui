@@ -4,7 +4,8 @@ import { createRequire } from "node:module";
 import { join, resolve, dirname, relative, isAbsolute } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
-import { compilerOptions, subset, typeSource } from "./check-compatibility.mjs";
+import { capturedConsumer, compilerOptions, subset, typeSource } from "./check-compatibility.mjs";
+import { loadMigrationPolicy, normalizedHash } from "./compatibility-migration.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const kit = join(root, "packages/ui-kit");
@@ -15,15 +16,14 @@ const ts = require("typescript");
 const temporaryBase = join(kit, ".tmp");
 mkdirSync(temporaryBase, { recursive: true });
 
-function diagnosticsFor(change) {
+function diagnosticsFor(change, { releaseFixture = fixture, releaseBaseline = baseline, currentHasGenericDataContracts = false } = {}) {
   const temporary = mkdtempSync(join(temporaryBase, "compatibility-mutation-"));
   try {
-    cpSync(join(fixture, "declarations"), join(temporary, "current"), { recursive: true });
+    cpSync(join(releaseFixture, "declarations"), join(temporary, "current"), { recursive: true });
     if (change) change(join(temporary, "current"));
-    // Both sides here are immutable 0.9.1 declarations, whose data controls
-    // predate the generic candidate API. The production gate specializes it.
-    const source = typeSource(baseline, null, { currentHasGenericDataContracts: false })
-      .replace('"./previous/index"', JSON.stringify(join(fixture, "declarations/index").replaceAll("\\", "/")));
+    // Compare a copied candidate with the selected immutable release fixture.
+    const source = typeSource(releaseBaseline, null, { currentHasGenericDataContracts })
+      .replace('"./previous/index"', JSON.stringify(join(releaseFixture, "declarations/index").replaceAll("\\", "/")));
     const path = join(temporary, "contract.ts");
     writeFileSync(path, source);
     return ts.getPreEmitDiagnostics(ts.createProgram([path], compilerOptions(ts))).map((item) => {
@@ -91,4 +91,42 @@ test("adding optional props and widening accepted variants remains compatible", 
     mutate(directory, "types.d.ts", 'export type WlButtonVariant = "primary"', 'export type WlButtonVariant = "new-variant" | "primary"');
   });
   assert.deepEqual(errors, []);
+});
+
+const genericFixture = join(kit, "tests/fixtures/compatibility-0.11.1");
+const genericBaseline = JSON.parse(readFileSync(join(genericFixture, "contract.json"), "utf8"));
+const genericOptions = { releaseFixture: genericFixture, releaseBaseline: genericBaseline, currentHasGenericDataContracts: true };
+
+test("the 0.11.1 baseline freezes the reviewed consumer and has no inherited migration approval", () => {
+  const policy = JSON.parse(readFileSync(join(root, "scripts/migrations/public-api-0.11.json"), "utf8"));
+  assert.equal(normalizedHash(readFileSync(join(genericFixture, "consumer.vue"), "utf8")), policy.consumer.migratedSha256);
+  assert.equal(loadMigrationPolicy(root, genericFixture, genericBaseline, "0.12.0"), null);
+  assert.equal(capturedConsumer(root, genericFixture, genericBaseline, "0.12.0"), readFileSync(join(genericFixture, "consumer.vue"), "utf8"));
+  for (const name of ["WlAutocomplete", "WlSelect", "WlMultiSelect", "WlTable"]) {
+    assert.ok(genericBaseline.declarationExports.find((item) => item.name === name)?.genericParameters > 0, name);
+  }
+});
+
+test("unchanged generic 0.11.1 declarations pass without migration policy", () => {
+  assert.deepEqual(diagnosticsFor(undefined, genericOptions), []);
+});
+
+test("generic autocomplete multiple-domain narrowing fails without migration policy", () => {
+  const errors = diagnosticsFor((directory) => mutate(directory, "components/WlAutocomplete.vue.d.ts", "multiple?: TMultiple & boolean;", "multiple?: false;"), genericOptions);
+  assert.ok(errors.some((error) => error.includes("WlAutocomplete_1_inputsAndHandlers")), errors.join("\n"));
+});
+
+test("generic select model narrowing fails without migration policy", () => {
+  const errors = diagnosticsFor((directory) => mutate(directory, "components/WlSelect.vue.d.ts", "modelValue?: WlSelectModel<NoInfer<TOption>, NoInfer<TResolver>>;", "modelValue?: string;"), genericOptions);
+  assert.ok(errors.some((error) => error.includes("WlSelect_0_inputsAndHandlers")), errors.join("\n"));
+});
+
+test("generic table slot removal fails without migration policy", () => {
+  const errors = diagnosticsFor((directory) => {
+    const path = join(directory, "components/WlTable.vue.d.ts");
+    const source = readFileSync(path, "utf8");
+    assert.ok(source.includes("empty?: (props: {}) => unknown;"));
+    writeFileSync(path, source.replaceAll("empty?: (props: {}) => unknown;", ""));
+  }, genericOptions);
+  assert.ok(errors.some((error) => error.includes("WlTable_0_slotNames")), errors.join("\n"));
 });

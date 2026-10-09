@@ -1,28 +1,28 @@
-# Обновление до Gavia UI 0.11.1
+# Upgrade to Gavia UI 0.11.1
 
-0.11.1 — patch-выпуск с исправлениями оформления и документации.
-Props, события, slots, публичные имена классов и токенов, пути импортов сохранены.
-Изменения типов из 0.11.0 описаны в [миграции 0.11.0](migration-0.11.0.md).
+0.11.1 is a patch release with styling and documentation fixes.
+Props, events, slots, public class/token names and import paths are preserved.
+Type changes from 0.11.0 are described in the [0.11.0 migration](migration-0.11.0.md).
 
-## Обновление
+## Update
 
 ```bash
 pnpm add gavia-ui@0.11.1
 ```
 
-После обновления подключайте стили и тему тем же способом. Правки относятся
-к CSS библиотеки; отдельные переопределения в приложении не нужны.
+After upgrading, import styles and themes the same way. These fixes belong
+to the library CSS; no application overrides are required.
 
-## Оформление
+## Styling
 
-- У разделителя хлебных крошек одинаковые отступы с обеих сторон.
-- WlPill выравнивает текст относительно точки и занимает ширину содержимого.
-  Если нужна метка на всю ширину строки, задайте ей `style="width: 100%"` явно.
-- Основной акцент светлой Gavia изменён на `#3c7490`; hover — `#376b84`,
-  нажатие — `#326179`. Акцентный текст и ссылки используют `#326179`,
-  чтобы сохранять контраст на мягких выбранных поверхностях.
-  Для собственных ссылок используйте `--wl-text-accent`, для основного
-  действия — `--wl-action-primary-*`. Gavia Dark и остальные темы сохраняют палитру.
+- Breadcrumb separators have equal spacing on both sides.
+- WlPill aligns text with the dot and takes its content width.
+  For a full-width label, set `style="width: 100%"` explicitly.
+- The main accent in light Gavia changed to `#3c7490`; hover is `#376b84`
+  and active is `#326179`. Accent text and links use `#326179`
+  to keep readable contrast on soft selected surfaces.
+  Use `--wl-text-accent` for custom links and `--wl-action-primary-*`
+  for primary actions. Gavia Dark and other themes retain their palettes.
 
-В Playground и документации отредактированы тексты. Сохранённые ссылки на разделы
-документации открываются с прокруткой к выбранному разделу.
+Playground and documentation copy was revised. Saved documentation section links
+open with the requested section scrolled into view.

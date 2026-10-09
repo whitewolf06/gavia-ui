@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { formatWlLocaleText } from "../locale";
+import { useWlLocale } from "../config";
 import { computed, ref } from "vue";
 import { useNativeFilePicker } from "../composables/useNativeFilePicker";
 import WlIcon from "./WlIcon.vue";
 import type { WlFileReject, WlFileRejectReason, WlIconName } from "../types";
 import type { WlNoModelModifiers } from "../model-types";
+const locale = useWlLocale();
 
 const props = withDefaults(
   defineProps<{
@@ -51,22 +54,22 @@ const sizeLimit = computed(() => {
 
 function formatNum(n: number): string {
   const r = n >= 100 ? Math.round(n) : Math.round(n * 10) / 10;
-  return String(r).replace(".", ",");
+  return String(r).replace(".", locale.value.decimalSeparator);
 }
 
 function humanSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} Б`;
+  if (bytes < 1024) return `${bytes} ${locale.value.fileByteUnit}`;
   const kb = bytes / 1024;
-  if (kb < 1024) return `${formatNum(kb)} КБ`;
-  return `${formatNum(kb / 1024)} МБ`;
+  if (kb < 1024) return `${formatNum(kb)} ${locale.value.fileKilobyteUnit}`;
+  return `${formatNum(kb / 1024)} ${locale.value.fileMegabyteUnit}`;
 }
 
 function reasonMessage(reason: WlFileRejectReason): string {
-  if (reason === "type") return "тип файла не поддерживается";
+  if (reason === "type") return locale.value.fileUnsupportedType;
   if (reason === "size") {
-    return sizeLimit.value !== undefined ? `размер больше ${humanSize(sizeLimit.value)}` : "файл слишком большой";
+    return sizeLimit.value !== undefined ? formatWlLocaleText(locale.value.fileSizeLimit, { size: humanSize(sizeLimit.value) }) : locale.value.fileTooLarge;
   }
-  return fileLimit.value !== undefined ? `лимит файлов: ${fileLimit.value}` : "слишком много файлов";
+  return fileLimit.value !== undefined ? formatWlLocaleText(locale.value.fileCountLimit, { count: fileLimit.value }) : locale.value.fileTooMany;
 }
 
 function acceptMatches(file: File): boolean {
@@ -153,7 +156,7 @@ function iconFor(file: File): WlIconName {
       class="wl-upload__drop"
       :class="{ 'is-dragover': dragOver, 'is-disabled': disabled }"
       role="button"
-      aria-label="Выбрать файлы или перетащить их сюда"
+      :aria-label="locale.fileDropLabel"
       :aria-disabled="disabled"
       :tabindex="disabled ? -1 : 0"
       @click="openPicker"
@@ -165,12 +168,12 @@ function iconFor(file: File): WlIconName {
       @drop="onDrop"
     >
       <WlIcon name="upload" :size="22" class="wl-upload__icon" />
-      <span class="wl-upload__text">Перетащите файлы сюда или</span>
+      <span class="wl-upload__text">{{ locale.dropFiles }}</span>
       <span
         class="wl-btn wl-btn--sm wl-upload__btn"
         aria-hidden="true"
       >
-        Выбрать файлы
+        {{ locale.chooseFiles }}
       </span>
       <input
         ref="input"
@@ -201,7 +204,7 @@ function iconFor(file: File): WlIconName {
         <button
           type="button"
           class="wl-upload__remove"
-          :aria-label="`Удалить ${file.name}`"
+          :aria-label="formatWlLocaleText(locale.removeItem, { label: file.name })"
           :disabled="disabled"
           @click="removeAt(i)"
         >

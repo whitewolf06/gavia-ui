@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "./i18n";
+const { t } = usePlaygroundI18n();
 import { computed, onMounted, ref, watch } from "vue";
 import { WlAlert, WlButton, WlCheckbox, WlIcon, WlInput, WlSelect, WlSwitch, WlTag } from "../../../packages/ui-kit/src";
 import type { WlThemeName } from "../../../packages/ui-kit/src/types";
@@ -21,7 +23,7 @@ const failedContrast = computed(() => contrast.value.filter((pair) => !pair.pass
 const themeExport = computed(() => createThemeExport(nameInvalid.value ? "my-theme" : name.value, baseTheme.value, palette.value));
 const exportPanel = ref<InstanceType<typeof CodePanel> | null>(null);
 const exportMode = ref<"prompt" | "json" | "css">("prompt");
-const exportOptions = [{ value: "prompt", label: "Для агента" }, { value: "json", label: "JSON" }, { value: "css", label: "CSS" }] as const;
+const exportOptions = [{ value: "prompt", label: t('shell.ThemeBuilderPage.text302') }, { value: "json", label: "JSON" }, { value: "css", label: "CSS" }] as const;
 const exportSource = computed(() => themeExport.value[exportMode.value]);
 const savedLocally = ref(false);
 const storageUnavailable = ref(false);
@@ -64,55 +66,55 @@ watch([name, baseTheme, palette], () => {
   } catch { storageUnavailable.value = true; }
 }, { deep: true });
 
-const title = ref("Новый проект");
+const title = ref(t('shell.ThemeBuilderPage.text303'));
 const priority = ref<string | null>("normal");
 const notifications = ref(true);
 const publicProject = ref(false);
 const actions = ref(0);
 const demoDisabled = ref(false);
 const demoInvalid = ref(false);
-const previewOptions = [{ label: "Обычный", value: "normal" }, { label: "Высокий", value: "high" }, { label: "Низкий", value: "low" }];
+const previewOptions = [{ label: t('shell.ThemeBuilderPage.text304'), value: "normal" }, { label: t('shell.ThemeBuilderPage.text305'), value: "high" }, { label: t('shell.ThemeBuilderPage.text306'), value: "low" }];
 const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.value, style: overrides.value, "data-testid": "theme-builder-overlay" } }));
 </script>
 
 <template>
   <main class="tb-page wl-container wl-stack" data-space="2xl" data-testid="theme-builder-page" aria-labelledby="tb-title">
-    <PlaygroundPageHeader title="Подбор темы" title-id="tb-title"
-      description="Выберите базовую тему, измените цвета и посмотрите, как выглядят компоненты. Скопируйте CSS для проекта или задание для агента."
-      :breadcrumbs="[{ label: 'Подбор темы' }]" />
+    <PlaygroundPageHeader :title="t('shell.ThemeBuilderPage.text307')" title-id="tb-title"
+      :description="t('shell.ThemeBuilderPage.text308')"
+      :breadcrumbs="[{ label: t('shell.ThemeBuilderPage.text309') }]" />
 
     <div class="tb-workspace">
       <section class="tb-controls wl-stack" data-space="lg" aria-labelledby="tb-settings-title">
         <div class="tb-section-header">
-          <h2 id="tb-settings-title" class="wl-text-subheading">Цветовая схема</h2>
-          <WlButton size="sm" variant="secondary" @click="resetPalette"><template #icon><WlIcon name="refresh" :size="14" /></template>Сбросить цвета</WlButton>
+          <h2 id="tb-settings-title" class="wl-text-subheading">{{ t('shell.ThemeBuilderPage.text310') }}</h2>
+          <WlButton size="sm" variant="secondary" @click="resetPalette"><template #icon><WlIcon name="refresh" :size="14" /></template>{{ t('shell.ThemeBuilderPage.text311') }}</WlButton>
         </div>
         <div class="wl-stack" data-space="sm">
-          <label id="tb-base-label" class="wl-text-label">Взять за основу</label>
+          <label id="tb-base-label" class="wl-text-label">{{ t('shell.ThemeBuilderPage.text312') }}</label>
           <WlSelect :model-value="baseTheme" :options="playgroundThemeOptions" option-label="label" option-value="value" aria-labelledby="tb-base-label" @update:model-value="chooseBase" />
-          <p class="wl-text-small wl-text-muted">При смене основы цвета сбрасываются к выбранной теме. Из неё также берутся размеры, шрифты и цвета статусов.</p>
+          <p class="wl-text-small wl-text-muted">{{ t('shell.ThemeBuilderPage.text313') }}</p>
         </div>
         <div class="wl-stack" data-space="sm">
-          <label for="tb-name" class="wl-text-label">Имя темы</label>
+          <label for="tb-name" class="wl-text-label">{{ t('shell.ThemeBuilderPage.text314') }}</label>
           <WlInput id="tb-name" v-model="name" :invalid="nameInvalid" aria-describedby="tb-name-help" spellcheck="false" autocomplete="off" />
-          <p id="tb-name-help" class="wl-text-small" :class="nameInvalid ? 'tb-error' : 'wl-text-muted'">Латинские строчные буквы, цифры и дефис, до 32 символов. Имя должно отличаться от готовых тем.</p>
+          <p id="tb-name-help" class="wl-text-small" :class="nameInvalid ? 'tb-error' : 'wl-text-muted'">{{ t('shell.ThemeBuilderPage.text315') }}</p>
         </div>
         <div class="tb-colors">
           <div v-for="field in themePaletteFields" :key="field.key" class="tb-color-field">
             <label :for="'tb-hex-' + field.key" class="wl-text-label">{{ field.label }}</label>
             <div class="tb-color-input">
-              <input class="tb-native-color" type="color" :aria-label="'Выбрать цвет: ' + field.label" :value="palette[field.key]" @input="setColor(field.key, ($event.target as HTMLInputElement).value)" />
+              <input class="tb-native-color" type="color" :aria-label="t('shell.ThemeBuilderPage.text316') + field.label" :value="palette[field.key]" @input="setColor(field.key, ($event.target as HTMLInputElement).value)" />
               <WlInput :id="'tb-hex-' + field.key" :model-value="hexDrafts[field.key]" :invalid="!normalizeHex(hexDrafts[field.key])" :aria-describedby="'tb-help-' + field.key" spellcheck="false" autocomplete="off" @update:model-value="setColor(field.key, $event)" />
             </div>
-            <p :id="'tb-help-' + field.key" class="wl-text-small" :class="!normalizeHex(hexDrafts[field.key]) ? 'tb-error' : 'wl-text-muted'">{{ !normalizeHex(hexDrafts[field.key]) ? 'Введите цвет в формате #rgb или #rrggbb. В примере остаётся последний корректный цвет.' : field.description }}</p>
+            <p :id="'tb-help-' + field.key" class="wl-text-small" :class="!normalizeHex(hexDrafts[field.key]) ? 'tb-error' : 'wl-text-muted'">{{ !normalizeHex(hexDrafts[field.key]) ? t('shell.ThemeBuilderPage.text317') : field.description }}</p>
           </div>
         </div>
-        <p class="wl-text-small wl-text-muted" role="status">{{ storageUnavailable ? 'Сохранение в браузере недоступно. Настройки можно скопировать ниже.' : savedLocally ? 'Черновик сохранён в этом браузере.' : 'Изменения сохраняются в этом браузере.' }}</p>
+        <p class="wl-text-small wl-text-muted" role="status">{{ storageUnavailable ? t('shell.ThemeBuilderPage.text318') : savedLocally ? t('shell.ThemeBuilderPage.text319') : t('shell.ThemeBuilderPage.text320') }}</p>
       </section>
 
       <div class="tb-preview-column wl-stack" data-space="lg">
         <div class="tb-section-header">
-          <div class="wl-stack" data-space="xs"><h2 id="tb-preview-title" class="wl-text-subheading">Пример интерфейса</h2><p class="wl-text-small wl-text-muted">Цвета применяются только к этому примеру.</p></div>
+          <div class="wl-stack" data-space="xs"><h2 id="tb-preview-title" class="wl-text-subheading">{{ t('shell.ThemeBuilderPage.text321') }}</h2><p class="wl-text-small wl-text-muted">{{ t('shell.ThemeBuilderPage.text322') }}</p></div>
           <span class="tb-base-tag wl-text-code">{{ baseTheme }}</span>
         </div>
         <div class="tb-preview-modes wl-inline" data-space="lg">
@@ -120,36 +122,36 @@ const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.
           <WlCheckbox v-model="demoInvalid">Invalid</WlCheckbox>
         </div>
         <section class="tb-preview wl-stack" data-space="lg" :data-wl-theme="baseTheme" :style="overrides" data-testid="theme-builder-preview" aria-labelledby="tb-preview-title">
-          <div class="tb-demo-bar"><span class="tb-demo-brand"><WlIcon name="waves" :size="20" /> {{ nameInvalid ? 'Моя тема' : name }}</span><a href="#tb-export-title">Настройки темы <WlIcon name="arrow-right" :size="14" /></a></div>
+          <div class="tb-demo-bar"><span class="tb-demo-brand"><WlIcon name="waves" :size="20" /> {{ nameInvalid ? t('shell.ThemeBuilderPage.text323') : name }}</span><a href="#tb-export-title">{{ t('shell.ThemeBuilderPage.text324') }} <WlIcon name="arrow-right" :size="14" /></a></div>
           <article class="tb-demo-card wl-stack" data-space="lg">
-            <div class="tb-section-header"><div class="wl-stack" data-space="xs"><span class="tb-demo-eyebrow wl-text-small">Пример формы</span><h3 class="wl-text-heading">Новый проект</h3></div><WlTag variant="blue">Черновик</WlTag></div>
-            <p class="wl-text-body wl-text-muted">Посмотрите, как сочетаются фон, текст и основной цвет. Форма не создаёт и не сохраняет проекты.</p>
+            <div class="tb-section-header"><div class="wl-stack" data-space="xs"><span class="tb-demo-eyebrow wl-text-small">{{ t('shell.ThemeBuilderPage.text325') }}</span><h3 class="wl-text-heading">{{ t('shell.ThemeBuilderPage.text326') }}</h3></div><WlTag variant="blue">{{ t('shell.ThemeBuilderPage.text327') }}</WlTag></div>
+            <p class="wl-text-body wl-text-muted">{{ t('shell.ThemeBuilderPage.text328') }}</p>
             <div class="tb-demo-fields">
-              <div class="wl-stack" data-space="sm"><label for="tb-demo-name" class="wl-text-label">Название проекта</label><WlInput id="tb-demo-name" v-model="title" :disabled="demoDisabled" :invalid="demoInvalid" :aria-describedby="demoInvalid ? 'tb-demo-error' : undefined" /><span v-if="demoInvalid" id="tb-demo-error" class="tb-demo-error wl-text-small">Проверьте название проекта.</span></div>
-              <div class="wl-stack" data-space="sm"><label id="tb-demo-priority-label" class="wl-text-label">Приоритет</label><WlSelect v-model="priority" :options="previewOptions" option-label="label" option-value="value" :disabled="demoDisabled" :invalid="demoInvalid" :pt="previewSelectPt" aria-labelledby="tb-demo-priority-label" /></div>
+              <div class="wl-stack" data-space="sm"><label for="tb-demo-name" class="wl-text-label">{{ t('shell.ThemeBuilderPage.text329') }}</label><WlInput id="tb-demo-name" v-model="title" :disabled="demoDisabled" :invalid="demoInvalid" :aria-describedby="demoInvalid ? 'tb-demo-error' : undefined" /><span v-if="demoInvalid" id="tb-demo-error" class="tb-demo-error wl-text-small">{{ t('shell.ThemeBuilderPage.text330') }}</span></div>
+              <div class="wl-stack" data-space="sm"><label id="tb-demo-priority-label" class="wl-text-label">{{ t('shell.ThemeBuilderPage.text331') }}</label><WlSelect v-model="priority" :options="previewOptions" option-label="label" option-value="value" :disabled="demoDisabled" :invalid="demoInvalid" :pt="previewSelectPt" aria-labelledby="tb-demo-priority-label" /></div>
             </div>
-            <div class="tb-demo-checks wl-stack" data-space="md"><WlCheckbox v-model="notifications" :disabled="demoDisabled">Получать уведомления</WlCheckbox><WlSwitch v-model="publicProject" :disabled="demoDisabled">Публичный проект</WlSwitch></div>
-            <div class="wl-inline" data-space="md"><WlButton variant="primary" :disabled="demoDisabled" @click="actions++"><template #icon><WlIcon name="plus" :size="16" /></template>Создать проект</WlButton><WlButton variant="secondary" :disabled="demoDisabled" @click="actions = 0">Сбросить счётчик</WlButton></div>
-            <p class="wl-text-small wl-text-muted" role="status">Нажатий: {{ actions }}</p>
+            <div class="tb-demo-checks wl-stack" data-space="md"><WlCheckbox v-model="notifications" :disabled="demoDisabled">{{ t('shell.ThemeBuilderPage.text332') }}</WlCheckbox><WlSwitch v-model="publicProject" :disabled="demoDisabled">{{ t('shell.ThemeBuilderPage.text333') }}</WlSwitch></div>
+            <div class="wl-inline" data-space="md"><WlButton variant="primary" :disabled="demoDisabled" @click="actions++"><template #icon><WlIcon name="plus" :size="16" /></template>{{ t('shell.ThemeBuilderPage.text334') }}</WlButton><WlButton variant="secondary" :disabled="demoDisabled" @click="actions = 0">{{ t('shell.ThemeBuilderPage.text335') }}</WlButton></div>
+            <p class="wl-text-small wl-text-muted" role="status">{{ t('shell.ThemeBuilderPage.text336') }} {{ actions }}</p>
           </article>
-          <div class="tb-demo-soft wl-stack" data-space="md"><h3 class="wl-text-label">Варианты действий</h3><div class="wl-inline" data-space="sm"><WlButton variant="primary" size="sm" :disabled="demoDisabled">Primary</WlButton><WlButton variant="soft" size="sm" :disabled="demoDisabled">Soft</WlButton><WlButton variant="secondary" size="sm" :disabled="demoDisabled">Secondary</WlButton><WlButton variant="ghost" size="sm" :disabled="demoDisabled">Ghost</WlButton><WlButton variant="danger" size="sm" :disabled="demoDisabled">Danger</WlButton></div></div>
-          <div class="wl-inline" data-space="sm"><WlTag variant="green">Готово</WlTag><WlTag variant="amber">В процессе</WlTag><WlTag variant="red">Нужна проверка</WlTag><WlTag variant="gray">Без статуса</WlTag></div>
-          <WlAlert variant="info" title="Цвета статусов берутся из базовой темы">Цвета успеха, предупреждения и ошибки здесь не меняются.</WlAlert>
+          <div class="tb-demo-soft wl-stack" data-space="md"><h3 class="wl-text-label">{{ t('shell.ThemeBuilderPage.text337') }}</h3><div class="wl-inline" data-space="sm"><WlButton variant="primary" size="sm" :disabled="demoDisabled">Primary</WlButton><WlButton variant="soft" size="sm" :disabled="demoDisabled">Soft</WlButton><WlButton variant="secondary" size="sm" :disabled="demoDisabled">Secondary</WlButton><WlButton variant="ghost" size="sm" :disabled="demoDisabled">Ghost</WlButton><WlButton variant="danger" size="sm" :disabled="demoDisabled">Danger</WlButton></div></div>
+          <div class="wl-inline" data-space="sm"><WlTag variant="green">{{ t('shell.ThemeBuilderPage.text338') }}</WlTag><WlTag variant="amber">{{ t('shell.ThemeBuilderPage.text339') }}</WlTag><WlTag variant="red">{{ t('shell.ThemeBuilderPage.text340') }}</WlTag><WlTag variant="gray">{{ t('shell.ThemeBuilderPage.text341') }}</WlTag></div>
+          <WlAlert variant="info" :title="t('shell.ThemeBuilderPage.text342')">{{ t('shell.ThemeBuilderPage.text343') }}</WlAlert>
         </section>
         <section class="tb-contrast wl-stack" data-space="md" aria-labelledby="tb-contrast-title">
-          <div class="tb-section-header"><h2 id="tb-contrast-title" class="wl-text-subheading">Контраст текста</h2><span class="wl-text-small" :class="failedContrast ? 'tb-error' : 'wl-text-muted'">{{ failedContrast ? 'Нужно проверить: ' + failedContrast : 'Показанные пары проходят проверку' }}</span></div>
+          <div class="tb-section-header"><h2 id="tb-contrast-title" class="wl-text-subheading">{{ t('shell.ThemeBuilderPage.text344') }}</h2><span class="wl-text-small" :class="failedContrast ? 'tb-error' : 'wl-text-muted'">{{ failedContrast ? t('shell.ThemeBuilderPage.text345') + failedContrast : t('shell.ThemeBuilderPage.text346') }}</span></div>
           <ul class="tb-contrast-list"><li v-for="pair in contrast" :key="pair.key" :data-passes="pair.passes"><span>{{ pair.label }}</span><span class="tb-contrast-value"><WlIcon :name="pair.passes ? 'check-circle' : 'warn'" :size="14" />{{ pair.ratio.toFixed(2) }}:1 <span class="tb-contrast-min">/ {{ pair.minimum }}:1</span></span></li></ul>
-          <p class="wl-text-small wl-text-muted">Здесь проверяется контраст нескольких цветовых пар. Доступность всего интерфейса нужно проверить отдельно. Для основного цвета автоматически выбирается светлый или тёмный текст; цвет ссылок задаёте вы.</p>
+          <p class="wl-text-small wl-text-muted">{{ t('shell.ThemeBuilderPage.text347') }}</p>
         </section>
       </div>
     </div>
 
     <section class="tb-export wl-stack" data-space="lg" aria-labelledby="tb-export-title">
-      <div class="tb-section-header"><div class="wl-stack" data-space="sm"><h2 id="tb-export-title" class="wl-text-heading">Скопируйте настройки темы</h2><p class="wl-text-body wl-text-muted">Выберите задание для агента, настройки в JSON или CSS для подключения в проекте.</p></div><WlButton variant="primary" :disabled="nameInvalid || hexInvalid" @click="exportPanel?.copy()"><template #icon><WlIcon name="copy" :size="16" /></template>{{ exportMode === 'prompt' ? 'Копировать для агента' : 'Копировать ' + exportMode.toUpperCase() }}</WlButton></div>
-      <div class="wl-inline" data-space="sm" role="group" aria-label="Формат экспорта"><WlButton v-for="option in exportOptions" :key="option.value" size="sm" :variant="exportMode === option.value ? 'soft' : 'secondary'" :aria-pressed="exportMode === option.value" @click="exportMode = option.value">{{ option.label }}</WlButton></div>
-      <p v-if="nameInvalid || hexInvalid" class="tb-error wl-text-small" role="alert">Исправьте имя и HEX-значения перед копированием.</p>
-      <div v-else data-testid="theme-builder-export"><CodePanel ref="exportPanel" :source="exportSource" :title="exportMode === 'prompt' ? 'Задание для агента' : exportMode === 'json' ? name + '.theme.json' : name + '.css'" :language="exportMode === 'css' ? 'css' : exportMode === 'json' ? 'json' : 'auto'" :expanded="true" /></div>
-      <p class="wl-text-small wl-text-muted">CSS подключается после стилей Gavia UI; атрибут data-wl-theme должен стоять на html, чтобы всплывающие элементы получили вашу тему.</p>
+      <div class="tb-section-header"><div class="wl-stack" data-space="sm"><h2 id="tb-export-title" class="wl-text-heading">{{ t('shell.ThemeBuilderPage.text348') }}</h2><p class="wl-text-body wl-text-muted">{{ t('shell.ThemeBuilderPage.text349') }}</p></div><WlButton variant="primary" :disabled="nameInvalid || hexInvalid" @click="exportPanel?.copy()"><template #icon><WlIcon name="copy" :size="16" /></template>{{ exportMode === 'prompt' ? t('shell.ThemeBuilderPage.text350') : t('shell.ThemeBuilderPage.text351') + exportMode.toUpperCase() }}</WlButton></div>
+      <div class="wl-inline" data-space="sm" role="group" :aria-label="t('shell.ThemeBuilderPage.text352')"><WlButton v-for="option in exportOptions" :key="option.value" size="sm" :variant="exportMode === option.value ? 'soft' : 'secondary'" :aria-pressed="exportMode === option.value" @click="exportMode = option.value">{{ option.label }}</WlButton></div>
+      <p v-if="nameInvalid || hexInvalid" class="tb-error wl-text-small" role="alert">{{ t('shell.ThemeBuilderPage.text353') }}</p>
+      <div v-else data-testid="theme-builder-export"><CodePanel ref="exportPanel" :source="exportSource" :title="exportMode === 'prompt' ? t('shell.ThemeBuilderPage.text354') : exportMode === 'json' ? name + '.theme.json' : name + '.css'" :language="exportMode === 'css' ? 'css' : exportMode === 'json' ? 'json' : 'auto'" :expanded="true" /></div>
+      <p class="wl-text-small wl-text-muted">{{ t('shell.ThemeBuilderPage.text355') }}</p>
     </section>
   </main>
 </template>

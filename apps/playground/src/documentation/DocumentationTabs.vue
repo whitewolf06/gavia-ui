@@ -1,13 +1,15 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../i18n";
+const { t } = usePlaygroundI18n();
 import { nextTick, ref } from "vue";
 export type DocumentationTab = "examples" | "api" | "accessibility";
 const props = defineProps<{ modelValue: DocumentationTab; idPrefix: string; componentName: string; label?: string }>();
 const emit = defineEmits<{ "update:modelValue": [value: DocumentationTab] }>();
 const element = ref<HTMLElement | null>(null);
 const tabs = [
-  { key: "examples", label: "Примеры" },
+  { key: "examples", label: t('documentation.strings.s0694') },
   { key: "api", label: "API" },
-  { key: "accessibility", label: "Доступность" }
+  { key: "accessibility", label: t('documentation.strings.s0695') }
 ] as const;
 async function navigate(event: KeyboardEvent, index: number): Promise<void> {
   const next = event.key === "ArrowRight" ? (index + 1) % tabs.length
@@ -22,7 +24,7 @@ async function navigate(event: KeyboardEvent, index: number): Promise<void> {
 }
 </script>
 <template>
-  <div ref="element" class="docs-tabs" role="tablist" :aria-label="label ?? 'Руководство ' + componentName" data-testid="docs-component-tabs">
+  <div ref="element" class="docs-tabs" role="tablist" :aria-label="label ?? t('documentation.strings.s0696') + componentName" data-testid="docs-component-tabs">
     <button v-for="(tab, index) in tabs" :id="idPrefix + '-tab-' + tab.key" :key="tab.key" type="button" role="tab" class="docs-tab" :data-docs-tab="tab.key" :aria-selected="modelValue === tab.key" :aria-controls="idPrefix + '-panel-' + tab.key" :tabindex="modelValue === tab.key ? 0 : -1" @click="emit('update:modelValue', tab.key)" @keydown="navigate($event, index)">{{ tab.label }}</button>
   </div>
   <slot name="outline" />

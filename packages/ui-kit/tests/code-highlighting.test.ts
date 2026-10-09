@@ -1,8 +1,23 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import { enableAutoUnmount, flushPromises, mount } from "@vue/test-utils";
 import { detectCodeLanguage, highlightCode, type CodeLanguage } from "../../../apps/playground/src/design-system/highlighting/tokenizer";
 import CodeHighlight from "../../../apps/playground/src/design-system/CodeHighlight.vue";
 import CodePanel from "../../../apps/playground/src/design-system/CodePanel.vue";
+import { playgroundI18n } from "../../../apps/playground/src/i18n";
+import type { Plugin } from "vue";
+
+// Playground uses Vue 3.5 and kit tests Vue 3.4. Bridge only their Plugin types;
+// the same real plugin is still installed and exercised at runtime.
+const playgroundI18nPlugin = playgroundI18n as unknown as Plugin;
+
+let previousLocale = playgroundI18n.global.locale.value;
+beforeEach(() => {
+  previousLocale = playgroundI18n.global.locale.value;
+  playgroundI18n.global.locale.value = "en";
+});
+afterEach(() => {
+  playgroundI18n.global.locale.value = previousLocale;
+});
 
 enableAutoUnmount(afterEach);
 afterEach(() => { vi.unstubAllGlobals(); });
@@ -123,20 +138,20 @@ describe("lossless documentation highlighting", () => {
   it("copies the original source and retains manual fallback instead of copying rendered markup", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     vi.stubGlobal("navigator", { clipboard: { writeText } });
-    const wrapper = mount(CodePanel, { props: { source: sfc, expanded: true, language: "vue", title: "App.vue" } });
+    const wrapper = mount(CodePanel, { global: { plugins: [playgroundI18nPlugin] }, props: { source: sfc, expanded: true, language: "vue", title: "App.vue" } });
     expect(wrapper.get("pre code").element.textContent).toBe(sfc);
     expect(wrapper.get("pre").attributes()).toMatchObject({ tabindex: "0", role: "region", "aria-label": "App.vue" });
     await wrapper.get("button").trigger("click");
     await flushPromises();
     expect(writeText).toHaveBeenCalledWith(sfc);
-    expect(wrapper.get('[role="status"]').text()).toBe("Код скопирован.");
+    expect(wrapper.get('[role="status"]').text()).toBe("Code copied.");
     writeText.mockRejectedValueOnce(new Error("Clipboard blocked"));
     await wrapper.get("button").trigger("click");
     await flushPromises();
     // Native textarea values normalize CRLF/CR to LF; clipboard and code above keep the original source.
     expect(wrapper.get("textarea").element.value).toBe(sfc.replace(/\r\n?/g, "\n"));
     expect(wrapper.get("pre code").element.textContent).toBe(sfc);
-    expect(wrapper.get('[role="status"]').text()).toContain("Буфер обмена недоступен");
+    expect(wrapper.get('[role="status"]').text()).toContain("Clipboard unavailable");
   });
   it("distinguishes CSS selectors, declaration properties, values, functions and adjacent units", () => {
     const source = '@media (max-width: 640px) { button:hover, .card { display: grid; padding: calc(1rem + 8px); color: var(--wl-accent); width: 50%; } }';
@@ -165,21 +180,21 @@ describe("lossless documentation highlighting", () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     vi.stubGlobal("navigator", { clipboard: { writeText } });
     const source = '<div>readable & inert</div>\n';
-    const wrapper = mount(CodePanel, { props: { source, language: "html" } });
+    const wrapper = mount(CodePanel, { global: { plugins: [playgroundI18nPlugin] }, props: { source, language: "html" } });
     const frame = wrapper.get(".ds-source-frame");
-    const copy = wrapper.get('button[aria-label="Копировать код"]');
+    const copy = wrapper.get('button[aria-label="Copy code"]');
     expect(frame.element.contains(copy.element)).toBe(true);
     expect(copy.element.closest("details")).toBeNull();
     expect(wrapper.get("pre").element.contains(copy.element)).toBe(false);
     expect(wrapper.get("details").attributes("open")).toBeUndefined();
-    expect(copy.attributes()).toMatchObject({ type: "button", title: "Копировать код" });
+    expect(copy.attributes()).toMatchObject({ type: "button", title: "Copy code" });
     expect((copy.element as HTMLElement).tabIndex).toBe(0);
     expect(copy.attributes("aria-hidden")).toBeUndefined();
     expect(copy.find('[data-icon="copy"]').exists()).toBe(true);
     await copy.trigger("click");
     await flushPromises();
     expect(writeText).toHaveBeenCalledWith(source);
-    expect(wrapper.get('button[aria-label="Скопировано"]').find('[data-icon="check"]').exists()).toBe(true);
+    expect(wrapper.get('button[aria-label="Copied"]').find('[data-icon="check"]').exists()).toBe(true);
     expect(wrapper.get("pre code").element.textContent).toBe(source);
     await wrapper.setProps({ expanded: true });
     expect(wrapper.get("details").attributes("open")).toBeDefined();

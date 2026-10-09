@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="TOption = unknown, TResolver extends WlOptionValueResolver<NoInfer<TOption>> | undefined = undefined">
 import { useWlId } from "../utils/useWlId";
 import { computed, nextTick, ref, useAttrs, watch, type Ref } from "vue";
-import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
+import { mergeWlAttrs, useWlMotion, useWlPt, useWlLocale } from "../config";
 import type { WlDensity, WlSizeSm } from "../types";
 import type { WlPt } from "../pt-types";
 import type { WlNoModelModifiers } from "../model-types";
@@ -12,6 +12,7 @@ import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTran
 import { optionLabel as resolveOptionLabel, optionValue as resolveOptionValue, useListNavigation } from "../utils/options";
 
 import WlIcon from "./WlIcon.vue";
+const locale = useWlLocale();
 
 defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<{
@@ -39,7 +40,7 @@ const motion = useWlMotion(computed(() => props.motion));
 const generatedListId = `wl-select-list-${useWlId()}`;
 const listAttrs = computed(() => {
   const control = getWlControlProps(mergeWlAttrs(attrGroups.value.inputAttrs, section("root")));
-  return mergeWlAttrs({ id: generatedListId, "aria-label": control.ariaLabel ?? props.placeholder ?? "Варианты", "aria-labelledby": control.ariaLabelledby }, section("list"));
+  return mergeWlAttrs({ id: generatedListId, "aria-label": control.ariaLabel ?? props.placeholder ?? locale.value.options, "aria-labelledby": control.ariaLabelledby }, section("list"));
 });
 const { visible, panel, style, show, hide } = useAnchoredOverlay();
 watch(() => props.disabled, (disabled) => { if (disabled) hide(); });
@@ -97,7 +98,7 @@ function onKeydown(event: KeyboardEvent): void {
             @mousedown.prevent="choose(index)" @click="choose(index)">
             <span v-bind="section('optionLabel')" class="wl-select__option-label">{{ resolveOptionLabel(option, props.optionLabel) }}</span>
           </div>
-          <div v-if="options.length === 0" v-bind="section('emptyMessage')" class="wl-select__empty">Нет вариантов</div>
+          <div v-if="options.length === 0" v-bind="section('emptyMessage')" class="wl-select__empty">{{ locale.noOptions }}</div>
         </div>
       </div>
     </div>

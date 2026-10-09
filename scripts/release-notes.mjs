@@ -121,9 +121,9 @@ function main() {
   if (args[0] === "--check") {
     console.log("Reviewed release notes and migration present for " + version);
   } else {
-    console.log(releaseDocsLinks(notes, version) + "\n\n### Витрина этого выпуска\n\nРаспакуйте gavia-ui-playground-"
-      + version + ".tgz и откройте через локальный HTTP server. Это сохранённая версия для сравнения; "
-      + "актуальная публичная документация находится в GitHub Pages.");
+    console.log(releaseDocsLinks(notes, version) + "\n\n### Release playground\n\nExtract gavia-ui-playground-"
+      + version + ".tgz and open it through a local HTTP server. This saved preview is for version comparisons; "
+      + "current public documentation is on GitHub Pages.");
   }
 }
 

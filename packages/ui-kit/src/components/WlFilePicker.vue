@@ -2,12 +2,13 @@
 import type { WlPt } from "../pt-types";
 import type { WlFilePickerExpose } from "../input-expose-types";
 import { computed, useAttrs } from "vue";
-import { mergeWlAttrs, useWlPt } from "../config";
+import { mergeWlAttrs, useWlPt, useWlLocaleText } from "../config";
 import { useNativeFilePicker } from "../composables/useNativeFilePicker";
 import { splitInputAttrs } from "../utils/inputAttrs";
 import type { WlDensity, WlSizeSm } from "../types";
 import WlButton from "./WlButton.vue";
 import WlIcon from "./WlIcon.vue";
+const localeText = useWlLocaleText();
 
 defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<{
@@ -43,9 +44,9 @@ defineExpose<WlFilePickerExpose>({ choose, clear });
     data-wl="file-picker" :data-size="size" :data-density="density">
     <slot name="trigger" :choose="choose" :clear="clear" :disabled="disabled" :attrs="triggerAttrs">
       <WlButton v-bind="triggerAttrs" :size="size" :density="density" :disabled="disabled"
-        :aria-label="ariaLabel ?? chooseLabel" :pt="{ root: section('trigger') }" @click="choose">
+        :aria-label="ariaLabel ?? localeText('chooseLabel', chooseLabel, 'chooseFiles')" :pt="{ root: section('trigger') }" @click="choose">
         <template #icon><WlIcon name="upload" :size="16" /></template>
-        {{ chooseLabel }}
+        {{ localeText('chooseLabel', chooseLabel, 'chooseFiles') }}
       </WlButton>
     </slot>
     <input ref="input" v-bind="mergeWlAttrs(pickerAttrs, section('input'))"

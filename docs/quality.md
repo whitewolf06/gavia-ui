@@ -1,130 +1,165 @@
-# Совместимость и проверки Gavia UI
+# Gavia UI compatibility and checks
 
-## Версии и публичный контракт
+## Versions and public contract
 
-Все компоненты выходят в одном выпуске Gavia UI. В каталоге указана версия,
-в которой компонент появился впервые. Последующие изменения смотрите в changelog.
-Patch сохраняет публичный контракт, minor добавляет возможности. В 0.x
-несовместимые изменения допускаются только в minor с отметкой Breaking changes
-и руководством миграции. Само повышение minor не означает несовместимость.
-После 1.0 для несовместимых изменений нужен major.
+All components ship in one Gavia UI release. The catalog records the version
+in which each component first appeared; see changelog for later changes.
+Patch preserves the public contract; minor adds features. In 0.x, breaking
+changes are allowed only in a minor with a Breaking changes notice and migration
+guide. A minor increment does not itself imply incompatibility.
+After 1.0, incompatible changes require a major.
 
-Контракт включает props и их обязательность, события/payload, slots, v-model,
-exposed методы, imports/exports, CSS-классы, data-wl, токены и pt-секции.
-`pnpm verify:compatibility` после сборки сравнивает фактические declarations
-с неизменяемым снимком 0.9.1. Старые снимки 0.3/0.5 также сохранены. Добавления
-разрешены; удаление/сужение контракта останавливает CI. Для согласованного перехода
-на 0.11 применяется отдельный, ограниченный версиями контракт миграции: он меняет
-только конкретные ожидаемые поля старого контракта и одну декларацию в копии
-Vue-потребителя. Исходные расхождения остаются в отчёте; дополнительные поломки
-продолжают блокировать gate. Снимок принятого нового стабильного выпуска добавляют
-отдельно после проверки npm; `node scripts/check-compatibility.mjs --help` описывает
-команду. Не обновляйте базу ради прохождения проверки. Миграционная заметка сама
-по себе не отключает проверку. Проверка типов не доказывает идентичность поведения
-— для этого остаются unit/E2E.
+The contract includes props and requiredness, events/payloads, slots, v-model,
+exposed methods, imports/exports, CSS classes, data-wl, tokens and pt sections.
+After a build, `pnpm verify:compatibility` compares actual declarations against
+the immutable 0.9.1 snapshot. Earlier 0.3/0.5 snapshots are also preserved.
+Additions are allowed; removal or narrowing blocks CI. The agreed 0.11 transition
+uses a separate version-limited migration contract: it changes only specific
+expected fields in the previous contract and one declaration in a copy of the
+Vue consumer. Original differences remain in the report; additional breakage
+still blocks the gate. A snapshot of a newly accepted stable release is added
+separately after npm verification; `node scripts/check-compatibility.mjs --help`
+describes the command. Do not update the baseline just to pass.
+A migration note alone does not disable the gate. Type checks do not prove
+identical behavior; unit/E2E checks remain necessary.
 
+New compile-only consumer fixtures check accepted props and expected errors:
+model/resolver/mode, column keys, slot values, select payloads and pt sections.
+They import the public entry point. `verify:package` copies the same TypeScript/Vue
+fixtures into a clean consumer and compiles against declarations in the installed
+archive. A source build does not prove published generic accuracy.
+During 0.11.0 preparation, contracts were checked locally in source and in the installed archive.
 
-Новые compile-only consumer fixtures проверяют допустимые props и ожидаемые ошибки: модель/резолвер/режим, ключ колонки, slot value, select-payload и секции pt. Они импортируют публичную точку входа. `verify:package` переносит те же TypeScript/Vue fixtures в чистый потребитель и компилирует против declarations из устанавливаемого архива. Сборка исходников не подтверждает точность публикуемых generics. При подготовке 0.11.0 контракты локально проверены в исходниках
-и в устанавливаемом архиве.
+<a id="проверка-новых-публичных-контрактов"></a>
 
+### Checking new public contracts
 
+verify:package prepares compile-only TS, Vue and TSX scenarios using the installed
+archive’s public export. They check inference for options/model, rows and table
+cell slots, navigation items/groups, actual v-model modifiers, locale, pt, native
+attributes and exposed refs. A separate strict Vue consumer imports all 53
+components. Positive examples and expected errors are checked together;
+an incorrect error-expectation directive must also stop compilation.
 
-### Проверка новых публичных контрактов
+The minimum CI consumer uses Vue 3.4.0 + TypeScript 5.4.5; another uses pinned
+Vue 3.5 and the current compiler. `--typescript <exact-version>` selects the
+consumer compiler explicitly so linked vue-tsc does not substitute workspace
+TypeScript. strictTemplates and JSX are enabled; skipLibCheck is disabled.
+Historical compatibility fixtures are not rewritten.
 
-В verify:package подготовлены compile-only TS, Vue и TSX сценарии из публичного export установленного архива. Они проверяют вывод типов options/model, строк и cell-слотов таблицы, item/group navigation, реальные v-model modifiers, locale, pt, нативные атрибуты и exposed refs. Отдельный строгий Vue-потребитель импортирует все 53 компонента. Положительные примеры и ожидаемые ошибки проверяются совместно; неверная директива ожидания тоже должна остановить компиляцию.
+During local 0.11.0 preparation on October 8, 2026, package/playground typecheck,
+build and pack passed: 686/686 unit tests for 0.11.0, lines/statements 98.44%,
+branches 89.26%, functions 86.51%. The same archive was checked with Vue 3.4.0 /
+TypeScript 5.4.5 through npm and Vue 3.5.40 / TypeScript 5.8.3 through pnpm:
+21 positive/negative API fixtures, all 53 components and 59 copyable SFCs.
+Node import/SSR passed in both environments; desktop/mobile and SSR hydration
+were checked on both Vue versions. Bun 1.4.0 / Vue 3.5.40 also passed those checks.
+The quality snapshot and badge came from that unit run. These are 0.11.0
+preparation results. CI and publication status are recorded separately in
+[release history](releases.md#release-0110).
 
-Минимальный consumer в CI настроен на Vue 3.4.0 + TypeScript 5.4.5; другой использует закреплённую Vue 3.5 и текущий compiler. Параметр `--typescript <exact-version>` выбирает компилятор потребителя явно, чтобы linked vue-tsc не подменял его TypeScript из workspace. strictTemplates и JSX включены, skipLibCheck отключён. Исторические compatibility fixtures не переписываются.
+On October 8, the agreed 0.11 migration gate also passed for all 53 components.
+Focused migration-mechanism tests passed 3/3, covering 17 invalid-policy rejections
+and 14 unapproved API breakage scenarios. The earlier generic-helper test passed
+1/1 with 11 negative scenarios. Comparison now checks each prop/handler field:
+whole-object comparison had missed incompatible callback-payload widening.
+No new builds, packs or full unit/E2E/visual runs were started in that iteration.
 
-При подготовке 0.11.0 локально 8 октября 2026: typecheck пакета и playground, build и pack прошли; 686/686 unit-тестов версии 0.11.0, строки/инструкции 98,44%, ветвления 89,26%, функции 86,51%. Проверен один и тот же архив с Vue 3.4.0 / TypeScript 5.4.5 через npm и Vue 3.5.40 / TypeScript 5.8.3 через pnpm: 21 положительный/отрицательный API fixture, все 53 компонента и 59 копируемых SFC. Node import/SSR прошли в обоих окружениях; desktop/mobile и SSR-гидратация проверены на обеих версиях Vue; Bun 1.4.0 / Vue 3.5.40 также прошёл эти проверки. Quality snapshot и бейдж обновлены из этого unit-прогона. Это результаты подготовки 0.11.0. Статус CI и публикации зафиксирован
-отдельно в [истории выпуска](releases.md#выпуск-0110).
+The historical 0.9.1 gate records five declaration changes: multiple Autocomplete
+requires an array instead of unknown; CommandPalette and Sidebar select payloads
+contain readonly collections; arbitrary createWlPt result extensions are unknown;
+range DatePicker requires explicit selectionMode. The unchanged Vue consumer also
+detects ref<unknown> in keyed Select. These transitions are explicitly included
+in the 0.11 migration contract; fields are not replaced wholesale with Current,
+and TypeScript diagnostics are not globally ignored.
+Negative checks protect other event fields, models, slots and exposed methods.
+Approval is tied to the original baseline, migration guide and minor Changeset,
+then constrained to version 0.11. New API accuracy and compatibility with every
+previous TypeScript contract are separate checks.
+[Migration guide](migration-0.11.0.md).
 
-Локально 8 октября также прошла проверка согласованной миграции 0.11 для всех 53 компонентов. Точечные tests механизма миграции прошли 3/3: проверены 17 отказов неверной политики и 14 сценариев несогласованных поломок API. Прежняя проверка generic-helper прошла 1/1 с 11 отрицательными сценариями. Добавлено сравнение каждого поля props/handlers: сравнение объекта целиком пропускало несовместимое расширение callback payload. Новые сборки, упаковка и полные unit/E2E/visual прогоны в этой итерации не запускались.
+## Browsers and consumer environment
 
-Исторический gate 0.9.1 фиксирует пять изменений declarations: multiple Autocomplete требует массив вместо unknown; select-payload CommandPalette и Sidebar содержит readonly коллекции; произвольные расширения результата createWlPt имеют unknown-тип; range DatePicker требует явный selectionMode. Неизменённый Vue-потребитель отдельно выявляет ref<unknown> в keyed Select. Эти переходы явно включены в контракт миграции 0.11; поля не заменяются целиком на Current и диагностики TypeScript не игнорируются глобально. Негативные проверки защищают остальные поля событий, модели, slots и exposed методы. Разрешение связано с исходным baseline, руководством миграции и minor Changeset, затем ограничено версией 0.11. Точность нового API и совместимость со всеми прежними TypeScript-контрактами — разные проверки. [Руководство перехода](migration-0.11.0.md).
-
-
-## Браузеры и окружение потребителя
-
-Целевой диапазон: Chrome/Edge 111+, Firefox 121+, Safari/iOS Safari 16.4+,
-соответствующие Android Chromium/Firefox. Основа — ES2020, CSS Layers, :has(),
-color-mix и container queries. Границы определены по возможностям платформы;
-полный набор тестов на каждой исторической минимальной версии не запускался.
-CI проверяет закреплённые Playwright 1.58.2 Chromium, Firefox, WebKit и мобильный
-Chromium. WebKit — проверка движка, а не замена отдельного Safari/iOS устройства.
-Источники: [MDN :has](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/:has),
+Target range: Chrome/Edge 111+, Firefox 121+, Safari/iOS Safari 16.4+,
+and corresponding Android Chromium/Firefox.
+The foundation uses ES2020, CSS Layers, :has(), color-mix and container queries.
+Minimums come from platform features; the full suite has not been run on every
+historical minimum version. CI uses pinned Playwright 1.58.2 Chromium, Firefox,
+WebKit and mobile Chromium. WebKit checks the engine; it does not replace a
+separate Safari/iOS device.
+Sources: [MDN :has](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/:has),
 [MDN color-mix](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/color_value/color-mix).
-IE и старые WebView не поддерживаются. При расширении требований сначала задайте
-fallback/feature detection и тест; библиотека не подключает глобальные полифиллы.
+IE and old WebViews are unsupported. When extending requirements, define a
+fallback/feature detection and a test first; the library installs no global polyfills.
 
-Vue остаётся peer, CSS подключается явно. Потребитель может устанавливать пакет
-через pnpm, npm или Bun; менеджер не меняет API и тему. Для работы над репозиторием
-используется только pnpm. ESM требует сборщика с Vue SFC либо обычного ESM-потребителя;
-CommonJS entrypoint не предоставляется.
+Vue remains a peer; CSS is imported explicitly. Consumers may install through
+pnpm, npm or Bun; the manager does not change API or theme.
+Repository development uses only pnpm. ESM requires a Vue SFC bundler or a
+plain ESM consumer; there is no CommonJS entry point.
 
-`pnpm verify:package` проверяет точный архив, нативный Node import, SSR,
-типы/59 копируемых SFC, сборку, файлы/лицензии/шрифт и bundle одной кнопки.
-`pnpm verify:package:browser` дополнительно запускает настоящий собранный
-потребитель на desktop/mobile и гидратирует серверный HTML: DOM и IDs сохраняются,
-события работают, предупреждений hydration нет. Это проверка Vue SSR, без обещания
-отдельно проверенной интеграции каждого Nuxt-модуля. В Vue 3.5 используются нативные SSR-идентификаторы; для Vue 3.4 есть генератор
-на уровне приложения. В 3.4 порядок синхронного SSR-дерева и гидратации должен
-совпадать; порядок асинхронных ветвей отдельно не гарантируется.
-Оверлеи и браузерные действия
-запускаются после mount; import библиотеки не должен требовать window/document.
+`pnpm verify:package` checks the exact archive, native Node import, SSR,
+types/59 copyable SFCs, build, files/licenses/font and a single-button bundle.
+`pnpm verify:package:browser` also runs the actual built consumer on desktop/mobile
+and hydrates server HTML: DOM and IDs are preserved, events work and there are
+no hydration warnings. This checks Vue SSR without claiming separately verified
+integration for every Nuxt module. Vue 3.5 uses native SSR IDs; Vue 3.4 has an
+application-scoped generator. In 3.4, synchronous SSR-tree and hydration order
+must match; asynchronous branch order is not separately guaranteed.
+Overlays and browser actions start after mount; importing the library must
+not require window/document.
 
-Оверлеи используют Teleport в body. SSR-сервер должен вставлять
-`context.teleports.body`, полученный через `renderToString(app, context)`,
-в начало body перед корнем приложения, сохраняя порядок порталов. Тестовый сервер
-делает именно это и проверяет гидратацию без подавления предупреждений.
-Vue рекомендует выделенный контейнер для SSR; если ваш фреймворк обрабатывает
-только свой teleport-target, используйте его ClientOnly для этих оверлеев
-и отдельно проверьте интеграцию. [Контракт Vue SSR](https://vuejs.org/guide/scaling-up/ssr.html#teleports).
+Overlays use Teleport to body. The SSR server must insert
+`context.teleports.body` from `renderToString(app, context)` at the beginning of
+body, before the application root, preserving portal order. The test server
+does this and checks hydration without suppressing warnings.
+Vue recommends a dedicated SSR container; if your framework handles only its
+own teleport target, use its ClientOnly for these overlays and check integration
+separately. [Vue SSR contract](https://vuejs.org/guide/scaling-up/ssr.html#teleports).
 
-## Доступность и графика
+## Accessibility and graphics
 
-Целевой уровень — [WCAG 2.2 AA](https://www.w3.org/TR/WCAG22/).
-Axe проверяет видимый DOM, включая открытые списки и диалоги, в пяти темах.
-Скан выполняется в Chromium один раз, клавиатура и фокус — во всех движках.
-Проверяются имена, связи ARIA, контраст, ошибки, disabled/loading и возврат фокуса.
-Автоматический скан не подтверждает полное соответствие WCAG: нужны ручные
-проверки клавиатуры, масштабирования и NVDA/VoiceOver в приложении потребителя.
+The target is [WCAG 2.2 AA](https://www.w3.org/TR/WCAG22/).
+Axe scans visible DOM, including open lists and dialogs, in five themes.
+Scanning runs once in Chromium; keyboard and focus checks run in every engine.
+Checks cover names, ARIA relationships, contrast, errors, disabled/loading and
+focus restoration. An automated scan does not confirm full WCAG compliance:
+the consumer application needs manual keyboard, zoom and NVDA/VoiceOver checks.
 
-Визуальные PNG — Windows/закреплённый Chromium, desktop 1280 и mobile 390.
-Геометрические эталоны Classic / Classic Dark используют Arial/Consolas;
-Newspaper сохраняет свою типографику заголовков. Эталоны Gavia / Gavia Dark
-используют настоящий Gavia Sans, включая 12 начертаний, кириллицу, латиницу,
-цифры, главную страницу и оверлеи. Проверяйте expected/actual/diff перед принятием
-намеренных изменений. CI никогда не обновляет изображения автоматически.
+Visual PNGs use Windows/pinned Chromium, desktop 1280 and mobile 390.
+Classic / Classic Dark geometry baselines use Arial/Consolas; Newspaper retains
+its heading typography. Gavia / Gavia Dark baselines use real Gavia Sans,
+including 12 faces, Cyrillic, Latin, numerals, home and overlays.
+Review expected/actual/diff before accepting intentional changes.
+CI never updates images automatically.
 
-## Покрытие и размер
+## Coverage and size
 
-`pnpm test:coverage` создаёт HTML, LCOV, JSON summary и результаты Vitest в
-`packages/ui-kit/coverage/tests.json`. Команда `pnpm quality:update` получает
-проценты и количество успешных тестов из этих файлов, записывает версию и время
-запуска и обновляет данные playground и SVG-бейдж README.
-Главная показывает passed/total и долю успешных unit-тестов, а также покрытие строк;
-подробная страница показывает строки, инструкции, ветвления и функции. Значения
-передаются в WlProgress со шкалой 0–100% и доступным текстом процента. Цвета, радиусы
-и анимация берутся из темы; prefers-reduced-motion отключает появление полос.
-Показатели относятся к этому unit-прогону. Результаты browser/visual/axe
-и публикации смотрите отдельно в workflow.
-[Сохранённое измерение](../apps/playground/src/project/quality-report.generated.json) — источник бейджа README.
-[Раздел playground](https://whitewolf06.github.io/gavia-ui/?view=docs&section=quality) показывает отчёт
-своей сборки; после публикации из CI он может отличаться от сохранённого снимка.
-Дата относится к измерению, а не к публикации пакета. Генератор отклоняет
-неуспешный или неполный прогон; в CI данные передаются в Pages и архив
-playground из того же запуска workflow с проверкой версии и Git revision.
-В CI минимум 97/97/85/81% соответственно, критическое восстановление атрибутов
-при отмене закрытия оверлея — 100%. Из расчёта исключены декларации типов,
-сгенерированные каталоги и метаданные manifest, точки реэкспорта; компоненты,
-утилиты, разрешение имён иконок и разрешение токенов включены.
-Порог не поднимают автоматически и не снижают ради зелёного CI. Новый сценарий
-добавляют для наблюдаемой ошибки или значимой непроверенной ветки, а не ради процента.
+`pnpm test:coverage` creates HTML, LCOV, JSON summary and Vitest results in
+`packages/ui-kit/coverage/tests.json`. `pnpm quality:update` reads percentages
+and passed-test counts from those files, records the version and run time,
+and updates playground data and the README SVG badge.
+Home shows passed/total, unit pass rate and line coverage; the detailed page
+shows lines, statements, branches and functions. Values go to WlProgress on a
+0–100% scale with accessible percentage text. Theme tokens supply colors,
+radii and motion; prefers-reduced-motion disables bar entry motion.
+Metrics belong to that unit run. Browser/visual/axe and publication results
+are separate workflow results.
+The [saved measurement](../apps/playground/src/project/quality-report.generated.json)
+supplies the README badge. The [playground section](https://whitewolf06.github.io/gavia-ui/?view=docs&section=quality)
+shows its build’s report; after CI publication it may differ from the saved snapshot.
+The date is the measurement date, not package publication.
+The generator rejects failed or incomplete runs; CI passes data to Pages and the
+playground archive from the same workflow, validating the version and Git revision.
+CI minimums are respectively 97/97/85/81%; critical attribute restoration when
+overlay closing is cancelled is 100%.
+Type declarations, generated catalogs, manifest metadata and re-export entry
+points are excluded; components, utilities, icon resolution and token resolution
+are included. Thresholds are not raised automatically or lowered for green CI.
+Add scenarios for observed failures or meaningful uncovered branches, not percentages.
 
-Проверка приложения с одной WlButton измеряет весь JS gzip, включая Vue peer
-(лимит 30 500 байт), и отдельно объём кода kit до gzip (13 500 байт). Она также
-проверяет отсутствие неиспользуемых компонентов и редакторских каталогов.
-Бюджет и запас записаны в `scripts/package-consumer-budget.json`; изменение
-лимита сопровождается причиной. Полный CSS подключается явно и не обещает покомпонентный
-CSS tree-shaking. Динамическую загрузку тяжёлых страниц выбирает приложение.
-
+The single-WlButton consumer measures all gzipped JS, including the Vue peer
+(limit 30,500 bytes), and kit code before gzip separately (13,500 bytes).
+It also checks that unused components and editor catalogs are absent.
+Budgets and headroom are recorded in `scripts/package-consumer-budget.json`;
+a limit change needs a reason. Full CSS is imported explicitly; per-component
+CSS tree-shaking is not promised. Applications choose lazy loading for heavy pages.

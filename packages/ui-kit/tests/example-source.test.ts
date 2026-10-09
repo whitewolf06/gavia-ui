@@ -2,6 +2,10 @@
 import { describe, expect, it } from "vitest";
 import { parse, compileScript, compileTemplate } from "vue/compiler-sfc";
 import { consumerSource } from "../../../scripts/example-source.mjs";
+import { readFileSync } from "node:fs";
+import { runInNewContext } from "node:vm";
+import { fileURLToPath } from "node:url";
+import russianExamples from "../../../apps/playground/src/i18n/messages/examples.ru.json";
 
 const setupExample = [
   '<script setup lang="ts">',
@@ -108,6 +112,46 @@ describe("setup-aware consumer source", () => {
     expect(source).not.toContain("defineProps");
     expect(source).not.toContain('v-bind="preview"');
     expect(source).toContain('"invalid":true');
+    compile(source);
+  });
+});
+
+describe("localised standalone consumer source", () => {
+  it.each([
+    { language: "English default", messages: undefined, label: "Add", counter: "Clicks:" },
+    { language: "Russian", messages: russianExamples, label: "Добавить", counter: "Нажатий:" }
+  ])("exports $language text without the private Playground hook", ({ messages, label, counter }) => {
+    const raw = readFileSync(fileURLToPath(new URL("../../../apps/playground/src/design-system/examples/WlButton.vue", import.meta.url)), "utf8");
+    const source = consumerSource(raw, {}, messages);
+    expect(source).toContain(JSON.stringify(label));
+    expect(source).toContain(JSON.stringify(counter));
+    expect(source).toContain('from "gavia-ui"');
+    expect(source).not.toMatch(/usePlaygroundI18n|from ["'](?:\.\.\/)+i18n|\bt\(["']examples\./);
+    compile(source);
+  });
+
+  it("preserves translated script and attribute values with special characters", () => {
+    const raw = [
+      '<script setup lang="ts">',
+      'import { usePlaygroundI18n } from "../../i18n";',
+      'const { t } = usePlaygroundI18n();',
+      'import { WlInput } from "../../../packages/ui-kit/src";',
+      'const hint = t("examples.special");',
+      '</script>',
+      '<template><WlInput v-for="label in [t(\'examples.special\')]" :key="label" v-if="t(\'examples.special\') !== \'hidden\'" :placeholder="t(\'examples.special\')" :aria-label="hint + t(\'examples.special\')" /><p>{{ t("examples.special") }}</p></template>'
+    ].join("\n");
+    const message = "</script><div>\"A\" & B's @email | {count}</div>\u2028\u2029";
+    const source = consumerSource(raw, {}, { "examples.special": message });
+    const literal = source.match(/const hint = (.+);/)![1]!;
+    expect(JSON.parse(literal)).toBe(message);
+    expect(literal).not.toContain("<");
+    expect(literal).not.toContain("\u2028");
+    expect(literal).not.toContain("\u2029");
+    expect(source).toContain(`placeholder="&lt;/script>&lt;div>&quot;A&quot; &amp; B's @email | {count}&lt;/div>`);
+    const attributeLiteral = source.match(/v-for="label in \[(.+)\]"/)![1]!;
+    expect(attributeLiteral).not.toMatch(/&(?:quot|amp|lt);|"|</);
+    expect(runInNewContext(attributeLiteral, {}, { timeout: 100 })).toBe(message);
+    expect(source).not.toMatch(/usePlaygroundI18n|\bt\(["']examples\./);
     compile(source);
   });
 });

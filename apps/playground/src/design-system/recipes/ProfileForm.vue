@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../../i18n";
+const { t } = usePlaygroundI18n();
 import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 import { WlPageHeader, WlField, WlInput, WlTextarea, WlButton, WlAlert, WlSwitch } from "../../../../../packages/ui-kit/src";
 const name = ref("");
@@ -8,8 +10,8 @@ const submitted = ref(false);
 const pending = ref(false);
 const failure = ref(false);
 const outcome = ref<"idle" | "success" | "error">("idle");
-const nameError = computed(() => submitted.value && !name.value.trim() ? "Введите имя." : "");
-const emailError = computed(() => submitted.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value) ? "Проверьте адрес email." : "");
+const nameError = computed(() => submitted.value && !name.value.trim() ? t("examples.enter_a_name_0223") : "");
+const emailError = computed(() => submitted.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value) ? t("examples.check_the_email_address_0224") : "");
 watch([name, email, description], () => { outcome.value = "idle"; });
 let disposed = false;
 onBeforeUnmount(() => { disposed = true; });
@@ -29,14 +31,14 @@ async function save(): Promise<void> {
 </script>
 
 <template>
-  <form class="wl-stack" data-space="lg" novalidate aria-label="Форма профиля" @submit.prevent="save">
-    <WlPageHeader title="Профиль участника" description="Контактные данные и короткое описание." :heading-level="2" size="md" />
-    <WlField id="recipe-profile-name" label="Имя участника" required :error="nameError" v-slot="field"><WlInput :id="field.id" v-model="name" :invalid="field.invalid" :aria-describedby="field.ariaDescribedby" :disabled="pending" autocomplete="name" maxlength="80" required /></WlField>
-    <WlField id="recipe-profile-email" label="Email участника" required :error="emailError" hint="Для уведомлений о материалах." v-slot="field"><WlInput :id="field.id" v-model="email" type="email" :invalid="field.invalid" :aria-describedby="field.ariaDescribedby" :disabled="pending" autocomplete="email" required /></WlField>
-    <WlField id="recipe-profile-description" label="О себе" hint="До 240 символов." v-slot="field"><WlTextarea :id="field.id" v-model="description" :aria-describedby="field.ariaDescribedby" :disabled="pending" maxlength="240" /><span class="wl-text-small wl-text-muted">{{ description.length }}/240</span></WlField>
-    <WlSwitch v-model="failure" :disabled="pending" aria-label="Имитировать ошибку сохранения">Имитировать ошибку сохранения</WlSwitch>
-    <WlAlert v-if="outcome === 'error'" variant="err" title="Не удалось сохранить">Введённые данные остались в форме. Попробуйте ещё раз.<template #action><WlButton size="sm" @click="failure = false; save()">Повторить сохранение</WlButton></template></WlAlert>
-    <WlAlert v-if="outcome === 'success'" variant="ok" title="Профиль сохранён">Контактные данные обновлены.</WlAlert>
-    <div><WlButton variant="primary" type="submit" :loading="pending">Сохранить профиль</WlButton></div>
+  <form class="wl-stack" data-space="lg" novalidate :aria-label="t('examples.profile_form_0225')" @submit.prevent="save">
+    <WlPageHeader :title="t('examples.member_profile_0226')" :description="t('examples.contact_details_and_a_short_description_0227')" :heading-level="2" size="md" />
+    <WlField id="recipe-profile-name" :label="t('examples.member_name_0228')" required :error="nameError" v-slot="field"><WlInput :id="field.id" v-model="name" :invalid="field.invalid" :aria-describedby="field.ariaDescribedby" :disabled="pending" autocomplete="name" maxlength="80" required /></WlField>
+    <WlField id="recipe-profile-email" :label="t('examples.member_email_0229')" required :error="emailError" :hint="t('examples.for_material_notifications_0230')" v-slot="field"><WlInput :id="field.id" v-model="email" type="email" :invalid="field.invalid" :aria-describedby="field.ariaDescribedby" :disabled="pending" autocomplete="email" required /></WlField>
+    <WlField id="recipe-profile-description" :label="t('examples.about_me_0231')" :hint="t('examples.up_to_240_characters_0232')" v-slot="field"><WlTextarea :id="field.id" v-model="description" :aria-describedby="field.ariaDescribedby" :disabled="pending" maxlength="240" /><span class="wl-text-small wl-text-muted">{{ description.length }}/240</span></WlField>
+    <WlSwitch v-model="failure" :disabled="pending" :aria-label="t('examples.simulate_save_failure_0233')">{{ t("examples.simulate_save_failure_0233") }}</WlSwitch>
+    <WlAlert v-if="outcome === 'error'" variant="err" :title="t('examples.could_not_save_0145')">{{ t("examples.your_entries_remain_in_the_form_try_again_0234") }}<template #action><WlButton size="sm" @click="failure = false; save()">{{ t("examples.retry_saving_0235") }}</WlButton></template></WlAlert>
+    <WlAlert v-if="outcome === 'success'" variant="ok" :title="t('examples.profile_saved_0236')">{{ t("examples.contact_details_updated_0237") }}</WlAlert>
+    <div><WlButton variant="primary" type="submit" :loading="pending">{{ t("examples.save_profile_0238") }}</WlButton></div>
   </form>
 </template>

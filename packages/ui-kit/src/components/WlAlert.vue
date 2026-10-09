@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { useWlLocaleText } from "../config";
 import { computed } from "vue";
 import WlIcon from "./WlIcon.vue";
 import type { WlAlertVariant, WlIconName } from "../types";
+const localeText = useWlLocaleText();
 
 const props = withDefaults(
   defineProps<{
@@ -43,7 +45,7 @@ const icon = computed(() => ICONS[props.variant]);
       v-if="closable"
       type="button"
       class="wl-alert__close"
-      :aria-label="closeLabel"
+      :aria-label="localeText('closeLabel', closeLabel, 'close')"
       @click="emit('close', $event)"
     >
       <WlIcon name="x" :size="13" />

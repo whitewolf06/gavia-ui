@@ -1,8 +1,10 @@
 <script setup lang="ts" generic="Row extends object = WlTableRow">
 import type { WlPt } from "../pt-types";
 import { computed } from "vue";
-import { useWlPt } from "../config";
+import { useWlPt, useWlLocale, useWlLocaleText } from "../config";
 import type { WlTableColumn, WlTableRow, WlTableSlots } from "../table-types";
+const localeText = useWlLocaleText();
+const locale = useWlLocale();
 
 const props = withDefaults(
   defineProps<{
@@ -47,11 +49,11 @@ function valueOf(row: Row, key: string): unknown {
           </td>
         </tr>
         <tr v-if="value.length === 0" v-bind="section('emptyMessage')"><td v-bind="section('emptyMessageCell')"
-          class="wl-table__empty-cell" :colspan="columns.length"><slot name="empty">{{ emptyMessage }}</slot></td></tr>
+          class="wl-table__empty-cell" :colspan="columns.length"><slot name="empty">{{ localeText('emptyMessage', emptyMessage, 'noData') }}</slot></td></tr>
       </tbody>
     </table>
     <div v-if="loading" v-bind="section('mask')" class="wl-table__mask">
-      <span v-bind="section('loadingIcon')" class="wl-table__loading" role="status" aria-label="Загрузка" />
+      <span v-bind="section('loadingIcon')" class="wl-table__loading" role="status" :aria-label="locale.loading" />
     </div>
   </div>
 </template>

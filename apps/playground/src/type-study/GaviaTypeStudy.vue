@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../i18n";
+const { t, locale } = usePlaygroundI18n();
 import { computed, ref } from "vue";
 import { samples } from "./samples";
 import type { SpecimenLanguage } from "./samples";
@@ -24,7 +26,7 @@ const emit = defineEmits<{ navigate: [view: PlaygroundView] }>();
 const pageElement = ref<HTMLElement | null>(null);
 usePageAnchor(pageElement);
 
-const language = ref<SpecimenLanguage>("ru");
+const language = ref<SpecimenLanguage>(locale.value === "ru" ? "ru" : "en");
 const saved = ref(false);
 const fontStyle = ref<GaviaFontStyle>("normal");
 const fontFamily = gaviaFontFamily;
@@ -34,149 +36,80 @@ const proofText = ref("");
 
 const copy = {
   ru: {
-    edition: "6 весов, 12 начертаний",
-    aboutLabel: "Типографика UI Kit",
-    aboutTitle: "Шрифт для заголовков, текста и подписей",
-    aboutDescription: "Gavia Sans — шрифт без засечек, который используется в темах Gavia и Gavia Dark. На этой странице можно сравнить начертания на заголовках, абзацах, кнопках и цифрах.",
-    languageTitle: "Кириллица и латиница",
-    languageDescription: "Русские и английские тексты, цифры, пунктуация и знаки валют — в одном семействе.",
-    familyTitle: "Шесть весов, два стиля",
-    familyDescription: "Thin, Light, Regular, Medium, SemiBold и Bold. Для каждого веса есть прямое и наклонное начертание отдельными файлами.",
-    standaloneTitle: "Для веба и приложений",
-    standaloneDescription: "WOFF2 для веба и TTF для приложений. Шрифт можно подключить самостоятельно, без Vue и компонентов UI Kit.",
-    numbers: "Цифры",
-    numbersTitle: "Табличные и пропорциональные цифры",
-    numbersDescription: "Выберите одинаковую ширину цифр для таблиц или пропорциональную — для текста. Форма знаков сохраняется; меняется ширина, которую они занимают в строке.",
-    tabularTitle: "Табличные · tnum",
-    tabularDescription: "Каждая цифра занимает одинаковую ширину. Удобно для сумм, таблиц, дат и счётчиков. Это режим Gavia Sans по умолчанию.",
-    proportionalTitle: "Пропорциональные · pnum",
-    proportionalDescription: "Ширина зависит от формы цифры. Подходит для заголовков и отдельных чисел в тексте.",
-    numbersExample: "Одинаковые числа · Regular 400",
-    proof: "Проба гарнитуры",
-    proofTitle: "Проверьте свой текст",
-    proofDescription: "Введите текст и выберите вес и размер шрифта.",
-    proofWeight: "Вес",
-    proofSize: "Размер",
-    proofTextLabel: "Свой текст",
-    proofPlaceholder: "Введите одну или несколько строк",
-    proofExample: "Заголовки, текст и цифры.\nГавиа / Gavia Sans · 0123456789",
-    latin: "Латиница",
-    cyrillic: "Кириллица",
-    installation: "Подключить шрифт",
-    installationTitle: "Gavia Sans в вашем приложении",
-    installationDescription: "Подключите CSS шрифта. Темы Gavia и Gavia Dark используют его для текста и заголовков. В своих стилях задайте font-family: Gavia Sans.",
-    installationImport: "Импорт из UI Kit",
-    standaloneImport: "Без UI Kit — из ZIP",
-    download: "Скачать Gavia Sans 0.6",
-    downloadDetails: "ZIP · 12 начертаний · TTF + WOFF2 · CSS · лицензии",
-    packageNote: "Gavia Sans и тема Gavia входят в Gavia UI с версии 0.9.1. Для подключения шрифта отдельно от UI Kit скачайте ZIP.",
-    provenance: "Буквенная основа — производная Onest, цифры разработаны для Gavia Sans. Наклонные начертания имеют геометрический наклон 7°.",
-    demoNote: "Это пример интерфейса. Данные не сохраняются.",
-    installationFamily: "Семейство в CSS",
-    installationNote: "Для самостоятельного использования достаточно файлов шрифта и CSS с font-family: Gavia Sans. Vue и компоненты UI Kit не требуются. Шрифт распространяется по SIL Open Font License 1.1 (OFL); код UI Kit — по MIT.",
-    formats: "TTF для приложений · WOFF2 для веба",
+    edition: t('shell.type_study.GaviaTypeStudy.text496'),
+    aboutLabel: t('shell.type_study.GaviaTypeStudy.text497'),
+    aboutTitle: t('shell.type_study.GaviaTypeStudy.text498'),
+    aboutDescription: t('shell.type_study.GaviaTypeStudy.text499'),
+    languageTitle: t('shell.type_study.GaviaTypeStudy.text500'),
+    languageDescription: t('shell.type_study.GaviaTypeStudy.text501'),
+    familyTitle: t('shell.type_study.GaviaTypeStudy.text502'),
+    familyDescription: t('shell.type_study.GaviaTypeStudy.text503'),
+    standaloneTitle: t('shell.type_study.GaviaTypeStudy.text504'),
+    standaloneDescription: t('shell.type_study.GaviaTypeStudy.text505'),
+    numbers: t('shell.type_study.GaviaTypeStudy.text506'),
+    numbersTitle: t('shell.type_study.GaviaTypeStudy.text507'),
+    numbersDescription: t('shell.type_study.GaviaTypeStudy.text508'),
+    tabularTitle: t('shell.type_study.GaviaTypeStudy.text509'),
+    tabularDescription: t('shell.type_study.GaviaTypeStudy.text510'),
+    proportionalTitle: t('shell.type_study.GaviaTypeStudy.text511'),
+    proportionalDescription: t('shell.type_study.GaviaTypeStudy.text512'),
+    numbersExample: t('shell.type_study.GaviaTypeStudy.text513'),
+    proof: t('shell.type_study.GaviaTypeStudy.text514'),
+    proofTitle: t('shell.type_study.GaviaTypeStudy.text515'),
+    proofDescription: t('shell.type_study.GaviaTypeStudy.text516'),
+    proofWeight: t('shell.type_study.GaviaTypeStudy.text517'),
+    proofSize: t('shell.type_study.GaviaTypeStudy.text518'),
+    proofTextLabel: t('shell.type_study.GaviaTypeStudy.text519'),
+    proofPlaceholder: t('shell.type_study.GaviaTypeStudy.text520'),
+    proofExample: t('shell.type_study.GaviaTypeStudy.text521'),
+    latin: t('shell.type_study.GaviaTypeStudy.text522'),
+    cyrillic: t('shell.type_study.GaviaTypeStudy.text523'),
+    installation: t('shell.type_study.GaviaTypeStudy.text524'),
+    installationTitle: t('shell.type_study.GaviaTypeStudy.text525'),
+    installationDescription: t('shell.type_study.GaviaTypeStudy.text526'),
+    installationImport: t('shell.type_study.GaviaTypeStudy.text527'),
+    standaloneImport: t('shell.type_study.GaviaTypeStudy.text528'),
+    download: t('shell.type_study.GaviaTypeStudy.text529'),
+    downloadDetails: t('shell.type_study.GaviaTypeStudy.text530'),
+    packageNote: t('shell.type_study.GaviaTypeStudy.text531'),
+    provenance: t('shell.type_study.GaviaTypeStudy.text532'),
+    demoNote: t('shell.type_study.GaviaTypeStudy.text533'),
+    installationFamily: t('shell.type_study.GaviaTypeStudy.text534'),
+    installationNote: t('shell.type_study.GaviaTypeStudy.text535'),
+    formats: t('shell.type_study.GaviaTypeStudy.text536'),
     weights: "100 · 300 · 400 · 500 · 600 · 700",
-    top: "Наверх",
-    headline: "Шрифт\nдля интерфейсов",
-    readingHeadline: "Заголовки.\nАбзацы и подписи.",
-    interfaceHeadline: "Проект и его настройки",
-    direction: "Сравните шрифт в заголовке, абзаце и элементах интерфейса.",
-    typeLabel: "Форма и ритм",
-    readingLabel: "Длинный текст",
-    interfaceLabel: "В интерфейсе",
-    proportional: "Пропорциональный набор",
-    alphabets: "Кириллица / латиница",
-    glyphLabel: "Различимость знаков",
-    project: "Северные сады",
-    projectLabel: "Проект",
-    balance: "Доступно",
-    updated: "Обновлено",
+    top: t('shell.type_study.GaviaTypeStudy.text537'),
+    headline: t('shell.type_study.GaviaTypeStudy.text538'),
+    readingHeadline: t('shell.type_study.GaviaTypeStudy.text539'),
+    interfaceHeadline: t('shell.type_study.GaviaTypeStudy.text540'),
+    direction: t('shell.type_study.GaviaTypeStudy.text541'),
+    typeLabel: t('shell.type_study.GaviaTypeStudy.text542'),
+    readingLabel: t('shell.type_study.GaviaTypeStudy.text543'),
+    interfaceLabel: t('shell.type_study.GaviaTypeStudy.text544'),
+    proportional: t('shell.type_study.GaviaTypeStudy.text545'),
+    alphabets: t('shell.type_study.GaviaTypeStudy.text546'),
+    glyphLabel: t('shell.type_study.GaviaTypeStudy.text547'),
+    project: t('shell.type_study.GaviaTypeStudy.text548'),
+    projectLabel: t('shell.type_study.GaviaTypeStudy.text549'),
+    balance: t('shell.type_study.GaviaTypeStudy.text550'),
+    updated: t('shell.type_study.GaviaTypeStudy.text551'),
     date: "06.10.2026",
-    save: "Сохранить проект",
-    saved: "Сохранено",
-    settings: "Настройки",
-    search: "Поиск",
-    searchPlaceholder: "Введите свой текст",
-    searchLabel: "Проверить свой текст",
-    saveStatus: "Изменения сохранены",
-    fontNote: "Образцы заголовков, абзацев и строк с числами.",
-    back: "К документации UI Kit"
-  },
-  en: {
-    edition: "6 weights, 12 faces",
-    aboutLabel: "UI kit typography",
-    aboutTitle: "A typeface for headings, text and labels",
-    aboutDescription: "Gavia Sans is the sans-serif typeface used in the Gavia and Gavia Dark themes. Compare its styles in headings, paragraphs, buttons and numbers on this page.",
-    languageTitle: "Cyrillic and Latin",
-    languageDescription: "Russian and English text, numerals, punctuation and currency symbols in one family.",
-    familyTitle: "Six weights, two styles",
-    familyDescription: "Thin, Light, Regular, Medium, SemiBold and Bold. Each weight comes with upright and oblique forms in separate font files.",
-    standaloneTitle: "For the web and applications",
-    standaloneDescription: "WOFF2 for the web and TTF for applications. Use the typeface independently, without Vue or UI kit components.",
-    numbers: "Numbers",
-    numbersTitle: "Tabular and proportional numerals",
-    numbersDescription: "Choose equal-width numerals for tables or proportional numerals for text. The character shapes stay the same; their advances change.",
-    tabularTitle: "Tabular · tnum",
-    tabularDescription: "Every numeral takes the same width. Useful for amounts, tables, dates and counters. This is Gavia Sans's default mode.",
-    proportionalTitle: "Proportional · pnum",
-    proportionalDescription: "Widths follow the numeral shapes. Useful for headings and individual numbers within text.",
-    numbersExample: "The same numbers · Regular 400",
-    proof: "Try the typeface",
-    proofTitle: "Try your own text",
-    proofDescription: "Enter your text and choose a font weight and size.",
-    proofWeight: "Weight",
-    proofSize: "Size",
-    proofTextLabel: "Your text",
-    proofPlaceholder: "Enter one or several lines",
-    proofExample: "Headings, text and numbers.\nGavia Sans / Гавиа · 0123456789",
-    latin: "Latin",
-    cyrillic: "Cyrillic",
-    installation: "Use the typeface",
-    installationTitle: "Gavia Sans in your application",
-    installationDescription: "Import the font CSS. Gavia and Gavia Dark use the typeface for text and headings. Set font-family: Gavia Sans in your own styles.",
-    installationImport: "Import from the UI kit",
-    standaloneImport: "Without the UI kit — from the ZIP",
-    download: "Download Gavia Sans 0.6",
-    downloadDetails: "ZIP · 12 faces · TTF + WOFF2 · CSS · licenses",
-    packageNote: "Gavia Sans and the Gavia theme are included in Gavia UI from 0.9.1. Download the ZIP to use the font independently of the UI kit.",
-    provenance: "Letterforms are derived from Onest; numerals were authored for Gavia Sans. Oblique faces use a geometric 7° slope.",
-    demoNote: "This is an interface example. No data is saved.",
-    installationFamily: "CSS family",
-    installationNote: "Standalone use only requires the font files and CSS with font-family: Gavia Sans. Vue and UI kit components are not required. The font is distributed under SIL Open Font License 1.1 (OFL); the UI kit code uses MIT.",
-    formats: "TTF for applications · WOFF2 for the web",
-    weights: "100 · 300 · 400 · 500 · 600 · 700",
-    top: "Back to top",
-    headline: "A typeface\nfor interfaces",
-    readingHeadline: "Headings.\nParagraphs and labels.",
-    interfaceHeadline: "A project and its settings",
-    direction: "Compare the typeface in a heading, a paragraph and interface elements.",
-    typeLabel: "Form and rhythm",
-    readingLabel: "Longer reading",
-    interfaceLabel: "In the interface",
-    proportional: "Proportional typography",
-    alphabets: "Cyrillic / Latin",
-    glyphLabel: "Distinctive characters",
-    project: "Northern Gardens",
-    projectLabel: "Project",
-    balance: "Available",
-    updated: "Updated",
-    date: "06 Oct 2026",
-    save: "Save project",
-    saved: "Saved",
-    settings: "Settings",
-    search: "Search",
-    searchPlaceholder: "Enter your own text",
-    searchLabel: "Try your own text",
-    saveStatus: "Changes saved",
-    fontNote: "Samples of headings, paragraphs and rows of numbers.",
-    back: "Back to UI kit documentation"
+    save: t('shell.type_study.GaviaTypeStudy.text552'),
+    saved: t('shell.type_study.GaviaTypeStudy.text553'),
+    settings: t('shell.type_study.GaviaTypeStudy.text554'),
+    search: t('shell.type_study.GaviaTypeStudy.text555'),
+    searchPlaceholder: t('shell.type_study.GaviaTypeStudy.text556'),
+    searchLabel: t('shell.type_study.GaviaTypeStudy.text557'),
+    saveStatus: t('shell.type_study.GaviaTypeStudy.text558'),
+    fontNote: t('shell.type_study.GaviaTypeStudy.text559'),
+    back: t('shell.type_study.GaviaTypeStudy.text560')
   }
 } as const;
 
-const content = computed(() => copy[language.value]);
-const languageOptions = [{ label: "Русский", value: "ru" }, { label: "English", value: "en" }];
-const styleOptions = computed(() => [{ label: language.value === "ru" ? "Прямое" : "Upright", value: "normal" }, { label: language.value === "ru" ? "Курсив" : "Italic", value: "italic" }]);
-const weightOptions = computed(() => gaviaWeights.map(weight => ({ value: weight.value, label: weight.value + " — " + (language.value === "ru" ? weight.ru : weight.name) })));
+const content = computed(() => copy.ru);
+const languageOptions = [{ label: t('shell.type_study.GaviaTypeStudy.text562'), value: "ru" }, { label: "English", value: "en" }];
+const styleOptions = computed(() => [{ label: t('shell.type_study.GaviaTypeStudy.text563'), value: "normal" }, { label: t('shell.type_study.GaviaTypeStudy.text564'), value: "italic" }]);
+const weightOptions = computed(() => gaviaWeights.map(weight => ({ value: weight.value, label: weight.value + " — " + weight.ru })));
 function chooseLanguage(value: string | null): void { if (value === "ru" || value === "en") language.value = value; }
 function chooseStyle(value: string | null): void { if (value === "normal" || value === "italic") fontStyle.value = value; }
 function chooseWeight(value: unknown): void { if (gaviaWeights.some(weight => weight.value === value)) proofWeight.value = value as GaviaFontWeight; }
@@ -196,13 +129,13 @@ function saveProject(): void {
 </script>
 
 <template>
-  <div ref="pageElement" class="wl-type-page" data-testid="font-page" :lang="language" :data-font-style="fontStyle" :style="{ '--wl-type-sample-style': fontStyle }" data-wl="gavia-type-study">
+  <div ref="pageElement" class="wl-type-page" data-testid="font-page" :lang="locale" :data-font-style="fontStyle" :style="{ '--wl-type-sample-style': fontStyle }" data-wl="gavia-type-study">
     <main class="wl-type-shell wl-container">
-      <PlaygroundPageHeader title="Gavia Sans" :description="language === 'ru' ? 'Шрифт Gavia UI: шесть весов, двенадцать начертаний, кириллица и латиница.' : 'Gavia UI typeface: six weights, twelve faces, Cyrillic and Latin.'" :breadcrumbs="[{ label: 'Gavia Sans' }]" />
-      <section id="type-settings" class="wl-type-controls wl-type-controls-with-weights" :aria-label="language === 'ru' ? 'Настройки типографического примера' : 'Typography example settings'">
-        <WlSegmented class="wl-type-languages" :model-value="language" :options="languageOptions" :aria-label="language === 'ru' ? 'Язык образцов' : 'Sample language'" @update:model-value="chooseLanguage" />
-        <WlSegmented class="wl-type-style-controls" :model-value="fontStyle" :options="styleOptions" :aria-label="language === 'ru' ? 'Начертание образцов' : 'Sample style'" @update:model-value="chooseStyle" />
-        <a class="wl-type-link wl-weights-jump-link" href="#wl-type-weights">{{ language === "ru" ? "Шесть весов" : "Six weights" }} <span aria-hidden="true">↓</span></a>
+      <PlaygroundPageHeader title="Gavia Sans" :description="t('shell.type_study.GaviaTypeStudy.text565')" :breadcrumbs="[{ label: 'Gavia Sans' }]" />
+      <section id="type-settings" class="wl-type-controls wl-type-controls-with-weights" :aria-label="t('shell.type_study.GaviaTypeStudy.text566')">
+        <WlSegmented class="wl-type-languages" :model-value="language" :options="languageOptions" :aria-label="t('shell.type_study.GaviaTypeStudy.text567')" @update:model-value="chooseLanguage" />
+        <WlSegmented class="wl-type-style-controls" :model-value="fontStyle" :options="styleOptions" :aria-label="t('shell.type_study.GaviaTypeStudy.text568')" @update:model-value="chooseStyle" />
+        <a class="wl-type-link wl-weights-jump-link" href="#wl-type-weights">{{ t('shell.type_study.GaviaTypeStudy.text569') }} <span aria-hidden="true">↓</span></a>
         <a class="wl-type-link wl-type-proof-link" href="#wl-type-proof">{{ content.proof }} <span aria-hidden="true">↓</span></a>
         <a class="wl-type-link wl-type-numbers-link" href="#wl-type-numbers">{{ content.numbers }} <span aria-hidden="true">↓</span></a>
         <a class="wl-type-link wl-type-install-link" href="#wl-type-install">{{ content.installation }} <span aria-hidden="true">↓</span></a>
@@ -251,7 +184,7 @@ function saveProject(): void {
           <h2 id="wl-type-reading-title" class="wl-type-heading">{{ content.readingHeadline }}</h2>
           <p class="wl-type-reading-spec wl-type-detail">GAVIA SANS / 400<br />17 px · 1.75</p>
         </div>
-        <div class="wl-type-body-copy">
+        <div class="wl-type-body-copy" :lang="language">
           <p v-for="paragraph in paragraphs" :key="paragraph" class="wl-type-paragraph">{{ paragraph }}</p>
         </div>
       </section>

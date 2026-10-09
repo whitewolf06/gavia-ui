@@ -1,30 +1,30 @@
-# Обновление до Gavia UI 0.11.0
+# Upgrade to Gavia UI 0.11.0
 
-Gavia UI 0.11.0 опубликован в npm. Типы стали точнее, поэтому при обновлении
-может потребоваться правка кода. Проверьте модели, обработчики и слоты
-по примерам ниже.
+Gavia UI 0.11.0 is published to npm. Types are more precise, so upgrading
+may require code changes. Check models, handlers and slots
+against the examples below.
 
-## Breaking changes: связанные модели и коллекции
+## Breaking changes: linked models and collections
 
-Нужны Vue 3.4+ и TypeScript 5.4+: декларации используют встроенный NoInfer.
-Классы, CSS-токены, пути тем и имена компонентов сохраняются. Стили по-прежнему
-подключаются явно. Не скрывайте ошибки модели приведением к any.
+Vue 3.4+ and TypeScript 5.4+ are required: declarations use built-in NoInfer.
+Classes, CSS tokens, theme paths and component names are preserved. Styles remain
+explicit imports. Do not hide model errors by casting to any.
 
-### Select и MultiSelect
+### Select and MultiSelect
 
-Раньше ref<unknown> допускал значение неподходящего типа. Теперь тип модели
-выводится из options и optionValue: без резолвера — весь объект,
-с ключом — тип поля, с функцией — тип её результата. Модель должна соответствовать
-типу options. Наличие значения в загруженном списке эта проверка не подтверждает.
-Для очищенного Select используется null; MultiSelect хранит массив.
+Previously, ref<unknown> allowed values of the wrong type. The model type is now
+inferred from options and optionValue: without a resolver, the full object;
+with a key, the field type; with a function, its result type. The model must match
+the options type. This check does not prove that a value is present in the loaded list.
+A cleared Select uses null; MultiSelect stores an array.
 
-Было:
+Before:
 
 ```ts
 const selected = ref<unknown>(null);
 ```
 
-Стало:
+After:
 
 ```vue
 <script setup lang="ts">
@@ -32,7 +32,7 @@ import { ref } from "vue";
 import { WlSelect, WlMultiSelect } from "gavia-ui";
 import type { WlSelectModel, WlMultiSelectModel } from "gavia-ui";
 interface Material { id: number; name: string; }
-const options: readonly Material[] = [{ id: 1, name: "Материал" }];
+const options: readonly Material[] = [{ id: 1, name: "Material" }];
 const selected = ref<WlSelectModel<Material, "id">>(null);
 const selectedMany = ref<WlMultiSelectModel<Material, "id">>([]);
 </script>
@@ -42,16 +42,16 @@ const selectedMany = ref<WlMultiSelectModel<Material, "id">>([]);
 </template>
 ```
 
-Здесь selected имеет тип number | null, selectedMany — number[]. Обработчик
-update:modelValue принимает тот же домен. Непереданная модель Select допустима;
-если приложение отдельно использует undefined как начальное состояние, включите
-его в собственный ref. MultiSelect сохраняет исходный default [].
+Here, selected is number | null and selectedMany is number[]. The
+update:modelValue handler accepts the same domain. Omitting the Select model is allowed;
+if your app separately uses undefined as an initial state, include it
+in your ref. MultiSelect keeps its original [] default.
 
 ### Autocomplete
 
-Single допускает свободный текст: модель — Suggestion | string | null.
-Multiple хранит Suggestion[] | null. При динамическом boolean multiple модель
-должна охватывать оба режима. Поддержка forceSelection не добавлялась.
+Single mode allows free text: the model is Suggestion | string | null.
+Multiple stores Suggestion[] | null. With a dynamic boolean multiple, the model
+must cover both modes. forceSelection support was not added.
 
 ```ts
 import { ref } from "vue";
@@ -65,58 +65,58 @@ function label(value: Suggestion | string): string {
 }
 ```
 
-В single callback optionLabel обязан обработать строку пользователя. Ключ
-option-label="name" можно оставить: свободная строка отображается напрямую.
-Для selectedMany передайте multiple в компонент. В single внешний null/undefined
-очищает текст; в multiple []/null очищает выбор. Строковый ввод больше не теряется
-при label-ключе.
+In single mode, callback optionLabel must handle the user’s string. You can keep
+option-label="name": free strings display directly.
+Pass multiple to the component for selectedMany. In single mode, external null/undefined
+clears text; in multiple, []/null clears selection. String input is no longer lost
+with a label key.
 
-### DatePicker: режим range
+### DatePicker: range mode
 
-Раньше явный generic range допускал отсутствие selectionMode, хотя сам generic
-не переключает компонент во время выполнения. Теперь для range обязателен
-фактический prop. Для модели WlDateRange | null укажите режим явно:
+Previously, an explicit range generic allowed omission of selectionMode, although
+a generic cannot switch runtime behavior. Range now requires
+the actual prop. Specify the mode for a WlDateRange | null model:
 
 ```vue
 <WlDatePicker v-model="range" selection-mode="range" />
 ```
 
-Модель, обработчики и слоты DatePicker сохраняют свои типы. Без range компонент
-по-прежнему использует single; явно заданный тип должен соответствовать режиму.
+DatePicker models, handlers and slots retain their types. Without range,
+the component still uses single mode; an explicit type must match the mode.
 
-### Таблица
+### Table
 
-Обычная колонка должна указывать существующее строковое поле Row. Колонку действий
-или вычисляемое поле пометьте kind: "virtual". Для конкретных строк замените
-широкий WlTableColumn[] на WlTableColumn<MyRow>[] или satisfies.
+A regular column must reference an existing string key of Row. Mark action
+or computed columns with kind: "virtual". For specific rows, replace
+broad WlTableColumn[] with WlTableColumn<MyRow>[] or satisfies.
 
 ```ts
 import type { WlTableColumn } from "gavia-ui";
 interface Material { id: number; name: string; }
 const columns = [
-  { key: "name", label: "Название" },
-  { key: "actions", label: "Действия", kind: "virtual" }
+  { key: "name", label: "Name" },
+  { key: "actions", label: "Actions", kind: "virtual" }
 ] as const satisfies readonly WlTableColumn<Material, "actions">[];
 ```
 
-WlTable выводит Row из value. В cell-name значение имеет тип string; в виртуальном
-cell-actions значение остаётся unknown: используйте известные поля row или
-проверяйте значение. Старый словарный WlTableRow сохраняет широкие строковые ключи.
+WlTable infers Row from value. In cell-name, value is string; in virtual
+cell-actions it remains unknown: use known row fields or
+narrow the value. The old dictionary WlTableRow keeps broad string keys.
 
-### Навигация и события
+### Navigation and events
 
-Sidebar/CommandPalette сохраняют дополнительные поля item/data/group в событиях
-и слотах. Описания групп принимают readonly items; keywords CommandPalette также
-readonly. Menu/Accordion/Tabs/Radio/Segmented проверяют callbacks и модели по
-домену данных. Опечатка в ключе или неподходящий обработчик теперь даёт ошибку типов.
+Sidebar/CommandPalette retain additional item/data/group fields in events
+and slots. Group descriptors accept readonly items; CommandPalette keywords are also
+readonly. Menu/Accordion/Tabs/Radio/Segmented check callbacks and models against
+the data domain. A mistyped key or incompatible handler now produces a type error.
 
-При literal options модель Segmented должна хранить соответствующий union
-значений плюс null, Tabs — union ключей плюс пустую строку для начального состояния.
-Например, вместо ref<string | null> используйте ref<"list" | "grid" | null>;
-для двух Tabs — ref<"overview" | "details" | "">.
+With literal options, the Segmented model must store the corresponding value union
+plus null; Tabs uses the key union plus an empty string for its initial state.
+For example, replace ref<string | null> with ref<"list" | "grid" | null>;
+for two Tabs, use ref<"overview" | "details" | "">.
 
-Обработчик выбора не должен изменять group.items или item.keywords из payload.
-Если нужно изменить список, храните состояние приложения отдельно или копируйте:
+Selection handlers must not mutate group.items or item.keywords from the payload.
+To change a list, keep application state separately or copy it:
 
 ```ts
 import type { WlCommandPaletteItem } from "gavia-ui";
@@ -125,19 +125,19 @@ function copyKeywords(item: WlCommandPaletteItem): string[] {
 }
 ```
 
-Вместо group.items.sort(...) сортируйте [...group.items].sort(...).
-Вместо item.keywords?.push("tag") создавайте [...(item.keywords ?? []), "tag"]
-и обновляйте собственное состояние приложения.
+Replace group.items.sort(...) with [...group.items].sort(...).
+Replace item.keywords?.push("tag") with [...(item.keywords ?? []), "tag"]
+and update your own application state.
 
-Readonly применяется к коллекциям описаний, которые читает компонент.
-Типы собственных data сохраняются; полного DeepReadonly здесь нет.
+Readonly applies to descriptor collections read by the component.
+Your data types are preserved; this is not full DeepReadonly.
 
-### Секции pt и расширения
+### pt sections and extensions
 
-Известные секции pt получили подсказки и реальные контексты. Динамические ключи
-по-прежнему допустимы. createWlPt() возвращает unknown для произвольного расширения:
-не обращайтесь к нему как к дереву DOM-атрибутов без проверки. Для собственных
-метаданных удобнее сохранить типизированную переменную в приложении.
+Known pt sections provide suggestions and actual contexts. Dynamic keys
+remain allowed. createWlPt() returns unknown for arbitrary extensions:
+do not access it as a DOM-attribute tree without narrowing. For custom
+metadata, keep a typed variable in your app.
 
 ```ts
 import { createWlPt } from "gavia-ui";
@@ -147,34 +147,34 @@ const selectPt = {
 } satisfies WlPtStrict<"select">;
 const appMetadata = { feature: "editor" };
 const pt = createWlPt({ select: selectPt, appMetadata });
-// Типизированные метаданные приложения доступны через appMetadata.
+// Typed application metadata is available through appMetadata.
 ```
 
-WlPtStrict/WlPtConfigStrict — явная проверка через satisfies. Они не заменяют
-открытую настройку по умолчанию. Вложенные pcChip/pcInputText — узлы, а не callbacks
-всего дерева. Tooltip управляется директивой: его pt принимает DOM-атрибуты,
-но не Vue listeners, vnode hooks, key/ref. Старые default clearIcon у Select и
-MultiSelect сохранены; отдельных применяемых DOM-секций clearIcon нет.
+WlPtStrict/WlPtConfigStrict provide explicit checks through satisfies. They do not replace
+the default open configuration. Nested pcChip/pcInputText are nodes, not callbacks
+for the entire tree. Tooltip uses a directive: its pt accepts DOM attributes,
+but not Vue listeners, vnode hooks or key/ref. Existing default clearIcon values in Select
+and MultiSelect are preserved; there are no separate applied clearIcon DOM sections.
 
-### Модификаторы, DOM-атрибуты и refs
+### Modifiers, DOM attributes and refs
 
-Input/PasswordInput/Textarea и query CommandPalette поддерживают .trim.
-.number/.lazy для них не реализованы; модели выбора, дат, файлов, чисел, boolean
-и ключей не поддерживают встроенные модификаторы. Преобразуйте доменные значения
-в приложении и удалите неподдерживаемые модификаторы.
+Input/PasswordInput/Textarea and CommandPalette query support .trim.
+.number/.lazy are not implemented for them; selection, date, file, number, boolean
+and key models do not support built-in modifiers. Convert domain values
+in your app and remove unsupported modifiers.
 
-Нативные attrs/events соответствуют реальному контролу. Обработчики input/change
-получают Event, клавиатуры — KeyboardEvent; значения модели приходят через
-update:modelValue. Kit size/value/checked управляет компонент. Для Field явно
-свяжите inputId с id и ariaDescribedby с aria-describedby.
+Native attrs/events match the actual control. input/change handlers
+receive Event; keyboard handlers receive KeyboardEvent. Model values arrive through
+update:modelValue. The component manages kit size/value/checked. For Field, explicitly
+connect inputId to id and ariaDescribedby to aria-describedby.
 
-DatePicker использует minDate/maxDate вместо native min/max; readonly ограничивает
-текстовый ввод, а полный запрет выбора задаёт disabled. У TimePicker удалите step:
-контрол использует 60 секунд. WlNavItem рендерит ссылку при непустом href; пустая
-строка переключает его на кнопку, поэтому target/rel передавайте с непустой ссылкой.
+DatePicker uses minDate/maxDate instead of native min/max; readonly limits
+text input, while disabled blocks all selection. Remove step from TimePicker:
+it uses 60 seconds. WlNavItem renders a link for a nonempty href; an empty
+string switches it to a button, so pass target/rel with a nonempty link.
 
-Generic-компонент может быть callable вместо конструктора: InstanceType подходит
-не каждому экспорту. Для императивных методов используйте публичный Expose-контракт:
+A generic component may be callable rather than a constructor: InstanceType does not fit
+every export. Use the public Expose contract for imperative methods:
 
 ```ts
 import { ref } from "vue";
@@ -183,32 +183,32 @@ const sidebar = ref<WlSidebarExpose | null>(null);
 function showNavigation(): void { sidebar.value?.openMobile(); }
 ```
 
-Аналогично доступны WlCommandPaletteExpose, WlMenuExpose, WlPopoverExpose,
-WlFilePickerExpose и WlFilterBarExpose. Если generic задаётся явно, передайте
-соответствующий фактический prop: resolver optionValue, multiple либо
-selectionMode="range". Тип без соответствующего режима не меняет runtime.
+WlCommandPaletteExpose, WlMenuExpose, WlPopoverExpose,
+WlFilePickerExpose and WlFilterBarExpose are also available. With an explicit generic, pass
+the matching actual prop: optionValue resolver, multiple or
+selectionMode="range". A type without its corresponding mode does not change runtime.
 
-## Исправления поведения
+## Behavior fixes
 
-Disabled блокирует выбор через открытые списки/chips и отложенные обработчики.
-Single FileUpload принимает один файл; отклонённая замена сохраняет прежний выбор.
-NaN/Infinity и некорректные числовые границы нормализуются перед выводом CSS/ARIA.
-Locale принимает частичные readonly-настройки, игнорируя неверные известные поля.
-Teleport attrs передаются на существующий DOM-root; FilterBar использует SSR id.
-Для групповых Toast/Confirm добавлены адресные helpers; прежний close() Confirm
-остаётся глобальным. Эти изменения описаны в [changelog](../CHANGELOG.md).
+Disabled blocks selection through open lists/chips and delayed handlers.
+Single FileUpload accepts one file; a rejected replacement preserves the previous selection.
+NaN/Infinity and invalid numeric bounds are normalized before CSS/ARIA output.
+Locale accepts partial readonly configuration, ignoring invalid known fields.
+Teleport attrs reach the existing DOM root; FilterBar uses an SSR id.
+Toast/Confirm gained targeted group helpers; existing Confirm close()
+remains global. These changes are listed in the [changelog](../CHANGELOG.md).
 
-## Проверка совместимости
+## Compatibility checks
 
-Снимок API 0.9.1 и исходный Vue-потребитель сохраняются неизменными. Для подготовки
-0.11 используется отдельный, ограниченный версиями контракт миграции: только
-модель multiple Autocomplete, конкретные readonly-поля navigation select-payload,
-произвольные расширения результата createWlPt, обязательный selectionMode для
-range DatePicker и единственная правка Select ref.
-Исходные расхождения остаются в отчёте. Адаптированный контракт проверяется целиком:
-дополнительная потеря prop/event/slot/ref/CSS/токена останавливает gate.
+The API 0.9.1 snapshot and original Vue consumer remain unchanged. Preparing
+0.11 uses a separate, version-scoped migration contract: only
+the multiple Autocomplete model, specific readonly navigation selection-payload fields,
+arbitrary createWlPt result extensions, required selectionMode for
+range DatePicker and one Select ref adjustment.
+Original differences remain in the report. The adapted contract is checked in full:
+any additional loss of a prop/event/slot/ref/CSS/token blocks the gate.
 
-Новые TS/Vue/TSX примеры проверяются отдельно против устанавливаемого архива на
-Vue 3.4 / TypeScript 5.4 и Vue 3.5. Проверка типов не заменяет unit, SSR, browser
-или визуальную проверку приложения. Локальные результаты и пределы проверок —
-[качество и совместимость](quality.md#проверка-новых-публичных-контрактов).
+New TS/Vue/TSX examples are checked separately against the installed archive on
+Vue 3.4 / TypeScript 5.4 and Vue 3.5. Type checks do not replace unit, SSR, browser
+or visual application review. Local results and check boundaries:
+[quality and compatibility](quality.md#checking-new-public-contracts).

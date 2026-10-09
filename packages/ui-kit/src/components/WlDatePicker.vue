@@ -1,16 +1,19 @@
 <script setup lang="ts" generic="Mode extends WlDatePickerSelectionMode = 'single'">
+import { formatWlLocaleText } from "../locale";
 import type { WlPt } from "../pt-types";
 import type { WlNoModelModifiers } from "../model-types";
 import { useWlId } from "../utils/useWlId";
-import { computed, nextTick, ref, useAttrs, watch } from "vue";
+import { computed, nextTick, onBeforeUpdate, ref, useAttrs, watch } from "vue";
 import Teleport from "../utils/templateTeleport.vue";
 import Transition from "../utils/templateTransition.vue";
-import { mergeWlAttrs, useWlLocale, useWlMotion, useWlPt } from "../config";
+import { mergeWlAttrs, useWlLocale, useWlMotion, useWlPt, useWlLocaleText } from "../config";
 import type { WlDatePickerModel, WlDatePickerSelectionMode, WlDateRange, WlSizeSm } from "../types";
 import { splitInputAttrs } from "../utils/inputAttrs";
 import { useAnchoredOverlay } from "../utils/anchoredOverlay";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import WlIcon from "./WlIcon.vue";
+const localeText = useWlLocaleText();
+const locale = useWlLocale();
 
 defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<{
@@ -36,7 +39,6 @@ const props = withDefaults(defineProps<{
 const model = defineModel<WlDatePickerModel<NoInfer<Mode>>, never>({ default: null });
 const attrs = useAttrs();
 const attrGroups = computed(() => splitInputAttrs(attrs));
-const locale = useWlLocale();
 const section = useWlPt("datepicker", computed(() => props.pt));
 const motion = useWlMotion(computed(() => props.motion));
 const isRange = computed(() => props.selectionMode === "range");
@@ -59,7 +61,7 @@ function endpointAttrs(endpoint: 0 | 1): Record<string, unknown> {
   if (typeof inputAttrs["aria-labelledby"] === "string") {
     inputAttrs["aria-labelledby"] = `${inputAttrs["aria-labelledby"]} ${labelId}`;
   } else if (typeof inputAttrs["aria-label"] === "string") {
-    inputAttrs["aria-label"] = `${inputAttrs["aria-label"]}, ${endpoint === 0 ? props.startLabel : props.endLabel}`;
+    inputAttrs["aria-label"] = `${inputAttrs["aria-label"]}, ${endpoint === 0 ? localeText('startLabel', props.startLabel, 'dateFrom') : localeText('endLabel', props.endLabel, 'dateTo')}`;
   }
   return inputAttrs;
 }
@@ -97,9 +99,15 @@ const days = computed(() => {
     };
   });
 });
-const rangeHint = computed(() => !range.value ? `Выберите дату: ${props.startLabel}.`
-  : !range.value[1] ? `Выберите дату: ${props.endLabel}.`
-  : `${props.startLabel}: ${display(range.value[0])}; ${props.endLabel}: ${display(range.value[1])}. Выберите начало нового диапазона.`);
+function rangeHint(): string {
+  return !range.value ? formatWlLocaleText(locale.value.chooseDateForLabel, { label: localeText('startLabel', props.startLabel, 'dateFrom') })
+    : !range.value[1] ? formatWlLocaleText(locale.value.chooseDateForLabel, { label: localeText('endLabel', props.endLabel, 'dateTo') })
+    : `${localeText('startLabel', props.startLabel, 'dateFrom')}: ${display(range.value[0])}; ${localeText('endLabel', props.endLabel, 'dateTo')}: ${display(range.value[1])}. ${locale.value.newDateRange}`;
+}
+// Raw prop presence can change while withDefaults resolves to the same value.
+// Keep the transition slot in sync without remounting the open calendar.
+const rangeHintText = ref(rangeHint());
+onBeforeUpdate(() => { rangeHintText.value = rangeHint(); });
 function pad2(value: number): string { return String(value).padStart(2, "0"); }
 function toIso(date: Date): string {
   return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
@@ -249,25 +257,25 @@ function onDayKeydown(event: KeyboardEvent, iso: string): void {
     @click="open" @keydown="onKeydown">
     <template v-if="isRange">
       <label class="wl-dp__endpoint" :for="startId">
-        <span :id="`${startId}-label`" v-bind="section('startLabel')" class="wl-dp__endpoint-label">{{ props.startLabel }}</span>
+        <span :id="`${startId}-label`" v-bind="section('startLabel')" class="wl-dp__endpoint-label">{{ localeText('startLabel', props.startLabel, 'dateFrom') }}</span>
         <input ref="control" v-bind="mergeWlAttrs(endpointAttrs(0), section('pcInputText.root'))"
           v-model="text" class="wl-input wl-dp__input" :class="[`wl-input--${props.size}`, { 'is-invalid': props.invalid }]"
-          type="text" :placeholder="props.placeholder" :disabled="props.disabled" :aria-invalid="props.invalid || undefined"
+          type="text" :placeholder="localeText('placeholder', props.placeholder, 'datePlaceholder')" :disabled="props.disabled" :aria-invalid="props.invalid || undefined"
           :aria-expanded="visible" :aria-controls="visible ? panelId : undefined" aria-haspopup="dialog"
           autocomplete="off" @blur="commit(0)" />
       </label>
       <label class="wl-dp__endpoint" :for="endId">
-        <span :id="`${endId}-label`" v-bind="section('endLabel')" class="wl-dp__endpoint-label">{{ props.endLabel }}</span>
+        <span :id="`${endId}-label`" v-bind="section('endLabel')" class="wl-dp__endpoint-label">{{ localeText('endLabel', props.endLabel, 'dateTo') }}</span>
         <input ref="endControl" v-bind="mergeWlAttrs(endpointAttrs(1), section('endInput'))"
           v-model="endText" class="wl-input wl-dp__input" :class="[`wl-input--${props.size}`, { 'is-invalid': props.invalid }]"
-          type="text" :placeholder="props.placeholder" :disabled="props.disabled" :aria-invalid="props.invalid || undefined"
+          type="text" :placeholder="localeText('placeholder', props.placeholder, 'datePlaceholder')" :disabled="props.disabled" :aria-invalid="props.invalid || undefined"
           :aria-expanded="visible" :aria-controls="visible ? panelId : undefined" aria-haspopup="dialog"
           autocomplete="off" @blur="commit(1)" />
       </label>
     </template>
     <input v-else ref="control" v-bind="mergeWlAttrs(attrGroups.inputAttrs, section('pcInputText.root'))"
       v-model="text" class="wl-input wl-dp__input" :class="[`wl-input--${props.size}`, { 'is-invalid': props.invalid, 'wl-dp__input--btn': props.showIcon }]"
-      type="text" :placeholder="props.placeholder" :disabled="props.disabled" :aria-invalid="props.invalid || undefined"
+      type="text" :placeholder="localeText('placeholder', props.placeholder, 'datePlaceholder')" :disabled="props.disabled" :aria-invalid="props.invalid || undefined"
       :aria-expanded="visible" :aria-controls="visible ? panelId : undefined" aria-haspopup="dialog"
       autocomplete="off" @blur="commit(0)" />
     <button v-if="props.showIcon" v-bind="section('dropdown')" type="button" class="wl-dp__trigger"
@@ -291,15 +299,15 @@ function onDayKeydown(event: KeyboardEvent, iso: string): void {
             <template v-if="viewMode === 'years'">{{ firstVisibleYear }}–{{ firstVisibleYear + 11 }}</template>
             <template v-else>
               <button v-if="viewMode === 'days'" v-bind="section('selectMonth')" type="button" class="wl-dp__view-btn"
-                :aria-label="`Выбрать месяц, сейчас ${locale.monthNames[viewMonth]}`" @click="viewMode = 'months'">{{ locale.monthNames[viewMonth] }}</button>
+                :aria-label="formatWlLocaleText(locale.chooseMonthCurrent, { month: locale.monthNames[viewMonth]! })" @click="viewMode = 'months'">{{ locale.monthNames[viewMonth] }}</button>
               <button v-bind="section('selectYear')" type="button" class="wl-dp__view-btn"
-                :aria-label="`Выбрать год, сейчас ${viewYear}`" @click="viewMode = 'years'">{{ viewYear }}</button>
+                :aria-label="formatWlLocaleText(locale.chooseYearCurrent, { year: viewYear })" @click="viewMode = 'years'">{{ viewYear }}</button>
             </template>
           </div>
           <button v-bind="section('pcNextButton.root')" type="button" class="wl-dp__nav"
             :aria-label="locale.nextMonth" @click="stepMonth(1)"><WlIcon name="chevron-right" :size="16" v-bind="section('pcNextButton.icon')" /></button>
         </div>
-        <p v-if="isRange" v-bind="section('rangeHint')" class="wl-dp__range-hint" aria-live="polite">{{ rangeHint }}</p>
+        <p v-if="isRange" v-bind="section('rangeHint')" class="wl-dp__range-hint" aria-live="polite">{{ rangeHintText }}</p>
         <table v-if="viewMode === 'days'" v-bind="section('dayView')" class="wl-dp__table" role="grid"
           :aria-multiselectable="isRange || undefined" :aria-label="`${locale.monthNames[viewMonth]} ${viewYear}`">
           <thead><tr><th v-for="(day, index) in weekdays" :key="index" v-bind="section('tableHeaderCell')" class="wl-dp__wd-cell" scope="col">
@@ -317,12 +325,12 @@ function onDayKeydown(event: KeyboardEvent, iso: string): void {
             </td>
           </tr></tbody>
         </table>
-        <div v-else-if="viewMode === 'months'" v-bind="section('monthView')" class="wl-dp__choices" role="group" :aria-label="`Месяцы ${viewYear}`">
+        <div v-else-if="viewMode === 'months'" v-bind="section('monthView')" class="wl-dp__choices" role="group" :aria-label="formatWlLocaleText(locale.monthsOfYear, { year: viewYear })">
           <button v-for="(month, index) in locale.monthNames" :key="index" v-bind="section('month', { selected: index === viewMonth, disabled: monthDisabled(index) })"
             type="button" class="wl-dp__choice" :class="{ 'is-selected': index === viewMonth }" :disabled="monthDisabled(index)"
             @click="selectMonth(index)">{{ month }}</button>
         </div>
-        <div v-else v-bind="section('yearView')" class="wl-dp__choices" role="group" :aria-label="`Годы ${firstVisibleYear}–${firstVisibleYear + 11}`">
+        <div v-else v-bind="section('yearView')" class="wl-dp__choices" role="group" :aria-label="formatWlLocaleText(locale.yearsRange, { start: firstVisibleYear, end: firstVisibleYear + 11 })">
           <button v-for="year in 12" :key="firstVisibleYear + year - 1" v-bind="section('year', { selected: firstVisibleYear + year - 1 === viewYear, disabled: yearDisabled(firstVisibleYear + year - 1) })"
             type="button" class="wl-dp__choice" :class="{ 'is-selected': firstVisibleYear + year - 1 === viewYear }"
             :disabled="yearDisabled(firstVisibleYear + year - 1)" @click="selectYear(firstVisibleYear + year - 1)">{{ firstVisibleYear + year - 1 }}</button>

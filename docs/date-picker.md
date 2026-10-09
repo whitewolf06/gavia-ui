@@ -1,13 +1,13 @@
-# DatePicker: одна дата и диапазон
+# DatePicker: a single date and a range
 
-WlDatePicker выбирает одну дату или период. Ниже — формат модели,
-ручной ввод, ограничения дат и управление с клавиатуры.
+WlDatePicker selects one date or a period. This guide covers the model format,
+manual input, date limits and keyboard interaction.
 
-## Одна дата
+## Single date
 
-`selectionMode` по умолчанию равен `single`. Прежняя модель
-`string | null` сохраняется: ISO `YYYY-MM-DD` либо отсутствие даты.
-Представление `dd.mm.yyyy` не меняет формат модели.
+`selectionMode` defaults to `single`. The existing `string | null` model
+is preserved: an ISO `YYYY-MM-DD` value or no date.
+The `dd.mm.yyyy` display does not change the model format.
 
 ```vue
 <script setup lang="ts">
@@ -16,16 +16,18 @@ import { WlDatePicker } from "gavia-ui";
 const date = ref<string | null>("2026-10-15");
 </script>
 <template>
-  <WlDatePicker v-model="date" show-icon aria-label="Дата встречи" />
+  <WlDatePicker v-model="date" show-icon aria-label="Meeting date" />
 </template>
 ```
 
-## От — до
+## Start and end
 
-При `selectionMode="range"` модель имеет тип `WlDateRange | null`.
-`WlDateRange` — кортеж `[string, string | null]` с ISO-датами.
-Два поля с подписями `startLabel`/`endLabel` используют одну календарную панель.
-Подписи по умолчанию — «От» и «До».
+With `selectionMode="range"`, the model is `WlDateRange | null`.
+`WlDateRange` is an ISO-date tuple `[string, string | null]`.
+Two inputs with `startLabel`/`endLabel` labels share one calendar panel.
+The compatibility fallback uses Russian labels “От” and “До”.
+Configure the English preset explicitly or pass labels as in this example.
+See [localization](localization.md) for preset availability and setup.
 
 ```vue
 <script setup lang="ts">
@@ -36,45 +38,45 @@ const period = ref<WlDateRange | null>(["2026-10-10", "2026-10-20"]);
 <template>
   <WlDatePicker v-model="period" selection-mode="range" show-icon
     min-date="2026-10-01" max-date="2026-10-31"
-    start-label="От" end-label="До" aria-label="Период поездки" />
+    start-label="Start" end-label="End" aria-label="Trip period" />
 </template>
 ```
 
-1. Первый выбор в календаре задаёт `[start, null]` и оставляет панель открытой.
-2. Второй выбор завершает диапазон и закрывает панель. Если даты выбраны
-   в обратном порядке, они сортируются от меньшей к большей.
-3. Следующий выбор начинает новый диапазон. Промежуточные дни подсвечиваются.
-4. До завершения диапазона приложение может показывать инструкцию
-   или запрещать отправку формы. Компонент не отправляет бизнес-запросы.
+1. The first calendar selection sets `[start, null]` and keeps the panel open.
+2. The second completes the range and closes the panel. Dates selected in reverse
+   order are sorted from earlier to later.
+3. The next selection begins a new range. Intermediate days are highlighted.
+4. Until the range is complete, the application may show instructions or prevent
+   form submission. The component does not send business requests.
 
-При переключении `selectionMode` меняйте и модель: для одной даты
-передайте строку, для диапазона — кортеж. В примере Docs показаны оба режима.
+Change the model when switching `selectionMode`: pass a string for a single
+date and a tuple for a range. The Docs example shows both modes.
 
-## Ручной ввод и очистка
+## Manual input and clearing
 
-`displayFormat` выбирает и отображение, и parser: `dd.mm.yyyy` либо
-`yyyy-mm-dd`. `minDate`/`maxDate` включают граничные дни и ограничивают
-каждый конец диапазона. Пустая или некорректная граница не ограничивает выбор.
-Некорректный ввод и выход за границы не меняют
-модель; при blur/Enter поле восстанавливает принятое значение.
+`displayFormat` selects both display and parser: `dd.mm.yyyy` or `yyyy-mm-dd`.
+`minDate`/`maxDate` include boundary days and constrain both ends of a range.
+Empty or invalid bounds do not constrain selection.
+Invalid or out-of-bounds input does not change the model;
+blur/Enter restores the accepted value.
 
-Пустое поле начала очищает диапазон в `null`. Пустое поле конца возвращает
-`[start, null]`. Чтобы убрать обе даты из приложения, присвойте модели `null`.
+An empty start input clears the range to `null`. An empty end input returns
+`[start, null]`. To remove both dates from the application, set the model to `null`.
 
-## Фокус и доступность
+## Focus and accessibility
 
-- Рамка фокуса охватывает составное поле вместе с календарной кнопкой.
-  Состояние `invalid` использует цвет и рамку ошибки из токенов темы.
-- Поля «От» и «До» имеют отдельные подписи и уникальные id.
-  Переданный `id` относится к началу, второе поле получает суффикс `-end`.
-  Для native `name` применяется тот же суффикс; `aria-describedby` общий.
-- ArrowDown открывает календарь; стрелки перемещают дату, Home/End —
-  границы недели, PageUp/PageDown — месяц, Shift с ними — год.
-  Enter/Space выбирают день, Escape закрывает календарь и возвращает фокус.
-- `disabled` блокирует ввод и выбор; нативный `readonly` запрещает ручной
-  ввод, сохраняя прежнюю возможность календарного выбора.
-- Настройки внутренних элементов доступны через `pt`;
-  список реальных секций показан во вкладке API.
+- The focus ring covers the composite input and calendar button.
+  `invalid` uses the theme’s error color and border tokens.
+- Start and end inputs have separate labels and unique IDs.
+  The supplied `id` belongs to the start; the second input gets an `-end` suffix.
+  Native `name` uses the same suffix; `aria-describedby` is shared.
+- ArrowDown opens the calendar; arrows move the date, Home/End move to week
+  boundaries, PageUp/PageDown change the month, and Shift with those keys changes
+  the year. Enter/Space select a day; Escape closes the calendar and restores focus.
+- `disabled` blocks input and selection; native `readonly` prevents manual input
+  while preserving calendar selection.
+- Internal elements are configurable through `pt`;
+  the API tab lists the implemented sections.
 
-Подключите стили явно. Даты и часовые пояса преобразуются в приложении:
-`toISOString().slice(0, 10)` может сдвинуть локальный календарный день.
+Import styles explicitly. Applications convert dates and time zones:
+`toISOString().slice(0, 10)` may shift a local calendar day.

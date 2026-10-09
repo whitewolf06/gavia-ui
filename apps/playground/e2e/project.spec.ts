@@ -1,7 +1,8 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { publishedVersion } from "./project-version";
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import { expect, test } from "@playwright/test";
-import { chooseShowcaseTheme, navigateMainView } from "./select-helpers";
+import { chooseShowcaseTheme, navigateMainView, expectMainViewCurrent } from "./select-helpers";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, URL as NodeURL } from "node:url";
 
@@ -29,17 +30,17 @@ const history = parseChangelog(
 const inlineText = (content: ChangelogInline[]): string => content.map((part) => part.kind === "link" ? part.label : part.value).join("");
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/?view=changelog");
+  await page.goto(russianPlaygroundUrl("/?view=changelog"));
   // Changelog remains a lazy page and preserves historical release anchors.
   await expect(page.locator(".project-main")).toBeVisible();
 });
 
 test("home shows creator, source version, license and truthful package status while the old project query remains compatible", async ({ page }) => {
-  await page.goto("/?view=project");
+  await page.goto(russianPlaygroundUrl("/?view=project"));
   const changelog = page.getByTestId("changelog-page");
   await expect(changelog.getByRole("heading", { level: 1 })).toHaveText("Changelog");
-  await expect(page.locator(".pg-views [aria-current='page']")).toHaveText("Changelog");
-  await expect(page).toHaveURL(/\?view=project$/);
+  await expectMainViewCurrent(page, "Changelog");
+  await expect(page).toHaveURL((url) => url.searchParams.get("view") === "project" && url.searchParams.get("lang") === "ru" && !url.hash);
   await navigateMainView(page, "Главная");
   const main = page.getByTestId("home-page");
   await expect(main.getByRole("heading", { level: 1 })).toHaveText("Gavia UI");
@@ -58,7 +59,7 @@ test("home shows creator, source version, license and truthful package status wh
   await expect(packageStatus.getByRole("link", { name: `${project.packageName}@${publishedVersion}`, exact: true })).toHaveAttribute("href", project.packageUrl);
   await expect(packageStatus.locator("code")).toHaveText(`pnpm add ${project.packageName}@${publishedVersion}`);
   await expect(page.locator(".pg-footer")).toContainText(`Автор: ${project.author.name}`);
-  await expect(main.getByRole("link").filter({ has: page.getByRole("heading", { name: "Changelog", exact: true }) })).toHaveAttribute("href", "?view=changelog&theme=gavia");
+  await expect(main.getByRole("link").filter({ has: page.getByRole("heading", { name: "Changelog", exact: true }) })).toHaveAttribute("href", "?view=changelog&theme=gavia&lang=ru");
 });
 
 test("renders the canonical changelog with complete releases, continued bullets and safe documentation links", async ({ page }) => {
@@ -88,13 +89,13 @@ test("renders the canonical changelog with complete releases, continued bullets 
 });
 
 test("navigates from the design system, opens release anchors and restores the page through history", async ({ page }) => {
-  await page.goto("/?view=system");
+  await page.goto(russianPlaygroundUrl("/?view=system"));
   await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
   await navigateMainView(page, "Changelog");
-  await expect(page).toHaveURL(/\?view=changelog$/);
+  await expect(page).toHaveURL((url) => url.searchParams.get("view") === "changelog" && url.searchParams.get("lang") === "ru" && !url.hash);
   await expect(page.locator(".project-main")).toBeVisible();
   await page.getByRole("link", { name: "История изменений", exact: true }).click();
-  await expect(page).toHaveURL(/\?view=changelog#project-changelog$/);
+  await expect(page).toHaveURL((url) => url.searchParams.get("view") === "changelog" && url.searchParams.get("lang") === "ru" && url.hash === "#project-changelog");
   await expect(page.getByRole("heading", { name: "История изменений", exact: true })).toBeInViewport();
   const release = history.sections.find((section) => section.version)!;
   await page.getByRole("navigation", { name: "Версии в истории изменений" }).getByRole("link", { name: release.title, exact: true }).click();
@@ -106,7 +107,7 @@ test("navigates from the design system, opens release anchors and restores the p
   await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
   await page.goBack();
   await expect(page.locator(".project-main")).toBeVisible();
-  await expect(page.locator(".pg-views [aria-current='page']")).toHaveText("Changelog");
+  await expectMainViewCurrent(page, "Changelog");
   await expect(page.locator(`#${release.id}-title`)).toBeInViewport();
 });
 

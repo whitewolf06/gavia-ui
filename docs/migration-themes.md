@@ -1,37 +1,37 @@
-# Названия тем и Gavia Dark
+# Theme names and Gavia Dark
 
-Gavia Dark и новые подписи Classic / Classic Dark добавлены в 0.10.0.
-При обновлении с 0.9.1 существующее подключение четырёх тем продолжает работать.
-[Руководство перехода на 0.10.0](migration-0.10.0.md).
+Gavia Dark and new Classic / Classic Dark labels were added in 0.10.0.
+Existing four-theme setup continues to work when upgrading from 0.9.1.
+[Upgrade guide for 0.10.0](migration-0.10.0.md).
 
-## Названия и идентификаторы
+## Names and identifiers
 
-| Название в интерфейсе и каталоге | `data-wl-theme`, `WlThemeName` | Импорт CSS |
+| UI and catalog label | `data-wl-theme`, `WlThemeName` | CSS import |
 | --- | --- | --- |
 | Gavia | `gavia` | `gavia-ui/themes/gavia.css` |
 | Gavia Dark | `gavia-dark` | `gavia-ui/themes/gavia-dark.css` |
-| Classic, прежде White | `white` | `gavia-ui/themes/white.css` |
-| Classic Dark, прежде Graphite | `graphite` | `gavia-ui/themes/graphite.css` |
+| Classic, formerly White | `white` | `gavia-ui/themes/white.css` |
+| Classic Dark, formerly Graphite | `graphite` | `gavia-ui/themes/graphite.css` |
 | Newspaper | `newspaper` | `gavia-ui/themes/newspaper.css` |
 
-Classic / Classic Dark — названия для отображения. Идентификаторы
-`white` / `graphite`, пути CSS, параметры `theme=white` / `theme=graphite`,
-значения токенов и порядок существующих тем в каталоге сохраняются.
-Не заменяйте идентификаторы на `classic` / `classic-dark`.
-Базовые значения библиотеки и аргумент по умолчанию `resolveWlToken` /
-`getWlThemeTokens` остаются Classic (`white`); playground по умолчанию использует Gavia.
+Classic / Classic Dark are display names. Identifiers
+`white` / `graphite`, CSS paths, `theme=white` / `theme=graphite` parameters,
+token values and existing catalog order are preserved.
+Do not replace identifiers with `classic` / `classic-dark`.
+Library base values and default `resolveWlToken` /
+`getWlThemeTokens` arguments remain Classic (`white`); the playground defaults to Gavia.
 
-## Каталог и типы
+## Catalog and types
 
-В `wlDesignThemes` добавлен пятый элемент Gavia Dark с `name: "gavia-dark"`.
-Публичный readonly tuple вырос с четырёх до пяти элементов; literal labels
-`"White"` / `"Graphite"` изменились на `"Classic"` / `"Classic Dark"`.
-Код, фиксирующий старую длину tuple или точный тип прежней подписи, требует правки.
-Сохранение прежних идентификаторов не гарантирует совместимость такого inferred типа.
-Исторические снимки контрактов не переписываются ради прохождения проверки.
+`wlDesignThemes` gained a fifth entry, Gavia Dark, with `name: "gavia-dark"`.
+The public readonly tuple grew from four to five entries; literal labels
+`"White"` / `"Graphite"` changed to `"Classic"` / `"Classic Dark"`.
+Code fixing the old tuple length or exact old label type needs changes.
+Preserved identifiers do not guarantee compatibility of such inferred types.
+Historical contract snapshots are not rewritten to make a check pass.
 
-Используйте `WlDesignTheme` / `WlThemeName` и поле `name` для выбора темы,
-а `label` — для отображения. Не привязывайте бизнес-логику к подписи или индексу:
+Use `WlDesignTheme` / `WlThemeName` and `name` to select a theme,
+and `label` for display. Do not tie business logic to a label or index:
 
 ```ts
 import { wlDesignThemes, type WlDesignTheme, type WlThemeName } from "gavia-ui";
@@ -41,7 +41,7 @@ const selectedTheme: WlThemeName = "gavia-dark";
 const selected = themes.find((theme) => theme.name === selectedTheme);
 ```
 
-## Подключение Gavia Dark
+## Gavia Dark setup
 
 ```ts
 import "gavia-ui/styles/reset.css";
@@ -52,16 +52,16 @@ import "gavia-ui/themes/gavia-dark.css";
 document.documentElement.dataset.wlTheme = "gavia-dark";
 ```
 
-Gavia Sans используется в обеих Gavia. Classic, Classic Dark и Newspaper
-сохраняют прежнюю типографику. Без шрифтового CSS обе Gavia используют системный
-fallback; JavaScript библиотеки не загружает CSS автоматически.
+Both Gavia themes use Gavia Sans. Classic, Classic Dark and Newspaper
+retain their typography. Without font CSS, both Gavia themes use a system
+fallback; library JavaScript does not load CSS automatically.
 
-Для переключения всех пяти импортируйте `themes/white.css` первым, затем
-`themes/graphite.css`, `themes/newspaper.css`, `themes/gavia.css` и
-`themes/gavia-dark.css`. Выбирайте тему на `html`, чтобы телепортированные оверлеи
-наследовали её. Прежние URL и сохранённые черновики с `white` / `graphite`
-не требуют переименования.
+To switch among all five themes, import `themes/white.css` first, then
+`themes/graphite.css`, `themes/newspaper.css`, `themes/gavia.css` and
+`themes/gavia-dark.css`. Select the theme on `html` so teleported overlays
+inherit it. Previous URLs and saved drafts using `white` / `graphite`
+need no renaming.
 
-Перед обновлением проверьте выбор пяти тем, ссылки с `theme`, контраст, шрифты,
-состояния контролов и открытые оверлеи. [Темы](theme-gavia.md) ·
-[каталог и токены](design-system.md#темы-и-совместимость) · [методика проверок](quality.md).
+Before upgrading, check selection of all five themes, `theme` links, contrast, fonts,
+control states and open overlays. [Themes](theme-gavia.md) ·
+[catalog and tokens](design-system.md#themes-and-compatibility) · [check methodology](quality.md).

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { usePlaygroundI18n } from "../i18n";
+const { t } = usePlaygroundI18n();
 import type { WlComponentManifest } from "../../../../packages/ui-kit/src/manifest";
 import { propDefault, propType, type DocumentationPtSection } from "./catalog";
 
@@ -14,14 +16,14 @@ defineProps<{
   <div class="docs-contract wl-stack" data-space="xl">
     <section class="wl-stack" data-space="md">
       <h2 :id="anchors?.props" class="wl-text-heading">Props</h2>
-      <p class="wl-text-small wl-text-muted">Типы, допустимые значения и значения по умолчанию взяты из публичного манифеста. «—» означает, что prop не задан.</p>
+      <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0674') }}</p>
       <p v-if="entry.model" class="docs-model">
         <code>v-model{{ entry.model.name === 'modelValue' ? '' : ':' + entry.model.name }}: {{ entry.model.type }}</code>
         <span v-if="entry.model.description">{{ entry.model.description }}</span>
       </p>
       <div v-if="entry.props.length" class="docs-table-scroll" tabindex="0" role="region" :aria-label="'Props ' + entry.name">
         <table class="docs-contract-table">
-          <thead><tr><th scope="col">Prop</th><th scope="col">Тип / значения</th><th scope="col">По умолчанию</th><th scope="col">Назначение</th></tr></thead>
+          <thead><tr><th scope="col">Prop</th><th scope="col">{{ t('documentation.strings.s0675') }}</th><th scope="col">{{ t('documentation.strings.s0676') }}</th><th scope="col">{{ t('documentation.strings.s0677') }}</th></tr></thead>
           <tbody>
             <tr v-for="prop in entry.props" :key="prop.name" :data-prop="prop.name">
               <th scope="row"><code>{{ prop.name }}{{ prop.required ? ' *' : '' }}</code></th>
@@ -32,42 +34,42 @@ defineProps<{
           </tbody>
         </table>
       </div>
-      <p v-else class="wl-text-small wl-text-muted">Публичных props нет.</p>
+      <p v-else class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0678') }}</p>
     </section>
 
     <section class="wl-stack" data-space="md">
-      <h2 :id="anchors?.events" class="wl-text-heading">События</h2>
-      <div v-if="entry.emits.length" class="docs-table-scroll" tabindex="0" role="region" :aria-label="'События ' + entry.name">
+      <h2 :id="anchors?.events" class="wl-text-heading">{{ t('documentation.strings.s0129') }}</h2>
+      <div v-if="entry.emits.length" class="docs-table-scroll" tabindex="0" role="region" :aria-label="t('documentation.strings.s0679') + entry.name">
         <table class="docs-contract-table">
-          <thead><tr><th scope="col">Событие</th><th scope="col">Payload</th><th scope="col">Когда возникает</th></tr></thead>
+          <thead><tr><th scope="col">{{ t('documentation.strings.s0680') }}</th><th scope="col">Payload</th><th scope="col">{{ t('documentation.strings.s0681') }}</th></tr></thead>
           <tbody><tr v-for="event in entry.emits" :key="event.name"><th scope="row"><code>{{ event.name }}</code></th><td><code>{{ event.payload ?? '—' }}</code></td><td>{{ event.description ?? '—' }}</td></tr></tbody>
         </table>
       </div>
-      <p v-else class="wl-text-small wl-text-muted">Публичных событий нет.</p>
+      <p v-else class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0682') }}</p>
     </section>
 
     <section class="wl-stack" data-space="md">
-      <h2 :id="anchors?.slots" class="wl-text-heading">Слоты</h2>
-      <div v-if="entry.slots.length" class="docs-table-scroll" tabindex="0" role="region" :aria-label="'Слоты ' + entry.name">
+      <h2 :id="anchors?.slots" class="wl-text-heading">{{ t('documentation.strings.s0130') }}</h2>
+      <div v-if="entry.slots.length" class="docs-table-scroll" tabindex="0" role="region" :aria-label="t('documentation.strings.s0683') + entry.name">
         <table class="docs-contract-table">
-          <thead><tr><th scope="col">Слот</th><th scope="col">Содержимое</th></tr></thead>
+          <thead><tr><th scope="col">{{ t('documentation.strings.s0684') }}</th><th scope="col">{{ t('documentation.strings.s0685') }}</th></tr></thead>
           <tbody><tr v-for="slot in entry.slots" :key="slot.name"><th scope="row"><code>{{ slot.name }}</code></th><td>{{ slot.description ?? '—' }}</td></tr></tbody>
         </table>
       </div>
-      <p v-else class="wl-text-small wl-text-muted">Публичных слотов нет.</p>
+      <p v-else class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0686') }}</p>
     </section>
 
     <section v-if="ptSections?.length" class="wl-stack" data-space="md">
       <h2 :id="anchors?.pt" class="wl-text-heading">Pass-through: pt</h2>
-      <p class="wl-text-small wl-text-muted">Секции {{ entry.name }} перечислены ниже. Атрибуты объединяются в порядке <code>createWlPt()</code> → <code>WlConfig.pt{{ ptKey ? '.' + ptKey : '' }}</code> → <code>pt</code> экземпляра. Class и style объединяются; последнее заданное значение другого атрибута имеет приоритет.</p>
+      <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0687') }} {{ entry.name }} {{ t('documentation.strings.s0688') }} <code>createWlPt()</code> → <code>WlConfig.pt{{ ptKey ? '.' + ptKey : '' }}</code> → <code>pt</code> {{ t('documentation.strings.s0689') }}</p>
       <div class="docs-table-scroll" tabindex="0" role="region" :aria-label="'PT ' + entry.name">
         <table class="docs-contract-table">
-          <thead><tr><th scope="col">Секция</th><th scope="col">DOM</th><th scope="col">Назначение</th></tr></thead>
+          <thead><tr><th scope="col">{{ t('documentation.strings.s0690') }}</th><th scope="col">DOM</th><th scope="col">{{ t('documentation.strings.s0677') }}</th></tr></thead>
           <tbody><tr v-for="section in ptSections" :key="section.name"><th scope="row"><code>{{ section.name }}</code></th><td><code>{{ section.element }}</code></td><td>{{ section.description }}</td></tr></tbody>
         </table>
       </div>
-      <p v-if="entry.name !== 'WlButton'" class="wl-text-small wl-text-muted">Секции относятся к DOM компонента. Названия с точкой указывают группу конфигурации и её секцию; составные части используют свои pt-группы. Глобальные и локальные атрибуты объединяются, а class и style дополняются.</p>
-      <p v-if="entry.name === 'WlButton'" class="wl-text-small wl-text-muted">Иконка передаётся через слот <code>icon</code>; отдельной pt-секции для неё нет. Class, style, aria-* и data-* можно передать самой кнопке. Корень сохраняет <code>data-wl="button"</code>, <code>data-variant</code>, <code>data-size</code> и <code>data-density</code>.</p>
+      <p v-if="entry.name !== 'WlButton'" class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0691') }}</p>
+      <p v-if="entry.name === 'WlButton'" class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0692') }} <code>icon</code>{{ t('documentation.strings.s0693') }} <code>data-wl="button"</code>, <code>data-variant</code>, <code>data-size</code> {{ t('documentation.strings.s0089') }} <code>data-density</code>.</p>
     </section>
   </div>
 </template>

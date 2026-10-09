@@ -1,16 +1,16 @@
-# Переход с API 0.3 на 0.5
+# Upgrade from API 0.3 to 0.5
 
-Версия 0.5 сохраняет Vue 3, публичные `Wl*` компоненты, их props, события,
-слоты, `v-model`, `wl-*` классы, токены, `data-wl`, имена и рисунки иконок.
-PrimeVue и PrimeIcons пакету больше не нужны. Перед удалением этих зависимостей
-проверьте, использует ли их другое содержимое приложения.
+Version 0.5 preserves Vue 3, public `Wl*` components, their props, events,
+slots, `v-model`, `wl-*` classes, tokens, `data-wl`, icon names and shapes.
+The package no longer needs PrimeVue or PrimeIcons. Before removing these dependencies,
+check whether other application code uses them.
 
-Примеры используют актуальное имя пакета; смена импортов описана
-в [руководстве перехода на Gavia UI](migration-gavia.md).
+Examples use the current package name; import changes are described
+in the [Gavia UI migration guide](migration-gavia.md).
 
-## Инициализация приложения
+## Application initialization
 
-Раньше Gavia UI получал конфигурацию через PrimeVue:
+Previously, Gavia UI received configuration through PrimeVue:
 
 ```ts
 import PrimeVue from "primevue/config";
@@ -18,7 +18,7 @@ import { createWlPt, wlLocaleRu } from "gavia-ui";
 app.use(PrimeVue, { unstyled: true, pt: createWlPt(), locale: wlLocaleRu });
 ```
 
-Теперь конфигурация Gavia UI передаётся в `WlConfig`:
+Gavia UI configuration now goes to `WlConfig`:
 
 ```ts
 import {
@@ -28,85 +28,85 @@ import {
 app.use(WlConfig, { locale: wlLocaleRu, pt: {
   button: { root: { "data-test": "app-button" } }
 } });
-app.use(WlToastService);         // если используются WlToast/useWlToast
-app.use(WlConfirmationService);  // если используются WlConfirmDialog/useWlConfirm
+app.use(WlToastService);         // when using WlToast/useWlToast
+app.use(WlConfirmationService);  // when using WlConfirmDialog/useWlConfirm
 ```
 
-`WlConfig` необязателен: по умолчанию применяется русская локаль и стандартная
-карта `pt`. Сервисы нужно установить на каждом Vue-приложении, использующем
-соответствующие компоненты. Их состояние не разделяется между приложениями.
-Стили по-прежнему импортируются явно: reset, base, выбранная тема.
+`WlConfig` is optional: the Russian locale and standard
+`pt` map apply by default. Install services on each Vue app using
+their components. Service state is not shared between apps.
+Styles remain explicit imports: reset, base, selected theme.
 
-`createWlPt(overrides)` сохраняется. Глобальные переопределения можно передать
-как `WlConfig.pt`; они применяются после стандартных разделов. `pt` отдельного
-компонента применяется последним. `class` и `style` объединяются, остальные
-атрибуты заменяются. Список разделов — в [архитектуре](architecture.md#темы-и-публичный-dom).
+`createWlPt(overrides)` is preserved. Pass global overrides
+through `WlConfig.pt`; they apply after standard sections. Instance
+`pt` applies last. `class` and `style` merge; other
+attributes are replaced. See the section list in [architecture](architecture.md#themes-and-public-dom).
 
-## Анимация всплывающих элементов
+## Popup motion
 
-В версии 0.5 диалоги, дроверы, меню, панели выбора, уведомления и подсказки
-плавно появляются и закрываются. Если приложению нужно прежнее мгновенное
-поведение, задайте `app.use(WlConfig, { motion: false })`. Для отдельного
-компонента используйте `:motion="false"`; локальное значение имеет приоритет
-над настройкой приложения. Для подсказки используйте
-`v-wl-tooltip="{ value: 'Помощь', motion: false }"`. Системная настройка
-`prefers-reduced-motion: reduce` сокращает длительность переходов.
+In 0.5, dialogs, drawers, menus, selection panels, toasts and tooltips
+animate when opening and closing. To keep the previous immediate
+behavior, set `app.use(WlConfig, { motion: false })`. For one
+component, use `:motion="false"`; the local value takes priority
+over the app setting. For tooltips, use
+`v-wl-tooltip="{ value: 'Help', motion: false }"`. The system setting
+`prefers-reduced-motion: reduce` shortens transitions.
 
-## Таблица с колонками
+## Table columns
 
-`WlTable` принимает `columns: WlTableColumn[]` и `value`. Ячейка переопределяется
-слотом `cell-<key>` с `{ row, value }`.
+`WlTable` accepts `columns: WlTableColumn[]` and `value`. Override a cell
+through `cell-<key>` with `{ row, value }`.
 
 ```vue
 <WlTable :value="rows" :columns="[
-  { key: 'name', label: 'Имя' },
-  { key: 'amount', label: 'Сумма', numeric: true, width: 120 }
+  { key: 'name', label: 'Name' },
+  { key: 'amount', label: 'Amount', numeric: true, width: 120 }
 ]">
   <template #cell-amount="{ value }">{{ formatAmount(value) }}</template>
 </WlTable>
 ```
 
-Если в прежней разметке были PrimeVue `<Column>` внутри default-слота
-`WlTable`, перенесите их поля в `columns` и шаблоны body — в `cell-*`.
-Это единственное описанное изменение разметки потребителя,
-связанной с PrimeVue. Пустой `columns` оставляет default-слот для произвольного
-содержимого, но больше не создаёт таблицу из `<Column>`.
+If your previous markup placed PrimeVue `<Column>` in the default
+`WlTable` slot, move their fields to `columns` and body templates to `cell-*`.
+This is the only documented consumer markup change
+related to PrimeVue. Empty `columns` preserves the default slot for arbitrary
+content, but no longer builds a table from `<Column>`.
 
-## Проверка потребителя
+## Consumer checks
 
-### Дизайн-система
+### Design system
 
-Все прежние имена и итоговые значения CSS-токенов сохранены. Добавлены
-типизированный каталог, `design-tokens.json` и необязательный
-`styles/primitives.css`; подключать последний нужно явно. Primary/danger
-кнопки используют новые `--wl-action-primary-*` / `--wl-action-danger-*`
-роли для контраста. В Graphite текст таких кнопок тёмный; danger в White
-использует более тёмную поверхность. Текст ошибки/тихого опасного действия
-использует `--wl-text-danger`; клавиатурный фокус получает явную обводку.
-Подсказки полей, заголовки/пустое состояние таблицы и описание `WlEmpty`
-используют `--wl-text-muted` для читаемого контраста.
-Переопределяя цвета действий, задавайте bg/hover/text вместе. Прежние размеры
-и публичные контракты компонентов сохраняются. Полные правила —
+All previous CSS token names and resolved values are preserved. Added
+a typed catalog, `design-tokens.json` and optional
+`styles/primitives.css`; import the latter explicitly. Primary/danger
+buttons use new `--wl-action-primary-*` / `--wl-action-danger-*`
+roles for contrast. Their text is dark in Graphite; danger in White
+uses a darker surface. Error text and quiet destructive actions
+use `--wl-text-danger`; keyboard focus has an explicit ring.
+Field hints, table headings/empty state and `WlEmpty` descriptions
+use `--wl-text-muted` for readable contrast.
+When overriding action colors, set bg/hover/text together. Existing dimensions
+and public component contracts are preserved. Full rules:
 [design-system.md](design-system.md).
 
-1. Обновите импорт конфигурации и установите используемые сервисы.
-2. Замените `<Column>` внутри `WlTable` на `columns`/`cell-*`.
-3. Если приложение само использует PrimeVue или PrimeIcons, оставьте их
-   зависимости для этого кода; Gavia UI их больше не импортирует.
-4. Соберите приложение, проверьте клавиатуру и фокус в выпадающих списках и
-   модальных окнах, выбор даты, таблицы, уведомления и все используемые темы.
+1. Update the configuration import and install the services you use.
+2. Replace `<Column>` inside `WlTable` with `columns`/`cell-*`.
+3. If your app uses PrimeVue or PrimeIcons independently, keep those
+   dependencies for that code; Gavia UI no longer imports them.
+4. Build the app; check keyboard and focus in dropdowns and
+   modals, date selection, tables, toasts and all themes you use.
 
-Базовые публичные контракты 51 компонента проверяются тестами по манифесту;
-архив версии 0.5 дополнительно собирается в изолированном Vue-потребителе.
+The basic public contracts of 51 components are checked against the manifest;
+the 0.5 archive is also built in an isolated Vue consumer.
 
-## Примеры дизайн-системы
+## Design system examples
 
-Публичный API компонентов сохраняется. Витрина дополнена копируемыми Vue-примерами
-всех компонентов и шестью рабочими рецептами. Код примеров проверяется против
-архива пакета. Ошибки WlFileUpload дополнительно получают `role="alert"` для
-объявления скринридером; существующие события, модели и разметка списка сохраняются.
-Позиционируемые оверлеи учитывают слой родительского контрола. Это исправляет
-выбор вариантов внутри мобильной панели фильтров; публичные props не меняются.
-WlButton устанавливает фокус перед обработчиком клика, в том числе в Safari,
-чтобы закрытие Dialog/Drawer возвращало его на кнопку открытия. Программные
-props, события и блокировка disabled/loading сохраняются.
+The public component API is preserved. The playground adds copyable Vue examples
+for every component and six working recipes. Example code is checked against
+the package archive. WlFileUpload errors also receive `role="alert"` for
+screen reader announcements; existing events, models and list markup are preserved.
+Positioned overlays account for their parent control’s layer. This fixes
+selection inside a mobile filter panel without changing public props.
+WlButton sets focus before the click handler, including in Safari,
+so Dialog/Drawer closing returns focus to the opening button. Programmatic
+props, events and disabled/loading blocking are preserved.

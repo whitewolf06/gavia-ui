@@ -1,3 +1,4 @@
+import { russianPlaygroundUrl } from "./playground-url";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
 import { resolveWlToken, wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
@@ -41,7 +42,7 @@ test.beforeEach(async ({ page }) => {
 test.afterEach(async ({ page }) => { expect(errors.get(page), "Assets pages have no runtime errors").toEqual([]); });
 
 test("icons expose the complete registry, real selection, sizes, accessibility and exact consumer code", async ({ page, baseURL }) => {
-  await page.goto(docsUrl(baseURL, "icons"), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(docsUrl(baseURL, "icons")), { waitUntil: "domcontentloaded" });
   const assets = page.getByTestId("docs-assets-page");
   await expect(assets).toHaveAttribute("data-docs-section", "icons");
   await expect(page.getByTestId("docs-page").getByRole("heading", { level: 1 })).toHaveCount(1);
@@ -87,7 +88,7 @@ test("icons expose the complete registry, real selection, sizes, accessibility a
 });
 
 test("colors resolve shipped themes, preserve alpha, copy exact CSS values and expose labelled states", async ({ page, baseURL }) => {
-  await page.goto(docsUrl(baseURL, "colors"), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(docsUrl(baseURL, "colors")), { waitUntil: "domcontentloaded" });
   const assets = page.getByTestId("docs-assets-page");
   await expect(assets).toHaveAttribute("data-docs-section", "colors");
   await expect(page.getByTestId("docs-page").getByRole("heading", { level: 1 })).toHaveCount(1);
@@ -132,7 +133,7 @@ test("colors resolve shipped themes, preserve alpha, copy exact CSS values and e
 
 test("asset routes and TOC remain usable at 320px with light and dark themes", async ({ page, baseURL }) => {
   await page.setViewportSize({ width: 320, height: 740 });
-  await page.goto(docsUrl(baseURL, "icons"), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl(docsUrl(baseURL, "icons")), { waitUntil: "domcontentloaded" });
   const docs = page.getByTestId("docs-page");
   const assets = page.getByTestId("docs-assets-page");
   await expect(assets).toHaveAttribute("data-docs-section", "icons");
