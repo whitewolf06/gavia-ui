@@ -1,5 +1,5 @@
 import { consumerSource as transformConsumerSource } from "../../../../scripts/example-source.mjs";
-import russianMessages from "../i18n/messages/examples.ru.json";
+import russianMessages from "../i18n/messages/examples.ru.json" with { type: "json" };
 import { playgroundLocale } from "../i18n/locale";
 
 /** Export the currently displayed language as plain, standalone Vue code. */

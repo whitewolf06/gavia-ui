@@ -1,5 +1,5 @@
 import { translate } from "../i18n";
-import russianMessages from "../i18n/messages/documentation.ru.json";
+import russianMessages from "../i18n/messages/documentation.ru.json" with { type: "json" };
 
 const originals = new Map<string, string>(Object.entries(russianMessages.strings).map(([key, text]) => [text, "documentation.strings." + key]));
 const localized = new WeakMap<object, object>();

@@ -1,4 +1,5 @@
-import { author, version } from "../../../../packages/ui-kit/package.json";
+import packageMetadata from "../../../../packages/ui-kit/package.json" with { type: "json" };
+const { author, version } = packageMetadata;
 
 /** Public project metadata shared by the showcase and its navigation. */
 export const gaviaProjectInfo = {

@@ -1,7 +1,7 @@
 import { wlDesignTokens, wlDesignThemes, wlTypography, wlContrastReport } from "../../../../packages/ui-kit/src/design-system";
 import { translate } from "../i18n";
 import { translateDocumentationText } from "../documentation/localize";
-import russianMessages from "../i18n/messages/tokens.ru.json";
+import russianMessages from "../i18n/messages/tokens.ru.json" with { type: "json" };
 
 /** Keep canonical IDs and values intact; prose follows the presentation locale. */
 function localizedRows<T extends { name: string }>(rows: readonly T[], kind: string, fields: readonly string[]): T[] {

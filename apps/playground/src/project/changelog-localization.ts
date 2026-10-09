@@ -1,4 +1,4 @@
-import englishMessages from "../i18n/messages/changelog.en.json";
+import englishMessages from "../i18n/messages/changelog.en.json" with { type: "json" };
 import { playgroundLocale, translate } from "../i18n";
 
 const keys = new Map(Object.entries(englishMessages).map(([key, text]) => [text, key]));
