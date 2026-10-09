@@ -6,7 +6,7 @@ The history was reconstructed from release Git tags and migration notes.
 
 ## Unreleased
 
-## 0.12.0 — prepared
+## 0.12.0 — 2026-10-09
 
 - Added an optional wlLocaleEn preset and EN/RU Playground localization with English by default and language URLs; GitHub Markdown documentation now uses English.
 - Expanded the author story in the Playground and README, including the personal website.

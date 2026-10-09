@@ -8,6 +8,64 @@ Creator and maintainer: [Dmitry Gorbach](https://github.com/whitewolf06).
 [GitHub Pages playground](https://whitewolf06.github.io/gavia-ui/) ·
 [npm package](https://www.npmjs.com/package/gavia-ui). First npm release: 0.7.0.
 
+## Release 0.12.0
+
+[gavia-ui@0.12.0](https://www.npmjs.com/package/gavia-ui/v/0.12.0) was published
+on 2026-10-09 (Moscow) from tag `v0.12.0`. The tag points to
+`8b2be7996ebd0519b36c48f429daee046a28c310`.
+[Release CI](https://github.com/whitewolf06/gavia-ui/actions/runs/37937733062)
+passed its Node 18/24, four-browser, visual, packed-consumer and publish gates.
+The unit report contains 695 passed and 0 skipped tests;
+the four browser projects report 523 passed, 0 passed after retry and 3 skipped scenarios.
+Desktop/mobile visual checks report 24 passed and 0 skipped scenarios across five themes.
+[Pages CI smoke](https://github.com/whitewolf06/gavia-ui/actions/runs/37936117108)
+reports 18 passed and 0 skipped desktop/mobile scenarios on the same source revision.
+
+Browser skips: quality-presentation.spec.ts — quality home summary and documentation pass automated WCAG checks in five themes (mobile-chromium, firefox, webkit): Axe runs once; routing and layout use all browser projects.
+
+CI coverage: 98.55% lines, 89.31% branches and 86.62% functions.
+
+0.12.0 adds the optional `wlLocaleEn` preset and configurable built-in control
+text. Library applications keep the Russian fallback; explicitly supplied props
+still take precedence. English is now the default Playground language, with
+EN/RU URL navigation, shared component/API/example sources and localized search
+and changelog. Public GitHub Markdown documentation uses English.
+
+The header keeps the links that fit and moves trailing destinations to More.
+Mobile uses one compact row with equal 44 px icon controls and a language selector;
+desktop Search and Theme controls share a 120 px width. Route titles,
+descriptions, canonical/hreflang links and a sitemap were added. Documentation
+remains a client-rendered SPA; static HTML is the English home-page fallback.
+The author story now includes the personal website.
+[Upgrade details](migration-0.12.0.md) describe the locale configuration and compatibility boundaries.
+Public component names, classes, tokens and import paths are preserved.
+
+The registry confirmed 0.12.0 and latest=0.12.0. The downloaded npm archive
+matches the integrity checked by the publish job:
+
+```text
+sha512-pXoeICeEoWzQigeHz9N/bYkllefT6QjwpHWmlCpsJxwRP4QJ52sIp/53DKFeSKnz2Sd8z3jVAV2jryC8BKMOwg==
+```
+
+Its SHA256 is `4984326524aadc44bed493c88b6cc6514a91eb1560f4f155eb8c635b9e3400ca`.
+Vue remains the only library peer; there are no runtime dependencies.
+
+npm metadata includes a [provenance attestation](https://registry.npmjs.org/-/npm/v1/attestations/gavia-ui@0.12.0).
+
+```bash
+pnpm add gavia-ui@0.12.0 vue
+# or
+npm install gavia-ui@0.12.0 vue
+# or
+bun add gavia-ui@0.12.0 vue
+```
+
+[GitHub Release](https://github.com/whitewolf06/gavia-ui/releases/tag/v0.12.0) includes the saved Playground archive and checksum. The downloaded preview was checked for version 0.12.0, commit `8b2be7996ebd0519b36c48f429daee046a28c310` and relative asset paths. Its SHA256 is `467b0d25b5fc78f6631e0baadfbe7d167401247e02c34195cc830064da18db19`.
+
+Installation commands and `publishedVersion` were updated after npm verification.
+The release tag and published archive are preserved. Pages smoke evidence and
+npm publication evidence are recorded separately.
+
 ## Release 0.11.1
 
 [gavia-ui@0.11.1](https://www.npmjs.com/package/gavia-ui/v/0.11.1) was published
@@ -346,7 +404,7 @@ future publication success in advance.
 
 Source version in the header and project card is read automatically from
 the library manifest. `publishedVersion` in `project-info.ts` separately stores
-the last confirmed npm version: currently `0.11.1`. npm links and installation
+the last confirmed npm version: currently `0.12.0`. npm links and installation
 commands use that version.
 
 Update `publishedVersion` only after checking the new exact version
@@ -361,12 +419,12 @@ does not change the confirmed installation version.
    for the next version, for example:
 
 ```bash
-git tag -a v0.11.2 -m "Gavia UI 0.11.2"
-git push origin v0.11.2
+git tag -a v0.12.1 -m "Gavia UI 0.12.1"
+git push origin v0.12.1
 ```
 
 This is an example for the next patch release. Use it after agreeing
-on 0.11.2 and updating package.json.
+on 0.12.1 and updating package.json.
 The workflow repeats Node 18/24, browser and visual baseline checks.
 Publication is allowed only from `whitewolf06/gavia-ui`, only for a tag
 matching the package version, and after all checks. Regular pushes and PRs

@@ -89,11 +89,11 @@ the library uses Classic (`white`).
 Install the library in a Vue application:
 
 ```bash
-pnpm add gavia-ui@0.11.1 vue
+pnpm add gavia-ui@0.12.0 vue
 # or
-npm install gavia-ui@0.11.1 vue
+npm install gavia-ui@0.12.0 vue
 # or
-bun add gavia-ui@0.11.1 vue
+bun add gavia-ui@0.12.0 vue
 ```
 
 Import the styles and font in the entry point, then select Gavia:
@@ -138,7 +138,7 @@ theme, the library keeps Classic (`white`). `WlConfig` is not required for basic
 - [Design system](docs/design-system.md) — tokens, typography, states and complete interface flows.
 - [CSS primitives](docs/primitives.md) and [responsiveness](docs/responsiveness.md) — layout and sizing rules.
 - [Gavia / Gavia Dark themes](docs/theme-gavia.md) and [Gavia Sans](docs/font-gavia.md) — palette, setup, specimens and licenses.
-- [Changelog](CHANGELOG.md), [upgrade to 0.11.1](docs/migration-0.11.1.md), [type migration for 0.11](docs/migration-0.11.0.md), [0.10 themes](docs/migration-0.10.0.md), [rebranding history](docs/migration-gavia.md) and [verified releases](docs/releases.md) — release history and application upgrades.
+- [Changelog](CHANGELOG.md), [upgrade to 0.12.0](docs/migration-0.12.0.md), [type migration for 0.11](docs/migration-0.11.0.md), [0.10 themes](docs/migration-0.10.0.md), [rebranding history](docs/migration-gavia.md) and [verified releases](docs/releases.md) — release history and application upgrades.
 - [Localization](docs/localization.md) — explicit library locale and shared EN/RU Playground.
 - [Playground architecture](docs/playground.md) and [Pages publication](docs/hosting.md).
 

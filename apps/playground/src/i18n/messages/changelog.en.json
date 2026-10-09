@@ -162,7 +162,7 @@
   "changelog.text160": "Configured publication of the previous package to GitHub Packages.",
   "changelog.text161": "Maintenance rules",
   "changelog.text162": "Record changes under “Unreleased” first. At release, move them under the version and actual publication date. Record features, fixes and required upgrade steps; breaking changes require a migration note. Root and package changelogs must have the same content; package documentation links are absolute. Verify publication separately from pushing the tag.",
-  "changelog.text163": "0.12.0 — prepared",
+  "changelog.text163": "0.12.0 — 2026-10-09",
   "changelog.text164": "Add the optional wlLocaleEn preset and configurable built-in control text while preserving the Russian fallback and explicit component-prop priority.",
   "changelog.text165": "Make English the default Playground language, with EN/RU URL navigation, shared examples and API, and translated search and changelog. Publish GitHub Markdown documentation in English.",
   "changelog.text166": "Add route metadata and a sitemap for the client-rendered documentation SPA, expand the author story, and adapt header navigation to the available width with compact one-row mobile controls."
