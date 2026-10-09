@@ -1754,7 +1754,7 @@
         "white": "var(--wl-blue-500)",
         "graphite": "var(--wl-blue-400)",
         "newspaper": "#25211d",
-        "gavia": "#294451",
+        "gavia": "#3c7490",
         "gavia-dark": "#67bbbc"
       }
     },
@@ -1767,7 +1767,8 @@
       "value": "var(--wl-palette-accent)",
       "themes": {
         "graphite": "#79a3f4",
-        "gavia-dark": "var(--wl-palette-accent)"
+        "gavia-dark": "var(--wl-palette-accent)",
+        "gavia": "#326179"
       }
     },
     {
@@ -1781,7 +1782,7 @@
         "white": "var(--wl-blue-600)",
         "graphite": "#729df2",
         "newspaper": "#3a342e",
-        "gavia": "#203641",
+        "gavia": "#326179",
         "gavia-dark": "#7acdcd"
       }
     },
@@ -1868,7 +1869,7 @@
       "category": "color",
       "description": "Базовая поверхность основного действия, независимая от цвета ссылок.",
       "themes": {
-        "gavia": "#294451",
+        "gavia": "#3c7490",
         "gavia-dark": "#5faaab"
       }
     },
@@ -1880,7 +1881,7 @@
       "category": "color",
       "description": "Базовая поверхность основного действия при наведении.",
       "themes": {
-        "gavia": "#203641",
+        "gavia": "#376b84",
         "gavia-dark": "#70bbbc"
       }
     },
@@ -4016,7 +4017,7 @@
       "category": "color",
       "description": "Базовая поверхность основного действия при нажатии.",
       "themes": {
-        "gavia": "#182a33",
+        "gavia": "#326179",
         "gavia-dark": "#4d9798"
       }
     },

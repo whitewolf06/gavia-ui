@@ -1723,7 +1723,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-blue-500)",
       "graphite": "var(--wl-blue-400)",
       "newspaper": "#25211d",
-      "gavia": "#294451",
+      "gavia": "#3c7490",
       "gavia-dark": "#67bbbc"
     }
   },
@@ -1736,7 +1736,8 @@ export const wlDesignTokens = [
     "value": "var(--wl-palette-accent)",
     "themes": {
       "graphite": "#79a3f4",
-      "gavia-dark": "var(--wl-palette-accent)"
+      "gavia-dark": "var(--wl-palette-accent)",
+      "gavia": "#326179"
     }
   },
   {
@@ -1750,7 +1751,7 @@ export const wlDesignTokens = [
       "white": "var(--wl-blue-600)",
       "graphite": "#729df2",
       "newspaper": "#3a342e",
-      "gavia": "#203641",
+      "gavia": "#326179",
       "gavia-dark": "#7acdcd"
     }
   },
@@ -1837,7 +1838,7 @@ export const wlDesignTokens = [
     "category": "color",
     "description": "Базовая поверхность основного действия, независимая от цвета ссылок.",
     "themes": {
-      "gavia": "#294451",
+      "gavia": "#3c7490",
       "gavia-dark": "#5faaab"
     }
   },
@@ -1849,7 +1850,7 @@ export const wlDesignTokens = [
     "category": "color",
     "description": "Базовая поверхность основного действия при наведении.",
     "themes": {
-      "gavia": "#203641",
+      "gavia": "#376b84",
       "gavia-dark": "#70bbbc"
     }
   },
@@ -3985,7 +3986,7 @@ export const wlDesignTokens = [
     "category": "color",
     "description": "Базовая поверхность основного действия при нажатии.",
     "themes": {
-      "gavia": "#182a33",
+      "gavia": "#326179",
       "gavia-dark": "#4d9798"
     }
   },
@@ -4435,7 +4436,7 @@ export const wlContrastReport = [
     "background": "--wl-action-primary-bg",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 10.29
+    "ratio": 5.13
   },
   {
     "name": "primary-hover",
@@ -4444,7 +4445,7 @@ export const wlContrastReport = [
     "background": "--wl-action-primary-hover",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 12.61
+    "ratio": 5.84
   },
   {
     "name": "primary-active",
@@ -4453,7 +4454,7 @@ export const wlContrastReport = [
     "background": "--wl-action-primary-active",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 14.81
+    "ratio": 6.73
   },
   {
     "name": "danger",
@@ -4525,7 +4526,7 @@ export const wlContrastReport = [
     "background": "--wl-bg",
     "minimum": 3,
     "theme": "gavia",
-    "ratio": 9.78
+    "ratio": 4.87
   },
   {
     "name": "link",
@@ -4534,7 +4535,7 @@ export const wlContrastReport = [
     "background": "--wl-bg",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 9.78
+    "ratio": 6.39
   },
   {
     "name": "focus-soft",
@@ -4543,7 +4544,7 @@ export const wlContrastReport = [
     "background": "--wl-bg-soft",
     "minimum": 3,
     "theme": "gavia",
-    "ratio": 9.13
+    "ratio": 4.55
   },
   {
     "name": "text-raised",
@@ -4570,7 +4571,7 @@ export const wlContrastReport = [
     "background": "--wl-bg-raised",
     "minimum": 3,
     "theme": "gavia",
-    "ratio": 10.13
+    "ratio": 5.05
   },
   {
     "name": "accent-text-raised",
@@ -4579,7 +4580,7 @@ export const wlContrastReport = [
     "background": "--wl-bg-raised",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 10.13
+    "ratio": 6.62
   },
   {
     "name": "accent-text-soft",
@@ -4588,7 +4589,7 @@ export const wlContrastReport = [
     "background": "--wl-bg-soft",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 9.13
+    "ratio": 5.97
   },
   {
     "name": "accent-text-selected",
@@ -4597,7 +4598,7 @@ export const wlContrastReport = [
     "background": "--wl-accent-soft",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 8.27
+    "ratio": 5.41
   },
   {
     "name": "accent-text-hover",
@@ -4606,7 +4607,7 @@ export const wlContrastReport = [
     "background": "--wl-accent-soft-hover",
     "minimum": 4.5,
     "theme": "gavia",
-    "ratio": 9.27
+    "ratio": 4.95
   },
   {
     "name": "text",

@@ -2261,6 +2261,7 @@
   .wl-breadcrumbs__item {
     display: inline-flex;
     align-items: center;
+    gap: 6px;
   }
   .wl-breadcrumbs__link {
     display: inline-flex;
@@ -2561,11 +2562,13 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    width: fit-content;
     height: 22px;
     padding: 0 10px;
     border-radius: 11px;
     font-size: 11.5px;
     font-weight: 600;
+    line-height: 1;
   }
   .wl-pill::before {
     content: "";

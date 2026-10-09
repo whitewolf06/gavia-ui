@@ -9,7 +9,7 @@ describe("design token source validation", () => {
     expect(validateCatalog(source)).toHaveLength(source.themes.length * source.contrast.length);
   });
   it("keeps Gavia links readable on page, raised, soft and selected surfaces", () => {
-    const foreground = resolveToken(source, "--wl-accent", "gavia");
+    const foreground = resolveToken(source, "--wl-text-accent", "gavia");
     for (const name of ["--wl-bg", "--wl-bg-raised", "--wl-bg-soft", "--wl-accent-soft", "--wl-accent-soft-hover"]) {
       expect(contrastRatio(foreground, resolveToken(source, name, "gavia")), name).toBeGreaterThanOrEqual(4.5);
     }
@@ -20,11 +20,13 @@ describe("design token source validation", () => {
       expect(contrastRatio(foreground, resolveToken(source, name, theme)), name).toBeGreaterThanOrEqual(4.5);
     }
     expect(contrastRatio(resolveToken(source, "--wl-text-accent-hover", theme), resolveToken(source, "--wl-accent-soft-hover", theme))).toBeGreaterThanOrEqual(4.5);
-    if (theme !== "graphite") expect(foreground).toBe(resolveToken(source, "--wl-accent", theme));
-    else {
+    if (theme === "gavia") {
+      expect(resolveToken(source, "--wl-accent", theme)).toBe("#3c7490");
+      expect(foreground).toBe("#326179");
+    } else if (theme === "graphite") {
       expect(resolveToken(source, "--wl-accent", theme)).toBe("#5b8def");
       expect(foreground).toBe("#79a3f4");
-    }
+    } else expect(foreground).toBe(resolveToken(source, "--wl-accent", theme));
   });
   it("scopes Gavia to its theme attribute and preserves reduced motion", () => {
     const theme = source.themes.find((item) => item.name === "gavia");

@@ -262,13 +262,13 @@ test("Theme builder scopes live colors, restores its draft and exports a working
   const preview = page.getByTestId("theme-builder-preview");
   await expect(builder.getByRole("heading", { name: "Подбор темы", exact: true })).toBeVisible();
   const createAction = preview.getByRole("button", { name: "Создать проект", exact: true });
-  await expect(createAction).toHaveCSS("background-color", "rgb(41, 68, 81)");
+  await expect(createAction).toHaveCSS("background-color", "rgb(60, 116, 144)");
   await expect(createAction).toHaveCSS("color", "rgb(255, 255, 255)");
   await expect(createAction).toHaveCSS("border-radius", "4px");
   await expect(preview.getByRole("button", { name: "Primary", exact: true })).toHaveCSS("border-radius", "3px");
   await createAction.focus();
   await page.keyboard.down("Space");
-  await expect(createAction).toHaveCSS("background-color", "rgb(24, 42, 51)");
+  await expect(createAction).toHaveCSS("background-color", "rgb(50, 97, 121)");
   await page.keyboard.up("Space");
   await expect(preview.getByRole("status")).toHaveText("Нажатий: 1");
   const bg = builder.getByRole("textbox", { name: "Основной фон", exact: true });

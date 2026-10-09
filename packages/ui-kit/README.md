@@ -28,7 +28,7 @@ unit-тесты, покрытие Vitest/V8, браузеры, доступно�
 Он может отличаться от сохранённого снимка. Статус текущего CI проверяйте отдельно:
 [Текущие запуски CI](https://github.com/whitewolf06/gavia-ui/actions).
 
-Версия **0.11.0**. [История изменений](CHANGELOG.md) ·
+Версия исходников и архива пакета — **0.11.1**. [История изменений](CHANGELOG.md) ·
 [Миграция 0.11](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.11.0.md) ·
 [Темы 0.10](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.10.0.md) ·
 [История ребрендинга](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-gavia.md).
@@ -67,12 +67,14 @@ Classic и Classic Dark используют системный шрифт бе�
 
 ## Быстрый старт
 
+Установка 0.11.1 после публикации в npm:
+
 ```bash
-pnpm add gavia-ui@0.11.0 vue
+pnpm add gavia-ui@0.11.1 vue
 # либо
-npm install gavia-ui@0.11.0 vue
+npm install gavia-ui@0.11.1 vue
 # либо
-bun add gavia-ui@0.11.0 vue
+bun add gavia-ui@0.11.1 vue
 ```
 
 ```ts

@@ -1,8 +1,14 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Locator } from "@playwright/test";
 import { chooseDropdownOption, chooseShowcaseTheme } from "./select-helpers";
 const themes = [{ name: "white", label: "Classic" }, { name: "graphite", label: "Classic Dark" }, { name: "newspaper", label: "Newspaper" }];
 // Keep a configured production subpath when comparing the same built showcase.
 const showcaseUrl = new URL("?view=system", process.env.GAVIA_E2E_BASE_URL ?? "http://127.0.0.1:4173/").href;
+async function review(target: Locator, name: string): Promise<void> {
+  if (process.env.GAVIA_VISUAL_REVIEW === "1") {
+    // Review artifacts are never accepted automatically as reference images.
+    await target.screenshot({ path: test.info().outputPath(`review-${name}`), animations: "disabled", caret: "hide", scale: "css" });
+  }
+}
 test.beforeEach(async ({ page }) => {
   // Fixed time and locally available fonts prevent unrelated machine/date changes.
   await page.clock.setFixedTime(new Date("2026-10-01T12:00:00Z"));
@@ -39,11 +45,13 @@ for (const theme of themes) {
       try {
         // Compare the entire recipe batch so one difference cannot hide later screens.
         await expect.soft(preview).toHaveScreenshot(`${theme.name}-recipe-${id}.png`);
+        await review(preview, `${theme.name}-recipe-${id}.png`);
       } finally {
         if (transform !== undefined) await preview.evaluate((element: HTMLElement, value) => { element.style.transform = value; }, transform);
       }
     }
     await expect(page.getByTestId("ds-stress")).toHaveScreenshot(`${theme.name}-long-content.png`);
+    await review(page.getByTestId("ds-stress"), `${theme.name}-long-content.png`);
   });
   test(`${theme.name}: interactive states and overlay focus`, async ({ page }) => {
     await chooseShowcaseTheme(page, theme.label);
@@ -62,10 +70,12 @@ for (const theme of themes) {
     await explorer.getByRole("button", { name: "Проверить фокус" }).press("Enter");
     await expect(preview.getByRole("button", { name: "Добавить" })).toBeFocused();
     await expect(preview).toHaveScreenshot(`${theme.name}-button-focus.png`);
+    await review(preview, `${theme.name}-button-focus.png`);
     await select("WlInput");
     await explorer.getByRole("checkbox", { name: "invalid", exact: true }).check();
     await page.mouse.move(0, 0);
     await expect(preview).toHaveScreenshot(`${theme.name}-input-invalid.png`);
+    await review(preview, `${theme.name}-input-invalid.png`);
     await select("WlSelect");
     await preview.getByRole("combobox", { name: "Область" }).press("Enter");
     // Vue removes entry classes on animation frames even with reduced motion.
@@ -82,18 +92,22 @@ for (const theme of themes) {
       }
     });
     await expect(page.getByRole("listbox")).toHaveScreenshot(`${theme.name}-select-open.png`);
+    await review(page.getByRole("listbox"), `${theme.name}-select-open.png`);
     await page.keyboard.press("Escape");
     await select("WlDialog");
     await preview.getByRole("button", { name: "Открыть диалог" }).press("Enter");
     await expect(page.getByRole("dialog", { name: "Сведения о материале" })).toHaveScreenshot(`${theme.name}-dialog.png`);
+    await review(page.getByRole("dialog", { name: "Сведения о материале" }), `${theme.name}-dialog.png`);
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog", { name: "Сведения о материале" })).toHaveCount(0);
     await select("WlDrawer");
     await preview.getByRole("button", { name: "Открыть панель" }).press("Enter");
     await expect(page.getByRole("dialog", { name: "О материале" })).toHaveScreenshot(`${theme.name}-drawer.png`);
+    await review(page.getByRole("dialog", { name: "О материале" }), `${theme.name}-drawer.png`);
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog", { name: "О материале" })).toHaveCount(0);
     await page.locator(".pg-top").getByRole("button", { name: /^Поиск/ }).press("Enter");
     await expect(page.locator(".wl-command-palette")).toHaveScreenshot(`${theme.name}-palette-focus.png`);
+    await review(page.locator(".wl-command-palette"), `${theme.name}-palette-focus.png`);
   });
 }
