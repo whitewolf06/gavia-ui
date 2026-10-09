@@ -12,7 +12,7 @@ and working examples with code.
 
 <p align="center">
   <a href="https://whitewolf06.github.io/gavia-ui/"><img src="docs/brand/playground-button.svg" alt="Open Playground" width="230" height="44"></a><br>
-  · <a href="https://whitewolf06.github.io/gavia-ui/?view=docs">Documentation</a>
+  · <strong>Documentation:</strong> <a href="https://whitewolf06.github.io/gavia-ui/?view=docs&amp;lang=en">English</a> / <a href="https://whitewolf06.github.io/gavia-ui/?view=docs&amp;lang=ru">Русский</a>
   · <a href="https://whitewolf06.github.io/gavia-ui/?view=font">Gavia Sans</a>
   · <a href="https://www.npmjs.com/package/gavia-ui">npm package</a>
 </p>
