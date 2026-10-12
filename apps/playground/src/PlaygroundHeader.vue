@@ -10,20 +10,21 @@ import type { WlIconName } from "../../../packages/ui-kit/src/icons.generated";
 import type { WlMenuExpose, WlMenuItem } from "../../../packages/ui-kit/src/navigation-types";
 import type { WlThemeName } from "../../../packages/ui-kit/src/types";
 import type { PlaygroundView, PlaygroundRoute } from "./navigation";
-import { isPlaygroundTheme, withPlaygroundTheme } from "./themes";
+import { isPlaygroundThemePreference, withPlaygroundTheme, type PlaygroundThemePreference } from "./themes";
 
 const { t, locale } = usePlaygroundI18n();
 const props = defineProps<{
   activeView: PlaygroundView;
   route?: PlaygroundRoute;
   theme: WlThemeName;
+  themePreference: PlaygroundThemePreference;
   themeOptions: Array<{ label: string; value: string }>;
   version: string;
   logo: string;
 }>();
 const emit = defineEmits<{
   navigate: [view: PlaygroundView];
-  theme: [theme: WlThemeName];
+  theme: [theme: PlaygroundThemePreference];
   search: [];
   locale: [locale: PlaygroundLocale];
 }>();
@@ -164,13 +165,13 @@ function navigate(view: PlaygroundView): void {
   if (fromOverflow) void nextTick(restoreMenuFocus);
 }
 function selectTheme(value: unknown): void {
-  if (isPlaygroundTheme(value)) emit("theme", value);
+  if (isPlaygroundThemePreference(value)) emit("theme", value);
 }
 function selectLocale(value: unknown): void {
   if (value === "en" || value === "ru") emit("locale", value);
 }
 watch(() => props.activeView, () => { menuVisible.value = false; closeOverflow(); });
-watch(() => [props.theme, locale.value], () => { void nextTick(scheduleMeasurement); });
+watch(() => [props.theme, props.themePreference, locale.value], () => { void nextTick(scheduleMeasurement); });
 onMounted(() => {
   mounted = true;
   compactViewport = window.matchMedia("(max-width: 760px)");
@@ -197,7 +198,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="headerElement" class="pg-header-inner wl-container">
-    <a class="pg-brand" :href="withPlaygroundTheme('?', theme)" :aria-label="t('shell.PlaygroundHeader.text127')" @click.prevent="navigate('home')">
+    <a class="pg-brand" :href="withPlaygroundTheme('?', themePreference)" :aria-label="t('shell.PlaygroundHeader.text127')" @click.prevent="navigate('home')">
       <span class="pg-logo pg-logo-mask" aria-hidden="true" :style="{ maskImage: 'url(' + logo + ')', WebkitMaskImage: 'url(' + logo + ')' }" />
       <b class="pg-title">Gavia UI</b>
       <span class="pg-kit-version" :aria-label="t('shell.PlaygroundHeader.text128') + version">v{{ version }}</span>
@@ -221,9 +222,9 @@ onBeforeUnmount(() => {
           <template #icon><WlIcon name="search" :size="16" /></template><span class="pg-search-text">{{ t('shell.PlaygroundHeader.text132') }}</span>
         </WlButton>
         <div class="pg-theme-control">
-          <WlSelect class="pg-theme" size="sm" :model-value="theme" :options="themeOptions"
+          <WlSelect class="pg-theme" size="sm" :model-value="themePreference" :options="themeOptions"
             option-label="label" option-value="value" :aria-label="t('shell.PlaygroundHeader.text133')"
-            :title="t('shell.PlaygroundHeader.text134') + theme" data-testid="pg-theme-selector" @update:model-value="selectTheme" />
+            :title="t('shell.PlaygroundHeader.text134') + (themePreference === 'system' ? t('shell.theme.system') : theme)" data-testid="pg-theme-selector" @update:model-value="selectTheme" />
           <WlIcon class="pg-theme-mobile-icon" name="sliders-h" :size="18" />
         </div>
       </div>

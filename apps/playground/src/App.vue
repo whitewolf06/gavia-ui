@@ -9,7 +9,8 @@ import type { WlCommandPaletteGroup, WlCommandPaletteItem, WlThemeName } from ".
 import PlaygroundHeader from "./PlaygroundHeader.vue";
 import FontDownloadLink from "./project/FontDownloadLink.vue";
 import { playgroundNavigationKey } from "./playground-navigation";
-import { createPlaygroundThemeUrl, getPlaygroundThemeToggleTarget, isPlaygroundTheme, parsePlaygroundTheme, playgroundThemeOptions } from "./themes";
+import { createPlaygroundThemeUrl, getPlaygroundThemeToggleTarget, isPlaygroundThemePreference, parsePlaygroundThemePreference, playgroundThemePreference, playgroundThemeOptions, resolvePlaygroundTheme, type PlaygroundThemePreference } from "./themes";
+import { savePlaygroundPreference } from "./preferences";
 import { createPlaygroundThemeTransition } from "./theme-transition";
 import gaviaMarkUrl from "../../../docs/brand/gavia-ui-mark-v2.png";
 import { gaviaProjectInfo as project } from "./project/project-info";
@@ -26,6 +27,7 @@ const headerElement = ref<HTMLElement | null>(null);
 let restoreScrollPadding: (() => void) | undefined;
 let historyAnchorFrame: number | undefined;
 let appMounted = false;
+let systemTheme: MediaQueryList | undefined;
 const themeTransition = createPlaygroundThemeTransition();
 function cancelHistoryAnchor(): void {
   if (historyAnchorFrame !== undefined) window.cancelAnimationFrame(historyAnchorFrame);
@@ -43,13 +45,15 @@ function readView(): void {
   cancelHistoryAnchor();
   setPlaygroundLocale(parsePlaygroundLocale(window.location.search));
   activeRoute.value = routeFromLocation();
-  const locationTheme = parsePlaygroundTheme(window.location.search);
+  themePreference.value = parsePlaygroundThemePreference(window.location.search);
+  const locationTheme = resolvePlaygroundTheme(themePreference.value);
   classicLightTheme = rememberClassicLightTheme(locationTheme, theme.value, classicLightTheme);
   requestedTheme = locationTheme;
+  requestedThemePreference = themePreference.value;
   requestedClassicLightTheme = classicLightTheme;
   theme.value = locationTheme;
   // Back/Forward can change an asynchronous page before restoring its anchor.
-  if (activeRoute.value.view !== "docs" && activeRoute.value.view !== "font") return;
+  if (activeRoute.value.view !== "docs" && activeRoute.value.view !== "font" && activeRoute.value.view !== "system") return;
   const route = activeRoute.value;
   const hash = window.location.hash;
   if (!hash) return;
@@ -62,7 +66,7 @@ function readView(): void {
       historyAnchorFrame = undefined;
       if (!appMounted || window.location.hash !== hash || activeRoute.value !== route) return;
       const target = document.getElementById(id);
-      const pageSelector = route.view === "font" ? ".wl-type-page" : ".docs-content";
+      const pageSelector = route.view === "font" ? ".wl-type-page" : route.view === "system" ? ".ds-main" : ".docs-content";
       if (target?.closest(pageSelector)) target.scrollIntoView({ block: "start", behavior: "instant" });
     });
   });
@@ -91,13 +95,19 @@ function openQualityLink(event: MouseEvent): void {
 }
 function qualityRouteHref(): string {
   const current = new URL(typeof window === "undefined" ? "https://whitewolf06.github.io/gavia-ui/" : window.location.href);
-  return createPlaygroundThemeUrl(createPlaygroundUrl(current, { view: "docs", section: "quality" }), theme.value).href;
+  return createPlaygroundThemeUrl(createPlaygroundUrl(current, { view: "docs", section: "quality" }), themePreference.value).href;
 }
 function openDocsCatalog(): Promise<void> { return navigate({ view: "docs" }, "docs-components"); }
 function openDocsOverview(anchor: string): Promise<void> { return navigate({ view: "docs" }, anchor); }
 onMounted(() => {
   appMounted = true;
+  systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+  systemTheme.addEventListener("change", syncSystemTheme);
   readView();
+  // Pin this visit's resolved preferences before a manual choice updates storage.
+  // Back/Forward must restore the old language/mode rather than the latest saved choice.
+  const preferenceUrl = createPlaygroundLocaleUrl(createPlaygroundThemeUrl(new URL(window.location.href), themePreference.value), playgroundLocale.value);
+  if (preferenceUrl.href !== window.location.href) window.history.replaceState(null, "", preferenceUrl);
   if (new URLSearchParams(window.location.search).get("view") === "components") {
     window.history.replaceState(null, "", createPlaygroundUrl(new URL(window.location.href), activeRoute.value));
   }
@@ -124,6 +134,7 @@ onBeforeUnmount(() => {
   appMounted = false;
   cancelHistoryAnchor();
   themeTransition.dispose();
+  systemTheme?.removeEventListener("change", syncSystemTheme);
   window.removeEventListener("popstate", readView);
   restoreScrollPadding?.();
 });
@@ -237,6 +248,7 @@ function chooseLocale(value: PlaygroundLocale): void {
   const target = createPlaygroundLocaleUrl(new URL(window.location.href), value);
   if (target.href !== window.location.href) window.history.pushState(null, "", target);
   setPlaygroundLocale(value);
+  savePlaygroundPreference("locale", value);
 }
 watch([activeRoute, playgroundLocale], () => updatePlaygroundSeo(activeRoute.value), { immediate: true });
 
@@ -247,11 +259,13 @@ async function onCommandPaletteSelect(item: WlCommandPaletteItem): Promise<void>
   else if (data?.view === "docs" && isDocumentationSection(data.section)) await openDocsSection(data.section);
   else if (data?.view) await showView(data.view);
 }
-const theme = ref<WlThemeName>(parsePlaygroundTheme(typeof window === "undefined" ? "" : window.location.search));
-provide(playgroundNavigationKey, { navigate, theme });
-const themeOptions = playgroundThemeOptions;
+const themePreference = playgroundThemePreference;
+const theme = ref<WlThemeName>(resolvePlaygroundTheme(themePreference.value));
+provide(playgroundNavigationKey, { navigate, theme, themePreference });
+const themeOptions = computed(() => [{ value: "system", label: t("shell.theme.system") }, ...playgroundThemeOptions]);
 let classicLightTheme: "white" | "newspaper" = "white";
 let requestedTheme = theme.value;
+let requestedThemePreference = themePreference.value;
 let requestedClassicLightTheme: "white" | "newspaper" = classicLightTheme;
 
 function rememberClassicLightTheme(value: WlThemeName, previous: WlThemeName, remembered: "white" | "newspaper"): "white" | "newspaper" {
@@ -262,40 +276,57 @@ function rememberClassicLightTheme(value: WlThemeName, previous: WlThemeName, re
 function cancelPendingThemeChange(): void {
   themeTransition.cancel();
   requestedTheme = theme.value;
+  requestedThemePreference = themePreference.value;
   requestedClassicLightTheme = classicLightTheme;
 }
 function toggleThemeVariant(): void {
   chooseTheme(getPlaygroundThemeToggleTarget(requestedTheme, requestedClassicLightTheme));
 }
-function updateThemeUrl(value: WlThemeName): void {
+function syncSystemTheme(): void {
+  if (themePreference.value !== "system" || requestedThemePreference !== "system") return;
+  cancelPendingThemeChange();
+  theme.value = resolvePlaygroundTheme("system");
+  requestedTheme = theme.value;
+}
+function updateThemeUrl(value: PlaygroundThemePreference): void {
   const url = createPlaygroundThemeUrl(new URL(window.location.href), value);
   if (url.href !== window.location.href) window.history.replaceState(null, "", url);
 }
 function chooseTheme(value: unknown): void {
-  if (!isPlaygroundTheme(value)) return;
-  if (requestedTheme === value) {
+  if (!isPlaygroundThemePreference(value)) return;
+  const resolvedTheme = resolvePlaygroundTheme(value);
+  if (requestedTheme === resolvedTheme && requestedThemePreference === value) {
     // Do not write a pending theme into the URL before its guarded DOM update.
-    if (theme.value === value) updateThemeUrl(value);
+    if (theme.value === resolvedTheme && themePreference.value === value) {
+      updateThemeUrl(value);
+      savePlaygroundPreference("theme", value);
+    }
     return;
   }
-  requestedClassicLightTheme = rememberClassicLightTheme(value, requestedTheme, requestedClassicLightTheme);
-  requestedTheme = value;
+  requestedClassicLightTheme = rememberClassicLightTheme(resolvedTheme, requestedTheme, requestedClassicLightTheme);
+  requestedTheme = resolvedTheme;
+  requestedThemePreference = value;
   const nextClassicLightTheme = requestedClassicLightTheme;
   themeTransition.run(async () => {
     classicLightTheme = nextClassicLightTheme;
-    theme.value = value;
+    themePreference.value = value;
+    // Re-read the OS preference if it changed while the snapshot was captured.
+    theme.value = resolvePlaygroundTheme(value);
+    requestedTheme = theme.value;
     updateThemeUrl(value);
+    savePlaygroundPreference("theme", value);
     // Native capture must see Vue's updated hero layers, icon and header selector.
     await nextTick();
   });
 }
 watch(theme, (value) => {
   document.documentElement.dataset.wlTheme = value;
+  document.documentElement.style.colorScheme = value === "gavia-dark" || value === "graphite" ? "dark" : "light";
 }, { immediate: true, flush: "sync" });
 </script>
 <template>
   <header ref="headerElement" class="pg-top">
-    <PlaygroundHeader :active-view="activeView" :route="activeRoute" :theme="theme" :theme-options="themeOptions"
+    <PlaygroundHeader :active-view="activeView" :route="activeRoute" :theme="theme" :theme-preference="themePreference" :theme-options="themeOptions"
       :version="project.version" :logo="gaviaMarkUrl" @navigate="showView"
       @locale="chooseLocale" @theme="chooseTheme" @search="commandPaletteVisible = true" />
   </header>
@@ -303,7 +334,7 @@ watch(theme, (value) => {
     :groups="commandPaletteGroups" :shortcut="globalSearchShortcut" @select="onCommandPaletteSelect">
     <template #footer>{{ t('shell.App.text50') }}</template>
   </WlCommandPalette>
-  <HomePage :key="locale" v-if="activeView === 'home'" :theme="theme" @navigate="showView" @component="openDocs" @catalog="openDocsCatalog" @quality="openDocsSection('quality')" @toggle-theme="toggleThemeVariant" />
+  <HomePage :key="locale" v-if="activeView === 'home'" :theme="theme" @route="navigate" @navigate="showView" @component="openDocs" @catalog="openDocsCatalog" @quality="openDocsSection('quality')" @toggle-theme="toggleThemeVariant" />
   <DocsPage :key="locale" v-else-if="activeView === 'docs'" :component="activeRoute.component" :section="activeRoute.section" :theme="theme"
     @section="openDocsSection" @component="openDocs" @overview="openDocsOverview" @navigate="showView" />
   <FontPage :key="locale" v-else-if="activeView === 'font'" :theme="theme" @navigate="showView" />

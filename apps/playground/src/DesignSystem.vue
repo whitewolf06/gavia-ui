@@ -21,6 +21,7 @@ import CodePanel from "./design-system/CodePanel.vue";
 import RecipeGallery from "./design-system/RecipeGallery.vue";
 import ContentStress from "./design-system/ContentStress.vue";
 import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
+import { usePageAnchor } from "./usePageAnchor";
 
 const WlButton = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlButton.vue"));
 const WlInput = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlInput.vue"));
@@ -35,6 +36,8 @@ const WlTable = defineAsyncComponent(() => import("../../../packages/ui-kit/src/
 const WlDrawer = defineAsyncComponent(() => import("../../../packages/ui-kit/src/components/WlDrawer.vue"));
 
 const props = defineProps<{ theme: WlThemeName }>();
+const pageElement = ref<HTMLElement | null>(null);
+usePageAnchor(pageElement);
 const emit = defineEmits<{ (event: "component", name: string): void }>();
 const sections = [
   ["foundations", t('shell.DesignSystem.text141')], ["typography", t('shell.DesignSystem.text142')], ["layout", t('shell.DesignSystem.text143')],
@@ -98,7 +101,7 @@ const tokenCode = t('shell.DesignSystem.text167');
 </script>
 
 <template>
-  <main class="ds-main wl-container" id="ds-top">
+  <main ref="pageElement" class="ds-main wl-container" id="ds-top">
     <PlaygroundPageHeader class="ds-hero" :title="t('shell.DesignSystem.text168')"
       :description="t('shell.DesignSystem.text169')"
       :breadcrumbs="[{ label: t('shell.DesignSystem.text170') }]">
@@ -125,7 +128,7 @@ const tokenCode = t('shell.DesignSystem.text167');
             <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">{{ t('shell.DesignSystem.text181') }}</h3><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text182') }}</p></article>
             <article class="wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">{{ t('shell.DesignSystem.text183') }}</h3><p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text184') }}</p></article>
           </div>
-          <div class="wl-stack ds-theme-groups" data-space="2xl">
+          <div id="ds-themes" class="wl-stack ds-theme-groups" data-space="2xl">
             <div v-for="group in themePreviewGroups" :key="group.id" class="wl-grid ds-theme-grid" :class="{ 'ds-theme-grid--gavia': group.id === 'gavia' }" :data-theme-group="group.id" data-space="lg">
               <article v-for="item in group.themes" :key="item.name" :data-wl-theme="item.name" class="wl-surface wl-stack ds-theme-preview" data-space="md">
                 <h3 class="wl-text-heading">{{ item.label }}</h3>
@@ -271,7 +274,7 @@ const tokenCode = t('shell.DesignSystem.text167');
 .ds-nav a:hover { color: var(--wl-text); background: var(--wl-bg-soft); }
 .ds-nav a:focus-visible, .ds-table-scroll:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 2px; }
 .ds-content { min-width: 0; }
-.ds-section { scroll-margin-top: 90px; }
+.ds-section, .ds-theme-groups { scroll-margin-top: 90px; }
 .ds-section > div:first-child > p:last-child { max-width: 72ch; }
 .ds-theme-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .ds-theme-grid--gavia { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -316,7 +319,7 @@ const tokenCode = t('shell.DesignSystem.text167');
 @media (max-width: 640px) {
   .ds-theme-grid, .ds-theme-grid--gavia, .ds-token-filters { grid-template-columns: minmax(0, 1fr); }
   .ds-type-row { grid-template-columns: minmax(0, 1fr); gap: var(--wl-space-sm); }
-  .ds-section { scroll-margin-top: 145px; }
+  .ds-section, .ds-theme-groups { scroll-margin-top: 145px; }
 }
 @media (max-width: 760px) { .ds-main { padding-top: var(--wl-space-xl); } }
 </style>

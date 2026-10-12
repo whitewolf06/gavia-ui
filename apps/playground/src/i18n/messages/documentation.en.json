@@ -1287,5 +1287,10 @@
     "s1285": "Dark theme with status colours.",
     "s1286": "Light theme with a warm paper background.",
     "s1287": "Dark theme with a teal accent and Gavia Sans."
+  },
+  "componentSearch": {
+    "label": "Search components",
+    "clear": "Clear search",
+    "empty": "No components found"
   }
 }

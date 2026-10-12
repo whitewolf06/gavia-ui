@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "./i18n";
 const { t } = usePlaygroundI18n();
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { WlButton, WlIcon, WlSegmented, type WlThemeName } from "../../../packages/ui-kit/src";
+import { WlButton, WlIcon, WlIconButton, WlInput, WlSegmented, type WlThemeName } from "../../../packages/ui-kit/src";
 import { getLocalizedManifest } from "./documentation/manifest";
 const wlManifest = getLocalizedManifest();
 import CodePanel from "./design-system/CodePanel.vue";
@@ -12,7 +12,7 @@ import ComponentDocumentation from "./documentation/ComponentDocumentation.vue";
 import { useDocumentationScrollspy } from "./documentation/useDocumentationScrollspy";
 import FoundationPage from "./documentation/foundations/FoundationPage.vue";
 import { createPlaygroundUrl, isDocumentationAssetSection, isDocumentationFoundationSection, isDocumentationQualitySection, type DocumentationSection } from "./navigation";
-import { withPlaygroundTheme } from "./themes";
+import { playgroundThemePreference, withPlaygroundTheme } from "./themes";
 import DocumentationAssetsPage from "./documentation/assets/DocumentationAssetsPage.vue";
 import { documentationAssets, documentationAssetPages } from "./documentation/assets/assets";
 import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
@@ -57,10 +57,21 @@ const pageIntroduction = computed(() => {
     ? [{ label: t('documentation.strings.s0827'), route: { view: "docs" as const } }, { label: title }]
     : [{ label: t('documentation.strings.s0827') }] };
 });
-const groups = documentationCategories.map((category) => ({
-  ...category,
-  entries: wlManifest.filter((item) => item.category === category.key)
-})).filter((category) => category.entries.length > 0);
+const componentQuery = ref("");
+const groups = computed(() => {
+  const needle = componentQuery.value.trim().toLowerCase();
+  return documentationCategories.map((category) => ({
+    ...category,
+    entries: wlManifest.filter((item) => item.category === category.key
+      && (!needle || item.name.toLowerCase().includes(needle) || (item.description ?? "").toLowerCase().includes(needle)))
+      .sort((left, right) => left.name.localeCompare(right.name, "en"))
+  })).filter((category) => category.entries.length > 0);
+});
+async function clearComponentSearch(): Promise<void> {
+  componentQuery.value = "";
+  await nextTick();
+  pageElement.value?.querySelector<HTMLInputElement>("#docs-component-search")?.focus();
+}
 const overviewSections = documentationOverviewHeadings;
 const [installHeading, foundationsHeading, componentsHeading, tokensHeading, iconsHeading, migrationHeading] = documentationOverviewHeadings;
 const isMobile = ref(false);
@@ -69,6 +80,10 @@ const menuElement = ref<HTMLDetailsElement | null>(null);
 function closeMobileMenu(): void {
   mobileMenuOpen.value = false;
   if (isMobile.value && menuElement.value) menuElement.value.open = false;
+}
+function navigateComponent(name: string): void {
+  closeMobileMenu();
+  emit("component", name);
 }
 let mobileMedia: MediaQueryList | undefined;
 function updateMobile(): void { isMobile.value = mobileMedia?.matches ?? false; }
@@ -79,12 +94,12 @@ function overviewHref(heading: DocumentationHeading): string {
   const current = new URL(typeof window === "undefined" ? "http://localhost/" : window.location.href);
   const target = createPlaygroundUrl(current, { view: "docs" });
   target.hash = heading.id;
-  return withPlaygroundTheme(target.pathname + target.search + target.hash, props.theme);
+  return withPlaygroundTheme(target.pathname + target.search + target.hash, playgroundThemePreference.value);
 }
 const qualityHref = computed(() => {
   const current = new URL(typeof window === "undefined" ? "http://localhost/" : window.location.href);
   const target = createPlaygroundUrl(current, { view: "docs", section: "quality" });
-  return withPlaygroundTheme(target.pathname + target.search, props.theme);
+  return withPlaygroundTheme(target.pathname + target.search, playgroundThemePreference.value);
 });
 function navigateQuality(event: MouseEvent): void {
   if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
@@ -151,12 +166,17 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
             </nav>
             <section class="docs-nav-section wl-stack" data-space="md" :aria-label="t('documentation.strings.s0839')">
               <h2 class="docs-sidebar-heading"><span class="docs-sidebar-mark"><WlIcon class="docs-sidebar-icon" name="box" :size="16" /></span>{{ t('documentation.strings.s0839') }}</h2>
-              <nav class="docs-catalog" :aria-label="t('documentation.strings.s0840')">
+              <WlInput id="docs-component-search" v-model="componentQuery" class="docs-component-search" size="sm" type="search" :placeholder="t('documentation.componentSearch.label')" :aria-label="t('documentation.componentSearch.label')" aria-controls="docs-component-catalog" autocomplete="off" spellcheck="false" @keydown.esc.prevent.stop="clearComponentSearch">
+                <template #prefix><WlIcon name="search" :size="14" /></template>
+                <template v-if="componentQuery" #suffix><WlIconButton class="docs-component-search-clear" size="sm" icon="x" :aria-label="t('documentation.componentSearch.clear')" :title="t('documentation.componentSearch.clear')" @click="clearComponentSearch" /></template>
+              </WlInput>
+              <p v-if="!groups.length" class="docs-component-search-empty wl-text-small wl-text-muted" role="status">{{ t('documentation.componentSearch.empty') }}</p>
+              <nav id="docs-component-catalog" class="docs-catalog" :aria-label="t('documentation.strings.s0840')">
                 <section v-for="group in groups" :key="group.key" class="docs-catalog-group">
                   <h3 class="docs-category-label">{{ group.label }}</h3>
                   <ul class="docs-catalog-list">
                     <li v-for="item in group.entries" :key="item.name">
-                      <button type="button" class="docs-component-link" :aria-label="item.name" :aria-describedby="'docs-catalog-version-' + item.name" :aria-current="component === item.name ? 'page' : undefined" @click="emit('component', item.name)">
+                      <button type="button" class="docs-component-link" :aria-label="item.name" :aria-describedby="'docs-catalog-version-' + item.name" :aria-current="component === item.name ? 'page' : undefined" @click="navigateComponent(item.name)">
                         <span class="docs-component-name">{{ item.name }}</span>
                         <span :id="'docs-catalog-version-' + item.name" class="docs-component-version" :title="t('documentation.strings.s0841') + item.introducedIn">{{ t('documentation.strings.s0842') }} {{ item.introducedIn }}</span>
                       </button>
@@ -259,6 +279,10 @@ onBeforeUnmount(() => { mobileMedia?.removeEventListener("change", updateMobile)
 .docs-design-rules { background: var(--wl-bg-soft); }
 .docs-toc-list a:hover { color: var(--wl-text-accent); background: var(--wl-bg-soft); }
 .docs-toc-list a:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 2px; border-radius: var(--wl-corner-control); }
+:where(.docs-component-search) input::-webkit-search-cancel-button { appearance: none; }
+:where(.docs-component-search) .wl-input-wrap__suffix { right: var(--wl-space-2xs); }
+.docs-component-search-clear { pointer-events: auto; }
+.docs-component-search-empty { margin: 0; padding-inline: var(--wl-space-sm); }
 .docs-catalog { min-width: 0; padding: var(--wl-space-xs); margin-inline: calc(-1 * var(--wl-space-xs)); }
 .docs-catalog-group { margin-bottom: var(--wl-space-md); }
 .docs-catalog-group + .docs-catalog-group { padding-block-start: var(--wl-space-md); border-block-start: 1px solid var(--wl-border); }

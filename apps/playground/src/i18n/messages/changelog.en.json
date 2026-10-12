@@ -1,4 +1,9 @@
 {
+  "changelog.release0121.prepared": "0.12.1 — prepared",
+  "changelog.release0121.preferences": "The Playground follows the system color scheme and supported browser language on first visit, remembers manual choices, and offers a System theme option. Explicit language/theme links keep their priority.",
+  "changelog.release0121.navigation": "Home metrics link to the component, icon, token and theme sections. Documentation components are sorted alphabetically within each group and can be filtered with a local search field.",
+  "changelog.release0121.preferenceDetails": "Make the Playground follow the system theme and supported browser language on first visit, with persistent manual choices and explicit URL overrides. Apply the theme before first paint and preserve automatic mode in navigation and history.",
+  "changelog.release0121.navigationDetails": "Link home metrics to their documentation sections, sort components alphabetically within each group, and add a local component search with clear and empty states on desktop and mobile.",
   "changelog.text0": "Changelog",
   "changelog.text1": "What changed in Gavia UI and what to consider when upgrading. Versions before the rebrand used the previous package name. The history was reconstructed from release Git tags and migration notes.",
   "changelog.text2": "Unreleased",

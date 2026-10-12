@@ -12,7 +12,7 @@ import "gavia-ui/themes/gavia.css";
 import "gavia-ui/themes/gavia-dark.css";
 import { parsePlaygroundTheme } from "./themes";
 
-// Apply explicit URL themes before the asynchronous application mounts.
+// Resolve URL/saved/system preferences before the asynchronous application mounts.
 document.documentElement.dataset.wlTheme = parsePlaygroundTheme(window.location.search);
 
 /** The component gallery is deliberately excluded from the initial entry. */

@@ -3,7 +3,8 @@ import { usePlaygroundI18n } from "./i18n";
 const { t } = usePlaygroundI18n();
 import { computed, ref, watch } from "vue";
 import type { WlThemeName } from "../../../packages/ui-kit/src/types";
-import { withPlaygroundTheme } from "./themes";
+import { playgroundThemePreference, withPlaygroundTheme } from "./themes";
+import { createPlaygroundUrl, type PlaygroundRoute } from "./navigation";
 import { WlButton, WlIcon, WlIconButton, WlSegmented } from "../../../packages/ui-kit/src";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
@@ -26,12 +27,13 @@ const props = defineProps<{ theme: WlThemeName }>();
 const isDarkTheme = computed(() => wlDesignThemes.find((item) => item.name === props.theme)?.colorScheme === "dark");
 const nightArtReady = ref(false);
 const themeToggleLabel = computed(() => isDarkTheme.value ? t('shell.HomePage.text54') : t('shell.HomePage.text55'));
-const themedHref = (href: string): string => withPlaygroundTheme(href, props.theme);
+const themedHref = (href: string): string => withPlaygroundTheme(href, playgroundThemePreference.value);
 const pageElement = ref<HTMLElement | null>(null);
 usePageAnchor(pageElement);
 
 const emit = defineEmits<{
   navigate: [view: "docs" | "font" | "system" | "project" | "theme-builder"];
+  route: [route: PlaygroundRoute, anchor?: string];
   catalog: [];
   component: [name: string];
   quality: [];
@@ -63,11 +65,22 @@ const sections = [
   { view: "project", number: "03", icon: "file", title: "Changelog", description: t('shell.HomePage.text60') }
 ] as const;
 const metrics = [
-  { label: t('shell.HomePage.text61'), value: wlManifest.length, icon: "box", caption: "" },
-  { label: t('shell.HomePage.text62'), value: WL_ICON_NAMES.length, icon: "image", caption: "" },
-  { label: t('shell.HomePage.text63'), value: wlDesignTokens.length, icon: "database", caption: t('shell.HomePage.text64') },
-  { label: t('shell.HomePage.text65'), value: wlDesignThemes.length, icon: "grid", caption: t('shell.HomePage.text66') }
+  { label: t('shell.HomePage.text61'), value: wlManifest.length, icon: "box", caption: "", route: { view: "docs" }, anchor: "docs-components" },
+  { label: t('shell.HomePage.text62'), value: WL_ICON_NAMES.length, icon: "image", caption: "", route: { view: "docs", section: "icons" }, anchor: undefined },
+  { label: t('shell.HomePage.text63'), value: wlDesignTokens.length, icon: "database", caption: t('shell.HomePage.text64'), route: { view: "system" }, anchor: "ds-tokens" },
+  { label: t('shell.HomePage.text65'), value: wlDesignThemes.length, icon: "grid", caption: t('shell.HomePage.text66'), route: { view: "system" }, anchor: "ds-themes" }
 ] as const;
+function metricHref(route: PlaygroundRoute, anchor?: string): string {
+  const current = new URL(typeof window === "undefined" ? "https://whitewolf06.github.io/gavia-ui/" : window.location.href);
+  const target = createPlaygroundUrl(current, route);
+  if (anchor) target.hash = anchor;
+  return themedHref(target.pathname + target.search + target.hash);
+}
+function openMetric(event: MouseEvent, route: PlaygroundRoute, anchor?: string): void {
+  if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  emit("route", route, anchor);
+}
 const buttonPreview = { variant: "primary" } as const;
 const buttonSource = consumerSource(buttonExampleSource, buttonPreview);
 const setupSource = t('shell.HomePage.text67');
@@ -133,7 +146,7 @@ const setupSource = t('shell.HomePage.text67');
       </section>
     <dl class="home-metrics" :aria-label="t('shell.HomePage.text89')">
       <div v-for="metric in metrics" :key="metric.label" class="home-metric">
-        <dt class="home-metric-label"><span class="home-metric-icon" aria-hidden="true"><WlIcon :name="metric.icon" :size="25" /></span>{{ metric.label }}</dt>
+        <dt class="home-metric-label"><a class="home-metric-link" :href="metricHref(metric.route, metric.anchor)" @click="openMetric($event, metric.route, metric.anchor)"><span class="home-metric-icon" aria-hidden="true"><WlIcon :name="metric.icon" :size="25" /></span>{{ metric.label }}</a></dt>
         <dd class="home-metric-value">{{ metric.value }}</dd>
         <dd v-if="metric.caption" class="home-metric-caption wl-text-small wl-text-muted">{{ metric.caption }}</dd>
       </div>
@@ -244,7 +257,13 @@ const setupSource = t('shell.HomePage.text67');
 .home-copy-status { min-height: 1.6em; }
 .home-manual-copy { display: block; width: 100%; min-height: 80px; resize: vertical; border: 1px solid var(--wl-border); border-radius: var(--wl-corner-control); background: var(--wl-bg); color: var(--wl-text); padding: var(--wl-space-md); font: 13px/1.6 var(--wl-mono); }
 .home-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: var(--wl-space-lg); margin: 0; }
-.home-metric { position: relative; display: flex; flex-direction: column; justify-content: start; gap: var(--wl-space-2xs); min-width: 0; padding: var(--wl-space-lg) var(--wl-space-lg) var(--wl-space-lg) 80px; border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg-raised); }
+.home-metric { position: relative; display: flex; flex-direction: column; justify-content: start; gap: var(--wl-space-2xs); min-width: 0; padding: var(--wl-space-lg) var(--wl-space-lg) var(--wl-space-lg) 80px; border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg-raised); transition: background-color var(--wl-motion-fast) var(--wl-ease), border-color var(--wl-motion-fast) var(--wl-ease); }
+.home-metric:hover { background: var(--wl-bg-soft); border-color: var(--wl-accent); }
+.home-metric-link { color: inherit; text-decoration: none; }
+.home-metric-link::after { position: absolute; inset: 0; border-radius: var(--wl-corner-surface); content: ""; }
+.home-metric-link:hover, .home-metric-link:focus-visible { text-decoration: underline; text-underline-offset: 0.18em; }
+.home-metric-link:focus-visible { outline: none; }
+.home-metric-link:focus-visible::after { outline: 2px solid var(--wl-focus-color); outline-offset: 4px; }
 
 .home-metric-icon { position: absolute; inset-block-start: var(--wl-space-lg); inset-inline-start: var(--wl-space-lg); display: inline-flex; justify-content: center; align-items: center; width: 44px; height: 44px; border-radius: 50%; color: var(--wl-text); background: var(--wl-accent-soft); }
 
@@ -302,6 +321,6 @@ const setupSource = t('shell.HomePage.text67');
   .home-project-icon { width: 36px; height: 36px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .home-action, .home-section-card, .home-hero-layer--night, .home-theme-sun, .home-theme-moon { transition: none; }
+  .home-action, .home-metric, .home-section-card, .home-hero-layer--night, .home-theme-sun, .home-theme-moon { transition: none; }
 }
 </style>

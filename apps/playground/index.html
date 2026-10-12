@@ -2,6 +2,33 @@
 <html lang="en" data-wl-theme="gavia">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Run before styles/first paint. Keep resolution in sync with themes.ts and i18n/locale.ts.
+      (() => {
+        const query = new URLSearchParams(location.search);
+        const themes = ["system", "gavia", "gavia-dark", "white", "graphite", "newspaper"];
+        let savedTheme = null;
+        let savedLocale = null;
+        try {
+          savedTheme = localStorage.getItem("gavia-ui.theme");
+          savedLocale = localStorage.getItem("gavia-ui.locale");
+        } catch { /* Preferences still work without storage. */ }
+        const requestedTheme = query.get("theme");
+        const preference = themes.includes(requestedTheme) ? requestedTheme
+          : themes.includes(savedTheme) ? savedTheme : "system";
+        const theme = preference === "system"
+          ? typeof matchMedia === "function" && matchMedia("(prefers-color-scheme: dark)").matches ? "gavia-dark" : "gavia"
+          : preference;
+        const root = document.documentElement;
+        root.dataset.wlTheme = theme;
+        root.style.colorScheme = theme === "gavia-dark" || theme === "graphite" ? "dark" : "light";
+        const supported = (value) => value === "en" || value === "ru";
+        const requestedLocale = query.get("lang");
+        const languages = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+        const detectedLocale = languages.map((language) => language.toLowerCase().split(/[-_]/)[0]).find(supported);
+        root.lang = supported(requestedLocale) ? requestedLocale : supported(savedLocale) ? savedLocale : detectedLocale || "en";
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gavia UI — Vue 3 components and design system</title>
     <meta name="description" content="Vue 3 components, TypeScript, shared design tokens, five themes and interactive documentation. Open-source UI library by Dmitry Gorbach." />

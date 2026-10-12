@@ -1,9 +1,12 @@
 import { playgroundLocale } from "./i18n";
+import { ref } from "vue";
+import { prefersPlaygroundDarkTheme, readPlaygroundPreference } from "./preferences";
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import type { WlThemeName } from "../../../packages/ui-kit/src/types";
 
-/** The showcase has a branded default; the library keeps its Classic fallback. */
+/** Automatic mode uses the branded light/dark pair; all five themes remain available. */
 export const playgroundDefaultTheme: WlThemeName = "gavia";
+export type PlaygroundThemePreference = WlThemeName | "system";
 const themeOrder: readonly WlThemeName[] = ["gavia", "gavia-dark", "white", "graphite", "newspaper"];
 export const playgroundThemeOptions = [...wlDesignThemes]
   .sort((a, b) => themeOrder.indexOf(a.name) - themeOrder.indexOf(b.name))
@@ -13,20 +16,38 @@ export function isPlaygroundTheme(value: unknown): value is WlThemeName {
   return typeof value === "string" && wlDesignThemes.some((theme) => theme.name === value);
 }
 
-export function parsePlaygroundTheme(search: string): WlThemeName {
-  const candidate = new URLSearchParams(search).get("theme");
-  return isPlaygroundTheme(candidate) ? candidate : playgroundDefaultTheme;
+export function isPlaygroundThemePreference(value: unknown): value is PlaygroundThemePreference {
+  return value === "system" || isPlaygroundTheme(value);
 }
 
+export function parsePlaygroundThemePreference(search: string): PlaygroundThemePreference {
+  const candidate = new URLSearchParams(search).get("theme");
+  if (isPlaygroundThemePreference(candidate)) return candidate;
+  const saved = readPlaygroundPreference("theme");
+  return isPlaygroundThemePreference(saved) ? saved : "system";
+}
+
+export function resolvePlaygroundTheme(preference: PlaygroundThemePreference, dark = prefersPlaygroundDarkTheme()): WlThemeName {
+  return preference === "system" ? dark ? "gavia-dark" : playgroundDefaultTheme : preference;
+}
+
+export function parsePlaygroundTheme(search: string): WlThemeName {
+  return resolvePlaygroundTheme(parsePlaygroundThemePreference(search));
+}
+
+export const playgroundThemePreference = ref<PlaygroundThemePreference>(parsePlaygroundThemePreference(
+  typeof window === "undefined" ? "" : window.location.search
+));
+
 /** Preserve routes, anchors and the Pages subpath while changing the theme. */
-export function createPlaygroundThemeUrl(current: URL, theme: WlThemeName): URL {
+export function createPlaygroundThemeUrl(current: URL, theme: PlaygroundThemePreference): URL {
   const target = new URL(current.href);
   target.searchParams.set("theme", theme);
   return target;
 }
 
 /** Keep the chosen theme when a relative route link opens in a new tab. */
-export function withPlaygroundTheme(href: string, theme: WlThemeName): string {
+export function withPlaygroundTheme(href: string, theme: PlaygroundThemePreference): string {
   const fragmentIndex = href.indexOf("#");
   const fragment = fragmentIndex < 0 ? "" : href.slice(fragmentIndex);
   const route = fragmentIndex < 0 ? href : href.slice(0, fragmentIndex);

@@ -1,7 +1,7 @@
 import { createI18n, useI18n } from "vue-i18n";
 import { watch } from "vue";
 import { playgroundLocale, type PlaygroundLocale } from "./locale";
-export { playgroundLocale, parsePlaygroundLocale, type PlaygroundLocale } from "./locale";
+export { playgroundLocale, parsePlaygroundLocale, detectPlaygroundLocale, type PlaygroundLocale } from "./locale";
 
 
 import shellEN from "./messages/shell.en.json" with { type: "json" };
