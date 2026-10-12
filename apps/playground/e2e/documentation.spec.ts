@@ -144,7 +144,8 @@ test("home opens WlButton documentation and controls update the live button, con
     return Number.parseFloat(style.minHeight) === (matchMedia("(pointer: coarse)").matches ? 36 : 30) &&
       Number.parseFloat(style.paddingTop) === 6 && Number.parseFloat(style.paddingBottom) === 6;
   }), "Only component rows use the compact 30px/36px touch target").toBe(true);
-  await expect(sidebar.locator("#docs-component-search")).toHaveCount(0);
+  await expect(sidebar.locator("#docs-component-search")).toBeVisible();
+  await expect(sidebar.locator("#docs-component-search")).toHaveAttribute("type", "search");
   await expect(sidebar.getByText(/Найдено:/)).toHaveCount(0);
   await expect(catalog.getByRole("button")).toHaveCount(53);
   await expect(catalog.getByRole("heading", { level: 3 })).toHaveText([

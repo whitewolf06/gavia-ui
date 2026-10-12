@@ -247,22 +247,24 @@ test("responsive header preserves ordered desktop overflow, a compact mobile row
   await expect(palette).toHaveCount(0);
   await expect(search).toBeFocused();
 
-  const themeLabels: Record<string, string> = { gavia: "Gavia", "gavia-dark": "Gavia Dark", white: "Classic", graphite: "Classic Dark", newspaper: "Newspaper" };
+  const themeLabels: Record<string, string> = { system: "Системная", gavia: "Gavia", "gavia-dark": "Gavia Dark", white: "Classic", graphite: "Classic Dark", newspaper: "Newspaper" };
   const initialTheme = await page.locator("html").getAttribute("data-wl-theme");
+  const initialPreference = new URL(page.url()).searchParams.get("theme") ?? "system";
   expect(Object.keys(themeLabels)).toContain(initialTheme);
   await theme.click();
   const themeOptions = page.getByRole("listbox");
   await expect(theme).toHaveAttribute("aria-expanded", "true");
   await expect(themeOptions.getByRole("option")).toHaveText(Object.values(themeLabels));
-  await expect(themeOptions.getByRole("option", { selected: true })).toHaveText(themeLabels[initialTheme!]!);
+  await expect(themeOptions.getByRole("option", { selected: true })).toHaveText(themeLabels[initialPreference]!);
   await theme.press("Escape");
   await expect(themeOptions).toHaveCount(0);
   await expect(theme).toBeFocused();
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", initialTheme!);
   await theme.press("ArrowDown");
   await theme.press("Home");
-  const darkThemeIndex = playgroundThemeOptions.findIndex((option) => option.value === "graphite");
-  expect(darkThemeIndex).toBeGreaterThanOrEqual(0);
+  const catalogDarkThemeIndex = playgroundThemeOptions.findIndex((option) => option.value === "graphite");
+  expect(catalogDarkThemeIndex).toBeGreaterThanOrEqual(0);
+  const darkThemeIndex = catalogDarkThemeIndex + 1; // System precedes the five named themes.
   for (let index = 0; index < darkThemeIndex; index++) await theme.press("ArrowDown");
   await theme.press("Enter");
   await expect(themeOptions).toHaveCount(0);
@@ -298,12 +300,12 @@ test("responsive header preserves ordered desktop overflow, a compact mobile row
 });
 
 
-test("Gavia is the initial theme and explicit theme links survive refresh and navigation", async ({ page, baseURL }) => {
+test("System is the initial theme mode and explicit theme links survive refresh and navigation", async ({ page, baseURL }) => {
   const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
   await page.goto(russianPlaygroundUrl(url.href));
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "gavia");
   const selector = page.getByTestId("pg-theme-selector");
-  await expect(selector).toContainText("Gavia");
+  await expect(selector).toContainText("Системная");
 
   url.search = "?view=docs&section=colors&theme=white&example=palette";
   await page.goto(russianPlaygroundUrl(url.href));

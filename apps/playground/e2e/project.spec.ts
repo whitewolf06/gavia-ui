@@ -69,7 +69,7 @@ test("home shows creator, source version, license and truthful package status wh
   await expect(packageStatus.getByRole("link", { name: `${project.packageName}@${publishedVersion}`, exact: true })).toHaveAttribute("href", project.packageUrl);
   await expect(packageStatus.locator("code")).toHaveText(`pnpm add ${project.packageName}@${publishedVersion}`);
   await expect(page.locator(".pg-footer")).toContainText("Автор: Дмитрий Горбач");
-  await expect(main.getByRole("link").filter({ has: page.getByRole("heading", { name: "Changelog", exact: true }) })).toHaveAttribute("href", "?view=changelog&theme=gavia&lang=ru");
+  await expect(main.getByRole("link").filter({ has: page.getByRole("heading", { name: "Changelog", exact: true }) })).toHaveAttribute("href", "?view=changelog&theme=system&lang=ru");
 });
 
 test("renders the canonical changelog with complete releases, continued bullets and safe documentation links", async ({ page }) => {
