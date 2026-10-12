@@ -32,8 +32,8 @@ The badge stores a line coverage measurement. Its date, version and source are
 It may differ from the saved snapshot. Check the current CI status separately:
 [Current CI runs](https://github.com/whitewolf06/gavia-ui/actions).
 
-Source and package archive version: **0.12.0**. [Changelog](CHANGELOG.md) ·
-[Upgrade to 0.12.0](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.12.0.md) ·
+Source and package archive version: **0.12.1**. [Changelog](CHANGELOG.md) ·
+[Upgrade to 0.12.1](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.12.1.md) ·
 [0.11 type migration](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.11.0.md) ·
 [0.10 themes](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.10.0.md) ·
 [Rebrand history](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-gavia.md).
