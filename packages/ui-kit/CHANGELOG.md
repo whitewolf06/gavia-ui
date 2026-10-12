@@ -6,6 +6,17 @@ The history was reconstructed from release Git tags and migration notes.
 
 ## Unreleased
 
+## 0.12.1 — prepared
+
+- The Playground follows the system color scheme and supported browser language on first visit, remembers manual choices, and offers a System theme option. Explicit language/theme links keep their priority.
+- Home metrics link to the component, icon, token and theme sections. Documentation components are sorted alphabetically within each group and can be filtered with a local search field.
+
+### Changesets
+
+Make the Playground follow the system theme and supported browser language on first visit, with persistent manual choices and explicit URL overrides. Apply the theme before first paint and preserve automatic mode in navigation and history.
+
+Link home metrics to their documentation sections, sort components alphabetically within each group, and add a local component search with clear and empty states on desktop and mobile.
+
 ## 0.12.0 — 2026-10-09
 
 - Added an optional wlLocaleEn preset and EN/RU Playground localization with English by default and language URLs; GitHub Markdown documentation now uses English.
