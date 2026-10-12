@@ -57,6 +57,7 @@ for (const detection of [
 
 test("manual theme and language persist, explicit links override them, and System restores OS tracking", async ({ page }) => {
   await page.goto("/");
+  await expect(page.getByTestId("home-page")).toBeVisible();
   await expectPreferences(page, "ru", "system", "gavia");
   await chooseTheme(page, graphiteLabel);
   await chooseShowcaseLanguage(page, "en");
@@ -65,19 +66,23 @@ test("manual theme and language persist, explicit links override them, and Syste
     theme: localStorage.getItem("gavia-ui.theme"), locale: localStorage.getItem("gavia-ui.locale")
   }))).toEqual({ theme: "graphite", locale: "en" });
   await page.goto("/");
+  await expect(page.getByTestId("home-page")).toBeVisible();
   await expectPreferences(page, "en", "graphite", "graphite");
   await page.emulateMedia({ colorScheme: "dark" });
   await page.emulateMedia({ colorScheme: "light" });
   await expectPreferences(page, "en", "graphite", "graphite");
   await page.goto("/?theme=gavia&lang=ru");
+  await expect(page.getByTestId("home-page")).toBeVisible();
   await expectPreferences(page, "ru", "gavia", "gavia");
   await page.goto("/");
+  await expect(page.getByTestId("home-page")).toBeVisible();
   await expectPreferences(page, "en", "graphite", "graphite");
   await chooseTheme(page, "System");
   await expectPreferences(page, "en", "system", "gavia");
   await page.emulateMedia({ colorScheme: "dark" });
   await expectPreferences(page, "en", "system", "gavia-dark");
   await page.goto("/");
+  await expect(page.getByTestId("home-page")).toBeVisible();
   await expectPreferences(page, "en", "system", "gavia-dark");
 });
 
