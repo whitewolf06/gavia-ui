@@ -8,7 +8,12 @@ const steps = [t("examples.research_0979"), t("examples.prototype_0996"), t("exa
   <section class="wl-stack" data-space="lg">
     <p class="wl-text-small wl-text-muted">{{ t("examples.the_number_of_columns_depends_on_the_viewport_width_even_when_0997") }}</p>
     <div class="viewport-layout-example wl-grid" data-space="md">
-      <article v-for="(step, index) in steps" :key="step" class="wl-surface wl-stack" data-space="sm">
+      <article
+        v-for="(step, index) in steps"
+        :key="step"
+        class="wl-surface wl-stack"
+        data-space="sm"
+      >
         <span class="wl-text-code wl-text-muted">0{{ index + 1 }}</span>
         <h3 class="wl-text-subheading">{{ step }}</h3>
         <p class="wl-text-small">{{ t("examples.cards_preserve_reading_order_when_the_layout_changes_0998") }}</p>

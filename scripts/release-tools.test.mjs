@@ -1,16 +1,16 @@
 import "./compatibility-migration.test.mjs";
-import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, writeFileSync, mkdirSync, mkdtempSync, cpSync, symlinkSync, rmSync, existsSync } from "node:fs";
-import { resolve, join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
-import { releaseChannel } from "./release-channel.mjs";
-import { packageChangelog, releaseNotes, releaseDocsLinks, normalizeMarkdownNotes } from "./release-notes.mjs";
-import { prepareChangelog, promotionNotes } from "./version-release.mjs";
+import { dirname, join, resolve } from "node:path";
+import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 import { assertPortableHtml } from "./archive-playground.mjs";
 import { compilerOptions, typeSource } from "./check-compatibility.mjs";
+import { releaseChannel } from "./release-channel.mjs";
+import { normalizeMarkdownNotes, packageChangelog, releaseDocsLinks, releaseNotes } from "./release-notes.mjs";
+import { prepareChangelog, promotionNotes } from "./version-release.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 
@@ -45,7 +45,7 @@ test("preparation preserves introduction/history and rejects duplicate unrelease
   const prepared = prepareChangelog(source, "0.9.2", ["New fix."]);
   assert.equal(prepared.match(/^# Changelog$/gm).length, 1);
   assert.match(prepared, /Project introduction\.\n\n## Unreleased/);
-  assert.equal(releaseNotes(prepared, "0.9.2"), "### Changesets\n\nNew fix.");
+  assert.equal(releaseNotes(prepared, "0.9.2"), "New fix.");
   assert.equal(releaseNotes(prepared, "0.9.1"), "Previous.");
   assert.throws(() => prepareChangelog("## Unreleased\nA\n## Unreleased\nB\n", "0.9.2", ["Notes."]));
 });
@@ -78,7 +78,6 @@ function versionFixture(callback) {
     put("apps/playground/package.json", { name: "gavia-ui-playground", private: true, version: "0.1.0" });
     const changelog = "# Changelog\n\n## Unreleased\n\n- Consumer-facing note: [guide](docs/quality.md).\n\n## 0.9.1 — 2026-10-07\n\n- Previous release: [migration](docs/migration-0.9.md).\n";
     put("CHANGELOG.md", changelog);
-    put("packages/ui-kit/CHANGELOG.md", packageChangelog(changelog));
     put(".changeset/fixture.md", '---\n"gavia-ui": patch\n---\n\nA checked fix with [docs](docs/design-system.md).\n');
     cpSync(join(root, ".changeset/config.json"), join(fixture, ".changeset/config.json"));
     mkdirSync(join(fixture, "scripts"));
@@ -95,7 +94,7 @@ function versionFixture(callback) {
 }
 
 for (const prerelease of [false, true]) {
-  test(`real Changesets ${prerelease ? "beta" : "patch"} preparation synchronizes versions and package docs links`, () => {
+  test(`real Changesets ${prerelease ? "beta" : "patch"} preparation versions canonical sources without generated package copies`, () => {
     versionFixture(({ fixture, put, run }) => {
       const cli = join(fixture, "node_modules/@changesets/cli/bin.js");
       const wrapper = join(fixture, "scripts/version-release.mjs");
@@ -106,7 +105,8 @@ for (const prerelease of [false, true]) {
       assert.equal(kit.version, prerelease ? "0.9.2-beta.0" : "0.9.2");
       assert.equal(workspace.version, kit.version);
       const result = readFileSync(join(fixture, "CHANGELOG.md"), "utf8");
-      const packaged = readFileSync(join(fixture, "packages/ui-kit/CHANGELOG.md"), "utf8");
+      const packaged = packageChangelog(result);
+      assert.equal(existsSync(join(fixture, "packages/ui-kit/CHANGELOG.md")), false);
       assert.equal(packaged, packageChangelog(result));
       assert.match(result, /\(docs\/quality\.md\)/);
       assert.match(packaged, /\(https:\/\/github\.com\/whitewolf06\/gavia-ui\/blob\/main\/docs\/quality\.md\)/);
@@ -119,7 +119,6 @@ for (const prerelease of [false, true]) {
       if (prerelease) {
         const secondPreview = result.replace("## Unreleased\n\n", "## Unreleased\n\n- Editorial note for the second preview.\n\n");
         put("CHANGELOG.md", secondPreview);
-        put("packages/ui-kit/CHANGELOG.md", packageChangelog(secondPreview));
         put(".changeset/second.md", '---\n"gavia-ui": patch\n---\n\nSecond checked fix.\n');
         run([wrapper]);
         assert.equal(JSON.parse(readFileSync(join(fixture, "package.json"), "utf8")).version, "0.9.2-beta.1");
@@ -161,6 +160,20 @@ test("unfinished migration blocks release-notes publication check", () => {
     assert.match(rendered, /current public documentation is on GitHub Pages\./);
     assert.doesNotMatch(rendered, /Витрина этого выпуска|Распакуйте/);
     assert.match(readFileSync(join(fixture, "CHANGELOG.md"), "utf8"), /\(docs\/quality\.md\)/);
+  });
+});
+
+test("canonical migration redirects cannot bypass unfinished release guidance", () => {
+  versionFixture(({ fixture, put, run }) => {
+    run([join(fixture, "scripts/version-release.mjs")]);
+    put("docs/migration-0.9.2.md", "# Upgrade to Gavia UI 0.9.2\n\n**This guide moved.** Canonical guide: [Upgrade](migration.md#migration-0-9-2).\n");
+    const canonical = "# Migration\n\n<a id=\"migration-0-9-2\"></a>\n## Upgrade 0.9.2\nTODO: review current guidance.\n\n<a id=\"older\"></a>\n## Older release\nTODO: historical note.\n";
+    put("docs/migration.md", canonical);
+    run([join(fixture, "scripts/release-notes.mjs"), "--check"], 1);
+    put("docs/migration.md", canonical.replace("TODO: review current guidance.", "Reviewed compatible patch; no consumer change."));
+    run([join(fixture, "scripts/release-notes.mjs"), "--check"]);
+    put("docs/migration-0.9.2.md", "# Upgrade\n\n**This guide moved.** Canonical guide: [Escape](../../outside.md#release).\n");
+    run([join(fixture, "scripts/release-notes.mjs"), "--check"], 1);
   });
 });
 
@@ -246,7 +259,7 @@ test("real Changesets preparation normalizes embedded headings before writing ch
     assert.match(notes, /Important migration step\./);
     assert.match(notes, /After the snippet\./);
     assert.ok(notes.includes("```md\n## 0.9.2\n```"));
-    assert.equal(readFileSync(join(fixture, "packages/ui-kit/CHANGELOG.md"), "utf8"), packageChangelog(source));
+    assert.equal(existsSync(join(fixture, "packages/ui-kit/CHANGELOG.md")), false);
   });
 });
 
@@ -286,7 +299,6 @@ test("beta promotion deduplicates whole fenced blocks without dropping delimiter
   assert.equal(stable.match(/Checked fix\./g).length, 1);
 });
 
-
 test("compatibility type helpers preserve generic props and expose while rejecting real contract losses", () => {
   const ts = createRequire(join(root, "packages/ui-kit/package.json"))("typescript");
   const base = join(root, ".tmp");
@@ -294,63 +306,63 @@ test("compatibility type helpers preserve generic props and expose while rejecti
   const fixture = mkdtempSync(join(base, "compatibility-helpers-"));
   const constructor = (name) => [
     `export declare const ${name}: {`,
-    '  new (): ComponentPublicInstance & {',
-    '    $props: { items?: readonly unknown[]; label?: string; onChange?: (value: unknown) => void };',
-    '    $slots: { default?: (props: {}) => unknown };',
-    '    open(target?: Event): void;',
-    '    clear(): boolean;',
-    '  };',
-    '};'
+    "  new (): ComponentPublicInstance & {",
+    "    $props: { items?: readonly unknown[]; label?: string; onChange?: (value: unknown) => void };",
+    "    $slots: { default?: (props: {}) => unknown };",
+    "    open(target?: Event): void;",
+    "    clear(): boolean;",
+    "  };",
+    "};"
   ].join("\n");
   const callable = (name) => [
     `export declare const ${name}: <T = unknown>(`,
-    '  props: { items?: readonly T[]; label?: string; onChange?: (value: T) => void },',
-    '  context?: { slots: { default?: (props: {}) => unknown } },',
-    '  expose?: (exposed: { open: (target?: Event) => void; clear: () => boolean }) => void',
-    ') => { __ctx?: { expose: (exposed: { open: (target?: Event) => void; clear: () => boolean }) => void } };'
+    "  props: { items?: readonly T[]; label?: string; onChange?: (value: T) => void },",
+    "  context?: { slots: { default?: (props: {}) => unknown } },",
+    "  expose?: (exposed: { open: (target?: Event) => void; clear: () => boolean }) => void",
+    ") => { __ctx?: { expose: (exposed: { open: (target?: Event) => void; clear: () => boolean }) => void } };"
   ].join("\n");
   const previousTable = [
-    'export declare const WlTable: { new (): ComponentPublicInstance & {',
-    '  $props: { value?: WlTableRow[]; columns?: { key: string; label: string }[] };',
+    "export declare const WlTable: { new (): ComponentPublicInstance & {",
+    "  $props: { value?: WlTableRow[]; columns?: { key: string; label: string }[] };",
     '  $slots: { "cell-name"?: (props: { row: WlTableRow; value: unknown }) => unknown };',
-    '} };'
+    "} };"
   ].join("\n");
   const currentTable = [
-    'export declare const WlTable: <Row extends object = WlTableRow>(',
-    '  props: { value?: readonly Row[]; columns?: readonly { key: Extract<keyof Row, string>; label: string }[] },',
+    "export declare const WlTable: <Row extends object = WlTableRow>(",
+    "  props: { value?: readonly Row[]; columns?: readonly { key: Extract<keyof Row, string>; label: string }[] },",
     '  context?: { slots: { "cell-name"?: (props: { row: Row; value: unknown }) => unknown } }',
-    ') => { __ctx?: { expose: (exposed: {}) => void } };'
+    ") => { __ctx?: { expose: (exposed: {}) => void } };"
   ].join("\n");
   const previousSelection = (name, model) => [
     `export declare const ${name}: { new (): ComponentPublicInstance & {`,
     `  $props: { options?: unknown[]; optionValue?: ValueResolver; modelValue?: ${model}; "onUpdate:modelValue"?: (value: ${model}) => void };`,
-    '  $slots: {};',
-    '} };'
+    "  $slots: {};",
+    "} };"
   ].join("\n");
   const currentSelection = (name, model) => [
     `export declare const ${name}: <Item = unknown, Resolver extends ValueResolver | undefined = undefined>(`,
     `  props: RuntimeProp<{ options?: readonly Item[]; optionValue?: Resolver; modelValue?: ${model}; "onUpdate:modelValue"?: (value: ${model}) => void }, "optionValue", Resolver, undefined>,`,
-    '  context?: { slots: {} }',
-    ') => { __ctx?: { expose: (exposed: {}) => void } };'
+    "  context?: { slots: {} }",
+    ") => { __ctx?: { expose: (exposed: {}) => void } };"
   ].join("\n");
   const previousAuto = [
-    'export declare const WlAutocomplete: { new (): ComponentPublicInstance & {',
+    "export declare const WlAutocomplete: { new (): ComponentPublicInstance & {",
     '  $props: { suggestions?: unknown[]; multiple?: boolean; modelValue?: unknown; "onUpdate:modelValue"?: (value: unknown) => void };',
-    '  $slots: {};',
-    '} };'
+    "  $slots: {};",
+    "} };"
   ].join("\n");
   const currentAuto = [
-    'export declare const WlAutocomplete: <Item = unknown, Multiple extends boolean = false>(',
+    "export declare const WlAutocomplete: <Item = unknown, Multiple extends boolean = false>(",
     '  props: RuntimeProp<{ suggestions?: readonly Item[]; multiple?: Multiple; modelValue?: unknown; "onUpdate:modelValue"?: (value: unknown) => void }, "multiple", Multiple, false>,',
-    '  context?: { slots: {} }',
-    ') => { __ctx?: { expose: (exposed: {}) => void } };'
+    "  context?: { slots: {} }",
+    ") => { __ctx?: { expose: (exposed: {}) => void } };"
   ].join("\n");
   const header = [
     'import type { ComponentPublicInstance } from "vue";',
-    'export type WlTableRow = Record<string, unknown>;',
-    'type ValueResolver = string | ((option: unknown) => unknown);',
-    'type RuntimeProp<P, Key extends PropertyKey, Value, Default> = P & ([Value] extends [Default] ? unknown : { [K in Key]: Value });',
-    ''
+    "export type WlTableRow = Record<string, unknown>;",
+    "type ValueResolver = string | ((option: unknown) => unknown);",
+    "type RuntimeProp<P, Key extends PropertyKey, Value, Default> = P & ([Value] extends [Default] ? unknown : { [K in Key]: Value });",
+    ""
   ].join("\n");
   const previous = header + [constructor("WlGeneric"), callable("WlCallable"), constructor("WlClassic"), previousTable, previousAuto,
     previousSelection("WlSelect", "unknown"), previousSelection("WlMultiSelect", "unknown[]")].join("\n");
@@ -371,23 +383,24 @@ test("compatibility type helpers preserve generic props and expose while rejecti
     assert.deepEqual(unchanged.map((diagnostic) => ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")), [],
       "equivalent constructor/generic declarations must not report removed props or expose");
     const mutations = [
-      ["generic prop removed", current.replace('items?: readonly T[]; label?: string;', 'items?: readonly T[];'), /WlGeneric_0_propNames/],
-      ["generic input narrowed", current.replace('items?: readonly T[]; label?: string;', 'items?: readonly T[]; label?: number;'), /WlGeneric_0_inputsAndHandlers/],
-      ["generic exposed method removed", current.replaceAll(' clear: () => boolean', ''), /WlGeneric_0_exposedNames/],
-      ["generic exposed signature changed", current.replaceAll('open: (target?: Event) => void', 'open: (target: string) => void'), /WlGeneric_0_exposedMethods/],
-      ["existing callable prop removed", current.replace(callable("WlCallable"), callable("WlCallable").replace(' label?: string;', '')), /WlCallable_0_propNames/],
-      ["constructor input narrowed", current.replace(constructor("WlClassic"), constructor("WlClassic").replace('label?: string', 'label?: number')), /WlClassic_0_inputsAndHandlers/],
-      ["default table columns narrowed", current.replace('key: Extract<keyof Row, string>', 'key: never'), /WlTable_0_inputsAndHandlers/],
-      ["default table slot row changed", current.replace('props: { row: Row; value: unknown }', 'props: { row: number; value: unknown }'), /WlTable_0_slotPayloads/],
-      ["multiple autocomplete model narrowed", current.replace(currentAuto, currentAuto.replace('modelValue?: unknown;', 'modelValue?: Multiple extends true ? Item[] | null : unknown;')), /WlAutocomplete_1_inputsAndHandlers/],
-      ["resolved select model narrowed", current.replace(currentSelection("WlSelect", "unknown"), currentSelection("WlSelect", 'Resolver extends undefined ? unknown : number')), /WlSelect_1_inputsAndHandlers/],
-      ["resolved multiselect model narrowed", current.replace(currentSelection("WlMultiSelect", "unknown[]"), currentSelection("WlMultiSelect", 'Resolver extends undefined ? unknown[] : number[]')), /WlMultiSelect_1_inputsAndHandlers/]
+      ["generic prop removed", current.replace("items?: readonly T[]; label?: string;", "items?: readonly T[];"), /WlGeneric_0_propNames/],
+      ["generic input narrowed", current.replace("items?: readonly T[]; label?: string;", "items?: readonly T[]; label?: number;"), /WlGeneric_0_inputsAndHandlers/],
+      ["generic exposed method removed", current.replaceAll(" clear: () => boolean", ""), /WlGeneric_0_exposedNames/],
+      ["generic exposed signature changed", current.replaceAll("open: (target?: Event) => void", "open: (target: string) => void"), /WlGeneric_0_exposedMethods/],
+      ["existing callable prop removed", current.replace(callable("WlCallable"), callable("WlCallable").replace(" label?: string;", "")), /WlCallable_0_propNames/],
+      ["constructor input narrowed", current.replace(constructor("WlClassic"), constructor("WlClassic").replace("label?: string", "label?: number")), /WlClassic_0_inputsAndHandlers/],
+      ["default table columns narrowed", current.replace("key: Extract<keyof Row, string>", "key: never"), /WlTable_0_inputsAndHandlers/],
+      ["default table slot row changed", current.replace("props: { row: Row; value: unknown }", "props: { row: number; value: unknown }"), /WlTable_0_slotPayloads/],
+      ["multiple autocomplete model narrowed", current.replace(currentAuto, currentAuto.replace("modelValue?: unknown;", "modelValue?: Multiple extends true ? Item[] | null : unknown;")), /WlAutocomplete_1_inputsAndHandlers/],
+      ["resolved select model narrowed", current.replace(currentSelection("WlSelect", "unknown"), currentSelection("WlSelect", "Resolver extends undefined ? unknown : number")), /WlSelect_1_inputsAndHandlers/],
+      ["resolved multiselect model narrowed", current.replace(currentSelection("WlMultiSelect", "unknown[]"), currentSelection("WlMultiSelect", "Resolver extends undefined ? unknown[] : number[]")), /WlMultiSelect_1_inputsAndHandlers/]
     ];
     for (const [label, candidate, expected] of mutations) {
       const failures = diagnostics(candidate);
       assert.ok(failures.length, `${label} was silently accepted`);
-      assert.ok(failures.every((diagnostic) => diagnostic.code === 2344 && diagnostic.file && resolve(diagnostic.file.fileName) === contractPath),
-        `${label}: fixture must fail a compatibility assertion, not its declaration syntax`);
+      assert.ok(failures.every((diagnostic) =>
+        diagnostic.code === 2344 && diagnostic.file && resolve(diagnostic.file.fileName) === contractPath),
+      `${label}: fixture must fail a compatibility assertion, not its declaration syntax`);
       const lines = failures.map((diagnostic) => {
         const line = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start).line;
         return diagnostic.file.text.split("\n")[line];

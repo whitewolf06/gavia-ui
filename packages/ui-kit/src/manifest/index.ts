@@ -1,30 +1,29 @@
 import type { WlComponentManifest } from "./types";
 import { actionsManifest } from "./actions";
-import { inputsManifest } from "./inputs";
-import { dataManifest } from "./data";
-import { containersManifest } from "./containers";
 import { compositesManifest } from "./composites";
-import { navigationManifest } from "./navigation";
+import { containersManifest } from "./containers";
+import { dataManifest } from "./data";
 import { feedbackManifest } from "./feedback";
+import { inputsManifest } from "./inputs";
 import { miscManifest } from "./misc";
+import { navigationManifest } from "./navigation";
 
 export * from "./types";
 export {
   actionsManifest,
-  inputsManifest,
-  dataManifest,
-  containersManifest,
   compositesManifest,
-  navigationManifest,
+  containersManifest,
+  dataManifest,
   feedbackManifest,
-  miscManifest
+  inputsManifest,
+  miscManifest,
+  navigationManifest
 };
 
 /**
- * Машиночитаемый манифест всех компонентов библиотеки:
- * пропсы (типы, дефолты, enum-значения), слоты, события, v-model и версию
- * первой публичной поставки компонента.
- * Потребители — визуальные редакторы и AI-агенты. Tree-shakeable const export.
+ * Machine-readable component catalogue with props, defaults, enum values,
+ * slots, events, models and the first public version. Used by documentation,
+ * visual editors and agents; component-only consumers can tree-shake it.
  */
 // Pure construction lets component-only imports omit editor metadata. The build
 // manifest plugin and contract tests still evaluate and validate every category.

@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { consumerSource } from "../../../scripts/example-source.mjs";
+import { playgroundBasePath, playgroundRouteParams } from "./playground-url";
 import { chooseShowcaseLanguage, copyCodePanel, nativeReload } from "./select-helpers";
 
 const englishExamples = JSON.parse(readFileSync(new URL("../src/i18n/messages/examples.en.json", import.meta.url), "utf8")) as Record<string, string>;
@@ -16,7 +17,7 @@ test("unqualified URLs detect English browser language, and keyboard language se
   await page.goto(url.href);
   await expect(page.getByTestId("home-page")).toBeVisible();
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  expect(new URL(page.url()).searchParams.get("lang")).toBe("en");
+  expect(playgroundRouteParams(new URL(page.url())).get("lang")).toBe("en");
   await page.locator(".pg-top").getByRole("button", { name: "Search", exact: true }).click();
   const palette = page.getByRole("dialog", { name: "Command palette", exact: true });
   await expect(palette).toBeVisible();
@@ -44,7 +45,7 @@ test("unqualified URLs detect English browser language, and keyboard language se
   await expect(language).toBeFocused();
   await expect(language).toContainText("RU");
   await expect(page.locator("html")).toHaveAttribute("lang", "ru");
-  expect(new URL(page.url()).searchParams.get("lang")).toBe("ru");
+  expect(playgroundRouteParams(new URL(page.url())).get("lang")).toBe("ru");
   await language.press("ArrowDown");
   await language.press("Home");
   await language.press("Enter");
@@ -52,7 +53,7 @@ test("unqualified URLs detect English browser language, and keyboard language se
   await expect(language).toBeFocused();
   await expect(language).toContainText("EN");
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  expect(new URL(page.url()).searchParams.get("lang")).toBe("en");
+  expect(playgroundRouteParams(new URL(page.url())).get("lang")).toBe("en");
 });
 
 test("the language selector preserves deep routes, themes and anchors through reload and history, with standalone code in both languages", async ({ page, baseURL }) => {
@@ -73,12 +74,12 @@ test("the language selector preserves deep routes, themes and anchors through re
     await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "gavia-dark");
     await expect(workspace.getByRole("tab", { name: language === "en" ? "Examples" : "Примеры", exact: true })).toHaveAttribute("aria-selected", "true");
     const location = new URL(page.url());
-    expect(location.pathname).toBe(url.pathname);
-    expect(location.searchParams.get("view")).toBe("docs");
-    expect(location.searchParams.get("component")).toBe("WlButton");
+    expect(playgroundBasePath(location)).toBe(url.pathname);
+    expect(playgroundRouteParams(location).get("view")).toBe("docs");
+    expect(playgroundRouteParams(location).get("component")).toBe("WlButton");
     expect(location.searchParams.get("theme")).toBe("gavia-dark");
     expect(location.searchParams.get("example")).toBe("variants");
-    expect(location.searchParams.get("lang")).toBe(language);
+    expect(playgroundRouteParams(location).get("lang")).toBe(language);
     expect(location.hash).toBe(url.hash);
   }
   async function expectCopiedSource(language: "en" | "ru"): Promise<void> {

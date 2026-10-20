@@ -1,13 +1,11 @@
-import { translate } from "../i18n";
-import russianMessages from "../i18n/messages/documentation.ru.json" with { type: "json" };
+import { playgroundTranslationKey, translate } from "../i18n";
 
-const originals = new Map<string, string>(Object.entries(russianMessages.strings).map(([key, text]) => [text, "documentation.strings." + key]));
 const localized = new WeakMap<object, object>();
 const sources = new WeakMap<object, object>();
 
 /** Translate a prose string from a shared package catalogue at presentation time. */
 export function translateDocumentationText(text: string): string {
-  const key = originals.get(text);
+  const key = playgroundTranslationKey("documentation", text);
   return key ? translate(key) : text;
 }
 

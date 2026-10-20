@@ -9,6 +9,30 @@ import {
 
 export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
   {
+    name: "WlTagsInput",
+    category: "inputs",
+    description: "Editable string tags with validation, duplicate control and form submission.",
+    props: [],
+    slots: [],
+    emits: []
+  },
+  {
+    name: "WlRadioGroup",
+    category: "inputs",
+    description: "A labelled radio group with one selected option and shared keyboard navigation.",
+    props: [],
+    slots: [],
+    emits: []
+  },
+  {
+    name: "WlCheckboxGroup",
+    category: "inputs",
+    description: "A labelled group of checkboxes with an array model and application-owned options.",
+    props: [],
+    slots: [],
+    emits: []
+  },
+  {
     name: "WlTimePicker",
     category: "inputs",
     description: "Нативный выбор локального времени с точностью до минуты; без даты и часового пояса.",
@@ -155,9 +179,18 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер поля." },
       { name: "density", type: "enum", default: "default", values: WL_DENSITIES, description: "Плотность." },
       { name: "motion", type: "boolean", description: "Анимация списка; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." },
+      { name: "optionDisabled", type: "union", description: "Поле опции или функция: true запрещает выбор." },
+      { name: "optionKey", type: "union", description: "Поле или функция для устойчивого ключа опции." },
+      { name: "clearable", type: "boolean", description: "Кнопка очистки выбранного значения. После очистки модель равна null.", default: false }
     ],
-    slots: [],
+    slots: [
+      { name: "option", description: "Вариант списка; scope: { option, index, selected, active }." },
+      { name: "value", description: "Выбранное значение; scope: { option, placeholder }." },
+      { name: "empty", description: "Содержимое пустого списка." },
+      { name: "header", description: "Содержимое перед списком вариантов." },
+      { name: "footer", description: "Содержимое после списка вариантов." }
+    ],
     emits: [],
     model: { name: "modelValue", type: "TValue | null", description: "Выбранное значение по optionValue; без резолвера — TOption. Без default; можно не передавать модель." }
   },
@@ -197,9 +230,18 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
         description: "Сколько подписей показывать до замены счётчиком. Только для display=\"comma\"."
       },
       { name: "motion", type: "boolean", description: "Анимация списка; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." },
+      { name: "optionDisabled", type: "union", description: "Поле опции или функция: true запрещает выбор." },
+      { name: "optionKey", type: "union", description: "Поле или функция для устойчивого ключа опции." }
     ],
-    slots: [],
+    slots: [
+      { name: "option", description: "Вариант списка; scope: { option, index, selected, active }." },
+      { name: "value", description: "Выбранные значения; scope: { options, placeholder }." },
+      { name: "chip", description: "Выбранное значение; scope: { option, remove }." },
+      { name: "empty", description: "Содержимое пустого списка." },
+      { name: "header", description: "Содержимое перед списком вариантов." },
+      { name: "footer", description: "Содержимое после списка вариантов." }
+    ],
     emits: [],
     model: { name: "modelValue", type: "TValue[]", description: "Массив значений по optionValue; без него — TOption[]. По умолчанию []." }
   },
@@ -235,9 +277,16 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
         description: "Минимум символов для запуска поиска."
       },
       { name: "motion", type: "boolean", description: "Анимация подсказок; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." },
+      { name: "optionDisabled", type: "union", description: "Поле опции или функция: true запрещает выбор." },
+      { name: "optionKey", type: "union", description: "Поле или функция для устойчивого ключа опции." },
+      { name: "clearable", type: "boolean", description: "Кнопка очистки выбранного значения. После очистки модель равна null.", default: false }
     ],
-    slots: [],
+    slots: [
+      { name: "option", description: "Вариант списка; scope: { option, index, selected, active }." },
+      { name: "chip", description: "Выбранное значение; scope: { option, remove }." },
+      { name: "empty", description: "Содержимое пустого списка." }
+    ],
     emits: [
       {
         name: "complete",

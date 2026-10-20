@@ -1,6 +1,6 @@
-import { russianPlaygroundUrl } from "./playground-url";
 import { expect, test } from "@playwright/test";
 import { expectGaviaFontDownload } from "./font-download-helpers";
+import { playgroundBasePath, playgroundRouteParams, russianPlaygroundUrl } from "./playground-url";
 import { chooseDropdownOption, chooseShowcaseTheme, navigateMainView } from "./select-helpers";
 
 const weights = [100, 300, 400, 500, 600, 700] as const;
@@ -61,7 +61,7 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
 
   for (const theme of ["Classic", "Classic Dark", "Newspaper", "Gavia Dark", "Gavia"]) {
     await chooseShowcaseTheme(page, theme);
-    expect(new URL(page.url()).searchParams.get("view")).toBe("font");
+    expect(playgroundRouteParams(new URL(page.url())).get("view")).toBe("font");
     const headingFamily = await fontPage.locator(".wl-page-header__title").evaluate((element) => getComputedStyle(element).fontFamily);
     await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", headingFamily);
     await expect(fontPage.locator(".wl-type-display")).toHaveCSS("text-rendering", theme.startsWith("Gavia") ? "geometricprecision" : "optimizelegibility");
@@ -71,14 +71,16 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
     for (const sample of [".wl-type-number-sample", ".wl-weights-digits"]) {
       await expect(fontPage.locator(sample).first()).toHaveCSS("text-rendering", "geometricprecision");
     }
-    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+    await expect.poll(() => page.evaluate(() =>
+      document.documentElement.scrollWidth - document.documentElement.clientWidth
+    )).toBeLessThanOrEqual(1);
   }
 
   await navigateMainView(page, "Документация");
   await expect(page.getByTestId("docs-page")).toBeVisible();
   await navigateMainView(page, "Шрифт");
   await expect(fontPage).toBeVisible();
-  expect(new URL(page.url()).pathname).toBe(url.pathname);
+  expect(playgroundBasePath(new URL(page.url()))).toBe(url.pathname);
   expect(new URL(page.url()).searchParams.get("theme")).toBe("gavia");
   await page.goBack();
   await expect(page.getByTestId("docs-page")).toBeVisible();
@@ -125,8 +127,11 @@ test("tabular and proportional numbers use different spacing without changing th
           probe.textContent = line.textContent;
           probe.style.cssText = "position:absolute;display:inline-block;inline-size:max-content;white-space:pre";
           line.append(probe);
-          try { return probe.getBoundingClientRect().width; }
-          finally { probe.remove(); }
+          try {
+            return probe.getBoundingClientRect().width;
+          } finally {
+            probe.remove();
+          }
         })
       };
     });
@@ -150,7 +155,8 @@ test("tabular and proportional numbers use different spacing without changing th
       const faces = await document.fonts.load(`${fontStyle} ${weight} 38px ${family}`, "0123456789");
       for (const size of [13, 16, 25, 34, 38, 42]) {
         const probe = document.createElement("span");
-        probe.style.cssText = `position:absolute;display:inline-block;inline-size:max-content;white-space:pre;font-weight:${weight};font-style:${fontStyle};font-size:${size}px`;
+        probe.style.cssText = "position:absolute;display:inline-block;inline-size:max-content;white-space:pre;"
+          + `font-weight:${weight};font-style:${fontStyle};font-size:${size}px`;
         card.append(probe);
         try {
           const style = getComputedStyle(probe);
@@ -185,17 +191,23 @@ test("tabular and proportional numbers use different spacing without changing th
     nestedWhite.dataset.wlTheme = "white";
     theme.append(inherited, nestedWhite);
     document.body.append(theme);
-    try { return { gavia: getComputedStyle(inherited).textRendering, white: getComputedStyle(nestedWhite).textRendering }; }
-    finally { theme.remove(); }
+    try {
+      return { gavia: getComputedStyle(inherited).textRendering, white: getComputedStyle(nestedWhite).textRendering };
+    } finally {
+      theme.remove();
+    }
   });
   expect(nestedRendering).toEqual({ gavia: "geometricprecision", white: "optimizelegibility" });
-  await expect(fontPage.getByRole("link", { name: "К документации UI Kit", exact: false })).toHaveAttribute("href", "?view=docs&theme=white&lang=ru");
+  const docsLink = fontPage.getByRole("link", { name: "К документации UI Kit", exact: false });
+  const docsHref = new URL((await docsLink.getAttribute("href"))!, page.url());
+  expect(playgroundRouteParams(docsHref).get("view")).toBe("docs");
+  expect(playgroundRouteParams(docsHref).get("lang")).toBe("ru");
+  expect(docsHref.searchParams.get("theme")).toBe("white");
   await fontPage.getByRole("link", { name: "К документации UI Kit", exact: false }).click();
   await expect(page.getByTestId("docs-page")).toBeVisible();
-  expect(new URL(page.url()).pathname).toBe(url.pathname);
+  expect(playgroundBasePath(new URL(page.url()))).toBe(url.pathname);
   expect(new URL(page.url()).searchParams.get("theme")).toBe("white");
 });
-
 
 test("font download contains the approved family, standalone CSS and OFL licenses", async ({ page, baseURL }) => {
   const url = new URL(baseURL ?? "http://127.0.0.1:4173/");

@@ -1,0 +1,120 @@
+{
+  "generator": "apps/playground/scripts/brand-images.mjs",
+  "sharp": "0.35.5",
+  "vips": "8.18.7",
+  "webp": {
+    "quality": 82,
+    "effort": 6,
+    "smartSubsample": true
+  },
+  "images": [
+    {
+      "file": "gavia-lake-hero-v2-640.webp",
+      "source": "docs/brand/gavia-lake-hero-v2.png",
+      "sourceSha256": "8a8d4e0ae4567817606aa155b67f4775044dbf4030bba43c05b0cc2928b73412",
+      "sha256": "453692adf353407ff1b7a4f9d9bca852a9b90f2588842b811065a4d15d4c0632",
+      "width": 640,
+      "height": 213,
+      "bytes": 17886
+    },
+    {
+      "file": "gavia-lake-hero-v2-1024.webp",
+      "source": "docs/brand/gavia-lake-hero-v2.png",
+      "sourceSha256": "8a8d4e0ae4567817606aa155b67f4775044dbf4030bba43c05b0cc2928b73412",
+      "sha256": "854dfec67df805b4f05c09226e54037286266543187c041f1ae0457900ca0300",
+      "width": 1024,
+      "height": 341,
+      "bytes": 36686
+    },
+    {
+      "file": "gavia-lake-hero-v2-1600.webp",
+      "source": "docs/brand/gavia-lake-hero-v2.png",
+      "sourceSha256": "8a8d4e0ae4567817606aa155b67f4775044dbf4030bba43c05b0cc2928b73412",
+      "sha256": "87c940f43a7b576e475023bf54960f3868149eb846dc258d357f57f60c6cb831",
+      "width": 1600,
+      "height": 533,
+      "bytes": 66474
+    },
+    {
+      "file": "gavia-lake-night-v2-640.webp",
+      "source": "docs/brand/gavia-lake-night-v2.png",
+      "sourceSha256": "6cb8ae2ff1bebb85069dad78d0b34fbd64005779c822a2c6dd393d0126ebd5c3",
+      "sha256": "2d1a56ecd33a1169017b7235a37f7b0f62b905fc456d147fedfade20731f9e85",
+      "width": 640,
+      "height": 213,
+      "bytes": 16406
+    },
+    {
+      "file": "gavia-lake-night-v2-1024.webp",
+      "source": "docs/brand/gavia-lake-night-v2.png",
+      "sourceSha256": "6cb8ae2ff1bebb85069dad78d0b34fbd64005779c822a2c6dd393d0126ebd5c3",
+      "sha256": "99070d1c5dfb800ce547bef69a033a8988bea1492fafeec26c0afd031891f23d",
+      "width": 1024,
+      "height": 341,
+      "bytes": 33780
+    },
+    {
+      "file": "gavia-lake-night-v2-1600.webp",
+      "source": "docs/brand/gavia-lake-night-v2.png",
+      "sourceSha256": "6cb8ae2ff1bebb85069dad78d0b34fbd64005779c822a2c6dd393d0126ebd5c3",
+      "sha256": "b720cd659ec5ace245526b0855c381686de0ed982cea911dcd5163d786eb857e",
+      "width": 1600,
+      "height": 533,
+      "bytes": 62870
+    },
+    {
+      "file": "gavia-forest-card-v1-640.webp",
+      "source": "docs/brand/gavia-forest-card-v1.png",
+      "sourceSha256": "1299f569bdd67dac93b63015b57e177a15035a9ccf1c48e35ad07c07fe2e0af5",
+      "sha256": "d4c820e494146a116381b9ba5c8881ad798ced643b71692d1fbda4de94d9ad57",
+      "width": 640,
+      "height": 213,
+      "bytes": 4234
+    },
+    {
+      "file": "gavia-forest-card-v1-1024.webp",
+      "source": "docs/brand/gavia-forest-card-v1.png",
+      "sourceSha256": "1299f569bdd67dac93b63015b57e177a15035a9ccf1c48e35ad07c07fe2e0af5",
+      "sha256": "9830c84bae5a6ac149b59a3e9a56cf088f66afed7d3acbc026fec85e734b26ea",
+      "width": 1024,
+      "height": 341,
+      "bytes": 9012
+    },
+    {
+      "file": "gavia-forest-card-v1-1600.webp",
+      "source": "docs/brand/gavia-forest-card-v1.png",
+      "sourceSha256": "1299f569bdd67dac93b63015b57e177a15035a9ccf1c48e35ad07c07fe2e0af5",
+      "sha256": "4324c9017f7154d77a14f5e6ffd84a050022cd2062e22ee6bc914cc40ed62bf5",
+      "width": 1600,
+      "height": 533,
+      "bytes": 19036
+    },
+    {
+      "file": "gavia-reeds-card-v1-640.webp",
+      "source": "docs/brand/gavia-reeds-card-v1.png",
+      "sourceSha256": "3a0fd3a18de64feb1d27e6b850433c3c03bf2782563388921d810fa3b3760042",
+      "sha256": "29b355f27aa63969980cf0595c95cb60a7eb864bf923946d498b4e9a4c2f0c69",
+      "width": 640,
+      "height": 213,
+      "bytes": 6454
+    },
+    {
+      "file": "gavia-reeds-card-v1-1024.webp",
+      "source": "docs/brand/gavia-reeds-card-v1.png",
+      "sourceSha256": "3a0fd3a18de64feb1d27e6b850433c3c03bf2782563388921d810fa3b3760042",
+      "sha256": "c5b6787616670c76ff100b93a349dd9e063b8311da7395b33f651fc9c309767a",
+      "width": 1024,
+      "height": 341,
+      "bytes": 12792
+    },
+    {
+      "file": "gavia-reeds-card-v1-1600.webp",
+      "source": "docs/brand/gavia-reeds-card-v1.png",
+      "sourceSha256": "3a0fd3a18de64feb1d27e6b850433c3c03bf2782563388921d810fa3b3760042",
+      "sha256": "a540358147a781ede5e46e5bf823c7d56705f98ec90dea6f2c4c5143f5ab51cf",
+      "width": 1600,
+      "height": 533,
+      "bytes": 23674
+    }
+  ]
+}

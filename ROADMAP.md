@@ -1,142 +1,55 @@
 # Gavia UI roadmap
 
-The plan and development history of `gavia-ui`, from an HTML prototype to a design system.
-Status: ✅ implemented · 🚧 in progress · ⬜ planned · ⛔ belongs in the application.
+The review programme is in progress. All recommendations, including the
+post-1.0 list, are accepted into [the implementation backlog](review/PLAN.md).
+The backlog records task status; this roadmap describes direction and does not
+claim that pending code, checks, releases or owner acceptance are complete.
 
-The results below describe each stage when it was completed.
-Run the checks from `agents.md` section 6 before a new release.
+## Now
 
----
+- Resolve accessibility, list selection, unique IDs, overlay focus and service
+  lifecycle defects while retaining Vue 3.4/3.5 compatibility.
+- Establish maintainable tooling, component scaffolding, public Playground
+  imports, separate test projects and canonical package documentation.
+- Improve component depth, shared utilities and public contracts with focused
+  checks. Preserve unrelated changes and historical compatibility fixtures.
+- Prepare CI, package and deployment changes for review. Full builds, archives,
+  browser/visual suites and actual workflow runs remain separately authorized
+  validation, not an automatic result of editing configuration.
 
-## Stage 0. Design system prototype — ✅
+## Next
 
-- ✅ The original HTML catalog (tokens, 12 sections, vanilla JS) was moved into
-  the library and live Vue examples. Completed HTML prototypes were removed
-  from the working tree; Git retains the original layout history.
-- ✅ More variants: soft/link/lg/xs buttons, button group, password input,
-  stepper, counter, removable tags, presence avatars, alerts with actions,
-  toast types, popover, accordion, slider, steps and 46 icons.
+- Complete remaining family contracts, typed slots, table behavior, navigation
+  adaptation, accessible names and examples documented in the review backlog.
+- Finish documentation routes, real API metadata, search, recipes and starter
+  applications, preserving existing query links and explicit CSS imports.
+- Agree on and document 1.0 API migrations: semantic tones, normalized pt names,
+  `dismissible` and an English fallback. Introduce compatibility aliases and
+  development warnings in 0.x before removing them in 1.0.
+- Add the planned control groups, Tooltip component, menu nesting/ContextMenu,
+  Toolbar and TagsInput, then prepare an RC with manual accessibility and owner
+  acceptance evidence. Release versions and publication dates require agreement.
 
-Current examples are [live SFCs](apps/playground/src/design-system/examples)
-and [complete flows](apps/playground/src/design-system/recipes).
-Icons are maintained in the [SVG catalog](packages/ui-kit/icons).
-The “Prototype” column below preserves the mapping to early layouts.
+## Later
 
-## Stage 1. Technical foundation — ✅
+- Implement the complete accepted post-1.0 component backlog, including DataTable,
+  VirtualList, Tree, Descriptions, List and the remaining NEW-12…24 items.
+- Add selective icon/component CSS imports, Stylelint, browser-mode and mutation
+  testing, role-based test improvements and a reusable ESLint configuration.
+- Review Linux visual baseline candidates separately. Windows/Chromium remains
+  the primary screenshot environment; Docker does not replace those PNGs.
 
-- ✅ pnpm workspace: `packages/ui-kit` + `apps/playground`.
-- ✅ Vite library mode: ESM + TypeScript declarations, strict TS.
-- ✅ Vue 3 is the only peer; components and services are implemented in the kit.
-- ✅ `--wl-*` tokens: foundation → semantic → component; CSS Layers
-  (`wl.reset`, `wl.tokens`, `wl.components`).
-- ✅ `white` + `graphite` themes through `data-wl-theme` / explicit imports.
-- ✅ Subpath exports: `.`, `styles/base.css`, `styles/reset.css`, `themes/*.css`.
-- ✅ `createWlPt()` — extensible pt map; `WlConfig` — application configuration.
-- ✅ README (integration, theming, contracts) and agents.md (repository rules).
+## Non-goals
 
-## Stage 2. Basic components — ✅ (21 + a directive)
+- Application business logic, requests, router/store ownership or API clients in
+  library runtime dependencies. Vue stays the only required peer.
+- React, Tailwind, CSS-in-JS, component forks for themes or automatic style imports.
+- Unannounced public namespace/contract changes, automatic fixture replacement,
+  commits, pushes, tags, package publication or external announcements.
+- Treating successful source checks, a build or a tag as deployment, registry,
+  screen-reader or owner-acceptance proof.
 
-| Component | Status | Prototype |
-| --- | --- | --- |
-| `WlButton` (8 variants, xs–lg, loading, block) | ✅ | `.btn` |
-| `WlIcon` (built-in SVG set) | ✅ | `.ic` |
-| `WlInput` (sizes, invalid, prefix/suffix) | ✅ | `.input` |
-| `WlTextarea` | ✅ | `.textarea` |
-| `WlSelect` | ✅ | `.select` |
-| `WlCheckbox` (+ indeterminate) | ✅ | `.checkline` |
-| `WlRadio` | ✅ | `.box.rnd` |
-| `WlSwitch` (sm/md) | ✅ | `.switch` |
-| `WlTag` (5 colors, removable) | ✅ | `.tag` |
-| `WlChip` (filter, counter) | ✅ | `.chip` |
-| `WlBadge` (+ dot) | ✅ | `.nav-badge`, `.bell-dot` |
-| `WlAvatar` (24–48, presence) | ✅ | `.avatar` |
-| `WlCard` (title/content/footer, hoverable) | ✅ | `.card` |
-| `WlTabs` (items, counters, panels) | ✅ | `.tabs` |
-| `WlAlert` (4 types, action, closable) | ✅ | `.alert` |
-| `WlProgress` (+ thin, ok) | ✅ | `.progress` |
-| `WlSkeleton` | ✅ | `.skel` |
-| `WlSpinner` (+ light) | ✅ | `.spinner` |
-| `WlDialog` | ✅ | `.modal` |
-| `WlDrawer` | ✅ | `.drawer` |
-| `WlDivider` | ✅ | `.divider` |
-| `WlTooltip` (directive) | ✅ | `[data-tip]` |
-
-Stage validation: build ✓ · typecheck ✓ · 30/30 tests ✓ · playground ✓ ·
-pack ✓ (Vue outside the bundle).
-
-## Stage 3. Navigation and overlays — ✅ (11 components + a composable)
-
-| Component | Status | Prototype |
-| --- | --- | --- |
-| `WlIconButton` (sm/md, counter/dot) | ✅ | `.icb` |
-| `WlButtonGroup` | ✅ | `.btn-group` |
-| `WlSegmented` | ✅ | `.seg` |
-| `WlNavItem` (navigation row with a badge, width: 100%) | ✅ | `.nav-item` |
-| `WlBreadcrumbs` (last item has `aria-current`) | ✅ | `.crumbs` |
-| `WlPagination` (1-based `v-model:page` + compact) | ✅ | `.pager` |
-| `WlMenu` (static + popup, headings, danger) | ✅ | `.menu` |
-| `WlPopover` | ✅ | `.popover` |
-| `WlToast` + `useWlToast()` + `WlToastService` (4 types) | ✅ | `.toast` |
-| `WlEmpty` | ✅ | `.empty` |
-| `WlPill` (status with a dot, 5 variants) | ✅ | `.pill` |
-
-Stage validation: build ✓ · typecheck ✓ · 59/59 tests ✓ · playground ✓ ·
-pack ✓ (only dist/styles/themes/README/package.json in the archive).
-
-## Stage 4. Forms and data — ✅ (8 components)
-
-Implementation policy: forms and the table are implemented in the kit.
-
-| Component | Status | Prototype |
-| --- | --- | --- |
-| `WlNumberInput` (stepper, keyboard, clamp) | ✅ | `.stepper` |
-| `WlPasswordInput` (visibility toggle, aria-pressed) | ✅ | `.input-wrap` + `#pw-toggle` |
-| `WlSlider` (fill through `--wl-slider-pct`) | ✅ | `.slider` |
-| `WlAccordion` (details/summary, single, controlled) | ✅ | `.acc` |
-| `WlSteps` (done/current/pending) | ✅ | `.steps` |
-| `WlField` (label + hint + error, useId relationships) | ✅ | `.field` |
-| `WlTable` (columns, cell slots, numeric, empty) | ✅ | `.table` |
-| `WlStatCard` (label + value + focus bar) | ✅ | `.stat-card` |
-
-Part 4a added forms; 4b added the table and stat card.
-`WlInput`/`WlPasswordInput`/`WlNumberInput` also forward `id`/aria to their
-internal inputs. Validation: build ✓ · typecheck ✓ · 93/93 tests ✓ ·
-playground ✓ · pack ✓ (40 components in the kit).
-
-## Stage 5. Foundation showcase and additional components — ✅
-
-| Task | Status | Notes |
-| --- | --- | --- |
-| Playground: Colors section (token swatches, copy hex) | ✅ | getComputedStyle — correct in both themes |
-| Playground: Typography section (scale, mono, links) | ✅ | playground styles use the `pg-` prefix, outside the library |
-| `WlColorPicker` (swatches + hex input) | ✅ | custom, normalizes to `#rrggbb` |
-| `WlCalendar` (monthly grid: today/selected/events) | ✅ | custom, `v-model` = ISO `YYYY-MM-DD` |
-| `WlDatePicker` (ISO v-model, ru locale, kit-style panel) | ✅ | custom calendar |
-| `WlFileUpload` (dropzone + file list + reject events) | ✅ | custom; returns files to the consumer, does not upload them |
-
-Stage validation: build ✓ · typecheck ✓ · 115/115 tests ✓ · playground ✓ ·
-pack ✓ (44 components in the kit).
-
-## Stage 5b. Independence from PrimeVue — ✅ in `codex/remove-primevue`
-
-- ✅ Custom implementations of all 51 components; Vue 3 remains a peer.
-- ✅ `WlConfig` and services with state per Vue application.
-- ✅ SVG catalog and batch `icons:sync` / `icons:check`.
-- ✅ Contract, browser and package checks; migration 0.5.
-
-## Stage 6. Application layer — ⛔ outside the kit
-
-Applications compose these elements from library components.
-Their business logic stays in the application (agents.md section 2):
-
-- ⛔ task row (`.task`), note row (`.note-row`)
-- ⛔ timeline (`.tl-items`), agenda (`.ag-row`), settings rows (`.set-row`)
-- ⛔ application-specific palette commands (`.palette`)
-- ⛔ calendar cells (`.cal-day`), weekly mini chart (`.week-bars`)
-- ⛔ content mini cards (`.note-mini`, `.tile`)
-
-## Non-goals (agreed)
-
-- Pinia, Vue Router, API clients, Markdown/Mermaid — never in runtime deps.
-- Package publication requires a separate explicit instruction.
-- Tailwind / CSS-in-JS are not used.
+The [documentation index](docs/README.md) separates user guides and maintainer
+procedures. Historical implementation stages are preserved in
+[the stage ledger](docs/maintainers/history.md); previous publication evidence is
+in [the release ledger](docs/maintainers/release-history.md).

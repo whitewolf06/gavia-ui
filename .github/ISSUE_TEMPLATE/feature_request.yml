@@ -1,22 +1,23 @@
-name: Предложение
-description: Предложить улучшение Gavia UI
+name: Feature request
+description: Propose an improvement to Gavia UI
 title: "[Feature]: "
 body:
   - type: textarea
     id: problem
     attributes:
-      label: Какую задачу нужно решить?
+      label: Problem to solve
     validations:
       required: true
   - type: textarea
     id: proposal
     attributes:
-      label: Как должно работать?
-      description: Опишите поведение и приведите пример использования.
+      label: Proposed behavior
+      description: Describe the intended behavior and show an example of the public API.
     validations:
       required: true
   - type: textarea
     id: compatibility
     attributes:
-      label: Что важно сохранить и какие варианты уже пробовали?
+      label: Compatibility and alternatives
+      description: What must remain compatible, and which alternatives have you tried?
 

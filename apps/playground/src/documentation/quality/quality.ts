@@ -1,6 +1,6 @@
-import { localizeDocumentation } from "../localize";
+import type { WlTableColumn, WlTableRow } from "gavia-ui";
 import type { DocumentationHeading } from "../catalog";
-import type { WlTableColumn, WlTableRow } from "../../../../../packages/ui-kit/src";
+import { localizeDocumentation } from "../localize";
 
 export const qualityDocumentationHeadings = localizeDocumentation({
   measurement: { id: "docs-quality-measurement", title: "documentation.strings.s0780" },

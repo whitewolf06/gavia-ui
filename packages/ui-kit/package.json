@@ -4,19 +4,34 @@
   "description": "Gavia UI — a free, open source Vue 3 and TypeScript component library and design system",
   "type": "module",
   "license": "MIT",
+  "author": {
+    "name": "Gorbach Dmitry",
+    "url": "https://github.com/whitewolf06"
+  },
+  "homepage": "https://github.com/whitewolf06/gavia-ui#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/whitewolf06/gavia-ui.git",
     "directory": "packages/ui-kit"
   },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org",
-    "access": "public"
+  "bugs": {
+    "url": "https://github.com/whitewolf06/gavia-ui/issues"
   },
+  "keywords": [
+    "vue",
+    "vue3",
+    "components",
+    "ui",
+    "design-system",
+    "typescript",
+    "gavia"
+  ],
   "sideEffects": [
     "**/*.css"
   ],
   "exports": {
+    "./utils": { "types": "./dist/utils/index.d.ts", "import": "./dist/utils.js" },
+    "./composables": { "types": "./dist/composables/index.d.ts", "import": "./dist/composables.js" },
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
@@ -31,16 +46,21 @@
     "./styles/fonts/gavia.css": "./styles/fonts/gavia.css",
     "./fonts/gavia/*": "./fonts/gavia/*"
   },
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist",
     "styles",
-    "fonts",
+    "fonts/gavia/*.woff2",
+    "fonts/gavia/*.txt",
+    "fonts/gavia/manifest.json",
     "themes",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"
   ],
   "scripts": {
+    "prepack": "node scripts/prepack.mjs",
     "build": "vite build",
     "test": "vitest run",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
@@ -63,23 +83,10 @@
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^3.2.4",
     "vue": "3.4.38",
-    "vue-tsc": "^2.2.10"
+    "vue-tsc": "2.2.12"
   },
-  "homepage": "https://github.com/whitewolf06/gavia-ui#readme",
-  "bugs": {
-    "url": "https://github.com/whitewolf06/gavia-ui/issues"
-  },
-  "keywords": [
-    "vue",
-    "vue3",
-    "components",
-    "ui",
-    "design-system",
-    "typescript",
-    "gavia"
-  ],
-  "author": {
-    "name": "Gorbach Dmitry",
-    "url": "https://github.com/whitewolf06"
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
   }
 }

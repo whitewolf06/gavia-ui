@@ -1,10 +1,12 @@
-/// <reference types="vitest/config" />
-import { defineConfig } from "vite";
 import type { Plugin } from "vite";
 import vue from "@vitejs/plugin-vue";
-import dts from "vite-plugin-dts";
-import { wlManifest } from "./src/manifest";
 import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+/// <reference types="vitest/config" />
+import { defineConfig } from "vite";
+import dts from "vite-plugin-dts";
+import { normalizeDeclarationSpecifiers } from "../../scripts/normalize-declarations.mjs";
+import { wlManifest } from "./src/manifest";
 
 /** Emits dist/manifest.json — machine-readable component manifest for editors/agents. */
 function wlManifestPlugin(): Plugin {
@@ -31,16 +33,25 @@ export default defineConfig({
     dts({
       entryRoot: "src",
       include: ["src/**/*.ts", "src/**/*.vue"],
-      exclude: ["tests/**", "**/*.test.ts", "vite.config.ts"]
+      exclude: ["tests/**", "**/*.test.ts", "vite.config.ts"],
+      afterDiagnostic(diagnostics) {
+        if (diagnostics.length) throw new Error(`Declaration generation failed with ${diagnostics.length} TypeScript diagnostics`);
+      },
+      beforeWriteFile(filePath, content) {
+        return { content: normalizeDeclarationSpecifiers(content, filePath, {
+          sourceRoot: fileURLToPath(new URL("./src/", import.meta.url)),
+          outDir: fileURLToPath(new URL("./dist/", import.meta.url))
+        }) };
+      }
     }),
     wlManifestPlugin()
   ],
   build: {
     target: "es2020",
     lib: {
-      entry: "src/index.ts",
+      entry: { index: "src/index.ts", utils: "src/utils/index.ts", composables: "src/composables/index.ts" },
       formats: ["es"],
-      fileName: () => "index.js"
+      fileName: (_format, entryName) => `${entryName}.js`
     },
     rollupOptions: {
       external: [/^vue($|\/)/]

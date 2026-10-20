@@ -1,8 +1,8 @@
-import { russianPlaygroundUrl } from "./playground-url";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
-import { expect, test, type Locator, type Page } from "@playwright/test";
-import { chooseDropdownOption, chooseShowcaseTheme, navigateDocumentationComponent, expectMainViewCurrent, navigateMainView, openDocumentationMenu } from "./select-helpers";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
+import { playgroundRouteParams, russianPlaygroundUrl } from "./playground-url";
+import { chooseDropdownOption, chooseShowcaseTheme, expectMainViewCurrent, navigateDocumentationComponent, navigateMainView, openDocumentationMenu } from "./select-helpers";
 
 const pickerNames = ["WlTimePicker", "WlFilePicker"] as const;
 type PickerName = (typeof pickerNames)[number];
@@ -37,7 +37,7 @@ async function expectPickerDestination(page: Page, name: PickerName): Promise<Lo
   await expect(heading).toBeInViewport();
   await expect.poll(() => {
     const url = new URL(page.url());
-    return { view: url.searchParams.get("view"), component: url.searchParams.get("component") };
+    return { view: playgroundRouteParams(url).get("view"), component: playgroundRouteParams(url).get("component") };
   }).toEqual({ view: "docs", component: name });
   const workspace = docs.locator('[data-docs-component="' + name + '"]');
   await expect(workspace).toHaveCount(1);
@@ -73,7 +73,7 @@ test.beforeEach(async ({ page, baseURL }) => {
   // The SPA bootstrap and Docs chunk can finish after the static document loads.
   await page.getByTestId("docs-page").waitFor({ state: "visible" });
   await expect(page.getByTestId("docs-page").getByRole("heading", { level: 1 })).toHaveText("Документация");
-  await expect.poll(() => new URL(page.url()).searchParams.get("view")).toBe("docs");
+  await expect.poll(() => playgroundRouteParams(new URL(page.url())).get("view")).toBe("docs");
   await page.addStyleTag({ content: "html { scroll-behavior: auto; }" });
 });
 
@@ -81,7 +81,19 @@ test.afterEach(async ({ page }) => {
   expect(pageErrors.get(page), "Documentation examples must load without runtime errors").toEqual([]);
 });
 
-test("every manifest component has a populated live and source destination in Docs", async ({ page }) => {
+test("legacy component input resolves to a canonical hosted route without losing its theme or anchor", async ({ page }) => {
+  await page.goto("/?view=docs&component=WlTabs&lang=ru&theme=graphite#docs-wltabs-props");
+  await expect(page.locator('[data-docs-component="WlTabs"]')).toBeVisible();
+  await expect(page).toHaveURL((url) => url.pathname === "/ru/docs/components/WlTabs/"
+    && url.searchParams.get("theme") === "graphite"
+    && !url.searchParams.has("view") && !url.searchParams.has("component") && !url.searchParams.has("lang")
+    && url.hash === "#docs-wltabs-props");
+  await expect(page.locator("#docs-wltabs-props")).toBeInViewport();
+  await page.reload();
+  await expect(page.locator("#docs-wltabs-props")).toBeInViewport();
+});
+
+test("Docs catalog exposes all public component versions and opens the real button example", async ({ page }) => {
   const docs = await openDocumentationMenu(page);
   const catalog = docs.getByRole("navigation", { name: "Каталог компонентов", exact: true });
   await expect(catalog.getByRole("button")).toHaveCount(wlManifest.length);
@@ -93,26 +105,6 @@ test("every manifest component has a populated live and source destination in Do
     await expect(item).toHaveAccessibleDescription("С " + entry.introducedIn);
   }
 
-  for (const entry of wlManifest) {
-    const workspace = await navigateDocumentationComponent(page, entry.name);
-    await expect(docs.getByRole("heading", { level: 1 })).toHaveText(entry.name);
-    await expect.poll(() => new URL(page.url()).searchParams.get("component"), entry.name + " route").toBe(entry.name);
-    const preview = entry.name === "WlButton" ? workspace.getByTestId("docs-button-preview")
-      : workspace.getByTestId("ds-explorer").getByTestId("ds-example-preview");
-    await expect(preview.locator(":scope > *").first(), entry.name + " actual live example").toBeVisible();
-    await expect(preview.getByText("Пример не найден.", { exact: true })).toHaveCount(0);
-    const source = entry.name === "WlButton" ? workspace.getByTestId("docs-button-source").locator("pre code")
-      : workspace.getByTestId("ds-explorer").locator("pre code");
-    // Collapsed code remains present and must refer to the consumer package.
-    await expect(source, entry.name + " consumer source").toContainText('from "gavia-ui"');
-    expect(await source.textContent(), entry.name + " public import").not.toContain("packages/ui-kit");
-    if (entry.name !== "WlButton") {
-      const extra = workspace.locator('[data-docs-component-extra="' + entry.name + '"]');
-      await expect(extra.getByTestId("docs-component-extra-preview").locator(":scope > *").first(), entry.name + " rich live example").toBeVisible();
-      await expect(extra.getByTestId("docs-component-extra-source").locator("pre code")).toContainText("<template>");
-    }
-  }
-
   // Header controls also use WlButton; catalog navigation must reach its actual example.
   const buttonWorkspace = await navigateDocumentationComponent(page, "WlButton");
   const button = buttonWorkspace.getByTestId("docs-button-preview").getByRole("button", { name: "Добавить", exact: true });
@@ -120,20 +112,55 @@ test("every manifest component has a populated live and source destination in Do
   await expect(buttonWorkspace.getByTestId("docs-button-preview").getByRole("status")).toHaveText("Нажатий: 1");
 });
 
+function documentationExampleTargets(workspace: Locator, name: string): { preview: Locator; source: Locator } {
+  if (name === "WlButton") return {
+    preview: workspace.getByTestId("docs-button-preview"),
+    source: workspace.getByTestId("docs-button-source").locator("pre code")
+  };
+  const explorer = workspace.getByTestId("ds-explorer");
+  return { preview: explorer.getByTestId("ds-example-preview"), source: explorer.locator("pre code") };
+}
+
+async function expectRichDocumentationExample(workspace: Locator, name: string): Promise<void> {
+  if (name === "WlButton") return;
+  const extra = workspace.locator('[data-docs-component-extra="' + name + '"]');
+  await expect(extra.getByTestId("docs-component-extra-preview").locator(":scope > *").first(), name + " rich live example").toBeVisible();
+  await expect(extra.getByTestId("docs-component-extra-source").locator("pre code")).toContainText("<template>");
+}
+
+for (const category of new Set(wlManifest.map((entry) => entry.category))) {
+  test("Docs live examples and consumer source cover " + category, async ({ page }) => {
+    const docs = await openDocumentationMenu(page);
+
+    for (const entry of wlManifest.filter((item) => item.category === category)) {
+      const workspace = await navigateDocumentationComponent(page, entry.name);
+      await expect(docs.getByRole("heading", { level: 1 })).toHaveText(entry.name);
+      await expect.poll(() => playgroundRouteParams(new URL(page.url())).get("component"), entry.name + " route").toBe(entry.name);
+      const { preview, source } = documentationExampleTargets(workspace, entry.name);
+      await expect(preview.locator(":scope > *").first(), entry.name + " actual live example").toBeVisible();
+      await expect(preview.getByText("Пример не найден.", { exact: true })).toHaveCount(0);
+      // Collapsed code remains present and must refer to the consumer package.
+      await expect(source, entry.name + " consumer source").toContainText('from "gavia-ui"');
+      expect(await source.textContent(), entry.name + " public import").not.toContain("packages/ui-kit");
+      await expectRichDocumentationExample(workspace, entry.name);
+    }
+  });
+}
+
 test("Docs catalog reaches the time picker and its model clears to null in all themes", async ({ page, baseURL }) => {
   await navigateDocumentationComponent(page, "WlTimePicker");
-  await expect(pickerPreview(page, "WlTimePicker").getByLabel("Время встречи", { exact: true })).toHaveValue("09:30");
+  await expect(pickerPreview(page, "WlTimePicker").getByLabel("Время встречи", { exact: true })).toHaveValue("09:30 AM");
   for (const theme of themes) {
     await chooseShowcaseTheme(page, theme.label);
     await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme.name);
     await navigateDocumentationComponent(page, "WlTimePicker");
     const card = await expectPickerDestination(page, "WlTimePicker");
     const input = card.getByLabel("Время встречи", { exact: true });
-    await expect(input).toHaveAttribute("type", "time");
-    await input.fill("12:34");
+    await expect(input).toHaveAttribute("type", "text");
+    await input.fill("11:45 AM");
     await input.press("Enter");
-    await expect(input).toHaveValue("12:34");
-    await expect(card.getByRole("status")).toHaveText("Выбрано: 12:34");
+    await expect(input).toHaveValue("11:45 AM");
+    await expect(card.getByRole("status")).toHaveText("Выбрано: 11:45");
     await input.fill("");
     await input.press("Enter");
     await expect(input).toHaveValue("");
@@ -146,7 +173,7 @@ test("Docs catalog reaches the time picker and its model clears to null in all t
   await expectPickerDestination(page, "WlTimePicker");
   await page.reload();
   await expectPickerDestination(page, "WlTimePicker");
-  await expect(pickerPreview(page, "WlTimePicker").getByLabel("Время встречи", { exact: true })).toHaveValue("09:30");
+  await expect(pickerPreview(page, "WlTimePicker").getByLabel("Время встречи", { exact: true })).toHaveValue("09:30 AM");
 });
 
 for (const theme of themes) {
@@ -225,8 +252,12 @@ for (const name of pickerNames) {
     await expect(search).toBeFocused();
     await search.fill(name);
     const palette = page.locator(".wl-command-palette");
-    await expect(palette.getByRole("option")).toHaveCount(1);
-    await expect(palette.getByText(name, { exact: true })).toBeVisible();
+    const destination = palette.getByRole("option").filter({ has: page.getByText(name, { exact: true }) });
+    await expect(destination).toHaveCount(1);
+    await expect(destination).toBeVisible();
+    const targetId = await destination.getAttribute("id");
+    expect(targetId).toBeTruthy();
+    await expect(search).toHaveAttribute("aria-activedescendant", targetId!);
     await search.press("Enter");
     await expect(palette).toHaveCount(0);
     await expectPickerDestination(page, name);

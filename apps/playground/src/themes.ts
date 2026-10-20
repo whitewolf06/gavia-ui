@@ -1,19 +1,20 @@
-import { playgroundLocale } from "./i18n";
+import type { WlThemeName } from "gavia-ui";
+import { resolveWlTheme, type WlThemePair } from "gavia-ui/composables";
+import catalogSummary from "virtual:gavia-catalog-summary";
 import { ref } from "vue";
+import { playgroundLocale } from "./i18n/locale";
 import { prefersPlaygroundDarkTheme, readPlaygroundPreference } from "./preferences";
-import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
-import type { WlThemeName } from "../../../packages/ui-kit/src/types";
 
 /** Automatic mode uses the branded light/dark pair; all five themes remain available. */
 export const playgroundDefaultTheme: WlThemeName = "gavia";
 export type PlaygroundThemePreference = WlThemeName | "system";
 const themeOrder: readonly WlThemeName[] = ["gavia", "gavia-dark", "white", "graphite", "newspaper"];
-export const playgroundThemeOptions = [...wlDesignThemes]
+export const playgroundThemeOptions = [...catalogSummary.themes]
   .sort((a, b) => themeOrder.indexOf(a.name) - themeOrder.indexOf(b.name))
   .map(({ name, label }) => ({ value: name, label }));
 
 export function isPlaygroundTheme(value: unknown): value is WlThemeName {
-  return typeof value === "string" && wlDesignThemes.some((theme) => theme.name === value);
+  return typeof value === "string" && catalogSummary.themes.some((theme) => theme.name === value);
 }
 
 export function isPlaygroundThemePreference(value: unknown): value is PlaygroundThemePreference {
@@ -27,8 +28,14 @@ export function parsePlaygroundThemePreference(search: string): PlaygroundThemeP
   return isPlaygroundThemePreference(saved) ? saved : "system";
 }
 
+export function playgroundThemePair(preference: PlaygroundThemePreference): WlThemePair<WlThemeName> {
+  return preference === "system"
+    ? { light: playgroundDefaultTheme, dark: "gavia-dark" }
+    : { light: preference, dark: preference };
+}
+
 export function resolvePlaygroundTheme(preference: PlaygroundThemePreference, dark = prefersPlaygroundDarkTheme()): WlThemeName {
-  return preference === "system" ? dark ? "gavia-dark" : playgroundDefaultTheme : preference;
+  return resolveWlTheme("system", playgroundThemePair(preference), dark);
 }
 
 export function parsePlaygroundTheme(search: string): WlThemeName {

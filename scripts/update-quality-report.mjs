@@ -1,7 +1,7 @@
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
-import { join, dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const reportPath = "apps/playground/src/project/quality-report.generated.json";
@@ -9,11 +9,13 @@ const badgePath = "docs/quality-coverage.svg";
 const dimensions = ["lines", "statements", "branches", "functions"];
 
 function object(value, label) {
-  if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error(label + " must be an object");
+  if (!value || typeof value !== "object" || Array.isArray(value))
+    throw new Error(label + " must be an object");
   return value;
 }
 function count(value, label, minimum = 0) {
-  if (!Number.isSafeInteger(value) || value < minimum) throw new Error(label + " must be a valid test count");
+  if (!Number.isSafeInteger(value) || value < minimum)
+    throw new Error(label + " must be a valid test count");
   return value;
 }
 function percent(value, label) {
@@ -26,19 +28,24 @@ function percent(value, label) {
 /** Validate and retain only the agreed unit-measurement schema. */
 export function validateQualityReport(value, expectedVersion) {
   const report = object(value, "Quality report");
-  if (report.schemaVersion !== 1) throw new Error("Unsupported quality report schema");
-  if (report.version !== expectedVersion) throw new Error("Quality report/package versions differ");
+  if (report.schemaVersion !== 1)
+    throw new Error("Unsupported quality report schema");
+  if (report.version !== expectedVersion)
+    throw new Error("Quality report/package versions differ");
   if (typeof report.measuredAt !== "string" || !Number.isFinite(Date.parse(report.measuredAt))
-    || new Date(report.measuredAt).toISOString() !== report.measuredAt) throw new Error("Invalid quality measurement date");
+    || new Date(report.measuredAt).toISOString() !== report.measuredAt)
+    throw new Error("Invalid quality measurement date");
   const source = object(report.source, "Report source");
   if (source.revision !== null && (typeof source.revision !== "string" || !/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/i.test(source.revision))) {
     throw new Error("Invalid source revision");
   }
-  if (typeof source.dirty !== "boolean" || !["local", "ci"].includes(source.environment)) throw new Error("Invalid source environment");
+  if (typeof source.dirty !== "boolean" || !["local", "ci"].includes(source.environment))
+    throw new Error("Invalid source environment");
   const tests = object(report.tests, "Unit tests");
   const total = count(tests.total, "Total tests", 1);
   const passed = count(tests.passed, "Passed tests", 1);
-  if (passed !== total) throw new Error("All measured unit tests must pass");
+  if (passed !== total)
+    throw new Error("All measured unit tests must pass");
   const measuredCoverage = object(report.coverage, "Unit coverage");
   const coverage = Object.fromEntries(dimensions.map((name) => [name, percent(measuredCoverage[name], "Coverage " + name)]));
   return {
@@ -77,26 +84,30 @@ export function coverageBadge(lines) {
   percent(lines, "Coverage lines");
   const value = Number(lines.toFixed(2)).toString() + "%";
   return '<svg xmlns="http://www.w3.org/2000/svg" width="188" height="24" viewBox="0 0 188 24" role="img" aria-labelledby="unit-coverage-title">\n'
-    + '  <title id="unit-coverage-title">unit coverage: ' + value + '</title>\n'
+    + '  <title id="unit-coverage-title">unit coverage: ' + value + "</title>\n"
     + '  <rect x="0.5" y="0.5" width="187" height="23" rx="3" fill="#eef0f2" stroke="#c5cbd1"/>\n'
     + '  <path d="M119 1v22" stroke="#c5cbd1"/>\n'
     + '  <g fill="#26323d" font-family="Verdana, DejaVu Sans, sans-serif" font-size="11" text-anchor="middle">\n'
     + '    <text x="60" y="16">unit coverage</text>\n'
-    + '    <text x="153" y="16" font-weight="600">' + value + '</text>\n'
-    + '  </g>\n</svg>\n';
+    + '    <text x="153" y="16" font-weight="600">' + value + "</text>\n"
+    + "  </g>\n</svg>\n";
 }
 
-function readJson(path) { return JSON.parse(readFileSync(path, "utf8")); }
+function readJson(path) {
+  return JSON.parse(readFileSync(path, "utf8"));
+}
 function projectVersion() {
   const kit = readJson(join(root, "packages/ui-kit/package.json"));
   const workspace = readJson(join(root, "package.json"));
-  if (typeof kit.version !== "string" || !kit.version || kit.version !== workspace.version) throw new Error("Root/package versions differ");
+  if (typeof kit.version !== "string" || !kit.version || kit.version !== workspace.version)
+    throw new Error("Root/package versions differ");
   return kit.version;
 }
 function sourceMetadata() {
   const commit = spawnSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" });
   const status = spawnSync("git", ["status", "--porcelain=v1", "--untracked-files=normal"], { cwd: root, encoding: "utf8" });
-  if (commit.status !== 0 || status.status !== 0) throw new Error("Git source metadata is required for a new quality measurement");
+  if (commit.status !== 0 || status.status !== 0)
+    throw new Error("Git source metadata is required for a new quality measurement");
   return {
     revision: commit.stdout.trim(),
     dirty: status.stdout.trim().length > 0,
@@ -145,5 +156,11 @@ function main() {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  try { main(); } catch (error) { console.error(error.message); process.exitCode = 1; }
+  try {
+    main();
+  } catch (error) {
+    console.error(error.message);
+
+    process.exitCode = 1;
+  }
 }

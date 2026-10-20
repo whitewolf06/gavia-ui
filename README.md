@@ -4,55 +4,58 @@
 
 # Gavia UI
 
-[![Unit line coverage — repository snapshot](docs/quality-coverage.svg)](apps/playground/src/project/quality-report.generated.json)
+A Vue 3 + TypeScript component library with five themes and explicit CSS imports.
 
-A component library and design system for Vue 3 + TypeScript.
-Buttons, inputs, tables, navigation and overlays. Shared tokens, five themes
-and working examples with code.
+[![npm version](https://img.shields.io/npm/v/gavia-ui)](https://www.npmjs.com/package/gavia-ui)
+[![CI](https://github.com/whitewolf06/gavia-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/whitewolf06/gavia-ui/actions/workflows/ci.yml)
+[![Unit line coverage — saved snapshot](docs/quality-coverage.svg)](docs/quality.md)
+[![Packed Button + Vue gzip — measured snapshot](https://img.shields.io/badge/Button%20%2B%20Vue%20gzip-33.1%20kB-3c7490)](scripts/package-consumer-budget.json)
+[![MIT license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-<p align="center">
-  <a href="https://whitewolf06.github.io/gavia-ui/"><img src="docs/brand/playground-button.svg" alt="Open Playground" width="230" height="44"></a><br>
-  · <strong>Documentation:</strong> <a href="https://whitewolf06.github.io/gavia-ui/?view=docs&amp;lang=en">English</a> / <a href="https://whitewolf06.github.io/gavia-ui/?view=docs&amp;lang=ru">Русский</a>
-  · <a href="https://whitewolf06.github.io/gavia-ui/?view=font">Gavia Sans</a>
-  · <a href="https://www.npmjs.com/package/gavia-ui">npm package</a>
-</p>
+[![Real Gavia UI fields, inputs, switch and button in Gavia and Gavia Dark](docs/brand/readme-preview.webp)](https://whitewolf06.github.io/gavia-ui/)
 
-[Quality and compatibility](https://whitewolf06.github.io/gavia-ui/?view=docs&section=quality):
-unit tests, Vitest/V8 coverage, browsers, accessibility, SSR and installed-package checks.
-The 0–100% scales show the unit test pass rate and coverage.
-The badge stores a line coverage measurement. Its date, version and source are
-[in the JSON report](apps/playground/src/project/quality-report.generated.json).
-The published playground shows the CI report for that build, which may differ
-from the saved snapshot. Check the current CI status separately:
-[CI runs](https://github.com/whitewolf06/gavia-ui/actions).
+[Documentation](https://whitewolf06.github.io/gavia-ui/?view=docs&lang=en) ·
+[Playground](https://whitewolf06.github.io/gavia-ui/) ·
+[Theme builder](https://whitewolf06.github.io/gavia-ui/?view=theme-builder) ·
+[Русский](https://whitewolf06.github.io/gavia-ui/?view=docs&lang=ru)
 
-<a href="https://whitewolf06.github.io/gavia-ui/">
-  <img src="docs/brand/gavia-lake-hero-v2.webp" alt="A quiet lake at dawn, a misty conifer shore and a loon — artwork for the Gavia theme" width="1200">
-</a>
+- Vue is the only required peer; the library has no runtime dependencies.
+- Native Vue components, typed models, slots and application-owned routing/data.
+- Five themes share CSS tokens and component code; reset and styles stay opt-in.
+- App-scoped configuration, overlays, confirmation and notification services.
+- Working SFC examples and recipes use the same source as the copyable code.
+- Contract tests cover keyboard, SSR/hydration, types and installed-package consumers.
 
-Gavia UI includes **53 components, 113 SVG icons, 447 design tokens
-and five themes:** Gavia, Gavia Dark, Classic, Classic Dark and Newspaper.
-The playground lets you configure components, copy Vue code, try complete
-interface flows and choose a palette. Each component has a guide
-and the version in which it first appeared.
+### Quick start
 
-**Gavia Sans 0.6** is included in the package. It is the primary font for Gavia
-and Gavia Dark: Cyrillic and Latin, six weights in upright and italic styles,
-TTF and WOFF2. Classic, Classic Dark and Newspaper keep their own typography.
-[Theme setup](docs/theme-gavia.md) · [Font specimens and download](https://whitewolf06.github.io/gavia-ui/?view=font).
+```sh
+pnpm add gavia-ui vue
+```
 
-**Vue 3 is the only required peer.** There are no runtime dependencies;
-styles are imported explicitly. The library works without additional UI packages,
-a router, a state store or an API client.
+```vue
+<script setup lang="ts">
+import { WlButton } from "gavia-ui";
+import "gavia-ui/styles/base.css";
+import "gavia-ui/styles/fonts/gavia.css";
+import "gavia-ui/themes/gavia.css";
+</script>
 
-## Public TypeScript contracts
+<template>
+  <WlButton>Save changes</WlButton>
+</template>
+```
 
-In 0.11.0, selection model types became tied to options, table columns are
-checked against row fields, and pt, slots, events and refs received precise types.
-Invalid input values are normalized. TypeScript ≥ 5.4 is required;
-an upgrade may require changes to application code.
-[Type migration for 0.11](docs/migration-0.11.0.md) · [Data type contracts](docs/architecture.md#data-type-contracts) ·
-[Installed-package API checks](docs/quality.md#checking-new-public-contracts).
+Set `data-wl-theme="gavia"` on the root element. Import
+`gavia-ui/styles/reset.css` before base styles if your application needs the reset.
+[Installation and fonts](docs/guide/getting-started.md) · [Migration guide](docs/migration.md).
+
+**Gavia Sans** supplies Cyrillic and Latin, six weights and upright/italic faces.
+WOFF2 web fonts ship in npm; TTF desktop files are available through the
+[font download](https://whitewolf06.github.io/gavia-ui/?view=font).
+Classic, Classic Dark and Newspaper retain their own typography.
+
+[Public TypeScript contracts and upgrading](docs/migration.md).
+Measurement dates and scope are documented in [quality and compatibility](docs/maintainers/quality.md#coverage-and-size).
 
 ## Themes
 
@@ -84,16 +87,16 @@ Choose the theme CSS and identifier from the table. Both primary themes also
 require `gavia-ui/styles/fonts/gavia.css`. Without an explicit theme,
 the library uses Classic (`white`).
 
-## Quick start
+## Application setup
 
 Install the library in a Vue application:
 
 ```bash
-pnpm add gavia-ui@0.12.0 vue
+pnpm add gavia-ui vue
 # or
-npm install gavia-ui@0.12.0 vue
+npm install gavia-ui vue
 # or
-bun add gavia-ui@0.12.0 vue
+bun add gavia-ui vue
 ```
 
 Import the styles and font in the entry point, then select Gavia:
@@ -165,7 +168,7 @@ See [LICENSE](LICENSE) for the full terms.
 ## Development
 
 `packages/ui-kit` is the published library; `apps/playground` is the application
-for development and checks. Node.js ≥ 18 and pnpm 10 are required.
+for development and checks. Node.js 22.13+ or 24 and pnpm 10 are required.
 
 ```bash
 pnpm install
@@ -187,12 +190,13 @@ and [hosting](docs/hosting.md). Package publication is a separate step:
 
 ## Contracts and theming
 
-Components share `variant`, `size`, `density`, explicit states,
-`class`/`style`, slots and `data-wl`/`data-variant`/`data-size`.
+Components preserve `class`/`style`, typed slots and their documented DOM attributes.
+Input families align applicable size, density, disabled and invalid states;
+status components use semantic tone. Each component's guide lists its actual axes.
 `WlConfig` is optional; toast and confirmation services are installed separately
 and belong to a specific Vue application. pt settings merge in the order
 default → `WlConfig.pt` → instance `pt`; `class` and `style` are merged.
-[API and integration](packages/ui-kit/README.md) · [Public DOM and pt](docs/architecture.md#themes-and-public-dom).
+[API and integration](docs/guide/getting-started.md) · [Public DOM and pt](docs/maintainers/architecture.md#themes-and-public-dom).
 
 Themes and local configuration use `--wl-*` CSS custom properties:
 foundation → semantic → component. The `wl.reset`, `wl.tokens` and

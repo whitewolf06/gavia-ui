@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Questions and RFCs (when Discussions is enabled)
+    url: https://github.com/whitewolf06/gavia-ui/discussions
+    about: Use Discussions when available; otherwise use an issue form.
+  - name: Security vulnerability
+    url: https://github.com/whitewolf06/gavia-ui/blob/main/SECURITY.md
+    about: Follow the private reporting policy instead of opening a public issue.

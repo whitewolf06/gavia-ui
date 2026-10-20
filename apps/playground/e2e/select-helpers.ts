@@ -22,7 +22,6 @@ export async function chooseShowcaseTheme(page: Page, label: string): Promise<vo
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme.name);
 }
 
-
 /** The persistent language selector uses the same keyboard and dismissal contract as other selects. */
 export async function chooseShowcaseLanguage(page: Page, language: "en" | "ru"): Promise<void> {
   await chooseDropdownOption(page, page.getByTestId("pg-language-selector"), language === "en" ? "EN" : "RU");
@@ -101,8 +100,8 @@ export async function navigateMainView(page: Page, label: string): Promise<void>
 /** Hidden desktop destinations retain their current-page state on the overflow trigger and menu item. */
 export async function expectMainViewCurrent(page: Page, label: string): Promise<void> {
   const markers: Record<string, string> = {
-    "Главная": '[data-testid="home-page"]', "Документация": '[data-testid="docs-page"]',
-    "Шрифт": '[data-testid="font-page"]', "Дизайн-система": "main#ds-top",
+    Главная: '[data-testid="home-page"]', Документация: '[data-testid="docs-page"]',
+    Шрифт: '[data-testid="font-page"]', "Дизайн-система": "main#ds-top",
     "Подбор темы": '[data-testid="theme-builder-page"]', Changelog: '[data-testid="changelog-page"]'
   };
   const marker = markers[label];
@@ -171,7 +170,7 @@ export async function nativeReload(page: Page): Promise<void> {
   // Playwright's Firefox reload has injected history entries; exercise the
   // browser's native operation: https://github.com/microsoft/playwright/issues/22640
   await Promise.all([
-    page.waitForNavigation({ waitUntil: "domcontentloaded" }),
+    page.waitForEvent("domcontentloaded"),
     page.evaluate(() => window.location.reload())
   ]);
   await expect(page).toHaveURL(url);

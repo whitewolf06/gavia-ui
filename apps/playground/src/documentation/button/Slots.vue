@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
 const { t } = usePlaygroundI18n();
+import { WlButton, WlIcon } from "gavia-ui";
 import { ref } from "vue";
-import { WlButton, WlIcon } from "../../../../../packages/ui-kit/src";
 const lastAction = ref("");
 const unread = ref(3);
 function readMessages(): void {
@@ -33,7 +33,11 @@ function readMessages(): void {
       </WlButton>
     </div>
     <p class="wl-text-small wl-text-muted">{{ t("examples.icon_places_an_icon_on_the_left_the_default_slot_can_hold_an_i_0276") }}</p>
-    <p class="wl-text-small" role="status">{{ lastAction ? t("examples.last_action_0277") + lastAction : t("examples.click_a_button_and_check_its_action_and_accessible_name_0278") }}</p>
+    <p class="wl-text-small" role="status">
+      {{ lastAction
+        ? t("examples.last_action_0277") + lastAction
+        : t("examples.click_a_button_and_check_its_action_and_accessible_name_0278") }}
+    </p>
   </div>
 </template>
 

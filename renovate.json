@@ -1,0 +1,45 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":pinDevDependencies", "helpers:pinGitHubActionDigests"],
+  "timezone": "Europe/Moscow",
+  "schedule": ["before 6am on monday"],
+  "dependencyDashboard": true,
+  "automerge": false,
+  "packageRules": [
+    {
+      "description": "Automatically merge only development patch updates after required checks pass",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    },
+    {
+      "groupName": "Vite and Vitest",
+      "matchPackageNames": ["vite", "@vitejs/plugin-vue", "vitest", "/^@vitest//", "vite-plugin-dts"]
+    },
+    {
+      "groupName": "TypeScript and Vue declarations",
+      "matchPackageNames": ["typescript", "vue-tsc"],
+      "automerge": false
+    },
+    {
+      "groupName": "Playwright and browser accessibility",
+      "matchPackageNames": ["@playwright/test", "@axe-core/playwright", "mcr.microsoft.com/playwright"]
+    },
+    {
+      "groupName": "ESLint tooling",
+      "matchPackageNames": ["/^eslint/", "/^@eslint//", "/^@stylistic//", "/eslint-plugin/"]
+    },
+    {
+      "description": "Library development Vue deliberately exercises the minimum supported line",
+      "matchFileNames": ["packages/ui-kit/package.json"],
+      "matchDepTypes": ["devDependencies"],
+      "matchPackageNames": ["vue"],
+      "enabled": false
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "pinDigests": true,
+      "automerge": false
+    }
+  ]
+}

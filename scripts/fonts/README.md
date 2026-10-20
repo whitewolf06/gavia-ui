@@ -79,6 +79,12 @@ Before a production release, review 12–18 px reading, the full basic alphabets
 
 ## Future revisions
 
+The variable-font pipeline starts with a read-only topology/provenance audit.
+See [current blockers and safe build boundary](../../docs/maintainers/font-variation-audit.md).
+`python -B scripts/fonts/audit_variable.py` needs no optional dependencies and
+does not rebuild or modify accepted fonts. The initial available axis is
+100–700; 900 needs an authored calibration and acceptance first.
+
 Git history preserves the accepted development states. Keep the public specimen and verifier focused on the current family; do not reintroduce earlier font files into public assets for regression checks.
 
 When intentionally accepting a new drawing, update its version, builder metadata, font URL cache key and the verifier's accepted SHA/geometry expectations together. The frozen 0.600 hashes prevent a regenerated manifest from silently approving altered font content. Rebuilding with the pinned source and tooling must reproduce the accepted font binaries; generated QA reports can change when the verification contract is clarified.

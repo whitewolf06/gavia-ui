@@ -645,5 +645,9 @@
   "shell.seo.section.quality": "Quality and compatibility",
   "shell.author.name": "Dmitry Gorbach",
   "shell.header.more": "More",
-  "shell.header.moreSections": "More sections"
+  "shell.header.moreSections": "More sections",
+  "shell.code.loading": "Loading code…",
+  "shell.code.error": "Code could not be loaded. Try again.",
+  "shell.code.retry": "Try again",
+  "shell.catalog.error": "The requested content could not be loaded. Try again."
 }

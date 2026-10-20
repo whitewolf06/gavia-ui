@@ -1,8 +1,8 @@
-import { russianPlaygroundUrl } from "./playground-url";
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { playgroundRouteParams, russianPlaygroundUrl } from "./playground-url";
 
 const report = JSON.parse(readFileSync(fileURLToPath(new URL("../src/project/quality-report.generated.json", import.meta.url)), "utf8")) as {
   version: string;
@@ -26,7 +26,7 @@ test("quality summary, footer and documentation preserve themes and show the mea
     await expect(summary.locator("time")).toHaveAttribute("datetime", report.measuredAt);
     const link = summary.getByRole("link", { name: "Результаты проверок", exact: true });
     const href = new URL((await link.getAttribute("href"))!, page.url());
-    expect(href.searchParams.get("section")).toBe("quality");
+    expect(playgroundRouteParams(href).get("section")).toBe("quality");
     expect(href.searchParams.get("theme")).toBe(theme);
     await link.click();
     const docs = page.getByTestId("docs-page");
@@ -45,24 +45,30 @@ test("quality summary, footer and documentation preserve themes and show the mea
     const footer = page.locator(".pg-footer").getByRole("link", { name: "Качество и совместимость", exact: true });
     const footerUrl = new URL((await footer.getAttribute("href"))!, page.url());
     expect(footerUrl.searchParams.get("theme")).toBe(theme);
-    expect(footerUrl.searchParams.get("section")).toBe("quality");
-    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+    expect(playgroundRouteParams(footerUrl).get("section")).toBe("quality");
+    await expect.poll(() => page.evaluate(() =>
+      document.documentElement.scrollWidth - document.documentElement.clientWidth
+    )).toBeLessThanOrEqual(1);
     await page.reload();
     await expect(quality).toBeVisible();
   }
 });
 
-test("quality home summary and documentation pass automated WCAG checks in five themes", async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== "chromium", "Axe runs once; routing and layout use all browser projects.");
-  for (const theme of themes) {
-    for (const view of ["home", "docs"]) {
-      await page.goto(russianPlaygroundUrl("/?theme=" + theme + (view === "docs" ? "&view=docs&section=quality" : "")));
-      const selector = view === "home" ? '[data-testid="home-quality"]' : '[data-testid="docs-page"]';
+for (const theme of themes) {
+  for (const { view, selector, query } of [
+    { view: "home", selector: '[data-testid="home-quality"]', query: "" },
+    { view: "docs", selector: '[data-testid="docs-page"]', query: "&view=docs&section=quality" }
+  ]) {
+    test(theme + ": quality " + view + " meets automated WCAG checks", async ({ page }, testInfo) => {
+      // Exactly ten Axe cases per non-Chromium project are intentionally skipped (30 configured skips).
+      // eslint-disable-next-line playwright/no-skipped-test
+      test.skip(testInfo.project.name !== "chromium", "Axe runs once; routing and layout use all browser projects.");
+      await page.goto(russianPlaygroundUrl("/?theme=" + theme + query));
       await expect(page.locator(selector)).toBeVisible();
       await page.evaluate(() => document.fonts.ready);
       const results = await new AxeBuilder({ page }).include(selector).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();
       await testInfo.attach("quality-axe-" + theme + "-" + view, { body: JSON.stringify(results.violations, null, 2), contentType: "application/json" });
       expect(results.violations).toEqual([]);
-    }
+    });
   }
-});
+}

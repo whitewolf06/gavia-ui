@@ -2,11 +2,18 @@
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
 </script>
+
 <template>
   <section class="wl-stack" data-space="lg">
     <div class="proportion-example wl-grid" data-space="md">
-      <article class="proportion-example-wide wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">{{ t("examples.8_of_12_0888") }}</h3><p class="wl-text-body">{{ t("examples.the_main_block_occupies_two_thirds_of_the_width_0889") }}</p></article>
-      <aside class="proportion-example-aside wl-surface wl-stack" data-space="sm"><h3 class="wl-text-subheading">{{ t("examples.4_of_12_0890") }}</h3><p class="wl-text-body">{{ t("examples.explanations_and_additional_actions_0891") }}</p></aside>
+      <article class="proportion-example-wide wl-surface wl-stack" data-space="sm">
+        <h3 class="wl-text-subheading">{{ t("examples.8_of_12_0888") }}</h3>
+        <p class="wl-text-body">{{ t("examples.the_main_block_occupies_two_thirds_of_the_width_0889") }}</p>
+      </article>
+      <aside class="proportion-example-aside wl-surface wl-stack" data-space="sm">
+        <h3 class="wl-text-subheading">{{ t("examples.4_of_12_0890") }}</h3>
+        <p class="wl-text-body">{{ t("examples.explanations_and_additional_actions_0891") }}</p>
+      </aside>
       <article class="proportion-example-half wl-surface"><h3 class="wl-text-label">{{ t("examples.6_of_12_0892") }}</h3></article>
       <article class="proportion-example-half wl-surface"><h3 class="wl-text-label">{{ t("examples.6_of_12_0892") }}</h3></article>
     </div>

@@ -1,8 +1,8 @@
-import { russianPlaygroundUrl } from "./playground-url";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
-import { expect, test, type Page, type Locator } from "@playwright/test";
-import { copyCodePanel, chooseDropdownOption, chooseShowcaseTheme } from "./select-helpers";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
+import { russianPlaygroundUrl } from "./playground-url";
+import { chooseDropdownOption, chooseShowcaseTheme, copyCodePanel } from "./select-helpers";
 
 async function selectComponent(page: Page, name: string): Promise<void> {
   await page.getByRole("combobox", { name: "Компонент", exact: true }).click();
@@ -17,6 +17,7 @@ async function recipe(page: Page, id: string) {
   await expect(preview.locator(":scope > :first-child")).toBeVisible();
   return preview;
 }
+
 test.beforeEach(async ({ page }) => {
   await page.goto(russianPlaygroundUrl("/?view=system"), { waitUntil: "domcontentloaded" });
   await page.getByRole("heading", { name: "Дизайн-система" }).waitFor({ state: "visible" });
@@ -24,7 +25,7 @@ test.beforeEach(async ({ page }) => {
   await page.addStyleTag({ content: "html { scroll-behavior: auto; }" });
 });
 
-for (const category of [...new Set(wlManifest.map((entry) => entry.category))]) {
+for (const category of new Set(wlManifest.map((entry) => entry.category))) {
   test(`all ${category} components have a live example and public copyable source`, async ({ page }) => {
     const entries = wlManifest.filter((item) => item.category === category);
     // Each lazy example needs three settled clicks (open, select, show source).
@@ -36,7 +37,7 @@ for (const category of [...new Set(wlManifest.map((entry) => entry.category))]) 
       await selectComponent(page, entry.name);
       const explorer = page.getByTestId("ds-explorer");
       await explorer.getByText("Показать Vue-код", { exact: true }).click();
-      await expect(explorer.locator("pre code")).toContainText('gavia-ui');
+      await expect(explorer.locator("pre code")).toContainText("gavia-ui");
       await expect(explorer.locator("pre code")).not.toContainText('v-bind="preview"');
       await expect(explorer.locator("pre code")).not.toContainText("packages/ui-kit");
     }
@@ -55,7 +56,9 @@ test("state combinations change the real component and copied code; keyboard foc
   await expect(button).toBeDisabled();
   await expect(button).toHaveAttribute("data-size", "lg");
   await expect(button).toHaveAttribute("data-variant", "danger");
-  await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async (text: string) => { document.documentElement.dataset.copied = text; } } }));
+  await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async (text: string) => {
+    document.documentElement.dataset.copied = text;
+  } } }));
   await copyCodePanel(explorer);
   await expect(explorer.getByRole("status").last()).toHaveText("Код скопирован.");
   const copied = await page.locator("html").getAttribute("data-copied");
@@ -87,7 +90,9 @@ test("state combinations change the real component and copied code; keyboard foc
 });
 
 test("clipboard failure offers selectable manual source and reports no false success", async ({ page }) => {
-  await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async () => { throw new Error("Denied"); } } }));
+  await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async () => {
+    throw new Error("Denied");
+  } } }));
   const explorer = page.getByTestId("ds-explorer");
   await copyCodePanel(explorer);
   const manual = explorer.getByRole("textbox", { name: "Код для ручного копирования" });
@@ -97,16 +102,53 @@ test("clipboard failure offers selectable manual source and reports no false suc
   await expect(explorer.getByRole("status").last()).toContainText("Буфер обмена недоступен");
 });
 
+async function expectMaterialListMobileOverflow(preview: Locator, project: string): Promise<void> {
+  if (!project.includes("mobile")) return;
+  const widths = await preview.locator(".ds-material-table").evaluate((region) => ({
+    localOverflow: region.scrollWidth - region.clientWidth,
+    pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth
+  }));
+  expect(widths.localOverflow).toBeGreaterThan(0);
+  expect(widths.pageOverflow).toBeLessThanOrEqual(1);
+}
+
+async function sortMaterialListDescending(page: Page, preview: Locator, project: string): Promise<void> {
+  if (project.includes("mobile")) {
+    await preview.getByRole("button", { name: /^Фильтры/ }).click();
+  }
+  const sort = page.getByRole("combobox", { name: "Порядок материалов" });
+  await sort.click();
+  await page.getByRole("option", { name: "Название Я–А" }).click();
+  if (project.includes("mobile")) await page.getByRole("button", { name: "Применить", exact: true }).click();
+}
+
+async function commitDropdownEnd(
+  component: string, root: Locator, listbox: Locator, control: Locator
+): Promise<void> {
+  const wasSelected = component === "WlMultiSelect"
+    ? await listbox.getByRole("option", { name: "Разработка", exact: true }).getAttribute("aria-selected")
+    : undefined;
+  await control.press("Enter");
+  if (component === "WlSelect") {
+    await expect(root.locator(".wl-select__label")).toHaveText("Личное");
+  } else if (component === "WlMultiSelect") {
+    await expect(listbox.getByRole("option", { name: "Разработка", exact: true }))
+      .toHaveAttribute("aria-selected", wasSelected === "true" ? "false" : "true");
+    await expect(listbox.getByRole("option", { name: "Исследования", exact: true })).toHaveAttribute("aria-disabled", "true");
+    await expect(listbox.getByRole("option", { name: "Исследования", exact: true })).toHaveAttribute("aria-selected", "false");
+    await control.press("Escape");
+  } else {
+    await expect(control).toHaveValue("Мария");
+  }
+}
+
+async function expectAutocompleteDropdownDisabled(component: string, dropdown: Locator): Promise<void> {
+  if (component === "WlAutocomplete") await expect(dropdown).toBeDisabled();
+}
+
 test("material list filters, resets page, creates, edits and confirms deletion", async ({ page }, testInfo) => {
   const preview = await recipe(page, "MaterialList");
-  if (testInfo.project.name.includes("mobile")) {
-    const widths = await preview.locator(".ds-material-table").evaluate((region) => ({
-      localOverflow: region.scrollWidth - region.clientWidth,
-      pageOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth
-    }));
-    expect(widths.localOverflow).toBeGreaterThan(0);
-    expect(widths.pageOverflow).toBeLessThanOrEqual(1);
-  }
+  await expectMaterialListMobileOverflow(preview, testInfo.project.name);
   const search = preview.getByRole("searchbox", { name: "Найти материал" });
   await preview.getByRole("button", { name: "2", exact: true }).click();
   await expect(preview.getByRole("status")).toContainText("страница 2");
@@ -115,13 +157,7 @@ test("material list filters, resets page, creates, edits and confirms deletion",
   await expect(preview.getByRole("status")).toContainText("страница 1");
   await preview.getByRole("button", { name: "Сбросить поиск" }).click();
   await expect(search).toHaveValue("");
-  if (testInfo.project.name.includes("mobile")) {
-    await preview.getByRole("button", { name: /^Фильтры/ }).click();
-  }
-  const sort = page.getByRole("combobox", { name: "Порядок материалов" });
-  await sort.click();
-  await page.getByRole("option", { name: "Название Я–А" }).click();
-  if (testInfo.project.name.includes("mobile")) await page.getByRole("button", { name: "Применить", exact: true }).click();
+  await sortMaterialListDescending(page, preview, testInfo.project.name);
   await expect(preview.getByRole("table").getByRole("row").nth(1)).toContainText("Руководство команды");
   await preview.getByRole("button", { name: "Создать материал" }).click();
   let drawer = page.getByRole("dialog", { name: "Новый материал" });
@@ -168,7 +204,7 @@ test("profile form keeps values after request error and supports retry", async (
   await expect(preview.getByRole("textbox", { name: "Имя участника", exact: true })).toHaveValue("Анна");
   await preview.getByRole("button", { name: "Повторить сохранение" }).click();
   await page.clock.runFor(400);
-  await expect(preview.getByRole("alert")).toContainText("Профиль сохранён");
+  await expect(preview.getByRole("status")).toContainText("Профиль сохранён");
   await preview.getByRole("textbox", { name: "Email участника", exact: true }).fill("changed@example.com");
   await expect(preview.getByRole("alert")).toHaveCount(0);
 });
@@ -184,7 +220,7 @@ test("preferences preserve saved values, cancel drafts and disable dependent con
   await preview.getByRole("switch", { name: "Email-уведомления" }).uncheck();
   await expect(preview.getByRole("combobox", { name: "Частота уведомлений" })).toHaveAttribute("aria-disabled", "true");
   await save.click();
-  await expect(preview.getByRole("alert")).toContainText("Настройки сохранены");
+  await expect(preview.getByRole("status").filter({ hasText: "Настройки сохранены" })).toContainText("Настройки сохранены");
   await expect(save).toBeDisabled();
 });
 
@@ -223,7 +259,7 @@ test("wizard validates, restores earlier values, focuses each step and completes
   await preview.getByRole("button", { name: "Продолжить" }).click();
   await expect(preview).toContainText("Проверка данных");
   await preview.getByRole("button", { name: "Создать проект", exact: true }).click();
-  await expect(preview.getByRole("alert")).toContainText("Новый проект · личный");
+  await expect(preview.getByRole("status")).toContainText("Новый проект · личный");
 });
 
 test("attachment upload rejects bad files, supports error/retry and cancels progress", async ({ page }) => {
@@ -247,7 +283,7 @@ test("attachment upload rejects bad files, supports error/retry and cancels prog
   await expect(preview.getByRole("alert").filter({ hasText: "Загрузка не завершена" })).toBeVisible();
   await preview.getByRole("button", { name: "Повторить загрузку" }).click();
   await page.clock.runFor(600);
-  await expect(preview.getByRole("alert").filter({ hasText: "Вложения готовы" })).toBeVisible();
+  await expect(preview.getByRole("status").filter({ hasText: "Вложения готовы" })).toBeVisible();
   await expect(preview.locator(".wl-upload__row")).toHaveCount(1);
   await preview.getByRole("button", { name: "Удалить guide.txt" }).click();
   await fileInput.setInputFiles({ name: "again.txt", mimeType: "text/plain", buffer: Buffer.from("again") });
@@ -285,7 +321,9 @@ test("long content fits 320px, 200% text; nested overlays close from the top and
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   const overflowDetails = await page.evaluate(() => [...document.querySelectorAll<HTMLElement>("body *")]
     .filter((element) => getComputedStyle(element).visibility !== "hidden" && !element.closest("details:not([open]), .ds-table-scroll, .ds-stress-table") && element.getBoundingClientRect().right > document.documentElement.clientWidth)
-    .slice(0, 8).map((element) => ({ class: element.className, text: element.textContent?.slice(0, 60), right: element.getBoundingClientRect().right })));
+    .slice(0, 8).map((element) => ({
+      class: element.className, text: element.textContent?.slice(0, 60), right: element.getBoundingClientRect().right
+    })));
   expect(overflow, JSON.stringify(overflowDetails)).toBeLessThanOrEqual(1);
   const open = stress.getByRole("button", { name: "Вложенные оверлеи" });
   await open.click();
@@ -355,7 +393,7 @@ for (const theme of wlDesignThemes) {
     const explorer = page.getByTestId("ds-explorer");
     const preview = page.getByTestId("ds-example-preview");
     const checkbox = preview.getByRole("checkbox", { name: "Получать обновления" });
-    const box = preview.locator(".wl-checkbox__box");
+    const box = checkbox.locator("..").locator(".wl-checkbox__box");
 
     await expect(checkbox).toBeChecked();
     await expectCenteredCheckboxMark(box);
@@ -363,6 +401,8 @@ for (const theme of wlDesignThemes) {
     const focusAction = explorer.getByRole("button", { name: "Проверить фокус" });
     await focusAction.focus();
     await page.keyboard.press("Shift+Tab");
+    await expect(preview.getByRole("checkbox").last()).toBeFocused();
+    await checkbox.focus();
     await expect(checkbox).toBeFocused();
     await expect(box).toHaveCSS("outline-width", "2px");
     await expect(box).toHaveCSS("outline-style", "solid");
@@ -392,7 +432,7 @@ for (const theme of wlDesignThemes) {
     await checkbox.hover();
     await expect(box).toHaveCSS("background-color", disabledBackground);
     await expect(box).toHaveCSS("border-color", disabledBorder);
-    await preview.locator(".wl-checkline").evaluate((label: HTMLLabelElement) => label.click());
+    await checkbox.evaluate((input: HTMLInputElement) => input.closest<HTMLLabelElement>("label")!.click());
     await expect(checkbox).toBeChecked();
     expect(await checkbox.evaluate((input: HTMLInputElement) => input.indeterminate)).toBe(true);
 
@@ -456,7 +496,9 @@ for (const entry of [
   { name: "WlAutocomplete", root: ".wl-autocomplete", dropdown: ".wl-autocomplete__dropdown", label: "Участник" }
 ]) {
   for (const theme of wlDesignThemes) {
-    test(`${entry.name}: SVG dropdown stays centered across sizes and keyboard or disabled interaction (${theme.label})`, async ({ page }) => {
+    const title = `${entry.name}: SVG dropdown stays centered across sizes and keyboard or disabled interaction (${theme.label})`;
+
+    test(title, async ({ page }) => {
       await selectComponent(page, entry.name);
       await expect(page.locator(".wl-select-overlay")).toHaveCount(0);
       const explorer = page.getByTestId("ds-explorer");
@@ -481,18 +523,7 @@ for (const entry of [
       const listbox = page.getByRole("listbox");
       await expect(listbox).toBeVisible();
       await control.press("End");
-      const wasSelected = entry.name === "WlMultiSelect"
-        ? await listbox.getByRole("option", { name: "Исследования" }).getAttribute("aria-selected")
-        : undefined;
-      await control.press("Enter");
-      if (entry.name === "WlSelect") {
-        await expect(root.locator(".wl-select__label")).toHaveText("Личное");
-      } else if (entry.name === "WlMultiSelect") {
-        await expect(listbox.getByRole("option", { name: "Исследования" })).toHaveAttribute("aria-selected", wasSelected === "true" ? "false" : "true");
-        await control.press("Escape");
-      } else {
-        await expect(control).toHaveValue("Мария");
-      }
+      await commitDropdownEnd(entry.name, root, listbox, control);
       await expect(page.getByRole("listbox")).toHaveCount(0);
       await expect(control).toBeFocused();
       await expectCenteredDropdown(root, dropdown);
@@ -502,11 +533,12 @@ for (const entry of [
       await disabled.check();
       await expect(control).toBeDisabled();
       await expectCenteredDropdown(root, dropdown);
-      if (entry.name === "WlAutocomplete") await expect(dropdown).toBeDisabled();
+      await expectAutocompleteDropdownDisabled(entry.name, dropdown);
       await dropdown.evaluate((element: HTMLElement) => element.click());
       await control.evaluate((element) => element.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })));
       await expect(page.getByRole("listbox")).toHaveCount(0);
-      expect(await control.evaluate((element) => element instanceof HTMLInputElement ? element.value : element.textContent)).toBe(valueBefore);
+      const valueAfter = await control.evaluate((element) => element instanceof HTMLInputElement ? element.value : element.textContent);
+      expect(valueAfter).toBe(valueBefore);
       await disabled.uncheck();
       await expect(control).toBeEnabled();
     });

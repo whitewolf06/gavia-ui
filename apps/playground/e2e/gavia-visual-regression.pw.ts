@@ -1,5 +1,5 @@
+import { expect, type Locator, type Page, test } from "@playwright/test";
 import { russianPlaygroundUrl } from "./playground-url";
-import { expect, test, type Locator, type Page } from "@playwright/test";
 import { chooseDropdownOption } from "./select-helpers";
 
 function gaviaUrl(baseURL: string | undefined, view: string, theme: string): string {
@@ -40,9 +40,12 @@ async function capture(target: Locator, name: string): Promise<void> {
   const page = target.page();
   const viewport = page.viewportSize();
   const bounds = await target.boundingBox();
+  const overlay = await target.evaluate((element) => Boolean(element.closest(".wl-overlay, .wl-dialog")));
   // Chromium may leave beyond-viewport glyph rows unpainted. Fit tall sections
   // in the capture viewport while keeping the responsive width unchanged.
-  if (viewport && bounds && bounds.height + 200 > viewport.height) {
+  // A fullscreen dialog follows 100dvh: enlarging its viewport would enlarge the
+  // dialog itself and record a screen taller than the actual mobile viewport.
+  if (!overlay && viewport && bounds && bounds.height + 200 > viewport.height) {
     await page.setViewportSize({ width: viewport.width, height: Math.ceil(bounds.height) + 200 });
   }
   try {
@@ -72,64 +75,71 @@ test.beforeEach(async ({ page }) => {
   await page.clock.setFixedTime(new Date("2026-10-01T12:00:00Z"));
 });
 
-for (const theme of ["gavia", "gavia-dark"]) {
-
-test(`${theme}: home hero, installation grid and project panels`, async ({ page, baseURL }) => {
-  await page.goto(russianPlaygroundUrl(gaviaUrl(baseURL, "home", theme)), { waitUntil: "domcontentloaded" });
-  const home = page.getByTestId("home-page");
-  await expect(home).toBeVisible();
-  await readyForDrawing(page, theme);
-  await capture(page.locator(".pg-top"), `${theme}-header.png`);
-  await prepareSectionCrops(page);
-  // Preserve page spacing and fonts; crops cover the responsive layout.
-  await capture(home.locator(".home-hero"), `${theme}-home-hero.png`);
-  await capture(home.locator(".home-onboarding"), `${theme}-home-onboarding.png`);
-  await capture(home.locator(".home-project-grid"), `${theme}-home-projects.png`);
-  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
-});
-
-test(`${theme}: Cyrillic, Latin, numeral spacing and all six weights`, async ({ page, baseURL }) => {
-  await page.goto(russianPlaygroundUrl(gaviaUrl(baseURL, "font", theme)), { waitUntil: "domcontentloaded" });
-  const font = page.getByTestId("font-page");
-  await expect(font).toBeVisible();
-  await readyForDrawing(page, theme);
-  await prepareSectionCrops(page);
-  await capture(font.locator(".wl-type-hero"), `${theme}-font-hero.png`);
-  await capture(font.locator("#wl-type-proof"), `${theme}-font-alphabets.png`);
-  await capture(font.locator("#wl-type-weights"), `${theme}-font-weights.png`);
-  await capture(font.locator("#wl-type-numbers"), `${theme}-font-numerals.png`);
-});
-
-test(`${theme}: form, selected control and dialog with actual font`, async ({ page, baseURL }) => {
-  await page.goto(russianPlaygroundUrl(gaviaUrl(baseURL, "system", theme)), { waitUntil: "domcontentloaded" });
-  await expect(page.getByRole("heading", { name: "Дизайн-система" })).toBeVisible();
-  await readyForDrawing(page, theme);
-  await prepareSectionCrops(page);
-  await page.locator('[data-testid="ds-recipes"] [data-recipe="ProfileForm"]').first().click();
-  const recipe = page.getByTestId("ds-recipe-preview");
-  await expect(recipe).toHaveAttribute("data-recipe", "ProfileForm");
-  await expect(recipe.locator(":scope > :first-child")).toBeVisible();
-  await capture(recipe, `${theme}-profile-form.png`);
-
-  const explorer = page.getByTestId("ds-explorer");
-  const preview = page.getByTestId("ds-example-preview");
-  for (const component of ["WlSelect", "WlDialog"]) {
-    await chooseDropdownOption(page, page.getByRole("combobox", { name: "Компонент", exact: true }), component);
-    await expect(explorer).toHaveAttribute("data-component", component);
-    await expect(preview.locator(":scope > .wl-stack")).toBeVisible();
-    if (component === "WlSelect") {
-      await preview.getByRole("combobox", { name: "Область" }).press("Enter");
-      const overlay = page.locator(".wl-select-overlay");
-      await expect(overlay).not.toHaveClass(/wl-pop-motion-enter-/);
-      await expect(overlay).toHaveCSS("transform", "none");
-      await capture(page.getByRole("listbox"), `${theme}-select-open.png`);
-    } else {
-      await preview.getByRole("button", { name: "Открыть диалог" }).press("Enter");
-      await capture(page.getByRole("dialog", { name: "Сведения о материале" }), `${theme}-dialog.png`);
-    }
-    await page.keyboard.press("Escape");
-    await expect(page.locator(".wl-select-overlay, .wl-dialog")).toHaveCount(0);
+async function captureOpenComponent(page: Page, preview: Locator, component: string, theme: string): Promise<void> {
+  if (component === "WlSelect") {
+    await preview.getByRole("combobox", { name: "Область" }).press("Enter");
+    const overlay = page.locator(".wl-select-overlay");
+    await expect(overlay).not.toHaveClass(/wl-pop-motion-enter-/);
+    await expect(overlay).toHaveCSS("transform", "none");
+    // The removed component picker must not leave the pointer over an
+    // unrelated option in this keyboard-opened list.
+    await page.mouse.move(0, 0);
+    await capture(page.getByRole("listbox"), `${theme}-select-open.png`);
+  } else {
+    await preview.getByRole("button", { name: "Открыть диалог" }).press("Enter");
+    await capture(page.getByRole("dialog", { name: "Сведения о материале" }), `${theme}-dialog.png`);
   }
-});
+}
 
+for (const theme of ["gavia", "gavia-dark"]) {
+  test(`${theme}: home hero, installation grid and project panels`, async ({ page, baseURL }) => {
+    await page.goto(russianPlaygroundUrl(gaviaUrl(baseURL, "home", theme)), { waitUntil: "domcontentloaded" });
+    const home = page.getByTestId("home-page");
+    await expect(home).toBeVisible();
+    await readyForDrawing(page, theme);
+    await capture(page.locator(".pg-top"), `${theme}-header.png`);
+    await prepareSectionCrops(page);
+    // Preserve page spacing and fonts; crops cover the responsive layout.
+    await capture(home.locator(".home-hero"), `${theme}-home-hero.png`);
+    await capture(home.locator(".home-onboarding"), `${theme}-home-onboarding.png`);
+    await capture(home.locator(".home-project-grid"), `${theme}-home-projects.png`);
+    await expect.poll(() => page.evaluate(() =>
+      document.documentElement.scrollWidth - document.documentElement.clientWidth
+    )).toBeLessThanOrEqual(1);
+  });
+
+  test(`${theme}: Cyrillic, Latin, numeral spacing and all six weights`, async ({ page, baseURL }) => {
+    await page.goto(russianPlaygroundUrl(gaviaUrl(baseURL, "font", theme)), { waitUntil: "domcontentloaded" });
+    const font = page.getByTestId("font-page");
+    await expect(font).toBeVisible();
+    await readyForDrawing(page, theme);
+    await prepareSectionCrops(page);
+    await capture(font.locator(".wl-type-hero"), `${theme}-font-hero.png`);
+    await capture(font.locator("#wl-type-proof"), `${theme}-font-alphabets.png`);
+    await capture(font.locator("#wl-type-weights"), `${theme}-font-weights.png`);
+    await capture(font.locator("#wl-type-numbers"), `${theme}-font-numerals.png`);
+  });
+
+  test(`${theme}: form, selected control and dialog with actual font`, async ({ page, baseURL }) => {
+    await page.goto(russianPlaygroundUrl(gaviaUrl(baseURL, "system", theme)), { waitUntil: "domcontentloaded" });
+    await expect(page.getByRole("heading", { name: "Дизайн-система" })).toBeVisible();
+    await readyForDrawing(page, theme);
+    await prepareSectionCrops(page);
+    await page.locator('[data-testid="ds-recipes"] [data-recipe="ProfileForm"]').first().click();
+    const recipe = page.getByTestId("ds-recipe-preview");
+    await expect(recipe).toHaveAttribute("data-recipe", "ProfileForm");
+    await expect(recipe.locator(":scope > :first-child")).toBeVisible();
+    await capture(recipe, `${theme}-profile-form.png`);
+
+    const explorer = page.getByTestId("ds-explorer");
+    const preview = page.getByTestId("ds-example-preview");
+    for (const component of ["WlSelect", "WlDialog"]) {
+      await chooseDropdownOption(page, page.getByRole("combobox", { name: "Компонент", exact: true }), component);
+      await expect(explorer).toHaveAttribute("data-component", component);
+      await expect(preview.locator(":scope > .wl-stack")).toBeVisible();
+      await captureOpenComponent(page, preview, component, theme);
+      await page.keyboard.press("Escape");
+      await expect(page.locator(".wl-select-overlay, .wl-dialog")).toHaveCount(0);
+    }
+  });
 }

@@ -1,0 +1,31 @@
+# Maintainer reference; GitHub does not apply this file automatically.
+- name: good first issue
+  color: '7057ff'
+  description: Scoped task with reproduction and acceptance criteria for a new contributor.
+- name: help wanted
+  color: '008672'
+  description: Contributions are welcome; discuss the approach before implementation.
+- name: bug
+  color: 'd73a4a'
+  description: Existing behavior does not meet its public contract.
+- name: enhancement
+  color: 'a2eeef'
+  description: New capability or improvement to an existing component.
+- name: a11y
+  color: '5319e7'
+  description: Keyboard, focus, semantics or assistive technology behavior.
+- name: docs
+  color: '0075ca'
+  description: Guides, examples and documentation content.
+- name: component:select
+  color: 'c5def5'
+  description: Select and related option-list behavior.
+- name: component:table
+  color: 'c5def5'
+  description: Table and row/cell behavior.
+- name: tooling
+  color: 'ededed'
+  description: Development, tests, packaging and CI infrastructure.
+- name: rfc
+  color: 'd4c5f9'
+  description: Public API or architectural proposal requiring design discussion.

@@ -11,13 +11,15 @@ export const miscManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "label", type: "string", description: "Подпись поля." },
       { name: "required", type: "boolean", default: false, description: "Звёздочка у обязательного поля." },
       { name: "hint", type: "string", description: "Подсказка под полем." },
-      { name: "error", type: "string", description: "Текст ошибки. Показывается вместо hint." },
-      { name: "id", type: "string", description: "id поля; по умолчанию создаётся wl-field-<uid>." }
+      { name: "error", type: "string", description: "Текст ошибки. Подсказка остаётся видимой." },
+      { name: "id", type: "string", description: "id поля; по умолчанию создаётся wl-field-<uid>." },
+      { name: "announceError", type: "boolean", description: "Объявлять изменения ошибки. По умолчанию ошибка связана с полем без live-области.", default: false },
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов." }
     ],
     slots: [
       {
         name: "default",
-        description: "Поле формы; scope: { id, ariaDescribedby, invalid }."
+        description: "Поле формы; scope: { id, inputId, labelId, ariaDescribedby, ariaInvalid, invalid, required }."
       }
     ],
     emits: []

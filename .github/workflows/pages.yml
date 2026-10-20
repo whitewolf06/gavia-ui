@@ -1,0 +1,75 @@
+name: Pages
+on:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  pages:
+    timeout-minutes: 20
+    name: Publish documentation to GitHub Pages
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository && github.repository == 'whitewolf06/gavia-ui'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: gavia-ui-pages
+      cancel-in-progress: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - name: Require current successful main revision
+        run: node .github/scripts/pages-provenance.mjs
+      - name: Set up workspace
+        uses: ./.github/actions/setup
+        with:
+          node-version: "24"
+          build: "true"
+      - name: Download quality metrics measured in this workflow
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: gavia-ui-quality
+          path: .tmp/quality-report
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+      - name: Restore validated quality metrics for this revision
+        run: GITHUB_SHA="$VERIFIED_SHA" pnpm quality:restore .tmp/quality-report
+      - name: Build public documentation for its repository path
+        run: pnpm build:pages
+      - name: Set up cached browser
+        uses: ./.github/actions/playwright
+        with:
+          browser: chromium
+      - name: Verify production Pages build
+        run: pnpm pages:prerender && pnpm test:pages
+      - name: Save Pages smoke traces
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: gavia-ui-pages-results
+          path: apps/playground/test-results/
+          if-no-files-found: ignore
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        with:
+          path: apps/playground/dist
+      - name: Require the current main commit
+        shell: bash
+        run: node .github/scripts/pages-provenance.mjs
+      - uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
+        id: deployment
+    env:
+      VERIFIED_SHA: ${{ github.event.workflow_run.head_sha }}

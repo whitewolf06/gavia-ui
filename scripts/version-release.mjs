@@ -1,8 +1,8 @@
-import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
-import { packageChangelog, releaseNotes, markdownHeadings, markdownParagraphs, normalizeMarkdownNotes } from "./release-notes.mjs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { markdownHeadings, markdownParagraphs, normalizeMarkdownNotes, releaseNotes } from "./release-notes.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const read = (path) => readFileSync(join(root, path), "utf8").replaceAll("\r\n", "\n");
@@ -13,9 +13,11 @@ function changesetNotes() {
     .flatMap((file) => {
       const source = read(".changeset/" + file);
       const frontmatter = source.match(/^---[ \t]*\n([\s\S]*?)\n---[ \t]*(?:\n|$)/);
-      if (!frontmatter || !/^[ \t]*["']?gavia-ui["']?[ \t]*:[ \t]*(?:patch|minor|major)[ \t]*$/m.test(frontmatter[1])) return [];
+      if (!frontmatter || !/^[ \t]*["']?gavia-ui["']?[ \t]*:[ \t]*(?:patch|minor|major)[ \t]*$/m.test(frontmatter[1]))
+        return [];
       const notes = source.slice(frontmatter[0].length).trim();
-      if (!notes) throw new Error("A changeset must have human-readable notes: " + file);
+      if (!notes)
+        throw new Error("A changeset must have human-readable notes: " + file);
       return [normalizeMarkdownNotes(notes, file)];
     });
 }
@@ -24,7 +26,8 @@ export function prepareChangelog(source, version, notes, promotedNotes = "") {
   const normalized = source.replaceAll("\r\n", "\n");
   const headings = markdownHeadings(normalized).filter((heading) => heading.level === 2);
   const pending = headings.filter((heading) => heading.title === "Unreleased" || heading.title === "Не выпущено");
-  if (pending.length > 1) throw new Error("Changelog has duplicate unreleased sections");
+  if (pending.length > 1)
+    throw new Error("Changelog has duplicate unreleased sections");
   const section = pending[0];
   const start = section?.index ?? headings[0]?.index ?? -1;
   const insertion = start < 0 ? normalized.length : start;
@@ -32,9 +35,10 @@ export function prepareChangelog(source, version, notes, promotedNotes = "") {
   const next = section ? headings.find((heading) => heading.index >= bodyStart) : undefined;
   const end = section ? next?.index ?? normalized.length : insertion;
   const current = section ? normalized.slice(bodyStart, end).trim() : "";
-  const changeNotes = [...new Set(notes)].join("\n\n");
-  const content = [current, promotedNotes, changeNotes && "### Changesets\n\n" + changeNotes].filter(Boolean).join("\n\n");
-  if (!content) throw new Error("A release must have human-readable notes");
+  const paragraphs = [current, promotedNotes, ...notes].filter(Boolean).flatMap((note) => markdownParagraphs(note));
+  const content = [...new Set(paragraphs)].join("\n\n");
+  if (!content)
+    throw new Error("A release must have human-readable notes");
   const replacement = "## Unreleased\n\n## " + version + " — prepared\n\n" + content + "\n\n";
   const prefix = normalized.slice(0, insertion).trimEnd();
   const suffix = normalized.slice(end).trimStart();
@@ -55,38 +59,49 @@ export function promotionNotes(source, version, changesets) {
 }
 
 function main() {
-  if (process.argv.length > 2) throw new Error("Usage: pnpm release:version");
+  if (process.argv.length > 2)
+    throw new Error("Usage: pnpm release:version");
   const notes = changesetNotes();
-  if (!notes.length) throw new Error("No gavia-ui changeset; nothing to version");
+  if (!notes.length)
+    throw new Error("No gavia-ui changeset; nothing to version");
   const before = JSON.parse(read("packages/ui-kit/package.json")).version;
   const rootManifest = JSON.parse(read("package.json"));
-  if (before !== rootManifest.version) throw new Error("Root/package versions differ before preparation");
+  if (before !== rootManifest.version)
+    throw new Error("Root/package versions differ before preparation");
   const source = read("CHANGELOG.md");
-  if (packageChangelog(source) !== read("packages/ui-kit/CHANGELOG.md")) throw new Error("Changelog copies differ");
   // Validate all notes before Changesets consumes files or changes any versions.
   const previousNotes = before.includes("-") ? promotionNotes(source, before.split("-")[0], notes) : "";
   prepareChangelog(source, before, notes);
   const cli = join(root, "node_modules/@changesets/cli/bin.js");
   const result = spawnSync(process.execPath, [cli, "version"], { cwd: root, stdio: "inherit" });
-  if (result.error) throw result.error;
-  if (result.status !== 0) { process.exitCode = result.status ?? 1; return; }
+  if (result.error)
+    throw result.error;
+  if (result.status !== 0) {
+    process.exitCode = result.status ?? 1;
+    return;
+  }
   const version = JSON.parse(read("packages/ui-kit/package.json")).version;
-  if (version === before) throw new Error("Changesets produced no new package version");
+  if (version === before)
+    throw new Error("Changesets produced no new package version");
   const promoted = !version.includes("-") ? previousNotes : "";
   const changelog = prepareChangelog(source, version, notes, promoted);
   rootManifest.version = version;
   writeFileSync(join(root, "package.json"), JSON.stringify(rootManifest, null, 2) + "\n");
   writeFileSync(join(root, "CHANGELOG.md"), changelog);
-  writeFileSync(join(root, "packages/ui-kit/CHANGELOG.md"), packageChangelog(changelog));
   mkdirSync(join(root, "docs"), { recursive: true });
   const migration = join(root, "docs/migration-" + version + ".md");
   if (!existsSync(migration)) {
     writeFileSync(migration, "# Upgrading to Gavia UI " + version
-      + "\n\nTODO: describe changes, compatibility and consumer migration steps.\n");
+    + "\n\nTODO: describe changes, compatibility and consumer migration steps.\n");
   }
   console.log("Prepared " + version + ". Review changelog/migration before creating a release tag. No publication performed.");
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  try { main(); } catch (error) { console.error(error.message); process.exitCode = 1; }
+  try {
+    main();
+  } catch (error) {
+    console.error(error.message);
+    process.exitCode = 1;
+  }
 }

@@ -1,11 +1,13 @@
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, realpathSync, rmSync, statSync, symlinkSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, symlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { consumerSource } from "./example-source.mjs";
 import { consumerManager } from "./consumer-manager.mjs";
-import { preparePackedRuntimeFixtures, checkPackedNode, checkPackedButtonBundle, checkPackedBrowser } from "./package-consumer-checks.mjs";
+import { consumerSource } from "./example-source.mjs";
+import { checkPackedBrowser, checkPackedButtonBundle, checkPackedNode, preparePackedRuntimeFixtures } from "./package-consumer-checks.mjs";
+import { packageDocumentation } from "./package-docs.mjs";
+import { assertPureUtilityEntry } from "./utility-boundary.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, "..");
@@ -20,7 +22,7 @@ for (let index = 0; index < args.length; index += 1) {
   if (args[index] === "--browser" && !browserRequested) browserRequested = true;
   else if (args[index] === "--archive" && !requestedArchive && args[index + 1]?.trim()) requestedArchive = resolve(args[++index]);
   else if (args[index] === "--manager" && ["pnpm", "npm", "bun"].includes(args[index + 1])) selectedManager = args[++index];
-  else if (/^--manager=(pnpm|npm|bun)$/.test(args[index])) selectedManager = args[index].split("=")[1];
+  else if (/^--manager=(?:pnpm|npm|bun)$/.test(args[index])) selectedManager = args[index].split("=")[1];
   else if (args[index] === "--vue" && /^\d+\.\d+\.\d+$/.test(args[index + 1] ?? "")) requestedVue = args[++index];
   else if (args[index] === "--typescript" && /^\d+\.\d+\.\d+$/.test(args[index + 1] ?? "")) requestedTypescript = args[++index];
   else throw new Error("Usage: pnpm verify:package [--archive <path>] [--browser] [--manager=pnpm|npm|bun] [--vue <exact-version>] [--typescript <exact-version>]");
@@ -42,6 +44,9 @@ const registryVueVersion = requestedVue ?? (selectedManager === "bun" ? workspac
 const temporaryBase = join(repoRoot, ".tmp");
 mkdirSync(temporaryBase, { recursive: true });
 const temporaryRoot = mkdtempSync(join(temporaryBase, "gavia-ui-consumer-"));
+// Validate the immutable cleanup target before work starts, preserving the original
+// failure if a consumer check later throws. Cleanup never computes another path.
+if (dirname(temporaryRoot) !== temporaryBase) throw new Error("Consumer must stay inside the task temporary directory");
 const packDir = join(temporaryRoot, "package");
 const consumerDir = join(temporaryRoot, "consumer");
 
@@ -97,12 +102,14 @@ try {
       "gavia-ui": `file:${archivePath.replaceAll("\\", "/")}`,
       vue: registryVueVersion ?? localPackage("vue")
     },
-    devDependencies: selectedManager === "bun" ? (requestedTypescript ? { typescript: requestedTypescript } : undefined) : {
-      "@vitejs/plugin-vue": localPackage("@vitejs/plugin-vue"),
-      typescript: requestedTypescript ?? localPackage("typescript"),
-      vite: localPackage("vite"),
-      "vue-tsc": localPackage("vue-tsc")
-    }
+    devDependencies: selectedManager === "bun"
+      ? (requestedTypescript ? { typescript: requestedTypescript } : undefined)
+      : {
+          "@vitejs/plugin-vue": localPackage("@vitejs/plugin-vue"),
+          typescript: requestedTypescript ?? localPackage("typescript"),
+          vite: localPackage("vite"),
+          "vue-tsc": localPackage("vue-tsc")
+        }
   };
 
   write("package.json", `${JSON.stringify(consumerPackage, null, 2)}\n`);
@@ -135,7 +142,7 @@ try {
   );
   write(
     "vite.config.ts",
-    `import { defineConfig } from "vite";\nimport vue from "@vitejs/plugin-vue";\nimport { resolve } from "node:path";\n\nexport default defineConfig({ plugins: [vue()], resolve: { dedupe: ["vue"] }, build: { rollupOptions: { input: { consumer: resolve("index.html"), hydration: resolve("ssr.html") } } } });\n`
+    "import { defineConfig } from \"vite\";\nimport vue from \"@vitejs/plugin-vue\";\nimport { resolve } from \"node:path\";\n\nexport default defineConfig({ plugins: [vue()], resolve: { dedupe: [\"vue\"] }, build: { rollupOptions: { input: { consumer: resolve(\"index.html\"), hydration: resolve(\"ssr.html\") } } } });\n"
   );
   write("index.html", '<!doctype html><html lang="ru"><head><meta charset="utf-8"><link rel="icon" href="data:,"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Packed Gavia consumer</title></head><body><div id="app"></div><script type="module" src="/src/main.ts"></script></body></html>\n');
   preparePackedRuntimeFixtures(write);
@@ -181,14 +188,14 @@ createApp(App).use(WlConfig, { pt: createWlPt(), locale: wlLocaleRu })
   // Check positive and negative API type contracts against declarations from the actual archive.
   // These are compile-only files: they are not imported by the runtime application.
   const apiContractFiles = [
-    "selection-contracts.types.ts", "table-contract.types.ts", "pt-contract.types.ts",
-    "navigation-contract.types.ts", "generic-mode-contract.types.ts", "date-picker.types.ts",
+    "types/selection-contracts.types.ts", "types/table-contract.types.ts", "types/pt-contract.types.ts",
+    "types/navigation-contract.types.ts", "types/generic-mode-contract.types.ts", "types/date-picker.types.ts",
     "fixtures/selection-contracts-consumer.vue", "fixtures/table-contract-consumer.vue",
     "fixtures/navigation-contract-consumer.vue", "fixtures/date-picker-consumer.vue",
-    "collection-contract.types.ts", "fixtures/collection-contract-consumer.vue",
-    "input-model-modifiers.types.ts", "fixtures/input-model-modifiers-consumer.vue",
-    "overlay-locale-contract.types.ts", "fixtures/overlay-model-modifiers-consumer.vue", "pt-tooltip-contract.types.ts",
-    "native-contract.types.ts", "native-contract.tsx", "field-slot-contract.types.ts", "fixtures/public-components-consumer.vue"
+    "types/collection-contract.types.ts", "fixtures/collection-contract-consumer.vue",
+    "types/input-model-modifiers.types.ts", "fixtures/input-model-modifiers-consumer.vue",
+    "types/overlay-locale-contract.types.ts", "fixtures/overlay-model-modifiers-consumer.vue", "types/pt-tooltip-contract.types.ts",
+    "types/native-contract.types.ts", "types/native-contract.tsx", "types/field-slot-contract.types.ts", "fixtures/public-components-consumer.vue"
   ];
   for (const relativePath of apiContractFiles) {
     const source = readFileSync(join(uiKitDir, "tests", relativePath), "utf8")
@@ -234,6 +241,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
 
   const installedPackageDir = join(consumerDir, "node_modules", ...packageJson.name.split("/"));
   const requiredFiles = [
+    "README.md",
     "LICENSE",
     "CHANGELOG.md",
     "dist/index.js",
@@ -250,7 +258,6 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     "themes/gavia-dark.css",
     "styles/fonts/gavia.css",
     "fonts/gavia/manifest.json",
-    "fonts/gavia/qa-report.json",
     "fonts/gavia/OFL.txt",
     "fonts/gavia/Onest-OFL.txt",
     "fonts/gavia/FONTLOG.txt"
@@ -268,6 +275,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     }
   }
   const installedManifest = JSON.parse(readFileSync(join(installedPackageDir, "package.json"), "utf8"));
+  assertPureUtilityEntry(installedPackageDir);
   if (installedManifest.name !== packageJson.name || installedManifest.version !== packageJson.version) {
     throw new Error(`Packed package must be ${packageJson.name}@${packageJson.version}, received ${installedManifest.name}@${installedManifest.version}`);
   }
@@ -296,11 +304,13 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     throw new Error("Packed font family differs from the accepted Gavia Sans 0.600 release");
   }
   const packedFontFiles = readdirSync(packedFontDirectory).filter((file) => /\.(?:ttf|woff2)$/.test(file)).sort();
-  if (JSON.stringify(packedFontFiles) !== JSON.stringify(Object.keys(acceptedHashes).sort())) {
-    throw new Error("Packed font family must contain exactly the 24 current font files");
+  const acceptedWebFonts = Object.keys(acceptedHashes).filter((file) => file.endsWith(".woff2")).sort();
+  if (JSON.stringify(packedFontFiles) !== JSON.stringify(acceptedWebFonts)
+    || existsSync(join(packedFontDirectory, "qa-report.json"))) {
+    throw new Error("Packed font family must contain the 12 accepted WOFF2 files and exclude TTF/QA artifacts");
   }
   for (const face of packedFontManifest.faces) {
-    for (const format of ["ttf", "woff2"]) {
+    for (const format of ["woff2"]) {
       const asset = face[format];
       const actual = createHash("sha256").update(readFileSync(join(packedFontDirectory, asset.file))).digest("hex");
       if (asset.sha256 !== acceptedHashes[asset.file] || actual !== acceptedHashes[asset.file]) {
@@ -308,7 +318,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
       }
     }
   }
-  for (const filename of ["OFL.txt", "Onest-OFL.txt", "FONTLOG.txt", "manifest.json", "qa-report.json"]) {
+  for (const filename of ["OFL.txt", "Onest-OFL.txt", "FONTLOG.txt", "manifest.json"]) {
     const normalize = (text) => text.replaceAll("\r\n", "\n");
     if (normalize(readFileSync(join(packedFontDirectory, filename), "utf8"))
       !== normalize(readFileSync(join(canonicalFontDirectory, filename), "utf8"))) {
@@ -346,14 +356,14 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   const builtCss = readdirSync(builtAssets).filter((file) => file.endsWith(".css"))
     .map((file) => readFileSync(join(builtAssets, file), "utf8")).join("\n");
   const builtFontFaces = [...builtCss.matchAll(/@font-face\s*\{([^}]+)\}/g)]
-    .filter(([, block]) => /font-family:["']?Gavia(?: Sans)?(?:["']|;)/.test(block));
+    .filter(([, block]) => /font-family:["']?Gavia(?: Sans)?["';]/.test(block));
   if (builtFontFaces.length !== 24) throw new Error("Consumer CSS did not preserve the 12 Gavia Sans faces and legacy aliases");
   for (const [, block] of builtFontFaces) {
     const fontUrl = block.match(/url\(["']?([^"')]+)["']?\)/)?.[1];
     const emittedPath = fontUrl?.startsWith("/") ? join(consumerDir, "dist", fontUrl.slice(1)) : resolve(builtAssets, fontUrl ?? "");
     if (!fontUrl || !existsSync(emittedPath)) throw new Error("Consumer font CSS has an unresolved emitted URL: " + fontUrl);
   }
-  console.log("Packed font smoke passed: 24 accepted binaries, OFL notices, 12 canonical CSS faces plus legacy aliases and emitted WOFF2 assets");
+  console.log("Packed font smoke passed: 12 accepted WOFF2 files, OFL notices, 12 canonical CSS faces plus legacy aliases");
 
   // Git checkouts may use CRLF on Windows and LF on the publishing runner.
   const packedLicense = readFileSync(join(installedPackageDir, "LICENSE"), "utf8").replaceAll("\r\n", "\n");
@@ -361,10 +371,10 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   if (packedLicense !== canonicalLicense) {
     throw new Error("Packed LICENSE differs from the repository license");
   }
-  const canonicalChangelog = readFileSync(join(repoRoot, "CHANGELOG.md"), "utf8")
-    .replaceAll("(docs/", "(https://github.com/whitewolf06/gavia-ui/blob/main/docs/");
-  if (readFileSync(join(installedPackageDir, "CHANGELOG.md"), "utf8") !== canonicalChangelog) {
-    throw new Error("Packed changelog is out of sync with the repository");
+  for (const [name, content] of Object.entries(packageDocumentation(repoRoot))) {
+    if (readFileSync(join(installedPackageDir, name), "utf8").replaceAll("\r\n", "\n") !== content) {
+      throw new Error(`Packed ${name} is out of sync with canonical repository sources`);
+    }
   }
   if (readFileSync(join(installedPackageDir, "dist", "index.js"), "utf8").match(/primevue|primeicons|@primeuix/i)) {
     throw new Error("Published JavaScript still references PrimeVue or PrimeIcons");
@@ -393,6 +403,5 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   console.log(`Consumer smoke passed for ${packageJson.name}@${packageJson.version}`);
   console.log(`Copied showcase sources passed typecheck and build: ${copiedExamples.length}`);
 } finally {
-  if (dirname(temporaryRoot) !== temporaryBase) throw new Error("Refusing to remove a consumer outside the task temporary directory");
   rmSync(temporaryRoot, { recursive: true, force: true });
 }

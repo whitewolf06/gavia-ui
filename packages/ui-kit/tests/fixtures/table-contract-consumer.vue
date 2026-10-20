@@ -13,13 +13,24 @@ function scoreLabel(value: number): string { return value.toFixed(1); }
 function optionalLabel(value: string | undefined): string { return value ?? "—"; }
 function personLabel(value: Person): string { return value.name; }
 function emptyScope(scope: object): string { return Object.keys(scope).join(); }
+function nameHeader(key: "name"): string { return key; }
 </script>
 
 <template>
   <WlTable :value="rows" :columns="columns">
+    <template #header-name="{ column, direction }"><span>{{ nameHeader(column.key) }} {{ direction }}</span></template>
     <template #cell-name="{ row, value }"><span>{{ personLabel(row) }}: {{ nameLabel(value) }}</span></template>
     <template #cell-score="{ value }"><span>{{ scoreLabel(value) }}</span></template>
     <template #cell-note="{ value }"><span>{{ optionalLabel(value) }}</span></template>
+  </WlTable>
+  <WlTable :value="rows" :columns="columns" row-key="id" selection-mode="multiple" :selection="[1]" :sort="{key: 'score', direction: 'desc'}" />
+  <!-- @vue-expect-error Row-key field spelling is checked. -->
+  <WlTable :value="rows" :columns="columns" row-key="idd" />
+  <WlTable :value="rows" :columns="columns">
+    <template #header-score="{column}">
+      <!-- @vue-expect-error Header slots preserve their field key. -->
+      <span :data-key="nameHeader(column.key)" />
+    </template>
   </WlTable>
   <WlTable :value="rows" :columns="virtualColumns">
     <template #cell-actions="{ row, value }">

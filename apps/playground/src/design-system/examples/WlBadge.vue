@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WlBadge } from "../../../../../packages/ui-kit/src";
+import { WlBadge } from "gavia-ui";
 defineProps<{ preview?: Record<string, unknown> }>();
 
 </script>

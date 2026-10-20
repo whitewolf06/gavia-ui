@@ -1,5 +1,6 @@
-import type { WlControlLocale, WlResolvedLocale, WlLocaleInput } from "./locale-types";
-export type { WlLocale, WlResolvedLocale, WlLocaleInput } from "./locale-types";
+import type { WlControlLocale, WlLocaleInput, WlResolvedLocale } from "./locale-types";
+import { getWlFirstDayOfWeek, getWlMonthNames, getWlWeekdayNames } from "./utils/date";
+export type { WlLocale, WlLocaleInput, WlResolvedLocale } from "./locale-types";
 
 /** Complete internal output; public locale objects keep their previous required fields. */
 type WlNormalizedLocale = WlResolvedLocale & Required<WlControlLocale>;
@@ -9,6 +10,10 @@ type WlNormalizedLocale = WlResolvedLocale & Required<WlControlLocale>;
  *   app.use(WlConfig, { locale: wlLocaleRu })
  */
 export const wlLocaleRu: WlNormalizedLocale = {
+  showBreadcrumbs: "Показать весь путь",
+  dateRangePresets: "Готовые диапазоны",
+  colorHue: "Тон", colorSaturation: "Насыщенность", colorValue: "Яркость", colorAlpha: "Непрозрачность",
+  badgeCount: "Количество: {count}", badgeDot: "Новые элементы",
   firstDayOfWeek: 1,
   dayNames: [
     "Воскресенье",
@@ -125,13 +130,31 @@ export const wlLocaleRu: WlNormalizedLocale = {
   noData: "Нет данных",
   eventOne: "событие",
   eventFew: "события",
-  eventMany: "событий"
+  eventMany: "событий",
+  stepCompleted: "Выполнено",
+  stepCurrent: "Текущий шаг",
+  rowsPerPage: "Строк на странице", pageRange: "Показано {from}–{to} из {total}",
+  selectAll: "Выбрать всё",
+  selectAllRows: "Выбрать все строки",
+  selectRow: "Выбрать строку {row}",
+  sortAscending: "{column}: по возрастанию",
+  sortDescending: "{column}: по убыванию",
+  clearSort: "{column}: сбросить сортировку",
+  resultsFound: { one: "Найден {count} результат", few: "Найдено {count} результата", many: "Найдено {count} результатов", other: "Найдено {count} результата" },
+  fileProgress: "Загрузка файла {name}",
+  optional: "необязательно", stepError: "Ошибка шага", passwordStrength: "Надёжность пароля", rangeStart: "Начало диапазона", rangeEnd: "Конец диапазона", slider: "Значение",
+  presenceOnline: "В сети", presenceBusy: "Занят", presenceOffline: "Не в сети",
+  opensInNewTab: "Откроется в новой вкладке"
 };
 
 /** English locale, selected explicitly through WlConfig.locale. */
 export const wlLocaleEn: WlNormalizedLocale = {
-  "firstDayOfWeek": 1,
-  "dayNames": [
+  showBreadcrumbs: "Show full path",
+  dateRangePresets: "Date range presets",
+  colorHue: "Hue", colorSaturation: "Saturation", colorValue: "Brightness", colorAlpha: "Opacity",
+  badgeCount: "Items: {count}", badgeDot: "New items",
+  firstDayOfWeek: 1,
+  dayNames: [
     "Sunday",
     "Monday",
     "Tuesday",
@@ -140,7 +163,7 @@ export const wlLocaleEn: WlNormalizedLocale = {
     "Friday",
     "Saturday"
   ],
-  "dayNamesShort": [
+  dayNamesShort: [
     "Sun",
     "Mon",
     "Tue",
@@ -149,7 +172,7 @@ export const wlLocaleEn: WlNormalizedLocale = {
     "Fri",
     "Sat"
   ],
-  "dayNamesMin": [
+  dayNamesMin: [
     "Su",
     "Mo",
     "Tu",
@@ -158,7 +181,7 @@ export const wlLocaleEn: WlNormalizedLocale = {
     "Fr",
     "Sa"
   ],
-  "monthNames": [
+  monthNames: [
     "January",
     "February",
     "March",
@@ -172,7 +195,7 @@ export const wlLocaleEn: WlNormalizedLocale = {
     "November",
     "December"
   ],
-  "monthNamesShort": [
+  monthNamesShort: [
     "Jan",
     "Feb",
     "Mar",
@@ -186,83 +209,97 @@ export const wlLocaleEn: WlNormalizedLocale = {
     "Nov",
     "Dec"
   ],
-  "today": "Today",
-  "clear": "Clear",
-  "accept": "Confirm",
-  "reject": "Cancel",
-  "chooseDate": "Choose date",
-  "chooseMonth": "Choose month",
-  "chooseYear": "Choose year",
-  "prevMonth": "Previous month",
-  "nextMonth": "Next month",
-  "prevYear": "Previous year",
-  "nextYear": "Next year",
-  "prevDecade": "Previous decade",
-  "nextDecade": "Next decade",
-  "weekHeader": "Wk",
-  "localeCode": "en-US",
-  "close": "Close",
-  "remove": "Remove",
-  "loading": "Loading",
-  "options": "Options",
-  "noOptions": "No options",
-  "filter": "Filter",
-  "selectedItems": "{count} selected",
-  "removeItem": "Remove {label}",
-  "breadcrumbs": "Breadcrumbs",
-  "showOptions": "Show options",
-  "password": "Password",
-  "showPassword": "Show password",
-  "hidePassword": "Hide password",
-  "colorPalette": "Palette",
-  "colorHex": "Color HEX code",
-  "searchPlaceholder": "Search or navigate…",
-  "noResults": "Nothing found",
-  "searching": "Searching…",
-  "commandPalette": "Command palette",
-  "confirmation": "Confirmation",
-  "datePlaceholder": "dd.mm.yyyy",
-  "dateFrom": "From",
-  "dateTo": "To",
-  "chooseDateForLabel": "Choose a date: {label}.",
-  "newDateRange": "Choose the start of a new range.",
-  "chooseMonthCurrent": "Choose month, current month {month}",
-  "chooseYearCurrent": "Choose year, current year {year}",
-  "monthsOfYear": "Months of {year}",
-  "yearsRange": "Years {start}–{end}",
-  "chooseFiles": "Choose files",
-  "fileDropLabel": "Choose files or drop them here",
-  "dropFiles": "Drop files here or",
-  "fileByteUnit": "B",
-  "fileKilobyteUnit": "KB",
-  "fileMegabyteUnit": "MB",
-  "decimalSeparator": ".",
-  "fileUnsupportedType": "file type is not supported",
-  "fileTooLarge": "file is too large",
-  "fileSizeLimit": "size exceeds {size}",
-  "fileCountLimit": "file limit: {count}",
-  "fileTooMany": "too many files",
-  "filters": "Filters",
-  "reset": "Reset",
-  "apply": "Apply",
-  "closeFilters": "Close filters",
-  "decrease": "Decrease",
-  "increase": "Increase",
-  "pages": "Pages",
-  "firstPage": "First page",
-  "prevPage": "Previous page",
-  "nextPage": "Next page",
-  "lastPage": "Last page",
-  "pageNumber": "Page number",
-  "of": "of",
-  "mainNavigation": "Main navigation",
-  "pinSidebar": "Pin sidebar",
-  "unpinSidebar": "Unpin sidebar",
-  "closeNavigation": "Close navigation",
-  "noData": "No data",
-  "eventOne": "event",
-  "eventFew": "events",
-  "eventMany": "events"
+  today: "Today",
+  clear: "Clear",
+  accept: "Confirm",
+  reject: "Cancel",
+  chooseDate: "Choose date",
+  chooseMonth: "Choose month",
+  chooseYear: "Choose year",
+  prevMonth: "Previous month",
+  nextMonth: "Next month",
+  prevYear: "Previous year",
+  nextYear: "Next year",
+  prevDecade: "Previous decade",
+  nextDecade: "Next decade",
+  weekHeader: "Wk",
+  localeCode: "en-US",
+  close: "Close",
+  remove: "Remove",
+  loading: "Loading",
+  options: "Options",
+  noOptions: "No options",
+  filter: "Filter",
+  selectedItems: "{count} selected",
+  removeItem: "Remove {label}",
+  breadcrumbs: "Breadcrumbs",
+  showOptions: "Show options",
+  password: "Password",
+  showPassword: "Show password",
+  hidePassword: "Hide password",
+  colorPalette: "Palette",
+  colorHex: "Color HEX code",
+  searchPlaceholder: "Search or navigate…",
+  noResults: "Nothing found",
+  searching: "Searching…",
+  commandPalette: "Command palette",
+  confirmation: "Confirmation",
+  datePlaceholder: "dd.mm.yyyy",
+  dateFrom: "From",
+  dateTo: "To",
+  chooseDateForLabel: "Choose a date: {label}.",
+  newDateRange: "Choose the start of a new range.",
+  chooseMonthCurrent: "Choose month, current month {month}",
+  chooseYearCurrent: "Choose year, current year {year}",
+  monthsOfYear: "Months of {year}",
+  yearsRange: "Years {start}–{end}",
+  chooseFiles: "Choose files",
+  fileDropLabel: "Choose files or drop them here",
+  dropFiles: "Drop files here or",
+  fileByteUnit: "B",
+  fileKilobyteUnit: "KB",
+  fileMegabyteUnit: "MB",
+  decimalSeparator: ".",
+  fileUnsupportedType: "file type is not supported",
+  fileTooLarge: "file is too large",
+  fileSizeLimit: "size exceeds {size}",
+  fileCountLimit: "file limit: {count}",
+  fileTooMany: "too many files",
+  filters: "Filters",
+  reset: "Reset",
+  apply: "Apply",
+  closeFilters: "Close filters",
+  decrease: "Decrease",
+  increase: "Increase",
+  pages: "Pages",
+  firstPage: "First page",
+  prevPage: "Previous page",
+  nextPage: "Next page",
+  lastPage: "Last page",
+  pageNumber: "Page number",
+  of: "of",
+  mainNavigation: "Main navigation",
+  pinSidebar: "Pin sidebar",
+  unpinSidebar: "Unpin sidebar",
+  closeNavigation: "Close navigation",
+  noData: "No data",
+  eventOne: "event",
+  eventFew: "events",
+  eventMany: "events",
+  stepCompleted: "Completed",
+  stepCurrent: "Current step",
+  rowsPerPage: "Rows per page", pageRange: "Showing {from}–{to} of {total}",
+  selectAll: "Select all",
+  selectAllRows: "Select all rows",
+  selectRow: "Select row {row}",
+  sortAscending: "{column}: sort ascending",
+  sortDescending: "{column}: sort descending",
+  clearSort: "{column}: clear sort",
+  resultsFound: { one: "{count} result found", other: "{count} results found" },
+  fileProgress: "Upload progress for {name}",
+  optional: "optional", stepError: "Step error", passwordStrength: "Password strength", rangeStart: "Range start", rangeEnd: "Range end", slider: "Value",
+  presenceOnline: "Online", presenceBusy: "Busy", presenceOffline: "Offline",
+  opensInNewTab: "Opens in a new tab"
 };
 
 const controlTextKeys = [
@@ -273,7 +310,6 @@ const controlTextKeys = [
   "options",
   "noOptions",
   "filter",
-  "selectedItems",
   "removeItem",
   "breadcrumbs",
   "showOptions",
@@ -328,7 +364,10 @@ const controlTextKeys = [
   "noData",
   "eventOne",
   "eventFew",
-  "eventMany"
+  "eventMany",
+  "stepCompleted",
+  "stepCurrent",
+  "opensInNewTab", "rowsPerPage", "pageRange", "selectAll", "selectAllRows", "selectRow", "sortAscending", "sortDescending", "clearSort", "presenceOnline", "presenceBusy", "presenceOffline", "fileProgress", "optional", "stepError", "passwordStrength", "rangeStart", "rangeEnd", "slider", "showBreadcrumbs", "dateRangePresets", "colorHue", "colorSaturation", "colorValue", "colorAlpha", "badgeCount", "badgeDot"
 ] as const;
 
 const textKeys = [
@@ -338,7 +377,7 @@ const textKeys = [
 ] as const;
 const dayKeys = ["dayNames", "dayNamesShort", "dayNamesMin"] as const;
 const monthKeys = ["monthNames", "monthNamesShort"] as const;
-const knownKeys = new Set<string>(["firstDayOfWeek", ...textKeys, ...dayKeys, ...monthKeys]);
+const knownKeys = new Set<string>(["firstDayOfWeek", "selectedItems", "resultsFound", ...textKeys, ...dayKeys, ...monthKeys]);
 
 function isNames(value: unknown, count: number): value is readonly string[] {
   return Array.isArray(value) && value.length === count
@@ -350,7 +389,8 @@ export function normalizeWlLocale(input?: WlLocaleInput, base: WlResolvedLocale 
   const source: WlLocaleInput = input && typeof input === "object" && !Array.isArray(input) ? input : {};
   const normalizedBase: WlNormalizedLocale = { ...wlLocaleRu, ...base };
   for (const key of controlTextKeys) {
-    if (typeof normalizedBase[key] !== "string") normalizedBase[key] = wlLocaleRu[key];
+    if (typeof normalizedBase[key] !== "string")
+      normalizedBase[key] = wlLocaleRu[key];
   }
   try {
     normalizedBase.localeCode = Intl.getCanonicalLocales(normalizedBase.localeCode)[0] ?? wlLocaleRu.localeCode;
@@ -361,16 +401,26 @@ export function normalizeWlLocale(input?: WlLocaleInput, base: WlResolvedLocale 
     ...normalizedBase,
     ...Object.fromEntries(Object.entries(source).filter(([key, value]) => !knownKeys.has(key) && value !== undefined))
   };
+  for (const key of ["selectedItems", "resultsFound"] as const) {
+    const value = source[key];
+    if (typeof value === "string" || (value && typeof value === "object" && typeof value.other === "string"
+      && Object.values(value).every((form) => typeof form === "string")))
+      result[key] = value;
+  }
   const firstDay = source.firstDayOfWeek;
   if (typeof firstDay === "number" && Number.isInteger(firstDay) && firstDay >= 0 && firstDay <= 6) {
     result.firstDayOfWeek = firstDay;
   }
   for (const key of textKeys) {
     const value = source[key];
-    if (typeof value !== "string") continue;
+    if (typeof value !== "string")
+      continue;
     if (key === "localeCode") {
-      try { result.localeCode = Intl.getCanonicalLocales(value)[0] ?? normalizedBase.localeCode; } catch { /* Preserve the valid base locale. */ }
-    } else result[key] = value;
+      try {
+        result.localeCode = Intl.getCanonicalLocales(value)[0] ?? normalizedBase.localeCode;
+      } catch { /* Preserve the valid base locale. */ }
+    } else
+      result[key] = value;
   }
   for (const key of dayKeys) {
     const value = source[key];
@@ -386,4 +436,16 @@ export function normalizeWlLocale(input?: WlLocaleInput, base: WlResolvedLocale 
 /** Substitute named values in control text without evaluating application input. */
 export function formatWlLocaleText(text: string, values: Readonly<Record<string, string | number>>): string {
   return text.replace(/\{(\w+)\}/g, (token, key: string) => values[key] === undefined ? token : String(values[key]));
+}
+
+/** Intl supplies calendar/number metadata; UI phrases fall back to English unless overridden. */
+export function createWlLocaleFromIntl(code: string, overrides: WlLocaleInput = {}): WlResolvedLocale {
+  const localeCode = Intl.getCanonicalLocales(code)[0] ?? "en";
+  const decimalSeparator = new Intl.NumberFormat(localeCode).formatToParts(1.5).find((part) => part.type === "decimal")?.value ?? ".";
+  return normalizeWlLocale({
+    localeCode, firstDayOfWeek: getWlFirstDayOfWeek(localeCode),
+    monthNames: getWlMonthNames(localeCode), monthNamesShort: getWlMonthNames(localeCode, "short"),
+    dayNames: getWlWeekdayNames(localeCode, "long"), dayNamesShort: getWlWeekdayNames(localeCode, "short"),
+    dayNamesMin: getWlWeekdayNames(localeCode, "narrow"), decimalSeparator, ...overrides
+  }, wlLocaleEn);
 }

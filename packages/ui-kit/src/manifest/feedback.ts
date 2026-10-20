@@ -3,6 +3,14 @@ import { WL_ALERT_VARIANTS, WL_SPINNER_SIZES } from "./values";
 
 export const feedbackManifest = /* @__PURE__ */ defineComponentManifest([
   {
+    name: "WlTooltipComponent",
+    category: "feedback",
+    description: "Descriptive hover and focus content with an optional controlled visibility model.",
+    props: [],
+    slots: [],
+    emits: []
+  },
+  {
     name: "WlAlert",
     category: "feedback",
     description: "Уведомление внутри страницы. Иконка зависит от варианта; заголовок и кнопку закрытия можно добавить отдельно.",
@@ -10,7 +18,9 @@ export const feedbackManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "variant", type: "enum", default: "info", values: WL_ALERT_VARIANTS, description: "Тип уведомления." },
       { name: "title", type: "string", description: "Заголовок." },
       { name: "closable", type: "boolean", default: false, description: "Кнопка закрытия." },
-      { name: "closeLabel", type: "string", default: "Закрыть", description: "aria-label кнопки закрытия." }
+      { name: "closeLabel", type: "string", default: "Закрыть", description: "aria-label кнопки закрытия." },
+      { name: "live", type: "enum", description: "Приоритет объявления: по варианту, polite, assertive или off для статичного блока.", values: ["assertive", "polite", "off"] },
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов." }
     ],
     slots: [
       { name: "default", description: "Текст уведомления." },
@@ -22,7 +32,7 @@ export const feedbackManifest = /* @__PURE__ */ defineComponentManifest([
     name: "WlToast",
     category: "feedback",
     description:
-      "Toast-контейнер в позиции bottom-center. Показ — через useWlToast / WlToastService.",
+      "Toast-контейнер с семантическим tone. Показ — через useWlToast().show; прежние методы и severity сохранены.",
     props: [
       { name: "group", type: "string", description: "Группа уведомлений." },
       { name: "motion", type: "boolean", description: "Анимация сообщений; по умолчанию WlConfig.motion (true)." },
@@ -35,7 +45,7 @@ export const feedbackManifest = /* @__PURE__ */ defineComponentManifest([
     name: "WlConfirmDialog",
     category: "feedback",
     description:
-      "Диалог подтверждения с кнопками accept/reject. Вызывается через useWlConfirm. Подключите app.use(WlConfirmationService) и один <WlConfirmDialog /> в корне приложения.",
+      "Диалог подтверждения с кнопками accept/reject. Задайте tone в useWlConfirm().confirm(); confirmDanger остаётся алиасом danger. Подключите WlConfirmationService и один WlConfirmDialog в корне приложения.",
     props: [
       { name: "group", type: "string", description: "Группа диалога; обычно можно не задавать." },
       { name: "motion", type: "boolean", description: "Анимация окна; по умолчанию WlConfig.motion (true)." },

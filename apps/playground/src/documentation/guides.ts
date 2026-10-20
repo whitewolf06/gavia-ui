@@ -1,0 +1,79 @@
+import type { DocumentationGuideSection } from "../navigation";
+
+export const documentationGuideSections: readonly DocumentationGuideSection[] = ["why", "theming", "recipes", "accessibility", "how-it-is-built"];
+interface GuideSection { title: string; text: string; code?: string }
+export interface DocumentationGuide { title: string; description: string; sections: GuideSection[] }
+const themes = `/* Import after base.css, keeping the token layers. */
+@layer wl.tokens {
+  [data-wl-theme="gavia"][data-wl-brand="my-brand"] {
+    --wl-accent: #245bd1;
+    --wl-text-accent: #245bd1;
+    --wl-focus-color: #245bd1;
+  }
+}`;
+const sources: Record<"en" | "ru", Record<DocumentationGuideSection, DocumentationGuide>> = {
+  en: {
+    why: { title: "Why Gavia UI", description: "An independent Vue foundation with explicit styles, app-scoped services and editable tokens.", sections: [
+      { title: "A small application contract", text: "Vue is the library's only required peer dependency. Routing, network requests and business state belong to your application. Import reset, base styles and a theme explicitly." },
+      { title: "One component, five themes", text: "Gavia, Gavia Dark, Classic, Classic Dark and Newspaper share components and behavior. Change tokens or pass-through attributes instead of forking components." },
+      { title: "Start with a working consumer", text: "The repository includes Vite, Nuxt and custom-theme starters. Examples on component pages use the same SFC source as the copy button. Browser and manual assistive-technology acceptance are recorded separately from unit checks." }
+    ] },
+    theming: { title: "Theming", description: "Keep foundation, semantic and component tokens separate while adapting a theme to your brand.", sections: [
+      { title: "Override semantic roles", text: "Load your theme after base.css. Override named roles inside wl.tokens and keep data-wl-theme=\"gavia\" and data-wl-brand=\"my-brand\" on the same root element as in the starter. Check text, surface and focus contrast in every supported mode; the values below are an example, not a completed palette.", code: themes },
+      { title: "Select a theme before mounting", text: "Set data-wl-theme on the document root or a containing element. The public theme composable can resolve light, dark and system preferences; use its early initialization script to avoid a flash of the wrong mode.", code: 'import { useWlTheme } from "gavia-ui/composables";\nconst theme = useWlTheme({ themes: { light: "gavia", dark: "gavia-dark" } });' },
+      { title: "Keep application transitions under your control", text: "The themes option also accepts a reactive getter. Map both light and dark to an explicit selection to keep all five named themes independent of OS changes. With target: () => null, useWlTheme only resolves the choice, so your application can apply it inside its own snapshot transition. resolveWlTheme is the pure SSR/early-resolution helper; wlThemeInitScript accepts a static pair." },
+      { title: "Choose a stable decorative color", text: "getWlColorFromString maps the same trimmed NFC name to the same palette entry during SSR and in the browser. Its default palette returns foundation token references; pass an ordered nonempty palette for your brand. Keep the person's name and check contrast separately: the mapping does not guarantee unique or accessible foreground colors.", code: 'import { getWlColorFromString } from "gavia-ui/utils";\nconst outline = getWlColorFromString("Anna Mikhailova");\nconst brandOutline = getWlColorFromString("Anna Mikhailova", ["coral", "indigo"] as const);' },
+      { title: "Customize internal DOM", text: "Use WlConfig.pt for app defaults and a local pt prop for one instance. Class and style values merge in default → app → instance order. Canonical section names and released 0.x aliases are documented in the migration guide." }
+    ] },
+    recipes: { title: "Recipes", description: "Working compositions with validation, cancellation, retry and application-owned operations.", sections: [
+      { title: "Keep operations in the consumer", text: "Recipes compose public components. Replace simulated application operations with your API and preserve loading, failure, cancel and retry paths. Each selected recipe loads its own live component and copyable SFC." },
+      { title: "Format binary file sizes", text: "formatWlBytes keeps 1024-based units and Intl formatting for existing two-argument calls. The optional third argument supplies unit labels, a decimal separator, grouping, precision and a maximum unit. FileUpload uses it while preserving its 0.x locale overrides, rounding and megabyte cap.", code: 'import { formatWlBytes } from "gavia-ui/utils";\nformatWlBytes("en", 1536);\nformatWlBytes("en", 1536, { unitLabels: { kilobyte: "KiB" } });' }
+    ] },
+    accessibility: { title: "Accessibility", description: "Keyboard contracts, accessible names and a separate protocol for real screen-reader acceptance.", sections: [
+      { title: "Names and descriptions", text: "Give icon-only controls an aria-label. WlField exposes inputId, labelId and ariaDescribedby: bind labelId to aria-labelledby on composite controls, and bind descriptions to the actual focusable input." },
+      { title: "Keyboard and focus", text: "Tab moves between controls. Arrow keys move inside listboxes, tabs, menus, groups and toolbars according to their orientation. Escape closes only the top applicable overlay. Modal dialogs keep focus inside and restore it to the opener after closing." },
+      { title: "What your application owns", text: "Provide meaningful labels, errors, alternative text, table captions and loading outcomes. Preserve native modified-link behavior. Test keyboard operation and visible focus with your content in all five themes, on desktop and mobile." },
+      { title: "Manual acceptance", text: "Record browser, operating system, NVDA/VoiceOver versions, date and results in the maintainer protocol. Unit, browser and ARIA snapshot checks do not substitute for this manual acceptance." }
+    ] },
+    "how-it-is-built": { title: "How it is built", description: "The repository keeps tokens, behavior, DOM and application concerns in separate modules.", sections: [
+      { title: "Tokens become public assets", text: "tokens/source.json is the source for CSS, theme overrides, JSON catalogues and TypeScript tokens. The sync command generates them together and validates references and contrast." },
+      { title: "Components consume small behaviors", text: "Vue SFCs own props, DOM, slots and events. Shared composables own listbox navigation, overlay positioning, focus and cleanup. Toast and confirmation services are isolated by Vue application." },
+      { title: "Examples and API stay connected", text: "The component generator prepares source, contracts, examples, metadata and test scaffolds. API tables read generated TypeScript annotations from the same SFC declarations. Copyable examples use public package imports." },
+      { title: "Release evidence stays explicit", text: "Targeted checks support development. A release additionally verifies installed archives, Vue 3.4/3.5 consumers, SSR and hydration, browser interactions and Windows visual baselines. Publication is a separate authorized operation." }
+    ] }
+  },
+  ru: {
+    why: { title: "Зачем Gavia UI", description: "Независимая основа для Vue: явные стили, сервисы в границах приложения и редактируемые токены.", sections: [
+      { title: "Понятный контракт приложения", text: "Vue — единственная обязательная peer-зависимость библиотеки. Роутинг, запросы и бизнес-состояние остаются в вашем приложении. Reset, базовые стили и тему вы подключаете явно." },
+      { title: "Один компонент, пять тем", text: "Gavia, Gavia Dark, Classic, Classic Dark и Newspaper используют общие компоненты и поведение. Для своей темы меняйте токены и pt-атрибуты: копия компонента для этого не нужна." },
+      { title: "Начните с рабочего примера", text: "В репозитории есть стартовые проекты для Vite, Nuxt и своей темы. Витрина и кнопка копирования берут код из одного SFC. Проверки в браузере и ручная приёмка со скринридером учитываются отдельно от unit-тестов." }
+    ] },
+    theming: { title: "Темы", description: "Настройте тему под свой проект, сохранив слои базовых, семантических и компонентных токенов.", sections: [
+      { title: "Переопределите семантические роли", text: "Подключите свой CSS после base.css. Меняйте роли внутри wl.tokens и задайте data-wl-theme=\"gavia\" и data-wl-brand=\"my-brand\" на одном корневом элементе, как в стартере. Проверьте контраст текста, поверхностей и фокуса в каждом режиме. Значения ниже показывают подход, а не готовую палитру.", code: themes },
+      { title: "Выберите тему до монтирования", text: "Задайте data-wl-theme корневому элементу документа или контейнеру. Публичный composable определяет светлый, тёмный и системный режимы. Его ранний скрипт помогает избежать вспышки другой темы при загрузке.", code: 'import { useWlTheme } from "gavia-ui/composables";\nconst theme = useWlTheme({ themes: { light: "gavia", dark: "gavia-dark" } });' },
+      { title: "Управляйте переходом в приложении", text: "В themes можно передать реактивную функцию. Если пользователь выбрал конкретную тему, укажите её в обоих полях light и dark: смена системного режима её не заменит. С target: () => null composable только определяет тему, а приложение применяет её внутри своего перехода. Для SSR и раннего выбора есть чистая функция resolveWlTheme. Ранний скрипт wlThemeInitScript принимает обычную пару, без реактивной функции." },
+      { title: "Закрепите декоративный цвет за именем", text: "getWlColorFromString выбирает для одного имени один элемент палитры и при SSR, и в браузере. Пробелы по краям убираются, Unicode приводится к NFC. По умолчанию функция возвращает ссылки на базовые токены; для своего бренда передайте непустую палитру в фиксированном порядке. Сохраните имя человека и отдельно проверьте контраст: цвет не служит уникальным идентификатором.", code: 'import { getWlColorFromString } from "gavia-ui/utils";\nconst outline = getWlColorFromString("Анна Михайлова");\nconst brandOutline = getWlColorFromString("Анна Михайлова", ["coral", "indigo"] as const);' },
+      { title: "Настройте внутреннюю разметку", text: "WlConfig.pt задаёт общие настройки, локальный pt — настройки одного экземпляра. Class и style объединяются в порядке: библиотека → приложение → экземпляр. Новые имена секций и прежние алиасы 0.x описаны в миграции." }
+    ] },
+    recipes: { title: "Рецепты", description: "Рабочие сценарии с валидацией, отменой, повтором и операциями на стороне приложения.", sections: [
+      { title: "Операции остаются у потребителя", text: "Рецепты собираются из публичных компонентов. Замените учебные операции своими запросами и сохраните загрузку, ошибку, отмену и повтор. Выбранный рецепт отдельно загружает живой пример и SFC для копирования." },
+      { title: "Форматируйте размер файла", text: "formatWlBytes сохраняет шаг 1024 и формат Intl для прежнего вызова с двумя аргументами. В третьем аргументе можно задать подписи единиц, десятичный разделитель, группировку, точность и предельную единицу. FileUpload использует этот же форматтер: настройки локали 0.x, округление и предел в мегабайтах сохраняются.", code: 'import { formatWlBytes } from "gavia-ui/utils";\nformatWlBytes("ru", 1536);\nformatWlBytes("ru", 1536, { unitLabels: { kilobyte: "КиБ" } });' }
+    ] },
+    accessibility: { title: "Доступность", description: "Клавиатурные контракты, доступные имена и отдельная ручная приёмка со скринридером.", sections: [
+      { title: "Имена и описания", text: "Задайте aria-label кнопкам без текста. WlField передаёт inputId, labelId и ariaDescribedby: для составного контрола свяжите labelId с aria-labelledby, а описания — с элементом, который получает фокус." },
+      { title: "Клавиатура и фокус", text: "Tab переводит фокус между контролами. Стрелки перемещают его внутри списков, вкладок, меню, групп и панелей действий с учётом ориентации. Escape закрывает верхний подходящий оверлей. Модальное окно удерживает фокус и возвращает его после закрытия." },
+      { title: "Что задаёт приложение", text: "Добавьте понятные подписи, ошибки, альтернативный текст, заголовки таблиц и результаты загрузки. Сохраните обычное поведение ссылок с клавишами-модификаторами. Проверьте клавиатуру и видимый фокус со своими данными во всех пяти темах, на desktop и mobile." },
+      { title: "Ручная приёмка", text: "Запишите браузер, ОС, версии NVDA или VoiceOver, дату и результаты в протокол мейнтейнера. Unit-тесты, браузерные проверки и ARIA-снимки дополняют эту приёмку." }
+    ] },
+    "how-it-is-built": { title: "Как это устроено", description: "Токены, поведение, разметка и задачи приложения живут в отдельных модулях.", sections: [
+      { title: "Токены становятся публичными файлами", text: "tokens/source.json задаёт CSS, темы, JSON-каталоги и TypeScript-токены. Команда синхронизации обновляет их вместе и проверяет ссылки и контраст." },
+      { title: "Компоненты используют общие механики", text: "Vue SFC отвечает за props, разметку, слоты и события. Небольшие composables — за навигацию в списках, позиционирование, фокус и очистку. Сервисы уведомлений и подтверждений изолированы по Vue-приложениям." },
+      { title: "Примеры связаны с API", text: "Генератор готовит исходник, контракты, примеры, метаданные и заготовки тестов. Таблицы API читают TypeScript-аннотации из деклараций SFC. Код для копирования использует публичные импорты пакета." },
+      { title: "Готовность к выпуску подтверждается отдельно", text: "Точечные проверки сопровождают разработку. Перед выпуском дополнительно проверяются установленный архив, Vue 3.4/3.5, SSR и гидрация, поведение в браузерах и визуальные эталоны Windows. Публикация выполняется по отдельной команде." }
+    ] }
+  }
+};
+
+export function documentationGuide(section: DocumentationGuideSection, locale: string): DocumentationGuide {
+  return sources[locale === "ru" ? "ru" : "en"][section];
+}

@@ -1,6 +1,7 @@
-import { deepMerge } from "./utils/merge";
-
 import type { WlPtCallbackOptions, WlPtConfig } from "./pt-types";
+
+import { deepMerge } from "./utils/merge";
+import { trackWlPtOverrides } from "./utils/pt-aliases";
 export type { WlPtCallbackOptions, WlPtConfig, WlPtSection } from "./pt-types";
 
 const cx = (...parts: Array<string | false | null | undefined>): string =>
@@ -248,5 +249,5 @@ export function createWlPt(overrides: WlPtConfig = {}): WlPtConfig {
     }
   };
 
-  return deepMerge(base as Record<string, unknown>, overrides) as unknown as WlPtConfig;
+  return trackWlPtOverrides(deepMerge(base as Record<string, unknown>, overrides) as unknown as WlPtConfig, overrides);
 }

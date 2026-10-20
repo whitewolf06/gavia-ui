@@ -1,7 +1,7 @@
+import type { Plugin } from "vite";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { deflateRawSync } from "node:zlib";
-import type { Plugin } from "vite";
 import { gaviaRelease } from "../src/type-study/font";
 
 export const gaviaDownloadName = "Gavia-Sans-" + gaviaRelease + ".zip";

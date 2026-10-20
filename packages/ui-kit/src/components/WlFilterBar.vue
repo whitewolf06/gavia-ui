@@ -1,35 +1,91 @@
 <script setup lang="ts">
-import { useWlLocaleText } from "../config";
+/** WlFilterBar public component contract.
+ * @since 0.3.0
+ * @slot leading - Search or another control before filters.
+ * @slot default - Filter controls; scope { open, close, clear }.
+ * @slot actions - Desktop panel actions; scope { clear, close }.
+ * @slot footer - Mobile Drawer actions; scope { apply, clear, close }.
+ * @slot summary - Active filters or chips below the panel; scope { clear }.
+ */
 import {
   computed,
   onBeforeUnmount,
   onMounted,
   ref,
+  useAttrs
 } from "vue";
-import type { WlDensity } from "../types";
 import type { WlNoModelModifiers } from "../model-types";
 import type { WlFilterBarExpose, WlFilterBarSlots } from "../overlay-types";
-import { useWlId } from "../utils/useWlId";
+import type { WlPt } from "../pt-types";
+import type { WlDensity } from "../types";
+import { mergeWlAttrs, useWlLocaleText, useWlPt } from "../config";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
+import { useWlId } from "../utils/useWlId";
 import WlButton from "./WlButton.vue";
 import WlIcon from "./WlIcon.vue";
 import WlIconButton from "./WlIconButton.vue";
-const localeText = useWlLocaleText();
-
+defineOptions({ inheritAttrs: false });
 const props = withDefaults(
   defineProps<{
+    /**
+     * Number of active filters.
+     * @default 0
+     */
     activeCount?: number;
+    /** Modifier contract for open state; built-in modifiers are unsupported. */
     openModifiers?: WlNoModelModifiers;
+    /**
+     * Accessible name when an external label is not referenced.
+     * @default "Фильтры"
+     */
     ariaLabel?: string;
+    /**
+     * Accessible name of the filter panel's toggle action.
+     * @default "Фильтры"
+     */
     toggleLabel?: string;
+    /**
+     * Visible title of the mobile filter panel.
+     * @default "Фильтры"
+     */
     panelTitle?: string;
+    /**
+     * Accessible text for the clear action.
+     * @default "Сбросить"
+     */
     clearLabel?: string;
+    /**
+     * Accessible text for the apply action.
+     * @default "Применить"
+     */
     applyLabel?: string;
+    /**
+     * Accessible text for the close action.
+     * @default "Закрыть фильтры"
+     */
     closeLabel?: string;
+    /**
+     * Show the filter panel's clear action when applicable.
+     * @default true
+     */
     showClear?: boolean;
+    /**
+     * Show the filter panel's apply action.
+     * @default true
+     */
     showApply?: boolean;
+    /**
+     * Disable user interaction with this component.
+     * @default false
+     */
     disabled?: boolean;
+    /**
+     * Spacing density for this component family.
+     * @default "default"
+     */
     density?: WlDensity;
+    /** Attributes and callbacks for the component's documented pass-through sections. */
+    pt?: WlPt<"filterbar">;
   }>(),
   {
     activeCount: 0,
@@ -47,14 +103,28 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
+  /** Reset filter values in the application. */
   clear: [];
+  /** Apply current values in the application. */
   apply: [];
+  /** Emitted when the surface opens. */
   open: [];
+  /** Emitted when the surface closes. */
   close: [];
 }>();
 
+/** Whether the mobile filter panel is open.
+ * Paired with update:open.
+ * @default false
+ */
 const open = defineModel<boolean, never>("open", { default: false });
+
 const slots = defineSlots<WlFilterBarSlots>();
+
+const localeText = useWlLocaleText();
+const attrs = useAttrs();
+const section = useWlPt("filterbar", computed(() => props.pt));
+
 const panelId = `wl-filter-bar-panel-${useWlId()}`;
 const panelRef = ref<HTMLElement | null>(null);
 const isMobile = ref(false);
@@ -91,6 +161,8 @@ const { requestClose } = useOverlayLifecycle({
   visible: open,
   container: panelRef,
   enabled: () => !props.disabled,
+  modal: () => isMobile.value,
+  backdrop: () => panelRef.value?.parentElement?.querySelector<HTMLElement>(".wl-filter-bar__backdrop") ?? null,
   lockScroll: () => isMobile.value,
   onOpen: () => emit("open"),
   onClose: () => emit("close")
@@ -98,7 +170,8 @@ const { requestClose } = useOverlayLifecycle({
 
 function toggle(): void {
   if (props.disabled) return;
-  open.value ? requestClose() : requestOpen();
+  if (open.value) requestClose();
+  else requestOpen();
 }
 
 function clear(): void {
@@ -116,6 +189,7 @@ defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } sa
 
 <template>
   <section
+    v-bind="mergeWlAttrs(section('root'), attrs)"
     class="wl-filter-bar"
     :class="[
       open && 'is-open',
@@ -127,7 +201,7 @@ defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } sa
     :data-density="density"
     :data-open="open"
   >
-    <div class="wl-filter-bar__mobile-toggle">
+    <div v-bind="section('mobileToggle')" class="wl-filter-bar__mobile-toggle">
       <WlButton
         variant="secondary"
         size="sm"
@@ -145,60 +219,81 @@ defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } sa
     <div
       :id="panelId"
       ref="panelRef"
+      v-bind="section('panel')"
       class="wl-filter-bar__panel"
       :class="open && 'wl-filter-bar__panel--open'"
+      :role="isMobile ? 'dialog' : undefined"
+      :aria-modal="isMobile && open || undefined"
+      :aria-label="isMobile ? localeText('panelTitle', panelTitle, 'filters') : undefined"
       :aria-hidden="isMobile && !open ? 'true' : undefined"
       :inert="isMobile && !open"
       tabindex="-1"
     >
-      <div class="wl-filter-bar__mobile-head">
-        <strong class="wl-filter-bar__title">{{ localeText('panelTitle', panelTitle, 'filters') }}</strong>
+      <div v-bind="section('mobileHead')" class="wl-filter-bar__mobile-head">
+        <strong v-bind="section('title')" class="wl-filter-bar__title">{{ localeText('panelTitle', panelTitle, 'filters') }}</strong>
         <WlIconButton
           icon="x"
           size="sm"
           variant="ghost"
+          v-bind="section('closeButton')"
           :aria-label="localeText('closeLabel', closeLabel, 'closeFilters')"
           @click="requestClose"
         />
       </div>
 
-      <div class="wl-filter-bar__toolbar">
-        <div v-if="hasLeading" class="wl-filter-bar__leading">
-          <slot name="leading" />
+      <div v-bind="section('toolbar')" class="wl-filter-bar__toolbar">
+        <div v-if="hasLeading" v-bind="section('leading')" class="wl-filter-bar__leading">
+          <slot name="leading"></slot>
         </div>
 
-        <div class="wl-filter-bar__controls">
-          <slot :open="requestOpen" :close="requestClose" :clear="clear" />
+        <div v-bind="section('controls')" class="wl-filter-bar__controls">
+          <slot :open="requestOpen" :close="requestClose" :clear="clear"></slot>
         </div>
 
-        <div v-if="hasActions" class="wl-filter-bar__actions">
+        <div v-if="hasActions" v-bind="section('actions')" class="wl-filter-bar__actions">
           <slot name="actions" :clear="clear" :close="requestClose">
-            <WlButton v-if="showClear && count > 0" variant="ghost" size="sm" @click="clear">
+            <WlButton
+              v-if="showClear && count > 0"
+              variant="ghost"
+              size="sm"
+              @click="clear"
+            >
               {{ localeText('clearLabel', clearLabel, 'reset') }}
             </WlButton>
           </slot>
         </div>
       </div>
 
-      <div v-if="hasFooter" class="wl-filter-bar__footer">
-        <slot name="footer" :apply="apply" :clear="clear" :close="requestClose">
-          <WlButton class="wl-filter-bar__apply" variant="primary" size="sm" @click="apply">
+      <div v-if="hasFooter" v-bind="section('footer')" class="wl-filter-bar__footer">
+        <slot
+          name="footer"
+          :apply="apply"
+          :clear="clear"
+          :close="requestClose"
+        >
+          <WlButton
+            class="wl-filter-bar__apply"
+            variant="primary"
+            size="sm"
+            @click="apply"
+          >
             {{ localeText('applyLabel', applyLabel, 'apply') }}
           </WlButton>
         </slot>
       </div>
     </div>
 
-    <div v-if="hasSummary" class="wl-filter-bar__summary">
-      <slot name="summary" :clear="clear" />
+    <div v-if="hasSummary" v-bind="section('summary')" class="wl-filter-bar__summary">
+      <slot name="summary" :clear="clear"></slot>
     </div>
 
     <button
       v-if="open"
+      v-bind="section('backdrop')"
       type="button"
       class="wl-filter-bar__backdrop"
       :aria-label="localeText('closeLabel', closeLabel, 'closeFilters')"
       @click="requestClose"
-    />
+    ></button>
   </section>
 </template>

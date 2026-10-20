@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
+import { WlButton, WlDivider } from "gavia-ui";
 import { ref } from "vue";
-import { WlDivider, WlButton } from "../../../../../../packages/ui-kit/src";
 const selected = ref(false);
 </script>
+
 <template>
   <div class="wl-stack" data-space="lg">
     <p class="wl-text-body">{{ t("examples.a_simple_line_separates_independent_sections_of_content_0410") }}</p><WlDivider />

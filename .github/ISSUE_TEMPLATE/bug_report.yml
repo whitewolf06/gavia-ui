@@ -1,48 +1,48 @@
-name: Ошибка
-description: Сообщить об ошибке и показать, как её повторить
+name: Bug report
+description: Report a reproducible problem in Gavia UI
 title: "[Bug]: "
 body:
   - type: input
     id: gavia
     attributes:
-      label: Версия Gavia UI
-      placeholder: "0.11.0"
+      label: Gavia UI version
+      description: The exact installed version from your lockfile.
     validations:
       required: true
   - type: input
     id: vue
     attributes:
-      label: Версия Vue
+      label: Vue version
     validations:
       required: true
   - type: input
     id: browser
     attributes:
-      label: Браузер, версия и ОС
+      label: Browser, version and operating system
     validations:
       required: true
   - type: dropdown
     id: theme
     attributes:
-      label: Тема
+      label: Theme
       options:
         - Gavia
         - Gavia Dark
         - Classic
         - Classic Dark
         - Newspaper
-        - Собственная
+        - Custom
   - type: textarea
     id: reproduction
     attributes:
-      label: Как повторить ошибку?
-      description: Дайте ссылку на небольшой пример или приложите Vue SFC и опишите шаги. Уберите секреты и данные пользователей.
+      label: Minimal reproduction and steps
+      description: Link a small example or include a Vue SFC and exact steps. Remove secrets and personal data.
     validations:
       required: true
   - type: textarea
     id: behavior
     attributes:
-      label: Что ожидали и что произошло?
+      label: Expected and actual behavior
     validations:
       required: true
 

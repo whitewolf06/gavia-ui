@@ -1,0 +1,8 @@
+/* Inherit the complete Gavia theme; scope only the changed roles. */
+@layer wl.tokens {
+  [data-wl-theme="gavia"][data-wl-brand="my-brand"] {
+    --wl-accent: #245bd1;
+    --wl-text-accent: #245bd1;
+    --wl-focus-color: #245bd1;
+  }
+}

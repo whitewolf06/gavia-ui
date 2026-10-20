@@ -1,7 +1,6 @@
-import { russianPlaygroundUrl } from "./playground-url";
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import { expect, type Locator, type Page, test } from "@playwright/test";
+import { playgroundBasePath, playgroundRouteParams, russianPlaygroundUrl } from "./playground-url";
 import { expectMainViewCurrent, navigateMainView } from "./select-helpers";
-import { playgroundThemeOptions } from "../src/themes";
 
 const sectionNames = ["Главная", "Документация", "Шрифт", "Дизайн-система", "Подбор темы", "Changelog"] as const;
 
@@ -76,11 +75,31 @@ async function expectHeaderLayout(page: Page, header: Locator, mobile: boolean):
       && right(boxes.theme) <= boxes.language.x
       && [[boxes.searchIcon, boxes.search], [boxes.menuIcon, boxes.menu], [boxes.themeIcon, boxes.theme]]
         .every(([icon, control]) => near(centerX(icon!), centerX(control!)) && near(center(icon!), center(control!)))
-      && near(boxes.paddingLeft, 8) && near(boxes.paddingRight, 8)
-      && near(boxes.header.height, Math.max(boxes.minHeight,
-        44 + boxes.paddingTop + boxes.paddingBottom));
+        && near(boxes.paddingLeft, 8) && near(boxes.paddingRight, 8)
+        && near(boxes.header.height, Math.max(boxes.minHeight,
+          44 + boxes.paddingTop + boxes.paddingBottom));
   }, "Header keeps equal utility controls and one mobile row with centered icons and its menu on the right").toBe(true);
   await expectNoOverflow(page, header);
+}
+
+async function expectDesktopOverflowMenu(
+  page: Page, overflow: Locator, popup: Locator, count: number
+): Promise<void> {
+  if (count < sectionNames.length) {
+    await expect(overflow).toBeVisible();
+    await expect(overflow).toHaveAttribute("aria-haspopup", "menu");
+    await expect(overflow).toHaveAttribute("aria-controls", "pg-overflow-navigation");
+    await expect(overflow.locator(".wl-btn__label")).toHaveText("Ещё");
+    await overflow.click();
+    await expect(overflow).toHaveAttribute("aria-expanded", "true");
+    await expect(popup.getByRole("menu", { name: "Разделы Gavia UI", exact: true })).toBeVisible();
+    await expect(popup.getByRole("menuitem")).toHaveText(sectionNames.slice(count));
+    await expect(popup.getByRole("menuitem").first()).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(popup).toHaveCount(0);
+    await expect(overflow).toHaveAttribute("aria-expanded", "false");
+    await expect(overflow).toBeFocused();
+  } else await expect(overflow).toHaveCount(0);
 }
 
 test("responsive header preserves ordered desktop overflow, a compact mobile row and focus through dismissal and resize", async ({ page, baseURL }) => {
@@ -116,21 +135,7 @@ test("responsive header preserves ordered desktop overflow, a compact mobile row
     previousCount = count;
     measuredCounts.set(width, count);
     await expect(directButtons).toHaveText(sectionNames.slice(0, count));
-    if (count < sectionNames.length) {
-      await expect(overflow).toBeVisible();
-      await expect(overflow).toHaveAttribute("aria-haspopup", "menu");
-      await expect(overflow).toHaveAttribute("aria-controls", "pg-overflow-navigation");
-      await expect(overflow.locator(".wl-btn__label")).toHaveText("Ещё");
-      await overflow.click();
-      await expect(overflow).toHaveAttribute("aria-expanded", "true");
-      await expect(popup.getByRole("menu", { name: "Разделы Gavia UI", exact: true })).toBeVisible();
-      await expect(popup.getByRole("menuitem")).toHaveText(sectionNames.slice(count));
-      await expect(popup.getByRole("menuitem").first()).toBeFocused();
-      await page.keyboard.press("Escape");
-      await expect(popup).toHaveCount(0);
-      await expect(overflow).toHaveAttribute("aria-expanded", "false");
-      await expect(overflow).toBeFocused();
-    } else await expect(overflow).toHaveCount(0);
+    await expectDesktopOverflowMenu(page, overflow, popup, count);
     const row = await desktopNavigation.getByRole("button").evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
     expect(Math.max(...row) - Math.min(...row), "Visible desktop destinations stay in one row").toBeLessThanOrEqual(1);
   }
@@ -180,9 +185,9 @@ test("responsive header preserves ordered desktop overflow, a compact mobile row
   await overflow.press("ArrowDown");
   const firstLabel = (await items.first().textContent())!.trim();
   await items.first().press("Space");
-  const viewByLabel: Record<string, string> = { "Главная": "home", "Документация": "docs", "Шрифт": "font", "Дизайн-система": "system", "Подбор темы": "theme-builder", Changelog: "changelog" };
+  const viewByLabel: Record<string, string> = { Главная: "home", Документация: "docs", Шрифт: "font", "Дизайн-система": "system", "Подбор темы": "theme-builder", Changelog: "changelog" };
   expect(Object.keys(viewByLabel)).toContain(firstLabel);
-  await expect.poll(() => new URL(page.url()).searchParams.get("view") ?? "home").toBe(viewByLabel[firstLabel]);
+  await expect.poll(() => playgroundRouteParams(new URL(page.url())).get("view") ?? "home").toBe(viewByLabel[firstLabel]);
   await expectMainViewCurrent(page, firstLabel);
   await navigateMainView(page, "Главная");
   await expect(page.getByTestId("home-page")).toBeVisible();
@@ -230,8 +235,7 @@ test("responsive header preserves ordered desktop overflow, a compact mobile row
     await expect(desktopNavigation).toBeHidden();
     for (const control of [brand, search, theme, trigger, language]) await expect(control).toBeVisible();
     await expect(header.locator(".pg-kit-version"), "The compact brand hides its version at " + width + "px").toBeHidden();
-    if (width <= 360) await expect(brand.locator(".pg-title")).toBeHidden();
-    else await expect(brand.locator(".pg-title")).toBeVisible();
+    await expect(brand.locator(".pg-title")).toBeVisible({ visible: width > 360 });
     await expect(brand.locator(".pg-logo")).toBeVisible();
     await expect(search.locator(".wl-btn__label")).toBeHidden();
     await expect(search.locator('svg[data-icon="search"]')).toBeVisible();
@@ -262,9 +266,8 @@ test("responsive header preserves ordered desktop overflow, a compact mobile row
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", initialTheme!);
   await theme.press("ArrowDown");
   await theme.press("Home");
-  const catalogDarkThemeIndex = playgroundThemeOptions.findIndex((option) => option.value === "graphite");
-  expect(catalogDarkThemeIndex).toBeGreaterThanOrEqual(0);
-  const darkThemeIndex = catalogDarkThemeIndex + 1; // System precedes the five named themes.
+  const darkThemeIndex = Object.keys(themeLabels).indexOf("graphite");
+  expect(darkThemeIndex).toBeGreaterThanOrEqual(0);
   for (let index = 0; index < darkThemeIndex; index++) await theme.press("ArrowDown");
   await theme.press("Enter");
   await expect(themeOptions).toHaveCount(0);
@@ -282,7 +285,7 @@ test("responsive header preserves ordered desktop overflow, a compact mobile row
   await expectMenuClosed(menu, trigger);
   await expect.poll(() => {
     const url = new URL(page.url());
-    return { pathname: url.pathname, view: url.searchParams.get("view"), language: url.searchParams.get("lang") };
+    return { pathname: playgroundBasePath(url), view: playgroundRouteParams(url).get("view"), language: playgroundRouteParams(url).get("lang") };
   }).toEqual({ pathname: homeUrl.pathname, view: "docs", language: "ru" });
   await expect(trigger).toBeFocused();
   await trigger.click();
@@ -298,7 +301,6 @@ test("responsive header preserves ordered desktop overflow, a compact mobile row
   await expectHeaderLayout(page, header, false);
   expect(pageErrors, "Header navigation loads pages without runtime errors").toEqual([]);
 });
-
 
 test("System is the initial theme mode and explicit theme links survive refresh and navigation", async ({ page, baseURL }) => {
   const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
@@ -318,9 +320,9 @@ test("System is the initial theme mode and explicit theme links survive refresh 
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "gavia");
   await expect.poll(() => new URL(page.url()).searchParams.get("theme")).toBe("gavia");
   const selected = new URL(page.url());
-  expect(selected.pathname).toBe(url.pathname);
+  expect(playgroundBasePath(selected)).toBe(url.pathname);
   expect(selected.searchParams.get("theme")).toBe("gavia");
-  expect(selected.searchParams.get("section")).toBe("colors");
+  expect(playgroundRouteParams(selected).get("section")).toBe("colors");
   expect(selected.searchParams.get("example")).toBe("palette");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "gavia");

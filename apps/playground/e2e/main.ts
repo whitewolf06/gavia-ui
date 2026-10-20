@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import {
-  WlConfig, WlConfirmationService, WlToastService, WlTooltip, createWlPt, wlLocaleRu
+  createWlPt, WlConfig, WlConfirmationService, wlLocaleRu, WlToastService, WlTooltip
 } from "../../../packages/ui-kit/src";
 import Fixture from "./Fixture.vue";
 import "gavia-ui/styles/reset.css";

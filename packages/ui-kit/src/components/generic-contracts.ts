@@ -1,20 +1,22 @@
-import RawSelect from "./WlSelect.vue";
-import RawMultiSelect from "./WlMultiSelect.vue";
-import RawAutocomplete from "./WlAutocomplete.vue";
-import RawDatePicker from "./WlDatePicker.vue";
-import type { WlOptionValueResolver } from "../selection-types";
-import type { WlDatePickerSelectionMode, WlTabItem } from "../types";
-import type { WlAccordionItem, WlMenuItem, WlMenuItemBase, WlSidebarItem, WlSidebarGroup, WlCommandPaletteItem, WlCommandPaletteGroup } from "../navigation-types";
+import type { WlComboboxAttributes, WlDateInputAttributes, WlElementAttributes, WlInputAttributes, WlToggleAttributes } from "../native-types";
+import type { WlAccordionItem, WlCommandPaletteGroup, WlCommandPaletteItem, WlMenuItem, WlMenuItemBase, WlSidebarGroup, WlSidebarItem } from "../navigation-types";
+import type { WlOptionGroupChildrenResolver, WlOptionLeaf, WlOptionValueResolver } from "../selection-types";
 import type { WlTableRow } from "../table-types";
-import type { WlElementAttributes, WlComboboxAttributes, WlInputAttributes, WlDateInputAttributes, WlToggleAttributes } from "../native-types";
+import type { WlDatePickerSelectionMode, WlTabItem } from "../types";
+import RawAccordion from "./WlAccordion.vue";
+import RawAutocomplete from "./WlAutocomplete.vue";
+import RawCalendar from "./WlCalendar.vue";
+import RawCommandPalette from "./WlCommandPalette.vue";
+import RawContextMenu from "./WlContextMenu.vue";
+import RawDatePicker from "./WlDatePicker.vue";
+import RawMenu from "./WlMenu.vue";
+import RawMultiSelect from "./WlMultiSelect.vue";
 import RawRadio from "./WlRadio.vue";
 import RawSegmented from "./WlSegmented.vue";
-import RawTabs from "./WlTabs.vue";
-import RawTable from "./WlTable.vue";
-import RawAccordion from "./WlAccordion.vue";
-import RawMenu from "./WlMenu.vue";
+import RawSelect from "./WlSelect.vue";
 import RawSidebar from "./WlSidebar.vue";
-import RawCommandPalette from "./WlCommandPalette.vue";
+import RawTable from "./WlTable.vue";
+import RawTabs from "./WlTabs.vue";
 
 type WithNativeAttributes<Props, Attributes> = Props & Omit<Attributes, keyof Props>;
 
@@ -22,35 +24,50 @@ type WithNativeAttributes<Props, Attributes> = Props & Omit<Attributes, keyof Pr
 type VueArguments<T extends readonly unknown[]> = T extends readonly [unknown, ...infer Rest] ? Rest : never;
 
 /** A non-default generic must also be supplied at runtime; unions retain the required property. */
-type RuntimeGenericProp<Props, Key extends PropertyKey, Value, Default> = Props &
-  ([Value] extends [never] ? { [Prop in Key]: never }
+type RuntimeGenericProp<Props, Key extends PropertyKey, Value, Default> = Props
+  & ([Value] extends [never] ? { [Prop in Key]: never }
     : [Value] extends [Default] ? unknown : { [Prop in Key]: Value });
 
 // Vue tooling first infers options/resolvers through the component constructor, then checks
 // the exact $props. Keeping model inputs out of that inference prevents overload failures
 // from hiding a wrong v-model in template diagnostics. These signatures are type-only.
 type ModelInferenceProps<Props> = Omit<Props, "modelValue" | "onUpdate:modelValue"> & { modelValue?: unknown; "onUpdate:modelValue"?: unknown };
-type GenericInstance<Props, Result extends { __ctx?: unknown }> =
-  (NonNullable<Result["__ctx"]> extends { expose(exposed: infer Exposed): void } ? Exposed : {}) & {
-  $props: Props;
-  $slots: NonNullable<Result["__ctx"]> extends { slots: infer Slots } ? Slots : {};
-  $emit: NonNullable<Result["__ctx"]> extends { emit: infer Emit } ? Emit : never;
-};
+type GenericInstance<Props, Result extends { __ctx?: unknown }>
+  = (NonNullable<Result["__ctx"]> extends { expose(exposed: infer Exposed): void } ? Exposed : {}) & {
+    $props: Props;
+    $slots: NonNullable<Result["__ctx"]> extends { slots: infer Slots } ? Slots : {};
+    $emit: NonNullable<Result["__ctx"]> extends { emit: infer Emit } ? Emit : never;
+  };
 
-type SelectProps<TOption, TResolver extends WlOptionValueResolver<NoInfer<TOption>> | undefined> =
-  RuntimeGenericProp<WithNativeAttributes<Parameters<typeof RawSelect<TOption, TResolver>>[0], WlComboboxAttributes>, "optionValue", TResolver, undefined>;
+type SelectProps<TOption, TResolver extends WlOptionValueResolver<NoInfer<TOption>> | undefined>
+  = RuntimeGenericProp<WithNativeAttributes<Parameters<typeof RawSelect<TOption, TResolver>>[0], WlComboboxAttributes>, "optionValue", TResolver, undefined>;
+
+type GroupSelectProps<TSource, TResolver extends WlOptionValueResolver<NoInfer<WlOptionLeaf<TSource, TChildren>>> | undefined,
+  TChildren extends WlOptionGroupChildrenResolver<NoInfer<TSource>>>
+  = RuntimeGenericProp<WithNativeAttributes<Parameters<typeof RawSelect<TSource, TResolver, TChildren>>[0], WlComboboxAttributes>, "optionValue", TResolver, undefined>;
 
 type SelectContract = {
-  // The inference-only third parameter keeps explicit <Option, Resolver> instantiation
-  // on the general signature. The callback constraint supplies its option context.
-  new <TOption, TResolver extends (option: NoInfer<TOption>) => unknown, CallbackInference extends never>(
-    props: { options?: readonly TOption[]; optionValue: TResolver } & ModelInferenceProps<Omit<SelectProps<TOption, TResolver>, "options" | "optionValue">>
+  new<TSource, const TResolver extends WlOptionValueResolver<NoInfer<WlOptionLeaf<TSource, TChildren>>> | undefined = undefined,
+    const TChildren extends WlOptionGroupChildrenResolver<NoInfer<TSource>> = never>(
+    props: { options?: readonly TSource[]; optionGroupChildren: TChildren; optionValue?: TResolver }
+      & ModelInferenceProps<GroupSelectProps<TSource, TResolver, TChildren>>
+  ): GenericInstance<GroupSelectProps<TSource, TResolver, TChildren>, ReturnType<typeof RawSelect<TSource, TResolver, TChildren>>>;
+  // Inference-only parameters keep explicit two/three-argument instantiation on the
+  // general/grouped signatures. The callback constraint supplies its option context.
+  new<TOption, TResolver extends (option: NoInfer<TOption>) => unknown, TNoGroups extends undefined, CallbackInference extends never>(
+    props: { options?: readonly TOption[]; optionValue: TResolver; optionGroupChildren?: TNoGroups } & ModelInferenceProps<Omit<SelectProps<TOption, TResolver>, "options" | "optionValue">>
   ): GenericInstance<SelectProps<TOption, TResolver>, ReturnType<typeof RawSelect<TOption, TResolver>>>;
-  new <TOption = unknown, const TResolver extends WlOptionValueResolver<NoInfer<TOption>> | undefined = undefined>(
+  new<TOption = unknown, const TResolver extends WlOptionValueResolver<NoInfer<TOption>> | undefined = undefined>(
     props: { options?: readonly TOption[]; optionValue?: TResolver } & ModelInferenceProps<SelectProps<TOption, TResolver>>
   ): GenericInstance<SelectProps<TOption, TResolver>, ReturnType<typeof RawSelect<TOption, TResolver>>>;
-  <TOption, TResolver extends (option: NoInfer<TOption>) => unknown, CallbackInference extends never>(
-    props: { options?: readonly TOption[]; optionValue: TResolver } & Omit<SelectProps<TOption, TResolver>, "options" | "optionValue">,
+  <TSource, const TResolver extends WlOptionValueResolver<NoInfer<WlOptionLeaf<TSource, TChildren>>> | undefined = undefined,
+    const TChildren extends WlOptionGroupChildrenResolver<NoInfer<TSource>> = never>(
+    props: { options?: readonly TSource[]; optionGroupChildren: TChildren; optionValue?: TResolver }
+      & GroupSelectProps<TSource, TResolver, TChildren>,
+    ...vue: VueArguments<Parameters<typeof RawSelect<TSource, TResolver, TChildren>>>
+  ): ReturnType<typeof RawSelect<TSource, TResolver, TChildren>>;
+  <TOption, TResolver extends (option: NoInfer<TOption>) => unknown, TNoGroups extends undefined, CallbackInference extends never>(
+    props: { options?: readonly TOption[]; optionValue: TResolver; optionGroupChildren?: TNoGroups } & Omit<SelectProps<TOption, TResolver>, "options" | "optionValue">,
     ...vue: VueArguments<Parameters<typeof RawSelect<TOption, TResolver>>>
   ): ReturnType<typeof RawSelect<TOption, TResolver>>;
   <TOption = unknown, const TResolver extends WlOptionValueResolver<NoInfer<TOption>> | undefined = undefined>(
@@ -58,20 +75,38 @@ type SelectContract = {
     ...vue: VueArguments<Parameters<typeof RawSelect<TOption, TResolver>>>
   ): ReturnType<typeof RawSelect<TOption, TResolver>>;
 };
-type MultiSelectProps<TOption, TResolver extends WlOptionValueResolver<NoInfer<TOption>> | undefined> =
-  RuntimeGenericProp<WithNativeAttributes<Parameters<typeof RawMultiSelect<TOption, TResolver>>[0], WlComboboxAttributes>, "optionValue", TResolver, undefined>;
+type MultiSelectProps<TOption, TResolver extends WlOptionValueResolver<NoInfer<TOption>> | undefined>
+  = RuntimeGenericProp<WithNativeAttributes<Parameters<typeof RawMultiSelect<TOption, TResolver>>[0], WlComboboxAttributes>, "optionValue", TResolver, undefined>;
+
+type GroupMultiSelectProps<TSource, TResolver extends WlOptionValueResolver<NoInfer<WlOptionLeaf<TSource, TChildren>>> | undefined,
+  TChildren extends WlOptionGroupChildrenResolver<NoInfer<TSource>>>
+  = RuntimeGenericProp<WithNativeAttributes<Parameters<typeof RawMultiSelect<TSource, TResolver, TChildren>>[0], WlComboboxAttributes>, "optionValue", TResolver, undefined>;
 
 type MultiSelectContract = {
-  // The inference-only third parameter keeps explicit <Option, Resolver> instantiation
-  // on the general signature. The callback constraint supplies its option context.
-  new <TOption, TResolver extends (option: NoInfer<TOption>) => unknown, CallbackInference extends never>(
-    props: { options?: readonly TOption[]; optionValue: TResolver } & ModelInferenceProps<Omit<MultiSelectProps<TOption, TResolver>, "options" | "optionValue">>
+  new<TSource, const TResolver extends WlOptionValueResolver<NoInfer<WlOptionLeaf<TSource, TChildren>>> | undefined = undefined,
+    const TChildren extends WlOptionGroupChildrenResolver<NoInfer<TSource>> = never>(
+    props: { options?: readonly TSource[]; optionGroupChildren: TChildren; optionValue?: TResolver }
+      & ModelInferenceProps<GroupMultiSelectProps<TSource, TResolver, TChildren>>
+  ): GenericInstance<
+    GroupMultiSelectProps<TSource, TResolver, TChildren>,
+    ReturnType<typeof RawMultiSelect<TSource, TResolver, TChildren>>
+  >;
+  // Inference-only parameters keep explicit two/three-argument instantiation on the
+  // general/grouped signatures. The callback constraint supplies its option context.
+  new<TOption, TResolver extends (option: NoInfer<TOption>) => unknown, TNoGroups extends undefined, CallbackInference extends never>(
+    props: { options?: readonly TOption[]; optionValue: TResolver; optionGroupChildren?: TNoGroups } & ModelInferenceProps<Omit<MultiSelectProps<TOption, TResolver>, "options" | "optionValue">>
   ): GenericInstance<MultiSelectProps<TOption, TResolver>, ReturnType<typeof RawMultiSelect<TOption, TResolver>>>;
-  new <TOption = unknown, const TResolver extends WlOptionValueResolver<NoInfer<TOption>> | undefined = undefined>(
+  new<TOption = unknown, const TResolver extends WlOptionValueResolver<NoInfer<TOption>> | undefined = undefined>(
     props: { options?: readonly TOption[]; optionValue?: TResolver } & ModelInferenceProps<MultiSelectProps<TOption, TResolver>>
   ): GenericInstance<MultiSelectProps<TOption, TResolver>, ReturnType<typeof RawMultiSelect<TOption, TResolver>>>;
-  <TOption, TResolver extends (option: NoInfer<TOption>) => unknown, CallbackInference extends never>(
-    props: { options?: readonly TOption[]; optionValue: TResolver } & Omit<MultiSelectProps<TOption, TResolver>, "options" | "optionValue">,
+  <TSource, const TResolver extends WlOptionValueResolver<NoInfer<WlOptionLeaf<TSource, TChildren>>> | undefined = undefined,
+    const TChildren extends WlOptionGroupChildrenResolver<NoInfer<TSource>> = never>(
+    props: { options?: readonly TSource[]; optionGroupChildren: TChildren; optionValue?: TResolver }
+      & GroupMultiSelectProps<TSource, TResolver, TChildren>,
+    ...vue: VueArguments<Parameters<typeof RawMultiSelect<TSource, TResolver, TChildren>>>
+  ): ReturnType<typeof RawMultiSelect<TSource, TResolver, TChildren>>;
+  <TOption, TResolver extends (option: NoInfer<TOption>) => unknown, TNoGroups extends undefined, CallbackInference extends never>(
+    props: { options?: readonly TOption[]; optionValue: TResolver; optionGroupChildren?: TNoGroups } & Omit<MultiSelectProps<TOption, TResolver>, "options" | "optionValue">,
     ...vue: VueArguments<Parameters<typeof RawMultiSelect<TOption, TResolver>>>
   ): ReturnType<typeof RawMultiSelect<TOption, TResolver>>;
   <TOption = unknown, const TResolver extends WlOptionValueResolver<NoInfer<TOption>> | undefined = undefined>(
@@ -104,6 +139,22 @@ export const WlSelect = RawSelect as unknown as SelectContract;
 export const WlMultiSelect = RawMultiSelect as unknown as MultiSelectContract;
 export const WlAutocomplete = RawAutocomplete as AutocompleteContract;
 export const WlDatePicker = RawDatePicker as DatePickerContract;
+
+type CalendarProps<Multiple extends boolean> = RuntimeGenericProp<
+  WithNativeAttributes<Parameters<typeof RawCalendar<Multiple>>[0], WlElementAttributes>, "multiple", Multiple, false
+>;
+type CalendarContract = {
+  new<Multiple extends boolean = false>(
+    props: ModelInferenceProps<CalendarProps<Multiple>>
+  ): GenericInstance<CalendarProps<Multiple>, ReturnType<typeof RawCalendar<Multiple>>>;
+  new(props: ModelInferenceProps<CalendarProps<false>>): GenericInstance<CalendarProps<false>, ReturnType<typeof RawCalendar<false>>>;
+  <Multiple extends boolean = false>(
+    props: CalendarProps<Multiple>,
+    ...vue: VueArguments<Parameters<typeof RawCalendar<Multiple>>>
+  ): ReturnType<typeof RawCalendar<Multiple>>;
+  (props: CalendarProps<false>, ...vue: VueArguments<Parameters<typeof RawCalendar<false>>>): ReturnType<typeof RawCalendar<false>>;
+};
+export const WlCalendar = RawCalendar as unknown as CalendarContract;
 
 type RadioContract = <Value = unknown>(
   props: WithNativeAttributes<Parameters<typeof RawRadio<Value>>[0], WlToggleAttributes>,
@@ -141,13 +192,22 @@ type MenuContract = <Item extends WlMenuItemBase = WlMenuItem>(
 ) => ReturnType<typeof RawMenu<Item>>;
 export const WlMenu = RawMenu as MenuContract;
 
+type ContextMenuContract = <Item extends WlMenuItemBase = WlMenuItem>(
+  props: WithNativeAttributes<Parameters<typeof RawContextMenu<Item>>[0], WlElementAttributes>,
+  ...vue: VueArguments<Parameters<typeof RawContextMenu<Item>>>
+) => ReturnType<typeof RawContextMenu<Item>>;
+export const WlContextMenu = RawContextMenu as ContextMenuContract;
+
 type SidebarContract = <Item extends WlSidebarItem = WlSidebarItem, Group extends WlSidebarGroup<Item> = WlSidebarGroup<Item>>(
   props: WithNativeAttributes<Parameters<typeof RawSidebar<Item, Group>>[0], WlElementAttributes>,
   ...vue: VueArguments<Parameters<typeof RawSidebar<Item, Group>>>
 ) => ReturnType<typeof RawSidebar<Item, Group>>;
 export const WlSidebar = RawSidebar as SidebarContract;
 
-type CommandPaletteContract = <Item extends WlCommandPaletteItem = WlCommandPaletteItem, Group extends WlCommandPaletteGroup<Item> = WlCommandPaletteGroup<Item>>(
+type CommandPaletteContract = <
+  Item extends WlCommandPaletteItem = WlCommandPaletteItem,
+  Group extends WlCommandPaletteGroup<Item> = WlCommandPaletteGroup<Item>
+>(
   props: WithNativeAttributes<Parameters<typeof RawCommandPalette<Item, Group>>[0], WlElementAttributes>,
   ...vue: VueArguments<Parameters<typeof RawCommandPalette<Item, Group>>>
 ) => ReturnType<typeof RawCommandPalette<Item, Group>>;

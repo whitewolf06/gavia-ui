@@ -1,12 +1,25 @@
 <script setup lang="ts">
-import { useWlLocaleText } from "../config";
+/** WlSpinner public component contract.
+ * @since 0.1.0
+ */
 import type { WlSpinnerSize } from "../types";
-const localeText = useWlLocaleText();
-
+import { useWlLocaleText } from "../config";
 withDefaults(
   defineProps<{
+    /**
+     * Size.
+     * @default "md"
+     */
     size?: WlSpinnerSize;
+    /**
+     * Light variant for dark backgrounds.
+     * @default false
+     */
     light?: boolean;
+    /**
+     * aria-label.
+     * @default "Загрузка"
+     */
     label?: string;
   }>(),
   {
@@ -15,6 +28,9 @@ withDefaults(
     label: "Загрузка"
   }
 );
+
+const localeText = useWlLocaleText();
+
 </script>
 
 <template>
@@ -25,5 +41,5 @@ withDefaults(
     :aria-label="localeText('label', label, 'loading')"
     data-wl="spinner"
     :data-size="size"
-  />
+  ></span>
 </template>

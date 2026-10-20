@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "status": "proposal-no-assets-moved",
+  "preparedOn": "2026-10-17",
+  "assetRoot": "docs/brand",
+  "assets": [
+    {
+      "file": "gavia-forest-card-v1-prompt.txt",
+      "bytes": 1928,
+      "sha256": "fffe4c9bf032bd709353e898599bc21359494ffbd5a17cc33d3195f02b73ad17",
+      "role": "author-prompt",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-forest-card-v1.png",
+      "bytes": 1622682,
+      "sha256": "1299f569bdd67dac93b63015b57e177a15035a9ccf1c48e35ad07c07fe2e0af5",
+      "role": "authored-png-source",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-forest-card-v1.webp",
+      "bytes": 37028,
+      "sha256": "05c60730fe161ea9cd80f246d322fa1778892e4bbedd732e7be063328755efd8",
+      "role": "retained-final",
+      "archiveCandidate": false
+    },
+    {
+      "file": "gavia-lake-hero-v1-prompt.txt",
+      "bytes": 1982,
+      "sha256": "b8c41b9898954b43860060589279a88e05f5bff4f60f28fd86f9b87ca8b233f3",
+      "role": "author-prompt",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-lake-hero-v1.png",
+      "bytes": 2119191,
+      "sha256": "b05ccc3e99cf3fa491ca893e847a99a970698ee70d6fd1e0e419c035ddeeccb2",
+      "role": "historical-variant",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-lake-hero-v2-prompt.txt",
+      "bytes": 4326,
+      "sha256": "33a4be62bd03cc94417987bece4262e3c0573e57f25647bb3f16233935cc6380",
+      "role": "author-prompt",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-lake-hero-v2.png",
+      "bytes": 1848425,
+      "sha256": "8a8d4e0ae4567817606aa155b67f4775044dbf4030bba43c05b0cc2928b73412",
+      "role": "authored-png-source",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-lake-hero-v2.webp",
+      "bytes": 112136,
+      "sha256": "fb18fffc55b581ec32f4f294c0471e6fc1272b28ae3e3fa4124136c07e166b4d",
+      "role": "retained-final",
+      "archiveCandidate": false
+    },
+    {
+      "file": "gavia-lake-night-v1-prompt.txt",
+      "bytes": 2842,
+      "sha256": "4c9f47e29a98219940c22430c5718e9e4b511225d0ffe53db40bcb97570109f3",
+      "role": "author-prompt",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-lake-night-v1.png",
+      "bytes": 1828909,
+      "sha256": "3d0092bb5f351de87688f3d3ad0454595550e1d311dfe564ee0cf1fd7fe6a487",
+      "role": "historical-variant",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-lake-night-v1.webp",
+      "bytes": 102212,
+      "sha256": "9c2ed6aa4312921e441acbcc529dc9144b5201b568940fddddf75db893df95b7",
+      "role": "historical-variant",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-lake-night-v2-prompt.txt",
+      "bytes": 1655,
+      "sha256": "72fd4bb09cc945b59cabd0f17475e5d1edbf969c003a087864a4d265838f114c",
+      "role": "author-prompt",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-lake-night-v2.png",
+      "bytes": 1905295,
+      "sha256": "6cb8ae2ff1bebb85069dad78d0b34fbd64005779c822a2c6dd393d0126ebd5c3",
+      "role": "authored-png-source",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-lake-night-v2.webp",
+      "bytes": 110972,
+      "sha256": "3efe66901ea9c25fb819dada7e3cc7f940b8b137b5a898a28ff9f37a16f5dbf8",
+      "role": "retained-final",
+      "archiveCandidate": false
+    },
+    {
+      "file": "gavia-reeds-card-v1-prompt.txt",
+      "bytes": 2026,
+      "sha256": "8166d36b0f6f709f5d3d590424e7ea16a86b23c6413055a4fbd4f117e08ee9c6",
+      "role": "author-prompt",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-reeds-card-v1.png",
+      "bytes": 1549317,
+      "sha256": "3a0fd3a18de64feb1d27e6b850433c3c03bf2782563388921d810fa3b3760042",
+      "role": "authored-png-source",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-reeds-card-v1.webp",
+      "bytes": 40288,
+      "sha256": "7c13b77eabed1dceb3ebc4346eed398710cbfe62791347507e9a9f9e67384946",
+      "role": "retained-final",
+      "archiveCandidate": false
+    },
+    {
+      "file": "gavia-ui-logo-prompts.txt",
+      "bytes": 3072,
+      "sha256": "62ce86d38bb3fe23d8ce8438fdacf31f952c73c5aabbd0adfc97fafc653d6e63",
+      "role": "author-prompt",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-ui-logo-v1-preview.png",
+      "bytes": 756057,
+      "sha256": "9a8e664095d296c83b31fb0f6803a5ba37cf3539d6515f4463ee4701ffa71b2d",
+      "role": "historical-variant",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-ui-logo-v1.png",
+      "bytes": 339208,
+      "sha256": "6806d8750561a86253558a247f6f6dd89f8fc36868a254296f4a84b30c60d5e4",
+      "role": "historical-variant",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-ui-logo-v2-eye.png",
+      "bytes": 351481,
+      "sha256": "1c99b269dc2d13a4022a54c46cc5b27341ddbc4c3e1e9484f0bc7cdab7599744",
+      "role": "authored-png-source",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-ui-logo-v2-prompts.txt",
+      "bytes": 1334,
+      "sha256": "dafb8542763e4a495b7fe86f60d2ba9983bf2ae241ef6c9882f97735de1ed7da",
+      "role": "author-prompt",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-ui-mark-lake.svg",
+      "bytes": 17983,
+      "sha256": "875765d884ad8dcf1e527ae78b14980fa3bc7e2ea11a56ab2993c23707f34097",
+      "role": "retained-final",
+      "archiveCandidate": false
+    },
+    {
+      "file": "gavia-ui-mark-v2-prompt.txt",
+      "bytes": 800,
+      "sha256": "3f5b945d55bcd78ef5f8b2f48abd48035be0c7a72e3ee74beea302ce13a6c800",
+      "role": "author-prompt",
+      "archiveCandidate": true
+    },
+    {
+      "file": "gavia-ui-mark-v2.png",
+      "bytes": 410824,
+      "sha256": "019f89997145178e97f61bdcea687fc6dd348e4e48cf1212240784f9842f5b52",
+      "role": "authored-png-source",
+      "archiveCandidate": true
+    },
+    {
+      "file": "playground-button.svg",
+      "bytes": 428,
+      "sha256": "9a049b695c2da06f5430bf385425ad0cfd256e9ed89d3b44ec0f46bd66ceb50c",
+      "role": "retained-final",
+      "archiveCandidate": false
+    }
+  ]
+}

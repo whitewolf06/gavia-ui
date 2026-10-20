@@ -9,6 +9,55 @@ import {
 
 export const actionsManifest = /* @__PURE__ */ defineComponentManifest([
   {
+    name: "WlLink",
+    category: "actions",
+    description: "Accessible links with an optional application-provided router adapter.",
+    props: [
+      {
+        name: "href",
+        type: "string",
+        description: "Native URL."
+      },
+      {
+        name: "to",
+        type: "union",
+        description: "Router location passed unchanged to WlConfig.linkComponent."
+      },
+      {
+        name: "external",
+        type: "boolean",
+        default: false,
+        description: "Opens a new tab with a safe rel and an accessible hint."
+      },
+      {
+        name: "disabled",
+        type: "boolean",
+        default: false
+      },
+      {
+        name: "active",
+        type: "boolean",
+        default: false
+      },
+      {
+        name: "pt",
+        type: "object"
+      }
+    ],
+    slots: [
+      {
+        name: "default",
+        description: "Link content; scope { isActive, href }."
+      }
+    ],
+    emits: [
+      {
+        name: "click",
+        payload: "MouseEvent"
+      }
+    ]
+  },
+  {
     name: "WlButton",
     category: "actions",
     description: "Кнопка действия с вариантами, размерами и состоянием загрузки.",

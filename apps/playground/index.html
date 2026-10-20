@@ -24,9 +24,11 @@
         root.style.colorScheme = theme === "gavia-dark" || theme === "graphite" ? "dark" : "light";
         const supported = (value) => value === "en" || value === "ru";
         const requestedLocale = query.get("lang");
+        const pathLocale = /\/ru(?:\/|$)/.test(location.pathname) ? "ru"
+          : /\/(?:docs|system|font|theme-builder|changelog)(?:\/|$)/.test(location.pathname) ? "en" : null;
         const languages = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
         const detectedLocale = languages.map((language) => language.toLowerCase().split(/[-_]/)[0]).find(supported);
-        root.lang = supported(requestedLocale) ? requestedLocale : supported(savedLocale) ? savedLocale : detectedLocale || "en";
+        root.lang = supported(requestedLocale) ? requestedLocale : pathLocale || (supported(savedLocale) ? savedLocale : detectedLocale || "en");
       })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -39,10 +41,12 @@
     <meta property="og:description" content="Vue 3 components, TypeScript, shared design tokens, five themes and interactive documentation. Open-source UI library by Dmitry Gorbach." />
     <meta property="og:url" content="https://whitewolf06.github.io/gavia-ui/?lang=en" />
     <meta property="og:image" content="https://whitewolf06.github.io/gavia-ui/gavia-social.png" />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="640" />
     <meta property="og:image:alt" content="Gavia UI" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="ru_RU" />
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Gavia UI — Vue 3 components and design system" />
     <meta name="twitter:description" content="Vue 3 components, TypeScript, design tokens, five themes and interactive examples." />
     <meta name="twitter:image" content="https://whitewolf06.github.io/gavia-ui/gavia-social.png" />

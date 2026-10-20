@@ -7,6 +7,9 @@ export interface InputDocumentationExample {
 
 /** Additional examples accompany the shared controlled preview of each input. */
 export const inputDocumentationExamples: Record<string, InputDocumentationExample> = localizeDocumentation({
+  WlTagsInput: { title: "documentation.strings.generatedWlTagsInputTitle", description: "documentation.strings.generatedWlTagsInputDescription", sourceName: "inputs/WlTagsInput.vue" },
+  WlRadioGroup: { title: "documentation.strings.generatedWlRadioGroupTitle", description: "documentation.strings.generatedWlRadioGroupDescription", sourceName: "inputs/WlRadioGroup.vue" },
+  WlCheckboxGroup: { title: "documentation.strings.generatedWlCheckboxGroupTitle", description: "documentation.strings.generatedWlCheckboxGroupDescription", sourceName: "inputs/WlCheckboxGroup.vue" },
   WlTimePicker: { title: "documentation.strings.s0220", description: "documentation.strings.s0221", sourceName: "inputs/WlTimePicker.vue" },
   WlFilePicker: { title: "documentation.strings.s0222", description: "documentation.strings.s0223", sourceName: "inputs/WlFilePicker.vue" },
   WlInput: { title: "documentation.strings.s0224", description: "documentation.strings.s0225", sourceName: "inputs/WlInput.vue" },
@@ -28,6 +31,9 @@ export const inputDocumentationExamples: Record<string, InputDocumentationExampl
 
 /** Rules describe each component's actual DOM and model contract. */
 export const inputDocumentationAccessibility: Record<string, readonly string[]> = localizeDocumentation({
+  WlTagsInput: ["documentation.strings.generatedWlTagsInputA11yContent", "documentation.strings.generatedWlTagsInputA11ySemantics", "documentation.strings.generatedWlTagsInputA11yKeyboard"],
+  WlRadioGroup: ["documentation.strings.generatedWlRadioGroupA11yContent", "documentation.strings.generatedWlRadioGroupA11ySemantics", "documentation.strings.generatedWlRadioGroupA11yKeyboard"],
+  WlCheckboxGroup: ["documentation.strings.generatedWlCheckboxGroupA11yContent", "documentation.strings.generatedWlCheckboxGroupA11ySemantics", "documentation.strings.generatedWlCheckboxGroupA11yKeyboard"],
   WlTimePicker: [
     "documentation.strings.s0254",
     "documentation.strings.s0255",

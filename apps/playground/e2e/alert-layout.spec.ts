@@ -1,6 +1,6 @@
-import { russianPlaygroundUrl } from "./playground-url";
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
+import { russianPlaygroundUrl } from "./playground-url";
 import { chooseDropdownOption } from "./select-helpers";
 
 async function expectReadableAlert(page: Page, preview: Locator, alert: Locator): Promise<void> {
@@ -61,7 +61,7 @@ for (const theme of wlDesignThemes) {
       await expect(preview.locator(":scope > .wl-stack")).toBeVisible();
       await explorer.getByRole("checkbox", { name: "closable", exact: true }).check();
 
-      const alert = preview.getByRole("alert");
+      const alert = preview.getByRole("status");
       const action = alert.getByRole("button", { name: "Понятно", exact: true });
       const close = alert.getByRole("button", { name: "Закрыть", exact: true });
       const restore = preview.getByRole("button", { name: "Показать уведомление", exact: true });

@@ -1,82 +1,151 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../i18n";
+const props = defineProps<{ entry: WlComponentManifest }>();
 const { t } = usePlaygroundI18n();
+import type { WlComponentManifest } from "gavia-ui";
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
-import type { WlComponentManifest } from "../../../../packages/ui-kit/src/manifest";
-import ComponentExplorer from "../design-system/ComponentExplorer.vue";
+import { consumerSource } from "../design-system/code";
 import CodePanel from "../design-system/CodePanel.vue";
+import ComponentExplorer from "../design-system/ComponentExplorer.vue";
+import { useLazySource } from "../design-system/lazy-source";
+import { documentationPtSections } from "./components/pt-sections";
+import { componentDocumentationAccessibility, documentationExample } from "./components/registry";
 import DocumentationContract from "./DocumentationContract.vue";
 import DocumentationTabs, { type DocumentationTab } from "./DocumentationTabs.vue";
-import { componentDocumentationAccessibility, documentationExample } from "./components/registry";
-import { documentationPtSections } from "./components/pt-sections";
-const props = defineProps<{ entry: WlComponentManifest }>();
+import KeyboardContract from "./KeyboardContract.vue";
 const selectedTab = ref<DocumentationTab>("examples");
 const prefix = computed(() => "docs-" + props.entry.name.toLowerCase());
 const anchors = computed(() => Object.fromEntries(["props", "events", "slots", "pt"].map((key) => [key, prefix.value + "-" + key])));
 const extra = computed(() => documentationExample(props.entry.name));
+const { source: rawExtraSource, loading: sourceLoading, error: sourceError, reload: reloadSource }
+  = useLazySource(() => extra.value?.loadSource);
+const extraSource = computed(() => consumerSource(rawExtraSource.value));
 const accessibility = computed(() => componentDocumentationAccessibility[props.entry.name] ?? []);
 const ptSections = computed(() => documentationPtSections[props.entry.name]);
 const service = computed(() => props.entry.name === "WlToast" ? "WlToastService" : props.entry.name === "WlConfirmDialog" ? "WlConfirmationService" : undefined);
-const setupSource = computed(() => service.value ? [
-  'import { createApp } from "vue";',
-  'import { ' + service.value + ' } from "gavia-ui";',
-  'import App from "./App.vue";',
-  'const app = createApp(App);',
-  'app.use(' + service.value + ');',
-  'app.mount("#app");',
-  '',
-  t('documentation.strings.s0207') + props.entry.name + '.',
-  '// import { ' + props.entry.name + ' } from "gavia-ui";',
-  '// <' + props.entry.name + ' />'
-].join("\n") : "");
+const setupSource = computed(() => service.value
+  ? [
+      'import { createApp } from "vue";',
+      "import { " + service.value + ' } from "gavia-ui";',
+      'import App from "./App.vue";',
+      "const app = createApp(App);",
+      "app.use(" + service.value + ");",
+      'app.mount("#app");',
+      "",
+      t("documentation.strings.s0207") + props.entry.name + ".",
+      "// import { " + props.entry.name + ' } from "gavia-ui";',
+      "// <" + props.entry.name + " />"
+    ].join("\n")
+  : "");
 async function showHeading(id: string): Promise<void> {
   if (!id.startsWith(prefix.value + "-")) return;
-  selectedTab.value = id.endsWith("-accessibility") ? "accessibility"
+  selectedTab.value = id.endsWith("-accessibility")
+    ? "accessibility"
     : ["props", "events", "slots", "pt"].some((key) => id === prefix.value + "-" + key) ? "api" : "examples";
   await nextTick();
   document.getElementById(id)?.scrollIntoView({ block: "start" });
 }
 function restoreHeading(): void {
-  try { void showHeading(decodeURIComponent(window.location.hash.slice(1))); } catch { /* Ignore malformed URL fragments. */ }
+  try {
+    void showHeading(decodeURIComponent(window.location.hash.slice(1)));
+  } catch { /* Ignore malformed URL fragments. */ }
 }
-onMounted(() => { restoreHeading(); window.addEventListener("hashchange", restoreHeading); });
+onMounted(() => {
+  restoreHeading();
+  window.addEventListener("hashchange", restoreHeading);
+});
 onBeforeUnmount(() => window.removeEventListener("hashchange", restoreHeading));
 defineExpose({ showHeading });
 </script>
+
 <template>
   <div class="docs-component-guide wl-stack" data-space="xl" :data-docs-component="entry.name">
     <DocumentationTabs v-model="selectedTab" :id-prefix="prefix" :component-name="entry.name">
-      <template #outline><slot name="outline" /></template>
+      <template #outline><slot name="outline"></slot></template>
     </DocumentationTabs>
-    <div v-show="selectedTab === 'examples'" :id="prefix + '-panel-examples'" role="tabpanel" :aria-labelledby="prefix + '-tab-examples'" class="wl-stack" data-space="2xl">
+    <div
+      v-show="selectedTab === 'examples'"
+      :id="prefix + '-panel-examples'"
+      role="tabpanel"
+      :aria-labelledby="prefix + '-tab-examples'"
+      class="wl-stack"
+      data-space="2xl"
+    >
       <p class="wl-text-body wl-text-muted">{{ t('documentation.strings.s0208') }}</p>
       <ComponentExplorer :entry="entry" layout="documentation" :heading-prefix="prefix" />
-      <section v-if="extra?.component" class="wl-stack" data-space="lg" :aria-labelledby="prefix + '-examples'" :data-docs-component-extra="entry.name">
+      <section
+        v-if="extra?.component"
+        class="wl-stack"
+        data-space="lg"
+        :aria-labelledby="prefix + '-examples'"
+        :data-docs-component-extra="entry.name"
+      >
         <h2 :id="prefix + '-examples'" class="wl-text-heading">{{ extra.title }}</h2>
         <p class="wl-text-body wl-text-muted">{{ extra.description }}</p>
         <div class="docs-component-extra-preview" data-testid="docs-component-extra-preview"><component :is="extra.component" /></div>
-        <div data-testid="docs-component-extra-source"><CodePanel :source="extra.source" :title="t('documentation.strings.s0209')" /></div>
+        <div data-testid="docs-component-extra-source"><CodePanel
+          :source="extraSource"
+          :loading="sourceLoading"
+          :load-error="Boolean(sourceError)"
+          :title="t('documentation.strings.s0209')"
+          @retry="reloadSource"
+        /></div>
       </section>
       <p v-else class="docs-notice" role="alert">{{ t('documentation.strings.s0210') }}</p>
       <section v-if="service" class="wl-stack" data-space="lg">
         <h2 :id="prefix + '-service'" class="wl-text-heading">{{ t('documentation.strings.s0211') }}</h2>
-        <p class="wl-text-body">{{ t('documentation.strings.s0212') }} {{ service }} {{ t('documentation.strings.s0213') }} {{ entry.name }} {{ t('documentation.strings.s0214') }}</p>
+        <p class="wl-text-body">
+          {{ t('documentation.strings.s0212') }} {{ service }} {{ t('documentation.strings.s0213') }}
+          {{ entry.name }} {{ t('documentation.strings.s0214') }}
+        </p>
         <CodePanel :source="setupSource" :title="t('documentation.strings.s0215')" />
       </section>
     </div>
-    <div v-show="selectedTab === 'api'" :id="prefix + '-panel-api'" role="tabpanel" :aria-labelledby="prefix + '-tab-api'">
+    <div
+      v-show="selectedTab === 'api'"
+      :id="prefix + '-panel-api'"
+      role="tabpanel"
+      :aria-labelledby="prefix + '-tab-api'"
+    >
       <DocumentationContract :entry="entry" :anchors="anchors" :pt-sections="ptSections" />
     </div>
-    <div v-show="selectedTab === 'accessibility'" :id="prefix + '-panel-accessibility'" role="tabpanel" :aria-labelledby="prefix + '-tab-accessibility'" class="wl-stack" data-space="lg">
+    <div
+      v-show="selectedTab === 'accessibility'"
+      :id="prefix + '-panel-accessibility'"
+      role="tabpanel"
+      :aria-labelledby="prefix + '-tab-accessibility'"
+      class="wl-stack"
+      data-space="lg"
+    >
       <h2 :id="prefix + '-accessibility'" class="wl-text-heading">{{ t('documentation.strings.s0216') }}</h2>
       <ul class="docs-component-rules"><li v-for="rule in accessibility" :key="rule">{{ rule }}</li></ul>
-      <p v-if="entry.model" class="wl-text-body">{{ t('documentation.strings.s0217') }} <code>v-model{{ entry.model.name === 'modelValue' ? '' : ':' + entry.model.name }}</code>{{ t('documentation.strings.s0218') }}</p>
+      <KeyboardContract :name="entry.name" />
+      <p v-if="entry.model" class="wl-text-body">
+        {{ t('documentation.strings.s0217') }} <code>v-model{{
+          entry.model.name === 'modelValue' ? '' : ':' + entry.model.name
+        }}</code>{{ t('documentation.strings.s0218') }}
+      </p>
       <p class="wl-text-body wl-text-muted">{{ t('documentation.strings.s0219') }}</p>
     </div>
   </div>
 </template>
+
 <style>
 .docs-component-guide { min-width: 0; }
-.docs-component-extra-preview { min-width: 0; padding: var(--wl-space-lg); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg); overflow-wrap: anywhere; }
-.docs-component-rules { display: grid; gap: var(--wl-space-md); margin: 0; padding-inline-start: var(--wl-space-lg); font-size: var(--wl-type-body-size); line-height: var(--wl-type-body-line-height); }
+.docs-component-extra-preview {
+  min-width: 0;
+  padding: var(--wl-space-lg);
+  border: 1px solid var(--wl-border);
+  border-radius: var(--wl-corner-surface);
+  background: var(--wl-bg);
+  overflow-wrap: anywhere;
+}
+.docs-component-rules {
+  display: grid;
+  gap: var(--wl-space-md);
+  margin: 0;
+  padding-inline-start: var(--wl-space-lg);
+  font-size: var(--wl-type-body-size);
+  line-height: var(--wl-type-body-line-height);
+}
 </style>

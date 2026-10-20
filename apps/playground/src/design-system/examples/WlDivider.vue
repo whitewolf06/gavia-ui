@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
-const { t } = usePlaygroundI18n();
-import { WlDivider } from "../../../../../packages/ui-kit/src";
-type PreviewProps = Partial<InstanceType<typeof WlDivider>["$props"]>;
 defineProps<{ preview?: PreviewProps }>();
-
+const { t } = usePlaygroundI18n();
+import { WlDivider } from "gavia-ui";
+type PreviewProps = Partial<InstanceType<typeof WlDivider>["$props"]>;
 </script>
 
 <template>

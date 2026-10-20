@@ -1,13 +1,20 @@
-import { russianPlaygroundUrl } from "./playground-url";
-import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
-import { expect, test, type Page } from "@playwright/test";
-import { chooseShowcaseTheme, chooseDropdownOption } from "./select-helpers";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
+import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
+import { russianPlaygroundUrl } from "./playground-url";
+import { chooseDropdownOption, chooseShowcaseTheme } from "./select-helpers";
 
 const uiKitVersion = (JSON.parse(readFileSync(
   new URL("../../../packages/ui-kit/package.json", import.meta.url), "utf8"
 )) as { version: string }).version;
+
+async function captureChromiumArtifact(
+  target: Page | Locator, browserName: string, options: { path: string; fullPage?: boolean; style?: string }
+): Promise<void> {
+  if (browserName !== "chromium") return;
+  await target.screenshot(options);
+}
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/e2e.html");
@@ -45,7 +52,7 @@ test("selection controls keep values and keyboard behavior", async ({ page }) =>
   await page.getByRole("combobox", { name: "Множественный выбор" }).click();
   await page.getByRole("option", { name: "Альфа" }).click();
   await expect(page.locator("#multi-value")).toHaveText("a");
-  await page.getByRole("searchbox", { name: "Фильтр" }).fill("Бе");
+  await page.getByRole("combobox", { name: "Фильтр" }).fill("Бе");
   await page.locator(".wl-multiselect-overlay").getByRole("option", { name: "Бета" }).click();
   await expect(page.locator("#multi-value")).toHaveText("a,b");
   await page.getByRole("button", { name: "Удалить Альфа" }).click();
@@ -308,9 +315,7 @@ test("command palette search focus ring stays inside its panel in every theme", 
     expect(indicator.inputOutline, theme).toBe("none");
     expect(indicator.radius, theme).toBeGreaterThan(0);
     expect(indicator.contained, theme).toBe(true);
-    if (browserName === "chromium") {
-      await page.screenshot({ path: testInfo.outputPath(`palette-focus-${theme}.png`) });
-    }
+    await captureChromiumArtifact(page, browserName, { path: testInfo.outputPath(`palette-focus-${theme}.png`) });
   }
 
   await input.press("Tab");
@@ -366,9 +371,7 @@ test("all themes render without runtime errors", async ({ page, browserName }, t
     await page.evaluate((name) => document.documentElement.setAttribute("data-wl-theme", name), theme);
     await expect(page.locator(".wl-table__row")).toHaveCount(2);
     backgrounds.push(await page.locator("body").evaluate((element) => getComputedStyle(element).backgroundColor));
-    if (browserName === "chromium") {
-      await page.screenshot({ path: testInfo.outputPath(`fixture-${theme}.png`), fullPage: true });
-    }
+    await captureChromiumArtifact(page, browserName, { path: testInfo.outputPath(`fixture-${theme}.png`), fullPage: true });
   }
   expect(new Set(backgrounds).size).toBe(wlDesignThemes.length);
   expect(errors).toEqual([]);
@@ -391,7 +394,9 @@ test("the complete icon batch renders at three sizes in each theme", async ({ pa
         return { width: rect.width, height: rect.height, hasPath: Boolean(svg.querySelector("path, circle, rect, line, polyline, polygon, ellipse")) };
       }));
       expect(bounds.every((item) => item.width === size && item.height === size && item.hasPath)).toBe(true);
-      if (browserName === "chromium") await catalog.screenshot({ path: testInfo.outputPath(`icons-${theme}-${size}.png`), style: ".pg-top { visibility: hidden; }" });
+      await captureChromiumArtifact(catalog, browserName, {
+        path: testInfo.outputPath(`icons-${theme}-${size}.png`), style: ".pg-top { visibility: hidden; }"
+      });
     }
   }
 });

@@ -1,5 +1,5 @@
-import { russianPlaygroundUrl } from "./playground-url";
 import { expect, test } from "@playwright/test";
+import { russianPlaygroundUrl } from "./playground-url";
 
 test("home and documentation offer matching pnpm, npm and Bun installation commands", async ({ page }) => {
   await page.addInitScript(() => {
@@ -11,10 +11,9 @@ test("home and documentation offer matching pnpm, npm and Bun installation comma
   await page.goto(russianPlaygroundUrl("/?view=home&theme=gavia"));
   const install = page.getByTestId("project-npm-status");
   const managers = install.getByRole("group", { name: "Менеджер пакетов для установки" });
-  const packageVersion = await install.locator(".home-install-brand a").textContent();
   for (const [name, prefix] of [["pnpm", "pnpm add"], ["npm", "npm install"], ["Bun", "bun add"]]) {
     await managers.getByRole("button", { name, exact: true }).click();
-    const command = prefix + " " + packageVersion;
+    const command = prefix + " gavia-ui";
     await expect(page.getByTestId("home-install")).toHaveText(command);
     await expect(managers.getByRole("button", { name, exact: true })).toHaveAttribute("aria-pressed", "true");
     await install.getByRole("button", { name: "Копировать команду", exact: true }).click();
@@ -26,7 +25,9 @@ test("home and documentation offer matching pnpm, npm and Bun installation comma
   for (const [name, prefix] of [["pnpm", "pnpm add"], ["npm", "npm install"], ["Bun", "bun add"]]) {
     await docsManagers.getByRole("button", { name, exact: true }).click();
     const panel = page.locator("details").filter({ has: page.locator("summary", { hasText: "Установка через" }) });
-    await expect(panel.locator("code")).toHaveText(prefix + " " + packageVersion + " vue");
+    await expect(panel.locator("code")).toHaveText(prefix + " gavia-ui vue");
   }
-  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+  await expect.poll(() => page.evaluate(() =>
+    document.documentElement.scrollWidth - document.documentElement.clientWidth
+  )).toBeLessThanOrEqual(1);
 });

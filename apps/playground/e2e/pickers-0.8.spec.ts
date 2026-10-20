@@ -1,7 +1,14 @@
+import { expect, type Page, test } from "@playwright/test";
 import { russianPlaygroundUrl } from "./playground-url";
-import { expect, test, type Page } from "@playwright/test";
 
 async function selectPicker(page: Page, name: "WlTimePicker" | "WlFilePicker") {
+  if (name === "WlTimePicker") {
+    await page.goto("/e2e.html?review-time-picker");
+    const explorer = page.getByTestId("native-time-explorer");
+    const preview = page.getByTestId("native-time-preview");
+    await expect(preview).toBeVisible();
+    return { explorer, preview };
+  }
   await page.getByRole("combobox", { name: "Компонент", exact: true }).click();
   await page.getByRole("listbox").getByRole("option", { name, exact: true }).click();
   const explorer = page.getByTestId("ds-explorer");
@@ -15,6 +22,27 @@ test.beforeEach(async ({ page }) => {
   await page.goto(russianPlaygroundUrl("/?view=system"), { waitUntil: "domcontentloaded" });
   await expect(page.getByRole("heading", { name: "Дизайн-система" })).toBeVisible({ timeout: 15000 });
   await page.addStyleTag({ content: "html { scroll-behavior: auto; }" });
+});
+
+test("the documented twelve-hour picker respects quarter-hours and the lunch interval", async ({ page }) => {
+  await page.getByRole("combobox", { name: "Компонент", exact: true }).click();
+  await page.getByRole("listbox").getByRole("option", { name: "WlTimePicker", exact: true }).click();
+  const preview = page.getByTestId("ds-example-preview");
+  const input = preview.getByRole("textbox", { name: "Время встречи", exact: true });
+  const status = preview.getByRole("status");
+  const displayTime = (hour: number, minute: number) => new Intl.DateTimeFormat("ru-RU", { hour: "2-digit", minute: "2-digit", hour12: true }).format(new Date(2026, 9, 18, hour, minute));
+  await expect(input).toHaveValue(displayTime(9, 30));
+  await input.fill(displayTime(13, 15));
+  await expect(status).toHaveText("Выбрано: 13:15");
+  await input.fill(displayTime(12, 30));
+  await input.press("Enter");
+  await expect(input).toHaveValue(displayTime(13, 15));
+  await expect(status).toHaveText("Выбрано: 13:15");
+  await input.fill(displayTime(13, 16));
+  await input.press("Tab");
+  await expect(input).toHaveValue(displayTime(13, 15));
+  await input.fill("");
+  await expect(status).toHaveText("Выбрано: время не задано");
 });
 
 test("time picker uses its labelled native input for keyboard focus and minute precision", async ({ page }) => {
@@ -149,11 +177,15 @@ test("file picker resets native selection so the application can select the same
   const input = preview.locator('input[type="file"]');
   const sameFile = { name: "same.txt", mimeType: "text/plain", buffer: Buffer.from("same contents") };
 
-  for (let attempt = 0; attempt < 2; attempt++) {
-    if (attempt) {
+  const preparations = [
+    () => Promise.resolve(),
+    async () => {
       await preview.getByRole("button", { name: "Очистить список", exact: true }).click();
       await expect(preview.getByRole("status")).toHaveText("Можно выбрать файлы повторно.");
     }
+  ];
+  for (const prepare of preparations) {
+    await prepare();
     const opened = page.waitForEvent("filechooser");
     await button.click();
     await (await opened).setFiles(sameFile);

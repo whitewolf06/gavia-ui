@@ -1,6 +1,6 @@
-import { localizeDocumentation, documentationMetadataSource } from "./localize";
+import type { WlManifestCategory, WlPropManifest } from "gavia-ui";
 import type { DocumentationFoundationSection } from "../navigation";
-import type { WlManifestCategory, WlPropManifest } from "../../../../packages/ui-kit/src/manifest";
+import { documentationMetadataSource, localizeDocumentation } from "./localize";
 
 export const documentationCategories: readonly { key: WlManifestCategory; label: string }[] = localizeDocumentation([
   { key: "actions", label: "documentation.strings.s0109" },
@@ -14,7 +14,7 @@ export const documentationCategories: readonly { key: WlManifestCategory; label:
 ]);
 
 export function propType(prop: WlPropManifest): string {
-  return prop.values?.length ? prop.values.map((value) => JSON.stringify(value)).join(" | ") : prop.type;
+  return prop.typescriptType ?? (prop.values?.length ? prop.values.map((value) => JSON.stringify(value)).join(" | ") : prop.type);
 }
 
 export function propDefault(prop: WlPropManifest): string {
@@ -47,8 +47,8 @@ export const installationSource = [
   'createApp(App).mount("#app");'
 ].join("\n");
 
-export interface DocumentationHeading { id: string; title: string; }
-export interface DocumentationExampleHeading extends DocumentationHeading { name: string; description: string; }
+export interface DocumentationHeading { id: string; title: string }
+export interface DocumentationExampleHeading extends DocumentationHeading { name: string; description: string }
 export interface DocumentationFoundation {
   label: string;
   description: string;

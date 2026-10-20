@@ -1,7 +1,7 @@
+import { expect, type Locator, type Page } from "@playwright/test";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { inflateRawSync } from "node:zlib";
-import { expect, type Locator, type Page } from "@playwright/test";
 
 const fontRoot = new URL("../../../packages/ui-kit/fonts/gavia/", import.meta.url);
 
@@ -23,7 +23,7 @@ function unzip(bytes: Buffer): Map<string, Buffer> {
     expect(bytes.readUInt32LE(local)).toBe(0x04034b50);
     const start = local + 30 + bytes.readUInt16LE(local + 26) + bytes.readUInt16LE(local + 28);
     const file = inflateRawSync(bytes.subarray(start, start + compressedLength));
-    expect(file.length, name).toBe(rawLength);
+    expect(file, name).toHaveLength(rawLength);
     files.set(name, file);
     offset += 46 + nameLength + bytes.readUInt16LE(offset + 30) + bytes.readUInt16LE(offset + 32);
   }

@@ -1,12 +1,19 @@
-import { russianPlaygroundUrl } from "./playground-url";
-import { expect, test, type Page } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
+import { playgroundBasePath, playgroundRouteParams, russianPlaygroundUrl } from "./playground-url";
 import { chooseShowcaseTheme } from "./select-helpers";
 
 interface NativeTransitionEvidence {
   started: number;
   finished: number;
   keyboardDuringNative: number;
-  ready: Array<{ theme: string | undefined; marker: string | undefined; buttonDuration: string; imageDuration: string; symbolDuration: string; pointerTarget: boolean }>;
+  ready: Array<{
+    theme: string | undefined;
+    marker: string | undefined;
+    buttonDuration: string;
+    imageDuration: string;
+    symbolDuration: string;
+    pointerTarget: boolean;
+  }>;
 }
 interface HeroFadeEvidence {
   events: string[];
@@ -14,13 +21,17 @@ interface HeroFadeEvidence {
 }
 
 const runtimeErrors = new WeakMap<Page, string[]>();
+
 test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   const errors: string[] = [];
   runtimeErrors.set(page, errors);
   page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(message.text());
+  });
 });
+
 test.afterEach(async ({ page }) => {
   expect(runtimeErrors.get(page), "Theme switches do not produce runtime errors").toEqual([]);
 });
@@ -31,12 +42,14 @@ async function openHome(page: Page, baseURL: string | undefined, theme = "gavia"
   url.hash = "home-title";
   await page.goto(russianPlaygroundUrl(url.href), { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("home-page")).toBeVisible();
+  const initialLayers = theme === "gavia-dark" || theme === "graphite" ? 2 : 1;
+  await expect(page.locator(".home-hero-layer")).toHaveCount(initialLayers);
   await expect.poll(() => page.locator(".home-hero-layer").evaluateAll((elements) =>
-    elements.length === 2 && elements.every((element) => {
+    elements.length > 0 && elements.every((element) => {
       const image = element as HTMLImageElement;
       return image.complete && image.naturalWidth > 0;
     })
-  ), { message: "Both persistent hero images are loaded before the interaction" }).toBe(true);
+  ), { message: "Initial artwork is loaded; night artwork is deferred until the first dark theme" }).toBe(true);
   return url;
 }
 function heroToggle(page: Page) {
@@ -46,26 +59,35 @@ async function expectTheme(page: Page, theme: string, originalUrl: URL): Promise
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme);
   await expect.poll(() => {
     const current = new URL(page.url());
-    return { theme: current.searchParams.get("theme"), example: current.searchParams.get("example"), view: current.searchParams.get("view"), path: current.pathname, hash: current.hash };
+    return { theme: current.searchParams.get("theme"), example: current.searchParams.get("example"), view: playgroundRouteParams(current).get("view") ?? "home", path: playgroundBasePath(current), hash: current.hash };
   }).toEqual({ theme, example: "theme-switch", view: "home", path: originalUrl.pathname, hash: originalUrl.hash });
 }
 async function expectTransitionCleared(page: Page): Promise<void> {
   await expect.poll(() => page.locator("html").getAttribute("data-wl-playground-theme-transition")).toBeNull();
 }
-async function instrumentNativeTransitions(page: Page): Promise<void> {
-  await page.addInitScript(() => {
+async function instrumentNativeTransitions(page: Page, holdUntilCancelled: number[] = []): Promise<void> {
+  await page.addInitScript((heldTransitions: number[]) => {
     const target = window as typeof window & { themeNativeEvidence: NativeTransitionEvidence };
     target.themeNativeEvidence = { started: 0, finished: 0, keyboardDuringNative: 0, ready: [] };
     document.addEventListener("keydown", (event) => {
-      if ((event.key === "Enter" || event.key === " ") &&
-        document.documentElement.dataset.wlPlaygroundThemeTransition === "native" &&
-        event.target instanceof HTMLButtonElement && event.target.classList.contains("home-theme-toggle")) {
+      if ((event.key === "Enter" || event.key === " ")
+        && document.documentElement.dataset.wlPlaygroundThemeTransition === "native"
+        && event.target instanceof HTMLButtonElement && event.target.classList.contains("home-theme-toggle")) {
         target.themeNativeEvidence.keyboardDuringNative += 1;
       }
     });
     const native = document.startViewTransition?.bind(document);
     if (!native) return;
+    const holdStyle = document.createElement("style");
+    holdStyle.textContent = `
+      :root[data-wl-playground-theme-transition="native"]::view-transition-new(root) {
+        animation-play-state: paused;
+      }
+    `;
     document.startViewTransition = ((update: () => Promise<void>) => {
+      // Keep cancellation cases active across focus/input IPCs without replacing the native lifecycle.
+      if (heldTransitions.includes(target.themeNativeEvidence.started + 1)) document.head.append(holdStyle);
+      else holdStyle.remove();
       const transition = native(update);
       target.themeNativeEvidence.started += 1;
       void transition.ready.then(() => {
@@ -85,10 +107,12 @@ async function instrumentNativeTransitions(page: Page): Promise<void> {
           pointerTarget: button.contains(hit)
         });
       }, () => undefined);
-      void transition.finished.then(() => { target.themeNativeEvidence.finished += 1; }, () => undefined);
+      void transition.finished.then(() => {
+        target.themeNativeEvidence.finished += 1;
+      }, () => undefined);
       return transition;
     }) as typeof document.startViewTransition;
-  });
+  }, holdUntilCancelled);
 }
 async function nativeEvidence(page: Page): Promise<NativeTransitionEvidence> {
   return page.evaluate(() => (window as typeof window & { themeNativeEvidence: NativeTransitionEvidence }).themeNativeEvidence);
@@ -178,8 +202,11 @@ test("native theme snapshots suppress inner transitions and restore physical inp
     stopInitialScrollMotion();
     document.addEventListener("readystatechange", stopInitialScrollMotion, { once: true });
   });
-  await instrumentNativeTransitions(page);
+  // Physical Enter cancels snapshot 1; the rapid-click chain cancels snapshot 3.
+  await instrumentNativeTransitions(page, [1, 3]);
   const url = await openHome(page, baseURL);
+  // This scenario requires the real native API; unsupported engines retain their configured skip.
+  // eslint-disable-next-line playwright/no-skipped-test
   test.skip(!await page.evaluate(() => typeof document.startViewTransition === "function"), "This browser uses the separately tested CSS fallback");
   await page.evaluate(() => document.fonts.ready);
   const toggle = heroToggle(page);
@@ -247,6 +274,7 @@ test("native theme snapshots suppress inner transitions and restore physical inp
     getComputedStyle(element).transitionDuration.split(",").some((duration) => Number.parseFloat(duration) > 0)
   ), { message: "Normal component interactions regain their own transitions" }).toBe(true);
 });
+
 test("reduced motion updates theme, URL and focus without starting a native animation", async ({ page, baseURL }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await instrumentNativeTransitions(page);
@@ -274,26 +302,39 @@ test("without View Transition API only the persistent hero artwork fades and the
   const url = await openHome(page, baseURL);
   await page.evaluate(() => {
     const target = window as typeof window & { themeHeroFade: HeroFadeEvidence; themeHeroImages: Element[] };
-    const night = document.querySelector(".home-hero-layer--night")!;
     target.themeHeroImages = [...document.querySelectorAll(".home-hero-layer")];
     target.themeHeroFade = { events: [], intermediate: false };
-    let sampling = false;
-    let stopAt = 0;
-    const sample = () => {
-      const opacity = Number.parseFloat(getComputedStyle(night).opacity);
-      if (opacity > 0 && opacity < 1) target.themeHeroFade.intermediate = true;
-      if (sampling && performance.now() < stopAt) requestAnimationFrame(sample);
+    const observeNight = (night: Element) => {
+      if (!target.themeHeroImages.includes(night)) target.themeHeroImages.push(night);
+      let sampling = false;
+      let stopAt = 0;
+      const sample = () => {
+        const opacity = Number.parseFloat(getComputedStyle(night).opacity);
+        if (opacity > 0 && opacity < 1) target.themeHeroFade.intermediate = true;
+        if (sampling && performance.now() < stopAt) requestAnimationFrame(sample);
+      };
+      for (const name of ["transitionrun", "transitionend", "transitioncancel"]) {
+        night.addEventListener(name, (event) => {
+          if ((event as TransitionEvent).propertyName !== "opacity") return;
+          target.themeHeroFade.events.push(event.type);
+          sampling = event.type === "transitionrun";
+          if (sampling) {
+            stopAt = performance.now() + 2000;
+            requestAnimationFrame(sample);
+          }
+        });
+      }
     };
-    for (const name of ["transitionrun", "transitionend", "transitioncancel"]) {
-      night.addEventListener(name, (event) => {
-        if ((event as TransitionEvent).propertyName !== "opacity") return;
-        target.themeHeroFade.events.push(event.type);
-        sampling = event.type === "transitionrun";
-        if (sampling) {
-          stopAt = performance.now() + 2000;
-          requestAnimationFrame(sample);
-        }
+    const night = document.querySelector(".home-hero-layer--night");
+    if (night) observeNight(night);
+    else {
+      const observer = new MutationObserver(() => {
+        const mounted = document.querySelector(".home-hero-layer--night");
+        if (!mounted) return;
+        observeNight(mounted);
+        observer.disconnect();
       });
+      observer.observe(document.querySelector(".home-hero")!, { childList: true });
     }
   });
   const toggle = heroToggle(page);
@@ -307,6 +348,7 @@ test("without View Transition API only the persistent hero artwork fades and the
   const fade = await page.evaluate(() => (window as typeof window & { themeHeroFade: HeroFadeEvidence }).themeHeroFade);
   expect(fade.intermediate, "Real animation frames include intermediate image opacity").toBe(true);
   await expect(page.locator(".home-hero-layer--night")).toHaveCSS("opacity", "1");
+  await expect(page.locator(".home-hero-layer")).toHaveCount(2);
   expect(await page.evaluate(() => {
     const original = (window as typeof window & { themeHeroImages: Element[] }).themeHeroImages;
     return [...document.querySelectorAll(".home-hero-layer")].every((image, index) => image === original[index]);
@@ -316,5 +358,10 @@ test("without View Transition API only the persistent hero artwork fades and the
   await expectTheme(page, "gavia", url);
   await expectTransitionCleared(page);
   await expect(page.locator(".home-hero-layer--night")).toHaveCSS("opacity", "0");
+  await expect(page.locator(".home-hero-layer")).toHaveCount(2);
+  expect(await page.evaluate(() => {
+    const original = (window as typeof window & { themeHeroImages: Element[] }).themeHeroImages;
+    return [...document.querySelectorAll(".home-hero-layer")].every((image, index) => image === original[index]);
+  }), "Returning to light preserves both loaded artwork nodes").toBe(true);
   await expect(toggle).toBeFocused();
 });

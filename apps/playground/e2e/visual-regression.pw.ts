@@ -1,5 +1,5 @@
+import { expect, type Locator, test } from "@playwright/test";
 import { russianPlaygroundUrl } from "./playground-url";
-import { expect, test, type Locator } from "@playwright/test";
 import { chooseDropdownOption, chooseShowcaseTheme } from "./select-helpers";
 const themes = [{ name: "white", label: "Classic" }, { name: "graphite", label: "Classic Dark" }, { name: "newspaper", label: "Newspaper" }];
 // Keep a configured production subpath when comparing the same built showcase.
@@ -10,6 +10,55 @@ async function review(target: Locator, name: string): Promise<void> {
     await target.screenshot({ path: test.info().outputPath(`review-${name}`), animations: "disabled", caret: "hide", scale: "css" });
   }
 }
+
+async function captureLongContent(target: Locator, name: string): Promise<void> {
+  await target.scrollIntoViewIfNeeded();
+  const page = target.page();
+  const viewport = page.viewportSize();
+  const bounds = await target.boundingBox();
+  // Fit the tall example without changing its responsive width. Automatic
+  // beyond-viewport crops can include glyph rows from the preceding section.
+  if (viewport && bounds && bounds.height + 200 > viewport.height) {
+    await page.setViewportSize({ width: viewport.width, height: Math.ceil(bounds.height) + 200 });
+  }
+  try {
+    await target.evaluate((element) => {
+      window.scrollTo({ top: element.getBoundingClientRect().top + window.scrollY, behavior: "instant" });
+    });
+    await page.evaluate(async () => {
+      for (let frame = 0; frame < 3; frame += 1) {
+        await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      }
+    });
+    await expect.soft(target).toHaveScreenshot(name);
+    await review(target, name);
+  } finally {
+    if (viewport) await page.setViewportSize(viewport);
+  }
+}
+
+async function alignMobileAttachmentCrop(preview: Locator, project: string, recipe: string): Promise<string | undefined> {
+  if (project !== "mobile" || recipe !== "AttachmentUpload") return undefined;
+  await preview.scrollIntoViewIfNeeded();
+  // This crop checks the drawing, independently of the catalog's position.
+  // A fractional document origin encloses one extra bottom-border pixel.
+  // Preserve dimensions/styles and align only its screenshot raster origin.
+  return await preview.evaluate((element: HTMLElement) => {
+    const rect = element.getBoundingClientRect();
+    const original = element.style.transform;
+    const documentTop = rect.top + window.scrollY;
+    element.style.transform = `translateY(${Math.round(documentTop) - documentTop}px)`;
+    return original;
+  });
+}
+
+async function restoreCropTransform(preview: Locator, transform: string | undefined): Promise<void> {
+  if (transform === undefined) return;
+  await preview.evaluate((element: HTMLElement, value) => {
+    element.style.transform = value;
+  }, transform);
+}
+
 test.beforeEach(async ({ page }) => {
   // Fixed time and locally available fonts prevent unrelated machine/date changes.
   await page.clock.setFixedTime(new Date("2026-10-01T12:00:00Z"));
@@ -17,9 +66,10 @@ test.beforeEach(async ({ page }) => {
   await page.getByRole("heading", { name: "Дизайн-система" }).waitFor({ state: "visible" });
   // Capture the example itself: the showcase header must not cover tall mobile screens.
   // Functional tests retain the actual sticky header and normal viewport.
-  await page.addStyleTag({ content: 'html { --wl-font: Arial, sans-serif; --wl-mono: Consolas, monospace; scroll-behavior: auto; } .pg-top { position: static; }' });
+  await page.addStyleTag({ content: "html { --wl-font: Arial, sans-serif; --wl-mono: Consolas, monospace; scroll-behavior: auto; } .pg-top { position: static; }" });
   await page.evaluate(() => document.fonts.ready);
 });
+
 for (const theme of themes) {
   test(`${theme.name}: six complete screens`, async ({ page }, testInfo) => {
     await chooseShowcaseTheme(page, theme.label);
@@ -29,31 +79,18 @@ for (const theme of themes) {
       await expect(preview).toHaveAttribute("data-recipe", id);
       await expect(preview.locator(":scope > :first-child")).toBeVisible();
       await page.mouse.move(0, 0);
-      let transform: string | undefined;
-      if (testInfo.project.name === "mobile" && id === "AttachmentUpload") {
-        await preview.scrollIntoViewIfNeeded();
-        // This crop checks the drawing, independently of the catalog's position.
-        // A fractional document origin encloses one extra bottom-border pixel.
-        // Preserve dimensions/styles and align only its screenshot raster origin.
-        transform = await preview.evaluate((element: HTMLElement) => {
-          const rect = element.getBoundingClientRect();
-          const original = element.style.transform;
-          const documentTop = rect.top + window.scrollY;
-          element.style.transform = `translateY(${Math.round(documentTop) - documentTop}px)`;
-          return original;
-        });
-      }
+      const transform = await alignMobileAttachmentCrop(preview, testInfo.project.name, id);
       try {
         // Compare the entire recipe batch so one difference cannot hide later screens.
         await expect.soft(preview).toHaveScreenshot(`${theme.name}-recipe-${id}.png`);
         await review(preview, `${theme.name}-recipe-${id}.png`);
       } finally {
-        if (transform !== undefined) await preview.evaluate((element: HTMLElement, value) => { element.style.transform = value; }, transform);
+        await restoreCropTransform(preview, transform);
       }
     }
-    await expect(page.getByTestId("ds-stress")).toHaveScreenshot(`${theme.name}-long-content.png`);
-    await review(page.getByTestId("ds-stress"), `${theme.name}-long-content.png`);
+    await captureLongContent(page.getByTestId("ds-stress"), `${theme.name}-long-content.png`);
   });
+
   test(`${theme.name}: interactive states and overlay focus`, async ({ page }) => {
     await chooseShowcaseTheme(page, theme.label);
     const explorer = page.getByTestId("ds-explorer");
@@ -70,12 +107,12 @@ for (const theme of themes) {
     await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: variant", exact: true }), "primary");
     await explorer.getByRole("button", { name: "Проверить фокус" }).press("Enter");
     await expect(preview.getByRole("button", { name: "Добавить" })).toBeFocused();
-    await expect(preview).toHaveScreenshot(`${theme.name}-button-focus.png`);
+    await expect.soft(preview).toHaveScreenshot(`${theme.name}-button-focus.png`);
     await review(preview, `${theme.name}-button-focus.png`);
     await select("WlInput");
     await explorer.getByRole("checkbox", { name: "invalid", exact: true }).check();
     await page.mouse.move(0, 0);
-    await expect(preview).toHaveScreenshot(`${theme.name}-input-invalid.png`);
+    await expect.soft(preview).toHaveScreenshot(`${theme.name}-input-invalid.png`);
     await review(preview, `${theme.name}-input-invalid.png`);
     await select("WlSelect");
     await preview.getByRole("combobox", { name: "Область" }).press("Enter");
@@ -92,23 +129,24 @@ for (const theme of themes) {
         element.style[axis] = `${Math.round(Number.parseFloat(element.style[axis]))}px`;
       }
     });
-    await expect(page.getByRole("listbox")).toHaveScreenshot(`${theme.name}-select-open.png`);
+    await page.mouse.move(0, 0);
+    await expect.soft(page.getByRole("listbox")).toHaveScreenshot(`${theme.name}-select-open.png`);
     await review(page.getByRole("listbox"), `${theme.name}-select-open.png`);
     await page.keyboard.press("Escape");
     await select("WlDialog");
     await preview.getByRole("button", { name: "Открыть диалог" }).press("Enter");
-    await expect(page.getByRole("dialog", { name: "Сведения о материале" })).toHaveScreenshot(`${theme.name}-dialog.png`);
+    await expect.soft(page.getByRole("dialog", { name: "Сведения о материале" })).toHaveScreenshot(`${theme.name}-dialog.png`);
     await review(page.getByRole("dialog", { name: "Сведения о материале" }), `${theme.name}-dialog.png`);
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog", { name: "Сведения о материале" })).toHaveCount(0);
     await select("WlDrawer");
     await preview.getByRole("button", { name: "Открыть панель" }).press("Enter");
-    await expect(page.getByRole("dialog", { name: "О материале" })).toHaveScreenshot(`${theme.name}-drawer.png`);
+    await expect.soft(page.getByRole("dialog", { name: "О материале" })).toHaveScreenshot(`${theme.name}-drawer.png`);
     await review(page.getByRole("dialog", { name: "О материале" }), `${theme.name}-drawer.png`);
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog", { name: "О материале" })).toHaveCount(0);
     await page.locator(".pg-top").getByRole("button", { name: /^Поиск/ }).press("Enter");
-    await expect(page.locator(".wl-command-palette")).toHaveScreenshot(`${theme.name}-palette-focus.png`);
+    await expect.soft(page.locator(".wl-command-palette")).toHaveScreenshot(`${theme.name}-palette-focus.png`);
     await review(page.locator(".wl-command-palette"), `${theme.name}-palette-focus.png`);
   });
 }

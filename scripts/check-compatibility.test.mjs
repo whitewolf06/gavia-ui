@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
-import { join, resolve, dirname, relative, isAbsolute } from "node:path";
-import { fileURLToPath } from "node:url";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 import { capturedConsumer, compilerOptions, subset, typeSource } from "./check-compatibility.mjs";
 import { loadMigrationPolicy, normalizedHash } from "./compatibility-migration.mjs";
 

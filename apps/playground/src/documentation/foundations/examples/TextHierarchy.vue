@@ -2,6 +2,7 @@
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
 </script>
+
 <template>
   <article class="hierarchy-example wl-stack" data-space="lg">
     <header class="wl-stack" data-space="sm">
@@ -11,12 +12,20 @@ const { t } = usePlaygroundI18n();
     </header>
     <section class="wl-stack" data-space="sm">
       <h4 class="wl-text-subheading">{{ t("examples.project_access_0248") }}</h4>
-      <p class="wl-text-body">{{ t("examples.members_receive_permissions_through_a_group_0992") }} <code class="wl-text-code">project-editors</code>.</p>
+      <p class="wl-text-body">
+        {{ t("examples.members_receive_permissions_through_a_group_0992") }} <code class="wl-text-code">project-editors</code>.
+      </p>
       <p class="wl-text-small wl-text-muted">{{ t("examples.changing_permissions_does_not_affect_previously_saved_material_0993") }}</p>
     </section>
     <dl class="hierarchy-example-meta">
-      <div><dt class="wl-text-label">{{ t("examples.owner_0624") }}</dt><dd class="wl-text-body">{{ t("examples.anna_petrova_0994") }}</dd></div>
-      <div><dt class="wl-text-label">{{ t("examples.status_0067") }}</dt><dd class="wl-text-body">{{ t("examples.ready_for_review_0995") }}</dd></div>
+      <div>
+        <dt class="wl-text-label">{{ t("examples.owner_0624") }}</dt>
+        <dd class="wl-text-body">{{ t("examples.anna_petrova_0994") }}</dd>
+      </div>
+      <div>
+        <dt class="wl-text-label">{{ t("examples.status_0067") }}</dt>
+        <dd class="wl-text-body">{{ t("examples.ready_for_review_0995") }}</dd>
+      </div>
     </dl>
   </article>
 </template>
