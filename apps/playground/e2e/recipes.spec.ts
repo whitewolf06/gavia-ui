@@ -1,8 +1,6 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
-import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
-import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import { russianPlaygroundUrl } from "./playground-url";
-import { chooseDropdownOption, chooseShowcaseTheme, copyCodePanel } from "./select-helpers";
+import { chooseDropdownOption, copyCodePanel } from "./select-helpers";
 
 async function selectComponent(page: Page, name: string): Promise<void> {
   await page.getByRole("combobox", { name: "Компонент", exact: true }).click();
@@ -19,31 +17,14 @@ async function recipe(page: Page, id: string) {
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(russianPlaygroundUrl("/?view=system"), { waitUntil: "domcontentloaded" });
+  await page.goto(russianPlaygroundUrl("/?view=system&theme=gavia"), { waitUntil: "domcontentloaded" });
   await page.getByRole("heading", { name: "Дизайн-система" }).waitFor({ state: "visible" });
   // Workflow assertions target settled controls; overlay motion has its own suite.
   await page.addStyleTag({ content: "html { scroll-behavior: auto; }" });
 });
 
-for (const category of new Set(wlManifest.map((entry) => entry.category))) {
-  test(`all ${category} components have a live example and public copyable source`, async ({ page }) => {
-    const entries = wlManifest.filter((item) => item.category === category);
-    // Each lazy example needs three settled clicks (open, select, show source).
-    // Give the batch time for those actions and startup; assertions stay at 5 s.
-    test.setTimeout(Math.max(60_000, 20_000 + entries.length * 15_000));
-    const failures: string[] = [];
-    page.on("pageerror", (error) => failures.push(error.message));
-    for (const entry of entries) {
-      await selectComponent(page, entry.name);
-      const explorer = page.getByTestId("ds-explorer");
-      await explorer.getByText("Показать Vue-код", { exact: true }).click();
-      await expect(explorer.locator("pre code")).toContainText("gavia-ui");
-      await expect(explorer.locator("pre code")).not.toContainText('v-bind="preview"');
-      await expect(explorer.locator("pre code")).not.toContainText("packages/ui-kit");
-    }
-    expect(failures).toEqual([]);
-  });
-}
+// Full manifest/state/source compilation belongs to playground-examples.test.ts.
+// Browser coverage below exercises copied overrides, focus and actual app workflows.
 
 test("state combinations change the real component and copied code; keyboard focus remains visible", async ({ page }) => {
   await selectComponent(page, "WlButton");
@@ -385,79 +366,77 @@ async function resolvedTokenColor(locator: Locator, token: string): Promise<stri
   }, token);
 }
 
-for (const theme of wlDesignThemes) {
-  test(`${theme.name}: checkbox marks stay centered and disabled binary controls ignore hover and activation`, async ({ page }) => {
-    await chooseShowcaseTheme(page, theme.label);
-    await selectComponent(page, "WlCheckbox");
-    await expect(page.locator(".wl-select-overlay")).toHaveCount(0);
-    const explorer = page.getByTestId("ds-explorer");
-    const preview = page.getByTestId("ds-example-preview");
-    const checkbox = preview.getByRole("checkbox", { name: "Получать обновления" });
-    const box = checkbox.locator("..").locator(".wl-checkbox__box");
+test("checkbox marks stay centered and disabled binary controls ignore hover and activation", async ({ page }) => {
+  await selectComponent(page, "WlCheckbox");
+  await expect(page.locator(".wl-select-overlay")).toHaveCount(0);
+  const explorer = page.getByTestId("ds-explorer");
+  const preview = page.getByTestId("ds-example-preview");
+  const checkbox = preview.getByRole("checkbox", { name: "Получать обновления" });
+  const box = checkbox.locator("..").locator(".wl-checkbox__box");
 
-    await expect(checkbox).toBeChecked();
-    await expectCenteredCheckboxMark(box);
+  await expect(checkbox).toBeChecked();
+  await expectCenteredCheckboxMark(box);
 
-    const focusAction = explorer.getByRole("button", { name: "Проверить фокус" });
-    await focusAction.focus();
-    await page.keyboard.press("Shift+Tab");
-    await expect(preview.getByRole("checkbox").last()).toBeFocused();
-    await checkbox.focus();
-    await expect(checkbox).toBeFocused();
-    await expect(box).toHaveCSS("outline-width", "2px");
-    await expect(box).toHaveCSS("outline-style", "solid");
-    await checkbox.press("Space");
-    await expect(checkbox).not.toBeChecked();
-    await expect(box.locator(".wl-checkbox__icon")).toHaveCount(0);
-    await checkbox.press("Space");
-    await expect(checkbox).toBeChecked();
-    await expectCenteredCheckboxMark(box);
+  const focusAction = explorer.getByRole("button", { name: "Проверить фокус" });
+  await focusAction.focus();
+  await page.keyboard.press("Shift+Tab");
+  await expect(preview.getByRole("checkbox").last()).toBeFocused();
+  await checkbox.focus();
+  await expect(checkbox).toBeFocused();
+  await expect(box).toHaveCSS("outline-width", "2px");
+  await expect(box).toHaveCSS("outline-style", "solid");
+  await checkbox.press("Space");
+  await expect(checkbox).not.toBeChecked();
+  await expect(box.locator(".wl-checkbox__icon")).toHaveCount(0);
+  await checkbox.press("Space");
+  await expect(checkbox).toBeChecked();
+  await expectCenteredCheckboxMark(box);
 
-    await explorer.getByRole("checkbox", { name: "indeterminate", exact: true }).check();
-    expect(await checkbox.evaluate((input: HTMLInputElement) => input.indeterminate)).toBe(true);
-    await expect(box).toHaveClass(/is-indeterminate/);
-    await expectCenteredCheckboxMark(box);
+  await explorer.getByRole("checkbox", { name: "indeterminate", exact: true }).check();
+  expect(await checkbox.evaluate((input: HTMLInputElement) => input.indeterminate)).toBe(true);
+  await expect(box).toHaveClass(/is-indeterminate/);
+  await expectCenteredCheckboxMark(box);
 
-    const disabledControl = explorer.getByRole("checkbox", { name: "disabled", exact: true });
-    await disabledControl.check();
-    await expect(disabledControl).toBeEnabled();
-    await expect(checkbox).toBeDisabled();
-    // These controls reproduce the reported drawing defect even when text grows.
-    await page.addStyleTag({ content: ".ds-explorer-controls { font-size: 24px; line-height: 2; }" });
-    await expectCenteredCheckboxMark(explorer.locator(".wl-checkline").filter({ has: page.getByRole("checkbox", { name: "disabled", exact: true }) }).locator(".wl-checkbox__box"));
-    const disabledBackground = await resolvedTokenColor(box, "--wl-bg-soft");
-    const disabledBorder = await resolvedTokenColor(box, "--wl-border");
-    await expect(box).toHaveCSS("background-color", disabledBackground);
-    await expect(box).toHaveCSS("border-color", disabledBorder);
-    await checkbox.hover();
-    await expect(box).toHaveCSS("background-color", disabledBackground);
-    await expect(box).toHaveCSS("border-color", disabledBorder);
-    await checkbox.evaluate((input: HTMLInputElement) => input.closest<HTMLLabelElement>("label")!.click());
-    await expect(checkbox).toBeChecked();
-    expect(await checkbox.evaluate((input: HTMLInputElement) => input.indeterminate)).toBe(true);
+  const disabledControl = explorer.getByRole("checkbox", { name: "disabled", exact: true });
+  await disabledControl.check();
+  await expect(disabledControl).toBeEnabled();
+  await expect(checkbox).toBeDisabled();
+  // These controls reproduce the reported drawing defect even when text grows.
+  await page.addStyleTag({ content: ".ds-explorer-controls { font-size: 24px; line-height: 2; }" });
+  await expectCenteredCheckboxMark(explorer.locator(".wl-checkline")
+    .filter({ has: page.getByRole("checkbox", { name: "disabled", exact: true }) }).locator(".wl-checkbox__box"));
+  const disabledBackground = await resolvedTokenColor(box, "--wl-bg-soft");
+  const disabledBorder = await resolvedTokenColor(box, "--wl-border");
+  await expect(box).toHaveCSS("background-color", disabledBackground);
+  await expect(box).toHaveCSS("border-color", disabledBorder);
+  await checkbox.hover();
+  await expect(box).toHaveCSS("background-color", disabledBackground);
+  await expect(box).toHaveCSS("border-color", disabledBorder);
+  await checkbox.evaluate((input: HTMLInputElement) => input.closest<HTMLLabelElement>("label")!.click());
+  await expect(checkbox).toBeChecked();
+  expect(await checkbox.evaluate((input: HTMLInputElement) => input.indeterminate)).toBe(true);
 
-    await disabledControl.uncheck();
-    await explorer.getByRole("checkbox", { name: "indeterminate", exact: true }).uncheck();
-    await expect(checkbox).toBeEnabled();
-    await expect(checkbox).toBeChecked();
-    await expectCenteredCheckboxMark(box);
+  await disabledControl.uncheck();
+  await explorer.getByRole("checkbox", { name: "indeterminate", exact: true }).uncheck();
+  await expect(checkbox).toBeEnabled();
+  await expect(checkbox).toBeChecked();
+  await expectCenteredCheckboxMark(box);
 
-    await selectComponent(page, "WlRadio");
-    const radio = preview.getByRole("radio", { name: "Вся команда" });
-    const radioBox = preview.locator(".wl-radio__box").first();
-    await expect(radio).toBeChecked();
-    await explorer.getByRole("checkbox", { name: "disabled", exact: true }).check();
-    await expect(radio).toBeDisabled();
-    await expect(radioBox).toHaveCSS("background-color", disabledBackground);
-    await expect(radioBox).toHaveCSS("border-color", disabledBorder);
-    await radio.hover();
-    await expect(radioBox).toHaveCSS("background-color", disabledBackground);
-    await expect(radioBox).toHaveCSS("border-color", disabledBorder);
-    await preview.locator(".wl-checkline").first().evaluate((label: HTMLLabelElement) => label.click());
-    await expect(radio).toBeChecked();
-    await expect(preview.getByRole("radio", { name: "Только я" })).not.toBeChecked();
-  });
-}
+  await selectComponent(page, "WlRadio");
+  const radio = preview.getByRole("radio", { name: "Вся команда" });
+  const radioBox = preview.locator(".wl-radio__box").first();
+  await expect(radio).toBeChecked();
+  await explorer.getByRole("checkbox", { name: "disabled", exact: true }).check();
+  await expect(radio).toBeDisabled();
+  await expect(radioBox).toHaveCSS("background-color", disabledBackground);
+  await expect(radioBox).toHaveCSS("border-color", disabledBorder);
+  await radio.hover();
+  await expect(radioBox).toHaveCSS("background-color", disabledBackground);
+  await expect(radioBox).toHaveCSS("border-color", disabledBorder);
+  await preview.locator(".wl-checkline").first().evaluate((label: HTMLLabelElement) => label.click());
+  await expect(radio).toBeChecked();
+  await expect(preview.getByRole("radio", { name: "Только я" })).not.toBeChecked();
+});
 
 async function expectCenteredDropdown(root: Locator, dropdown: Locator): Promise<void> {
   const arrow = dropdown.locator("svg");
@@ -495,52 +474,49 @@ for (const entry of [
   { name: "WlMultiSelect", root: ".wl-multiselect", dropdown: ".wl-multiselect__dropdown", label: "Направления" },
   { name: "WlAutocomplete", root: ".wl-autocomplete", dropdown: ".wl-autocomplete__dropdown", label: "Участник" }
 ]) {
-  for (const theme of wlDesignThemes) {
-    const title = `${entry.name}: SVG dropdown stays centered across sizes and keyboard or disabled interaction (${theme.label})`;
+  const title = `${entry.name}: SVG dropdown stays centered across sizes and keyboard or disabled interaction`;
 
-    test(title, async ({ page }) => {
-      await selectComponent(page, entry.name);
-      await expect(page.locator(".wl-select-overlay")).toHaveCount(0);
-      const explorer = page.getByTestId("ds-explorer");
-      const preview = page.getByTestId("ds-example-preview");
-      const root = preview.locator(entry.root);
-      const dropdown = preview.locator(entry.dropdown);
-      const control = preview.getByRole("combobox", { name: entry.label, exact: true });
-      // Font metrics must not affect a decorative arrow or its control height.
-      await page.addStyleTag({ content: ".ds-example-preview { font-size:24px; line-height:2.5; }" });
-      await chooseShowcaseTheme(page, theme.label);
-      for (const size of ["sm", "md", "lg"]) {
-        await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: size", exact: true }), size);
-        await expect(root).toHaveAttribute("data-size", size);
-        await expectCenteredDropdown(root, dropdown);
-      }
-      await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: size", exact: true }), "md");
-      await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: density", exact: true }), "compact");
+  test(title, async ({ page }) => {
+    await selectComponent(page, entry.name);
+    await expect(page.locator(".wl-select-overlay")).toHaveCount(0);
+    const explorer = page.getByTestId("ds-explorer");
+    const preview = page.getByTestId("ds-example-preview");
+    const root = preview.locator(entry.root);
+    const dropdown = preview.locator(entry.dropdown);
+    const control = preview.getByRole("combobox", { name: entry.label, exact: true });
+    // Font metrics must not affect a decorative arrow or its control height.
+    await page.addStyleTag({ content: ".ds-example-preview { font-size:24px; line-height:2.5; }" });
+    for (const size of ["sm", "md", "lg"]) {
+      await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: size", exact: true }), size);
+      await expect(root).toHaveAttribute("data-size", size);
       await expectCenteredDropdown(root, dropdown);
-      await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: density", exact: true }), "default");
+    }
+    await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: size", exact: true }), "md");
+    await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: density", exact: true }), "compact");
+    await expectCenteredDropdown(root, dropdown);
+    await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: density", exact: true }), "default");
 
-      await control.press("ArrowDown");
-      const listbox = page.getByRole("listbox");
-      await expect(listbox).toBeVisible();
-      await control.press("End");
-      await commitDropdownEnd(entry.name, root, listbox, control);
-      await expect(page.getByRole("listbox")).toHaveCount(0);
-      await expect(control).toBeFocused();
-      await expectCenteredDropdown(root, dropdown);
+    await control.press("ArrowDown");
+    const listbox = page.getByRole("listbox");
+    await expect(listbox).toBeVisible();
+    await control.press("End");
+    await commitDropdownEnd(entry.name, root, listbox, control);
+    await expect(page.getByRole("listbox")).toHaveCount(0);
+    await expect(control).toBeFocused();
+    await expectCenteredDropdown(root, dropdown);
 
-      const valueBefore = await control.evaluate((element) => element instanceof HTMLInputElement ? element.value : element.textContent);
-      const disabled = explorer.getByRole("checkbox", { name: "disabled", exact: true });
-      await disabled.check();
-      await expect(control).toBeDisabled();
-      await expectCenteredDropdown(root, dropdown);
-      await expectAutocompleteDropdownDisabled(entry.name, dropdown);
-      await dropdown.evaluate((element: HTMLElement) => element.click());
-      await control.evaluate((element) => element.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })));
-      await expect(page.getByRole("listbox")).toHaveCount(0);
-      const valueAfter = await control.evaluate((element) => element instanceof HTMLInputElement ? element.value : element.textContent);
-      expect(valueAfter).toBe(valueBefore);
-      await disabled.uncheck();
-      await expect(control).toBeEnabled();
-    });
-  }
+    const valueBefore = await control.evaluate((element) => element instanceof HTMLInputElement ? element.value : element.textContent);
+    const disabled = explorer.getByRole("checkbox", { name: "disabled", exact: true });
+    await disabled.check();
+    await expect(control).toBeDisabled();
+    await expectCenteredDropdown(root, dropdown);
+    await expectAutocompleteDropdownDisabled(entry.name, dropdown);
+    await dropdown.evaluate((element: HTMLElement) => element.click());
+    await control.evaluate((element) => element.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })));
+    await expect(page.getByRole("listbox")).toHaveCount(0);
+    const valueAfter = await control.evaluate((element) => element instanceof HTMLInputElement ? element.value : element.textContent);
+    expect(valueAfter).toBe(valueBefore);
+    await disabled.uncheck();
+    await expect(control).toBeEnabled();
+  });
 }

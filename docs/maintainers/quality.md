@@ -129,7 +129,7 @@ automated checks. The prepared protocol currently has no completed manual runs.
 
 The target is [WCAG 2.2 AA](https://www.w3.org/TR/WCAG22/).
 Axe scans visible DOM, including open lists and dialogs, in five themes.
-Scanning runs once in Chromium; keyboard and focus checks run in every engine.
+Scanning runs once in Chromium; critical keyboard and focus checks run in every engine.
 Checks cover names, ARIA relationships, contrast, errors, disabled/loading and
 focus restoration. An automated scan does not confirm full WCAG compliance:
 the consumer application needs manual keyboard, zoom and NVDA/VoiceOver checks.
@@ -140,6 +140,43 @@ its heading typography. Gavia / Gavia Dark baselines use real Gavia Sans,
 including 12 faces, Cyrillic, Latin, numerals, home and overlays.
 Review expected/actual/diff before accepting intentional changes.
 CI never updates images automatically.
+
+### Browser coverage strategy
+
+Allocate the browser matrix by risk instead of repeating every scenario across
+themes, engines and viewport sizes. Theme-independent behavior uses Gavia once;
+critical library interactions also run in Firefox, WebKit and mobile Chromium.
+Keep real focus, native input and file selection, portals, history, transitions,
+scrolling and responsive layout in browser tests. Playground-only report,
+catalog and documentation presentation runs in the primary Chromium project.
+
+The default matrix registers 291 cases: 174 in Chromium, including 60 Axe
+audits, and 39 critical scenarios in each of mobile Chromium, Firefox and
+WebKit. The `@cross-browser` tag selects that critical subset for the three
+secondary profiles. This replaces the earlier 878-case matrix; historical runs
+of that matrix do not establish acceptance of the current suite.
+
+All five themes remain covered by the dedicated Windows visual suite and the
+Chromium accessibility suite. The latter registers 60 Axe cases: 50 page and
+component-state audits plus ten quality-summary/documentation audits. Other
+projects do not register these cases; they do not accumulate runtime skips.
+Alert readability and both dismissal paths use 320px and 390px in Gavia rather
+than repeating the same actions in five themes.
+
+Axe uses its built-in `setLegacyMode(true)` option to collect results in the
+audited page. Default `finishRun` collection uses a temporary `about:blank` page;
+native Windows runs encountered stalls while creating or closing that helper.
+Both audit entry points require zero `iframe`/`frame` elements and exactly one
+entry in `page.frames()` before using the in-page mode. WCAG tags, include scopes,
+enabled rules and zero-violation assertions remain unchanged. Adding framed
+content requires full frame coverage before changing these guards or the mode;
+an unexpected frame must fail the audit rather than escape coverage.
+
+Manifest inventory, exact copyable source, public types, parsing and model
+validation belong primarily to unit and contract tests. Keep representative
+browser checks for actual rendering and clipboard interaction. Removing a
+matrix duplicate must retain the underlying behavior, assertions and relevant
+engine coverage; a smaller suite is not evidence that a check has passed.
 
 ## Coverage and size
 

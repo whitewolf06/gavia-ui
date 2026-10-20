@@ -295,9 +295,11 @@ test("Theme builder scopes live colors, restores its draft and exports a working
   await expect(headerSearch).toHaveAttribute("title", "Поиск");
   await expect(page.locator(".pg-logo")).toHaveCSS("width", page.viewportSize()!.width <= 400 ? "28px" : page.viewportSize()!.width <= 700 ? "32px" : "36px");
   await navigateMainView(page, "Подбор темы");
+  await expect(page).toHaveURL((url) => url.pathname === pagesPath + "ru/theme-builder/");
   expectPagesLocation(page, "theme-builder");
   const builder = page.getByTestId("theme-builder-page");
   const preview = page.getByTestId("theme-builder-preview");
+  const actionStatus = preview.getByRole("article").getByRole("status");
   await expect(builder.getByRole("heading", { name: "Подбор темы", exact: true })).toBeVisible();
   const createAction = preview.getByRole("button", { name: "Создать проект", exact: true });
   await expect(createAction).toHaveCSS("background-color", "rgb(60, 116, 144)");
@@ -308,7 +310,7 @@ test("Theme builder scopes live colors, restores its draft and exports a working
   await page.keyboard.down("Space");
   await expect(createAction).toHaveCSS("background-color", "rgb(50, 97, 121)");
   await page.keyboard.up("Space");
-  await expect(preview.getByRole("status")).toHaveText("Нажатий: 1");
+  await expect(actionStatus).toHaveText("Нажатий: 1");
   const bg = builder.getByRole("textbox", { name: "Основной фон", exact: true });
   await bg.fill("#f0");
   await expect(bg).toHaveAttribute("aria-invalid", "true");
@@ -328,7 +330,7 @@ test("Theme builder scopes live colors, restores its draft and exports a working
   await overlay.getByRole("option", { name: "Высокий", exact: true }).click();
   await expect(priority).toHaveText("Высокий");
   await preview.getByRole("button", { name: "Создать проект", exact: true }).click();
-  await expect(preview.getByRole("status")).toHaveText("Нажатий: 2");
+  await expect(actionStatus).toHaveText("Нажатий: 2");
   await builder.getByRole("checkbox", { name: "Disabled", exact: true }).check();
   await expect(preview.getByRole("button", { name: "Создать проект", exact: true })).toBeDisabled();
   await page.reload();

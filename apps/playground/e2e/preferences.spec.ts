@@ -67,7 +67,7 @@ for (const detection of [
   });
 }
 
-test("manual theme and language persist, explicit links override them, and System restores OS tracking", async ({ page }) => {
+test("manual theme and language persist, explicit links override them, and System restores OS tracking", { tag: "@cross-browser" }, async ({ page }) => {
   await page.goto("/");
   await expect(page.getByTestId("home-page")).toBeVisible();
   await expectPreferences(page, "ru", "system", "gavia");

@@ -102,7 +102,7 @@ async function expectDesktopOverflowMenu(
   } else await expect(overflow).toHaveCount(0);
 }
 
-test("responsive header preserves ordered desktop overflow, a compact mobile row and focus through dismissal and resize", async ({ page, baseURL }) => {
+test("responsive header preserves ordered desktop overflow, a compact mobile row and focus through dismissal and resize", { tag: "@cross-browser" }, async ({ page, baseURL }) => {
   const pageErrors: string[] = [];
   page.on("pageerror", (error) => pageErrors.push(error.message));
   const homeUrl = new URL(baseURL ?? "http://127.0.0.1:4173/");

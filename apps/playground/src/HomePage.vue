@@ -26,7 +26,7 @@ import { consumerSource } from "./design-system/code";
 import CodePanel from "./design-system/CodePanel.vue";
 import ButtonExample from "./design-system/examples/WlButton.vue";
 import buttonExampleSource from "./design-system/examples/WlButton.vue?raw";
-import { createPlaygroundNavigationUrl as createPlaygroundUrl, type PlaygroundRoute } from "./navigation";
+import { createPlaygroundNavigationUrl as createPlaygroundUrl, parsePlaygroundRoute, type PlaygroundRoute } from "./navigation";
 import { getInstallCommand, installationManagers, type PackageManager } from "./project/installation";
 import { gaviaProjectInfo as project } from "./project/project-info";
 import QualitySummary from "./project/QualitySummary.vue";
@@ -36,7 +36,14 @@ import { usePageAnchor } from "./usePageAnchor";
 const isDarkTheme = computed(() => catalogSummary.themeColorSchemes[props.theme] === "dark");
 const nightArtReady = ref(false);
 const themeToggleLabel = computed(() => isDarkTheme.value ? t("shell.HomePage.text54") : t("shell.HomePage.text55"));
-const themedHref = (href: string): string => withPlaygroundTheme(href, playgroundThemePreference.value);
+function themedHref(href: string): string {
+  const current = typeof window === "undefined" ? "https://whitewolf06.github.io/gavia-ui/" : window.location.href;
+  const requested = new URL(withPlaygroundTheme(href, playgroundThemePreference.value), current);
+  const route = parsePlaygroundRoute(requested.search, requested.hash, requested.pathname);
+  const target = createPlaygroundUrl(requested, route);
+  target.hash = requested.hash;
+  return target.pathname + target.search + target.hash;
+}
 const pageElement = ref<HTMLElement | null>(null);
 usePageAnchor(pageElement);
 

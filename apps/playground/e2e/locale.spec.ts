@@ -10,7 +10,7 @@ const russianExamples = JSON.parse(readFileSync(new URL("../src/i18n/messages/ex
 const variantSource = readFileSync(new URL("../src/documentation/button/Variants.vue", import.meta.url), "utf8");
 test.use({ locale: "en-US" });
 
-test("unqualified URLs detect English browser language, and keyboard language selection preserves focus", async ({ page, baseURL }) => {
+test("unqualified URLs detect English browser language, and keyboard language selection preserves focus", { tag: "@cross-browser" }, async ({ page, baseURL }) => {
   const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
   url.search = "";
   url.hash = "";

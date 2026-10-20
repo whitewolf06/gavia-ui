@@ -7,6 +7,7 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 ## Unreleased
 
+- Keep Home documentation, quality and Theme Builder links canonical beneath the Pages prefix while preserving portable archive links, language, theme and anchors.
 - Repair listbox keyboard/ARIA navigation, active-option scrolling, single click selection and app-scoped IDs. Tabs gain unique tab/panel relationships, disabled and vertical modes, and explicit lazy/retained panel behavior.
 - Add an optional WlLink router adapter, stable Table row keys with controlled sorting/selection, typed list slots, disabled options and clearable selection controls.
 - Add reactive app configuration, a shared overlay stack with modal inert/focus ownership, active-only listeners and frame/observer positioning.

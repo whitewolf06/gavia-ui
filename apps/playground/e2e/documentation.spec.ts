@@ -1,10 +1,9 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
-import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import { playgroundBasePath, playgroundRouteParams, russianPlaygroundUrl } from "./playground-url";
-import { chooseDropdownOption, chooseShowcaseTheme, copyCodePanel, navigateMainView, openDocumentationMenu } from "./select-helpers";
+import { chooseDropdownOption, copyCodePanel, navigateMainView, openDocumentationMenu } from "./select-helpers";
 
 const russianDocumentation = JSON.parse(readFileSync(new URL("../src/i18n/messages/documentation.ru.json", import.meta.url), "utf8")) as { strings: Record<string, string> };
 
@@ -296,7 +295,7 @@ test("home opens WlButton documentation and controls update the live button, con
   await page.screenshot({ path: testInfo.outputPath("docs-button-desktop.png"), fullPage: true });
 });
 
-test("direct WlButton documentation survives reload, Back and Forward beneath the current base path", async ({ page, baseURL }) => {
+test("direct WlButton documentation survives reload, Back and Forward beneath the current base path", { tag: "@cross-browser" }, async ({ page, baseURL }) => {
   await page.goto(russianPlaygroundUrl(pageUrl(baseURL, "?view=docs&component=WlButton")), { waitUntil: "domcontentloaded" });
   await expect(buttonWorkspace(page)).toBeVisible();
   await expectRoute(page, baseURL, "docs", "WlButton");
@@ -341,116 +340,28 @@ test("direct WlButton documentation survives reload, Back and Forward beneath th
   expect(new URL(page.url()).hash).toBe("#home-quickstart");
 });
 
-async function expectNativeOverviewLink(
-  page: Page, overview: Locator, baseURL: string | undefined, testInfo: ReturnType<typeof test.info>, sourceIndex: number
-): Promise<void> {
-  if (sourceIndex !== 0) return;
+async function expectNativeOverviewLink(page: Page, overview: Locator, baseURL: string | undefined): Promise<void> {
   const original = page.url();
-  const nativeContext = page.context();
-  const telemetry: {
-    startedAt: number;
-    beforeUrl: string;
-    afterUrl?: string;
-    events: Array<{ type: string; at: number; url?: string }>;
-    click?: unknown;
-    pages?: Array<{ url: string; closed: boolean }>;
-    setupError?: string;
-    readError?: string;
-    cleanupError?: string;
-  } = { startedAt: Date.now(), beforeUrl: original, events: [] };
-  const contextPage = (opened: Page) => telemetry.events.push({ type: "context.page", at: Date.now(), url: opened.url() });
-  const pagePopup = (opened: Page) => telemetry.events.push({ type: "page.popup", at: Date.now(), url: opened.url() });
-  nativeContext.on("page", contextPage);
-  page.on("popup", pagePopup);
-  const diagnosticRead = async <T>(operation: Promise<T>): Promise<T> => {
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    try {
-      return await Promise.race([operation, new Promise<never>((_, reject) => {
-        timer = setTimeout(() => reject(new Error("Native-link diagnostic read unavailable after 1000ms")), 1000);
-      })]);
-    } finally { if (timer) clearTimeout(timer); }
-  };
+  const installation = overview.getByRole("link", { name: "Установка", exact: true });
+  await installation.focus();
+  await expect(installation).toBeFocused();
+  // Exercise the native foreground-tab keyboard shortcut without a mouse click.
+  const [newTab] = await Promise.all([
+    page.context().waitForEvent("page"),
+    installation.press("ControlOrMeta+Shift+Enter")
+  ]);
   try {
-    await diagnosticRead(page.evaluate(() => {
-      const target = window as typeof window & {
-        __gaviaNativeLinkTelemetry?: {
-          event: MouseEvent | null;
-          captured: Record<string, unknown> | null;
-          listener: (event: MouseEvent) => void;
-        };
-      };
-      const listener = (event: MouseEvent) => {
-        const anchor = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[href]") : null;
-        const state = target.__gaviaNativeLinkTelemetry;
-        if (!anchor || !state || !anchor.classList.contains("docs-anchor-link")) return;
-        state.event = event;
-        state.captured = {
-          at: Date.now(), eventTimeStamp: event.timeStamp, href: anchor.href,
-          ctrl: event.ctrlKey, meta: event.metaKey, alt: event.altKey, shift: event.shiftKey,
-          button: event.button, isTrusted: event.isTrusted, capturedDefaultPrevented: event.defaultPrevented,
-          documentFocused: document.hasFocus(), visibilityState: document.visibilityState,
-          anchorFocused: document.activeElement === anchor
-        };
-      };
-      target.__gaviaNativeLinkTelemetry = { event: null, captured: null, listener };
-      document.addEventListener("click", listener, { capture: true, passive: true });
-    }));
-  } catch (error) { telemetry.setupError = String(error); }
-  let newTab: Page | undefined;
-  try {
-    const opened = await Promise.all([
-      page.context().waitForEvent("page"),
-      (async () => {
-        try {
-          await overview.getByRole("link", { name: "Установка", exact: true }).click({ modifiers: ["ControlOrMeta"] });
-        } finally {
-          try {
-            telemetry.click = await diagnosticRead(page.evaluate(() => {
-              const target = window as typeof window & {
-                __gaviaNativeLinkTelemetry?: { event: MouseEvent | null; captured: Record<string, unknown> | null };
-              };
-              const state = target.__gaviaNativeLinkTelemetry;
-              return state
-                ? { ...state.captured, afterDispatchDefaultPrevented: state.event?.defaultPrevented ?? null,
-                    readAt: Date.now(), pageUrl: location.href,
-                    documentFocused: document.hasFocus(), visibilityState: document.visibilityState }
-                : null;
-            }));
-          } catch (error) { telemetry.readError = String(error); }
-        }
-      })()
-    ]);
-    newTab = opened[0];
-    // Bring the native tab forward so Firefox runs its lazy application without background throttling.
-    await newTab.bringToFront();
     await newTab.waitForLoadState("domcontentloaded");
-    await newTab.getByTestId("docs-page").waitFor({ state: "visible" });
+    await expect(newTab.getByTestId("docs-page")).toBeVisible();
     await expect(newTab.getByTestId("docs-page").locator("#docs-install")).toBeInViewport();
     await expectRoute(newTab, baseURL, "docs");
     expect(new URL(newTab.url()).hash).toBe("#docs-install");
     expect(page.url()).toBe(original);
     await expect(buttonWorkspace(page)).toBeVisible();
   } finally {
-    telemetry.afterUrl = page.url();
-    telemetry.pages = nativeContext.pages().map((current) => ({ url: current.url(), closed: current.isClosed() }));
-    nativeContext.off("page", contextPage);
-    page.off("popup", pagePopup);
-    try {
-      if (newTab) await newTab.close();
-    } finally {
-      try {
-        await diagnosticRead(page.evaluate(() => {
-          const target = window as typeof window & {
-            __gaviaNativeLinkTelemetry?: { listener: (event: MouseEvent) => void };
-          };
-          const state = target.__gaviaNativeLinkTelemetry;
-          if (state) document.removeEventListener("click", state.listener, true);
-          delete target.__gaviaNativeLinkTelemetry;
-        }));
-      } catch (error) { telemetry.cleanupError = String(error); }
-      await testInfo.attach("native-link-telemetry", { body: JSON.stringify(telemetry, null, 2), contentType: "application/json" });
-    }
+    await newTab.close();
   }
+  await page.bringToFront();
 }
 
 async function enterOverviewSource(
@@ -530,7 +441,15 @@ async function expectDesktopStickySidebar(page: Page, docs: Locator, mobile: boo
   }), "The desktop sidebar remains just below the global header while scrolling").toBeLessThanOrEqual(1);
 }
 
-test("getting-started links persist across Docs pages and preserve native links, SPA history and mobile closure", async ({ page, baseURL }, testInfo) => {
+test("native keyboard documentation links open a foreground tab and preserve the original page", { tag: "@cross-browser" }, async ({ page, baseURL }) => {
+  await page.goto(russianPlaygroundUrl(pageUrl(baseURL, "?view=docs&component=WlButton")), { waitUntil: "domcontentloaded" });
+  await expect(buttonWorkspace(page)).toBeVisible();
+  const docs = await openDocumentationMenu(page);
+  const overview = docs.getByRole("navigation", { name: "Разделы начала работы", exact: true });
+  await expectNativeOverviewLink(page, overview, baseURL);
+});
+
+test("getting-started links persist across Docs pages and preserve SPA history and mobile closure", async ({ page, baseURL }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto(russianPlaygroundUrl(pageUrl(baseURL, "?view=docs&component=WlButton")), { waitUntil: "domcontentloaded" });
   const docs = page.getByTestId("docs-page");
@@ -560,8 +479,6 @@ test("getting-started links persist across Docs pages and preserve native links,
     })).toEqual(documentationOverviewHeadings.map((heading) => ({
       path: basePath, view: "docs", component: null, section: null, hash: "#" + heading.id
     })));
-
-    await expectNativeOverviewLink(page, overview, baseURL, testInfo, index);
 
     const sourceAnchors: Record<string, string> = { layout: "docs-layout-nested-grid" };
     const sourceAnchor = sourceAnchors[destination.section ?? ""];
@@ -603,7 +520,7 @@ test("getting-started links persist across Docs pages and preserve native links,
   await expectRoute(page, baseURL, "docs");
 });
 
-test("history restores Docs anchors after an interrupted smooth overview transition", async ({ page, baseURL }) => {
+test("history restores Docs anchors after an interrupted smooth overview transition", { tag: "@cross-browser" }, async ({ page, baseURL }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   const initial = new URL(pageUrl(baseURL, "?view=docs&section=responsive"));
   initial.hash = "docs-responsive-breakpoints";
@@ -668,15 +585,15 @@ test("home and interactive WlButton documentation remain usable at 320px", async
   await page.screenshot({ path: testInfo.outputPath("docs-button-mobile-320.png"), fullPage: true });
 });
 
-test("foundations navigation preserves live examples and highlighted copy across themes and at 320px", async ({ page, baseURL }, testInfo) => {
-  await page.goto(russianPlaygroundUrl(pageUrl(baseURL, "?view=docs")), { waitUntil: "domcontentloaded" });
+test("foundations navigation keeps representative examples, copy and 320px layout usable", async ({ page, baseURL }) => {
+  await page.goto(russianPlaygroundUrl(pageUrl(baseURL, "?view=docs&theme=gavia")), { waitUntil: "domcontentloaded" });
   const docs = page.getByTestId("docs-page");
   const navigation = docs.getByRole("navigation", { name: "Основы", exact: true });
   const foundation = docs.getByTestId("docs-foundation-page");
   const sections = [
-    { name: "typography", label: "Типографика", examples: ["typography-scale", "text-hierarchy"] },
-    { name: "layout", label: "Layout и сетка", examples: ["containers", "equal-columns", "column-proportions", "responsive-grid", "gap-alignment", "nested-grid", "page-composition", "spacing", "css-helpers", "stacking-layers"] },
-    { name: "content", label: "Контент и состояния", examples: ["content-writing", "content-states"] }
+    { name: "typography", label: "Типографика", sample: "text-hierarchy", examples: ["typography-scale", "text-hierarchy"] },
+    { name: "layout", label: "Layout и сетка", sample: "responsive-grid", examples: ["containers", "equal-columns", "column-proportions", "responsive-grid", "gap-alignment", "nested-grid", "page-composition", "spacing", "css-helpers", "stacking-layers"] },
+    { name: "content", label: "Контент и состояния", sample: "content-states", examples: ["content-writing", "content-states"] }
   ];
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", {
     configurable: true,
@@ -698,21 +615,21 @@ test("foundations navigation preserves live examples and highlighted copy across
       const heading = document.getElementById(link.hash.slice(1));
       return heading?.tagName === "H2" && heading.textContent?.trim() === link.textContent?.trim();
     })), "TOC labels and anchors match actual H2 headings").toBe(true);
-    for (const name of section.examples) {
-      const example = foundation.locator('[data-docs-example="' + name + '"]');
-      await expect(example.getByTestId("docs-foundation-preview").locator(":scope > :first-child")).toBeVisible();
-      const panel = example.getByTestId("docs-foundation-source");
-      const code = panel.locator("pre code");
-      await expect(code).toBeVisible();
-      const consumerCode = await code.textContent();
-      expect(consumerCode, name + " source is available").not.toBeNull();
-      expectFoundationSource(consumerCode, name);
-      expect(consumerCode).not.toContain("packages/ui-kit");
-      expect((await code.locator(".ds-code-token").allTextContents()).join(""), name + " highlighted source is unchanged").toBe(consumerCode);
-      await copyCodePanel(panel);
-      await expect(panel.getByRole("status")).toHaveText("Код скопирован.");
-      await expect(page.locator("html")).toHaveAttribute("data-docs-copied", consumerCode!);
-    }
+    // The unit contract compiles every foundation SFC; exercise real copy once per section.
+    const name = section.sample;
+    const example = foundation.locator('[data-docs-example="' + name + '"]');
+    await expect(example.getByTestId("docs-foundation-preview").locator(":scope > :first-child")).toBeVisible();
+    const panel = example.getByTestId("docs-foundation-source");
+    const code = panel.locator("pre code");
+    await expect(code).toBeVisible();
+    const consumerCode = await code.textContent();
+    expect(consumerCode, name + " source is available").not.toBeNull();
+    expectFoundationSource(consumerCode, name);
+    expect(consumerCode).not.toContain("packages/ui-kit");
+    expect((await code.locator(".ds-code-token").allTextContents()).join(""), name + " highlighted source is unchanged").toBe(consumerCode);
+    await copyCodePanel(panel);
+    await expect(panel.getByRole("status")).toHaveText("Код скопирован.");
+    await expect(page.locator("html")).toHaveAttribute("data-docs-copied", consumerCode!);
     await expectLayoutFoundation(page, foundation, toc, section.name);
   }
 
@@ -735,17 +652,11 @@ test("foundations navigation preserves live examples and highlighted copy across
 
   const code = content.getByTestId("docs-foundation-source").locator("pre code");
   const sourceText = await code.textContent();
-  for (const label of wlDesignThemes.map((theme) => theme.label)) {
-    await chooseShowcaseTheme(page, label);
-    await expect(code).toHaveText(sourceText!);
-    const colors = await code.locator(".ds-code-token").evaluateAll((tokens) =>
-      [...new Set(tokens.filter((token) => token.textContent?.trim()).map((token) => getComputedStyle(token).color))]
-    );
-    expect(colors.length, label + " syntax uses more than one computed color").toBeGreaterThan(1);
-    const screenshotPath = testInfo.outputPath("foundation-syntax-" + label.toLowerCase() + ".png");
-    await content.getByTestId("docs-foundation-source").screenshot({ path: screenshotPath });
-    await testInfo.attach("foundation-syntax-" + label.toLowerCase(), { path: screenshotPath, contentType: "image/png" });
-  }
+  await expect(code).toHaveText(sourceText!);
+  const colors = await code.locator(".ds-code-token").evaluateAll((tokens) =>
+    [...new Set(tokens.filter((token) => token.textContent?.trim()).map((token) => getComputedStyle(token).color))]
+  );
+  expect(colors.length, "Gavia syntax uses more than one computed color").toBeGreaterThan(1);
 
   await enterCompactDocumentation(page);
   for (const section of sections) {
@@ -766,12 +677,10 @@ test("foundations navigation preserves live examples and highlighted copy across
   await page.reload();
   await expect(foundation.locator("#docs-content-states")).toBeInViewport();
   await expectRoute(page, baseURL, "docs", null, "content");
-  await chooseShowcaseTheme(page, "Classic");
   await expectNoHorizontalOverflow(page, docs);
-  await page.screenshot({ path: testInfo.outputPath("docs-foundations-mobile-320.png"), fullPage: true });
 });
 
-test("documentation scrollspy follows real Layout and icon scrolling without rewriting anchor history", async ({ page, baseURL }) => {
+test("documentation scrollspy follows real Layout and icon scrolling without rewriting anchor history", { tag: "@cross-browser" }, async ({ page, baseURL }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto(russianPlaygroundUrl(pageUrl(baseURL, "?view=docs")), { waitUntil: "domcontentloaded" });
   await page.addStyleTag({ content: "html { scroll-behavior: auto; }" });

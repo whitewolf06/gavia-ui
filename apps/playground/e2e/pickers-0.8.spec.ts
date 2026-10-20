@@ -45,7 +45,7 @@ test("the documented twelve-hour picker respects quarter-hours and the lunch int
   await expect(status).toHaveText("Выбрано: время не задано");
 });
 
-test("time picker uses its labelled native input for keyboard focus and minute precision", async ({ page }) => {
+test("time picker uses its labelled native input for keyboard focus and minute precision", { tag: "@cross-browser" }, async ({ page }) => {
   const { explorer, preview } = await selectPicker(page, "WlTimePicker");
   const input = preview.getByLabel("Время встречи", { exact: true });
   const root = preview.locator('[data-wl="time-picker"]');
@@ -148,7 +148,7 @@ test("disabled time picker stays out of keyboard focus and resumes without losin
   await expect(preview.getByRole("status")).toHaveText("Выбрано: 10:15");
 });
 
-test("file picker opens from Enter and Space while the native input remains hidden and outside tab order", async ({ page }) => {
+test("file picker opens from Enter and Space while the native input remains hidden and outside tab order", { tag: "@cross-browser" }, async ({ page }) => {
   const { preview } = await selectPicker(page, "WlFilePicker");
   const button = preview.getByRole("button", { name: "Выбрать файлы", exact: true });
   const input = preview.locator('input[type="file"]');
@@ -171,7 +171,7 @@ test("file picker opens from Enter and Space while the native input remains hidd
   await expect(preview.getByRole("button", { name: "Очистить список", exact: true })).toHaveCount(0);
 });
 
-test("file picker resets native selection so the application can select the same raw file again", async ({ page }) => {
+test("file picker resets native selection so the application can select the same raw file again", { tag: "@cross-browser" }, async ({ page }) => {
   const { preview } = await selectPicker(page, "WlFilePicker");
   const button = preview.getByRole("button", { name: "Выбрать файлы", exact: true });
   const input = preview.locator('input[type="file"]');
@@ -196,7 +196,7 @@ test("file picker resets native selection so the application can select the same
   }
 });
 
-test("file picker cancel preserves the application list and disabled state blocks activation and selection events", async ({ page }) => {
+test("file picker cancel preserves the application list and disabled state blocks activation and selection events", { tag: "@cross-browser" }, async ({ page }) => {
   const { explorer, preview } = await selectPicker(page, "WlFilePicker");
   const input = preview.locator('input[type="file"]');
   const button = preview.getByRole("button", { name: "Выбрать файлы", exact: true });

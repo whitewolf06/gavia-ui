@@ -1,12 +1,9 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
-import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
-import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import { playgroundRouteParams, russianPlaygroundUrl } from "./playground-url";
-import { chooseDropdownOption, chooseShowcaseTheme, expectMainViewCurrent, navigateDocumentationComponent, navigateMainView, openDocumentationMenu } from "./select-helpers";
+import { chooseDropdownOption, copyCodePanel, expectMainViewCurrent, navigateDocumentationComponent, navigateMainView, openDocumentationMenu } from "./select-helpers";
 
 const pickerNames = ["WlTimePicker", "WlFilePicker"] as const;
 type PickerName = (typeof pickerNames)[number];
-const themes = wlDesignThemes;
 const pageErrors = new WeakMap<Page, string[]>();
 
 function pickerPreview(page: Page, name: PickerName): Locator {
@@ -68,7 +65,7 @@ test.beforeEach(async ({ page, baseURL }) => {
   pageErrors.set(page, errors);
   page.on("pageerror", (error) => errors.push(error.message));
   // The former gallery URL remains a supported alias, including the Pages prefix.
-  const docsUrl = new URL("?view=components", baseURL ?? "http://127.0.0.1:4173/").href;
+  const docsUrl = new URL("?view=components&theme=gavia", baseURL ?? "http://127.0.0.1:4173/").href;
   await page.goto(russianPlaygroundUrl(docsUrl), { waitUntil: "domcontentloaded" });
   // The SPA bootstrap and Docs chunk can finish after the static document loads.
   await page.getByTestId("docs-page").waitFor({ state: "visible" });
@@ -93,17 +90,13 @@ test("legacy component input resolves to a canonical hosted route without losing
   await expect(page.locator("#docs-wltabs-props")).toBeInViewport();
 });
 
-test("Docs catalog exposes all public component versions and opens the real button example", async ({ page }) => {
+test("Docs catalog opens the real button example with its accessible version", async ({ page }) => {
   const docs = await openDocumentationMenu(page);
   const catalog = docs.getByRole("navigation", { name: "Каталог компонентов", exact: true });
-  await expect(catalog.getByRole("button")).toHaveCount(wlManifest.length);
-  await expect(catalog.locator(".docs-component-version")).toHaveCount(wlManifest.length);
-  for (const entry of wlManifest) {
-    const item = catalog.getByRole("button", { name: entry.name, exact: true });
-    await expect(item.locator(".docs-component-version")).toBeVisible();
-    await expect(item.locator(".docs-component-version"), entry.name + " first available version").toHaveText("С " + entry.introducedIn);
-    await expect(item).toHaveAccessibleDescription("С " + entry.introducedIn);
-  }
+  const item = catalog.getByRole("button", { name: "WlButton", exact: true });
+  await expect(item.locator(".docs-component-version")).toBeVisible();
+  await expect(item.locator(".docs-component-version")).toHaveText(/^С \d+\.\d+\.\d+$/);
+  await expect(item).toHaveAccessibleDescription(await item.locator(".docs-component-version").innerText());
 
   // Header controls also use WlButton; catalog navigation must reach its actual example.
   const buttonWorkspace = await navigateDocumentationComponent(page, "WlButton");
@@ -112,61 +105,55 @@ test("Docs catalog exposes all public component versions and opens the real butt
   await expect(buttonWorkspace.getByTestId("docs-button-preview").getByRole("status")).toHaveText("Нажатий: 1");
 });
 
-function documentationExampleTargets(workspace: Locator, name: string): { preview: Locator; source: Locator } {
-  if (name === "WlButton") return {
-    preview: workspace.getByTestId("docs-button-preview"),
-    source: workspace.getByTestId("docs-button-source").locator("pre code")
-  };
+// Exhaustive canonical/rich consumer compilation stays in playground-examples.test.ts
+// and documentation-components.test.ts; this scenario checks real lazy navigation/copy.
+test("Docs lazily loads a live example, copies public source and returns through history", async ({ page }) => {
+  const workspace = await navigateDocumentationComponent(page, "WlSelect");
+  await expect(page.getByTestId("docs-page").getByRole("heading", { level: 1 })).toHaveText("WlSelect");
+  await expect.poll(() => playgroundRouteParams(new URL(page.url())).get("component")).toBe("WlSelect");
   const explorer = workspace.getByTestId("ds-explorer");
-  return { preview: explorer.getByTestId("ds-example-preview"), source: explorer.locator("pre code") };
-}
-
-async function expectRichDocumentationExample(workspace: Locator, name: string): Promise<void> {
-  if (name === "WlButton") return;
-  const extra = workspace.locator('[data-docs-component-extra="' + name + '"]');
-  await expect(extra.getByTestId("docs-component-extra-preview").locator(":scope > *").first(), name + " rich live example").toBeVisible();
+  const preview = explorer.getByTestId("ds-example-preview");
+  await expect(preview.locator(":scope > .wl-stack")).toBeVisible();
+  const source = explorer.locator("pre code");
+  await expect(source).toContainText('from "gavia-ui"');
+  await expect(source).not.toContainText("packages/ui-kit");
+  const extra = workspace.locator('[data-docs-component-extra="WlSelect"]');
+  await expect(extra.getByTestId("docs-component-extra-preview").locator(":scope > *").first()).toBeVisible();
   await expect(extra.getByTestId("docs-component-extra-source").locator("pre code")).toContainText("<template>");
-}
 
-for (const category of new Set(wlManifest.map((entry) => entry.category))) {
-  test("Docs live examples and consumer source cover " + category, async ({ page }) => {
-    const docs = await openDocumentationMenu(page);
-
-    for (const entry of wlManifest.filter((item) => item.category === category)) {
-      const workspace = await navigateDocumentationComponent(page, entry.name);
-      await expect(docs.getByRole("heading", { level: 1 })).toHaveText(entry.name);
-      await expect.poll(() => playgroundRouteParams(new URL(page.url())).get("component"), entry.name + " route").toBe(entry.name);
-      const { preview, source } = documentationExampleTargets(workspace, entry.name);
-      await expect(preview.locator(":scope > *").first(), entry.name + " actual live example").toBeVisible();
-      await expect(preview.getByText("Пример не найден.", { exact: true })).toHaveCount(0);
-      // Collapsed code remains present and must refer to the consumer package.
-      await expect(source, entry.name + " consumer source").toContainText('from "gavia-ui"');
-      expect(await source.textContent(), entry.name + " public import").not.toContain("packages/ui-kit");
-      await expectRichDocumentationExample(workspace, entry.name);
+  await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: {
+    writeText: async (text: string) => {
+      document.documentElement.dataset.copied = text;
     }
-  });
-}
+  } }));
+  await copyCodePanel(explorer);
+  await expect(explorer.getByRole("status").last()).toHaveText("Код скопирован.");
+  const copied = await page.locator("html").getAttribute("data-copied");
+  expect(copied).toContain('from "gavia-ui"');
+  expect(copied).not.toContain('v-bind="preview"');
+  expect(copied).not.toContain("packages/ui-kit");
 
-test("Docs catalog reaches the time picker and its model clears to null in all themes", async ({ page, baseURL }) => {
+  await navigateDocumentationComponent(page, "WlButton");
+  await page.goBack();
+  await expect(page.getByTestId("docs-page").getByRole("heading", { level: 1 })).toHaveText("WlSelect");
+  await expect(preview.locator(":scope > .wl-stack")).toBeVisible();
+});
+
+test("Docs catalog reaches the time picker and its model clears to null", async ({ page, baseURL }) => {
   await navigateDocumentationComponent(page, "WlTimePicker");
   await expect(pickerPreview(page, "WlTimePicker").getByLabel("Время встречи", { exact: true })).toHaveValue("09:30 AM");
-  for (const theme of themes) {
-    await chooseShowcaseTheme(page, theme.label);
-    await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme.name);
-    await navigateDocumentationComponent(page, "WlTimePicker");
-    const card = await expectPickerDestination(page, "WlTimePicker");
-    const input = card.getByLabel("Время встречи", { exact: true });
-    await expect(input).toHaveAttribute("type", "text");
-    await input.fill("11:45 AM");
-    await input.press("Enter");
-    await expect(input).toHaveValue("11:45 AM");
-    await expect(card.getByRole("status")).toHaveText("Выбрано: 11:45");
-    await input.fill("");
-    await input.press("Enter");
-    await expect(input).toHaveValue("");
-    await expect(card.getByRole("status")).toHaveText("Выбрано: время не задано");
-    await expectNoOverflow(page, card);
-  }
+  const card = await expectPickerDestination(page, "WlTimePicker");
+  const input = card.getByLabel("Время встречи", { exact: true });
+  await expect(input).toHaveAttribute("type", "text");
+  await input.fill("11:45 AM");
+  await input.press("Enter");
+  await expect(input).toHaveValue("11:45 AM");
+  await expect(card.getByRole("status")).toHaveText("Выбрано: 11:45");
+  await input.fill("");
+  await input.press("Enter");
+  await expect(input).toHaveValue("");
+  await expect(card.getByRole("status")).toHaveText("Выбрано: время не задано");
+  await expectNoOverflow(page, card);
 
   const legacy = new URL("?view=components#component-WlTimePicker", baseURL ?? "http://127.0.0.1:4173/");
   await page.goto(russianPlaygroundUrl(legacy.href), { waitUntil: "domcontentloaded" });
@@ -176,59 +163,55 @@ test("Docs catalog reaches the time picker and its model clears to null in all t
   await expect(pickerPreview(page, "WlTimePicker").getByLabel("Время встречи", { exact: true })).toHaveValue("09:30 AM");
 });
 
-for (const theme of themes) {
-  test("Docs catalog reaches the file picker and can clear and reselect a long filename (" + theme.label + ")", async ({ page }) => {
-    const originalViewport = page.viewportSize()!;
-    const file = { name: "gallery-" + "x".repeat(120) + ".txt", mimeType: "text/plain", buffer: Buffer.from("gallery file") };
-    await chooseShowcaseTheme(page, theme.label);
-    await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme.name);
-    await navigateDocumentationComponent(page, "WlFilePicker");
-    const card = await expectPickerDestination(page, "WlFilePicker");
-    const button = card.getByRole("button", { name: "Выбрать файлы", exact: true });
-    const input = card.locator('input[type="file"]');
-    const status = card.getByRole("status");
-    await expect(input).toBeHidden();
-    await expect(input).toHaveAttribute("accept", ".pdf,.txt");
-    const opened = page.waitForEvent("filechooser");
-    await button.click();
-    const chooser = await opened;
-    expect(chooser.isMultiple()).toBe(true);
-    await chooser.setFiles(file);
-    await expect(status).toHaveText("Выбрано: " + file.name);
-    await expect(input).toHaveValue("");
-    await expectNoOverflow(page, card);
+test("Docs catalog reaches the file picker and can clear and reselect a long filename", async ({ page }) => {
+  const originalViewport = page.viewportSize()!;
+  const file = { name: "gallery-" + "x".repeat(120) + ".txt", mimeType: "text/plain", buffer: Buffer.from("gallery file") };
+  await navigateDocumentationComponent(page, "WlFilePicker");
+  const card = await expectPickerDestination(page, "WlFilePicker");
+  const button = card.getByRole("button", { name: "Выбрать файлы", exact: true });
+  const input = card.locator('input[type="file"]');
+  const status = card.getByRole("status");
+  await expect(input).toBeHidden();
+  await expect(input).toHaveAttribute("accept", ".pdf,.txt");
+  const opened = page.waitForEvent("filechooser");
+  await button.click();
+  const chooser = await opened;
+  expect(chooser.isMultiple()).toBe(true);
+  await chooser.setFiles(file);
+  await expect(status).toHaveText("Выбрано: " + file.name);
+  await expect(input).toHaveValue("");
+  await expectNoOverflow(page, card);
 
-    // Check the actual unbroken filename at narrow width, not merely its clipped border.
-    await setDocumentationViewport(page, { width: 320, height: originalViewport.height });
-    await navigateDocumentationComponent(page, "WlFilePicker");
-    await expectPickerDestination(page, "WlFilePicker");
-    await expectNoOverflow(page, card);
-    await expect.poll(() => status.evaluate((element) =>
-      element.scrollWidth - element.clientWidth
-    )).toBeLessThanOrEqual(1);
+  // Check the actual unbroken filename at narrow width, not merely its clipped border.
+  await setDocumentationViewport(page, { width: 320, height: originalViewport.height });
+  await navigateDocumentationComponent(page, "WlFilePicker");
+  await expectPickerDestination(page, "WlFilePicker");
+  await expectNoOverflow(page, card);
+  await expect.poll(() => status.evaluate((element) =>
+    element.scrollWidth - element.clientWidth
+  )).toBeLessThanOrEqual(1);
 
-    await setDocumentationViewport(page, originalViewport);
-    await navigateDocumentationComponent(page, "WlFilePicker");
-    await expectPickerDestination(page, "WlFilePicker");
-    await card.getByRole("button", { name: "Очистить список", exact: true }).click();
-    await expect(status).toHaveText("Можно выбрать файлы повторно.");
-    await expect(card.getByRole("button", { name: "Очистить список", exact: true })).toHaveCount(0);
-    await expectNoOverflow(page, card);
+  await setDocumentationViewport(page, originalViewport);
+  await navigateDocumentationComponent(page, "WlFilePicker");
+  await expectPickerDestination(page, "WlFilePicker");
+  await card.getByRole("button", { name: "Очистить список", exact: true }).click();
+  await expect(status).toHaveText("Можно выбрать файлы повторно.");
+  await expect(card.getByRole("button", { name: "Очистить список", exact: true })).toHaveCount(0);
+  await expectNoOverflow(page, card);
 
-    // Each theme owns a fresh page, so reselect the same raw file on this mounted picker.
-    const reopened = page.waitForEvent("filechooser");
-    await button.click();
-    const sameFileChooser = await reopened;
-    expect(sameFileChooser.isMultiple()).toBe(true);
-    await sameFileChooser.setFiles(file);
-    await expect(status).toHaveText("Выбрано: " + file.name);
-    await expect(input).toHaveValue("");
-    await card.getByRole("button", { name: "Очистить список", exact: true }).click();
-    await expect(status).toHaveText("Можно выбрать файлы повторно.");
-    await expect(card.getByRole("button", { name: "Очистить список", exact: true })).toHaveCount(0);
-    await expectNoOverflow(page, card);
-  });
-}
+  // Reselect the same raw file on this mounted picker.
+  const reopened = page.waitForEvent("filechooser");
+  await button.click();
+  const sameFileChooser = await reopened;
+  expect(sameFileChooser.isMultiple()).toBe(true);
+  await sameFileChooser.setFiles(file);
+  await expect(status).toHaveText("Выбрано: " + file.name);
+  await expect(input).toHaveValue("");
+  await card.getByRole("button", { name: "Очистить список", exact: true }).click();
+  await expect(status).toHaveText("Можно выбрать файлы повторно.");
+  await expect(card.getByRole("button", { name: "Очистить список", exact: true })).toHaveCount(0);
+  await expectNoOverflow(page, card);
+});
 
 for (const name of pickerNames) {
   test("DesignSystem opens the live " + name + " documentation", async ({ page }) => {

@@ -193,7 +193,7 @@ test("hero switch is a 32px themed ghost icon and keeps real theme pairs and hea
   await expect(toggle).toBeFocused();
 });
 
-test("native theme snapshots suppress inner transitions and restore physical input after completion", async ({ page, baseURL }) => {
+test("native theme snapshots suppress inner transitions and restore physical input after completion", { tag: "@cross-browser" }, async ({ page, baseURL }) => {
   // Isolate the initial hash's CSS smooth scroll, while keeping the real theme animation.
   await page.addInitScript(() => {
     const stopInitialScrollMotion = () => {
@@ -275,7 +275,7 @@ test("native theme snapshots suppress inner transitions and restore physical inp
   ), { message: "Normal component interactions regain their own transitions" }).toBe(true);
 });
 
-test("reduced motion updates theme, URL and focus without starting a native animation", async ({ page, baseURL }) => {
+test("reduced motion updates theme, URL and focus without starting a native animation", { tag: "@cross-browser" }, async ({ page, baseURL }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await instrumentNativeTransitions(page);
   const url = await openHome(page, baseURL);
@@ -295,7 +295,7 @@ test("reduced motion updates theme, URL and focus without starting a native anim
   await expect(toggle).toBeFocused();
 });
 
-test("without View Transition API only the persistent hero artwork fades and the temporary marker is released", async ({ page, baseURL }) => {
+test("without View Transition API only the persistent hero artwork fades and the temporary marker is released", { tag: "@cross-browser" }, async ({ page, baseURL }) => {
   await page.addInitScript(() => {
     Object.defineProperty(document, "startViewTransition", { value: undefined, configurable: true });
   });

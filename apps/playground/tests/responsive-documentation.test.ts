@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath, URL as NodeURL } from "node:url";
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -23,18 +23,27 @@ afterEach(() => {
   playgroundI18n.global.locale.value = previousLocale;
 });
 const base = new NodeURL("../src/documentation/foundations/", import.meta.url);
-const names = ["ViewportLayout", "FluidGrid", "ContainerCard", "MediaBehavior"];
-describe("copyable responsiveness examples", () => {
+const names = readdirSync(fileURLToPath(new NodeURL("examples/", base)))
+  .filter((filename) => filename.endsWith(".vue"))
+  .map((filename) => filename.slice(0, -4))
+  .sort();
+describe("copyable foundation examples", () => {
   for (const name of names) it(name + " compiles with public consumer imports and scoped CSS", () => {
     const filename = name + ".vue";
     const source = consumerSource(readFileSync(fileURLToPath(new NodeURL("examples/" + filename, base)), "utf8"));
     const parsed = parse(source, { filename });
     expect(parsed.errors).toEqual([]);
-    expect(source).not.toMatch(/packages\/ui-kit|usePlaygroundI18n|\bt\(['"]examples\./);
-    const script = compileScript(parsed.descriptor, { id: name });
+    expect(source).not.toMatch(/packages\/ui-kit|usePlaygroundI18n|\bt\(['"](?:examples|documentation)\./);
+    expect(parsed.descriptor.template?.content.trim()).toBeTruthy();
+    const script = parsed.descriptor.script || parsed.descriptor.scriptSetup
+      ? compileScript(parsed.descriptor, { id: name })
+      : undefined;
+    for (const imported of Object.values(script?.imports ?? {})) {
+      expect(["gavia-ui", "vue"]).toContain(imported.source);
+    }
     const template = compileTemplate({
       filename, id: name, source: parsed.descriptor.template!.content,
-      compilerOptions: { bindingMetadata: script.bindings }
+      compilerOptions: { bindingMetadata: script?.bindings ?? {} }
     });
     expect(template.errors).toEqual([]);
     for (const style of parsed.descriptor.styles) {

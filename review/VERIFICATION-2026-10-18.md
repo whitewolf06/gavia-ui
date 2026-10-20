@@ -3,20 +3,74 @@
 ## Current authorized checks — 2026-10-20
 
 The user subsequently authorized existing lint, strict types, affected-code tests
-and builds with fixes. Current results and outstanding repairs are recorded in
-[the implementation ledger](IMPLEMENTATION.md). The no-runs instruction below
-describes the preceding iteration and is superseded for those named gates only.
-No new verification wrappers, commits, pushes, packaging or publication were
-introduced; the older full-E2E/Docker failure is retained without restarting it.
+and builds with fixes, followed by one commit and sequential native E2E, visual
+and Pages checks. Commit `5bfc00f` precedes the current browser changes; no further
+commits, pushes or publication are authorized. Current results and outstanding
+repairs are recorded in [the implementation ledger](IMPLEMENTATION.md#e2e-reduction-and-browser-follow-up).
+The no-runs instruction below describes the preceding iteration. No new
+verification wrappers, packaging or dependency installs were introduced; the
+older full-E2E/Docker failure and unverified cleanup remain historical evidence.
 
-The requested checks are now complete: final lint has zero errors and 39 length
+Before the browser follow-up, final lint passed with zero errors and 39 length
 warnings (715 files); both strict typechecks, affected tests and both production
 builds pass. Initial compiler timeout and junction permission failures are kept
 as history; their targeted retries pass with unchanged assertions and timeouts.
 The original filesystem-capability skip also passed when rerun with permission.
 FileUpload row-slot API punctuation was synchronized by the existing generator,
-then its API check, documentation tests and final builds passed. Fresh E2E,
-visual, Pages, installed archives, knip and manual acceptance are not claimed.
+then its API check, documentation tests and final builds passed. These earlier
+checks do not certify the latest browser/test edits. After the final browser
+repairs, targeted ESLint for all 23 changed TypeScript files and strict Playground
+types both exited 0 without diagnostics. The three later Home/Pages/unit files
+also passed focused ESLint, and Playground strict types passed again after the
+Home link correction.
+
+The reduced matrix registers 291 cases: 174 Chromium cases, including 60 Axe
+audits, plus 39 critical `@cross-browser` cases in each secondary profile.
+Five-theme visual/Axe coverage is retained. Both Axe entry points use the built-in
+in-page `setLegacyMode(true)` with zero-frame-element and single-page-frame guards,
+retaining the WCAG tags, include scopes, rules and zero-violation assertions.
+
+The complete reduced E2E batch FAILED: 289 passed, two failed, zero skipped,
+1,127,270 ms (18.8 minutes), in [the raw JSON](../.tmp/e2e-reduced-final-2026-10-20.json).
+The five-case targeted repair retry passed 5/5 with zero skipped/flaky cases,
+exit 0 and 34.6 seconds: [raw JSON](../.tmp/e2e-reduced-repairs-2026-10-20.json).
+It covers foundations in Chromium and native keyboard-link behavior in all four
+profiles. It does not relabel the failed full batch as passed.
+The earlier native 878-case attempt had 723 recorded starts without final JSON
+or completion totals and remains incomplete rather than passed.
+
+The primary Windows visual run passed 24/24 in 206,508 ms (3.4 minutes), with
+122 unchanged PNG comparisons: [raw JSON](../.tmp/visual-reduced-2026-10-20.json),
+Node 24.15.0 and pinned Chromium 145 headless shell. Earlier consumer units
+passed 132/132 in two files before the latest edits; the expanded foundation SFC
+consumer unit file separately passed 20/20 in 7.39 seconds. Counts overlap earlier
+units and are not a new full-suite total. The visual run predates the Home
+href-only correction below; CSS and structural markup are unchanged, references
+were not updated, and no post-correction visual rerun is claimed.
+
+The first Pages batch FAILED: 18 passed, four failed, zero skipped, 63,446 ms
+(1.1 minutes): [raw JSON](../.tmp/pages-reduced-2026-10-20.json). Three causes were
+repaired: HomePage's legacy-query `themedHref` now uses the existing canonical/
+portable URL builder with theme, language and hash; the Theme builder test awaits
+the canonical URL with the default five-second budget; its action-status assertion
+is scoped to the example article instead of an ambiguous Alert status.
+Two new Home-navigation regressions plus three existing home-assets cases passed
+5/5 in 25.14 seconds. These checks do not relabel the failed Pages batch.
+
+The latest Pages production build after the Home fix passed: 916 modules,
+5.84 seconds, `/gavia-ui/`, no E2E fixture. Fresh prerender passed 156/156 EN/RU
+routes: [report](../.tmp/pages-prerender-final-2026-10-20.json). The subsequent
+full Pages repeat passed 22/22, zero skipped/flaky, exit 0, 85,999 ms (1.4 minutes):
+[final raw JSON](../.tmp/pages-reduced-final-2026-10-20.json). The earlier failed
+batch remains separate evidence. The complete 291-case E2E matrix was not rerun
+after its five-case repair retry.
+
+Heavy checks ran sequentially; browser suites used one worker. After completion, ports 4173,
+4175 and 4177 had no listeners. The Unreleased entry and Playground-only changeset
+have no package release entry or package API/version bump. No new verification
+harness, commit, push or publication was introduced. Installed-archive, portable,
+knip and manual/owner acceptance remain separate. These records do not establish
+publication.
 
 ## Superseding implementation boundary — 2026-10-19
 
@@ -29,7 +83,7 @@ type, package, browser, visual and Pages acceptance is pending. The previously
 verified archive does not contain this code. See the current
 [implementation status](IMPLEMENTATION.md#current-follow-up--code-prepared-verification-deferred).
 
-The latest user instruction suspends new runs, commits, pushes and publication.
+At the 2026-10-19 checkpoint, the user suspended new runs, commits, pushes and publication.
 The subsequent lint/brand follow-up manually addresses the saved diagnostics,
 updates lint policy and relocates brand originals into `archives/brand`.
 A social SVG/PNG was created and viewed locally; that asset export is not a

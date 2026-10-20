@@ -19,9 +19,11 @@ export default defineConfig({
   use: { baseURL: existingStand ?? "http://127.0.0.1:4173", trace: "on-first-retry" },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"], channel: chromiumChannel } },
-    { name: "mobile-chromium", testIgnore: "accessibility.spec.ts", use: { ...devices["Pixel 7"], channel: chromiumChannel } },
-    { name: "firefox", testIgnore: "accessibility.spec.ts", use: { ...devices["Desktop Firefox"] } },
-    { name: "webkit", testIgnore: "accessibility.spec.ts", use: { ...devices["Desktop Safari"] } }
+    // Site content and inventory run once in Chromium. Repeat native interaction
+    // risks across engines and the touch viewport; themes have visual/Axe gates.
+    { name: "mobile-chromium", grep: /@cross-browser/, testIgnore: "accessibility.spec.ts", use: { ...devices["Pixel 7"], channel: chromiumChannel } },
+    { name: "firefox", grep: /@cross-browser/, testIgnore: "accessibility.spec.ts", use: { ...devices["Desktop Firefox"] } },
+    { name: "webkit", grep: /@cross-browser/, testIgnore: "accessibility.spec.ts", use: { ...devices["Desktop Safari"] } }
   ],
   webServer: existingStand
     ? undefined

@@ -7,11 +7,14 @@ historical checks; release, manual acceptance and publication remain separate.
 ## Current verification — 2026-10-20
 
 The user authorized the existing linter, strict typechecks, affected-code tests
-and production builds, including fixes. Node 22.14.0 and the installed portable
-pnpm 10.34.5 are used. No verification wrappers, dependency installs, commits,
-pushes or publication are authorized or added.
+and production builds, including fixes, followed by one commit and sequential
+native E2E, visual and Pages checks. Commit `5bfc00f` precedes the current browser
+changes. No further commits, pushes or publication are authorized. No new
+verification wrappers or dependency installs were added. The earlier source
+checks below used Node 22.14.0 and portable pnpm 10.34.5; browser environments
+are recorded separately in the follow-up.
 
-| Gate | Current result | Scope / remaining work |
+| Gate | Earlier completed result | Scope / remaining work |
 |---|---|---|
 | Full ESLint | PASS: 715 files, zero errors, 39 warnings, all max-len | [Final raw report](../.tmp/lint-2026-10-20-final.json); 36 stylistic + 3 Vue length warnings meet the <=50 criterion. Initial 64 errors/40 warnings are preserved in `.tmp/lint-2026-10-20.json`; rules were not weakened |
 | Strict types | Final PASS for library and Playground, no diagnostics | Existing package scripts rerun after repairs; Playground includes browser-spec/fixture types. Logs `.tmp/typecheck-2026-10-20-{library,playground}-final.log`; initial nested global-pnpm startup failure is recorded separately |
@@ -22,13 +25,54 @@ pushes or publication are authorized or added.
 | Playground production build | Final PASS: 916 modules, 7.06 seconds | Existing `gavia-ui-playground build`, repeated after API repair; no Pages/prerender/browser acceptance |
 | Source API metadata | Final PASS after normal regeneration | Layout fixing added a trailing semicolon to the FileUpload row-slot type. Existing `node scripts/sync-api.mjs` refreshed that one signature; `--check` then passed. Only punctuation changed; no public member or runtime behavior changed |
 
-Requested repairs and checks are complete on this source. Fixes address layout,
+The preceding source-repair iteration completed the named checks above; those
+results do not certify the later browser/test edits. Fixes address layout,
 type-only imports, import ordering, a literal test title, one callback's statement
 layout and obsolete lint directives. Source API metadata was updated only through
 its existing generator. No new verification machinery or dependencies were added.
-Older results below remain historical. Full E2E, visual, Pages, installed-archive,
-knip and manual accessibility/owner gates remain outside this run. Root HEAD is
-still `fc7792d`; the two pre-existing local commits are preserved.
+Browser results and outstanding repairs are recorded below. Installed-archive,
+knip and manual accessibility/owner acceptance remain separate. Root HEAD is
+`5bfc00f`; the two pre-existing local commits are preserved.
+
+## E2E reduction and browser follow-up
+
+The default matrix was reduced from 878 to 291 registered cases: 174 Chromium
+cases, including 60 Axe audits, plus 39 `@cross-browser` critical scenarios in
+each of mobile Chromium, Firefox and WebKit. All five themes remain covered
+by visual and Axe checks. Built-in `AxeBuilder.setLegacyMode(true)` collects
+results in the audited page without a temporary result tab. Both audit entry
+points require zero `iframe`/`frame` elements and exactly one `page.frames()`
+entry; WCAG tags, include scopes, rules and zero-violation assertions are retained.
+
+| Gate | Recorded result | Boundary / remaining work |
+|---|---|---|
+| Complete reduced production E2E | FAILED: 289 passed, two failed, zero skipped; 291 total, 1,127,270 ms (18.8 minutes) | [Raw JSON](../.tmp/e2e-reduced-final-2026-10-20.json). The foundations-documentation scenario and native Firefox case failed; this complete batch is not a passing gate |
+| Post-failure repairs | PASS: 5/5 targeted cases, zero skipped/flaky, exit 0, 34.6 seconds | [Raw JSON](../.tmp/e2e-reduced-repairs-2026-10-20.json): foundations in Chromium plus native keyboard-link behavior in all four profiles. This scoped pass does not relabel the failed full batch |
+| Final test-source checks | PASS: targeted ESLint for all 23 changed TypeScript files, then the three latest Home/Pages/unit files; strict Playground types passed again after the Home fix | All named checks exited 0 without diagnostics; no new full lint or unit suite |
+| Windows visual | PASS: 24/24, 206,508 ms (3.4 minutes), 122 unchanged PNG comparisons | [Raw JSON](../.tmp/visual-reduced-2026-10-20.json); Node 24.15.0 and pinned Chromium 145 headless shell, primary Windows baselines. This predates the Home href-only correction; CSS and structural markup are unchanged, but no post-correction visual rerun is claimed. No references were updated |
+| Playground consumer units | 132/132 in two existing files passed before the latest edits | These overlap earlier documentation/example results and do not establish the later repair outcome |
+| Foundation consumer backfill | PASS: 20/20, 7.39 seconds | [Existing unit file](../apps/playground/tests/responsive-documentation.test.ts) now discovers every foundation-example SFC, compiles public consumer imports/template/styles, handles markup-only examples and retains SSR/sidebar checks |
+| First Pages smoke batch | FAILED: 18 passed, four failed, zero skipped; 22 total, 63,446 ms (1.1 minutes) | [Raw JSON](../.tmp/pages-reduced-2026-10-20.json). This batch remains failed after the repairs below |
+| Home link regression units | PASS: 5/5 in 25.14 seconds | Two new Home-navigation regressions and three existing home-assets cases; no new full-unit total |
+| Latest Pages build and renewal | PASS after the Home fix: build 916 modules / 5.84 seconds, prerender 156/156, Pages 22/22 / 85,999 ms (1.4 minutes), zero skipped/flaky | [Final Pages JSON](../.tmp/pages-reduced-final-2026-10-20.json), [prerender report](../.tmp/pages-prerender-final-2026-10-20.json). Existing `/gavia-ui/` build without the E2E fixture; desktop/mobile, EN/RU, direct/legacy links, downloads and Theme Builder passed. No publication |
+
+The Pages failures exposed three causes. HomePage's `themedHref` still generated
+legacy-query links; it now uses the existing canonical/portable URL builder,
+preserving theme, language and hash. The Theme builder test now awaits its
+canonical URL with the default five-second assertion budget. Its action-status
+assertion is scoped to the example article, avoiding an ambiguous Alert status.
+The Unreleased entry and a Playground-only changeset with no package release
+entry describe this follow-up without a package API or version bump. The failed
+Pages batch and any subsequent repair result remain separate evidence.
+The renewed full Pages batch passed on the rebuilt site. Heavy checks ran
+sequentially; browser suites used one worker. Test ports 4173, 4175 and 4177 have no remaining
+listeners. No additional commit, push, publication or verification harness was
+introduced. The complete 291-case E2E matrix was not rerun after its scoped repairs.
+
+The preceding native 878-case attempt recorded 723 starts without a final JSON
+or completion totals. It remains incomplete diagnostic evidence, not 723 passes.
+The completed reduced batch above and its successful targeted repair retry are
+separate results. The targeted pass does not relabel the failed full batch.
 
 ## Current follow-up — code prepared, verification deferred
 
@@ -102,9 +146,10 @@ are not carried forward. No future browser or release pass is inferred.
   2026-10-18, including builds, archives, full tests/coverage and browser/visual/Pages
   checks. That authorization was superseded on 2026-10-19 by the instruction to
   implement the current stage, then lint debt and brand assets, without new
-  verification runs or harness work.
-  No new commit, push, publication, external post or remote setting change is
-  authorized.
+  verification runs or harness work. On 2026-10-20, existing checks and fixes,
+  one commit (`5bfc00f`) and sequential native E2E, visual and Pages checks were
+  authorized. That commit precedes the current browser changes; no further
+  commit, push, publication, external post or remote setting change is authorized.
 - Preserve CallbackInference overload guards, template Teleport/Transition
   adapters, historical compatibility fixtures, accepted font drawings and the
   two existing local commits. Generated files follow their generators.
@@ -247,7 +292,7 @@ below remain explicit.
 | T7.2 | Генератор компонента | Verified | Generator 10 scoped tests cover registration, source/type fixtures, dry-run and path/junction safety; new controls use the generator. |
 | T7.3 | Playground через `gavia-ui` | Implemented | Public gavia-ui imports/source aliases and five earlier installed-consumer lanes exist. New bootstrap config and public utility examples continue using public entries; their strict/unit/installed checks remain pending. |
 | T7.4 | Разбить CI | Implemented | CI/Pages/Release split, common setup, SHA pins, browser cache and exact-SHA Pages provenance authored; no workflow run or deployment claimed. |
-| T7.5 | Тесты Playground отдельно; дописать покрытие; ускорить | Implemented | 2026-10-20 affected Playground tests pass 354/354 in 26 files, with post-repair subset 172/172 and final documentation 60/60; final strict types pass. These overlap and are not a full-suite count. Earlier full 408/34 Node 22/24 evidence remains historical. |
+| T7.5 | Тесты Playground отдельно; дописать покрытие; ускорить | Implemented | Separate Playground tests and strict types pass. The browser matrix is reduced from 878 to 291; consumer units passed 132/132 plus the expanded 20-case foundation contract. Full E2E recorded 289 passes/two failures, then all five affected repair cases passed; see the browser follow-up above. Earlier unit counts overlap and are not a new full-suite total. |
 | T7.6 | Визуальные эталоны в Docker | Implemented | Last Windows and supplemental Linux runs each passed 24 cases/122 PNG comparisons at 1155/f5e6c272 with unchanged baselines and exact cleanup. Follow-up component styles/examples/config are unverified; Windows remains primary. No baselines or visual tooling changed in the follow-up. |
 | T8.1 | Пользовательская и мейнтейнерская документация | Implemented | English guide/reference/maintainer split and document index prepared; historical URLs retained as compatibility links. |
 | T8.2 | Один `migration.md` | Implemented | Canonical migration.md with preserved historical anchors/stubs and review-programme migration prepared; local link audits passed. |
@@ -262,9 +307,9 @@ below remain explicit.
 | T9.3 | Нормализация имён pt-секций и удаление алиасов | Partial | Canonical component/nested PT names, 0.x aliases/warnings and semantic tone/dismissible migration implemented; alias removals remain deferred to 1.0. |
 | T9.4 | Новые компоненты базового набора | Verified | Six generated controls: CheckboxGroup, RadioGroup, TooltipComponent, ContextMenu, Toolbar, TagsInput. With WlLink, seven public additions; group slice 15 and other focused behavior/type checks passed. |
 | T9.5 | Типы для `node16`/`nodenext` | Implemented | AST normalization, Node16/NodeNext fixtures, publint/attw and five consumer lanes passed on the earlier archive without ignored rules. Follow-up service/PT/utility declarations and compiler pins await renewed current-source/archive verification. |
-| T9.6 | Поведенческие a11y-тесты и ручная проверка | Partial | Keyboard/ARIA units passed; behavioral accessibility-tree browser suites are configured for the pending renewed full production E2E gate. Dated NVDA/Firefox and VoiceOver/Safari/macOS/iOS protocol remains prepared but unexecuted. |
+| T9.6 | Поведенческие a11y-тесты и ручная проверка | Partial | Keyboard/ARIA units, 60 five-theme Axe cases and the critical behavior/accessibility-tree browser scenarios passed in the reduced matrix. Its two documentation failures and the five-case successful repair retry are recorded separately above. Dated NVDA/Firefox and VoiceOver/Safari/macOS/iOS protocol remains prepared but unexecuted. |
 | T9.7 | Сайт: пути, пререндер, StackBlitz, examples | Implemented | Router/canonical EN-RU paths, query compatibility and prerender/SEO/search/StackBlitz are authored; three earlier starter builds/SSR/hydration passed. New bootstrap/examples are unverified; final Pages/prerender/portable smoke and actual StackBlitz/external listing remain pending. |
-| T9.8 | Релиз 1.0 | Partial | RC checklist, manual protocol, changelog/migration and announcement material prepared. Earlier snapshot gates passed; current-source checks, final E2E/Pages/prerender/portable gates, RC versioning, feedback window, manual/owner acceptance and publication remain pending. |
+| T9.8 | Релиз 1.0 | Partial | RC checklist, manual protocol, changelog/migration and announcement material prepared. Named affected units, lint/strict checks, builds and primary Windows visual passed with the source boundaries above. Reduced E2E recorded 289 passes/two failures, followed by five passing repair cases; no full post-repair repeat. Fresh Pages build, 156-route prerender and all 22 Pages cases passed after the Home fix. Current release/package acceptance, portable preview, RC versioning, feedback window, manual/owner acceptance and publication remain pending. |
 | T10.1 | NEW-8: WlVirtualList and opt-in list virtualization | Queued | Accepted group; see the 25 individual tasks in [10-post-1.0.md](10-post-1.0.md). No implementation or validation claimed. |
 | T10.2 | NEW-7: WlDataTable (controlled data, sort, selection and pagination; sticky/expandable columns) | Queued | Accepted group; see the 25 individual tasks in [10-post-1.0.md](10-post-1.0.md). No implementation or validation claimed. |
 | T10.3 | NEW-9: WlTree with APG keyboard navigation | Queued | Accepted group; see the 25 individual tasks in [10-post-1.0.md](10-post-1.0.md). No implementation or validation claimed. |

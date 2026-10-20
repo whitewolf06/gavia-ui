@@ -1,9 +1,7 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
-import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
-import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
 import { russianPlaygroundUrl } from "./playground-url";
-import { chooseDropdownOption, chooseShowcaseTheme } from "./select-helpers";
+import { chooseDropdownOption } from "./select-helpers";
 
 const uiKitVersion = (JSON.parse(readFileSync(
   new URL("../../../packages/ui-kit/package.json", import.meta.url), "utf8"
@@ -22,6 +20,8 @@ test.beforeEach(async ({ page }) => {
 });
 
 async function openDialogMotion(page: Page, buttonId: string) {
+  // Vue's CSS transition steps need an active page, including rapid enter cancellation.
+  await page.bringToFront();
   return page.locator(buttonId).evaluate(async (button) => {
     (button as HTMLButtonElement).click();
     await Promise.resolve();
@@ -38,7 +38,7 @@ async function openDialogClasses(page: Page, buttonId: string): Promise<string> 
   return (await openDialogMotion(page, buttonId)).classes;
 }
 
-test("selection controls keep values and keyboard behavior", async ({ page }) => {
+test("selection controls keep values and keyboard behavior", { tag: "@cross-browser" }, async ({ page }) => {
   const select = page.getByRole("combobox", { name: "Выбор", exact: true });
   await select.focus();
   await select.press("ArrowDown");
@@ -63,7 +63,7 @@ test("selection controls keep values and keyboard behavior", async ({ page }) =>
   await expect(page.locator("#auto-value")).toHaveText("b");
 });
 
-test("date picker keeps ISO model and honours text entry", async ({ page }) => {
+test("date picker keeps ISO model and honours text entry", { tag: "@cross-browser" }, async ({ page }) => {
   const input = page.getByRole("textbox", { name: "Дата" });
   await input.click();
   const day = page.locator(".wl-dp__day:not(.is-muted):not(.is-disabled)").first();
@@ -81,7 +81,7 @@ test("date picker keeps ISO model and honours text entry", async ({ page }) => {
   await expect(page.locator("#date-value")).toHaveText("2026-03-16");
 });
 
-test("dialog, drawer, menu and popover open and close", async ({ page }) => {
+test("dialog, drawer, menu and popover open and close", { tag: "@cross-browser" }, async ({ page }) => {
   await page.locator("#dialog-open").focus();
   await page.locator("#dialog-open").press("Enter");
   await expect(page.getByRole("dialog", { name: "Проверка диалога" })).toBeVisible();
@@ -106,7 +106,7 @@ test("dialog, drawer, menu and popover open and close", async ({ page }) => {
   await expect(page.getByRole("dialog", { name: "Детали" })).toHaveCount(0);
 });
 
-test("dialog and drawer keep a scrolling page at the same width", async ({ page }) => {
+test("dialog and drawer keep a scrolling page at the same width", { tag: "@cross-browser" }, async ({ page }) => {
   await page.evaluate(() => {
     const spacer = document.createElement("div");
     spacer.style.height = "200vh";
@@ -140,7 +140,7 @@ test("dialog and drawer keep a scrolling page at the same width", async ({ page 
   }
 });
 
-test("Docs layout stays in place when its dialog and drawer open", async ({ page }) => {
+test("Docs layout stays in place when its dialog and drawer open", { tag: "@cross-browser" }, async ({ page }) => {
   for (const [component, trigger, name] of [
     ["WlDialog", "Открыть диалог", "Сведения о материале"],
     ["WlDrawer", "Открыть панель", "О материале"]
@@ -168,7 +168,7 @@ test("Docs layout stays in place when its dialog and drawer open", async ({ page
   }
 });
 
-test("overlay motion defaults on and local settings override app configuration", async ({ page }) => {
+test("overlay motion defaults on and local settings override app configuration", { tag: "@cross-browser" }, async ({ page }) => {
   const motion = await openDialogMotion(page, "#dialog-open");
   expect(motion.classes).toContain("wl-dialog-motion-enter-active");
   expect(motion.duration).toBeGreaterThan(0.1);
@@ -198,7 +198,7 @@ test("overlay motion defaults on and local settings override app configuration",
   await expect(page.locator(".wl-dialog-mask")).toHaveCount(0);
 });
 
-test("drawer and tooltip animate, then release their DOM after closing", async ({ page }) => {
+test("drawer and tooltip animate, then release their DOM after closing", { tag: "@cross-browser" }, async ({ page }) => {
   const drawerClasses = await page.locator("#drawer-open").evaluate(async (button) => {
     (button as HTMLButtonElement).click();
     await Promise.resolve();
@@ -221,7 +221,7 @@ test("drawer and tooltip animate, then release their DOM after closing", async (
   await expect(page.getByRole("tooltip")).toHaveCount(0);
 });
 
-test("anchored panels animate without changing Escape dismissal", async ({ page }) => {
+test("anchored panels animate without changing Escape dismissal", { tag: "@cross-browser" }, async ({ page }) => {
   for (const [trigger, panel] of [
     ["#menu-open", ".wl-menu"],
     ["#popover-open", ".wl-popover"],
@@ -240,7 +240,7 @@ test("anchored panels animate without changing Escape dismissal", async ({ page 
   }
 });
 
-test("reopening a leaving list restores its accessible options", async ({ page }) => {
+test("reopening a leaving list restores its accessible options", { tag: "@cross-browser" }, async ({ page }) => {
   const select = page.getByRole("combobox", { name: "Выбор", exact: true });
   await select.click();
   await expect(page.getByRole("listbox")).toBeVisible();
@@ -253,7 +253,7 @@ test("reopening a leaving list restores its accessible options", async ({ page }
   await expect(page.getByRole("option", { name: "Альфа" })).toBeVisible();
 });
 
-test("toast messages animate in and out without retaining removed messages", async ({ page }) => {
+test("toast messages animate in and out without retaining removed messages", { tag: "@cross-browser" }, async ({ page }) => {
   const classes = await page.locator("#toast-open").evaluate(async (button) => {
     (button as HTMLButtonElement).click();
     await Promise.resolve();
@@ -264,7 +264,7 @@ test("toast messages animate in and out without retaining removed messages", asy
   await expect(page.locator(".wl-toast__message")).toHaveCount(0);
 });
 
-test("command palette keeps focus behavior with entry and exit motion", async ({ page }) => {
+test("command palette keeps focus behavior with entry and exit motion", { tag: "@cross-browser" }, async ({ page }) => {
   await page.locator("#palette-open").focus();
   const classes = await page.locator("#palette-open").evaluate(async (button) => {
     (button as HTMLButtonElement).click();
@@ -278,7 +278,7 @@ test("command palette keeps focus behavior with entry and exit motion", async ({
   await expect(page.locator("#palette-open")).toBeFocused();
 });
 
-test("command palette search focus ring stays inside its panel in every theme", async ({ page, browserName }, testInfo) => {
+test("command palette search focus ring stays inside its Gavia panel", { tag: "@cross-browser" }, async ({ page, browserName }, testInfo) => {
   const trigger = page.locator("#palette-open");
   await trigger.focus();
   await trigger.press("Enter");
@@ -287,36 +287,34 @@ test("command palette search focus ring stays inside its panel in every theme", 
   await expect(input).toBeFocused();
   await expect(page.locator(".wl-command-palette")).toHaveCSS("opacity", "1");
 
-  for (const theme of wlDesignThemes.map((theme) => theme.name)) {
-    await page.evaluate((name) => document.documentElement.setAttribute("data-wl-theme", name), theme);
-    const indicator = await search.evaluate((row) => {
-      const panel = row.parentElement!;
-      const input = row.querySelector("input")!;
-      const rowStyle = getComputedStyle(row);
-      const panelStyle = getComputedStyle(panel);
-      const rowBounds = row.getBoundingClientRect();
-      const panelBounds = panel.getBoundingClientRect();
-      const width = Number.parseFloat(rowStyle.outlineWidth);
-      const offset = Number.parseFloat(rowStyle.outlineOffset);
-      const outset = Math.max(0, width + offset);
-      return {
-        width,
-        offset,
-        inputOutline: getComputedStyle(input).outlineStyle,
-        radius: Number.parseFloat(rowStyle.borderTopLeftRadius),
-        contained: rowBounds.left - outset >= panelBounds.left + Number.parseFloat(panelStyle.borderLeftWidth) - 0.25
-          && rowBounds.top - outset >= panelBounds.top + Number.parseFloat(panelStyle.borderTopWidth) - 0.25
-          && rowBounds.right + outset <= panelBounds.right - Number.parseFloat(panelStyle.borderRightWidth) + 0.25
-          && rowBounds.bottom + outset <= panelBounds.bottom - Number.parseFloat(panelStyle.borderBottomWidth) + 0.25
-      };
-    });
-    expect(indicator.width, theme).toBeGreaterThanOrEqual(2);
-    expect(indicator.offset, theme).toBeLessThanOrEqual(-indicator.width);
-    expect(indicator.inputOutline, theme).toBe("none");
-    expect(indicator.radius, theme).toBeGreaterThan(0);
-    expect(indicator.contained, theme).toBe(true);
-    await captureChromiumArtifact(page, browserName, { path: testInfo.outputPath(`palette-focus-${theme}.png`) });
-  }
+  await page.evaluate(() => document.documentElement.setAttribute("data-wl-theme", "gavia"));
+  const indicator = await search.evaluate((row) => {
+    const panel = row.parentElement!;
+    const input = row.querySelector("input")!;
+    const rowStyle = getComputedStyle(row);
+    const panelStyle = getComputedStyle(panel);
+    const rowBounds = row.getBoundingClientRect();
+    const panelBounds = panel.getBoundingClientRect();
+    const width = Number.parseFloat(rowStyle.outlineWidth);
+    const offset = Number.parseFloat(rowStyle.outlineOffset);
+    const outset = Math.max(0, width + offset);
+    return {
+      width,
+      offset,
+      inputOutline: getComputedStyle(input).outlineStyle,
+      radius: Number.parseFloat(rowStyle.borderTopLeftRadius),
+      contained: rowBounds.left - outset >= panelBounds.left + Number.parseFloat(panelStyle.borderLeftWidth) - 0.25
+        && rowBounds.top - outset >= panelBounds.top + Number.parseFloat(panelStyle.borderTopWidth) - 0.25
+        && rowBounds.right + outset <= panelBounds.right - Number.parseFloat(panelStyle.borderRightWidth) + 0.25
+        && rowBounds.bottom + outset <= panelBounds.bottom - Number.parseFloat(panelStyle.borderBottomWidth) + 0.25
+    };
+  });
+  expect(indicator.width).toBeGreaterThanOrEqual(2);
+  expect(indicator.offset).toBeLessThanOrEqual(-indicator.width);
+  expect(indicator.inputOutline).toBe("none");
+  expect(indicator.radius).toBeGreaterThan(0);
+  expect(indicator.contained).toBe(true);
+  await captureChromiumArtifact(page, browserName, { path: testInfo.outputPath("palette-focus-gavia.png") });
 
   await input.press("Tab");
   const option = page.locator(".wl-command-palette").getByRole("option").first();
@@ -328,7 +326,7 @@ test("command palette search focus ring stays inside its panel in every theme", 
   await expect(trigger).toBeFocused();
 });
 
-test("confirmation message remains until its closing animation finishes", async ({ page }) => {
+test("confirmation message remains until its closing animation finishes", { tag: "@cross-browser" }, async ({ page }) => {
   await page.locator("#confirm-open").click();
   const messageDuringExit = await page.getByRole("button", { name: "Удалить", exact: true }).evaluate(async (button) => {
     (button as HTMLButtonElement).click();
@@ -339,7 +337,7 @@ test("confirmation message remains until its closing animation finishes", async 
   await expect(page.locator(".wl-dialog-mask")).toHaveCount(0);
 });
 
-test("reduced-motion preference shortens overlay transitions", async ({ page }) => {
+test("reduced-motion preference shortens overlay transitions", { tag: "@cross-browser" }, async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   const motion = await openDialogMotion(page, "#dialog-open");
   expect(motion.classes).toContain("wl-dialog-motion-enter-active");
@@ -352,7 +350,7 @@ test("reduced-motion preference shortens overlay transitions", async ({ page }) 
   await expect(page.getByRole("tooltip")).not.toHaveClass(/wl-tooltip-motion/);
 });
 
-test("toast, confirmation and tooltip remain accessible", async ({ page }) => {
+test("toast, confirmation and tooltip remain accessible", { tag: "@cross-browser" }, async ({ page }) => {
   await page.locator("#toast-open").click();
   await expect(page.locator(".wl-toast__summary")).toHaveText("Сохранено");
   await page.locator("#confirm-open").click();
@@ -363,40 +361,20 @@ test("toast, confirmation and tooltip remain accessible", async ({ page }) => {
   await expect(page.getByRole("tooltip")).toHaveText("Подсказка");
 });
 
-test("all themes render without runtime errors", async ({ page, browserName }, testInfo) => {
-  const errors: string[] = [];
-  const backgrounds: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  for (const theme of wlDesignThemes.map((theme) => theme.name)) {
-    await page.evaluate((name) => document.documentElement.setAttribute("data-wl-theme", name), theme);
-    await expect(page.locator(".wl-table__row")).toHaveCount(2);
-    backgrounds.push(await page.locator("body").evaluate((element) => getComputedStyle(element).backgroundColor));
-    await captureChromiumArtifact(page, browserName, { path: testInfo.outputPath(`fixture-${theme}.png`), fullPage: true });
-  }
-  expect(new Set(backgrounds).size).toBe(wlDesignThemes.length);
-  expect(errors).toEqual([]);
-});
-
-test("the complete icon batch renders at three sizes in each theme", async ({ page, browserName }, testInfo) => {
-  await page.goto(russianPlaygroundUrl("/?view=docs&section=icons"));
+// Catalog completeness/drawings are asset contracts; theme rendering has dedicated visual/a11y suites.
+test("the icon catalog size control updates a real SVG", async ({ page }) => {
+  await page.goto(russianPlaygroundUrl("/?view=docs&section=icons&theme=gavia"));
   await expect(page.locator(".pg-brand .pg-kit-version")).toHaveText(`v${uiKitVersion}`);
   const catalog = page.getByTestId("docs-icon-catalog");
-  await expect(catalog.locator("li")).toHaveCount(WL_ICON_NAMES.length);
-  for (const theme of wlDesignThemes.map((theme) => theme.name)) {
-    await chooseShowcaseTheme(page, wlDesignThemes.find((definition) => definition.name === theme)!.label);
-    await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme);
-    for (const size of [16, 20, 24]) {
-      await chooseDropdownOption(page, page.getByRole("combobox", { name: "Размер иконки", exact: true }), String(size));
-      const drawings = catalog.locator('svg[data-wl="icon"]');
-      await expect(drawings).toHaveCount(WL_ICON_NAMES.length);
-      const bounds = await drawings.evaluateAll((elements) => elements.map((svg) => {
-        const rect = svg.getBoundingClientRect();
-        return { width: rect.width, height: rect.height, hasPath: Boolean(svg.querySelector("path, circle, rect, line, polyline, polygon, ellipse")) };
-      }));
-      expect(bounds.every((item) => item.width === size && item.height === size && item.hasPath)).toBe(true);
-      await captureChromiumArtifact(catalog, browserName, {
-        path: testInfo.outputPath(`icons-${theme}-${size}.png`), style: ".pg-top { visibility: hidden; }"
-      });
-    }
+  const drawing = catalog.locator('svg[data-icon="check"]');
+  for (const size of [16, 20, 24]) {
+    await chooseDropdownOption(page, page.getByRole("combobox", { name: "Размер иконки", exact: true }), String(size));
+    await expect(drawing).toHaveAttribute("width", size + "px");
+    await expect(drawing).toHaveAttribute("height", size + "px");
+    const bounds = await drawing.evaluate((svg) => {
+      const rect = svg.getBoundingClientRect();
+      return { width: rect.width, height: rect.height, hasPath: Boolean(svg.querySelector("path")) };
+    });
+    expect(bounds).toEqual({ width: size, height: size, hasPath: true });
   }
 });

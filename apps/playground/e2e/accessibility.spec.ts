@@ -15,7 +15,11 @@ function showcaseUrl(baseURL: string | undefined, view: string, theme: string): 
 
 async function audit(page: Page, testInfo: TestInfo, name: string, include?: string): Promise<void> {
   await page.evaluate(() => document.fonts.ready);
-  const builder = new AxeBuilder({ page }).withTags(wcagTags);
+  // These surfaces have no frames. Audit in place, avoiding Axe's temporary
+  // results tab; fail explicitly if future content requires frame coverage.
+  await expect(page.locator("iframe, frame")).toHaveCount(0);
+  expect(page.frames()).toHaveLength(1);
+  const builder = new AxeBuilder({ page }).setLegacyMode().withTags(wcagTags);
   if (include) builder.include(include);
   const results = await builder.analyze();
   // Retain precise affected selectors and remediation in CI, without rule exclusions.
@@ -117,5 +121,23 @@ for (const theme of themes) {
         await state.inspect(page, preview, info);
       });
     }
+  }
+
+  for (const { view, selector, query } of [
+    { view: "home", selector: '[data-testid="home-quality"]', query: "" },
+    { view: "docs", selector: '[data-testid="docs-page"]', query: "&view=docs&section=quality" }
+  ]) {
+    test(theme + ": quality " + view + " meets automated WCAG checks", async ({ page }, testInfo) => {
+      await page.goto(russianPlaygroundUrl("/?theme=" + theme + query));
+      await expect(page.locator(selector)).toBeVisible();
+      await page.evaluate(() => document.fonts.ready);
+      await expect(page.locator("iframe, frame")).toHaveCount(0);
+      expect(page.frames()).toHaveLength(1);
+      const results = await new AxeBuilder({ page }).setLegacyMode().include(selector).withTags(wcagTags).analyze();
+      await testInfo.attach("quality-axe-" + theme + "-" + view, {
+        body: JSON.stringify(results.violations, null, 2), contentType: "application/json"
+      });
+      expect(results.violations).toEqual([]);
+    });
   }
 }
