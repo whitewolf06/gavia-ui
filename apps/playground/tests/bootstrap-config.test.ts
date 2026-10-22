@@ -79,6 +79,7 @@ beforeEach(async () => {
   window.history.replaceState(null, "", "/docs/");
 });
 afterEach(() => {
+  delete document.documentElement.dataset.wlBoot;
   for (const app of startup.apps) app.unmount();
   document.body.replaceChildren();
   window.history.replaceState(null, "", "/");

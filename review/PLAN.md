@@ -2,13 +2,15 @@
 
 > Execution authority: [approved decisions and live task ledger](IMPLEMENTATION.md) override the original recommendations and template permissions below. Vue 3.4 support and Windows primary baselines are retained. No commits or heavy checks are authorised implicitly.
 
-Current source: **1.0.0-rc.1, archive distribution checks passed on 2026-10-22**.
-Build/pack, strict publint/attw, contents/fonts/documents and one installed
-pnpm/Vue 3.4.38/TS 6.0.3 lane pass under sequential hard resource limits;
-remaining candidate release gates are pending. The owner approved the
+Current source: **1.0.0-rc.1; nine GitHub CI jobs pass at `e66ed54`**.
+Subsequent Playground loading changes are local and unverified. Formal manual
+acceptance is unavailable now and remains pending; performance/CLS, final-revision
+Pages preflight and delivery also remain open. See the
+[current result](IMPLEMENTATION.md#playground-loading-followup-2026-10-22).
+The owner approved the
 RC transition in place of a separate 0.x warning release: npm `next`, then two
 to four weeks of feedback after actual publication before stable 1.0. Font visual
-acceptance is confirmed. See the [current archive checkpoint](IMPLEMENTATION.md#rc1-archive-verification-2026-10-22);
+acceptance is confirmed. See the [earlier archive checkpoint](IMPLEMENTATION.md#rc1-archive-verification-2026-10-22);
 original phased versions and old pending statements below are historical planning.
 
 

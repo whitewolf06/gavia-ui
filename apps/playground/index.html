@@ -20,6 +20,7 @@
           ? typeof matchMedia === "function" && matchMedia("(prefers-color-scheme: dark)").matches ? "gavia-dark" : "gavia"
           : preference;
         const root = document.documentElement;
+        root.dataset.wlBoot = "loading";
         root.dataset.wlTheme = theme;
         root.style.colorScheme = theme === "gavia-dark" || theme === "graphite" ? "dark" : "light";
         const supported = (value) => value === "en" || value === "ru";
@@ -31,6 +32,46 @@
         root.lang = supported(requestedLocale) ? requestedLocale : pathLocale || (supported(savedLocale) ? savedLocale : detectedLocale || "en");
       })();
     </script>
+    <style>
+      /* Critical startup UI is available before the application CSS and chunks. */
+      html[data-wl-boot] { background: var(--wl-bg, #faf9f6); color: var(--wl-text, #0f1a23); }
+      html[data-wl-boot][data-wl-theme="gavia-dark"] { background: var(--wl-bg, #18191b); color: var(--wl-text, #eceee8); }
+      html[data-wl-boot][data-wl-theme="graphite"] { background: var(--wl-bg, #17181c); color: var(--wl-text, #e8eaee); }
+      html[data-wl-boot][data-wl-theme="white"] { background: var(--wl-bg, #fff); }
+      html[data-wl-boot][data-wl-theme="newspaper"] { background: var(--wl-bg, #fffefb); }
+      html[data-wl-boot] body { margin: 0; }
+      .pg-startup { display: none; }
+      html[data-wl-boot] .pg-startup {
+        display: grid;
+        min-height: 100svh;
+        box-sizing: border-box;
+        place-content: center;
+        justify-items: center;
+        gap: 20px;
+        padding: 32px 24px;
+        text-align: center;
+        font: 14px/1.6 system-ui, sans-serif;
+      }
+      html[data-wl-boot] .pg-static-fallback { display: none; }
+      .pg-startup-brand { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 600; letter-spacing: -.04em; }
+      .pg-startup-brand img { width: 44px; height: 44px; }
+      html[data-wl-theme="gavia-dark"] .pg-startup-brand img,
+      html[data-wl-theme="graphite"] .pg-startup-brand img { filter: brightness(2); }
+      .pg-startup-message { margin: 0; opacity: .7; }
+      .pg-startup-line { width: 160px; height: 2px; overflow: hidden; border-radius: 2px; background: rgb(128 128 128 / 18%); }
+      .pg-startup-line::after { content: ""; display: block; width: 40%; height: 100%; background: currentColor; animation: pg-startup 1.4s ease-in-out infinite; }
+      .pg-startup-ru { display: none; }
+      html[lang="ru"] .pg-startup-ru { display: inline; }
+      html[lang="ru"] .pg-startup-en { display: none; }
+      html[data-wl-boot="error"] .pg-startup-message,
+      html[data-wl-boot="error"] .pg-startup-line { display: none; }
+      .pg-startup-notice { max-width: 360px; }
+      .pg-startup-notice p { margin: 0 0 16px; }
+      .pg-startup-notice button { padding: 10px 18px; border: 1px solid currentColor; border-radius: 8px; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+      .pg-startup-notice button:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+      @keyframes pg-startup { from { transform: translateX(-100%); } to { transform: translateX(350%); } }
+      @media (prefers-reduced-motion: reduce) { .pg-startup-line::after { width: 100%; animation: none; } }
+    </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gavia UI — Vue 3 components and design system</title>
     <meta name="description" content="Vue 3 components, TypeScript, shared design tokens, five themes and interactive documentation. Open-source UI library by Dmitry Gorbach." />
@@ -59,7 +100,15 @@
   </head>
   <body>
     <div id="app">
-      <main class="wl-container wl-stack" data-space="lg">
+      <div class="pg-startup">
+        <div class="pg-startup-brand"><img src="./src/assets/gavia-favicon.svg" width="44" height="44" alt="" />Gavia UI</div>
+        <p class="pg-startup-message" role="status">
+          <span class="pg-startup-en">Loading page…</span><span class="pg-startup-ru" lang="ru">Загружаем страницу…</span>
+        </p>
+        <span class="pg-startup-line" aria-hidden="true"></span>
+        <div class="pg-startup-notice" data-playground-boot-error></div>
+      </div>
+      <main class="pg-static-fallback wl-container wl-stack" data-space="lg">
         <h1>Gavia UI</h1>
         <p>A component library for Vue 3. Buttons, inputs, tables and icons with shared design tokens, five themes and interactive examples.</p>
         <p>Created by Dmitry Gorbach, a frontend engineer with over 13 years of commercial development experience.</p>

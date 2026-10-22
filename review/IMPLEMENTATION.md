@@ -4,6 +4,45 @@ Approved on 2026-10-17. Accounting updated on 2026-10-22.
 The dated [verification record](VERIFICATION-2026-10-18.md) retains confirmed
 historical checks; release, manual acceptance and publication remain separate.
 
+<a id="playground-loading-followup-2026-10-22"></a>
+
+## Current result and Playground loading follow-up — 2026-10-22
+
+**Committed automation: PASS at `e66ed54ad94ceca2aba740f3b617c1284237589f`.
+New local Playground changes: implemented, verification pending.
+Manual release acceptance and publication: pending.**
+
+[CI 39746258276](https://github.com/whitewolf06/gavia-ui/actions/runs/39746258276)
+completed successfully: **9/9 jobs**, Node 22.13/24, strict types, API/generated
+assets, compatibility, release/tool tests, 990 library and 428 Playground tests,
+coverage thresholds, builds, package checks, npm/Vue 3.4.0/TypeScript 5.4.5 and
+Bun/Vue 3.5.40 consumers, SSR/hydration, four browser projects and Windows
+desktop/mobile visuals. ESLint recorded zero errors and 48 warnings. These
+results supersede the older pending remote/consumer/browser statements for that
+commit only. The local Windows archive checkpoint below retains its own hash;
+it is not the archive built by CI or a published RC.
+
+The owner cannot perform manual accessibility acceptance now. NVDA/Firefox,
+VoiceOver/Safari on macOS and physical iOS, and overall manual sign-off remain
+**Pending / unavailable now**, not Pass and not an implicit waiver. Prior font
+appearance acceptance remains confirmed. Also pending: T5.2's 500-option runtime
+comparison, T5.3 loading CLS, T5.4's <=80 KB gzip main-entry target, T5.5's <=400 KB
+home transfer target and a Pages-subpath preflight for the final revision. The
+separate Pages workflow did not run in the nine-job PR CI; no deployment is claimed.
+
+The owner then requested a cleaner loading experience. The local follow-up
+waits for page modules and catalogs together before replacing the current page,
+shows delayed navigation feedback, ignores stale failures and clears its timer
+on unmount. The initial HTML has a themed, reduced-motion-aware startup screen
+and recoverable errors; documentation sections and examples have shared
+loading/error placeholders. EN/RU messages and focused regression scenarios are
+authored. This follow-up changes the Playground only, with no library API,
+dependency or verification-harness change. The owner subsequently authorized a
+commit/push to the existing RC PR and renewed GitHub CI, with fixes for failures.
+No heavy local checks, new harness, merge, tag or publication are authorized.
+Renewed CI remains pending at this preparation checkpoint; the previous green
+run does not verify the loading follow-up. Screenshot baselines were not changed.
+
 <a id="rc1-ci-handoff-2026-10-22"></a>
 
 ## 1.0.0-rc.1 — commit, push and CI handoff authorized, 2026-10-22
@@ -818,7 +857,7 @@ was replaced by the owner's 2026-10-22 RC decision.
 | T4.7 | Мелкие улучшения компонентов | Verified | All 50 component-table rows remain tracked. Current full units/types, copied examples, archive consumers, visuals and production browser evidence cover the implemented pre-1.0 depth. AvatarGroup and separate datetime composition remain explicitly queued post-1.0. |
 | T5.1 | Оверлеи: слушатели только при открытии | Verified | Open-only listeners, frame/observer positioning and Tooltip hide/reopen/unmount/empty-value cleanup pass the current full unit suite and relevant production browser scenarios. No new lifecycle wrapper or runtime experiment remains. |
 | T5.2 | Быстрый путь `useWlPt` и кэш locale | Implemented | Current full units verify shared locale caching, PT merge priority and the immutable fast path. The before/after 500-option runtime benchmark remains unproved; bundle-size passes do not establish that target. |
-| T5.3 | Переменный шрифт | Partial | Canonical CSS/assets activated; Core size gate PASS: normal 75428, italic 79696 bytes. Recorded exact six-master geometry/metric/shaping, 27 Python units and the focused CSS-regeneration unit pass. Earlier Windows Chromium evidence covers one home font, presets/intermediate weights, real italic, Core/full cluster raster and the ZIP. Owner visual acceptance is confirmed on 2026-10-22. RC1 archive font hashes/licenses/CSS/emission pass; static binaries/artwork remain unchanged. Measured CLS and remaining fresh browser/regression acceptance stay pending; see [archive state](#rc1-archive-verification-2026-10-22). |
+| T5.3 | Переменный шрифт | Partial | Core size gate PASS: normal 75428, italic 79696 bytes; original masters/static assets and geometry/metric/shaping evidence retained. Owner appearance acceptance is confirmed. Font assets, variable-face loading, browser consumers and Windows visuals pass committed CI at e66ed54. Measured loading CLS remains pending. Later Playground loading edits are unverified; see [current result](#playground-loading-followup-2026-10-22). |
 | T5.4 | Playground: ленивые словари и предкомпиляция | Implemented | Current 428 Playground tests, production builds and Pages lazy-example/source scenarios pass; the virtual-resource resolver repair yields 390 byte-identical production assets. The separate <=80 KB gzip main-entry performance target remains unmeasured, not implied by functional acceptance. |
 | T5.5 | Playground: изображения и чанки | Implemented | Twelve derivative hashes/dimensions, lazy-image source, current production output and Windows/Linux visuals pass; Pages download/request scenarios pass. The separate <=400 KB home transfer target remains unmeasured. |
 | T5.6 | Один стек оверлеев | Verified | One global ownership stack preserves cross-app/nested portal behavior, scroll locks, focus and inert; reported overlay/service slice 92 passed. |
@@ -832,9 +871,9 @@ was replaced by the owner's 2026-10-22 RC decision.
 | T7.1 | Тесты по компонентам | Verified | Purpose-separated component/unit/contract tests retain historical scenarios and immutable fixtures. Current Node 24 run passes 989/989 tests in 123 files with all coverage thresholds; earlier Node 22 evidence remains historical, and the new remote Node matrix is not claimed executed. |
 | T7.2 | Генератор компонента | Verified | Generator 10 scoped tests cover registration, source/type fixtures, dry-run and path/junction safety; new controls use the generator. |
 | T7.3 | Playground через `gavia-ui` | Verified | Public package imports pass current Playground types/428 tests, production/Pages builds and three installed archive lanes. Each consumer compiles/builds all 66 copied examples through the published entries. |
-| T7.4 | Разбить CI | Implemented | CI/Pages/Release split, common setup, SHA pins, browser cache and exact-SHA Pages provenance authored; no workflow run or deployment claimed. |
+| T7.4 | Разбить CI | Implemented | CI/Pages/Release split, common setup, SHA pins, browser cache and exact-SHA provenance are implemented. The RC draft PR's CI passes all nine jobs at e66ed54. Pages and tag-triggered Release have not run for this candidate; no deployment or publication is claimed. |
 | T7.5 | Тесты Playground отдельно; дописать покрытие; ускорить | Verified | Current separate Playground suite passes 428/428 in 83.69 seconds. The 878-to-291 browser reduction remains: full batch 271 pass/20 fail in 8.8 minutes, followed by exact passing repairs for all 20 failures. All 291 distinct cases have passing evidence across runs, not one relabelled full PASS. |
-| T7.6 | Визуальные эталоны в Docker | Verified | Current Windows and supplemental Docker/Linux runs each pass 24 cases using distinct references. Windows compares 122 unchanged PNGs; Docker uses a fresh build, one CPU/2 GB/one worker/zero retries and read-only Linux PNGs with updates disabled. Primary Windows references are unchanged. |
+| T7.6 | Визуальные эталоны в Docker | Verified | Windows CI passes 24 cases at e66ed54 after seven RC/version/weight-control PNGs were inspected and updated. Supplemental Docker/Linux retains its earlier separate 24-case pass and unchanged Linux references. Neither historical Linux evidence nor the green committed Windows run verifies the later local loading follow-up. |
 | T8.1 | Пользовательская и мейнтейнерская документация | Implemented | English guide/reference/maintainer split and document index prepared; historical URLs retained as compatibility links. |
 | T8.2 | Один `migration.md` | Implemented | Canonical migration.md with preserved historical anchors/stubs and review-programme migration prepared; local link audits passed. |
 | T8.3 | ROADMAP как план | Implemented | Prospective Now/Next/Later/Non-goals roadmap and separate historical ledger prepared; remaining work stays explicit here. |
@@ -848,9 +887,9 @@ was replaced by the owner's 2026-10-22 RC decision.
 | T9.3 | Нормализация имён pt-секций и удаление алиасов | Verified | Canonical PT, independent iconButton PT, tone/status/Tag and dismissible migrations have passing units/types/API, exact version/hash-scoped 1.0 compatibility and three installed-consumer records. Major notes are retained in .changeset/pre/ and canonical migration links remain stable. The separate 0.x warning-release requirement was replaced by the approved RC transition; exact-candidate acceptance, RC feedback and publication remain pending. |
 | T9.4 | Новые компоненты базового набора | Verified | CheckboxGroup, RadioGroup, ContextMenu, Toolbar, TagsInput, WlTooltip/WlTooltipDirective and typed icon-action names pass current units/strict consumer fixtures, copied examples and browser scenarios. Old documentation links normalize; manual AT and release remain separate. |
 | T9.5 | Типы для `node16`/`nodenext` | Verified | Current declaration normalization, supported Node16/NodeNext ESM fixtures, strict publint/attw and native installed-archive consumers pass. Vue 3.4.0/TS 5.4.5 uses compatible vue-tsc 2.2.12; two TS 6 consumer lanes also pass. Unsupported Node10/CJS boundaries are explicit, not newly waived. |
-| T9.6 | Поведенческие a11y-тесты и ручная проверка | Partial | Current keyboard/ARIA units, five-theme Axe and critical accessibility-tree/browser scenarios have passing evidence across the full 291-case batch and exact repairs. Windows/Linux visuals and desktop/mobile Pages pass. Dated NVDA/Firefox and VoiceOver/Safari/macOS/iOS protocol remains prepared but unexecuted; owner acceptance is pending. |
+| T9.6 | Поведенческие a11y-тесты и ручная проверка | Partial | Keyboard/ARIA units, five-theme Axe and critical browser scenarios pass committed CI at e66ed54. The owner cannot perform manual acceptance now: NVDA/Firefox, VoiceOver/Safari/macOS/iOS and overall sign-off remain Pending / unavailable now. No manual pass or waiver is inferred; later loading changes await verification. |
 | T9.7 | Сайт: пути, пререндер, StackBlitz, examples | Partial | Current 428 Playground tests, production builds, 156 prerendered routes and 22/22 desktop/mobile Pages cases pass. Resolver repair preserves all 390 production assets byte-for-byte. StackBlitz/external listing/provider verification, remote deployment and actual public publication remain pending. |
-| T9.8 | Релиз 1.0 | Partial | RC1 versions, Changesets state, changelog and migration are prepared. The exact local archive passes build/pack, contents/docs/fonts, strict publint/attw and pnpm/Vue 3.4.38/TS 6.0.3 consumer checks. The approved RC transition and owner font acceptance remain recorded. Commit/push and existing remote CI are now authorized through a separate RC branch and draft PR. Remaining gates, matrix/hydration, performance/CLS, formal AT/overall acceptance, publication and feedback stay pending. No new infrastructure, merge, tag or publication is authorized. See [CI handoff](#rc1-ci-handoff-2026-10-22) and [archive verification](#rc1-archive-verification-2026-10-22). |
+| T9.8 | Релиз 1.0 | Partial | RC1 versions, Changesets, changelog and migration are prepared. The RC branch is pushed through draft PR #2; all nine CI jobs pass at e66ed54, including consumer/hydration lanes. Later local Playground loading edits are unverified. Performance/CLS, final Pages preflight, manual AT/overall acceptance, delivery and post-publication feedback remain pending. The older local archive retains its own hash. No merge, tag or publication performed; see [current result](#playground-loading-followup-2026-10-22). |
 | T10.1 | NEW-8: WlVirtualList and opt-in list virtualization | Queued | Accepted group; see the 25 individual tasks in [10-post-1.0.md](10-post-1.0.md). No implementation or validation claimed. |
 | T10.2 | NEW-7: WlDataTable (controlled data, sort, selection and pagination; sticky/expandable columns) | Queued | Accepted group; see the 25 individual tasks in [10-post-1.0.md](10-post-1.0.md). No implementation or validation claimed. |
 | T10.3 | NEW-9: WlTree with APG keyboard navigation | Queued | Accepted group; see the 25 individual tasks in [10-post-1.0.md](10-post-1.0.md). No implementation or validation claimed. |

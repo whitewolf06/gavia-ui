@@ -11,11 +11,13 @@
 
 **Status source:** Keep task IDs in the mapping column. Record current status, verification evidence and remaining scope only in [the execution ledger](IMPLEMENTATION.md#execution-ledger), avoiding a second status copy here.
 
-For **1.0.0-rc.1**, the exact archive now passes distribution checks and the
-pnpm/Vue 3.4.38/TS 6.0.3 consumer lane; remaining release gates stay pending.
-For evidence, the accepted RC transition and the owner's font acceptance,
-follow the [2026-10-22 archive checkpoint](IMPLEMENTATION.md#rc1-archive-verification-2026-10-22)
-and [candidate migration](../docs/migration.md#migration-1-0-rc-1).
+For **1.0.0-rc.1**, committed revision `e66ed54` passes all nine GitHub CI jobs.
+The subsequent local Playground loading follow-up is implemented but unverified;
+manual acceptance is unavailable now and remains pending, as do performance/CLS,
+final-revision Pages preflight and delivery. Use the
+[current result](IMPLEMENTATION.md#playground-loading-followup-2026-10-22)
+for exact evidence boundaries. The earlier archive hash and font acceptance
+remain in the [archive checkpoint](IMPLEMENTATION.md#rc1-archive-verification-2026-10-22).
 
 For LINT-3/T0.4, follow the [completed unused-code audit](T0.4-unused-code-audit-2026-10-21.md)
 and [current verification boundary](IMPLEMENTATION.md#t04-unused-code-audit-2026-10-21).

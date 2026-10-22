@@ -25,4 +25,22 @@ const initialLocale = parsePlaygroundLocale(window.location.search, window.locat
 void preloadPlaygroundCatalogs(initialView, initialLocale).catch(() => {});
 void preloadPlaygroundPage(initialView).catch(() => {});
 /** The component gallery is deliberately excluded from the initial entry. */
-void import("./bootstrap");
+void import("./bootstrap").catch(() => {
+  document.documentElement.dataset.wlBoot = "error";
+  let target = document.querySelector("[data-playground-boot-error]");
+  if (!target) {
+    target = document.createElement("div");
+    target.className = "pg-startup-notice wl-container";
+    document.getElementById("app")?.prepend(target);
+  }
+  target.setAttribute("role", "alert");
+  const message = document.createElement("p");
+  message.textContent = document.documentElement.lang === "ru"
+    ? "Не удалось загрузить содержимое. Попробуйте ещё раз."
+    : "The requested content could not be loaded. Try again.";
+  const reload = document.createElement("button");
+  reload.type = "button";
+  reload.textContent = document.documentElement.lang === "ru" ? "Обновить страницу" : "Reload page";
+  reload.addEventListener("click", () => window.location.reload(), { once: true });
+  target.replaceChildren(message, reload);
+});

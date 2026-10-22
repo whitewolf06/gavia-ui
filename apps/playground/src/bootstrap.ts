@@ -34,15 +34,18 @@ async function mount(): Promise<void> {
   };
   try {
     app.mount("#app");
+    delete document.documentElement.dataset.wlBoot;
   } catch (error) {
     localeScope.stop();
     throw error;
   }
 }
 function start(): void {
+  document.documentElement.dataset.wlBoot = "loading";
   void mount().catch(() => {
+    document.documentElement.dataset.wlBoot = "error";
     const notice = document.createElement("div");
-    notice.className = "wl-container";
+    notice.className = "pg-startup-notice";
     notice.setAttribute("role", "alert");
     const message = document.createElement("p");
     message.textContent = playgroundLocale.value === "ru"
@@ -56,7 +59,9 @@ function start(): void {
       start();
     }, { once: true });
     notice.append(message, retry);
-    document.getElementById("app")?.append(notice);
+    const target = document.querySelector("[data-playground-boot-error]");
+    if (target) target.append(notice);
+    else document.getElementById("app")?.prepend(notice);
   });
 }
 start();

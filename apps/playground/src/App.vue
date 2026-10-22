@@ -11,7 +11,7 @@ import { computed, defineAsyncComponent, inject, nextTick, onBeforeUnmount, onMo
 import { routerKey } from "vue-router";
 import gaviaMarkUrl from "../../../docs/brand/gavia-ui-mark-lake.svg";
 import { createPlaygroundNavigationUrl as createPlaygroundUrl, type DocumentationSection, isDocumentationSection, parsePlaygroundRoute, type PlaygroundRoute, type PlaygroundView } from "./navigation";
-import { playgroundPageLoaders } from "./page-loaders";
+import { playgroundPageLoaders, preloadPlaygroundPage } from "./page-loaders";
 import { playgroundNavigationKey } from "./playground-navigation";
 import PlaygroundHeader from "./PlaygroundHeader.vue";
 import { savePlaygroundPreference } from "./preferences";
@@ -69,20 +69,42 @@ const activeView = computed(() => activeRoute.value.view);
 // The shortcut demonstration owns Ctrl K; the header search still opens by click.
 const globalSearchShortcut = computed(() => !(activeRoute.value.view === "docs" && activeRoute.value.component === "WlCommandPalette"));
 const catalogRetry = shallowRef<(() => Promise<void>) | undefined>();
+const pageLoading = ref(false);
+let pageLoadingTimer: ReturnType<typeof setTimeout> | undefined;
 let navigationRevision = 0;
+function beginPageLoad(revision: number): void {
+  clearTimeout(pageLoadingTimer);
+  pageLoading.value = false;
+  catalogRetry.value = undefined;
+  // Cached routes should not flash a loader or interrupt screen-reader speech.
+  pageLoadingTimer = setTimeout(() => {
+    if (appMounted && revision === navigationRevision) pageLoading.value = true;
+  }, 150);
+}
+function endPageLoad(revision: number): void {
+  if (revision !== navigationRevision) return;
+  clearTimeout(pageLoadingTimer);
+  pageLoading.value = false;
+}
 async function readView(): Promise<void> {
   const revision = ++navigationRevision;
+  beginPageLoad(revision);
   cancelPendingThemeChange();
   cancelHistoryAnchor();
   const requestedRoute = routeFromLocation();
   const requestedLocale = parsePlaygroundLocale(window.location.search);
   try {
-    if (!await preparePlaygroundPage(requestedRoute.view, requestedLocale) || revision !== navigationRevision) return;
+    const [prepared] = await Promise.all([
+      preparePlaygroundPage(requestedRoute.view, requestedLocale), preloadPlaygroundPage(requestedRoute.view)
+    ]);
+    if (!prepared || !appMounted || revision !== navigationRevision) return;
     if (!await setPlaygroundLocale(requestedLocale) || revision !== navigationRevision) return;
     catalogRetry.value = undefined;
   } catch {
-    catalogRetry.value = readView;
+    if (appMounted && revision === navigationRevision) catalogRetry.value = readView;
     return;
+  } finally {
+    endPageLoad(revision);
   }
   activeRoute.value = routeFromLocation();
   themePreference.value = parsePlaygroundThemePreference(window.location.search);
@@ -113,14 +135,18 @@ async function readView(): Promise<void> {
 }
 async function navigate(route: PlaygroundRoute, anchor?: string): Promise<void> {
   const revision = ++navigationRevision;
+  beginPageLoad(revision);
   cancelPendingThemeChange();
   cancelHistoryAnchor();
   try {
-    if (!await preparePlaygroundPage(route.view) || revision !== navigationRevision) return;
+    const [prepared] = await Promise.all([preparePlaygroundPage(route.view), preloadPlaygroundPage(route.view)]);
+    if (!prepared || !appMounted || revision !== navigationRevision) return;
     catalogRetry.value = undefined;
   } catch {
-    catalogRetry.value = () => navigate(route, anchor);
+    if (appMounted && revision === navigationRevision) catalogRetry.value = () => navigate(route, anchor);
     return;
+  } finally {
+    endPageLoad(revision);
   }
   const url = createPlaygroundUrl(new URL(window.location.href), route);
   if (anchor) url.hash = anchor;
@@ -212,6 +238,8 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   appMounted = false;
+  navigationRevision++;
+  clearTimeout(pageLoadingTimer);
   cancelHistoryAnchor();
   themeTransition.dispose();
   stopRouter?.();
@@ -328,13 +356,16 @@ const commandPaletteGroups = computed<WlCommandPaletteGroup[]>(() => [
 
 async function chooseLocale(value: PlaygroundLocale): Promise<void> {
   const revision = ++navigationRevision;
+  beginPageLoad(revision);
   cancelPendingThemeChange();
   try {
-    if (!await setPlaygroundLocale(value) || revision !== navigationRevision) return;
+    if (!await setPlaygroundLocale(value) || !appMounted || revision !== navigationRevision) return;
     catalogRetry.value = undefined;
   } catch {
-    catalogRetry.value = () => chooseLocale(value);
+    if (appMounted && revision === navigationRevision) catalogRetry.value = () => chooseLocale(value);
     return;
+  } finally {
+    endPageLoad(revision);
   }
   const target = createPlaygroundUrl(createPlaygroundLocaleUrl(new URL(window.location.href), value), activeRoute.value);
   target.hash = window.location.hash;
@@ -460,6 +491,10 @@ watch(theme, (value) => {
       @theme="chooseTheme"
       @search="setCommandPaletteVisible(true)"
     />
+    <div v-if="pageLoading" class="pg-page-loading" role="status">
+      <span class="pg-page-loading-track" aria-hidden="true" />
+      <span class="pg-page-loading-label">{{ t('shell.page.loading') }}</span>
+    </div>
   </header>
   <WlCommandPalette
     v-model:query="commandPaletteQuery"
@@ -473,7 +508,7 @@ watch(theme, (value) => {
   </WlCommandPalette>
   <div
     v-if="catalogRetry"
-    class="wl-container wl-inline"
+    class="pg-page-error wl-container wl-inline"
     role="alert"
     data-space="sm"
   >
@@ -530,6 +565,42 @@ watch(theme, (value) => {
 
 <style>
 .pg-top { border-bottom: 1px solid var(--wl-border); position: sticky; top: 0; background: var(--wl-bg); z-index: var(--wl-layer-sticky); }
+.pg-page-loading {
+  position: absolute;
+  inset: auto 0 -2px;
+  height: 2px;
+  overflow: visible;
+  pointer-events: none;
+}
+.pg-page-loading-track { display: block; height: 100%; overflow: hidden; background: var(--wl-border); }
+.pg-page-loading-track::after {
+  content: "";
+  display: block;
+  width: 35%;
+  height: 100%;
+  background: var(--wl-text-accent);
+  animation: pg-page-loading 1.2s ease-in-out infinite;
+}
+.pg-page-loading-label {
+  position: absolute;
+  top: 14px;
+  right: 24px;
+  padding: 8px 14px;
+  border: 1px solid var(--wl-border);
+  border-radius: 24px;
+  background: var(--wl-bg);
+  color: var(--wl-text-2);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 6%);
+  font-size: var(--wl-type-small-size);
+}
+.pg-page-error { padding-block: 16px; }
+@keyframes pg-page-loading {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(385%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pg-page-loading-track::after { width: 100%; animation: none; }
+}
 .pg-footer {
   display: flex;
   align-items: center;

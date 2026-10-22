@@ -7,6 +7,8 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 ## Unreleased
 
+- Playground: retain the current page until its replacement module and translations are ready; add a themed startup screen, delayed navigation feedback and loading/error placeholders for documentation and live examples.
+
 ## 1.0.0-rc.1 — prepared
 
 Prepared on **2026-10-22**. Publication date: **pending**. Intended npm channel:

@@ -1,4 +1,5 @@
 import { type Component, defineAsyncComponent } from "vue";
+import PlaygroundPageLoading from "../../PlaygroundPageLoading.vue";
 import { inputDocumentationAccessibility, inputDocumentationExamples } from "./inputs";
 import { showcaseDocumentationAccessibility, showcaseDocumentationExamples } from "./showcase";
 interface ComponentDocumentationExample { title: string; description: string; sourceName: string }
@@ -10,7 +11,9 @@ export const componentDocumentationAccessibility: Readonly<Record<string, readon
 };
 const modules = import.meta.glob<{ default: Component }>(["./inputs/*.vue", "./showcase/*.vue"]);
 const sources = import.meta.glob<string>(["./inputs/*.vue", "./showcase/*.vue"], { query: "?raw", import: "default" });
-const examples = Object.fromEntries(Object.entries(modules).map(([path, loader]) => [path, defineAsyncComponent(loader)]));
+const examples = Object.fromEntries(Object.entries(modules).map(([path, loader]) => [
+  path, defineAsyncComponent({ loader, loadingComponent: PlaygroundPageLoading, errorComponent: PlaygroundPageLoading, delay: 0 })
+]));
 export function documentationExample(name: string) {
   const definition = componentDocumentationExamples[name];
   if (!definition) return undefined;

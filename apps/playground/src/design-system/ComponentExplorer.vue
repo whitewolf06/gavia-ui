@@ -7,6 +7,7 @@ import { WlButton, WlCheckbox, WlInput, WlNumberInput, WlSelect } from "gavia-ui
 import { type Component, computed, defineAsyncComponent, nextTick, ref, watch } from "vue";
 import { consumerSource } from "./code";
 import CodePanel from "./CodePanel.vue";
+import PlaygroundPageLoading from "../PlaygroundPageLoading.vue";
 import { acceptsDocumentationValue, documentationComplexProps, type DocumentationControl, documentationDefaults, documentationPresets } from "./documentation-controls";
 import { useLazySource } from "./lazy-source";
 import { documentationControls, stateCases, stateControls } from "./states";
@@ -14,7 +15,9 @@ const documentationLayout = computed(() => props.layout === "documentation");
 const headingPrefix = computed(() => props.headingPrefix ?? "docs-" + props.entry.name.toLowerCase());
 const modules = import.meta.glob<{ default: Component }>("./examples/*.vue");
 const sources = import.meta.glob<string>("./examples/*.vue", { query: "?raw", import: "default" });
-const examples = Object.fromEntries(Object.entries(modules).map(([path, loader]) => [path, defineAsyncComponent(loader)]));
+const examples = Object.fromEntries(Object.entries(modules).map(([path, loader]) => [
+  path, defineAsyncComponent({ loader, loadingComponent: PlaygroundPageLoading, errorComponent: PlaygroundPageLoading, delay: 0 })
+]));
 const example = computed(() => examples[`./examples/${props.entry.name}.vue`]);
 const { source: canonicalSource, loading: sourceLoading, error: sourceError, reload: reloadSource }
   = useLazySource(() => sources[`./examples/${props.entry.name}.vue`]);

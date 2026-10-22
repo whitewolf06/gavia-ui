@@ -1,13 +1,15 @@
 # Preparing Gavia UI 1.0.0-rc.1
 
-Status on **2026-10-22: the exact RC archive passes distribution checks and one
-installed-consumer lane; remaining release gates and publication are pending**.
-After source preparation, the owner separately authorized building and checking
-the archive with hard resource limits, then approved up to four wrapper processes
-within the same aggregate limit. The owner subsequently authorized a commit,
-push and the existing CI through a separate RC branch/draft PR. Those remote
-results remain pending; see the [CI handoff](../../review/IMPLEMENTATION.md#rc1-ci-handoff-2026-10-22).
-No new infrastructure, merge, tag or publication is authorized. Follow
+Status on **2026-10-22: all nine GitHub CI jobs pass at `e66ed54`; subsequent
+local Playground loading changes are implemented but unverified**.
+The owner cannot perform manual acceptance now; its protocol remains pending.
+Performance/CLS, final-revision Pages preflight, overall release acceptance and
+publication also remain pending. See the
+[current result](../../review/IMPLEMENTATION.md#playground-loading-followup-2026-10-22)
+and [successful CI](https://github.com/whitewolf06/gavia-ui/actions/runs/39746258276).
+The earlier bounded local archive check retains its own hash and scope below.
+No new runs, infrastructure, merge, tag or publication were performed for the
+loading follow-up. Follow
 [the release procedure](releases.md) after the required separate delivery instructions.
 
 ## Candidate scope
@@ -27,7 +29,7 @@ another candidate with its own verification.
 - [x] Prepare English locale fallback, canonical pt/dismissible/tone names,
   Tooltip export migration and icon-action name types with before/after examples
   and explicit Russian locale opt-in. This records source preparation only;
-  automated/consumer/manual acceptance below is pending.
+  committed automated/consumer results and remaining manual acceptance are below.
 - [ ] Review public utils/composables, new controls, router adapter boundaries,
   types, manifests, live SFC examples and English/Russian guides together.
 - [ ] Close or explicitly disposition every required pre-1.0 item in the
@@ -36,12 +38,14 @@ another candidate with its own verification.
 - [x] Retain the completed variable-font geometry/metric/shaping and size evidence;
   record the owner's visual font acceptance on 2026-10-22. The original artwork
   and static binaries remain. The exact archive's font contents, hashes, CSS and
-  consumer asset emission now pass; CLS and fresh browser checks remain pending.
+  consumer asset emission and committed browser checks pass; measured CLS remains pending.
 - [x] Prepare the canonical changelog and [candidate migration](../migration.md#migration-1-0-rc-1),
   including localization, PT/tone/dismissible, Tooltip and icon-action names.
 - [x] Generate package README/LICENSE/CHANGELOG through the existing prepack hook
   and verify their canonical contents in the installed RC archive. The ignored
   generated copies were not edited by hand.
+- [ ] Verify the local Playground startup/navigation loading follow-up. Earlier
+  green CI does not cover these later edits or the new regression scenarios.
 
 ## Prepared version state
 
@@ -50,7 +54,7 @@ Playground package, excluded from Changesets versioning, keeps 0.1.0 and its
 `workspace:*` dependency. Dependency ranges and lockfile resolutions were not
 changed by this preparation. Introduction metadata for the seven newly added
 components now points to **1.0.0-rc.1**. The existing manifest contract accepts RC
-suffixes as well as stable versions; it was updated but not run. This preserves
+suffixes as well as stable versions and passes the committed CI. This preserves
 the first-public-version meaning without attributing new components to 0.12.1.
 Playground source-version badges use the package metadata. The published-version
 field is 0.12.1, matching the registry read-back rather than the prepared RC.
@@ -74,25 +78,25 @@ and saved quality snapshots retain their original versions and evidence.
 
 ## Evidence for the exact candidate
 
-The distribution result below belongs to one exact archive from the uncommitted
-working tree on base HEAD `9c2be71fa6bbd3378aacdd4b8f5332775a75645d`. It does not
-certify the whole release checklist. Earlier results retain their original source
-boundaries; missing current-candidate checks remain pending.
+The latest completed automated result belongs to committed revision
+`e66ed54ad94ceca2aba740f3b617c1284237589f`, not the later local loading changes.
+The historical local archive on base `9c2be71` is recorded separately below;
+its hash is not reused for CI archives or future publication.
 
 | Gate | Required evidence | Status |
 | --- | --- | --- |
-| Source and generated assets | Strict package/Playground typechecks, lint, token/icon/API generation checks; no unexplained warnings | Partial: library build generated declarations with the existing strict diagnostic gate; separate typechecks, lint and asset-generation checks not run |
-| Tests | Full library and Playground tests, coverage thresholds, focused regressions and release-tool tests | Pending |
-| Distribution | Build, pack, tar file/license/font inspection, external Vue, installed-archive import/SSR, publint and attw | Verified for the archive below: library build, prepack/pack, contents, installed consumer, publint strict and all six attw JS/JSON entrypoints under the existing ESM-only profile |
-| Consumer contracts | Minimum and current Vue, TypeScript consumer matrix, strict templates/TSX, unchanged compatibility snapshots and approved migration policy | Partial: pnpm / Vue 3.4.38 / TypeScript 6.0.3 passes 21 contract files and 66 copied SFCs with strict templates/TSX and skipLibCheck false; minimum/3.5/other-manager lanes and compatibility rerun pending |
-| SSR IDs | Two instances, parallel/repeated SSR and hydration on Vue 3.4/3.5; no collisions, mismatches or suppression | Partial: native import and DOM-free SSR pass with seven stable IDs and no warnings on Vue 3.4.38; full SSR/hydration matrix pending |
-| Browser behavior | Production build; desktop/mobile, open/active/selected accessibility-tree states, keyboard, disabled/empty states, focus and overlay cleanup | Pending |
-| Themes and visuals | Five themes; Windows/Chromium canonical desktop/mobile images and reviewed diffs; Docker/Linux has separate supplemental baselines | Pending |
-| Performance | Fresh bundle and transfer measurements, documented budgets with 5% headroom; no reused review measurements | Partial: installed WlButton graph passes the unchanged budget, 30383 gzip bytes including Vue / 24035 rendered kit bytes; broader measurements and CLS pending |
-| Manual accessibility | [Ten-component NVDA/VoiceOver protocol](manual-accessibility.md), physical mobile results and explicit owner acceptance | Pending |
-| Documentation site | Production Pages subpath, direct paths, legacy query links, prerender, search, recipes, starter examples and copied SFCs | Pending |
+| Source and generated assets | Strict package/Playground types, lint, token/icon/API generation checks | PASS in CI on Node 22.13/24; ESLint has zero errors and 48 warnings. Local loading edits are not checked |
+| Tests | Full library/Playground tests, coverage, focused regressions and release-tool tests | PASS in CI: 990 library and 428 Playground tests, coverage thresholds and tooling. New loading regressions are authored but not run |
+| Distribution | Build, pack, contents/licenses/fonts, external Vue, installed import/SSR, publint and attw | PASS for CI-built archives at e66ed54, including strict publint and supported ESM declarations. The final publish workflow must verify the exact archive it publishes |
+| Consumer contracts | Minimum/current Vue and TypeScript, strict templates/TSX, immutable compatibility fixtures | PASS in CI: npm/Vue 3.4.0/TypeScript 5.4.5, Bun/Vue 3.5.40, default pnpm consumer and approved compatibility gate |
+| SSR IDs | Repeated/concurrent SSR and hydration on Vue 3.4/3.5, without collisions or warning suppression | PASS in committed units and installed browser-consumer/hydration lanes |
+| Browser behavior | Production desktop/mobile, keyboard/ARIA, disabled/empty states, focus and overlay cleanup | PASS in all four CI browser projects. New page-loading behavior remains unverified |
+| Themes and visuals | Five themes; reviewed Windows desktop/mobile PNGs; separate supplemental Linux references | PASS in Windows CI after inspection of seven expected/actual/diff triples. Older Linux evidence remains historical; no loading-follow-up images were reviewed |
+| Performance | Runtime/entry/transfer/CLS measurements in addition to bundle budgets | CI bundle budgets pass. Pending: 500-option runtime comparison, <=80 KB gzip main entry, <=400 KB home transfer and font-loading CLS |
+| Manual accessibility | [NVDA/VoiceOver protocol](manual-accessibility.md), physical mobile and owner acceptance | Pending / unavailable now, as reported by the owner on 2026-10-22; no pass or waiver |
+| Documentation site | Final-revision Pages subpath, direct/legacy links and prerender | Pending for the final revision. Pages build/smoke is a separate workflow and was not part of the nine-job PR CI |
 
-Full/browser/visual/Pages checks still require the user's separate instruction.
+Further checks of the local follow-up require the user's separate instruction.
 Correct screenshot differences require inspection before any baseline update.
 Record unavailable platforms as pending or blocked.
 
@@ -170,17 +174,17 @@ earlier evidence is preserved; this archive check does not renew it.
 
 ```text
 Candidate version: 1.0.0-rc.1
-Source revision: RC PR/CI head SHA; local archive checkpoint predates commit on base HEAD 9c2be71
+Source revision: e66ed54 passes CI; subsequent local Playground loading edits are unverified
 Archive: .tmp/rc1-package-2026-10-22/gavia-ui-1.0.0-rc.1.tgz (1250887 bytes)
 Archive SHA256: 0748a7e32277e7ebeaaa1aef0306a65f8af3e756aeeabb344c2545d9f315081a
 Authorized actions/date: preparation, then bounded build/pack/archive verification, 2026-10-22
 CI handoff authorization, 2026-10-22: commit/push codex/gavia-1-0-rc-1 and draft PR into main
 Code readiness: implemented scope recorded in review/IMPLEMENTATION.md
-Automated gates: distribution and pnpm/Vue 3.4.38/TS 6.0.3 consumer PASS; other gates pending
+Automated gates: 9/9 GitHub jobs PASS at e66ed54; local loading follow-up pending
 Manual font acceptance: owner confirmed, 2026-10-22
-Pending quality: performance/CLS and formal NVDA/VoiceOver/mobile protocol
+Pending quality: loading follow-up checks, final Pages preflight, performance/CLS, manual NVDA/VoiceOver/mobile and overall acceptance
 Transition decision: RC feedback replaces the separate 0.x warning release
-CI runs / remaining consumer matrix / exact-candidate browser and visuals: pending
+CI run: https://github.com/whitewolf06/gavia-ui/actions/runs/39746258276 (success)
 Registry observation, 2026-10-22: latest 0.12.1; no candidate published
 RC channel / publication date / integrity: next / pending / pending
 GitHub release / Pages deployment: not performed

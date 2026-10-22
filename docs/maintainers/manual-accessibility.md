@@ -4,6 +4,11 @@ Status: **protocol prepared; all execution and acceptance pending**.
 Prepared on 2026-10-17 for review task T9.6. No NVDA, VoiceOver, Safari, mobile
 device or owner acceptance is claimed by this document.
 
+On 2026-10-22 the owner reported being unable to perform the manual checks now.
+The protocol remains Pending / unavailable now; no manual pass or waiver was
+granted. Successful automated CI at `e66ed54` does not fill these result cells.
+The owner's separate font appearance acceptance is retained in the RC record.
+
 Use this protocol against the exact release candidate and its production
 Playground or installed consumer. Record the source SHA, installed archive hash
 and URL. An earlier source test, axe report, accessibility-tree snapshot or

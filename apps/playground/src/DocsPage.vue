@@ -10,18 +10,23 @@ const emit = defineEmits<{
 }>();
 const { t } = usePlaygroundI18n();
 import { WlButton, WlIcon, WlIconButton, WlInput, WlSegmented, type WlThemeName } from "gavia-ui";
+import type { AsyncComponentLoader, Component } from "vue";
 import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { getLocalizedManifest } from "./documentation/manifest";
 const wlManifest = getLocalizedManifest();
 import CodePanel from "./design-system/CodePanel.vue";
+import PlaygroundPageLoading from "./PlaygroundPageLoading.vue";
+const asyncContent = <Page extends Component>(loader: AsyncComponentLoader<Page>) => defineAsyncComponent({
+  loader, loadingComponent: PlaygroundPageLoading, errorComponent: PlaygroundPageLoading, delay: 0
+});
 import { documentationAssetPages, documentationAssets } from "./documentation/assets/assets";
-const DocumentationAssetsPage = defineAsyncComponent(() => import("./documentation/assets/DocumentationAssetsPage.vue"));
-const ButtonDocumentation = defineAsyncComponent(() => import("./documentation/ButtonDocumentation.vue"));
+const DocumentationAssetsPage = asyncContent(() => import("./documentation/assets/DocumentationAssetsPage.vue"));
+const ButtonDocumentation = asyncContent(() => import("./documentation/ButtonDocumentation.vue"));
 import { documentationCategories, documentationFoundationPages, documentationFoundations, type DocumentationHeading, documentationOverviewHeadings, foundationHeadings, installationSource } from "./documentation/catalog";
-const ComponentDocumentation = defineAsyncComponent(() => import("./documentation/ComponentDocumentation.vue"));
-const FoundationPage = defineAsyncComponent(() => import("./documentation/foundations/FoundationPage.vue"));
-const DocumentationQualityPage = defineAsyncComponent(() => import("./documentation/quality/DocumentationQualityPage.vue"));
-const GuidePage = defineAsyncComponent(() => import("./documentation/GuidePage.vue"));
+const ComponentDocumentation = asyncContent(() => import("./documentation/ComponentDocumentation.vue"));
+const FoundationPage = asyncContent(() => import("./documentation/foundations/FoundationPage.vue"));
+const DocumentationQualityPage = asyncContent(() => import("./documentation/quality/DocumentationQualityPage.vue"));
+const GuidePage = asyncContent(() => import("./documentation/GuidePage.vue"));
 import { documentationGuide, documentationGuideSections } from "./documentation/guides";
 import { documentationQualityPage } from "./documentation/quality/quality";
 import { useDocumentationScrollspy } from "./documentation/useDocumentationScrollspy";

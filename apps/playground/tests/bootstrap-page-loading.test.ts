@@ -45,6 +45,7 @@ beforeEach(() => {
   window.history.replaceState(null, "", "/ru/docs/components/WlSelect/?theme=white");
 });
 afterEach(() => {
+  delete document.documentElement.dataset.wlBoot;
   document.body.replaceChildren();
   window.history.replaceState(null, "", "/");
 });
@@ -59,6 +60,7 @@ describe("initial page preparation", () => {
     expect(startup.preload).toHaveBeenCalledExactlyOnceWith("docs");
     expect(startup.messages).toHaveBeenCalledExactlyOnceWith("docs");
     expect(startup.createApp).not.toHaveBeenCalled();
+    expect(document.documentElement.dataset.wlBoot).toBe("loading");
     if (first === "page") page.resolve({ default: {} });
     else messages.resolve(true);
     await flushPromises();
@@ -68,6 +70,7 @@ describe("initial page preparation", () => {
     else page.resolve({ default: {} });
     await flushPromises();
     expect(startup.app.mount).toHaveBeenCalledExactlyOnceWith("#app");
+    expect(document.documentElement.dataset.wlBoot).toBeUndefined();
   });
 
   it("routes failed initial imports through the existing retry UI before mounting", async () => {
@@ -76,6 +79,7 @@ describe("initial page preparation", () => {
     await import("../src/bootstrap");
     await flushPromises();
     expect(startup.app.mount).not.toHaveBeenCalled();
+    expect(document.documentElement.dataset.wlBoot).toBe("error");
     expect(document.querySelector('[role="alert"]')?.textContent).toContain("Не удалось загрузить содержимое");
     document.querySelector<HTMLButtonElement>('[role="alert"] button')!.click();
     await flushPromises();
