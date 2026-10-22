@@ -49,7 +49,11 @@ describe("icon display compatibility", () => {
   });
 
   it("accepts persisted identifiers through button and navigation icon props", () => {
-    expect(mount(WlIconButton, { props: { icon: "pi pi-cog" } }).get("svg").attributes("data-icon")).toBe("settings");
-    expect(mount(WlNavItem, { props: { icon: "pi pi-briefcase", label: "Project" } }).get("svg").attributes("data-icon")).toBe("briefcase");
+    const button = mount(WlIconButton, { props: { icon: "pi pi-cog", ariaLabel: "Settings" } });
+    const navigation = mount(WlNavItem, { props: { icon: "pi pi-briefcase", label: "Project" } });
+    expect(button.get("svg").attributes("data-icon")).toBe("settings");
+    expect(navigation.get("svg").attributes("data-icon")).toBe("briefcase");
+    button.unmount();
+    navigation.unmount();
   });
 });

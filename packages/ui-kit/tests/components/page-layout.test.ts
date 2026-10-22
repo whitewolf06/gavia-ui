@@ -1,5 +1,5 @@
 import { mount, type VueWrapper } from "@vue/test-utils";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { defineComponent, h, nextTick, reactive } from "vue";
 import type { WlConfigOptions } from "../../src";
 import type { GlobalMountOptions } from "../mounting-types";
@@ -110,13 +110,21 @@ describe("WlFilterBar", () => {
     expect(clear.text()).toBe("Сбросить");
     expect(apply.text()).toBe("Применить");
 
-    await wrapper.setProps({ ariaLabel: "", toggleLabel: "", panelTitle: "", closeLabel: "", clearLabel: "", applyLabel: "" });
-    expect(root.attributes("aria-label")).toBe("");
-    expect(toggle.text()).toBe("1");
-    expect(title.text()).toBe("");
-    expect(close.attributes("aria-label")).toBe("");
-    expect(clear.text()).toBe("");
-    expect(apply.text()).toBe("");
+    const warning = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      await wrapper.setProps({ ariaLabel: "", toggleLabel: "", panelTitle: "", closeLabel: "", clearLabel: "", applyLabel: "" });
+      await nextTick();
+      expect(root.attributes("aria-label")).toBe("");
+      expect(toggle.text()).toBe("1");
+      expect(title.text()).toBe("");
+      expect(close.attributes("aria-label")).toBe("");
+      expect(clear.text()).toBe("");
+      expect(apply.text()).toBe("");
+      expect(warning).toHaveBeenCalledTimes(1);
+      expect(warning).toHaveBeenCalledWith(expect.stringContaining("WlIconButton needs ariaLabel"));
+    } finally {
+      warning.mockRestore();
+    }
 
     await wrapper.setProps({
       ariaLabel: undefined, toggleLabel: undefined, panelTitle: undefined,

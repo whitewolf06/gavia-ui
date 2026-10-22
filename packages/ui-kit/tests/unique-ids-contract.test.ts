@@ -17,6 +17,7 @@ const fixtures: Record<string, Record<string, unknown>> = {
   WlCommandPalette: { visible: true, items: [{ id: "one", label: "One" }] },
   WlPagination: { pageCount: 4 },
   WlRadio: { value: "one" },
+  WlIconButton: { ariaLabel: "Action" },
   WlTable: { value: [{ title: "One" }], columns: [{ key: "title", label: "Title" }] },
   WlMenu: { items: [{ label: "One" }] },
   WlContextMenu: { items: [{ key: "one", label: "One" }] },
