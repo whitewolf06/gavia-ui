@@ -51,6 +51,15 @@ errors (seven self-closing spans and two import-order issues), cancelling Node
 rules, warning budgets, screenshots and verification infrastructure are unchanged.
 The new unit scenarios still await execution beyond the lint gate.
 
+Revision `15dac93e8816066bee884def58a0fc4ded3439e0` ran in
+[CI 39757896801](https://github.com/whitewolf06/gavia-ui/actions/runs/39757896801).
+All browser/visual jobs passed. Lint found one remaining parent-before-sibling
+import ordering issue in ComponentExplorer; the loading component import now
+precedes the entire sibling group. The optional one-file local ESLint attempt
+was stopped by its unchanged 45-second wall bound (exit 124, peak 126.81 MiB,
+one core / 1 GiB); it produced no lint result and is not counted as a pass.
+It is not retried locally. The next validation remains the existing remote CI.
+
 <a id="rc1-ci-handoff-2026-10-22"></a>
 
 ## 1.0.0-rc.1 — commit, push and CI handoff authorized, 2026-10-22
