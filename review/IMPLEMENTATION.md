@@ -60,6 +60,17 @@ was stopped by its unchanged 45-second wall bound (exit 124, peak 126.81 MiB,
 one core / 1 GiB); it produced no lint result and is not counted as a pass.
 It is not retried locally. The next validation remains the existing remote CI.
 
+Revision `dcfed8d8c9934914b5869c5ad0047fa93332f20e` passed lint, all 990 library
+tests and the 428 prior Playground tests in
+[CI 39758836146](https://github.com/whitewolf06/gavia-ui/actions/runs/39758836146).
+The four new loading tests failed because their mocked import namespace lacked
+the ES-module marker: Vue treated `{ default: component }` as the component and
+rendered no fixture page. The fixtures now carry `__esModule: true`, matching the
+existing async-module fixture convention. URL assertions also use the real
+route parser rather than assuming legacy query transport. Behavior assertions
+are retained, including exact URL preservation during a pending navigation.
+The application loading code, thresholds and snapshots are unchanged by this fix.
+
 <a id="rc1-ci-handoff-2026-10-22"></a>
 
 ## 1.0.0-rc.1 — commit, push and CI handoff authorized, 2026-10-22
