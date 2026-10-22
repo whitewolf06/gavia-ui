@@ -9,8 +9,8 @@ const emit = defineEmits<{
   navigate: [view: "system" | "project" | "components"];
 }>();
 const { t } = usePlaygroundI18n();
-import { WlButton, WlIcon, WlIconButton, WlInput, WlSegmented, type WlThemeName } from "gavia-ui";
 import type { AsyncComponentLoader, Component } from "vue";
+import { WlButton, WlIcon, WlIconButton, WlInput, WlSegmented, type WlThemeName } from "gavia-ui";
 import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { getLocalizedManifest } from "./documentation/manifest";
 const wlManifest = getLocalizedManifest();

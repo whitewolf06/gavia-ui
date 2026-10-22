@@ -17,13 +17,13 @@ function reload(): void {
     <template v-else>
       <span class="pg-content-loading-label">{{ t('shell.page.loading') }}</span>
       <div class="pg-content-loading-skeleton" aria-hidden="true">
-        <span class="pg-content-loading-line pg-content-loading-line--title" />
-        <span class="pg-content-loading-line" />
-        <span class="pg-content-loading-line pg-content-loading-line--short" />
+        <span class="pg-content-loading-line pg-content-loading-line--title"></span>
+        <span class="pg-content-loading-line"></span>
+        <span class="pg-content-loading-line pg-content-loading-line--short"></span>
         <div class="pg-content-loading-panel">
-          <span class="pg-content-loading-line pg-content-loading-line--short" />
-          <span class="pg-content-loading-line" />
-          <span class="pg-content-loading-line" />
+          <span class="pg-content-loading-line pg-content-loading-line--short"></span>
+          <span class="pg-content-loading-line"></span>
+          <span class="pg-content-loading-line"></span>
         </div>
       </div>
     </template>

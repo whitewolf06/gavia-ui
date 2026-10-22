@@ -43,6 +43,14 @@ No heavy local checks, new harness, merge, tag or publication are authorized.
 Renewed CI remains pending at this preparation checkpoint; the previous green
 run does not verify the loading follow-up. Screenshot baselines were not changed.
 
+The follow-up was committed/pushed as `8715aed9aa30960f37bfaaf6d2e62e1389603586`.
+[CI 39757122569](https://github.com/whitewolf06/gavia-ui/actions/runs/39757122569)
+passed Windows visuals and the browser checks; Node 22 stopped at nine new lint
+errors (seven self-closing spans and two import-order issues), cancelling Node
+24 and skipping dependent consumer jobs. Those source errors are corrected;
+rules, warning budgets, screenshots and verification infrastructure are unchanged.
+The new unit scenarios still await execution beyond the lint gate.
+
 <a id="rc1-ci-handoff-2026-10-22"></a>
 
 ## 1.0.0-rc.1 — commit, push and CI handoff authorized, 2026-10-22

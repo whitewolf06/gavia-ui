@@ -492,7 +492,7 @@ watch(theme, (value) => {
       @search="setCommandPaletteVisible(true)"
     />
     <div v-if="pageLoading" class="pg-page-loading" role="status">
-      <span class="pg-page-loading-track" aria-hidden="true" />
+      <span class="pg-page-loading-track" aria-hidden="true"></span>
       <span class="pg-page-loading-label">{{ t('shell.page.loading') }}</span>
     </div>
   </header>
