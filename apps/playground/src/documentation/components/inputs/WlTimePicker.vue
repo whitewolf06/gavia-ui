@@ -66,11 +66,24 @@ const night = ref<string | null>("23:30");
           :required="required"
           :aria-describedby="ariaDescribedby"
         /></WlField>
-        <WlField id="docs-time-disabled" v-slot="{ id }" :label="t('examples.unavailable_time_0882')"><WlTimePicker :id="id" model-value="10:00" disabled /></WlField>
+        <WlField id="docs-time-disabled" v-slot="{ id }" :label="t('examples.unavailable_time_0882')">
+          <WlTimePicker :id="id" model-value="10:00" disabled />
+        </WlField>
       </div>
       <p class="wl-text-small wl-text-muted">{{ t("examples.the_model_is_hh_mm_or_null_without_a_date_or_time_zone_an_empt_0883") }}</p>
-      <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="appointment = null; night = null">{{ t("examples.clear_time_0884") }}</WlButton><WlButton size="sm" @click="appointment = '09:30'; night = '23:30'">{{ t("examples.reset_time_0885") }}</WlButton></div>
-      <p class="wl-text-small" role="status">{{ t("examples.meeting_0886") }} {{ appointment ?? 'null' }}{{ t("examples.night_shift_0887") }} {{ night ?? 'null' }}.</p>
+      <div class="wl-inline" data-space="sm">
+        <WlButton size="sm" @click="appointment = null; night = null">{{ t("examples.clear_time_0884") }}</WlButton>
+        <WlButton size="sm" @click="appointment = '09:30'; night = '23:30'">{{ t("examples.reset_time_0885") }}</WlButton>
+      </div>
+      <p class="wl-text-small" role="status">{{
+        t("examples.meeting_0886")
+      }} {{
+        appointment ?? 'null'
+      }}{{
+        t("examples.night_shift_0887")
+      }} {{
+        night ?? 'null'
+      }}.</p>
     </section>
   </div>
 </template>

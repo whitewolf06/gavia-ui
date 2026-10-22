@@ -83,7 +83,13 @@ const localCss = [
         <code>wlBreakpoints</code> {{ t('documentation.strings.s0731') }}
         <code>packages/ui-kit/tokens/source.json</code>{{ t('documentation.strings.s0732') }}
       </p>
-      <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0733') }} <code>var()</code> {{ t('documentation.strings.s0734') }} <code>@media</code> {{ t('documentation.strings.s0096') }} <code>@container</code>. <a class="docs-text-link" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Cascading_variables/Using_custom_properties">CSS custom properties — MDN</a>.</p>
+      <p class="wl-text-small wl-text-muted">{{
+        t('documentation.strings.s0733')
+      }} <code>var()</code> {{
+        t('documentation.strings.s0734')
+      }} <code>@media</code> {{
+        t('documentation.strings.s0096')
+      }} <code>@container</code>. <a class="docs-text-link" href="https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Cascading_variables/Using_custom_properties">CSS custom properties — MDN</a>.</p>
     </section>
     <FoundationExample v-for="sample in examples" :key="sample.name" v-bind="sample" />
     <section class="wl-stack" data-space="md" aria-labelledby="docs-responsive-overrides">
@@ -108,7 +114,17 @@ const localCss = [
           href="https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Containment/Container_queries"
         >Container queries — MDN</a>.
       </p>
-      <p class="wl-text-body">{{ t('documentation.strings.s0744') }} <code>tokens/source.json → breakpoints</code> {{ t('documentation.strings.s0745') }} <code>pnpm tokens:sync</code>{{ t('documentation.strings.s0746') }} <code>pnpm tokens:check</code>{{ t('documentation.strings.s0747') }} <code>@media</code> {{ t('documentation.strings.s0748') }}</p>
+      <p class="wl-text-body">{{
+        t('documentation.strings.s0744')
+      }} <code>tokens/source.json → breakpoints</code> {{
+        t('documentation.strings.s0745')
+      }} <code>pnpm tokens:sync</code>{{
+        t('documentation.strings.s0746')
+      }} <code>pnpm tokens:check</code>{{
+        t('documentation.strings.s0747')
+      }} <code>@media</code> {{
+        t('documentation.strings.s0748')
+      }}</p>
     </section>
     <section class="wl-stack" data-space="md" aria-labelledby="docs-responsive-components">
       <h2 id="docs-responsive-components" class="docs-foundation-anchor wl-text-heading">{{ t('documentation.strings.s0194') }}</h2>
@@ -147,7 +163,13 @@ const localCss = [
       </div>
       <p class="wl-text-body">{{ t('documentation.strings.s0758') }}</p>
       <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0759') }}</p>
-      <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0760') }} <a class="docs-text-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia">matchMedia</a> {{ t('documentation.strings.s0089') }} <a class="docs-text-link" href="https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList/change_event">{{ t('documentation.strings.s0761') }}</a>.</p>
+      <p class="wl-text-small wl-text-muted">{{
+        t('documentation.strings.s0760')
+      }} <a class="docs-text-link" href="https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia">matchMedia</a> {{
+        t('documentation.strings.s0089')
+      }} <a class="docs-text-link" href="https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList/change_event">{{
+        t('documentation.strings.s0761')
+      }}</a>.</p>
     </section>
     <section class="wl-stack" data-space="md" aria-labelledby="docs-responsive-checks">
       <h2 id="docs-responsive-checks" class="docs-foundation-anchor wl-text-heading">{{ t('documentation.strings.s0195') }}</h2>

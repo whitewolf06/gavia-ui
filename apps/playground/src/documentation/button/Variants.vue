@@ -28,15 +28,27 @@ const lastAction = ref("");
         <code class="wl-text-small">{{ variant }}</code>
       </div>
       <div class="wl-stack" data-space="sm">
-        <div><WlButton variant="primary" tone="danger" @click="lastAction = t('examples.delete_0037')">{{ t('examples.delete_0037') }}</WlButton></div>
+        <div>
+          <WlButton variant="primary" tone="danger" @click="lastAction = t('examples.delete_0037')">
+            {{ t('examples.delete_0037') }}
+          </WlButton>
+        </div>
         <code class="wl-text-small">primary + danger</code>
       </div>
       <div class="wl-stack" data-space="sm">
-        <div><WlButton variant="ghost" tone="danger" @click="lastAction = t('examples.delete_quietly_0293')">{{ t('examples.delete_quietly_0293') }}</WlButton></div>
+        <div>
+          <WlButton variant="ghost" tone="danger" @click="lastAction = t('examples.delete_quietly_0293')">
+            {{ t('examples.delete_quietly_0293') }}
+          </WlButton>
+        </div>
         <code class="wl-text-small">ghost + danger</code>
       </div>
       <div class="wl-stack" data-space="sm">
-        <div><WlButton variant="soft" tone="danger" @click="lastAction = t('examples.archive_0113')">{{ t('examples.archive_0113') }}</WlButton></div>
+        <div>
+          <WlButton variant="soft" tone="danger" @click="lastAction = t('examples.archive_0113')">
+            {{ t('examples.archive_0113') }}
+          </WlButton>
+        </div>
         <code class="wl-text-small">soft + danger</code>
       </div>
     </div>

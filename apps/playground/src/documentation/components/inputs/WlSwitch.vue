@@ -18,15 +18,35 @@ const protectedMode = ref(false);
     </section>
     <section class="wl-stack" data-space="md">
       <h3 class="wl-text-title">{{ t("examples.error_and_unavailable_setting_0846") }}</h3>
-      <WlField id="docs-switch-protected" v-slot="{ id, ariaDescribedby, invalid }" :error="protectedMode ? undefined : t('examples.enable_protection_before_continuing_0847')"><WlSwitch
+      <WlField
+        id="docs-switch-protected"
+        v-slot="{ id, ariaDescribedby, invalid }"
+        :error="protectedMode ? undefined : t('examples.enable_protection_before_continuing_0847')"
+      ><WlSwitch
         :id="id"
         v-model="protectedMode"
         :invalid="invalid"
         :aria-describedby="ariaDescribedby"
       >{{ t("examples.protected_mode_0848") }}</WlSwitch></WlField>
       <WlSwitch :model-value="true" disabled>{{ t("examples.archiving_is_enabled_by_an_administrator_0849") }}</WlSwitch>
-      <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="notifications = true; compactNotifications = false; protectedMode = false">{{ t("examples.reset_settings_0850") }}</WlButton></div>
-      <p class="wl-text-small" role="status">{{ t("examples.notifications_0851") }} {{ notifications ? t("examples.enabled_0852") : t("examples.disabled_0853") }}{{ t("examples.brief_0854") }} {{ compactNotifications ? t("examples.enabled_0852") : t("examples.disabled_0853") }}{{ t("examples.protection_0855") }} {{ protectedMode ? t("examples.enabled_0856") : t("examples.disabled_0857") }}.</p>
+      <div class="wl-inline" data-space="sm">
+        <WlButton size="sm" @click="notifications = true; compactNotifications = false; protectedMode = false">
+          {{ t("examples.reset_settings_0850") }}
+        </WlButton>
+      </div>
+      <p class="wl-text-small" role="status">{{
+        t("examples.notifications_0851")
+      }} {{
+        notifications ? t("examples.enabled_0852") : t("examples.disabled_0853")
+      }}{{
+        t("examples.brief_0854")
+      }} {{
+        compactNotifications ? t("examples.enabled_0852") : t("examples.disabled_0853")
+      }}{{
+        t("examples.protection_0855")
+      }} {{
+        protectedMode ? t("examples.enabled_0856") : t("examples.disabled_0857")
+      }}.</p>
     </section>
   </div>
 </template>

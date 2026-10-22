@@ -81,7 +81,19 @@ const price = ref(12.5);
         /></WlField>
       </div>
       <WlButton size="sm" @click="quantity = 3; budget = 20; price = 12.5">{{ t("examples.reset_numbers_0790") }}</WlButton>
-      <p class="wl-text-small" role="status">{{ t("examples.quantity_0791") }} {{ quantity }}{{ t("examples.budget_0792") }} {{ budget }}{{ t("examples.price_0793") }} {{ price }}.</p>
+      <p class="wl-text-small" role="status">{{
+        t("examples.quantity_0791")
+      }} {{
+        quantity
+      }}{{
+        t("examples.budget_0792")
+      }} {{
+        budget
+      }}{{
+        t("examples.price_0793")
+      }} {{
+        price
+      }}.</p>
     </section>
   </div>
 </template>

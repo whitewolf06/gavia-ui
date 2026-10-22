@@ -60,5 +60,8 @@ export function tableConsumerTypes(): void {
   void [
     keyedProps, resolverProps, columnKey, wrongKey, wrongResolver, wrongSelection, wrongSort, wrongHeaderKey
   ];
-  void [props, virtualProps, legacyProps, nameScope, scoreScope, optionalScope, typoProps, implicitVirtual, broadBypass, wrongVirtual, wrongRows, wrongName, wrongScore, wrongRow, Consumer];
+  void [
+    props, virtualProps, legacyProps, nameScope, scoreScope, optionalScope, typoProps,
+    implicitVirtual, broadBypass, wrongVirtual, wrongRows, wrongName, wrongScore, wrongRow, Consumer
+  ];
 }

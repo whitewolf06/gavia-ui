@@ -22,7 +22,9 @@ const login = ref("");
         >
           <WlInput :id="id" v-model="title" :size="size" />
         </WlField>
-        <WlField id="docs-input-compact" v-slot="{ id }" :label="t('examples.compact_field_0743')"><WlInput :id="id" v-model="title" density="compact" /></WlField>
+        <WlField id="docs-input-compact" v-slot="{ id }" :label="t('examples.compact_field_0743')">
+          <WlInput :id="id" v-model="title" density="compact" />
+        </WlField>
       </div>
     </section>
     <section class="wl-stack" data-space="md">
@@ -39,7 +41,10 @@ const login = ref("");
             v-model="amount"
             inputmode="decimal"
             :aria-describedby="ariaDescribedby"
-          ><template #prefix><WlIcon name="file" :size="16" /></template><template #suffix><span class="wl-text-small">₽</span></template></WlInput>
+          >
+            <template #prefix><WlIcon name="file" :size="16" /></template>
+            <template #suffix><span class="wl-text-small">₽</span></template>
+          </WlInput>
         </WlField>
         <WlField
           id="docs-input-login"
@@ -57,10 +62,14 @@ const login = ref("");
             :placeholder="t('examples.for_example_dmitry_0749')"
           />
         </WlField>
-        <WlField id="docs-input-disabled" v-slot="{ id }" :label="t('examples.unavailable_field_0750')"><WlInput :id="id" :model-value="t('examples.the_title_is_set_by_an_administrator_0751')" disabled /></WlField>
+        <WlField id="docs-input-disabled" v-slot="{ id }" :label="t('examples.unavailable_field_0750')">
+          <WlInput :id="id" :model-value="t('examples.the_title_is_set_by_an_administrator_0751')" disabled />
+        </WlField>
       </div>
       <WlButton size="sm" @click="title = ''; amount = ''; login = ''">{{ t("examples.clear_fields_0752") }}</WlButton>
-      <p class="wl-text-small" role="status">{{ t("examples.title_0753") }} {{ title || t("examples.not_set_0754") }}{{ t("examples.cost_0755") }} {{ amount || t("examples.not_set_0756") }}.</p>
+      <p class="wl-text-small" role="status">{{ t("examples.title_0753") }} {{
+        title || t("examples.not_set_0754")
+      }}{{ t("examples.cost_0755") }} {{ amount || t("examples.not_set_0756") }}.</p>
     </section>
   </div>
 </template>

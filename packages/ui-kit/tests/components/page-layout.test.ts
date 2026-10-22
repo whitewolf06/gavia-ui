@@ -118,7 +118,10 @@ describe("WlFilterBar", () => {
     expect(clear.text()).toBe("");
     expect(apply.text()).toBe("");
 
-    await wrapper.setProps({ ariaLabel: undefined, toggleLabel: undefined, panelTitle: undefined, closeLabel: undefined, clearLabel: undefined, applyLabel: undefined });
+    await wrapper.setProps({
+      ariaLabel: undefined, toggleLabel: undefined, panelTitle: undefined,
+      closeLabel: undefined, clearLabel: undefined, applyLabel: undefined
+    });
     expect(root.attributes("aria-label")).toBe("Filters");
     expect(toggle.text()).toContain("Filters");
     expect(title.text()).toBe("Filters");

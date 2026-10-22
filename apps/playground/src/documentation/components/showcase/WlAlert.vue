@@ -17,7 +17,9 @@ async function showError(visible: boolean, retry = false): Promise<void> {
 <template>
   <div class="wl-stack" data-space="lg">
     <WlAlert tone="info" :title="t('examples.tip_0309')">{{ t("examples.your_application_saves_the_settings_0310") }}</WlAlert>
-    <WlAlert tone="success" :title="t('examples.saved_0311')">{{ t("examples.all_changes_are_recorded_in_the_local_example_0312") }}</WlAlert>
+    <WlAlert tone="success" :title="t('examples.saved_0311')">{{
+      t("examples.all_changes_are_recorded_in_the_local_example_0312")
+    }}</WlAlert>
     <WlAlert tone="warning" :title="t('examples.low_on_space_0313')">
       {{ t("examples.free_up_space_before_adding_another_attachment_0314") }}
       <template #action>

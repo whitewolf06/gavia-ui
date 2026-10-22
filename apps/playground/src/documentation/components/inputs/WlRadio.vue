@@ -47,7 +47,15 @@ const format = ref<string | null>(null);
       >{{ t("examples.choose_an_export_format_0815") }}</p>
     </fieldset>
     <WlButton size="sm" @click="visibility = 'team'; format = null">{{ t("examples.reset_groups_0816") }}</WlButton>
-    <p class="wl-text-small" role="status">{{ t("examples.access_0817") }} {{ visibility }}{{ t("examples.format_0818") }} {{ format ?? t("examples.not_selected_0637") }}.</p>
+    <p class="wl-text-small" role="status">{{
+      t("examples.access_0817")
+    }} {{
+      visibility
+    }}{{
+      t("examples.format_0818")
+    }} {{
+      format ?? t("examples.not_selected_0637")
+    }}.</p>
   </div>
 </template>
 

@@ -3,6 +3,10 @@ import { computed } from "vue";
 import { playgroundLocale } from "../i18n";
 const props = defineProps<{ name: string }>();
 const russian = computed(() => playgroundLocale.value === "ru");
+const accessibilityNote = computed(() => russian.value
+  ? "Задайте понятное доступное имя и свяжите подпись, подсказку и ошибку с фокусируемым элементом. Проверьте поведение со своими данными и скринридером."
+  : "Provide a meaningful accessible name and connect labels, hints and errors to the focusable element. Check the behavior with your own data and a screen reader."
+);
 type Rule = readonly [string, string, string];
 const rules = computed<Rule[]>(() => {
   const name = props.name;
@@ -74,7 +78,7 @@ const pattern = computed(() => {
         </tbody>
       </table>
     </div>
-    <p class="wl-text-small">{{ russian ? 'Задайте понятное доступное имя и свяжите подпись, подсказку и ошибку с фокусируемым элементом. Проверьте поведение со своими данными и скринридером.' : 'Provide a meaningful accessible name and connect labels, hints and errors to the focusable element. Check the behavior with your own data and a screen reader.' }}</p>
+    <p class="wl-text-small">{{ accessibilityNote }}</p>
     <a class="docs-text-link" :href="`https://www.w3.org/WAI/ARIA/apg/patterns/${pattern ? pattern + '/' : ''}`">WAI-ARIA Authoring Practices</a>
   </div>
 </template>

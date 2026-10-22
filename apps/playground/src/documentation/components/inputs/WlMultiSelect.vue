@@ -92,7 +92,9 @@ const options = [{ id: "design", label: t("examples.design_0079") }, { id: "code
         /></WlField>
       </div>
       <WlButton size="sm" @click="selected = []">{{ t("examples.clear_areas_0770") }}</WlButton>
-      <p class="wl-text-small" role="status">{{ t("examples.selected_0022") }} {{ selected.length }}{{ t("examples.values_0771") }} {{ selected.join(', ') || t("examples.none_0306") }}.</p>
+      <p class="wl-text-small" role="status">{{ t("examples.selected_0022") }} {{
+        selected.length
+      }}{{ t("examples.values_0771") }} {{ selected.join(', ') || t("examples.none_0306") }}.</p>
     </section>
   </div>
 </template>

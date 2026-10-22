@@ -42,7 +42,9 @@ const swatches = ["#2563eb", "#2e9e68", "#bf8615", "#d2494f", "#22252b", "#f7f7f
           invalid
           :palette-label="t('examples.palette_with_an_error_0676')"
           :input-label="t('examples.hex_with_an_error_0677')"
-        /><p id="docs-color-error" class="wl-text-small" role="alert">{{ t("examples.approve_the_selected_color_before_saving_0678") }}</p></div>
+        />
+        <p id="docs-color-error" class="wl-text-small" role="alert">{{ t("examples.approve_the_selected_color_before_saving_0678") }}</p>
+      </div>
         <div class="wl-stack" data-space="sm"><p class="wl-text-small">{{ t("examples.unavailable_color_0679") }}</p><WlColorPicker
           model-value="#2e9e68"
           :swatches="swatches"
@@ -51,12 +53,20 @@ const swatches = ["#2563eb", "#2e9e68", "#bf8615", "#d2494f", "#22252b", "#f7f7f
           :input-label="t('examples.unavailable_hex_0681')"
         /></div>
       </div>
-      <div class="wl-inline" data-space="sm"><span class="docs-color-preview" :style="{ backgroundColor: color }" aria-hidden="true"></span><WlButton size="sm" @click="color = '#2563eb'">{{ t("examples.reset_color_0682") }}</WlButton></div>
+      <div class="wl-inline" data-space="sm">
+        <span class="docs-color-preview" :style="{ backgroundColor: color }" aria-hidden="true"></span>
+        <WlButton size="sm" @click="color = '#2563eb'">{{ t("examples.reset_color_0682") }}</WlButton>
+      </div>
       <p class="wl-text-small" role="status">{{ t("examples.model_value_0683") }} {{ color }}.</p>
     </section>
   </div>
 </template>
 
 <style scoped>
-.docs-color-preview { width: var(--wl-space-xl); height: var(--wl-space-xl); border: 1px solid var(--wl-border); border-radius: var(--wl-radius-sm); }
+.docs-color-preview {
+  width: var(--wl-space-xl);
+  height: var(--wl-space-xl);
+  border: 1px solid var(--wl-border);
+  border-radius: var(--wl-radius-sm);
+}
 </style>

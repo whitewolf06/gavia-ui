@@ -151,7 +151,9 @@ function onKeydown(event: KeyboardEvent, index: number): void {
     <div v-bind="section('panels.root', { active: Boolean(selectedKey) })" class="wl-tabs__panels">
       <template v-for="(item, index) in items" :key="item.key">
         <div
-          v-bind="section('panel.root', { active: selectedKey === item.key, selected: selectedKey === item.key, disabled: !!item.disabled })"
+          v-bind="section('panel.root', {
+            active: selectedKey === item.key, selected: selectedKey === item.key, disabled: !!item.disabled
+          })"
           :id="panelId(index)"
           class="wl-tabs__panel"
           role="tabpanel"

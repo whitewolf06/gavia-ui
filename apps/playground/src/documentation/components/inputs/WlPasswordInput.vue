@@ -54,10 +54,21 @@ const touched = ref(false);
             @blur="touched = true"
           />
         </WlField>
-        <WlField id="docs-password-disabled" v-slot="{ id }" :label="t('examples.disabled_password_0802')"><WlPasswordInput :id="id" model-value="Example-secret" disabled /></WlField>
+        <WlField id="docs-password-disabled" v-slot="{ id }" :label="t('examples.disabled_password_0802')">
+          <WlPasswordInput :id="id" model-value="Example-secret" disabled />
+        </WlField>
       </div>
-      <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="touched = true">{{ t("examples.check_length_0803") }}</WlButton><WlButton size="sm" @click="password = ''; touched = false">{{ t("examples.clear_password_0804") }}</WlButton></div>
-      <p class="wl-text-small" role="status">{{ t("examples.characters_entered_0805") }} {{ password.length }}{{ t("examples.the_password_itself_is_not_shown_in_messages_0806") }}</p>
+      <div class="wl-inline" data-space="sm">
+        <WlButton size="sm" @click="touched = true">{{ t("examples.check_length_0803") }}</WlButton>
+        <WlButton size="sm" @click="password = ''; touched = false">{{ t("examples.clear_password_0804") }}</WlButton>
+      </div>
+      <p class="wl-text-small" role="status">{{
+        t("examples.characters_entered_0805")
+      }} {{
+        password.length
+      }}{{
+        t("examples.the_password_itself_is_not_shown_in_messages_0806")
+      }}</p>
     </section>
   </div>
 </template>

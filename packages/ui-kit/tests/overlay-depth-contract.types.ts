@@ -27,6 +27,9 @@ function contract(): void {
   const wrongFocus: DrawerProps = { initialFocus: () => "input" };
   // @ts-expect-error Placement remains a finite set.
   const wrongPlacement: PopoverProps = { placement: "diagonal" };
-  void [dialog, drawer, popover, dismissal, legacy, legacyDialog, legacyDrawer, legacyPopover, positioned, wrongSize, wrongFullscreen, wrongFocus, wrongPlacement];
+  void [
+    dialog, drawer, popover, dismissal, legacy, legacyDialog, legacyDrawer,
+    legacyPopover, positioned, wrongSize, wrongFullscreen, wrongFocus, wrongPlacement
+  ];
 }
 void contract;

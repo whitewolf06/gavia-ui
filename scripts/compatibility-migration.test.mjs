@@ -179,7 +179,9 @@ test("migration approval cannot be widened by versions, edits, missing notes or 
     ["unreviewed consumer replacement", { policy: { ...input.policy, consumer: { ...input.policy.consumer, to: "const selected = ref<any>(null);" } } }],
     ["unreviewed target", { policy: { ...input.policy, targetMinor: "0.12" } }]
   ];
-  for (const [label, overrides] of cases) assert.throws(() => validateMigrationPolicy({ ...input, ...overrides }), /Migration policy:/, label);
+  for (const [label, overrides] of cases) {
+    assert.throws(() => validateMigrationPolicy({ ...input, ...overrides }), /Migration policy:/, label);
+  }
   assert.throws(() => typeSource({ components: [], declarationExports: [] }, { id: input.policy.id }), /validated approval/);
 });
 test("typed migration projections accept only reviewed changes and still reject unrelated API losses", () => {

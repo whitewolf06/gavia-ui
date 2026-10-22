@@ -116,5 +116,6 @@ export function ptConsumerTypes(): void {
 
   void [select, multiple, calendar, tabs, config, strictConfig, open, extended, customApp,
     legacyConfig, dynamicConfig, dynamicMerged, opaqueExtensions, declaredExtension, legacyCallback, wrongSection, wrongNested, wrongGroup,
-    wrongValue, wrongContext, wrongComponent, wrongHook, legacyComponent, legacyComponentConfig, legacyNested, legacyTabs, legacyTabsConfig];
+    wrongValue, wrongContext, wrongComponent, wrongHook, legacyComponent,
+    legacyComponentConfig, legacyNested, legacyTabs, legacyTabsConfig];
 }

@@ -113,7 +113,9 @@ function clear() {
       <WlFileUpload :model-value="[]" disabled />
       <WlButton size="sm" @click="clear">{{ t("examples.clear_lists_and_errors_0737") }}</WlButton>
       <p class="wl-text-small wl-text-muted">{{ t("examples.enter_space_on_the_dropzone_opens_the_file_picker_cancelling_p_0738") }}</p>
-      <p class="wl-text-small" role="status">{{ t("examples.documents_0727") }} {{ documents.length }}{{ t("examples.images_0739") }} {{ image.length }}.</p>
+      <p class="wl-text-small" role="status">{{ t("examples.documents_0727") }} {{
+        documents.length
+      }}{{ t("examples.images_0739") }} {{ image.length }}.</p>
     </section>
   </div>
 </template>

@@ -40,9 +40,16 @@ function clear() {
           @click="choose"
         ><template #icon><WlIcon name="upload" :size="18" /></template>{{ t("examples.choose_documents_0716") }}</WlButton></template>
       </WlFilePicker>
-      <ul v-if="files.length" class="wl-stack docs-file-list" data-space="sm"><li v-for="(file, index) in files" :key="`${file.name}:${index}`">{{ file.name }} — {{ file.size }} {{ t("examples.bytes_0153") }}</li></ul>
+      <ul v-if="files.length" class="wl-stack docs-file-list" data-space="sm">
+        <li v-for="(file, index) in files" :key="`${file.name}:${index}`">{{
+          file.name
+        }} — {{ file.size }} {{ t("examples.bytes_0153") }}</li>
+      </ul>
       <p v-else class="wl-text-small">{{ t("examples.no_documents_chosen_0717") }}</p>
-      <div class="wl-inline" data-space="sm"><WlButton size="sm" @click="picker?.choose()">{{ t("examples.open_through_ref_0718") }}</WlButton><WlButton size="sm" @click="clear">{{ t("examples.clear_files_0719") }}</WlButton></div>
+      <div class="wl-inline" data-space="sm">
+        <WlButton size="sm" @click="picker?.choose()">{{ t("examples.open_through_ref_0718") }}</WlButton>
+        <WlButton size="sm" @click="clear">{{ t("examples.clear_files_0719") }}</WlButton>
+      </div>
       <p class="wl-text-small wl-text-muted">{{ t("examples.select_returns_a_new_file_list_it_replaces_the_application_lis_0720") }}</p>
     </section>
     <section class="wl-stack" data-space="md">

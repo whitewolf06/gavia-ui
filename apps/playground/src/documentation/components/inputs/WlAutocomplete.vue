@@ -113,7 +113,9 @@ function reset() {
         /></WlField>
       </div>
       <WlButton size="sm" @click="reset">{{ t("examples.clear_selected_values_0635") }}</WlButton>
-      <p class="wl-text-small" role="status">{{ t("examples.owner_0636") }} {{ label(person) || t("examples.not_selected_0637") }}{{ t("examples.members_0638") }} {{ selectedNames || t("examples.none_selected_0368") }}.</p>
+      <p class="wl-text-small" role="status">{{ t("examples.owner_0636") }} {{
+        label(person) || t("examples.not_selected_0637")
+      }}{{ t("examples.members_0638") }} {{ selectedNames || t("examples.none_selected_0368") }}.</p>
     </section>
   </div>
 </template>
