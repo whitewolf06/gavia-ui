@@ -18,10 +18,10 @@ after publication; ordinary installation follows stable `latest`. Read the
 
 [![Real Gavia UI fields, inputs, switch and button in Gavia and Gavia Dark](docs/brand/readme-preview.webp)](https://whitewolf06.github.io/gavia-ui/)
 
-[Documentation](https://whitewolf06.github.io/gavia-ui/?view=docs&lang=en) ·
+[Documentation](https://whitewolf06.github.io/gavia-ui/docs/) ·
 [Playground](https://whitewolf06.github.io/gavia-ui/) ·
 [Theme builder](https://whitewolf06.github.io/gavia-ui/?view=theme-builder) ·
-[Русский](https://whitewolf06.github.io/gavia-ui/?view=docs&lang=ru)
+[Русский](https://whitewolf06.github.io/gavia-ui/ru/docs/)
 
 - Vue is the only required peer; the library has no runtime dependencies.
 - Native Vue components, typed models, slots and application-owned routing/data.
@@ -53,9 +53,9 @@ Set `data-wl-theme="gavia"` on the root element. Import
 `gavia-ui/styles/reset.css` before base styles if your application needs the reset.
 [Installation and fonts](docs/guide/getting-started.md) · [Migration guide](docs/migration.md).
 
-**Gavia Sans** supplies Cyrillic and Latin, six weights and upright/italic faces.
+**Gavia Sans** supplies Cyrillic and Latin, variable weights 100–700 and upright/italic faces.
 WOFF2 web fonts ship in npm; TTF desktop files are available through the
-[font download](https://whitewolf06.github.io/gavia-ui/?view=font).
+[font download](https://whitewolf06.github.io/gavia-ui/font/).
 Classic, Classic Dark and Newspaper retain their own typography.
 
 [Public TypeScript contracts and upgrading](docs/migration.md).
@@ -137,11 +137,11 @@ or Newspaper, import `themes/white.css`, `themes/graphite.css` or
 Without the font CSS, both Gavia themes use a system font; without a selected
 theme, the library keeps Classic (`white`). `WlConfig` is not required for basic setup.
 [Theme names and compatibility](docs/migration-themes.md).
-[Detailed setup, API and accessibility](https://whitewolf06.github.io/gavia-ui/?view=docs).
+[Detailed setup, API and accessibility](https://whitewolf06.github.io/gavia-ui/docs/).
 
 ## Documentation and contributing
 
-- [Component guides](https://whitewolf06.github.io/gavia-ui/?view=docs) — examples, controls, API and keyboard states.
+- [Component guides](https://whitewolf06.github.io/gavia-ui/docs/) — examples, controls, API and keyboard states.
 - [Design system](docs/design-system.md) — tokens, typography, states and complete interface flows.
 - [CSS primitives](docs/primitives.md) and [responsiveness](docs/responsiveness.md) — layout and sizing rules.
 - [Gavia / Gavia Dark themes](docs/theme-gavia.md) and [Gavia Sans](docs/font-gavia.md) — palette, setup, specimens and licenses.

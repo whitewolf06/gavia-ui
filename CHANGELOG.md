@@ -7,58 +7,54 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 ## Unreleased
 
-- Playground: retain the current page until its replacement module and translations are ready; add a themed startup screen, delayed navigation feedback and loading/error placeholders for documentation and live examples.
+### Changed
+
+- Keep rendered documentation visible while the next Playground page and its translations load.
 
 ## 1.0.0-rc.1 — prepared
 
-Prepared on **2026-10-22**. Publication date: **pending**. Intended npm channel:
-**`next`**. This is an opt-in candidate for the 1.0 API; the published stable
-version remains 0.12.1 as observed on the preparation date.
-Follow the [candidate upgrade guide](docs/migration-1.0.0-rc.1.md).
+An opt-in candidate for npm `next`; publication date is pending.
+Follow the [1.0 upgrade guide](docs/migration.md#migration-1-0-rc-1).
 
 ### Breaking changes
 
-- Built-in control text and calendar names fall back to English. Configure `WlConfig` with `wlLocaleRu` to retain Russian; partial locales fill omitted fields from English. Localized text props have no literal defaults: `undefined` follows the active locale and explicit strings, including `""`, override it. The internal `useWlLocaleText` helper is removed. See [the localization migration](docs/migration.md#migration-1-0-localization).
-- Remove legacy PT/status/dismissable aliases and the IconButton PT fallback to Button. Export the Tooltip component as `WlTooltip`, its directive as `WlTooltipDirective`, and require a name source for typed icon-prop actions. Migrate through [canonical public names](docs/migration.md#migration-1-0-public-api). The owner-approved RC transition replaces the previously planned separate 0.x warning release; feedback runs for two to four weeks after confirmed RC publication.
+- Built-in text falls back to English; install `WlConfig` with `wlLocaleRu` to keep Russian ([localization](docs/migration.md#migration-1-0-localization)).
+- Use canonical PT names and separate `iconButton` overrides from `button` ([PT mapping](docs/migration.md#migration-1-0-public-api)).
+- Replace status variants with semantic `tone` and overlay `dismissable` with `dismissible` ([appearance and dismissal](docs/migration.md#semantic-tone-appearance-and-dismissal)).
+- Import the Tooltip component as `WlTooltip`, register `WlTooltipDirective`, and provide names for icon actions ([Tooltip and names](docs/migration.md#tooltip-imports-and-action-names)).
 
-### Features and fixes
+### Added
 
-- Remove an unused Playground installation-command constant and keep internal Playground/build helper declarations local to their modules.
-- Add a live 100–700 weight slider to the Playground font page, with a numeric readout, synchronized presets and immediate sample/alphabet updates in upright and italic styles.
-- Enable variable Gavia Sans fonts through the existing stylesheet, with exact master-recovery guards and a 100–700 weight axis. Load Latin-1/common Cyrillic text from one Core file; retain complete international faces for extended characters and combining clusters. Enforce an 80,000-byte Core limit in both styles. Keep accepted static fonts as a conditional fallback and include variable assets in the standalone download. Focused Windows Chromium evidence is retained; the owner accepted the font visually on 2026-10-22. CLS and exact-candidate verification remain pending.
-- Keep Home documentation, quality and Theme Builder links canonical beneath the Pages prefix while preserving portable archive links, language, theme and anchors.
-- Repair listbox keyboard/ARIA navigation, active-option scrolling, single click selection and app-scoped IDs. Tabs gain unique tab/panel relationships, disabled and vertical modes, and explicit lazy/retained panel behavior.
-- Add an optional WlLink router adapter, stable Table row keys with controlled sorting/selection, typed list slots, disabled options and clearable selection controls.
-- Add reactive app configuration, a shared overlay stack with modal inert/focus ownership, active-only listeners and frame/observer positioning.
-- Wait for rendered anchored panels before measuring their layer and handing off initial menu focus; rebind positioning when their anchor or panel changes and preserve stacking and focus after reopening.
-- Expand Toast with IDs, updates, promise messages, actions, positions, independent pause reasons and queue limits; confirmation now also returns Promise<boolean>.
-- Complete semantic tone support in Toast and confirmation, including typed PT context and `toast.show()`, while retaining legacy severity and danger adapters. Reset promise-message lifetimes on settlement even when the tone stays the same, and cancel confirmation entries consistently through reactive proxies.
-- Preserve existing consumer-provided Toast/Confirm adapter interfaces; richer composable results use additive WlToastController/WlConfirmController types. Keep inherited native IconButton/Tag attributes; the major migration replaces historical PT aliases with canonical keys.
-- Correct Alert/Field/Steps semantics; add semantic tone, avatar fallback/initials, bounded Badge counts and indeterminate Progress.
-- Add separate pure utility and Vue composable entry points, shared Intl/color/date helpers and source-derived API annotations.
-- Add stable string-to-palette colors and byte-format options; reuse byte formatting in FileUpload while retaining its released labels, decimal text and megabyte cap.
-- Prepare component scaffolding, scoped Playground tests/public imports, package documentation generation, WOFF2-only npm assets and Node16/NodeNext declaration normalization.
-- Prepare CI/Pages/Release separation with same-SHA deployment checks and supplemental Linux/Docker visual testing. Record local automated checks separately from release and manual assistive-technology acceptance.
-- Add CheckboxGroup, RadioGroup, Toolbar, TagsInput, Tooltip and ContextMenu. Register the Tooltip directive through `WlTooltipDirective`. Menus support nested and checked items.
-- Expand form, navigation and feedback components with the accepted size/density, slots, locale, range, preview, grouping and controlled-state options. The 1.0 migrations above replace the documented 0.x defaults and aliases.
-- Add canonical English/Russian documentation paths with legacy query compatibility, full-text search, editable StackBlitz examples, consumer starters, crawler resources and a separately run prerender step.
-- Restore bookmarked documentation sections after asynchronous page content appears, including direct-link reloads. Keep shared Playground runtime code outside HTML entry chunks to prevent circular lazy preloads.
-- Connect Playground language changes through the public app-scoped WlConfig API with watcher cleanup; document compiler-dependent generic contracts.
-- Update compatible Vite/Vitest/declaration, TypeScript/Vue compiler, jsdom and Changesets groups, with a resolved lockfile and existing configuration migrations. Keep TypeScript 6's compiler API, Node 22.13+/24 and the Vue 3.4/TypeScript 5.4 consumer minimum. Earlier installation and verification evidence remains scoped to its recorded source.
-- Attach Tooltip directive scroll/resize listeners only while visible, coalesce positioning through requestAnimationFrame and clean up queued work on hide/unmount.
-- Enforce declaration build diagnostics and explicit Node16/NodeNext import paths, provide usable clear-control targets, reduce duplicated language resources, and keep installation commands unpinned. Fresh bundle budgets include 5% headroom above measured Vue 3.4/3.5 fixtures.
-- Address the saved lint debt with manual source formatting, explicit browser-test cases and documented native/delegated accessibility exceptions; enforce active non-length rules as errors while retaining inference and unsafe-autofix safeguards. Complete the unused-code/export audit and its 11-file ESLint follow-up with no remaining errors or warnings in that scope.
-- Separate authored brand sources, prompts and historical variants into a tracked archive with provenance and updated maintenance paths. Prepare a 1280 x 640 social preview from the existing Gavia mark and font, preserving its public URL and the original square source.
+- Add CheckboxGroup, RadioGroup, Tooltip, nested menus, ContextMenu, Toolbar and TagsInput.
+- Add pure utilities through `gavia-ui/utils` and Vue helpers through `gavia-ui/composables`.
+- Add optional router adaptation through WlLink and controlled Table sorting/selection with stable row keys.
+- Add typed option slots, disabled options, stable keys and clearable single selection.
+- Add Toast IDs, updates, promise messages, actions, positions and pause/queue controls; confirmation also returns a Promise.
+- Add Gavia Sans variable weights 100–700, real italic and a live Playground weight slider.
+- Add canonical documentation routes, prerendering, full-text search, recipes and starter applications.
 
-### Candidate acceptance and delivery
+### Changed
 
-- Source versions and release materials are prepared. No new validation, build, packaging, commit, tag, push or publication ran during RC preparation. Previous results retain their original source boundaries; verification of the exact RC archive is pending.
-- Performance/CLS measurements and the formal NVDA/VoiceOver/mobile protocol remain open. Font visual acceptance is recorded separately and is no longer pending.
-- Vue `^3.4.0`, TypeScript 5.4+, public CSS/token namespaces and all five theme identifiers remain. New component introduction metadata identifies 1.0.0-rc.1 instead of attributing those additions to the already published 0.12.1.
+- Normalize configuration reactively and isolate locale, services and generated IDs per Vue application.
+- Share overlay stacking, modal inert/focus ownership and active-only positioning listeners.
+- Use one copyable SFC source for examples and source-derived public API metadata.
+- Ship WOFF2 web fonts in npm and provide licensed TTF desktop downloads separately.
+- Preserve Vue 3.4+, TypeScript 5.4+, five themes and explicit CSS imports.
 
-See [component/service migrations](docs/migration-review-programme.md),
-the [candidate record](docs/maintainers/release-candidate.md) and
-the [execution ledger](review/IMPLEMENTATION.md) for current scope and outstanding work.
+### Fixed
+
+- Correct listbox keyboard navigation, active-option scrolling and duplicate click selection.
+- Give Tabs unique tab/panel relationships and support disabled, vertical and retained/lazy panels.
+- Restore anchored-panel positioning and focus after rendering, rebinding and reopening.
+- Correct Alert/Field/Steps semantics and avoid duplicate Toast announcements.
+- Reset settled Toast lifetimes and consistently cancel replaced confirmation requests.
+- Support native Node16/NodeNext ESM declarations and independent installed-package consumers.
+
+### Deprecated / removed
+
+- Remove the 0.x PT/status/dismissal aliases in the major candidate; use the [canonical-name migration](docs/migration.md#migration-1-0-public-api).
+- Remove internal locale adapters and Russian prop defaults; public locale overrides remain optional.
+- Exclude TTF desktop files and font QA reports from npm ([font assets](docs/migration.md#migration-package-assets)).
 
 ## 0.12.1 — 2026-10-12
 

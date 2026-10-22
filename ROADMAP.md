@@ -1,55 +1,47 @@
 # Gavia UI roadmap
 
-The review programme is in progress. All recommendations, including the
-post-1.0 list, are accepted into [the implementation backlog](review/PLAN.md).
-The backlog records task status; this roadmap describes direction and does not
-claim that pending code, checks, releases or owner acceptance are complete.
+Gavia UI 1.0.0-rc.1 is being prepared. Track candidate readiness through
+[the release gates](docs/maintainers/release-candidate.md); source preparation,
+automated verification, owner acceptance and publication are separate states.
 
-## Now
+## Before 1.0
 
-- Resolve accessibility, list selection, unique IDs, overlay focus and service
-  lifecycle defects while retaining Vue 3.4/3.5 compatibility.
-- Establish maintainable tooling, component scaffolding, public Playground
-  imports, separate test projects and canonical package documentation.
-- Improve component depth, shared utilities and public contracts with focused
-  checks. Preserve unrelated changes and historical compatibility fixtures.
-- Prepare CI, package and deployment changes for review. Full builds, archives,
-  browser/visual suites and actual workflow runs remain separately authorized
-  validation, not an automatic result of editing configuration.
+- Finish candidate documentation, package cleanup and font-loading optimization.
+- Verify one exact candidate archive across Vue 3.4/3.5, minimum TypeScript,
+  Node 22.13/24, SSR/hydration, five themes and desktop/mobile browsers.
+- Measure page transfer, font loading and layout stability; obtain the manual
+  accessibility results or explicitly record accepted RC limitations.
+- Publish an approved candidate to `next`, gather two to four weeks of feedback
+  and resolve release blockers before separately approved stable delivery.
 
-## Next
+The major migration uses English fallback, semantic `tone`, canonical PT names,
+`dismissible` and explicit Tooltip imports. The accepted RC transition replaces
+the original separate 0.x warning-release proposal. Vue `^3.4.0`, public
+namespaces, CSS paths and historical compatibility fixtures remain preserved.
 
-- Complete remaining family contracts, typed slots, table behavior, navigation
-  adaptation, accessible names and examples documented in the review backlog.
-- Finish documentation routes, real API metadata, search, recipes and starter
-  applications, preserving existing query links and explicit CSS imports.
-- Agree on and document 1.0 API migrations: semantic tones, normalized pt names,
-  `dismissible` and an English fallback. Introduce compatibility aliases and
-  development warnings in 0.x before removing them in 1.0.
-- Add the planned control groups, Tooltip component, menu nesting/ContextMenu,
-  Toolbar and TagsInput, then prepare an RC with manual accessibility and owner
-  acceptance evidence. Release versions and publication dates require agreement.
+## After 1.0
 
-## Later
+- DataTable, VirtualList, Tree, Descriptions and List.
+- WlKbd, WlCopyButton, WlInputOtp/WlPinInput and WlStepper.
+- WlAvatarGroup, WlSplitter, WlSkipLink and WlVisuallyHidden.
+- WlRelativeTime/WlTime, WlBanner, WlRating, WlDateTimePicker and WlThemeSwitcher.
+- Each addition needs its own public contract, working example and EN/RU guide;
+  WlTreeSelect follows the shared Tree contract as a separate dependent feature.
+- Selective icon imports and CSS by component.
+- Stylelint, Vitest Browser Mode, role-based test improvements, mutation testing
+  and a reusable ESLint configuration.
+- Continue separate supplemental Linux visual coverage; Windows/Chromium remains
+  the primary screenshot environment.
 
-- Implement the complete accepted post-1.0 component backlog, including DataTable,
-  VirtualList, Tree, Descriptions, List and the remaining NEW-12…24 items.
-- Add selective icon/component CSS imports, Stylelint, browser-mode and mutation
-  testing, role-based test improvements and a reusable ESLint configuration.
-- Review Linux visual baseline candidates separately. Windows/Chromium remains
-  the primary screenshot environment; Docker does not replace those PNGs.
+## Boundaries
 
-## Non-goals
-
-- Application business logic, requests, router/store ownership or API clients in
-  library runtime dependencies. Vue stays the only required peer.
-- React, Tailwind, CSS-in-JS, component forks for themes or automatic style imports.
-- Unannounced public namespace/contract changes, automatic fixture replacement,
-  commits, pushes, tags, package publication or external announcements.
-- Treating successful source checks, a build or a tag as deployment, registry,
-  screen-reader or owner-acceptance proof.
+Business logic, requests, router/store ownership and API clients remain in the
+application. Vue is the only required peer. Themes use shared component code,
+plain CSS and explicit imports. Public changes require migration review;
+fixtures and screenshot baselines are never replaced just to pass a gate.
 
 The [documentation index](docs/README.md) separates user guides and maintainer
-procedures. Historical implementation stages are preserved in
-[the stage ledger](docs/maintainers/history.md); previous publication evidence is
-in [the release ledger](docs/maintainers/release-history.md).
+procedures. [Project history](docs/maintainers/history.md) and
+[release history](docs/maintainers/release-history.md) preserve earlier milestones.
+The complete original findings and post-1.0 acceptance criteria remain in the
+[archived review](https://github.com/whitewolf06/gavia-ui/tree/archive/review-2026-10/review).

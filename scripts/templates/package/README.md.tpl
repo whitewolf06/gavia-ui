@@ -7,7 +7,9 @@ required peer. TypeScript consumers need TypeScript 5.4 or later.
 Source and package archive version: **{{version}}**.
 Prerelease versions use npm `next` after publication; opt in with `gavia-ui@next`
 or an exact candidate version. The ordinary install command below selects stable.
-[Playground and documentation](https://whitewolf06.github.io/gavia-ui/) ·
+[Documentation](https://whitewolf06.github.io/gavia-ui/docs/) ·
+[Русский](https://whitewolf06.github.io/gavia-ui/ru/docs/) ·
+[Playground](https://whitewolf06.github.io/gavia-ui/) ·
 [Repository](https://github.com/whitewolf06/gavia-ui) ·
 [Changelog](https://github.com/whitewolf06/gavia-ui/blob/main/CHANGELOG.md) ·
 [Migration guides](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration.md)
@@ -40,7 +42,7 @@ import { WlButton } from "gavia-ui";
 </script>
 
 <template>
-  <WlButton>Save</WlButton>
+  <WlButton>Save changes</WlButton>
 </template>
 ```
 
@@ -59,7 +61,7 @@ pt and motion settings. Services are isolated per Vue application.
 The 1.0 line uses English built-in text when locale configuration is omitted;
 released 0.x versions used Russian. For a prerelease, follow the
 [candidate migration](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration.md#migration-1-0-rc-1).
-Source version preparation does not establish publication. To preserve Russian,
+To preserve Russian,
 install the explicit preset in your application entry point:
 
 ```ts
@@ -82,7 +84,7 @@ The package also exports `manifest.json` and `design-tokens.json` for tooling.
 
 The npm package contains the WOFF2 web fonts and their OFL notices. TTF files and
 the font QA report stay in the source repository. Download the full font family
-from the [font page](https://whitewolf06.github.io/gavia-ui/?view=font); release
+from the [font page](https://whitewolf06.github.io/gavia-ui/font/); release
 attachments, when published, are listed in
 [GitHub Releases](https://github.com/whitewolf06/gavia-ui/releases).
 

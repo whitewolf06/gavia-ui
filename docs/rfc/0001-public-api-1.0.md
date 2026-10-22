@@ -84,8 +84,8 @@ acceptance, Vue/TypeScript minimums and immutable compatibility fixtures remain.
 
 See [the candidate migration](../migration.md#migration-1-0-rc-1) and
 [preparation record](../maintainers/release-candidate.md). Public version history:
-[npm registry](https://registry.npmjs.org/gavia-ui); the read-only observation is
-retained in the [review ledger](../../review/IMPLEMENTATION.md#rc1-preparation-2026-10-22).
+[npm registry](https://registry.npmjs.org/gavia-ui). Candidate acceptance is
+tracked through [the release gates](../maintainers/release-candidate.md).
 
 ## Acceptance and release
 
@@ -98,5 +98,5 @@ NVDA/Firefox and VoiceOver/Safari require a separate dated manual protocol.
 
 RC source preparation was authorized on 2026-10-22 without new runs. Full release
 checks, commits, push, npm publication, Pages deployment and announcements remain
-separate owner commands. The execution ledger records
-code, scoped validation, release readiness and actual publication independently.
+separate owner commands. Candidate gates record code readiness, automated
+checks, manual acceptance and publication independently.

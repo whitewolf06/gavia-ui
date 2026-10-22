@@ -79,7 +79,8 @@ Before a production release, review 12–18 px reading, the full basic alphabets
 
 ## Variable-font implementation
 
-T5.3 draft generation has passed; font acceptance remains incomplete. The
+The owner visually accepted the variable font on 2026-10-22. Final-candidate
+loading, CLS and archive checks follow the [font acceptance procedure](../../docs/maintainers/font-variation-audit.md). The
 tracked normalizer derives compatible numeral representations in memory from
 the accepted masters; it does not redraw them, fit a donor outline or edit the
 frozen static binaries. Exact midpoint/line constructions on a complete 2000 UPM

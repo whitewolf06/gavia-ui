@@ -4,9 +4,8 @@ Choose the section for the version or contract you are changing. Historical
 sections describe that release; they do not report current validation or a new
 publication. Stable public namespaces remain `Wl*`, `wl-*` and `--wl-*`.
 
-The active review programme's additional contracts are documented in
-[its migration notes](migration-review-programme.md); follow their stated
-implementation and verification status.
+Start with the 1.0 checklist. Detailed component and service changes are
+included below; historical upgrade sections remain available at their anchors.
 
 - [Upgrading from 0.12.1 to 1.0.0-rc.1](#migration-1-0-rc-1)
 - [1.0 localization: English fallback](#migration-1-0-localization)
@@ -29,17 +28,10 @@ implementation and verification status.
 <a id="migration-1-0-rc-1"></a>
 ## Upgrading from 0.12.1 to 1.0.0-rc.1
 
-**Prepared on 2026-10-22; publication and exact-candidate verification pending.**
-The root and library source versions are `1.0.0-rc.1`. This candidate contains
-breaking changes and is intended for npm **`next`**. The currently published
-stable version is 0.12.1, as observed on 2026-10-22; preparing this document
-does not change the registry.
-
-The owner approved an RC transition on 2026-10-22, replacing the original plan
-for an intervening 0.x release with aliases and warnings. No such warning release
-is claimed. The two-to-four-week feedback period starts only after confirmed RC
-publication. Stable 1.0 requires feedback disposition and its own release approval.
-See the [accepted transition](rfc/0001-public-api-1.0.md#accepted-rc-transition--2026-10-22).
+This major candidate changes locale defaults and several public names.
+It is intended for npm **`next`** after publication. Stable consumers keep the
+ordinary package name. The RC feedback period is two to four weeks; see the
+[transition policy](rfc/0001-public-api-1.0.md#accepted-rc-transition--2026-10-22).
 
 After publication, opt into this exact candidate in a consumer application:
 
@@ -63,21 +55,19 @@ Upgrade application code together:
 4. Keep CSS imports, `Wl*`, `wl-*`, `--wl-*` and the five theme identifiers.
    The existing font CSS now enables the 100–700 variable Gavia Sans files;
    accepted static files remain the conditional fallback.
-5. Review public utility/composable imports and the
-   [additional component/service migrations](migration-review-programme.md).
-   Keep requests, routing and business state in the application.
+5. Add `rowKey` for stateful or selectable Table rows; install a `RouterLink`
+   adapter with `WlConfig.linkComponent` when `WlLink.to` uses location objects.
+6. Review the [component and service migrations](#component-and-service-migrations)
+   and public utility/composable imports. Keep requests and business state in
+   the application.
 
-Before adopting a candidate in an application, run its own strict types and
-exercise changed labels, PT customizations, keyboard/focus behavior and SSR
-hydration where used. Maintainer release evidence for this exact version remains
-pending in the [candidate checklist](maintainers/release-candidate.md).
+Before adopting a candidate, check your application's strict types, translated
+labels, PT customizations, keyboard/focus behavior and SSR hydration where used.
 
 <a id="migration-1-0-localization"></a>
 ## 1.0 localization: English fallback
 
-**Breaking change included in the prepared 1.0.0-rc.1 source.** Publication and
-verification of the exact candidate remain pending. Earlier scoped acceptance
-is retained in the review ledger; it does not certify this versioned archive.
+Without explicit locale configuration, the 1.0 line uses English built-in text.
 
 Without `WlConfig`, or with an omitted locale, built-in control labels and calendar
 names now use `wlLocaleEn`. Existing applications that rely on implicit Russian
@@ -124,10 +114,8 @@ text directly from the normalized `useWlLocale()` result with nullish fallback;
 they no longer inspect raw vnode props. This is not a new public import: consumer
 applications continue to use `WlConfig`, `useWlConfig` and the exported presets.
 
-Before release, check omitted/undefined/custom/empty text, changing EN/RU while
-mounted, independent Vue applications and repeated/concurrent SSR with hydration.
-Check built-in labels as well as visible content in your app. These instructions
-do not claim that those acceptance checks have run.
+Check omitted, custom and empty text, changing EN/RU while mounted, independent
+Vue applications and repeated SSR requests where your application uses them.
 
 The companion [public API migration](#migration-1-0-public-api) removes the
 0.x aliases and renames Tooltip exports. See the
@@ -136,10 +124,7 @@ The companion [public API migration](#migration-1-0-public-api) removes the
 <a id="migration-1-0-public-api"></a>
 ## 1.0 public API: canonical names
 
-**Breaking API included in the prepared 1.0.0-rc.1 source.** Candidate verification
-and publication remain pending. The owner-approved [RC transition](#migration-1-0-rc-1)
-replaces the originally planned 0.x warning release. Keep these removals in the
-major candidate channel; no intermediate compatibility publication is claimed.
+Apply these public-name changes when opting into the major candidate.
 
 ### Pass-through configuration
 
@@ -245,8 +230,7 @@ previously imported a TTF or QA report through `gavia-ui/fonts/gavia/*`, obtain
 it from the repository or the full font download instead. The font page still
 builds its archive from repository sources and includes both TTF and WOFF2:
 [Gavia Sans download](https://whitewolf06.github.io/gavia-ui/?view=font).
-Prepared font ZIP attachments can be published with a GitHub Release after
-separate authorization; this change does not publish an attachment.
+Versioned font attachments are listed with the corresponding GitHub Release.
 
 Root `LICENSE` and `CHANGELOG.md` are canonical. Package LICENSE, changelog and
 README are generated during `pnpm run pack` by `prepack` and are not maintained
@@ -255,9 +239,88 @@ for the npm README. Package changelog documentation links remain absolute.
 
 The declaration generator normalizes relative type imports to explicit ESM
 specifiers, including directory indices and Vue declaration modules. Public
-package imports stay the same. Installed-archive Node16/NodeNext checks remain
-part of the separately authorized package verification before release.
+package imports stay the same.
 
+
+<a id="component-and-service-migrations"></a>
+## Component and service migrations
+
+### Notifications and confirmation
+
+`useWlToast().show(summary, { tone })` returns an ID. Use `update(id, options)`
+and `dismiss(id)` to change or remove it. Existing `ok/info/warn/err` calls and
+legacy severity adapters remain supported; explicit tone wins. Rich helper
+results use `WlToastController` / `WlConfirmController`; existing consumer
+implementations of `WlToastApi` / `WlConfirmApi` keep their signatures.
+
+```ts
+const toast = useWlToast();
+const id = toast.show("Saving", { tone: "accent", life: 0 });
+toast.update(id, { summary: "Saved", tone: "success", life: 5000 });
+const accepted = await useWlConfirm().confirm({ message: "Continue?" });
+```
+
+Toast defaults to five seconds, or eight for danger; `life: 0` is sticky.
+Hover/focus pause independently, and a host displays five messages per group
+by default. Keep one host per displayed group to avoid duplicate messages.
+`toast.promise()` preserves the promise result/rejection and updates one ID;
+dismissing that ID prevents later reappearance. Settlement starts its terminal
+lifetime even when tone is unchanged.
+
+Confirmation retains callbacks and also resolves a boolean. Closing, replacement
+or unmount resolves false without a reject callback; explicit rejection retains
+it. `confirm({ message: "Delete?", tone: "danger" })` is the semantic form;
+`confirmDanger()` and legacy store `danger` flags remain supported.
+
+### Lists, fields and live messages
+
+Options accept typed slots, `optionKey` and `optionDisabled`; Select and single
+Autocomplete support `clearable`. Forward `field.labelId` to `aria-labelledby`
+when native `label[for]` cannot name the control, and forward the entire
+`field.ariaDescribedby` string for hint plus error. `announceError` opts into
+live validation. Alert uses status for information/success and alert for
+warnings/errors; `live="off"` makes it static.
+
+`selectedItems` accepts the released string template or plural forms containing
+`other`. `formatWlBytes` keeps two-argument Intl behavior and adds optional unit,
+precision and decimal overrides; FileUpload retains binary steps and its cap.
+
+### Stable tables and routing
+
+Supply stable `rowKey` values before selecting or rearranging stateful rows.
+Table's index fallback remains available. Sorting is controlled: without
+`sortFn`, the component emits changes and leaves ordering to the app.
+Selected keys outside the current page are preserved.
+
+```ts
+import { RouterLink } from "vue-router";
+app.use(WlConfig, { linkComponent: RouterLink });
+```
+
+`WlLink` uses the adapter's custom slot for location objects. String `to`
+values fall back to hrefs; modified clicks retain browser behavior. Vue Router
+remains optional and belongs to the application.
+
+### Utilities, controls and overlays
+
+Use `gavia-ui/utils` for pure Intl/color/date/number/attrs functions and
+`gavia-ui/composables` for Vue-dependent helpers. `useWlOverlay` combines an
+overlay lifecycle; narrower focus/dismiss wrappers are alternatives, not extra
+registrations for the same panel. Consumer-owned inert attributes survive
+closing a modal. IDs are opaque, app-scoped and must not become business keys.
+
+Checkbox without `value` keeps a boolean model; supplying it selects the array
+model. CheckboxGroup/RadioGroup are labelled fieldsets. TagsInput models strings;
+checked menu state belongs to the application. DatePicker uses Gregorian ISO
+date-only values; disabled dates validate range endpoints. TimePicker uses
+wall-clock `HH:mm[:ss]`; `hourFormat="auto"` retains native presentation.
+
+English docs use `/docs/…`, Russian docs `/ru/docs/…` beneath the deployment
+base. Existing query links, themes, anchors and `WlTooltipComponent` documentation
+links still resolve; URL compatibility does not restore removed package exports.
+
+<details>
+<summary>Historical upgrades: 0.x, package rebranding and theme names</summary>
 
 <a id="migration-0-12-1"></a>
 ## Upgrading to Gavia UI 0.12.1
@@ -1310,3 +1373,5 @@ Before upgrading, check selection of all five themes, `theme` links, contrast, f
 control states and open overlays. [Themes](guide/theming.md) ·
 [catalog and tokens](reference/design-system.md#themes-and-compatibility) · [check methodology](maintainers/quality.md).
 
+
+</details>
