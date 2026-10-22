@@ -32,15 +32,20 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
     const loaded = [];
     for (const weight of fontWeights) for (const style of ["normal", "italic"]) {
       const fonts = await document.fonts.load(`${style} ${weight} 16px 'Gavia Sans'`, "Гавиа Gavia 0123456789");
-      loaded.push({ weight, style, faces: fonts.length, ranges: fonts.map((font) => font.weight) });
+      loaded.push({ weight, style, fonts: fonts.map((font) => ({
+        family: font.family, weight: font.weight, style: font.style, status: font.status, unicodeRange: font.unicodeRange
+      })) });
     }
     return loaded;
   }, weights);
   expect(faces).toHaveLength(12);
-  expect(await page.evaluate(async () => (await document.fonts.load("normal 400 16px Gavia", "Гавиа 0123456789")).length)).toBe(1);
+  expect(await page.evaluate(async () => (await document.fonts.load("normal 400 16px Gavia", "Гавиа 0123456789")).length)).toBe(2);
   for (const face of faces) {
-    expect(face.faces, `${face.weight} ${face.style} loads a real font face`).toBe(1);
-    expect(face.ranges).toEqual(["100 700"]);
+    expect(face.fonts, `${face.weight} ${face.style} loads the Full/Core pair`).toHaveLength(2);
+    expect(new Set(face.fonts.map((font) => font.unicodeRange)).size).toBe(2);
+    for (const font of face.fonts) {
+      expect(font).toMatchObject({ family: "Gavia Sans", weight: "100 700", style: face.style, status: "loaded" });
+    }
   }
 
   await fontPage.getByRole("textbox", { name: "Свой текст", exact: true }).fill("Гагара / Loon 0123456789");
@@ -167,7 +172,7 @@ test("tabular and proportional numbers use different spacing without changing th
   for (const sample of samples) {
     expect(sample.family).toBe("Gavia Sans");
     expect(sample.weight).toBe("400");
-    expect(sample.faces).toEqual([{ family: "Gavia Sans", weight: "400", status: "loaded" }]);
+    expect(sample.faces).toEqual(Array.from({ length: 2 }, () => ({ family: "Gavia Sans", weight: "100 700", status: "loaded" })));
     expect(sample.widths).toHaveLength(2);
   }
   expect(samples[0]!.numeric).toBe("tabular-nums");
@@ -201,9 +206,9 @@ test("tabular and proportional numbers use different spacing without changing th
   expect(matrix).toHaveLength(72);
   for (const row of matrix) {
     const label = `${row.weight} ${row.fontStyle} ${row.size}px`;
-    expect(row.faces, `${label} uses its actual loaded face`).toEqual([
-      { family: "Gavia Sans", weight: String(row.weight), style: row.fontStyle, status: "loaded" }
-    ]);
+    expect(row.faces, `${label} uses its loaded variable Full/Core pair`).toEqual(Array.from({ length: 2 }, () => ({
+      family: "Gavia Sans", weight: "100 700", style: row.fontStyle, status: "loaded"
+    })));
     expect(row.numeric).toBe("tabular-nums");
     expect(row.rendering).toBe("geometricprecision");
     expect(row.widths).toHaveLength(10);

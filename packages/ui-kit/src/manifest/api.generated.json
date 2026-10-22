@@ -2369,7 +2369,7 @@
     "required": [],
     "descriptions": {
       "value": "Readonly Row extends object list; interfaces without an index signature are supported.",
-      "columns": "readonly WlTableColumn<Row>[] validates row field keys. For a virtual column (actions), explicitly set kind:\r\n\"virtual\". Without columns, the default slot is used.",
+      "columns": "readonly WlTableColumn<Row>[] validates row field keys. For a virtual column (actions), explicitly set kind:\n\"virtual\". Without columns, the default slot is used.",
       "rowKey": "Field or callback resolving stable row identity across sorting and reordering.",
       "rowClass": "Additional CSS classes, or a resolver returning classes for each row.",
       "caption": "Visible table caption associated with the table.",
@@ -2380,7 +2380,7 @@
       "sortFn": "Application sorting callback receiving readonly rows and returning their desired order.",
       "selectionMode": "Enable single or multiple row selection; the selection model stores row keys.",
       "loading": "Loading state.",
-      "emptyMessage": "Empty-state text.\r\nDefaults to WlConfig.locale.noData (English when unconfigured).",
+      "emptyMessage": "Empty-state text.\nDefaults to WlConfig.locale.noData (English when unconfigured).",
       "pt": "Attributes of internal Gavia UI elements."
     },
     "slotDescriptions": {

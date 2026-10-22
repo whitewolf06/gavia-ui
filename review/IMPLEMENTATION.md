@@ -8,6 +8,25 @@ historical checks; release, manual acceptance and publication remain separate.
 
 ## 1.0.0-rc.1 — commit, push and CI handoff authorized, 2026-10-22
 
+The first committed candidate is `91bea444f541032faf17cb1c4765cfba76192dfc`,
+available in [draft PR #2](https://github.com/whitewolf06/gavia-ui/pull/2).
+[CI run 39698424984](https://github.com/whitewolf06/gavia-ui/actions/runs/39698424984)
+passed Firefox, WebKit, mobile Chromium and the approved compatibility gate.
+Node verification stopped at API metadata: two WlTable descriptions retained
+checkout-specific CRLF characters. The generator now normalizes SFC/imported
+type source line endings; its existing regression file passes **5/5** in 0.67 s,
+peak 97.20 MiB. Regeneration took 1.08 s / 122.51 MiB and changes only those two
+description strings. These were sequential bounded local steps, not full runs.
+
+Chromium's packed consumer and all 12 Gavia visual cases also stopped at font
+readiness assumptions from the earlier static/single-face delivery. Existing
+checks now load and validate both Full/Core faces, their distinct coverage,
+variable range, style and loaded status. The related font-page/Pages assertions
+agree. Screenshot tolerances, reference PNGs and package/font assertions remain
+unchanged. The owner authorized fixing CI errors and another commit/push;
+the renewed full checks run on GitHub. No passing renewed CI result is claimed
+by this source preparation, and no build/package/browser suite ran locally.
+
 The owner authorized committing the RC changes, pushing a separate branch and
 running the required existing GitHub checks. The delivery branch is
 `codex/gavia-1-0-rc-1`; a draft pull request into `main` triggers `ci.yml`.

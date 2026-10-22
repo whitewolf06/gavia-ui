@@ -61,3 +61,36 @@ test("reads imported generic slot contracts and dynamic slot names without evalu
   assert.equal(metadata.slotDescriptions.empty, "Replacement for empty rows.");
   assert.equal(metadata.slotDescriptions["cell-${string}"], "The current row.");
 });
+
+test("keeps SFC and imported slot documentation identical across LF and CRLF checkouts", () => {
+  const source = `<script setup lang="ts">
+    import type { Slots } from "./slots";
+    defineProps<{
+      /** First label line.
+       * Second label line.
+       */
+      label?: string;
+    }>();
+    defineSlots<Slots>();
+    defineEmits<{
+      /** First event line.
+       * Second event line.
+       */
+      change: [value: string];
+    }>();
+  </script>`;
+  const slots = `export interface Slots {
+    /** First slot line.
+     * Second slot line.
+     */
+    default?(props: { value: string }): unknown;
+  }`;
+  const expected = extractComponentApi(source, "/fixtures/Widget.vue", () => slots);
+  assert.match(expected.descriptions.label, /First label line\.\nSecond label line\./);
+  assert.match(expected.slotDescriptions.default, /First slot line\.\nSecond slot line\./);
+  for (const sfcEnding of ["\n", "\r\n"]) for (const moduleEnding of ["\n", "\r\n"]) {
+    const actual = extractComponentApi(source.replaceAll("\n", sfcEnding), "/fixtures/Widget.vue",
+      () => slots.replaceAll("\n", moduleEnding));
+    assert.deepEqual(actual, expected);
+  }
+});

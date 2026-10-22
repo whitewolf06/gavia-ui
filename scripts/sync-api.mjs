@@ -7,7 +7,7 @@ const { parse: parseSfc } = createRequire(new URL("../packages/ui-kit/package.js
 
 /** Read literal Vue macro types without evaluating component modules or defaults. */
 export function extractComponentApi(source, filename = "Component.vue", readModule = (path) => existsSync(path) ? readFileSync(path, "utf8") : undefined) {
-  const script = parseSfc(source, { filename }).descriptor.scriptSetup?.content;
+  const script = parseSfc(source.replaceAll("\r\n", "\n"), { filename }).descriptor.scriptSetup?.content;
   if (script === undefined) throw new Error(`Missing setup script: ${filename}`);
   const ast = ts.createSourceFile(filename + ".ts", script, ts.ScriptTarget.Latest, true);
   const result = {
@@ -34,7 +34,7 @@ export function extractComponentApi(source, filename = "Component.vue", readModu
       const path = resolve(dirname(scope === ast ? filename : scope.fileName), statement.moduleSpecifier.text.replace(/\.js$/, "") + ".ts");
       if (!modules.has(path)) {
         const text = readModule(path);
-        const file = text === undefined ? undefined : ts.createSourceFile(path, text, ts.ScriptTarget.Latest, true);
+        const file = text === undefined ? undefined : ts.createSourceFile(path, text.replaceAll("\r\n", "\n"), ts.ScriptTarget.Latest, true);
         modules.set(path, file);
         if (file) scopes.set(file, new Map(file.statements.flatMap((node) =>
           ts.isTypeAliasDeclaration(node)

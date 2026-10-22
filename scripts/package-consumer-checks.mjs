@@ -106,11 +106,25 @@ export async function checkPackedBrowser(consumerDir, artifactLabel = "consumer"
         width: button.getBoundingClientRect().width
       })), 5_000, "Read consumer theme styles");
       assert.ok(styles.font.includes("Gavia Sans"), "Packed font CSS did not apply: " + styles.font);
-      await expect.poll(() => withinDeadline(
-        page.evaluate(() => document.fonts.check('14px "Gavia Sans"')), 5_000, "Read consumer font readiness"
-      ), {
-        timeout: 5_000, message: "Packed Gavia Sans font did not finish loading"
-      }).toBe(true);
+      const fonts = await withinDeadline(page.evaluate(async () => {
+        const font = '400 14px "Gavia Sans"';
+        const text = "Gavia Гавиа 0123456789";
+        const faces = await document.fonts.load(font, text);
+        return {
+          ready: document.fonts.check(font, text),
+          faces: faces.map((face) => ({ family: face.family, weight: face.weight, style: face.style, status: face.status,
+            unicodeRange: face.unicodeRange }))
+        };
+      }), 5_000, "Load consumer Gavia Full/Core faces");
+      assert.equal(fonts.ready, true, "Packed Gavia Sans font did not finish loading");
+      assert.equal(fonts.faces.length, 2, "Packed consumer must load the Full/Core pair");
+      assert.equal(new Set(fonts.faces.map((face) => face.unicodeRange)).size, 2, "Packed subsets must have distinct coverage");
+      for (const face of fonts.faces) {
+        assert.equal(face.family, "Gavia Sans");
+        assert.equal(face.weight, "100 700");
+        assert.equal(face.style, "normal");
+        assert.equal(face.status, "loaded");
+      }
       assert.notEqual(styles.background, "rgba(0, 0, 0, 0)", "Packed component/theme CSS did not apply");
       assert.ok(styles.width > 0);
       const overflow = await withinDeadline(

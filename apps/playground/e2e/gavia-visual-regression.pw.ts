@@ -16,13 +16,25 @@ async function readyForDrawing(page: Page, theme: string): Promise<void> {
     const loaded = [];
     for (const weight of [100, 300, 400, 500, 600, 700]) {
       for (const style of ["normal", "italic"]) {
-        loaded.push((await document.fonts.load(`${style} ${weight} 16px 'Gavia Sans'`, "Гавиа Gavia 0123456789")).length);
+        const fonts = await document.fonts.load(`${style} ${weight} 16px 'Gavia Sans'`, "Гавиа Gavia 0123456789");
+        loaded.push(fonts.map((font) => ({
+          family: font.family, weight: font.weight, style: font.style, status: font.status, unicodeRange: font.unicodeRange
+        })));
       }
     }
     await document.fonts.ready;
     return loaded;
   });
-  expect(faces).toEqual(Array.from({ length: 12 }, () => 1));
+  expect(faces).toHaveLength(12);
+  for (const [index, pair] of faces.entries()) {
+    expect(pair).toHaveLength(2);
+    expect(new Set(pair.map((font) => font.unicodeRange)).size).toBe(2);
+    for (const font of pair) {
+      expect(font).toMatchObject({
+        family: "Gavia Sans", weight: "100 700", style: index % 2 === 0 ? "normal" : "italic", status: "loaded"
+      });
+    }
+  }
   await page.mouse.move(0, 0);
 }
 
