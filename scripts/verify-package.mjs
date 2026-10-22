@@ -429,7 +429,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
       || JSON.stringify(matching.map(([, block]) => block.match(/font-family:\s*["']([^"']+)["']\s*;/)?.[1]).sort())
       !== JSON.stringify(["Gavia", "Gavia Sans"])
       || matching.some(([, block]) => !block.includes("font-style: " + record.style + ";")
-      || !block.includes("unicode-range: " + record.unicodeRange + ";") || !/font-display:\s*swap\s*;/.test(block))) {
+        || !block.includes("unicode-range: " + record.unicodeRange + ";") || !/font-display:\s*swap\s*;/.test(block))) {
       throw new Error("Packed variable-font CSS has a broken style, subset or URL: " + record.file);
     }
     if (record.subset === "core") {

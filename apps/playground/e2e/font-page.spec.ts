@@ -249,7 +249,9 @@ test("font download contains the approved family, standalone CSS and OFL license
   await expect(font).toBeVisible();
   await expect(font.locator("[data-wl=segmented]")).toHaveCount(3);
   await expect(font.locator("[data-wl=select]")).toHaveCount(1);
-  await expect(font.locator("[data-wl=slider]")).toHaveCount(1);
+  await expect(font.locator("[data-wl=slider]")).toHaveCount(2);
+  await expect(font.getByRole("slider", { name: "Вес", exact: true })).toBeVisible();
+  await expect(font.getByRole("slider", { name: "Размер", exact: true })).toBeVisible();
   await expect(font.locator("[data-wl=textarea]")).toHaveCount(1);
   await expect(font.locator("[data-wl=input]")).toHaveCount(1);
   await expect(font.locator("kbd")).toHaveCount(0);

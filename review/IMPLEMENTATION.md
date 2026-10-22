@@ -27,6 +27,36 @@ unchanged. The owner authorized fixing CI errors and another commit/push;
 the renewed full checks run on GitHub. No passing renewed CI result is claimed
 by this source preparation, and no build/package/browser suite ran locally.
 
+The follow-up `e55df1e47965f393c2ead69379e992d619164466` was checked in
+[CI run 39743473274](https://github.com/whitewolf06/gavia-ui/actions/runs/39743473274).
+API metadata, release tools, quality-report checks, strict types and the packed
+Chromium consumer/hydration passed. Full lint found five conditional font-test
+assertions and one continuation indent; those are corrected without rule
+exceptions. Variable font assets are now mandatory in their tests, and Core
+budgets and Full-before-Core ordering use explicit filtered-case loops.
+Chromium passed 173/174 cases; the remaining inventory assertion now requires
+both the weight and size sliders, including their accessible names. Firefox,
+WebKit and mobile Chromium passed. Windows visuals passed 17/24 cases; the seven
+differences are the RC header version, observed npm version and added weight
+control/copy. All seven expected/actual/diff triples were inspected before
+updating the corresponding canonical Windows PNGs. Fonts, layout and remaining
+screens showed no unexpected changes. No comparison threshold or Linux PNG changed.
+
+Reviewed source: Windows artifact `12410188462`, SHA256
+`e150509d3b76b831642603e68e3edb8d2da5036e200973a6cbcc53ee65af6cb3`,
+from the e55df1e run. Each artifact expected PNG matched its existing baseline
+hash before copying the reviewed actual. The seven replacements are:
+
+- `desktop/gavia-header.png`, `desktop/gavia-dark-header.png`;
+- `desktop/gavia-font-alphabets.png`, `desktop/gavia-dark-font-alphabets.png`;
+- `mobile/gavia-home-onboarding.png`;
+- `mobile/gavia-font-alphabets.png`, `mobile/gavia-dark-font-alphabets.png`.
+
+The [local review record](../.tmp/rc1-ci-baseline-review-2026-10-22.json) retains
+old/new hashes and exact paths. The ZIP download/hash/PNG extraction took 2.97 s,
+peak 33.62 MiB under the existing resource limits; it did not run a browser.
+The next committed revision still requires a renewed successful CI result.
+
 The owner authorized committing the RC changes, pushing a separate branch and
 running the required existing GitHub checks. The delivery branch is
 `codex/gavia-1-0-rc-1`; a draft pull request into `main` triggers `ci.yml`.

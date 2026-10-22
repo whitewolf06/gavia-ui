@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { createHash } from "node:crypto";
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -15,9 +15,9 @@ const repositoryRoot = resolve(kitRoot, "../..");
 const fontRoot = resolve(kitRoot, "fonts/gavia");
 const cssPath = resolve(kitRoot, "styles/fonts/gavia.css");
 const variableManifestPath = resolve(fontRoot, "variable-manifest.json");
-const variableManifest = existsSync(variableManifestPath) ? JSON.parse(readFileSync(variableManifestPath, "utf8")) : null;
+const variableManifest = JSON.parse(readFileSync(variableManifestPath, "utf8"));
 const variableFiles: { file: string; sha256: string; bytes: number; subset: string; style: string; unicodeRange: string }[]
-  = variableManifest?.files ?? [];
+  = variableManifest.files;
 const hash = (content: Buffer) => createHash("sha256").update(content).digest("hex");
 const acceptedBlock = /APPROVED_SANS_0600_SHA256 = \{([\s\S]*?)\r?\n\}/
   .exec(readFileSync(resolve(repositoryRoot, "scripts/fonts/verify_fonts.py"), "utf8"))?.[1];
@@ -75,11 +75,7 @@ function windowsName(font: Buffer, id: number): string {
 }
 
 describe("Gavia Sans font distribution", () => {
-  it("keeps both variable styles with compact cores and complete cluster fallbacks when present", () => {
-    if (!variableManifest) {
-      expect(variableFiles).toEqual([]);
-      return;
-    }
+  it("keeps both variable styles with compact cores and complete cluster fallbacks", () => {
     expect(variableManifest.family).toBe(manifest.family);
     expect(variableManifest.version).toBe(manifest.version);
     expect(variableManifest.license).toBe(manifest.license);
@@ -95,7 +91,9 @@ describe("Gavia Sans font distribution", () => {
       expect(file.file).toBe("Gavia-Variable" + (file.style === "italic" ? "-Italic" : "") + suffixes[file.subset] + ".woff2");
       expect(file.sha256).toMatch(/^[a-f0-9]{64}$/);
       expect(Number.isSafeInteger(file.bytes) && file.bytes > 0).toBe(true);
-      if (file.subset === "core") expect(file.bytes).toBeLessThanOrEqual(80_000);
+    }
+    for (const file of variableFiles.filter((record) => record.subset === "core")) {
+      expect(file.bytes).toBeLessThanOrEqual(80_000);
     }
     const coverage = (style: string, subset: string) => unicodeCharacters(
       variableFiles.find((file) => file.style === style && file.subset === subset)!.unicodeRange
@@ -189,8 +187,8 @@ describe("Gavia Sans font distribution", () => {
     }
     const variableFaces = allFaces.filter((block) => /font-weight:\s*100\s+700\s*;/.test(block)
       && ["Gavia Sans", "Gavia"].includes(block.match(/font-family:\s*"([^"]+)"\s*;/)?.[1] ?? ""));
-    expect(variableFaces).toHaveLength(variableFiles.length ? 8 : 0);
-    if (variableFiles.length) expect(css).toMatch(/^@supports not \(font-variation-settings: normal\) \{/);
+    expect(variableFaces).toHaveLength(8);
+    expect(css).toMatch(/^@supports not \(font-variation-settings: normal\) \{/);
     for (const file of variableFiles) {
       expect(file.file).toMatch(/^Gavia-Variable(?:-Italic)?(?:-Core)?\.woff2$/);
       const bytes = readFileSync(resolve(fontRoot, file.file));
@@ -208,15 +206,15 @@ describe("Gavia Sans font distribution", () => {
         expect(block).toContain("unicode-range: " + file.unicodeRange + ";");
         expect(block).toMatch(/font-display:\s*swap\s*;/);
       }
-      if (file.subset === "core") {
-        const fullFile = variableFiles.find((candidate) => candidate.style === file.style && candidate.subset === "full")!;
-        for (const family of ["Gavia Sans", "Gavia"]) {
-          const familyBlock = (block: string) => block.includes('font-family: "' + family + '";');
-          const fullIndex = variableFaces.findIndex((block) => familyBlock(block) && block.includes(fullFile.file));
-          const coreIndex = variableFaces.findIndex((block) => familyBlock(block) && block.includes(file.file));
-          expect(fullIndex).toBeGreaterThanOrEqual(0);
-          expect(coreIndex).toBeGreaterThan(fullIndex);
-        }
+    }
+    for (const file of variableFiles.filter((record) => record.subset === "core")) {
+      const fullFile = variableFiles.find((candidate) => candidate.style === file.style && candidate.subset === "full")!;
+      for (const family of ["Gavia Sans", "Gavia"]) {
+        const familyBlock = (block: string) => block.includes('font-family: "' + family + '";');
+        const fullIndex = variableFaces.findIndex((block) => familyBlock(block) && block.includes(fullFile.file));
+        const coreIndex = variableFaces.findIndex((block) => familyBlock(block) && block.includes(file.file));
+        expect(fullIndex).toBeGreaterThanOrEqual(0);
+        expect(coreIndex).toBeGreaterThan(fullIndex);
       }
     }
   });
