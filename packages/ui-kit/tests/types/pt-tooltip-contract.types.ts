@@ -1,5 +1,6 @@
 /** Compile-only distinction between Vue-bound PT and directive-managed tooltip attributes. */
-import type { WlConfigOptions, WlPtStrict, WlTooltipPtAttributes, WlTooltipValue } from "../../src";
+import type { Directive } from "vue";
+import { type WlConfigOptions, type WlPtStrict, type WlTooltip, WlTooltipDirective, type WlTooltipPtAttributes, type WlTooltipValue } from "../../src";
 
 export function tooltipPtConsumerTypes(): void {
   const attrs: WlTooltipPtAttributes = {
@@ -23,5 +24,10 @@ export function tooltipPtConsumerTypes(): void {
   // @ts-expect-error Event restrictions also apply inside application tooltip configuration.
   const appClick: WlConfigOptions = { pt: { tooltip: { text: { onPointerdown: () => {} } } } };
 
-  void [tooltip, config, vueBound, click, hook, reference, appClick];
+  const directive: Directive<HTMLElement, WlTooltipValue> = WlTooltipDirective;
+  const component: InstanceType<typeof WlTooltip>["$props"] = { content: "Help", visible: true, placement: "top" };
+  // @ts-expect-error The directive has no component props, slots or exposed show/hide methods.
+  const directiveAsComponent: typeof WlTooltip = WlTooltipDirective;
+
+  void [tooltip, config, vueBound, click, hook, reference, appClick, directive, component, directiveAsComponent];
 }

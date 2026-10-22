@@ -8,10 +8,15 @@ const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const read = (path) => readFileSync(join(root, path), "utf8").replaceAll("\r\n", "\n");
 
 function changesetNotes() {
-  return readdirSync(join(root, ".changeset")).sort()
+  // Changesets 3 retains consumed preview notes in pre/ until stable promotion.
+  // Read that archive too, just as the Changesets release plan does.
+  const directories = [".changeset"];
+  if (existsSync(join(root, ".changeset/pre"))) directories.push(".changeset/pre");
+  return directories.flatMap((directory) => readdirSync(join(root, directory)).sort()
     .filter((file) => file.endsWith(".md") && file !== "README.md")
+    .map((file) => directory + "/" + file))
     .flatMap((file) => {
-      const source = read(".changeset/" + file);
+      const source = read(file);
       const frontmatter = source.match(/^---[ \t]*\n([\s\S]*?)\n---[ \t]*(?:\n|$)/);
       if (!frontmatter || !/^[ \t]*["']?gavia-ui["']?[ \t]*:[ \t]*(?:patch|minor|major)[ \t]*$/m.test(frontmatter[1]))
         return [];

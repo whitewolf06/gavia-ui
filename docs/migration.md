@@ -8,6 +8,9 @@ The active review programme's additional contracts are documented in
 [its migration notes](migration-review-programme.md); follow their stated
 implementation and verification status.
 
+- [Upgrading from 0.12.1 to 1.0.0-rc.1](#migration-1-0-rc-1)
+- [1.0 localization: English fallback](#migration-1-0-localization)
+- [1.0 public API: canonical names](#migration-1-0-public-api)
 - [Package documentation and font assets](#migration-package-assets)
 - [Upgrading to Gavia UI 0.12.1](#migration-0-12-1)
 - [Upgrading to Gavia UI 0.12.0](#migration-0-12-0)
@@ -22,6 +25,213 @@ implementation and verification status.
 - [Baseline before removing PrimeVue](#baseline-0-3)
 - [Migration to Gavia UI](#migration-gavia)
 - [Theme names and Gavia Dark](#migration-themes)
+
+<a id="migration-1-0-rc-1"></a>
+## Upgrading from 0.12.1 to 1.0.0-rc.1
+
+**Prepared on 2026-10-22; publication and exact-candidate verification pending.**
+The root and library source versions are `1.0.0-rc.1`. This candidate contains
+breaking changes and is intended for npm **`next`**. The currently published
+stable version is 0.12.1, as observed on 2026-10-22; preparing this document
+does not change the registry.
+
+The owner approved an RC transition on 2026-10-22, replacing the original plan
+for an intervening 0.x release with aliases and warnings. No such warning release
+is claimed. The two-to-four-week feedback period starts only after confirmed RC
+publication. Stable 1.0 requires feedback disposition and its own release approval.
+See the [accepted transition](rfc/0001-public-api-1.0.md#accepted-rc-transition--2026-10-22).
+
+After publication, opt into this exact candidate in a consumer application:
+
+```sh
+pnpm add gavia-ui@1.0.0-rc.1 vue
+```
+
+`gavia-ui@next` follows the candidate channel after publication. Keep the exact
+version above when reproducing an RC issue. Consumers staying on stable continue
+using the ordinary package name. Vue `^3.4.0` and TypeScript 5.4+ remain supported.
+
+Upgrade application code together:
+
+1. Configure `WlConfig` with `wlLocaleRu` if the app relies on Russian built-in
+   text. Follow [English fallback and text overrides](#migration-1-0-localization).
+2. Replace legacy PT component/section names, status variants and `dismissable`;
+   move shared IconButton overrides to `pt.iconButton`. Follow the complete
+   [canonical-name mapping](#migration-1-0-public-api).
+3. Import the component as `WlTooltip` and register `WlTooltipDirective` as the
+   directive. Supply accessible names for icon-prop actions.
+4. Keep CSS imports, `Wl*`, `wl-*`, `--wl-*` and the five theme identifiers.
+   The existing font CSS now enables the 100–700 variable Gavia Sans files;
+   accepted static files remain the conditional fallback.
+5. Review public utility/composable imports and the
+   [additional component/service migrations](migration-review-programme.md).
+   Keep requests, routing and business state in the application.
+
+Before adopting a candidate in an application, run its own strict types and
+exercise changed labels, PT customizations, keyboard/focus behavior and SSR
+hydration where used. Maintainer release evidence for this exact version remains
+pending in the [candidate checklist](maintainers/release-candidate.md).
+
+<a id="migration-1-0-localization"></a>
+## 1.0 localization: English fallback
+
+**Breaking change included in the prepared 1.0.0-rc.1 source.** Publication and
+verification of the exact candidate remain pending. Earlier scoped acceptance
+is retained in the review ledger; it does not certify this versioned archive.
+
+Without `WlConfig`, or with an omitted locale, built-in control labels and calendar
+names now use `wlLocaleEn`. Existing applications that rely on implicit Russian
+text must install the Russian preset in their application entry point:
+
+```ts
+import { createApp } from "vue";
+import { WlConfig, wlLocaleRu } from "gavia-ui";
+import App from "./App.vue";
+
+createApp(App).use(WlConfig, { locale: wlLocaleRu }).mount("#app");
+```
+
+For Nuxt or another SSR host, install configuration inside the per-application
+plugin/request setup. Do not move mutable locale state to a module singleton.
+The library does not infer its locale from browser language or HTML `lang`.
+
+### Partial locales and custom text
+
+Missing or invalid known fields in a partial locale fall back to **English**.
+Setting only `localeCode: "ru-RU"` changes formatting metadata; it does not supply
+Russian translations. Spread the full preset before overriding selected labels:
+
+```ts
+app.use(WlConfig, {
+  locale: { ...wlLocaleRu, accept: "Продолжить", reject: "Вернуться" }
+});
+```
+
+Component text props keep priority over locale text. Omitted props and explicit
+`undefined` follow the active locale, including reactive changes through
+`useWlConfig().setLocale(...)`; an explicit string, including `""`, stays an
+override. Keep meaningful accessible names when suppressing text. Calling
+`setLocale(undefined)` restores the English fallback for that application only.
+
+Russian strings have been removed from component prop defaults. Their public
+inputs remain optional strings, but an omitted prop read through a component
+ref is now `undefined`; the rendered text is resolved from the locale. Remove
+code that inspects prop defaults to discover translated labels. Application
+content, supplied slots and custom prop strings are still translated by the app.
+
+The internal `useWlLocaleText` helper has been removed. Library components resolve
+text directly from the normalized `useWlLocale()` result with nullish fallback;
+they no longer inspect raw vnode props. This is not a new public import: consumer
+applications continue to use `WlConfig`, `useWlConfig` and the exported presets.
+
+Before release, check omitted/undefined/custom/empty text, changing EN/RU while
+mounted, independent Vue applications and repeated/concurrent SSR with hydration.
+Check built-in labels as well as visible content in your app. These instructions
+do not claim that those acceptance checks have run.
+
+The companion [public API migration](#migration-1-0-public-api) removes the
+0.x aliases and renames Tooltip exports. See the
+[localization guide](guide/localization.md) and [1.0 RFC](rfc/0001-public-api-1.0.md).
+
+<a id="migration-1-0-public-api"></a>
+## 1.0 public API: canonical names
+
+**Breaking API included in the prepared 1.0.0-rc.1 source.** Candidate verification
+and publication remain pending. The owner-approved [RC transition](#migration-1-0-rc-1)
+replaces the originally planned 0.x warning release. Keep these removals in the
+major candidate channel; no intermediate compatibility publication is claimed.
+
+### Pass-through configuration
+
+Use these component keys in `WlConfig.pt`, `WlPt` and `WlPtStrict`:
+
+| Removed 0.x key | 1.0 key |
+| --- | --- |
+| `datatable` | `table` |
+| `inputtext` | `input` |
+| `toggleswitch` | `switch` |
+| `selectbutton` | `segmented` |
+| `paginator` | `pagination` |
+| `progressbar` | `progress` |
+| `radiobutton` | `radio` |
+| `breadcrumb` | `breadcrumbs` |
+| `tablist` | `tabs` |
+| `tabpanels.root`, `tabpanel.root` | `tabs.panels.root`, `tabs.panel.root` |
+
+For local Tabs props use `pt.panels.root` and `pt.panel.root`. Nested section
+objects use `closeButton`, `chip`, `item`, `filter`, `inputText`, `prevButton` and
+`nextButton` instead of their `pc*` spellings. For example:
+
+```ts
+// Before: pt: { datatable: { root: attrs }, dialog: { pcCloseButton: { root: attrs } } }
+app.use(WlConfig, {
+  pt: { table: { root: attrs }, dialog: { closeButton: { root: attrs } } }
+});
+```
+
+`iconButton` no longer inherits `button` overrides. Move shared action styles
+explicitly to both keys when both components should receive them. The order
+defaults → application → instance, class/style merging, callback context and
+existing `wl-*` CSS classes stay the same. Open PT extension keys remain allowed;
+removed aliases have no built-in meaning. Use strict PT types to catch typos.
+
+### Semantic tone, appearance and dismissal
+
+Alert, Badge, Pill and Progress use `tone` with
+`neutral | accent | info | success | warning | danger`; remove their `variant`
+prop and translate the old values as follows:
+
+| Component | Former variant → tone |
+| --- | --- |
+| Alert | `info` → `info`, `ok` → `success`, `warn` → `warning`, `err` → `danger` |
+| Badge | `accent` → `accent`, `gray` → `neutral`, `success` → `success`, `warn` → `warning`, `danger` → `danger` |
+| Pill | `neutral` → `neutral`, `info` → `info`, `ok` → `success`, `warn` → `warning`, `err` → `danger` |
+| Progress | `default` → `accent`, `ok` → `success` |
+
+Tag uses `color` for its palette axis; replace `variant` with `color` while
+keeping `gray | blue | green | amber | red`. Other strings retain the existing
+native color attribute behavior and use the gray appearance.
+
+Button appearance remains `primary | secondary | ghost | link | soft`.
+Migrate `danger` to `variant="primary" tone="danger"`, `danger-quiet` to
+`variant="ghost" tone="danger"`, and `soft-danger` to
+`variant="soft" tone="danger"`. Keep appearance and meaning separate.
+The exported `WlAlertVariant`, `WlBadgeVariant`, `WlPillVariant` and
+`WlProgressVariant` types are removed; use `WlTone`. `WlTagVariant` becomes
+`WlTagColor`.
+
+Dialog, Drawer and Popover accept `dismissible`; replace `dismissable` in
+templates, bindings and prop types. Existing Toast severity adapters and helper
+methods, and confirmation `confirmDanger`, remain supported. This migration
+does not remove those independent service contracts.
+
+### Tooltip imports and action names
+
+`WlTooltip` is now the component. Import `WlTooltipDirective` for directive
+registration. Replace component imports and tags named `WlTooltipComponent`:
+
+```ts
+import { WlTooltip, WlTooltipDirective } from "gavia-ui";
+app.directive("tooltip", WlTooltipDirective);
+```
+
+```vue
+<WlTooltip content="Changes are saved automatically">
+  <WlIconButton icon="save" aria-label="Save" />
+</WlTooltip>
+```
+
+An `icon` prop on `WlIconButton` now requires a typed accessible-name source:
+`ariaLabel`, native `aria-label`/`aria-labelledby`, or an explicitly named
+`pt.root`. Without an `icon` prop, a default slot can supply action text and a
+custom icon. TypeScript cannot prove the rendered slot text, a referenced DOM
+label or a name supplied by global PT. Runtime development warnings remain to
+detect empty names and unresolved references. Tooltip text, count and dot
+descriptions do not name the action.
+
+The canonical component source/example is `WlTooltip.vue`. Old documentation
+query links naming `WlTooltipComponent` are normalized to `WlTooltip`; this URL
+compatibility does not restore the removed package export.
 
 <a id="migration-package-assets"></a>
 ## Package documentation and font assets

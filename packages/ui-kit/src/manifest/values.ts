@@ -1,21 +1,18 @@
 import type {
-  WlAlertVariant,
   WlAvatarSize,
-  WlBadgeVariant,
   WlButtonVariant,
   WlColorPickerSize,
   WlDensity,
   WlDrawerPosition,
   WlIconButtonVariant,
   WlMultiSelectDisplay,
-  WlPillVariant,
-  WlProgressVariant,
   WlSize,
   WlSizeSm,
   WlSpinnerSize,
   WlStatCardTone,
   WlSwitchSize,
-  WlTagVariant
+  WlTagColor,
+  WlTone
 } from "../types";
 export { WL_ICON_NAMES } from "../icons.generated";
 
@@ -35,9 +32,6 @@ export const WL_BUTTON_VARIANTS = [
   "secondary",
   "ghost",
   "soft",
-  "danger",
-  "danger-quiet",
-  "soft-danger",
   "link"
 ] as const satisfies readonly WlButtonVariant[];
 
@@ -47,41 +41,22 @@ export const WL_ICON_BUTTON_VARIANTS = [
   "soft"
 ] as const satisfies readonly WlIconButtonVariant[];
 
-export const WL_TAG_VARIANTS = [
+export const WL_TAG_COLORS = [
   "gray",
   "blue",
   "green",
   "amber",
   "red"
-] as const satisfies readonly WlTagVariant[];
+] as const satisfies readonly WlTagColor[];
 
-export const WL_BADGE_VARIANTS = [
-  "gray",
-  "accent",
-  "success",
-  "warn",
-  "danger"
-] as const satisfies readonly WlBadgeVariant[];
-
-export const WL_ALERT_VARIANTS = [
-  "info",
-  "ok",
-  "warn",
-  "err"
-] as const satisfies readonly WlAlertVariant[];
-
-export const WL_PROGRESS_VARIANTS = [
-  "default",
-  "ok"
-] as const satisfies readonly WlProgressVariant[];
-
-export const WL_PILL_VARIANTS = [
+export const WL_TONES = [
   "neutral",
+  "accent",
   "info",
-  "ok",
-  "warn",
-  "err"
-] as const satisfies readonly WlPillVariant[];
+  "success",
+  "warning",
+  "danger"
+] as const satisfies readonly WlTone[];
 
 export const WL_SWITCH_SIZES = ["sm", "md"] as const satisfies readonly WlSwitchSize[];
 export const WL_SPINNER_SIZES = ["sm", "md", "lg"] as const satisfies readonly WlSpinnerSize[];

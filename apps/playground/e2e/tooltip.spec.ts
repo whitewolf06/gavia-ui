@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
 
-test("WlTooltipComponent keyboard and controlled example", { tag: "@cross-browser" }, async ({ page, baseURL }) => {
+test("WlTooltip keyboard and controlled example", { tag: "@cross-browser" }, async ({ page, baseURL }) => {
   const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
-  url.search = "?view=docs&component=WlTooltipComponent&lang=en&theme=gavia";
+  url.search = "?view=docs&component=WlTooltip&lang=en&theme=gavia";
   await page.goto(url.href, { waitUntil: "domcontentloaded" });
-  const example = page.getByTestId("ds-example-preview").locator('[data-review-example="WlTooltipComponent"]');
+  const example = page.getByTestId("ds-example-preview").locator('[data-review-example="WlTooltip"]');
   await expect(example).toBeVisible();
   const trigger = example.getByRole("button", { name: "Save details", exact: true });
   await trigger.focus();

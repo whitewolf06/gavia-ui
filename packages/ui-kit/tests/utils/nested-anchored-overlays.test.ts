@@ -14,14 +14,14 @@ function harness(modal = false) {
   const Component = defineComponent({
     components: { WlDatePicker, WlDialog, WlPopover, WlSelect },
     setup() {
-      return { modal: ref(false), value: ref("all"), date: ref("2026-10-05"), child: ref(true), dismissable: ref(true), escape: ref(true),
+      return { modal: ref(false), value: ref("all"), date: ref("2026-10-05"), child: ref(true), dismissible: ref(true), escape: ref(true),
         options: [{ value: "all", label: "All items" }, { value: "task_deadline", label: "Task deadlines" }] };
     },
     template: `
       <button class="modal-anchor" @click="modal = true">Open dialog</button>
       ${modal ? '<WlDialog v-model:visible="modal" header="Outer dialog" :motion="false">' : "<section>"}
         <button class="parent-anchor" @click="$refs.parent.show($event)">Filters</button>
-        <WlPopover ref="parent" aria-label="Filters" :dismissable="dismissable" :close-on-escape="escape" :motion="false">
+        <WlPopover ref="parent" aria-label="Filters" :dismissible="dismissible" :close-on-escape="escape" :motion="false">
           <WlSelect v-if="child" v-model="value" :options="options" option-label="label"
             option-value="value" aria-label="Item type" :motion="false" />
           <WlDatePicker v-model="date" aria-label="Item date" :motion="false" />
@@ -147,7 +147,7 @@ describe("nested anchored portals", () => {
     await escape(element(".sibling-action"));
     expect(document.body.querySelector('.wl-popover[aria-label="Independent"]')).not.toBeNull();
     await pointer(element(".modal-anchor"));
-    wrapper.vm.dismissable = false;
+    wrapper.vm.dismissible = false;
     wrapper.vm.escape = false;
     await nextTick();
     await click(".parent-anchor");

@@ -1,25 +1,5 @@
-/** Consumer bundlers replace this literal; no Node type dependency is required. */
-declare const process: { env: { NODE_ENV?: string } };
-import { computed, type ComputedRef, getCurrentInstance, onBeforeUnmount, onMounted, ref, watch, watchEffect } from "vue";
+import { computed, type ComputedRef, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import type { WlOverlayInitialFocus } from "../overlay-types";
-import { isWlDevelopment } from "./development";
-
-/** Keep 0.x spelling/defaults while allowing the normalized name to take precedence. */
-export function useDismissible(
-  component: string, preferred: ComputedRef<boolean | undefined>, legacy: ComputedRef<boolean>
-): ComputedRef<boolean> {
-  const instance = getCurrentInstance();
-  let warned = false;
-  watchEffect(() => {
-    const value = legacy.value;
-    if (isWlDevelopment() && process.env.NODE_ENV !== "production" && !warned && instance?.vnode.props?.dismissable !== undefined) {
-      warned = true;
-      console.warn(`${component}: dismissable is deprecated; use dismissible instead.`);
-    }
-    void value;
-  });
-  return computed(() => preferred.value ?? legacy.value);
-}
 
 export function resolveOverlayInitialFocus(value: WlOverlayInitialFocus | undefined, container: HTMLElement | null): HTMLElement | null {
   if (!container || value === undefined) return null;

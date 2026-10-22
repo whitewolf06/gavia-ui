@@ -65,6 +65,31 @@ describe("WlContextMenu", () => {
     expect(document.querySelector('[role="menu"]')).toBeNull();
   });
 
+  it("toggles through its public methods and forwards controlled checkbox selections", async () => {
+    const checked = Object.freeze({ label: "Grid", type: "checkbox" as const, checked: false });
+    const wrapper = mount(WlContextMenu, { attachTo: document.body, props: { items: [checked], motion: false } });
+    wrappers.push(wrapper);
+    wrapper.vm.toggle();
+    await flushPromises();
+    const checkbox = document.querySelector<HTMLElement>('[role="menuitemcheckbox"]')!;
+    expect(document.activeElement).toBe(checkbox);
+    wrapper.vm.show();
+    await flushPromises();
+    expect(document.querySelectorAll('[role="menu"]')).toHaveLength(1);
+    expect(document.activeElement).toBe(checkbox);
+    wrapper.vm.toggle();
+    await flushPromises();
+    expect(document.querySelector('[role="menu"]')).toBeNull();
+
+    wrapper.vm.toggle();
+    await flushPromises();
+    document.querySelector<HTMLElement>('[role="menuitemcheckbox"]')!.click();
+    await flushPromises();
+    expect(wrapper.emitted("check")).toEqual([[{ item: checked, checked: true }]]);
+    expect(checked.checked).toBe(false);
+    expect(document.querySelector('[role="menu"]')).toBeNull();
+  });
+
   it("retains trigger ownership inside a modal when opening at coordinates and choosing a nested item", async () => {
     const command = vi.fn();
     const Harness = defineComponent({

@@ -65,7 +65,7 @@ const sortRows: WlTableSortFn<MaterialRow> = (value, order) => [...value].sort((
         >{{ value }}</WlButton></template>
         <template #cell-status="{ value }">
           <WlPill
-            :variant="value === 'done' ? 'ok' : 'info'"
+            :tone="value === 'done' ? 'success' : 'info'"
             :label="value === 'done' ? t('examples.done_0047') : t('examples.in_progress_0066')"
           />
         </template>

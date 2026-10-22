@@ -27,7 +27,7 @@ export default defineConfig({
     target: "es2020",
     // CI interaction checks exercise production output; the public Pages build
     // does not include the synthetic component fixture.
-    rollupOptions: {
+    rolldownOptions: {
       ...(process.env.GAVIA_E2E_BUILD === "1"
         ? {
             input: {
@@ -36,7 +36,12 @@ export default defineConfig({
             }
           }
         : {}),
-      output: { onlyExplicitManualChunks: true, manualChunks: playgroundManualChunks }
+      output: {
+        codeSplitting: {
+          includeDependenciesRecursively: false,
+          groups: [{ name: "playground-runtime", test: (id) => playgroundManualChunks(id) === "playground-runtime" }]
+        }
+      }
     }
   },
   server: {

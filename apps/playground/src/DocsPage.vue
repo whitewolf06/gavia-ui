@@ -29,6 +29,7 @@ import { playgroundLocale } from "./i18n";
 import { createPlaygroundNavigationUrl as createPlaygroundUrl, type DocumentationSection, isDocumentationAssetSection, isDocumentationFoundationSection, isDocumentationGuideSection, isDocumentationQualitySection } from "./navigation";
 import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
 import { getInstallCommand, installationManagers, type PackageManager } from "./project/installation";
+import { gaviaProjectInfo } from "./project/project-info";
 import { playgroundThemePreference, withPlaygroundTheme } from "./themes";
 import { usePageAnchor } from "./usePageAnchor";
 const installManager = ref<string | null>("pnpm");
@@ -182,7 +183,7 @@ onBeforeUnmount(() => {
       >
         <template v-if="entry" #meta>
           <span>{{ t('documentation.strings.s0830') }} {{ categoryLabel }}</span>
-          <span v-if="entry.introducedIn === '0.12.1'" class="docs-version">
+          <span v-if="entry.introducedIn === gaviaProjectInfo.version" class="docs-version">
             {{ playgroundLocale === 'ru' ? 'Новое' : 'New' }}
           </span>
         </template>

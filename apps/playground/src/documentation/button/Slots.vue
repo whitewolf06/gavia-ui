@@ -25,7 +25,12 @@ function readMessages(): void {
       <WlButton @click="lastAction = t('examples.continue_0253')">
         <span class="button-slot-inline">{{ t("examples.continue_0253") }}<WlIcon name="arrow-right" :size="16" /></span>
       </WlButton>
-      <WlButton variant="danger-quiet" :aria-label="t('examples.delete_draft_0273')" @click="lastAction = t('examples.draft_deleted_0274')">
+      <WlButton
+        variant="ghost"
+        tone="danger"
+        :aria-label="t('examples.delete_draft_0273')"
+        @click="lastAction = t('examples.draft_deleted_0274')"
+      >
         <template #icon><WlIcon name="trash" :size="16" /></template>
       </WlButton>
       <WlButton variant="soft" @click="readMessages">

@@ -21,7 +21,7 @@ describe("basic component behavior", () => {
         visible: true,
         header: "Dialog",
         ariaLabel: "Task dialog",
-        dismissable: true,
+        dismissible: true,
         blockScroll: true
       },
       slots: { default: "Dialog body" }

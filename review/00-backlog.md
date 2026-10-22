@@ -11,6 +11,32 @@
 
 **Status source:** Keep task IDs in the mapping column. Record current status, verification evidence and remaining scope only in [the execution ledger](IMPLEMENTATION.md#execution-ledger), avoiding a second status copy here.
 
+For **1.0.0-rc.1**, the exact archive now passes distribution checks and the
+pnpm/Vue 3.4.38/TS 6.0.3 consumer lane; remaining release gates stay pending.
+For evidence, the accepted RC transition and the owner's font acceptance,
+follow the [2026-10-22 archive checkpoint](IMPLEMENTATION.md#rc1-archive-verification-2026-10-22)
+and [candidate migration](../docs/migration.md#migration-1-0-rc-1).
+
+For LINT-3/T0.4, follow the [completed unused-code audit](T0.4-unused-code-audit-2026-10-21.md)
+and [current verification boundary](IMPLEMENTATION.md#t04-unused-code-audit-2026-10-21).
+
+For CMP-4, ARCH-4 and UTIL-8, follow the [T9.2 source and acceptance checkpoint](IMPLEMENTATION.md#t92--10-localization-implementation-prepared)
+and the [1.0 localization migration](../docs/migration.md#migration-1-0-localization).
+
+For current pre-1.0 verification, CMP-7/T9.3, Tooltip/action-name contracts and T2.8,
+follow the [2026-10-21 verification checkpoint](IMPLEMENTATION.md).
+For T5.3, follow the [activation/browser checkpoint](IMPLEMENTATION.md#t53-browser-activation-2026-10-21).
+The per-Core size gate passes: normal 75428 / italic 79696 bytes, both <80000.
+Four WOFF2 files retain complete international fallbacks; the original exact
+six-weight geometry/metric/shaping checks pass, as do 27 focused Python units.
+The bounded build used 160.67 MiB and 129.27 s. Original full faces, all 24 static
+binaries and authored artwork are unchanged. Canonical CSS/assets are now active;
+focused Windows Chromium checks pass for the 75428-byte Russian Gavia home
+request, variable weights/styles, Core/full cluster fallback and standalone ZIP.
+The owner accepted the font visually on 2026-10-22. Measured CLS and
+exact-candidate automated verification remain pending; T5.3 stays Partial for
+that scope. No new full verification sequence is claimed.
+
 **Приоритет:**
 - **P0** — дефект или дешёвое улучшение с большим эффектом, делать первым;
 - **P1** — важно до 1.0;

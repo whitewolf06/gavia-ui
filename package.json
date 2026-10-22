@@ -1,6 +1,6 @@
 {
   "name": "gavia-ui-workspace",
-  "version": "0.12.1",
+  "version": "1.0.0-rc.1",
   "private": true,
   "description": "Gavia UI workspace: an independent Vue 3 design system and component library",
   "license": "MIT",
@@ -54,7 +54,7 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
     "@axe-core/playwright": "4.13.0",
-    "@changesets/cli": "2.31.1",
+    "@changesets/cli": "3.0.3",
     "@eslint/js": "10.0.1",
     "@playwright/test": "1.58.2",
     "@stylistic/eslint-plugin": "5.10.0",
@@ -72,7 +72,7 @@
     "globals": "17.13.0",
     "jsonc-eslint-parser": "3.3.0",
     "publint": "0.3.25",
-    "typescript": "5.8.3",
+    "typescript": "6.0.3",
     "typescript-eslint": "8.71.2",
     "vue-eslint-parser": "10.4.1"
   },

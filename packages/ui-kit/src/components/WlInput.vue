@@ -52,7 +52,7 @@ const props = withDefaults(
      */
     type?: string;
     /** Attributes of internal Gavia UI elements. */
-    pt?: WlPt<"inputtext">;
+    pt?: WlPt<"input">;
   }>(),
   {
     size: "md",
@@ -99,7 +99,7 @@ const inputClass = computed(() => [
   props.disabled && "is-disabled",
   props.density === "compact" && "is-compact"
 ]);
-const section = useWlPt("inputtext", computed(() => props.pt));
+const section = useWlPt("input", computed(() => props.pt));
 </script>
 
 <template>

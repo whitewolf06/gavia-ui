@@ -1,5 +1,6 @@
 import { mount } from "@vue/test-utils";
 import { describe, expect, it, vi } from "vitest";
+import { h } from "vue";
 import type { GlobalMountOptions } from "../mounting-types";
 import { WlConfig } from "../../src";
 import { createWlPt, WlFileUpload, wlLocaleRu } from "../../src";
@@ -186,5 +187,96 @@ describe("WlFileUpload", () => {
     await remove.trigger("click");
     expect(wrapper.emitted("update:modelValue")).toBeUndefined();
     expect(wrapper.findAll(".wl-upload__row")).toHaveLength(1);
+  });
+
+  it("accepts case-insensitive extensions and exact MIME types and treats an empty filter as unrestricted", async () => {
+    const wrapper = mount(WlFileUpload, { global, props: { accept: " .PDF, audio/mpeg , " } });
+    const pdf = makeFile("REPORT.PDF", 10, "application/octet-stream");
+    const audio = makeFile("recording.mp3", 20, "audio/mpeg");
+    const rejected = makeFile("photo.png", 30, "image/png");
+    try {
+      await setInputFiles(wrapper, [pdf, audio, rejected]);
+      expect(wrapper.emitted("update:modelValue")?.at(-1)).toEqual([[pdf, audio]]);
+      expect(wrapper.emitted("reject")).toEqual([[{ file: rejected, reason: "type" }]]);
+      expect(wrapper.findAll(".wl-upload__file-icon").map((icon) => icon.attributes("data-icon"))).toEqual(["file", "music"]);
+      await wrapper.setProps({ accept: " , , " });
+      await setInputFiles(wrapper, [rejected]);
+      expect(wrapper.emitted("update:modelValue")?.at(-1)).toEqual([[pdf, audio, rejected]]);
+      expect(wrapper.find(".wl-upload__errors").exists()).toBe(false);
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
+  it("keeps nested drag feedback until the final leave and ignores drops while disabled", async () => {
+    const wrapper = mount(WlFileUpload, { global });
+    try {
+      const drop = wrapper.get(".wl-upload__drop");
+      await drop.trigger("dragenter");
+      await drop.trigger("dragenter");
+      const over = new Event("dragover", { bubbles: true, cancelable: true });
+      drop.element.dispatchEvent(over);
+      expect(over.defaultPrevented).toBe(true);
+      await drop.trigger("dragleave");
+      expect(drop.classes()).toContain("is-dragover");
+      await drop.trigger("dragleave");
+      expect(drop.classes()).not.toContain("is-dragover");
+      await wrapper.setProps({ disabled: true });
+      await drop.trigger("dragenter");
+      expect(drop.classes()).not.toContain("is-dragover");
+      await drop.trigger("drop", { dataTransfer: { files: [makeFile("ignored.pdf", 10)] } });
+      expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+      await wrapper.setProps({ disabled: false });
+      await drop.trigger("drop");
+      await drop.trigger("drop", { dataTransfer: { files: [] } });
+      expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
+  it("guards the row-slot remove action when disabled and exposes upload state to the owner", async () => {
+    const file = makeFile("report.pdf", 2048);
+    const wrapper = mount(WlFileUpload, {
+      global,
+      props: { modelValue: [file], disabled: true, fileState: () => ({ progress: 42, status: "uploading", message: "Sending" }) },
+      slots: { row: ({ file: selected, size, state, remove }) => h("button", { type: "button", onClick: remove }, `${selected.name}: ${size}: ${state?.message}`) }
+    });
+    try {
+      expect(wrapper.get(".wl-upload__row").text()).toBe("report.pdf: 2 КБ: Sending");
+      await wrapper.get(".wl-upload__row button").trigger("click");
+      expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+      await wrapper.setProps({ disabled: false });
+      await wrapper.get(".wl-upload__row button").trigger("click");
+      expect(wrapper.emitted("update:modelValue")).toEqual([[[]]]);
+      expect(wrapper.find(".wl-upload__list").exists()).toBe(false);
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
+  it("renders upload messages and clamps finite progress while omitting unknown progress", async () => {
+    const first = makeFile("sending.pdf", 10);
+    const second = makeFile("retry.pdf", 20);
+    const wrapper = mount(WlFileUpload, {
+      global,
+      props: {
+        modelValue: [first, second],
+        fileState: (file) => file === first
+          ? { status: "uploading", progress: -1, message: "Starting upload" }
+          : { status: "error", progress: NaN, message: "Retry required" }
+      }
+    });
+    try {
+      const rows = wrapper.findAll(".wl-upload__row");
+      expect(rows[0]!.attributes("data-status")).toBe("uploading");
+      expect(rows[0]!.get("progress").attributes("value")).toBe("0");
+      expect(rows[0]!.get(".wl-upload__message").text()).toBe("Starting upload");
+      expect(rows[1]!.attributes("data-status")).toBe("error");
+      expect(rows[1]!.find("progress").exists()).toBe(false);
+      expect(rows[1]!.get(".wl-upload__message").text()).toBe("Retry required");
+    } finally {
+      wrapper.unmount();
+    }
   });
 });

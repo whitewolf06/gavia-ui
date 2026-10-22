@@ -1,7 +1,6 @@
 import type { WlPtCallbackOptions, WlPtConfig } from "./pt-types";
 
 import { deepMerge } from "./utils/merge";
-import { trackWlPtOverrides } from "./utils/pt-aliases";
 export type { WlPtCallbackOptions, WlPtConfig, WlPtSection } from "./pt-types";
 
 const cx = (...parts: Array<string | false | null | undefined>): string =>
@@ -29,12 +28,12 @@ export function createWlPt(overrides: WlPtConfig = {}): WlPtConfig {
       }),
       icon: { class: "wl-checkbox__icon" }
     },
-    radiobutton: {
+    radio: {
       input: { class: "wl-check-input" },
       box: (o) => ({ class: cx("wl-radio__box", o.context.checked && "is-checked") }),
       icon: { class: "wl-radio__icon" }
     },
-    toggleswitch: {
+    switch: {
       input: { class: "wl-check-input" },
       slider: (o) => ({ class: cx("wl-switch__slider", o.context.checked && "is-checked") }),
       handle: { class: "wl-switch__handle" }
@@ -56,7 +55,7 @@ export function createWlPt(overrides: WlPtConfig = {}): WlPtConfig {
       label: { class: "wl-multiselect__label" },
       clearIcon: { class: "wl-multiselect__clear" },
       chipItem: { class: "wl-multiselect__chip-item" },
-      pcChip: {
+      chip: {
         root: { class: "wl-multiselect__chip" },
         label: { class: "wl-multiselect__chip-label" },
         removeIcon: { class: "wl-multiselect__chip-remove" }
@@ -65,7 +64,7 @@ export function createWlPt(overrides: WlPtConfig = {}): WlPtConfig {
       dropdownIcon: { class: "wl-multiselect__dropdown-icon" },
       overlay: { class: "wl-overlay wl-multiselect-overlay" },
       header: { class: "wl-multiselect__header" },
-      pcFilter: { root: { class: "wl-input wl-input--sm wl-multiselect__filter" } },
+      filter: { root: { class: "wl-input wl-input--sm wl-multiselect__filter" } },
       filterIcon: { class: "wl-multiselect__filter-icon" },
       listContainer: { class: "wl-select__list-container" },
       list: { class: "wl-select__list" },
@@ -76,7 +75,7 @@ export function createWlPt(overrides: WlPtConfig = {}): WlPtConfig {
     autocomplete: {
       inputMultiple: { class: "wl-autocomplete__multiple" },
       chipItem: { class: "wl-multiselect__chip-item" },
-      pcChip: {
+      chip: {
         root: { class: "wl-multiselect__chip" },
         label: { class: "wl-multiselect__chip-label" },
         removeIcon: { class: "wl-multiselect__chip-remove" }
@@ -107,7 +106,7 @@ export function createWlPt(overrides: WlPtConfig = {}): WlPtConfig {
       headerActions: { class: "wl-dialog__actions" },
       content: { class: "wl-dialog__content" },
       footer: { class: "wl-dialog__footer" },
-      pcCloseButton: {
+      closeButton: {
         root: { class: "wl-overlay-close" },
         icon: { class: "wl-overlay-close__icon" }
       }
@@ -127,12 +126,12 @@ export function createWlPt(overrides: WlPtConfig = {}): WlPtConfig {
       title: { class: "wl-drawer__title" },
       content: { class: "wl-drawer__content" },
       footer: { class: "wl-drawer__footer" },
-      pcCloseButton: {
+      closeButton: {
         root: { class: "wl-overlay-close" },
         icon: { class: "wl-overlay-close__icon" }
       }
     },
-    progressbar: {
+    progress: {
       value: { class: "wl-progress__value" },
       label: { class: "wl-progress__label" }
     },
@@ -146,31 +145,27 @@ export function createWlPt(overrides: WlPtConfig = {}): WlPtConfig {
     divider: {
       content: { class: "wl-divider__content" }
     },
-    tablist: {
+    tabs: {
       content: { class: "wl-tabs__content" },
       tabList: { class: "wl-tabs__list" },
-      activeBar: { class: "wl-tabs__active-bar" }
-    },
-    tabpanels: {
-      root: { class: "wl-tabs__panels" }
-    },
-    tabpanel: {
-      root: { class: "wl-tabs__panel" }
+      activeBar: { class: "wl-tabs__active-bar" },
+      panels: { root: { class: "wl-tabs__panels" } },
+      panel: { root: { class: "wl-tabs__panel" } }
     },
     tooltip: {
       root: { class: "wl-tooltip" },
       text: { class: "wl-tooltip__text" },
       arrow: { class: "wl-tooltip__arrow" }
     },
-    selectbutton: {
-      pcToggleButton: {
+    segmented: {
+      item: {
         root: (o: WlPtCallbackOptions) => ({
           class: cx("wl-segmented__item", o.context.active && "is-active")
         }),
         content: { class: "wl-segmented__item-content" }
       }
     },
-    breadcrumb: {
+    breadcrumbs: {
       list: { class: "wl-breadcrumbs__list" },
       item: { class: "wl-breadcrumbs__item" },
       separator: { class: "wl-breadcrumbs__separator" }
@@ -196,7 +191,7 @@ export function createWlPt(overrides: WlPtConfig = {}): WlPtConfig {
       closeButton: { class: "wl-toast__close" },
       closeIcon: { class: "wl-toast__close-icon" }
     },
-    datatable: {
+    table: {
       table: { class: "wl-table__table" },
       thead: { class: "wl-table__head" },
       tbody: { class: "wl-table__body" },
@@ -220,11 +215,11 @@ export function createWlPt(overrides: WlPtConfig = {}): WlPtConfig {
       title: { class: "wl-dp__title" },
       selectMonth: { class: "wl-dp__view-btn" },
       selectYear: { class: "wl-dp__view-btn" },
-      pcPrevButton: {
+      prevButton: {
         root: { class: "wl-dp__nav" },
         icon: { class: "wl-dp__nav-icon" }
       },
-      pcNextButton: {
+      nextButton: {
         root: { class: "wl-dp__nav" },
         icon: { class: "wl-dp__nav-icon" }
       },
@@ -249,5 +244,5 @@ export function createWlPt(overrides: WlPtConfig = {}): WlPtConfig {
     }
   };
 
-  return trackWlPtOverrides(deepMerge(base as Record<string, unknown>, overrides) as unknown as WlPtConfig, overrides);
+  return deepMerge(base as Record<string, unknown>, overrides) as unknown as WlPtConfig;
 }

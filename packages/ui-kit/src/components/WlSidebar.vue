@@ -12,7 +12,7 @@ import type { WlNoModelModifiers } from "../model-types";
 import type { WlSidebarExpose, WlSidebarGroup, WlSidebarItem } from "../navigation-types";
 import type { WlPt } from "../pt-types";
 import type { WlDensity } from "../types";
-import { mergeWlAttrs, useWlLocale, useWlLocaleText, useWlPt } from "../config";
+import { mergeWlAttrs, useWlLocale, useWlPt } from "../config";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
 import WlNavItem from "./WlNavItem.vue";
 defineOptions({ inheritAttrs: false });
@@ -45,8 +45,8 @@ const props = withDefaults(
      */
     brandMark?: string;
     /**
-     * Accessible name when an external label is not referenced.
-     * @default "Основная навигация"
+     * Accessible name; uses locale.mainNavigation when omitted or undefined (English: Main navigation).
+     * @default undefined
      */
     ariaLabel?: string;
     /**
@@ -65,13 +65,13 @@ const props = withDefaults(
      */
     showPin?: boolean;
     /**
-     * Accessible text for pinning the sidebar open.
-     * @default "Закрепить панель"
+     * Pin action text; uses locale.pinSidebar when omitted or undefined (English: Pin sidebar).
+     * @default undefined
      */
     pinLabel?: string;
     /**
-     * Accessible text for releasing the sidebar's pinned state.
-     * @default "Открепить панель"
+     * Unpin action text; uses locale.unpinSidebar when omitted or undefined (English: Unpin sidebar).
+     * @default undefined
      */
     unpinLabel?: string;
     /**
@@ -87,12 +87,9 @@ const props = withDefaults(
     footerItems: () => [],
     brand: "",
     brandMark: "",
-    ariaLabel: "Основная навигация",
     collapsible: true,
     expandOnHover: true,
     showPin: true,
-    pinLabel: "Закрепить панель",
-    unpinLabel: "Открепить панель",
     density: "default"
   }
 );
@@ -127,8 +124,10 @@ defineSlots<{
   /** Additional footer; scope { expanded }. */
   footer?(props: { expanded: boolean }): unknown;
 }>();
-const localeText = useWlLocaleText();
 const locale = useWlLocale();
+const ariaLabel = computed(() => props.ariaLabel ?? locale.value.mainNavigation);
+const pinLabel = computed(() => props.pinLabel ?? locale.value.pinSidebar);
+const unpinLabel = computed(() => props.unpinLabel ?? locale.value.unpinSidebar);
 
 const hovered = ref(false);
 const asideRef = ref<HTMLElement | null>(null);
@@ -201,7 +200,7 @@ defineExpose({
       class="wl-sidebar"
       :role="mobileOpen ? 'dialog' : undefined"
       :aria-modal="mobileOpen || undefined"
-      :aria-label="localeText('ariaLabel', ariaLabel, 'mainNavigation')"
+      :aria-label="ariaLabel"
       tabindex="-1"
     >
       <div v-bind="section('inner')" class="wl-sidebar__inner">
@@ -285,7 +284,7 @@ defineExpose({
           <WlNavItem
             v-if="collapsible && showPin"
             v-bind="section('pinButton', { active: pinned, expanded })"
-            :label="pinned ? localeText('unpinLabel', unpinLabel, 'unpinSidebar') : localeText('pinLabel', pinLabel, 'pinSidebar')"
+            :label="pinned ? unpinLabel : pinLabel"
             icon="panel"
             :collapsed="!expanded"
             @click="togglePinned"

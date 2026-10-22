@@ -6,6 +6,7 @@ import WlCard from "../src/components/WlCard.vue";
 import WlField from "../src/components/WlField.vue";
 import WlFileUpload from "../src/components/WlFileUpload.vue";
 import WlSteps from "../src/components/WlSteps.vue";
+import { wlLocaleEn } from "../src/locale";
 
 describe("component depth beyond the released baseline", () => {
   it("offers label slots, optional text and horizontal fields without losing the label ID", () => {
@@ -13,7 +14,7 @@ describe("component depth beyond the released baseline", () => {
       label: () => "Name",
       default: ({ labelId }) => h("input", { "aria-labelledby": labelId })
     } });
-    expect(wrapper.get("label").text()).toBe("Nameнеобязательно");
+    expect(wrapper.get("label").text()).toBe("Name" + wlLocaleEn.optional);
     expect(wrapper.get("input").attributes("aria-labelledby")).toBe(wrapper.get("label").attributes("id"));
     expect(wrapper.attributes("data-orientation")).toBe("horizontal");
     wrapper.unmount();
@@ -44,7 +45,7 @@ describe("component depth beyond the released baseline", () => {
     await nextTick();
     expect(document.activeElement).toBe(buttons[2]!.element);
     expect(wrapper.get("li").attributes("aria-current")).toBe("step");
-    expect(wrapper.text()).toContain("Ошибка шага");
+    expect(wrapper.text()).toContain(wlLocaleEn.stepError);
     expect(wrapper.text()).toContain("First");
     await buttons[2]!.trigger("click");
     expect(wrapper.emitted("update:current")).toEqual([[2]]);

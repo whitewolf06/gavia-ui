@@ -5,10 +5,9 @@
  */
 import { type ComponentPublicInstance, computed, type PropType, ref, shallowRef, watch } from "vue";
 import type { WlNoModelModifiers } from "../model-types";
-import type { WlPt, WlPtCallbackOptions } from "../pt-types";
+import type { WlPt } from "../pt-types";
 import type { WlTabItem } from "../types";
-import { mergeWlAttrs, useWlPt } from "../config";
-import { warnWlPtAlias } from "../utils/pt-aliases";
+import { useWlPt } from "../config";
 import { useWlRovingFocus } from "../utils/rovingFocus";
 import { useWlId } from "../utils/useWlId";
 import WlIcon from "./WlIcon.vue";
@@ -39,7 +38,7 @@ const props = withDefaults(
      */
     keepAlive?: boolean;
     /** Attributes of internal Gavia UI elements. */
-    pt?: WlPt<"tablist">;
+    pt?: WlPt<"tabs">;
   }>(),
   {
     items: () => [],
@@ -77,21 +76,7 @@ function onUpdate(item: Item, event?: MouseEvent): void {
   if (!item.disabled) model.value = item.key;
 }
 
-const section = useWlPt("tablist", computed(() => props.pt));
-function localPanelPt(legacy: "tabpanels" | "tabpanel", canonical: "panels" | "panel") {
-  return computed(() => {
-    const oldRoot = props.pt?.[legacy]?.root;
-    const newRoot = props.pt?.[canonical]?.root;
-    if (oldRoot === undefined && newRoot === undefined) return undefined;
-    warnWlPtAlias(props.pt, legacy, canonical);
-    return { root: (options: WlPtCallbackOptions) => mergeWlAttrs(
-      typeof oldRoot === "function" ? oldRoot(options) : oldRoot ?? {},
-      typeof newRoot === "function" ? newRoot(options) : newRoot ?? {}
-    ) };
-  });
-}
-const panelsSection = useWlPt("tabpanels", localPanelPt("tabpanels", "panels"));
-const panelSection = useWlPt("tabpanel", localPanelPt("tabpanel", "panel"));
+const section = useWlPt("tabs", computed(() => props.pt));
 const buttons = ref<({ focus: () => void } | undefined)[]>([]);
 function setTabRef(value: Element | ComponentPublicInstance | null, index: number): void {
   const element = value && "$el" in value ? value.$el : value;
@@ -163,10 +148,10 @@ function onKeydown(event: KeyboardEvent, index: number): void {
         <span v-bind="section('activeBar')" class="wl-tabs__active-bar" aria-hidden="true"></span>
       </div>
     </div>
-    <div v-bind="panelsSection('root', { active: Boolean(selectedKey) })" class="wl-tabs__panels">
+    <div v-bind="section('panels.root', { active: Boolean(selectedKey) })" class="wl-tabs__panels">
       <template v-for="(item, index) in items" :key="item.key">
         <div
-          v-bind="panelSection('root', { active: selectedKey === item.key, selected: selectedKey === item.key, disabled: !!item.disabled })"
+          v-bind="section('panel.root', { active: selectedKey === item.key, selected: selectedKey === item.key, disabled: !!item.disabled })"
           :id="panelId(index)"
           class="wl-tabs__panel"
           role="tabpanel"

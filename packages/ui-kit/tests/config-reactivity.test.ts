@@ -2,7 +2,7 @@ import { mount, type VueWrapper } from "@vue/test-utils";
 import { afterEach, describe, expect, it } from "vitest";
 import { computed, defineComponent, h, nextTick, reactive, ref } from "vue";
 import { useWlConfig, useWlLocale, useWlMotion, useWlPt, WlConfig, type WlConfigApi, type WlConfigOptions } from "../src/config";
-import { wlLocaleEn } from "../src/locale";
+import { wlLocaleEn, wlLocaleRu } from "../src/locale";
 
 const wrappers: VueWrapper[] = [];
 afterEach(() => {
@@ -75,6 +75,20 @@ describe("reactive application configuration", () => {
     expect(wrapper.get("button").attributes("data-motion")).toBe("false");
     api.setLocale({ close: "Setter" });
     expect(options.locale.close).toBe("Setter");
+  });
+
+  it("returns to English after clearing one app's locale without changing a Russian app", async () => {
+    const implicit = harness(undefined, false);
+    const russian = harness({ locale: wlLocaleRu });
+    expect(implicit.wrapper.get("button").text()).toBe(wlLocaleEn.close);
+    expect(russian.wrapper.get("button").text()).toBe(wlLocaleRu.close);
+    implicit.api.setLocale(wlLocaleRu);
+    await nextTick();
+    expect(implicit.wrapper.get("button").text()).toBe(wlLocaleRu.close);
+    implicit.api.setLocale(undefined);
+    await nextTick();
+    expect(implicit.wrapper.get("button").text()).toBe(wlLocaleEn.close);
+    expect(russian.wrapper.get("button").text()).toBe(wlLocaleRu.close);
   });
 
   it("caches frozen defaults without caching consumer callbacks or reactive overrides", async () => {

@@ -7,16 +7,16 @@ enableAutoUnmount(afterEach);
 
 describe("review: feedback accessibility", () => {
   it.each([
-    ["info", "status"], ["ok", "status"], ["warn", "alert"], ["err", "alert"]
-  ] as const)("uses an appropriate live role for %s", (variant, role) => {
-    const wrapper = mount(WlAlert, { props: { variant } });
+    ["neutral", "status"], ["accent", "status"], ["info", "status"], ["success", "status"], ["warning", "alert"], ["danger", "alert"]
+  ] as const)("uses an appropriate live role for %s", (tone, role) => {
+    const wrapper = mount(WlAlert, { props: { tone } });
     expect(wrapper.attributes("role")).toBe(role);
   });
 
   it.each([
     ["off", undefined], ["polite", "status"], ["assertive", "alert"]
   ] as const)("allows live=%s to override severity", (live, role) => {
-    const wrapper = mount(WlAlert, { props: { variant: "err", live } });
+    const wrapper = mount(WlAlert, { props: { tone: "danger", live } });
     expect(wrapper.attributes("role")).toBe(role);
   });
 

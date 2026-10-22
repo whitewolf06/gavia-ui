@@ -6,7 +6,7 @@ import { computed, ref, useAttrs } from "vue";
 import type { WlTextModelModifiers } from "../model-types";
 import type { WlPt } from "../pt-types";
 import type { WlDensity, WlSizeSm } from "../types";
-import { mergeWlAttrs, useWlLocale, useWlLocaleText, useWlPt } from "../config";
+import { mergeWlAttrs, useWlLocale, useWlPt } from "../config";
 import { splitInputAttrs } from "../utils/inputAttrs";
 import { clamp, finiteOr } from "../utils/number";
 import WlIcon from "./WlIcon.vue";
@@ -37,7 +37,8 @@ const props = withDefaults(
     disabled?: boolean;
     /**
      * Placeholder.
-     * @default "Пароль"
+     * Defaults to WlConfig.locale.password (English when unconfigured).
+     * @default undefined
      */
     placeholder?: string;
     /** Input aria-label. */
@@ -53,8 +54,7 @@ const props = withDefaults(
     size: "md",
     density: "default",
     invalid: false,
-    disabled: false,
-    placeholder: "Пароль"
+    disabled: false
   }
 );
 /** Password text value; supports the trim model modifier.
@@ -62,7 +62,6 @@ const props = withDefaults(
  * @default ""
  */
 const model = defineModel<string, "trim">({ default: "" });
-const localeText = useWlLocaleText();
 const locale = useWlLocale();
 
 const visible = ref(false);
@@ -97,7 +96,7 @@ const strengthValue = computed(() => clamp(finiteOr(props.strength, 0), 0, 100))
       v-bind="controlAttrs"
       :autocomplete="controlAttrs.autocomplete === undefined ? 'current-password' : String(controlAttrs.autocomplete)"
       :type="visible ? 'text' : 'password'"
-      :placeholder="localeText('placeholder', placeholder, 'password')"
+      :placeholder="placeholder ?? locale.password"
       :disabled="disabled"
       :aria-label="ariaLabel"
       :aria-invalid="invalid || undefined"

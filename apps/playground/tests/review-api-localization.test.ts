@@ -8,7 +8,7 @@ import english from "../src/i18n/messages/documentation.en.json";
 import russian from "../src/i18n/messages/documentation.ru.json";
 
 it("translates all source API prose and new component manifest prose through paired EN/RU reverse aliases", async () => {
-  const newComponents = new Set(["WlCheckboxGroup", "WlRadioGroup", "WlToolbar", "WlTagsInput", "WlTooltipComponent", "WlLink", "WlContextMenu"]);
+  const newComponents = new Set(["WlCheckboxGroup", "WlRadioGroup", "WlToolbar", "WlTagsInput", "WlTooltip", "WlLink", "WlContextMenu"]);
   const sourceProse = Object.values(apiMetadata).flatMap((api) => [
     ...Object.values(api.descriptions), ...Object.values(api.slotDescriptions), ...Object.values(api.eventDescriptions)
   ]);

@@ -1,5 +1,5 @@
 /** Compile-only JSX consumer; runtime and rendering remain Vue SFCs. */
-import { WlButton, WlCheckbox, WlInput, WlNumberInput, WlSelect, WlTextarea } from "../../src";
+import { WlButton, WlCheckbox, WlIconButton, WlInput, WlNumberInput, WlSelect, WlTextarea } from "../../src";
 
 export function nativeJsxContracts() {
   const good = (
@@ -10,6 +10,11 @@ export function nativeJsxContracts() {
       <WlNumberInput modelValue={1} min={0} step={0.5} name="amount" />
       <WlCheckbox name="consent" required modelValue={false} />
       <WlSelect<string> options={["One"]} name="choice" modelValue="One" />
+      <WlIconButton icon="bell" ariaLabel="Inbox" />
+      <WlIconButton icon="bell" aria-label="Inbox" />
+      <WlIconButton icon="bell" aria-labelledby="inbox-label" />
+      <WlIconButton icon="bell" pt={{ root: { "aria-label": "Inbox" } }} />
+      <WlIconButton>Save changes</WlIconButton>
     </div>
   );
   // @ts-expect-error Keep component size distinct from the native input size attribute.
@@ -20,5 +25,9 @@ export function nativeJsxContracts() {
   const badModel = <WlNumberInput modelValue="one" />;
   // @ts-expect-error A proxy combobox does not support native text maxlength.
   const badProxy = <WlSelect<string> options={["One"]} maxlength={10} />;
-  return [good, badSize, badListener, badModel, badProxy];
+  // @ts-expect-error Icon-only actions require a name independently of status descriptions.
+  const badIconName = <WlIconButton icon="bell" count={3} countLabel="Three unread messages" />;
+  // @ts-expect-error A help description does not name an icon-only action.
+  const badDescriptionName = <WlIconButton icon="bell" aria-describedby="inbox-help" />;
+  return [good, badSize, badListener, badModel, badProxy, badIconName, badDescriptionName];
 }

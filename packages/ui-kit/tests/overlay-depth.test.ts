@@ -104,20 +104,19 @@ describe("modal surface sizing and initial focus", () => {
   });
 });
 
-describe("dismissible compatibility", () => {
-  it("keeps default mounts silent and warns only for explicit legacy spelling", () => {
+describe("dismissible contract", () => {
+  it("keeps default and explicit canonical mounts silent", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     wrappers.push(mount(WlDialog), mount(WlDrawer), mount(WlPopover));
     expect(warn).not.toHaveBeenCalled();
-    const legacy = mount(WlDrawer, { props: { dismissable: false } });
-    wrappers.push(legacy);
-    expect(warn).toHaveBeenCalledExactlyOnceWith(expect.stringContaining("dismissable is deprecated"));
+    wrappers.push(mount(WlDrawer, { props: { dismissible: false } }));
+    expect(warn).not.toHaveBeenCalled();
   });
 
-  it("gives the normalized spelling precedence and keeps old default dismissal behavior", async () => {
+  it("supports reactive dismissal and preserves the distinct Dialog and Drawer defaults", async () => {
     vi.spyOn(console, "warn").mockImplementation(() => {});
     const dialog = mount(WlDialog, {
-      attachTo: document.body, props: { visible: true, motion: false, dismissable: true, dismissible: false }
+      attachTo: document.body, props: { visible: true, motion: false, dismissible: false }
     });
     wrappers.push(dialog);
     await flushPromises();

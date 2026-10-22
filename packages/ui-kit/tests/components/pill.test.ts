@@ -19,7 +19,7 @@ describe("WlPill", () => {
   it("applies variant class and data attributes", () => {
     const wrapper = mount(WlPill, {
       global,
-      props: { variant: "ok" },
+      props: { tone: "success" },
       slots: { default: "Готово" }
     });
     const pill = wrapper.find('[data-wl="pill"]');

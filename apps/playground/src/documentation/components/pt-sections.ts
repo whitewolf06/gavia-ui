@@ -1,7 +1,7 @@
 import type { DocumentationPtSection } from "../catalog";
 import { localizeDocumentation } from "../localize";
 
-/** Actual DOM sections, canonical names first; legacy paths remain accepted throughout 0.x. */
+/** Canonical public DOM sections for the 1.0 pass-through contract. */
 export const documentationPtSections: Readonly<Record<string, readonly DocumentationPtSection[]>> = localizeDocumentation({
   WlAccordion: [
     {
@@ -86,32 +86,17 @@ export const documentationPtSections: Readonly<Record<string, readonly Documenta
     {
       name: "chip.root",
       element: "span.wl-multiselect__chip",
-      description: "documentation.strings.ptReviewAliaspcChip_root"
-    },
-    {
-      name: "pcChip.root",
-      element: "span.wl-multiselect__chip",
-      description: "documentation.strings.ptReviewAliaspcChip_root"
+      description: "documentation.strings.ptReviewRoot"
     },
     {
       name: "chip.label",
       element: "span.wl-multiselect__chip-label",
-      description: "documentation.strings.ptReviewAliaspcChip_label"
-    },
-    {
-      name: "pcChip.label",
-      element: "span.wl-multiselect__chip-label",
-      description: "documentation.strings.ptReviewAliaspcChip_label"
+      description: "documentation.strings.ptReviewLabel"
     },
     {
       name: "chip.removeIcon",
       element: "button.wl-multiselect__chip-remove",
-      description: "documentation.strings.ptReviewAliaspcChip_removeIcon"
-    },
-    {
-      name: "pcChip.removeIcon",
-      element: "button.wl-multiselect__chip-remove",
-      description: "documentation.strings.ptReviewAliaspcChip_removeIcon"
+      description: "documentation.strings.ptReviewRemoveButton"
     },
     {
       name: "input",
@@ -126,12 +111,7 @@ export const documentationPtSections: Readonly<Record<string, readonly Documenta
     {
       name: "inputText.root",
       element: "input",
-      description: "documentation.strings.ptReviewAliaspcInputText_root"
-    },
-    {
-      name: "pcInputText.root",
-      element: "input",
-      description: "documentation.strings.ptReviewAliaspcInputText_root"
+      description: "documentation.strings.ptReviewInput"
     },
     {
       name: "clearButton",
@@ -609,12 +589,7 @@ export const documentationPtSections: Readonly<Record<string, readonly Documenta
     {
       name: "inputText.root",
       element: "input.wl-input",
-      description: "documentation.strings.ptReviewAliaspcInputText_root"
-    },
-    {
-      name: "pcInputText.root",
-      element: "input.wl-input",
-      description: "documentation.strings.ptReviewAliaspcInputText_root"
+      description: "documentation.strings.ptReviewInput"
     },
     {
       name: "endLabel",
@@ -669,22 +644,12 @@ export const documentationPtSections: Readonly<Record<string, readonly Documenta
     {
       name: "prevButton.root",
       element: "button.wl-dp__nav",
-      description: "documentation.strings.ptReviewAliaspcPrevButton_root"
-    },
-    {
-      name: "pcPrevButton.root",
-      element: "button.wl-dp__nav",
-      description: "documentation.strings.ptReviewAliaspcPrevButton_root"
+      description: "documentation.strings.ptReviewPrevButton"
     },
     {
       name: "prevButton.icon",
       element: "span",
-      description: "documentation.strings.ptReviewAliaspcPrevButton_icon"
-    },
-    {
-      name: "pcPrevButton.icon",
-      element: "span",
-      description: "documentation.strings.ptReviewAliaspcPrevButton_icon"
+      description: "documentation.strings.ptReviewIcon"
     },
     {
       name: "title",
@@ -704,22 +669,12 @@ export const documentationPtSections: Readonly<Record<string, readonly Documenta
     {
       name: "nextButton.root",
       element: "button.wl-dp__nav",
-      description: "documentation.strings.ptReviewAliaspcNextButton_root"
-    },
-    {
-      name: "pcNextButton.root",
-      element: "button.wl-dp__nav",
-      description: "documentation.strings.ptReviewAliaspcNextButton_root"
+      description: "documentation.strings.ptReviewNextButton"
     },
     {
       name: "nextButton.icon",
       element: "span",
-      description: "documentation.strings.ptReviewAliaspcNextButton_icon"
-    },
-    {
-      name: "pcNextButton.icon",
-      element: "span",
-      description: "documentation.strings.ptReviewAliaspcNextButton_icon"
+      description: "documentation.strings.ptReviewIcon"
     },
     {
       name: "rangeHint",
@@ -801,22 +756,12 @@ export const documentationPtSections: Readonly<Record<string, readonly Documenta
     {
       name: "closeButton.root",
       element: "button.wl-overlay-close",
-      description: "documentation.strings.ptReviewAliaspcCloseButton_root"
-    },
-    {
-      name: "pcCloseButton.root",
-      element: "button.wl-overlay-close",
-      description: "documentation.strings.ptReviewAliaspcCloseButton_root"
+      description: "documentation.strings.ptReviewCloseButton"
     },
     {
       name: "closeButton.icon",
       element: "span",
-      description: "documentation.strings.ptReviewAliaspcCloseButton_icon"
-    },
-    {
-      name: "pcCloseButton.icon",
-      element: "span",
-      description: "documentation.strings.ptReviewAliaspcCloseButton_icon"
+      description: "documentation.strings.ptReviewCloseIcon"
     },
     {
       name: "content",
@@ -865,22 +810,12 @@ export const documentationPtSections: Readonly<Record<string, readonly Documenta
     {
       name: "closeButton.root",
       element: "button.wl-overlay-close",
-      description: "documentation.strings.ptReviewAliaspcCloseButton_root"
-    },
-    {
-      name: "pcCloseButton.root",
-      element: "button.wl-overlay-close",
-      description: "documentation.strings.ptReviewAliaspcCloseButton_root"
+      description: "documentation.strings.ptReviewCloseButton"
     },
     {
       name: "closeButton.icon",
       element: "span",
-      description: "documentation.strings.ptReviewAliaspcCloseButton_icon"
-    },
-    {
-      name: "pcCloseButton.icon",
-      element: "span",
-      description: "documentation.strings.ptReviewAliaspcCloseButton_icon"
+      description: "documentation.strings.ptReviewCloseIcon"
     },
     {
       name: "content",
@@ -1158,32 +1093,17 @@ export const documentationPtSections: Readonly<Record<string, readonly Documenta
     {
       name: "chip.root",
       element: "span.wl-multiselect__chip",
-      description: "documentation.strings.ptReviewAliaspcChip_root"
-    },
-    {
-      name: "pcChip.root",
-      element: "span.wl-multiselect__chip",
-      description: "documentation.strings.ptReviewAliaspcChip_root"
+      description: "documentation.strings.ptReviewRoot"
     },
     {
       name: "chip.label",
       element: "span.wl-multiselect__chip-label",
-      description: "documentation.strings.ptReviewAliaspcChip_label"
-    },
-    {
-      name: "pcChip.label",
-      element: "span.wl-multiselect__chip-label",
-      description: "documentation.strings.ptReviewAliaspcChip_label"
+      description: "documentation.strings.ptReviewLabel"
     },
     {
       name: "chip.removeIcon",
       element: "button.wl-multiselect__chip-remove",
-      description: "documentation.strings.ptReviewAliaspcChip_removeIcon"
-    },
-    {
-      name: "pcChip.removeIcon",
-      element: "button.wl-multiselect__chip-remove",
-      description: "documentation.strings.ptReviewAliaspcChip_removeIcon"
+      description: "documentation.strings.ptReviewRemoveButton"
     },
     {
       name: "label",
@@ -1233,12 +1153,7 @@ export const documentationPtSections: Readonly<Record<string, readonly Documenta
     {
       name: "filter.root",
       element: "input.wl-input",
-      description: "documentation.strings.ptReviewAliaspcFilter_root"
-    },
-    {
-      name: "pcFilter.root",
-      element: "input.wl-input",
-      description: "documentation.strings.ptReviewAliaspcFilter_root"
+      description: "documentation.strings.ptReviewInput"
     },
     {
       name: "listContainer",
@@ -1535,22 +1450,12 @@ export const documentationPtSections: Readonly<Record<string, readonly Documenta
     {
       name: "item.root",
       element: "button.wl-segmented__item",
-      description: "documentation.strings.ptReviewAliaspcToggleButton_root"
-    },
-    {
-      name: "pcToggleButton.root",
-      element: "button.wl-segmented__item",
-      description: "documentation.strings.ptReviewAliaspcToggleButton_root"
+      description: "documentation.strings.ptReviewItem"
     },
     {
       name: "item.content",
       element: "span.wl-segmented__item-content",
-      description: "documentation.strings.ptReviewAliaspcToggleButton_content"
-    },
-    {
-      name: "pcToggleButton.content",
-      element: "span.wl-segmented__item-content",
-      description: "documentation.strings.ptReviewAliaspcToggleButton_content"
+      description: "documentation.strings.ptReviewContent"
     }
   ],
   WlSelect: [
@@ -1865,16 +1770,6 @@ export const documentationPtSections: Readonly<Record<string, readonly Documenta
       name: "panel.root",
       element: "div.wl-tabs__panel",
       description: "documentation.strings.ptReviewRoot"
-    },
-    {
-      name: "tabpanels.root",
-      element: "div.wl-tabs__panels",
-      description: "documentation.strings.ptReviewAliastabpanels_root"
-    },
-    {
-      name: "tabpanel.root",
-      element: "div.wl-tabs__panel",
-      description: "documentation.strings.ptReviewAliastabpanel_root"
     }
   ],
   WlTag: [
@@ -2014,7 +1909,7 @@ export const documentationPtSections: Readonly<Record<string, readonly Documenta
       description: "documentation.strings.ptReviewRoot"
     }
   ],
-  WlTooltipComponent: [
+  WlTooltip: [
     {
       name: "trigger",
       element: "span.wl-tooltip-component__trigger",

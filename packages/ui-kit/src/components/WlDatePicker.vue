@@ -2,12 +2,12 @@
 /** WlDatePicker public component contract.
  * @since 0.1.0
  */
-import { computed, nextTick, onBeforeUpdate, ref, useAttrs, watch } from "vue";
+import { computed, nextTick, ref, useAttrs, watch } from "vue";
 import type { WlNoModelModifiers } from "../model-types";
 import type { WlDateFormatOptions, WlDateRangePreset, WlDisabledDates } from "../picker-types";
 import type { WlPt } from "../pt-types";
 import type { WlDatePickerModel, WlDatePickerSelectionMode, WlDateRange, WlDensity, WlSizeSm } from "../types";
-import { mergeWlAttrs, useWlLocale, useWlLocaleText, useWlMotion, useWlPt } from "../config";
+import { mergeWlAttrs, useWlLocale, useWlMotion, useWlPt } from "../config";
 import { formatWlLocaleText } from "../locale";
 import { useAnchoredOverlay } from "../utils/anchoredOverlay";
 import { parseWlIsoDate, toWlIsoDate } from "../utils/date";
@@ -24,7 +24,8 @@ const props = withDefaults(defineProps<{
   modelModifiers?: WlNoModelModifiers;
   /**
    * Placeholder.
-   * @default "дд.мм.гггг"
+   * Defaults to WlConfig.locale.datePlaceholder (English when unconfigured).
+   * @default undefined
    */
   placeholder?: string;
   /**
@@ -74,12 +75,14 @@ const props = withDefaults(defineProps<{
   selectionMode?: Mode;
   /**
    * Visible range start label.
-   * @default "От"
+   * Defaults to WlConfig.locale.dateFrom (English when unconfigured).
+   * @default undefined
    */
   startLabel?: string;
   /**
    * Visible range end label.
-   * @default "До"
+   * Defaults to WlConfig.locale.dateTo (English when unconfigured).
+   * @default undefined
    */
   endLabel?: string;
   /** Calendar animation; defaults to WlConfig.motion (true). */
@@ -87,8 +90,8 @@ const props = withDefaults(defineProps<{
   /** Attributes of internal Gavia UI elements. */
   pt?: WlPt<"datepicker">;
 }>(), {
-  placeholder: "дд.мм.гггг", size: "md", density: "default", disabled: false, invalid: false, showIcon: false,
-  selectionMode: () => "single" as Mode, startLabel: "От", endLabel: "До",
+  size: "md", density: "default", disabled: false, invalid: false, showIcon: false,
+  selectionMode: () => "single" as Mode,
   motion: undefined, displayFormat: "dd.mm.yyyy"
 });
 /** ISO date or date-range value determined by selectionMode.
@@ -96,8 +99,10 @@ const props = withDefaults(defineProps<{
  * @default null
  */
 const model = defineModel<WlDatePickerModel<NoInfer<Mode>>, never>({ default: null });
-const localeText = useWlLocaleText();
 const locale = useWlLocale();
+const startLabel = computed(() => props.startLabel ?? locale.value.dateFrom);
+const endLabel = computed(() => props.endLabel ?? locale.value.dateTo);
+const placeholder = computed(() => props.placeholder ?? locale.value.datePlaceholder);
 
 const attrs = useAttrs();
 const attrGroups = computed(() => splitInputAttrs(attrs));
@@ -125,7 +130,7 @@ function endpointAttrs(endpoint: 0 | 1): Record<string, unknown> {
     inputAttrs["aria-labelledby"] = `${inputAttrs["aria-labelledby"]} ${labelId}`;
   } else
     if (typeof inputAttrs["aria-label"] === "string") {
-      inputAttrs["aria-label"] = `${inputAttrs["aria-label"]}, ${endpoint === 0 ? localeText("startLabel", props.startLabel, "dateFrom") : localeText("endLabel", props.endLabel, "dateTo")}`;
+      inputAttrs["aria-label"] = `${inputAttrs["aria-label"]}, ${endpoint === 0 ? startLabel.value : endLabel.value}`;
     }
   return inputAttrs;
 }
@@ -168,17 +173,12 @@ const days = computed(() => {
 });
 function rangeHint(): string {
   return !range.value
-    ? formatWlLocaleText(locale.value.chooseDateForLabel, { label: localeText("startLabel", props.startLabel, "dateFrom") })
+    ? formatWlLocaleText(locale.value.chooseDateForLabel, { label: startLabel.value })
     : !range.value[1]
-        ? formatWlLocaleText(locale.value.chooseDateForLabel, { label: localeText("endLabel", props.endLabel, "dateTo") })
-        : `${localeText("startLabel", props.startLabel, "dateFrom")}: ${display(range.value[0])}; ${localeText("endLabel", props.endLabel, "dateTo")}: ${display(range.value[1])}. ${locale.value.newDateRange}`;
+        ? formatWlLocaleText(locale.value.chooseDateForLabel, { label: endLabel.value })
+        : `${startLabel.value}: ${display(range.value[0])}; ${endLabel.value}: ${display(range.value[1])}. ${locale.value.newDateRange}`;
 }
-// Raw prop presence can change while withDefaults resolves to the same value.
-// Keep the transition slot in sync without remounting the open calendar.
-const rangeHintText = ref(rangeHint());
-onBeforeUpdate(() => {
-  rangeHintText.value = rangeHint();
-});
+const rangeHintText = computed(rangeHint);
 function pad2(value: number): string {
   return String(value).padStart(2, "0");
 }
@@ -437,15 +437,15 @@ function onDayKeydown(event: KeyboardEvent, iso: string): void {
           :id="`${startId}-endpoint-label`"
           v-bind="section('startLabel')"
           class="wl-dp__endpoint-label"
-        >{{ localeText('startLabel', props.startLabel, 'dateFrom') }}</span>
+        >{{ startLabel }}</span>
         <input
           ref="control"
-          v-bind="mergeWlAttrs(endpointAttrs(0), section('pcInputText.root'))"
+          v-bind="mergeWlAttrs(endpointAttrs(0), section('inputText.root'))"
           v-model="text"
           class="wl-input wl-dp__input"
           :class="[`wl-input--${props.size}`, { 'is-invalid': props.invalid, 'is-compact': props.density === 'compact' }]"
           type="text"
-          :placeholder="localeText('placeholder', props.placeholder, 'datePlaceholder')"
+          :placeholder="placeholder"
           :disabled="props.disabled"
           :aria-invalid="props.invalid || undefined"
           :aria-expanded="visible"
@@ -460,7 +460,7 @@ function onDayKeydown(event: KeyboardEvent, iso: string): void {
           :id="`${endId}-endpoint-label`"
           v-bind="section('endLabel')"
           class="wl-dp__endpoint-label"
-        >{{ localeText('endLabel', props.endLabel, 'dateTo') }}</span>
+        >{{ endLabel }}</span>
         <input
           ref="endControl"
           v-bind="mergeWlAttrs(endpointAttrs(1), section('endInput'))"
@@ -468,7 +468,7 @@ function onDayKeydown(event: KeyboardEvent, iso: string): void {
           class="wl-input wl-dp__input"
           :class="[`wl-input--${props.size}`, { 'is-invalid': props.invalid, 'is-compact': props.density === 'compact' }]"
           type="text"
-          :placeholder="localeText('placeholder', props.placeholder, 'datePlaceholder')"
+          :placeholder="placeholder"
           :disabled="props.disabled"
           :aria-invalid="props.invalid || undefined"
           :aria-expanded="visible"
@@ -482,7 +482,7 @@ function onDayKeydown(event: KeyboardEvent, iso: string): void {
     <input
       v-else
       ref="control"
-      v-bind="mergeWlAttrs(attrGroups.inputAttrs, section('pcInputText.root'))"
+      v-bind="mergeWlAttrs(attrGroups.inputAttrs, section('inputText.root'))"
       v-model="text"
       class="wl-input wl-dp__input"
       :class="[
@@ -490,7 +490,7 @@ function onDayKeydown(event: KeyboardEvent, iso: string): void {
         { 'is-invalid': props.invalid, 'is-compact': props.density === 'compact', 'wl-dp__input--btn': props.showIcon }
       ]"
       type="text"
-      :placeholder="localeText('placeholder', props.placeholder, 'datePlaceholder')"
+      :placeholder="placeholder"
       :disabled="props.disabled"
       :aria-invalid="props.invalid || undefined"
       :aria-expanded="visible"
@@ -557,12 +557,12 @@ function onDayKeydown(event: KeyboardEvent, iso: string): void {
           <div v-bind="section('calendar')" class="wl-dp__calendar">
             <div v-bind="section('header')" class="wl-dp__header">
               <button
-                v-bind="section('pcPrevButton.root')"
+                v-bind="section('prevButton.root')"
                 type="button"
                 class="wl-dp__nav"
                 :aria-label="locale.prevMonth"
                 @click="stepMonth(-1)"
-              ><WlIcon name="chevron-left" :size="16" v-bind="section('pcPrevButton.icon')" /></button>
+              ><WlIcon name="chevron-left" :size="16" v-bind="section('prevButton.icon')" /></button>
               <div v-bind="section('title')" class="wl-dp__title">
                 <template v-if="viewMode === 'years'">{{ firstVisibleYear }}–{{ firstVisibleYear + 11 }}</template>
                 <template v-else>
@@ -584,12 +584,12 @@ function onDayKeydown(event: KeyboardEvent, iso: string): void {
                 </template>
               </div>
               <button
-                v-bind="section('pcNextButton.root')"
+                v-bind="section('nextButton.root')"
                 type="button"
                 class="wl-dp__nav"
                 :aria-label="locale.nextMonth"
                 @click="stepMonth(1)"
-              ><WlIcon name="chevron-right" :size="16" v-bind="section('pcNextButton.icon')" /></button>
+              ><WlIcon name="chevron-right" :size="16" v-bind="section('nextButton.icon')" /></button>
             </div>
             <p
               v-if="isRange"

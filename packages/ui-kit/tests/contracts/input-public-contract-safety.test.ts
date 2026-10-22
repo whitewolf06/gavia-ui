@@ -2,6 +2,7 @@ import { mount } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, ref } from "vue";
 import { WlAutocomplete, WlFileUpload, WlInput, WlMultiSelect, WlNumberInput, WlPagination, WlPasswordInput, WlSelect, WlSlider, WlTextarea, WlTimePicker } from "../../src";
+import { wlLocaleEn } from "../../src/locale";
 
 describe("Input public contract safety", () => {
   afterEach(() => vi.useRealTimers());
@@ -140,7 +141,11 @@ describe("Input public contract safety", () => {
   it("Pagination emits integer pages and normalizes nonfinite and excessive windows", async () => {
     const wrapper = mount(WlPagination, { props: { page: 1, pageCount: 2.5 } });
     try {
-      await wrapper.get('button[aria-label="Следующая страница"]').trigger("click");
+      expect(wrapper.get("nav").attributes("aria-label")).toBe(wlLocaleEn.pages);
+      expect(wrapper.get(`button[aria-label="${wlLocaleEn.firstPage}"]`).attributes("disabled")).toBeDefined();
+      expect(wrapper.get(`button[aria-label="${wlLocaleEn.prevPage}"]`).attributes("disabled")).toBeDefined();
+      expect(wrapper.get(`button[aria-label="${wlLocaleEn.lastPage}"]`).attributes("disabled")).toBeUndefined();
+      await wrapper.get(`button[aria-label="${wlLocaleEn.nextPage}"]`).trigger("click");
       expect(wrapper.emitted("update:page")).toEqual([[2]]);
       await wrapper.setProps({ pageCount: Infinity, siblings: Infinity });
       expect(wrapper.findAll(".wl-pager__btn:not(.wl-pager__nav)")).toHaveLength(1);

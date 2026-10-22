@@ -77,13 +77,92 @@ it is not required by the current build or runtime.
 
 Before a production release, review 12–18 px reading, the full basic alphabets and numerals, darkness and spacing across weights, kerning, precomposed and combining accents, native application rendering and hinting.
 
-## Future revisions
+## Variable-font implementation
 
-The variable-font pipeline starts with a read-only topology/provenance audit.
-See [current blockers and safe build boundary](../../docs/maintainers/font-variation-audit.md).
+T5.3 draft generation has passed; font acceptance remains incomplete. The
+tracked normalizer derives compatible numeral representations in memory from
+the accepted masters; it does not redraw them, fit a donor outline or edit the
+frozen static binaries. Exact midpoint/line constructions on a complete 2000 UPM
+font grid retain source points, flags, metrics and directed endpoint curves.
+The four uses an explicit K/seam-A correspondence; intermediate optical quality
+is not established by matching the six accepted endpoints.
+
+The existing `build_variable.py` builds actual variable data from all six
+masters with direct integer nodal outline deltas. It retains the existing
+layout tables and numeric features and reopens WOFF2 before every endpoint,
+metric and HarfBuzz shaping check. It writes only a new scratch payload with
+static fallbacks, CSS, provenance and notices.
+
+The four-file delivery uses Full/Core for upright and italic. Core combines
+Latin-1 and common Cyrillic, numbers and punctuation; Full retains all original
+characters, including complete combining clusters. Full is declared before
+Core, which intentionally does not claim combining marks. Canonical composition
+can differ from separate base/mark positioning in authored masters; retaining
+the complete face avoids replacing that drawing with an approximate equivalent.
+Only private Core glyph names are omitted (`post` format 3); reopening restores
+the original GID aliases for the original strict geometry and shaping guards.
+No OTL recomputation, contour approximation or variation-axis change is used.
+
+The bounded 2026-10-21 build passed for all four files and all six weights per
+style. Normal Core is **75,428 bytes**, italic Core **79,696 bytes**. The builder
+rejects either Core above 80,000 bytes before writing output. Full files are
+131,620 and 138,676 bytes, byte-identical to the prior draft. All 24 static-font
+hashes and the authored source are unchanged. The current focused Python suite
+passes 27/27 tests. See the [implementation and resource evidence](../../docs/maintainers/font-variation-audit.md).
+The accepted scratch payload is `.tmp/gavia-variable-bounded-2026-10-21-run02/`.
+
+These are per-Core sizes. A page using both styles, extended characters or
+combining marks can load additional files. The four validated WOFF2s, provenance
+and notices are now canonical assets, activated through the existing stylesheet.
+Static faces are conditional on missing variable-font support; rebuilding the
+draft replaces its generated CSS block without duplicating registrations.
+Focused Windows Chromium checks measured one 75,428-byte home-page request and
+passed both styles, all presets, intermediate weights, exact Core/full cluster
+raster and standalone ZIP checks. One targeted CSS-generation unit also passes.
+The owner confirmed visual font acceptance on 2026-10-22. Measured CLS and
+automated verification of the exact 1.0.0-rc.1 candidate remain pending.
+No new full validation, visual-baseline or Pages sequence was run.
+The build ran alone with a 1 GiB Windows Job memory cap, one processor affinity,
+about one quarter of one processor, and a hard 180-second deadline. It passed in
+129.27 seconds with 160.67 MiB peak committed memory. Limits belong to the caller;
+the bare Python commands below do not establish OS resource limits themselves.
+No persistent launcher, new test harness or dependency was added.
+
+Historical baseline: on 2026-10-21 all 25 Python unit tests passed before the
+bounded Core/full change. Draft builds `run02` and `run03`
+passed geometry, semantic-flag, coverage, metric and HarfBuzz shaping guards at
+all six accepted weights in both styles, including reopened WOFF2 files.
+Run 03 also uses exact IUP with `tolerance=0.0`; reconstruction checks every
+tuple delta against the original integer value, including phantom points.
+Its eight variable WOFF2s and manifest are staged only in
+`.tmp/gavia-variable-candidate-2026-10-21-run03/`.
+
+That baseline's normal Latin subset is 62,276 bytes and Cyrillic is 39,080 bytes:
+**101,356 bytes combined, exceeding the 80,000-byte target**. The full normal
+and italic faces are 131,620 and 138,676 bytes respectively; candidate CSS uses
+the subsets rather than these full faces. Actual browser transfer and CLS are
+still unmeasured. This historical pair does not measure the new Core request.
+
 `python -B scripts/fonts/audit_variable.py` needs no optional dependencies and
-does not rebuild or modify accepted fonts. The initial available axis is
-100–700; 900 needs an authored calibration and acceptance first.
+does not rebuild or modify accepted fonts. That audit, and the default
+`build_variable.py --preflight`, intentionally continue to reject the original
+24 incompatible glyphs per style. Only the recognized accepted source can enter
+the normalized draft-build path. The axis is 100–700, default 400; 900 needs an
+authored calibration and acceptance first.
+
+To reproduce when font building and tests are authorized:
+
+```sh
+python -B scripts/fonts/build_variable.py --output-dir .tmp/gavia-variable-candidate
+python -B -m unittest discover -s scripts/fonts -p test_variable.py -v
+```
+
+Choose a new output directory each time. The builder only stages output; it does
+not overwrite canonical files. The validated four-file payload is now separately
+activated at the existing CSS/font paths, with its original build provenance
+retained in `variable-manifest.json`. Static binaries, frozen identities and
+source artwork remain unchanged. Focused browser acceptance is recorded above;
+it does not replace full package/browser gates or optical/native owner review.
 
 Git history preserves the accepted development states. Keep the public specimen and verifier focused on the current family; do not reintroduce earlier font files into public assets for regression checks.
 

@@ -24,7 +24,7 @@ const opened = ref("");
       </WlCard>
       <WlCard hoverable aria-labelledby="showcase-card-note">
         <template #header>
-          <div class="showcase-card-banner"><WlTag variant="blue">{{ t("examples.team_material_0071") }}</WlTag></div>
+          <div class="showcase-card-banner"><WlTag color="blue">{{ t("examples.team_material_0071") }}</WlTag></div>
         </template>
         <template #title>
           <h3 id="showcase-card-note" class="wl-text-subheading">{{ t("examples.product_note_0359") }}</h3>
@@ -33,7 +33,7 @@ const opened = ref("");
         <p class="wl-text-body">{{ t("examples.hoverable_changes_the_hover_appearance_a_separate_button_perfo_0361") }}</p>
         <template #footer>
           <WlButton size="sm" @click="opened = t('examples.product_note_0359')">{{ t("examples.read_note_0362") }}</WlButton>
-          <WlTag variant="green">{{ t("examples.new_0363") }}</WlTag>
+          <WlTag color="green">{{ t("examples.new_0363") }}</WlTag>
         </template>
       </WlCard>
     </div>

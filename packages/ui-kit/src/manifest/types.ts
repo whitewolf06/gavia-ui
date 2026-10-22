@@ -56,7 +56,7 @@ export type WlManifestCategory
 export interface WlComponentManifest {
   /** Public component name, for example WlButton. */
   name: string;
-  /** First public package version containing the component. */
+  /** First public package version containing the component, including release candidates. */
   introducedIn: string;
   category: WlManifestCategory;
   description?: string;
@@ -74,13 +74,13 @@ export type WlComponentManifestDefinition = Omit<WlComponentManifest, "introduce
  * entry; source versioning and publication evidence remain separate.
  */
 export const WL_COMPONENT_INTRODUCED_IN: Readonly<Record<string, string>> = {
-  WlContextMenu: "0.12.1",
-  WlTooltipComponent: "0.12.1",
-  WlTagsInput: "0.12.1",
-  WlToolbar: "0.12.1",
-  WlRadioGroup: "0.12.1",
-  WlCheckboxGroup: "0.12.1",
-  WlLink: "0.12.1",
+  WlContextMenu: "1.0.0-rc.1",
+  WlTooltip: "1.0.0-rc.1",
+  WlTagsInput: "1.0.0-rc.1",
+  WlToolbar: "1.0.0-rc.1",
+  WlRadioGroup: "1.0.0-rc.1",
+  WlCheckboxGroup: "1.0.0-rc.1",
+  WlLink: "1.0.0-rc.1",
   WlAccordion: "0.1.0",
   WlAlert: "0.1.0",
   WlAutocomplete: "0.2.0",

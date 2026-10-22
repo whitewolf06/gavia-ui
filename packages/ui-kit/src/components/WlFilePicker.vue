@@ -8,7 +8,7 @@ import type { WlFilePickerExpose } from "../input-expose-types";
 import type { WlPt } from "../pt-types";
 import type { WlDensity, WlSizeSm } from "../types";
 import { useNativeFilePicker } from "../composables/useNativeFilePicker";
-import { mergeWlAttrs, useWlLocaleText, useWlPt } from "../config";
+import { mergeWlAttrs, useWlLocale, useWlPt } from "../config";
 import { splitInputAttrs } from "../utils/inputAttrs";
 import WlButton from "./WlButton.vue";
 import WlIcon from "./WlIcon.vue";
@@ -29,7 +29,8 @@ const props = withDefaults(defineProps<{
   disabled?: boolean;
   /**
    * Default button label.
-   * @default "Выбрать файлы"
+   * Defaults to WlConfig.locale.chooseFiles (English when unconfigured).
+   * @default undefined
    */
   chooseLabel?: string;
   /** Default button accessible name. */
@@ -47,7 +48,7 @@ const props = withDefaults(defineProps<{
   /** Root, trigger and input attributes. */
   pt?: WlPt<"filepicker">;
 }>(), {
-  multiple: false, disabled: false, chooseLabel: "Выбрать файлы", size: "md", density: "default"
+  multiple: false, disabled: false, size: "md", density: "default"
 });
 
 const emit = defineEmits<{
@@ -56,7 +57,8 @@ const emit = defineEmits<{
   /** Selection cancelled. The application's file list stays unchanged. */
   cancel: []; }>();
 
-const localeText = useWlLocaleText();
+const locale = useWlLocale();
+const chooseLabel = computed(() => props.chooseLabel ?? locale.value.chooseFiles);
 
 const attrs = useAttrs();
 const attrGroups = computed(() => splitInputAttrs(attrs));
@@ -97,12 +99,12 @@ defineExpose<WlFilePickerExpose>({ choose, clear });
         :size="size"
         :density="density"
         :disabled="disabled"
-        :aria-label="ariaLabel ?? localeText('chooseLabel', chooseLabel, 'chooseFiles')"
+        :aria-label="ariaLabel ?? chooseLabel"
         :pt="{ root: section('trigger') }"
         @click="choose"
       >
         <template #icon><WlIcon name="upload" :size="16" /></template>
-        {{ localeText('chooseLabel', chooseLabel, 'chooseFiles') }}
+        {{ chooseLabel }}
       </WlButton>
     </slot>
     <input

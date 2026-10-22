@@ -13,6 +13,11 @@ export interface PlaygroundRoute {
   section?: DocumentationSection;
 }
 
+/** Preserve bookmarks to the 0.x component name after its public 1.0 rename. */
+function canonicalComponentName(name: string): string {
+  return name === "WlTooltipComponent" ? "WlTooltip" : name;
+}
+
 export function isDocumentationFoundationSection(value: unknown): value is DocumentationFoundationSection {
   return value === "typography" || value === "layout" || value === "responsive" || value === "content";
 }
@@ -49,7 +54,7 @@ export function parsePlaygroundRoute(search: string, hash = "", pathname = ""): 
       } catch { return { view }; }
       if (isDocumentationSection(detail)) return { view, section: detail };
       const component = /^(?:components\/)?(Wl[A-Za-z0-9]+)$/.exec(detail)?.[1];
-      return component ? { view, component } : { view };
+      return component ? { view, component: canonicalComponentName(component) } : { view };
     }
   }
   const candidate = query.get("view");
@@ -62,14 +67,14 @@ export function parsePlaygroundRoute(search: string, hash = "", pathname = ""): 
   const section = query.get("section");
   if (isDocumentationSection(section)) return { view, section };
   const component = query.get("component") || undefined;
-  if (component) return { view, component };
+  if (component) return { view, component: canonicalComponentName(component) };
   if (candidate === "components") {
     let fragment = "";
     try {
       fragment = decodeURIComponent(hash.replace(/^#/, ""));
     } catch { /* Ignore malformed fragments. */ }
     const match = /^component-(Wl[A-Za-z0-9]+)$/.exec(fragment);
-    if (match) return { view, component: match[1] };
+    if (match) return { view, component: canonicalComponentName(match[1]!) };
     if (fragment === "pg-colors") return { view, section: "colors" };
     if (fragment === "pg-icons") return { view, section: "icons" };
   }
@@ -96,7 +101,7 @@ export function createPlaygroundPathUrl(
   const detail = view === "docs"
     ? isDocumentationSection(route.section)
       ? `/${route.section}`
-      : route.component ? `/components/${encodeURIComponent(route.component)}` : ""
+      : route.component ? `/components/${encodeURIComponent(canonicalComponentName(route.component))}` : ""
     : "";
   const language = current.searchParams.get("lang") ?? (/\/ru(?:\/|$)/.test(current.pathname) ? "ru" : "en");
   target.pathname = playgroundBasePath(current.pathname, options.base) + (language === "ru" ? "ru/" : "") + segment + detail + (segment ? "/" : "");
@@ -123,7 +128,7 @@ export function createPlaygroundUrl(current: URL, route: PlaygroundRoute): URL {
   target.searchParams.delete("section");
   if (view === "docs") {
     if (isDocumentationSection(route.section)) target.searchParams.set("section", route.section);
-    else if (route.component) target.searchParams.set("component", route.component);
+    else if (route.component) target.searchParams.set("component", canonicalComponentName(route.component));
   }
   target.hash = "";
   return target;

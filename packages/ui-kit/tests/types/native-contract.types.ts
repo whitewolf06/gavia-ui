@@ -1,4 +1,4 @@
-import { type WlButton, type WlCheckbox, type WlDatePicker, type WlField, type WlFieldSlotProps, type WlFilePicker, type WlFilePickerExpose, type WlInput, type WlNavItem, type WlNumberInput, type WlSelect, type WlTextarea } from "../../src";
+import { type WlButton, type WlCheckbox, type WlDatePicker, type WlField, type WlFieldSlotProps, type WlFilePicker, type WlFilePickerExpose, type WlIconButton, type WlInput, type WlNavItem, type WlNumberInput, type WlSelect, type WlTextarea } from "../../src";
 
 type InputProps = InstanceType<typeof WlInput>["$props"];
 type TextareaProps = InstanceType<typeof WlTextarea>["$props"];
@@ -8,6 +8,7 @@ type CheckboxProps = InstanceType<typeof WlCheckbox>["$props"];
 type SelectProps = Parameters<typeof WlSelect<string>>[0];
 type NavProps = InstanceType<typeof WlNavItem>["$props"];
 type DateProps = Parameters<typeof WlDatePicker<"single">>[0];
+type IconButtonProps = InstanceType<typeof WlIconButton>["$props"];
 
 export function nativeConsumerContracts(): void {
   const input: InputProps = { name: "title", required: true, maxlength: 80, autocomplete: "off", "aria-describedby": "help", "data-testid": "title", onInput: (event) => {
@@ -25,6 +26,8 @@ export function nativeConsumerContracts(): void {
   const checkbox: CheckboxProps = { name: "consent", required: true, "aria-label": "Consent", onKeydown: (event) => {
     event.key.toUpperCase();
   } };
+  // @ts-expect-error Native checkbox key listeners receive a KeyboardEvent.
+  const badCheckboxListener: CheckboxProps = { onKeydown: (event: string) => event.toUpperCase() };
   const select: SelectProps = { options: ["One"], name: "choice", "aria-label": "Choice" };
   const date: DateProps = { name: "date", required: true, "aria-describedby": "date-help" };
   // @ts-expect-error Native event listeners receive events, not field text.
@@ -62,5 +65,22 @@ export function nativeConsumerContracts(): void {
   picker.clear();
   // @ts-expect-error Choosing a local file does not upload it.
   picker.upload();
-  void [input, textarea, number, button, checkbox, select, date, badInput, badNumber, badSize, badSelect, controlled];
+  const namedIcon: IconButtonProps = { icon: "bell", ariaLabel: "Inbox", count: 3 };
+  const nativeNamedIcon: IconButtonProps = { icon: "bell", "aria-label": "Inbox" };
+  const labelledIcon: IconButtonProps = { icon: "bell", "aria-labelledby": "inbox-label", href: "/inbox", target: "_blank" };
+  const ptNamedIcon: IconButtonProps = { icon: "bell", pt: { root: { "aria-label": "Inbox" } } };
+  const callbackNamedIcon: IconButtonProps = { icon: "bell", pt: { root: ({ context }) => ({ "aria-label": context.active ? "Close inbox" : "Open inbox" }) } };
+  // The no-icon branch uses the required default slot for action text and an optional custom icon.
+  const textSlotIcon: IconButtonProps = { loading: true };
+  // @ts-expect-error The icon prop requires an action name.
+  const unnamedIcon: IconButtonProps = { icon: "bell" };
+  // @ts-expect-error Badge text describes status and cannot name the action.
+  const badgeOnlyIcon: IconButtonProps = { icon: "bell", count: 3, countLabel: "Three unread messages" };
+  // @ts-expect-error Tooltip/help descriptions do not supply an action name.
+  const describedIcon: IconButtonProps = { icon: "bell", "aria-describedby": "inbox-help" };
+  // @ts-expect-error An unlabelled root does not satisfy the action-name contract.
+  const styledOnlyIcon: IconButtonProps = { icon: "bell", pt: { root: { class: "project-action" } } };
+  void [namedIcon, nativeNamedIcon, labelledIcon, ptNamedIcon, callbackNamedIcon,
+    textSlotIcon, unnamedIcon, badgeOnlyIcon, describedIcon, styledOnlyIcon];
+  void [input, textarea, number, button, checkbox, badCheckboxListener, select, date, badInput, badNumber, badSize, badSelect, controlled];
 }

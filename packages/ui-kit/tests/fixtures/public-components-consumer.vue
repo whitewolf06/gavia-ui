@@ -13,10 +13,10 @@ function clickEvent(event: MouseEvent): void { event.button.toFixed(); }
 <template>
   <!-- Every public component is used through the root package export under strictTemplates. -->
   <WlAccordion aria-label="Public API sample" data-testid="WlAccordion" />
-  <WlAlert aria-label="Public API sample" data-testid="WlAlert" />
+  <WlAlert tone="warning" aria-label="Public API sample" data-testid="WlAlert" />
   <WlAutocomplete aria-label="Public API sample" data-testid="WlAutocomplete" />
   <WlAvatar aria-label="Public API sample" data-testid="WlAvatar" />
-  <WlBadge aria-label="Public API sample" data-testid="WlBadge" />
+  <WlBadge tone="danger" aria-label="Public API sample" data-testid="WlBadge" />
   <WlBreadcrumbs aria-label="Public API sample" data-testid="WlBreadcrumbs" />
   <WlButton type="submit" form="project" @click="clickEvent" aria-label="Public API sample" data-testid="WlButton" />
   <WlButtonGroup aria-label="Public API sample" data-testid="WlButtonGroup" />
@@ -29,9 +29,9 @@ function clickEvent(event: MouseEvent): void { event.button.toFixed(); }
   <WlConfirmDialog aria-label="Public API sample" data-testid="WlConfirmDialog" />
   <WlDatePicker aria-label="Public API sample" data-testid="WlDatePicker" />
   <WlDatePicker v-model="dateRange" selection-mode="range" name="trip-dates" aria-label="Trip dates" data-testid="date-range" />
-  <WlDialog aria-label="Public API sample" data-testid="WlDialog" />
+  <WlDialog :dismissible="false" aria-label="Public API sample" data-testid="WlDialog" />
   <WlDivider aria-label="Public API sample" data-testid="WlDivider" />
-  <WlDrawer aria-label="Public API sample" data-testid="WlDrawer" />
+  <WlDrawer dismissible aria-label="Public API sample" data-testid="WlDrawer" />
   <WlEmpty aria-label="Public API sample" data-testid="WlEmpty" />
   <WlField label="Title" hint="Help"><template #default="{ inputId, ariaDescribedby, invalid, required }"><WlInput :id="inputId" :aria-describedby="ariaDescribedby" :invalid="invalid" :required="required" /></template></WlField>
   <WlFileUpload aria-label="Public API sample" data-testid="WlFileUpload" />
@@ -47,9 +47,9 @@ function clickEvent(event: MouseEvent): void { event.button.toFixed(); }
   <WlPagination :page-count="5" aria-label="Public API sample" data-testid="WlPagination" />
   <WlPageHeader aria-label="Public API sample" data-testid="WlPageHeader" />
   <WlPasswordInput aria-label="Public API sample" data-testid="WlPasswordInput" />
-  <WlPill aria-label="Public API sample" data-testid="WlPill" />
-  <WlPopover aria-label="Public API sample" data-testid="WlPopover" />
-  <WlProgress aria-label="Public API sample" data-testid="WlProgress" />
+  <WlPill tone="success" aria-label="Public API sample" data-testid="WlPill" />
+  <WlPopover dismissible aria-label="Public API sample" data-testid="WlPopover" />
+  <WlProgress tone="accent" aria-label="Public API sample" data-testid="WlProgress" />
   <WlRadio :value="'one'" aria-label="Public API sample" data-testid="WlRadio" />
   <WlSegmented aria-label="Public API sample" data-testid="WlSegmented" />
   <WlSelect aria-label="Public API sample" data-testid="WlSelect" />
@@ -63,12 +63,30 @@ function clickEvent(event: MouseEvent): void { event.button.toFixed(); }
   <WlSwitch aria-label="Public API sample" data-testid="WlSwitch" />
   <WlTable aria-label="Public API sample" data-testid="WlTable" />
   <WlTabs aria-label="Public API sample" data-testid="WlTabs" />
-  <WlTag aria-label="Public API sample" data-testid="WlTag" />
+  <WlTag color="blue" tone="info" aria-label="Public API sample" data-testid="WlTag" />
   <WlTextarea :rows="5" :cols="40" aria-label="Public API sample" data-testid="WlTextarea" />
   <WlTimePicker aria-label="Public API sample" data-testid="WlTimePicker" />
   <WlToast aria-label="Public API sample" data-testid="WlToast" />
   <!-- @vue-expect-error Named enum contracts remain strict after adding native attrs. -->
   <WlButton variant="unknown" />
+  <!-- @vue-expect-error Status is independent of button appearance in 1.0. -->
+  <WlButton variant="soft-danger" />
+  <!-- @vue-expect-error Status aliases were removed from Alert in 1.0. -->
+  <WlAlert variant="ok" />
+  <!-- @vue-expect-error Badge uses canonical semantic tone. -->
+  <WlBadge variant="warn" />
+  <!-- @vue-expect-error Pill uses canonical semantic tone. -->
+  <WlPill variant="ok" />
+  <!-- @vue-expect-error Progress uses canonical semantic tone. -->
+  <WlProgress variant="ok" />
+  <!-- @vue-expect-error Tag palette values use color. -->
+  <WlTag variant="blue" />
+  <!-- @vue-expect-error Dialog uses the canonical dismissible spelling. -->
+  <WlDialog dismissable />
+  <!-- @vue-expect-error Drawer uses the canonical dismissible spelling. -->
+  <WlDrawer dismissable />
+  <!-- @vue-expect-error Popover uses the canonical dismissible spelling. -->
+  <WlPopover dismissable />
   <!-- @vue-expect-error Native listeners are events, not text. -->
   <WlInput @input="(value: string) => value.toUpperCase()" />
   <!-- @vue-expect-error Kit size remains an enum. -->

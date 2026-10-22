@@ -25,7 +25,7 @@ import type { WlPt } from "../pt-types";
 import type { WlDensity, WlSizeSm } from "../types";
 import { useWlHotkey } from "../composables/useWlHotkey";
 import { useWlResultsAnnouncement } from "../composables/useWlResultsAnnouncement";
-import { mergeWlAttrs, useWlLocaleText, useWlMotion, useWlPt } from "../config";
+import { mergeWlAttrs, useWlLocale, useWlMotion, useWlPt } from "../config";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import { useWlId } from "../utils/useWlId";
@@ -45,23 +45,23 @@ const props = withDefaults(
     /** Modifiers accepted by the query model; trim normalizes surrounding whitespace. */
     queryModifiers?: WlTextModelModifiers;
     /**
-     * Hint shown when the control has no displayed text.
-     * @default "Поиск или переход…"
+     * Input hint; uses locale.searchPlaceholder when omitted or undefined (English: Search or navigate…).
+     * @default undefined
      */
     placeholder?: string;
     /**
-     * Text shown when no matching items are available.
-     * @default "Ничего не найдено"
+     * Empty state; uses locale.noResults when omitted or undefined (English: Nothing found).
+     * @default undefined
      */
     emptyText?: string;
     /**
-     * Localized text describing pending results.
-     * @default "Поиск…"
+     * Loading text; uses locale.searching when omitted or undefined (English: Searching…).
+     * @default undefined
      */
     loadingText?: string;
     /**
-     * Accessible name when an external label is not referenced.
-     * @default "Командная палитра"
+     * Accessible name; uses locale.commandPalette when omitted or undefined (English: Command palette).
+     * @default undefined
      */
     ariaLabel?: string;
     /**
@@ -106,10 +106,6 @@ const props = withDefaults(
   }>(),
   {
     groups: () => [],
-    placeholder: "Поиск или переход…",
-    emptyText: "Ничего не найдено",
-    loadingText: "Поиск…",
-    ariaLabel: "Командная палитра",
     filter: true,
     shortcut: false,
     closeOnSelect: true,
@@ -157,7 +153,11 @@ defineSlots<{
   footer?(props: {}): unknown;
 }>();
 
-const localeText = useWlLocaleText();
+const locale = useWlLocale();
+const placeholder = computed(() => props.placeholder ?? locale.value.searchPlaceholder);
+const emptyText = computed(() => props.emptyText ?? locale.value.noResults);
+const loadingText = computed(() => props.loadingText ?? locale.value.searching);
+const ariaLabel = computed(() => props.ariaLabel ?? locale.value.commandPalette);
 
 const attrs = useAttrs();
 const section = useWlPt("commandpalette", computed(() => props.pt));
@@ -343,7 +343,7 @@ useWlResultsAnnouncement({
         ]"
         role="dialog"
         aria-modal="true"
-        :aria-label="localeText('ariaLabel', ariaLabel, 'commandPalette')"
+        :aria-label="ariaLabel"
         data-wl="command-palette"
         :data-size="size"
         :data-density="density"
@@ -367,11 +367,11 @@ useWlResultsAnnouncement({
               type="search"
               role="combobox"
               aria-autocomplete="list"
-              :aria-label="localeText('ariaLabel', ariaLabel, 'commandPalette')"
+              :aria-label="ariaLabel"
               :aria-controls="listboxId"
               :aria-activedescendant="activeDescendant()"
               :aria-expanded="visible"
-              :placeholder="localeText('placeholder', placeholder, 'searchPlaceholder')"
+              :placeholder="placeholder"
               :disabled="disabled"
               autocomplete="off"
             />
@@ -410,6 +410,7 @@ useWlResultsAnnouncement({
                   class="wl-command-palette__item"
                   :class="{ 'is-active': isActive(item), 'is-disabled': item.disabled }"
                   role="option"
+                  tabindex="-1"
                   :aria-selected="isActive(item)"
                   :aria-disabled="item.disabled || undefined"
                   @mouseenter="!item.disabled && (activeIndex = selectableItems.findIndex((entry) => entry.item === item))"
@@ -449,10 +450,10 @@ useWlResultsAnnouncement({
               role="status"
             >
               <span class="wl-command-palette__spinner" aria-hidden="true"></span>
-              <span>{{ localeText('loadingText', loadingText, 'searching') }}</span>
+              <span>{{ loadingText }}</span>
             </div>
             <div v-else v-bind="section('status', { loading: false })" class="wl-command-palette__status">
-              <slot name="empty" :query="query">{{ localeText('emptyText', emptyText, 'noResults') }}</slot>
+              <slot name="empty" :query="query">{{ emptyText }}</slot>
             </div>
           </div>
 

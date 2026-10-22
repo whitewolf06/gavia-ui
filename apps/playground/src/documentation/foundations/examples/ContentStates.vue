@@ -39,7 +39,7 @@ const materials = [t("examples.launch_plan_0906"), t("examples.access_rules_0907
     >
       <template #action><WlButton @click="state = 'ready'">{{ t("examples.add_example_0910") }}</WlButton></template>
     </WlEmpty>
-    <WlAlert v-else-if="state === 'error'" variant="err" :title="t('examples.could_not_load_materials_0911')">
+    <WlAlert v-else-if="state === 'error'" tone="danger" :title="t('examples.could_not_load_materials_0911')">
       {{ t("examples.try_again_your_data_is_preserved_0912") }}
       <template #action><WlButton size="sm" @click="state = 'ready'">{{ t("examples.retry_0913") }}</WlButton></template>
     </WlAlert>

@@ -18,7 +18,7 @@ import type { WlNoModelModifiers } from "../model-types";
 import type { WlFilterBarExpose, WlFilterBarSlots } from "../overlay-types";
 import type { WlPt } from "../pt-types";
 import type { WlDensity } from "../types";
-import { mergeWlAttrs, useWlLocaleText, useWlPt } from "../config";
+import { mergeWlAttrs, useWlLocale, useWlPt } from "../config";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
 import { useWlId } from "../utils/useWlId";
 import WlButton from "./WlButton.vue";
@@ -35,33 +35,33 @@ const props = withDefaults(
     /** Modifier contract for open state; built-in modifiers are unsupported. */
     openModifiers?: WlNoModelModifiers;
     /**
-     * Accessible name when an external label is not referenced.
-     * @default "Фильтры"
+     * Accessible name; uses locale.filters when omitted or undefined (English: Filters).
+     * @default undefined
      */
     ariaLabel?: string;
     /**
-     * Accessible name of the filter panel's toggle action.
-     * @default "Фильтры"
+     * Toggle text; uses locale.filters when omitted or undefined (English: Filters).
+     * @default undefined
      */
     toggleLabel?: string;
     /**
-     * Visible title of the mobile filter panel.
-     * @default "Фильтры"
+     * Mobile panel title; uses locale.filters when omitted or undefined (English: Filters).
+     * @default undefined
      */
     panelTitle?: string;
     /**
-     * Accessible text for the clear action.
-     * @default "Сбросить"
+     * Clear action text; uses locale.reset when omitted or undefined (English: Reset).
+     * @default undefined
      */
     clearLabel?: string;
     /**
-     * Accessible text for the apply action.
-     * @default "Применить"
+     * Apply action text; uses locale.apply when omitted or undefined (English: Apply).
+     * @default undefined
      */
     applyLabel?: string;
     /**
-     * Accessible text for the close action.
-     * @default "Закрыть фильтры"
+     * Close action text; uses locale.closeFilters when omitted or undefined (English: Close filters).
+     * @default undefined
      */
     closeLabel?: string;
     /**
@@ -89,12 +89,6 @@ const props = withDefaults(
   }>(),
   {
     activeCount: 0,
-    ariaLabel: "Фильтры",
-    toggleLabel: "Фильтры",
-    panelTitle: "Фильтры",
-    clearLabel: "Сбросить",
-    applyLabel: "Применить",
-    closeLabel: "Закрыть фильтры",
     showClear: true,
     showApply: true,
     disabled: false,
@@ -121,7 +115,13 @@ const open = defineModel<boolean, never>("open", { default: false });
 
 const slots = defineSlots<WlFilterBarSlots>();
 
-const localeText = useWlLocaleText();
+const locale = useWlLocale();
+const ariaLabel = computed(() => props.ariaLabel ?? locale.value.filters);
+const toggleLabel = computed(() => props.toggleLabel ?? locale.value.filters);
+const panelTitle = computed(() => props.panelTitle ?? locale.value.filters);
+const clearLabel = computed(() => props.clearLabel ?? locale.value.reset);
+const applyLabel = computed(() => props.applyLabel ?? locale.value.apply);
+const closeLabel = computed(() => props.closeLabel ?? locale.value.closeFilters);
 const attrs = useAttrs();
 const section = useWlPt("filterbar", computed(() => props.pt));
 
@@ -196,7 +196,7 @@ defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } sa
       disabled && 'is-disabled',
       density === 'compact' && 'wl-filter-bar--compact'
     ]"
-    :aria-label="localeText('ariaLabel', ariaLabel, 'filters')"
+    :aria-label="ariaLabel"
     data-wl="filter-bar"
     :data-density="density"
     :data-open="open"
@@ -211,7 +211,7 @@ defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } sa
         @click="toggle"
       >
         <template #icon><WlIcon name="filter" :size="15" /></template>
-        {{ localeText('toggleLabel', toggleLabel, 'filters') }}
+        {{ toggleLabel }}
         <span v-if="count" class="wl-filter-bar__count">{{ count }}</span>
       </WlButton>
     </div>
@@ -224,19 +224,19 @@ defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } sa
       :class="open && 'wl-filter-bar__panel--open'"
       :role="isMobile ? 'dialog' : undefined"
       :aria-modal="isMobile && open || undefined"
-      :aria-label="isMobile ? localeText('panelTitle', panelTitle, 'filters') : undefined"
+      :aria-label="isMobile ? panelTitle : undefined"
       :aria-hidden="isMobile && !open ? 'true' : undefined"
       :inert="isMobile && !open"
       tabindex="-1"
     >
       <div v-bind="section('mobileHead')" class="wl-filter-bar__mobile-head">
-        <strong v-bind="section('title')" class="wl-filter-bar__title">{{ localeText('panelTitle', panelTitle, 'filters') }}</strong>
+        <strong v-bind="section('title')" class="wl-filter-bar__title">{{ panelTitle }}</strong>
         <WlIconButton
           icon="x"
           size="sm"
           variant="ghost"
           v-bind="section('closeButton')"
-          :aria-label="localeText('closeLabel', closeLabel, 'closeFilters')"
+          :aria-label="closeLabel"
           @click="requestClose"
         />
       </div>
@@ -258,7 +258,7 @@ defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } sa
               size="sm"
               @click="clear"
             >
-              {{ localeText('clearLabel', clearLabel, 'reset') }}
+              {{ clearLabel }}
             </WlButton>
           </slot>
         </div>
@@ -277,7 +277,7 @@ defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } sa
             size="sm"
             @click="apply"
           >
-            {{ localeText('applyLabel', applyLabel, 'apply') }}
+            {{ applyLabel }}
           </WlButton>
         </slot>
       </div>
@@ -292,7 +292,7 @@ defineExpose({ open: requestOpen, close: requestClose, toggle, clear, apply } sa
       v-bind="section('backdrop')"
       type="button"
       class="wl-filter-bar__backdrop"
-      :aria-label="localeText('closeLabel', closeLabel, 'closeFilters')"
+      :aria-label="closeLabel"
       @click="requestClose"
     ></button>
   </section>

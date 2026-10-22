@@ -65,7 +65,13 @@ const selectPt = {
 
 `WlPtConfig` retains open dynamic entries and arbitrary extension values; known sections have precise types. `createWlPt()` no longer promises that every unknown key contains a DOM-attribute tree: custom extensions remain unknown and must be narrowed before reading.
 
-A leaf section accepts attributes or a function returning attributes. Nested `pcChip`, `pcInputText` and similar nodes are section objects, not functions. A callback receives only `{ context }` with the actual supplied flags; props and internal state are not exposed. `class` / `style` and merge order are unchanged. The tooltip directive applies class/style and primitive attributes; unlike Vue component sections, its pt does not attach DOM events or vnode hooks.
+A leaf section accepts attributes or a function returning attributes. Nested `chip`, `inputText` and similar nodes are section objects, not functions. A callback receives only `{ context }` with the actual supplied flags; props and internal state are not exposed. `class` / `style` and merge order are unchanged. The tooltip directive applies class/style and primitive attributes; unlike Vue component sections, its pt does not attach DOM events or vnode hooks. The [1.0 migration](../migration.md#migration-1-0-public-api) lists the removed keys; `iconButton` has its own configuration and does not inherit `button` overrides.
+
+`WlIconButton` with an `icon` prop requires `ariaLabel`, `aria-label`,
+`aria-labelledby` or a named `pt.root`. Without an icon prop, use a default slot
+with action text. Runtime checks still cover empty names, referenced labels and
+slot content that TypeScript cannot inspect. Import the Tooltip component as
+`WlTooltip` and the directive as `WlTooltipDirective`.
 
 ## Linked models and navigation
 
@@ -87,7 +93,18 @@ Input/PasswordInput/Textarea support string `.trim`; CommandPalette query also s
 
 ## Locale, services and overlays
 
-`WlLocaleInput` accepts a partial locale with readonly names. Known labels are string; application extensions remain unknown. `normalizeWlLocale()` ignores undefined and invalid known values, checks seven weekday names, twelve months and firstDayOfWeek 0–6. `WlResolvedLocale` contains all known fields; the previous minimal `WlLocale` remains valid. The Russian fallback is preserved for compatibility; choose English explicitly through `WlConfig` with `locale: wlLocaleEn`.
+`WlLocaleInput` accepts a partial locale with readonly names. Known labels are string; application extensions remain unknown. `normalizeWlLocale()` ignores undefined and invalid known values, checks seven weekday names, twelve months and firstDayOfWeek 0–6. `WlResolvedLocale` retains the previous required calendar fields so existing custom locale types remain valid; runtime normalization supplies every built-in control label.
+
+The 1.0 source uses English for omitted configuration and missing locale fields.
+Install `WlConfig` with `locale: wlLocaleRu` to retain Russian; spread the preset
+before custom overrides. `localeCode` alone does not translate missing labels.
+Text props are optional `string` inputs: omitted/`undefined` reads the current
+locale, an explicit string (including `""`) overrides it. Components no longer
+declare Russian strings as prop defaults, so an omitted prop read through a ref
+can be `undefined`. Use the locale/configuration contract for defaults rather
+than reading a rendered label from a component prop. See the
+[1.0 locale migration](../migration.md#migration-1-0-localization). This change is
+prepared in `1.0.0-rc.1`; candidate versioning does not establish publication.
 
 `useWlToast({ group: "editor" })` targets the matching WlToast; clear() clears only that group. Confirm accepts group in options; closeGroup(group) closes only its request. Existing close() remains global. Drawer/Popover/Menu/Toast consumer class/style/data/ARIA are explicitly forwarded to their existing DOM root inside Teleport. FilterBar uses the shared SSR-compatible id generator.
 

@@ -63,7 +63,7 @@ function cancel(): void {
     <p class="wl-text-small wl-text-muted" role="status">
       {{ changed ? t("examples.there_are_unsaved_changes_0217") : t("examples.no_changes_0218") }}
     </p>
-    <WlAlert v-if="success && !changed" variant="ok" :title="t('examples.settings_saved_0219')">
+    <WlAlert v-if="success && !changed" tone="success" :title="t('examples.settings_saved_0219')">
       {{ t("examples.changes_applied_0220") }}
     </WlAlert>
     <div class="wl-inline" data-space="sm">

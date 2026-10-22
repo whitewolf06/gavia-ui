@@ -6,7 +6,7 @@ import { playgroundLocale } from "./i18n/locale";
 import { prefersPlaygroundDarkTheme, readPlaygroundPreference } from "./preferences";
 
 /** Automatic mode uses the branded light/dark pair; all five themes remain available. */
-export const playgroundDefaultTheme: WlThemeName = "gavia";
+const playgroundDefaultTheme: WlThemeName = "gavia";
 export type PlaygroundThemePreference = WlThemeName | "system";
 const themeOrder: readonly WlThemeName[] = ["gavia", "gavia-dark", "white", "graphite", "newspaper"];
 export const playgroundThemeOptions = [...catalogSummary.themes]

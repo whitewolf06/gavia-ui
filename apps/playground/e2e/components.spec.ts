@@ -316,11 +316,32 @@ test("command palette search focus ring stays inside its Gavia panel", { tag: "@
   expect(indicator.contained).toBe(true);
   await captureChromiumArtifact(page, browserName, { path: testInfo.outputPath("palette-focus-gavia.png") });
 
-  await input.press("Tab");
-  const option = page.locator(".wl-command-palette").getByRole("option").first();
-  await expect(option).toBeFocused();
-  await expect(option).toHaveCSS("outline-width", "2px");
-  await expect(search).toHaveCSS("outline-style", "none");
+  const palette = page.locator(".wl-command-palette");
+  const listbox = palette.getByRole("listbox");
+  const options = palette.getByRole("option");
+  await expect(options).toHaveCount(1);
+  const option = options.first();
+  await expect(input).toHaveAttribute("aria-controls", (await listbox.getAttribute("id"))!);
+  await expect(option).toHaveAttribute("tabindex", "-1");
+  for (const key of ["ArrowDown", "ArrowUp"]) {
+    await input.press(key);
+    await expect(input).toBeFocused();
+    await expect(input).toHaveAttribute("aria-activedescendant", (await option.getAttribute("id"))!);
+    await expect(option).toHaveAttribute("aria-selected", "true");
+    await expect(search).toHaveCSS("outline-width", `${indicator.width}px`);
+  }
+  // This fixture has no footer action: the combobox owns the only tab stop.
+  const tabStops = await palette.locator("input, button, a[href], [tabindex]").evaluateAll((elements) =>
+    elements.filter((element) => element instanceof HTMLElement && element.tabIndex >= 0 && !element.matches(":disabled"))
+      .map((element) => element.getAttribute("role"))
+  );
+  expect(tabStops).toEqual(["combobox"]);
+  for (const key of ["Tab", "Shift+Tab"]) {
+    await input.press(key);
+    await expect(input).toBeFocused();
+    await expect(search).toHaveCSS("outline-width", `${indicator.width}px`);
+    await expect(input).toHaveCSS("outline-style", "none");
+  }
   await page.keyboard.press("Escape");
   await expect(page.locator(".wl-command-palette")).toHaveCount(0);
   await expect(trigger).toBeFocused();

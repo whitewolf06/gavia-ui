@@ -48,7 +48,7 @@ const props = withDefaults(
      */
     density?: WlDensity;
     /** Attributes of internal Gavia UI elements. */
-    pt?: WlPt<"toggleswitch">;
+    pt?: WlPt<"switch">;
   }>(),
   {
     size: "md",
@@ -72,7 +72,7 @@ const inputAttrs = computed(() => attrGroups.value.inputAttrs);
 const rootAttrs = computed(() => attrGroups.value.rootAttrs);
 const controlProps = computed(() => getWlControlProps(inputAttrs.value));
 const mergedPt = computed(() => deepMerge({ input: inputAttrs.value }, props.pt));
-const section = useWlPt("toggleswitch", mergedPt);
+const section = useWlPt("switch", mergedPt);
 
 const rootClass = computed(() => [
   "wl-switch",

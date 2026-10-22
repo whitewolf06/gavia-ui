@@ -32,7 +32,7 @@ const added = ref(0);
       <template #title>{{ t("examples.team_materials_0083") }}</template>
       <template #description>{{ t("examples.actions_and_metadata_adapt_to_the_available_width_0507") }}</template>
       <template #meta>
-        <WlPill variant="info" :label="t('examples.24_active_0508')" /><span>{{ t("examples.updated_today_0358") }}</span>
+        <WlPill tone="info" :label="t('examples.24_active_0508')" /><span>{{ t("examples.updated_today_0358") }}</span>
       </template>
       <template #actions>
         <WlButton size="sm" variant="primary" @click="added++">{{ t("examples.new_material_0203") }}</WlButton>

@@ -23,7 +23,7 @@ const fixtures: Record<string, Record<string, unknown>> = {
   WlCheckboxGroup: { options: ["One", "Two"], legend: "Permissions" },
   WlRadioGroup: { options: ["One", "Two"], legend: "Plan" },
   WlTagsInput: { modelValue: ["One"], "aria-label": "Tags" },
-  WlTooltipComponent: { visible: true, content: "Details", motion: false },
+  WlTooltip: { visible: true, content: "Details", motion: false },
   WlSidebar: { groups: [] }
 };
 
@@ -36,7 +36,7 @@ describe("generated IDs and ID references", () => {
       ? { default: (field: { inputId: string; ariaDescribedby?: string }) => h("input", {
           id: field.inputId, "aria-describedby": field.ariaDescribedby
         }) }
-      : name === "WlTooltipComponent" ? { default: () => h("button", "Details") } : {};
+      : name === "WlTooltip" ? { default: () => h("button", "Details") } : {};
     const Host = defineComponent({
       setup: () => () => h("div", [h(component!, props, slots), h(component!, props, slots)])
     });

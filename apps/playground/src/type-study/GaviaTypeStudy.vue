@@ -30,7 +30,7 @@ const language = ref<SpecimenLanguage>(locale.value === "ru" ? "ru" : "en");
 const saved = ref(false);
 const fontStyle = ref<GaviaFontStyle>("normal");
 const fontFamily = gaviaFontFamily;
-const proofWeight = ref<GaviaFontWeight>(400);
+const proofWeight = ref(400);
 const proofSize = ref(32);
 const proofText = ref("");
 
@@ -58,6 +58,8 @@ const copy = {
     proofTitle: t("shell.type_study.GaviaTypeStudy.text515"),
     proofDescription: t("shell.type_study.GaviaTypeStudy.text516"),
     proofWeight: t("shell.type_study.GaviaTypeStudy.text517"),
+    proofWeightPreset: t("shell.type_study.GaviaTypeStudy.weightPreset"),
+    proofIntermediateWeight: t("shell.type_study.GaviaTypeStudy.intermediateWeight"),
     proofSize: t("shell.type_study.GaviaTypeStudy.text518"),
     proofTextLabel: t("shell.type_study.GaviaTypeStudy.text519"),
     proofPlaceholder: t("shell.type_study.GaviaTypeStudy.text520"),
@@ -110,6 +112,9 @@ const content = computed(() => copy.ru);
 const languageOptions = [{ label: t("shell.type_study.GaviaTypeStudy.text562"), value: "ru" }, { label: "English", value: "en" }];
 const styleOptions = computed(() => [{ label: t("shell.type_study.GaviaTypeStudy.text563"), value: "normal" }, { label: t("shell.type_study.GaviaTypeStudy.text564"), value: "italic" }]);
 const weightOptions = computed(() => gaviaWeights.map((weight) => ({ value: weight.value, label: weight.value + " — " + weight.ru })));
+const selectedWeightPreset = computed<GaviaFontWeight | null>(() =>
+  gaviaWeights.find((weight) => weight.value === proofWeight.value)?.value ?? null
+);
 function chooseLanguage(value: string | null): void {
   if (value === "ru" || value === "en") language.value = value;
 }
@@ -117,7 +122,7 @@ function chooseStyle(value: string | null): void {
   if (value === "normal" || value === "italic") fontStyle.value = value;
 }
 function chooseWeight(value: unknown): void {
-  if (gaviaWeights.some((weight) => weight.value === value)) proofWeight.value = value as GaviaFontWeight;
+  if (typeof value === "number" && gaviaWeights.some((weight) => weight.value === value)) proofWeight.value = value;
 }
 const standaloneCode = '<link rel="stylesheet" href="./gavia.css">\n<style>body { font-family: "Gavia Sans", sans-serif; text-rendering: geometricPrecision; }</style>';
 const paragraphs = computed(() => samples[language.value].body.split("\n\n"));
@@ -279,16 +284,31 @@ function saveProject(): void {
           <p class="wl-type-proof-description">{{ content.proofDescription }}</p>
         </header>
         <div class="wl-type-proof-controls">
+          <label for="wl-type-proof-variable-weight" class="wl-type-proof-weight-control">
+            <span class="wl-type-proof-label">
+              {{ content.proofWeight }} <output for="wl-type-proof-variable-weight">{{ proofWeight }}</output>
+            </span>
+            <WlSlider
+              id="wl-type-proof-variable-weight"
+              v-model="proofWeight"
+              class="wl-type-proof-range"
+              :min="100"
+              :max="700"
+              :step="1"
+              :aria-label="content.proofWeight"
+            />
+          </label>
           <div class="wl-type-proof-control">
-            <label class="wl-type-proof-label" for="wl-type-proof-weight">{{ content.proofWeight }}</label>
+            <label class="wl-type-proof-label" for="wl-type-proof-weight">{{ content.proofWeightPreset }}</label>
             <WlSelect
               id="wl-type-proof-weight"
               class="wl-type-proof-select"
-              :model-value="proofWeight"
+              :model-value="selectedWeightPreset"
               :options="weightOptions"
               option-label="label"
               option-value="value"
-              :aria-label="content.proofWeight"
+              :placeholder="content.proofIntermediateWeight"
+              :aria-label="content.proofWeightPreset"
               @update:model-value="chooseWeight"
             />
           </div>

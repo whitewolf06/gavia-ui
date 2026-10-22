@@ -12,6 +12,10 @@ A Vue 3 + TypeScript component library with five themes and explicit CSS imports
 [![Packed Button + Vue gzip — measured snapshot](https://img.shields.io/badge/Button%20%2B%20Vue%20gzip-33.1%20kB-3c7490)](scripts/package-consumer-budget.json)
 [![MIT license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
+Prepared source: **1.0.0-rc.1**, not yet published. The candidate uses npm `next`
+after publication; ordinary installation follows stable `latest`. Read the
+[RC migration](docs/migration-1.0.0-rc.1.md) before opting in.
+
 [![Real Gavia UI fields, inputs, switch and button in Gavia and Gavia Dark](docs/brand/readme-preview.webp)](https://whitewolf06.github.io/gavia-ui/)
 
 [Documentation](https://whitewolf06.github.io/gavia-ui/?view=docs&lang=en) ·

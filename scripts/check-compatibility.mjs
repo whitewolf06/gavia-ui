@@ -5,7 +5,10 @@ import { createRequire } from "node:module";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { isApprovedMigration, loadMigrationPolicy, migrationPropsProjection, migrationTypeHelpers } from "./compatibility-migration.mjs";
+import {
+  isApprovedMigration, loadMigrationPolicy, migrationCallableProjection, migrationInventoryProjection,
+  migrationPropsProjection, migrationPublicTypeProjection, migrationTypeHelpers
+} from "./compatibility-migration.mjs";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const kitDir = join(repoRoot, "packages/ui-kit");
@@ -183,7 +186,7 @@ export function typeSource(baseline, migration = null, { currentHasGenericDataCo
       const { old, current, props: originalProps } = branches[index];
       const props = migration ? migrationPropsProjection(migration, name, index, originalProps) : originalProps;
       const id = `${name}_${index}`;
-      lines.push(`type ${id}_propNames = Assert<KeysPreserved<Props<${old}>, Props<${current}>>>;`);
+      lines.push(`type ${id}_propNames = Assert<KeysPreserved<${props}, Props<${current}>>>;`);
       lines.push(`type ${id}_inputsAndHandlers = Assert<InputsAccepted<${props}, Props<${current}>>>;`);
       lines.push(`type ${id}_slotNames = Assert<KeysPreserved<Slots<${old}>, Slots<${current}>>>;`);
       lines.push(`type ${id}_slotPayloads = Assert<AcceptedSlots<Slots<${old}>, Slots<${current}>>>;`);
@@ -195,16 +198,21 @@ export function typeSource(baseline, migration = null, { currentHasGenericDataCo
   }
   for (const item of baseline.declarationExports) {
     if (item.type && !item.requiredParameters) {
-      lines.push(`type Public_${item.name} = Assert<Assignable<Previous.${item.name}, Current.${item.name}>>;`);
-      lines.push(`type Public_${item.name}_keys = Assert<KeysPreserved<Named<Previous.${item.name}>, Named<Current.${item.name}>>>;`);
+      const projection = migration
+        ? migrationPublicTypeProjection(migration, item.name, `Previous.${item.name}`)
+        : { name: item.name, previous: `Previous.${item.name}` };
+      lines.push(`type Public_${item.name} = Assert<Assignable<${projection.previous}, Current.${projection.name}>>;`);
+      lines.push(`type Public_${item.name}_keys = Assert<KeysPreserved<Named<${projection.previous}>, Named<Current.${projection.name}>>>;`);
     }
     if (item.callable) {
-      lines.push(`declare const args_${item.name}: Parameters<typeof Previous.${item.name}>;`);
+      const projection = migration
+        ? migrationCallableProjection(migration, item.name, `Parameters<typeof Previous.${item.name}>`, `ReturnType<typeof Previous.${item.name}>`)
+        : { args: `Parameters<typeof Previous.${item.name}>`, result: `ReturnType<typeof Previous.${item.name}>` };
+      lines.push(`declare const args_${item.name}: ${projection.args};`);
       lines.push(`Current.${item.name}(...args_${item.name});`);
       // Icon names are an extensible catalog: new names may appear in resolver output.
       if (item.name !== "resolveWlIconName") {
-        const previousReturn = migration && item.name === "createWlPt" ? "Record<string, unknown>" : `ReturnType<typeof Previous.${item.name}>`;
-        lines.push(`type Return_${item.name} = Assert<Assignable<ReturnType<typeof Current.${item.name}>, ${previousReturn}>>;`);
+        lines.push(`type Return_${item.name} = Assert<Assignable<ReturnType<typeof Current.${item.name}>, ${projection.result}>>;`);
       }
     }
   }
@@ -240,7 +248,7 @@ async function main() {
     if (sourceCommit !== releaseCommit)
       throw new Error("Release baseline source must be checked out at the exact release tag");
     // Pin API source and the reviewed policy used to freeze its consumer.
-    const publicPaths = ["packages/ui-kit/src", "packages/ui-kit/styles", "packages/ui-kit/themes", "packages/ui-kit/tokens", "packages/ui-kit/package.json", "packages/ui-kit/tests/fixtures", "scripts/migrations", "docs/migration-0.11.0.md"];
+    const publicPaths = ["packages/ui-kit/src", "packages/ui-kit/styles", "packages/ui-kit/themes", "packages/ui-kit/tokens", "packages/ui-kit/package.json", "packages/ui-kit/tests/fixtures", "scripts/migrations", "scripts/compatibility-migration.mjs", "scripts/check-compatibility.mjs", "docs/migration-0.11.0.md", "docs/migration.md", ".changeset/canonical-api-1-0.md"];
     execFileSync("git", ["diff", "--quiet", releaseRef, "--", ...publicPaths], { cwd: sourceRoot });
     const dirty = execFileSync("git", ["status", "--porcelain", "--untracked-files=all", "--", ...publicPaths], { cwd: sourceRoot, encoding: "utf8" }).trim();
     if (dirty)
@@ -279,8 +287,12 @@ async function main() {
     else
       subset(conditions, current.exports[name], `package exports ${name}`, errors);
   }
-  for (const key of ["runtimeExports", "components", "classes", "tokens", "themes", "pt"])
-    subset(baseline[key], current[key], key, errors);
+  const rawInventory = [];
+  for (const key of ["runtimeExports", "components", "classes", "tokens", "themes", "pt"]) {
+    subset(baseline[key], current[key], key, rawInventory);
+    const expected = migration ? migrationInventoryProjection(migration, key, baseline[key]) : baseline[key];
+    subset(expected, current[key], key, errors);
+  }
   for (const [file, markers] of Object.entries(baseline.markers))
     subset(markers, current.markers[file] ?? [], `data-wl ${file}`, errors);
   for (const [name, expected] of Object.entries(baseline.declarationHashes)) {
@@ -290,7 +302,14 @@ async function main() {
   }
   const ts = require("typescript");
   const names = publicTypes(ts, join(kitDir, "dist/index.d.ts"));
-  subset(baseline.declarationExports.map((item) => item.name), names.map((item) => item.name), "declaration exports", errors);
+  const previousNames = baseline.declarationExports.map((item) => item.name);
+  subset(previousNames, names.map((item) => item.name), "declaration exports", rawInventory);
+  const expectedNames = migration ? migrationInventoryProjection(migration, "declarationExports", previousNames) : previousNames;
+  subset(expectedNames, names.map((item) => item.name), "declaration exports", errors);
+  if (migration) {
+    console.log(`Released ${baseline.version} inventory differences before approved ${migration.targetMinor} migration (${migration.migrationNote}):`);
+    console.log(rawInventory.join("\n") || "Released inventory passed without migration.");
+  }
   if (errors.length)
     throw new Error(errors.join("\n"));
   const temporaryBase = join(kitDir, ".tmp");

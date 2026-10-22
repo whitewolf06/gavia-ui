@@ -12,7 +12,7 @@ import { computed } from "vue";
 import type { WlNoModelModifiers } from "../model-types";
 import type { WlPt } from "../pt-types";
 import type { WlTableColumn, WlTableRow, WlTableRowClass, WlTableRowKey, WlTableSelectionMode, WlTableSlots, WlTableSort, WlTableSortFn } from "../table-types";
-import { mergeWlAttrs, useWlLocale, useWlLocaleText, useWlPt } from "../config";
+import { mergeWlAttrs, useWlLocale, useWlPt } from "../config";
 import { formatWlLocaleText } from "../locale";
 import { isWlDevelopment } from "../utils/development";
 import { useWlId } from "../utils/useWlId";
@@ -56,13 +56,14 @@ const props = withDefaults(defineProps<{
   loading?: boolean;
   /**
    * Empty-state text.
-   * @default "Нет данных"
+   * Defaults to WlConfig.locale.noData (English when unconfigured).
+   * @default undefined
    */
   emptyMessage?: string;
   /** Attributes of internal Gavia UI elements. */
-  pt?: WlPt<"datatable">;
+  pt?: WlPt<"table">;
 }>(), {
-  value: () => [], columns: undefined, stickyHeader: false, loading: false, emptyMessage: "Нет данных"
+  value: () => [], columns: undefined, stickyHeader: false, loading: false
 });
 
 /** Selected sort key/direction, or null for unsorted rows.
@@ -76,9 +77,8 @@ const sort = defineModel<WlTableSort | null, never>("sort", { default: null });
  */
 const selection = defineModel<PropertyKey[], never>("selection", { default: () => [] });
 const slots = defineSlots<WlTableSlots<Row>>();
-const localeText = useWlLocaleText();
 const locale = useWlLocale();
-const section = useWlPt("datatable", computed(() => props.pt));
+const section = useWlPt("table", computed(() => props.pt));
 const selectionName = `wl-table-selection-${useWlId()}`;
 let warnedMissingKey = false;
 let warnedInvalidKey = false;
@@ -261,7 +261,7 @@ function selectAll(): void {
         </tr>
         <tr v-if="entries.length === 0 && !loading" v-bind="section('emptyMessage')">
           <td v-bind="section('emptyMessageCell')" class="wl-table__empty-cell" :colspan="columns.length + (selectionMode ? 1 : 0)">
-            <slot name="empty">{{ localeText('emptyMessage', emptyMessage, 'noData') }}</slot>
+            <slot name="empty">{{ emptyMessage ?? locale.noData }}</slot>
           </td>
         </tr>
       </tbody>

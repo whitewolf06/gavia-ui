@@ -10,7 +10,7 @@ const virtualDirectory = fileURLToPath(new URL("../src/i18n/precompiled/", impor
 interface Metadata { aliases: Record<string, string>; sourceMessages: Record<string, string> | true; parameters: Record<string, string[]> }
 
 /** Encode prose/code literally; preserve only the site's named placeholders. */
-export function literalMessage(text: string): string {
+function literalMessage(text: string): string {
   const literal = (part: string) => part
     ? "{'" + part.replace(/\\/g, "\\\\").replace(/'/g, "\\u0027")
       // eslint-disable-next-line no-control-regex -- Encode controls before Intlify parses single-line literals.
@@ -32,9 +32,15 @@ export function playgroundI18nPlugins(): Plugin[] {
     name: "gavia-literal-i18n-resources",
     enforce: "pre",
     resolveId(id) {
-      const file = basename(id);
-      if (/^(?:shell|documentation|examples|tokens|changelog)\.(?:en|ru)\.json\?compiled$/.test(file)) {
-        return virtualDirectory + file.slice(0, -"?compiled".length);
+      const normalized = id.replace(/\\/g, "/");
+      const request = basename(normalized);
+      const file = request.split("?")[0]!;
+      // Vite's import analysis requests the same virtual resource again as a
+      // root-relative URL with ?import. It has no corresponding physical file.
+      const virtual = normalized.startsWith(virtualDirectory) || normalized.startsWith("/src/i18n/precompiled/");
+      if ((request.endsWith("?compiled") || virtual)
+        && /^(?:shell|documentation|examples|tokens|changelog)\.(?:en|ru)\.json$/.test(file)) {
+        return virtualDirectory + file;
       }
     },
     async load(id) {

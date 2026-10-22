@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /** WlIconButton public component contract.
  * @since 0.1.0
- * @slot default - Custom content instead of the icon.
+ * @slot default - Action text, optionally with a custom icon. Icon-only content needs its own accessible name.
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, useAttrs } from "vue";
 import type { WlIconInput } from "../iconNames";
@@ -26,7 +26,7 @@ const props = withDefaults(
      * @default "ghost"
      */
     variant?: WlIconButtonVariant;
-    /** Semantic color role; takes precedence over supported legacy color aliases. */
+    /** Semantic color, independent of the visual treatment. */
     tone?: WlTone;
     /**
      * Button size.
@@ -62,7 +62,7 @@ const props = withDefaults(
     dot?: boolean;
     /** Accessible description for a meaningful status dot. */
     dotLabel?: string;
-    /** Required when no named default slot, native label or aria-labelledby is supplied. */
+    /** Required for the icon prop unless native aria-label, aria-labelledby or a named pt.root is supplied. */
     ariaLabel?: string;
     /** Attributes of internal Gavia UI elements. */
     pt?: WlPt<"iconButton">;
@@ -79,6 +79,11 @@ const props = withDefaults(
 const emit = defineEmits<{
   /** Click (not emitted when disabled). */
   (e: "click", event: MouseEvent): void;
+}>();
+
+defineSlots<{
+  /** Action text, optionally with a custom icon; descriptions alone do not name the action. */
+  default?(props: Record<never, never>): unknown;
 }>();
 
 const rootClass = computed(() => [

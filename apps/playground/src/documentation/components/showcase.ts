@@ -5,7 +5,7 @@ export const showcaseDocumentationExamples: Record<
   { title: string; description: string; sourceName: string }
 > = localizeDocumentation({
   WlContextMenu: { title: "documentation.strings.generatedWlContextMenuTitle", description: "documentation.strings.generatedWlContextMenuDescription", sourceName: "showcase/WlContextMenu.vue" },
-  WlTooltipComponent: { title: "documentation.strings.generatedWlTooltipComponentTitle", description: "documentation.strings.generatedWlTooltipComponentDescription", sourceName: "showcase/WlTooltipComponent.vue" },
+  WlTooltip: { title: "documentation.strings.generatedWlTooltipTitle", description: "documentation.strings.generatedWlTooltipDescription", sourceName: "showcase/WlTooltip.vue" },
   WlToolbar: { title: "documentation.strings.generatedWlToolbarTitle", description: "documentation.strings.generatedWlToolbarDescription", sourceName: "showcase/WlToolbar.vue" },
   WlLink: { title: "documentation.strings.review_link_title", description: "documentation.strings.review_link_description", sourceName: "showcase/WlLink.vue" },
   WlIconButton: { title: "documentation.strings.s0499", description: "documentation.strings.s0500", sourceName: "showcase/WlIconButton.vue" },
@@ -49,7 +49,7 @@ export const showcaseDocumentationExamples: Record<
 export const showcaseDocumentationAccessibility: Record<string, readonly string[]> = localizeDocumentation({
   WlLink: ["documentation.strings.review_link_a11y_content", "documentation.strings.review_link_a11y_semantics", "documentation.strings.review_link_a11y_keyboard"],
   WlContextMenu: ["documentation.strings.generatedWlContextMenuA11yContent", "documentation.strings.generatedWlContextMenuA11ySemantics", "documentation.strings.generatedWlContextMenuA11yKeyboard"],
-  WlTooltipComponent: ["documentation.strings.generatedWlTooltipComponentA11yContent", "documentation.strings.generatedWlTooltipComponentA11ySemantics", "documentation.strings.generatedWlTooltipComponentA11yKeyboard"],
+  WlTooltip: ["documentation.strings.generatedWlTooltipA11yContent", "documentation.strings.generatedWlTooltipA11ySemantics", "documentation.strings.generatedWlTooltipA11yKeyboard"],
   WlToolbar: ["documentation.strings.generatedWlToolbarA11yContent", "documentation.strings.generatedWlToolbarA11ySemantics", "documentation.strings.generatedWlToolbarA11yKeyboard"],
   WlIconButton: [
     "documentation.strings.s0569",

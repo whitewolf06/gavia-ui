@@ -10,10 +10,10 @@ const value = ref(40);
   <div class="wl-stack" data-space="lg">
     <WlProgress :value="64" :aria-label="t('examples.default_progress_0529')" />
     <WlProgress :value="32" thin :aria-label="t('examples.thin_progress_0530')" />
-    <WlProgress :value="100" variant="ok" :aria-label="t('examples.completed_operation_0531')" />
+    <WlProgress :value="100" tone="success" :aria-label="t('examples.completed_operation_0531')" />
     <WlProgress
       :value="value"
-      :variant="value === 100 ? 'ok' : 'default'"
+      :tone="value === 100 ? 'success' : 'accent'"
       show-value
       :aria-label="t('examples.local_preparation_progress_0532')"
     />

@@ -56,5 +56,5 @@ export { WlCheckboxGroup } from "./choice-group-contracts";
 export { WlRadioGroup } from "./choice-group-contracts";
 export { WlToolbar } from "./native-contracts";
 export { WlTagsInput } from "./native-contracts";
-export { WlTooltipComponent } from "./native-contracts";
+export { WlTooltip } from "./native-contracts";
 export { WlContextMenu } from "./generic-contracts";

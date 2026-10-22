@@ -5,22 +5,18 @@
  */
 import { type AriaAttributes, computed, useAttrs } from "vue";
 import type { WlPt } from "../pt-types";
-import type { WlBadgeVariant, WlTone } from "../types";
+import type { WlTone } from "../types";
 import { mergeWlAttrs, useWlPt } from "../config";
 import { formatWlCount } from "../utils/format";
-import { useWlTone } from "../utils/tone";
 
 defineOptions({ inheritAttrs: false });
 const props = withDefaults(
   defineProps<{
     /** Text or count shown when dot is false. */
     value?: string | number;
-    /** Legacy color alias.
-     * @deprecated Use tone instead.
+    /** Semantic badge color.
      * @default "accent"
      */
-    variant?: WlBadgeVariant;
-    /** Semantic badge color; takes precedence over variant. */
     tone?: WlTone;
     /** Display numeric values above this limit as a capped count. */
     max?: number;
@@ -34,7 +30,7 @@ const props = withDefaults(
     pt?: WlPt<"badge">;
   }>(),
   {
-    variant: "accent",
+    tone: "accent",
     dot: false
   }
 );
@@ -42,10 +38,7 @@ const props = withDefaults(
 defineSlots<{
   /** Custom badge content with the original and displayed values. */
   default?(props: { value: string | number | undefined; displayValue: string | number | undefined }): unknown; }>();
-const tone = useWlTone({
-  component: "WlBadge", tone: () => props.tone, variant: () => props.variant,
-  aliases: { gray: "neutral", accent: "accent", success: "success", warn: "warning", danger: "danger" }, fallback: "accent"
-});
+const tone = computed(() => props.tone);
 const legacyVariant = computed(() => ({ neutral: "gray", accent: "accent", info: "accent", success: "success", warning: "warn", danger: "danger" })[tone.value]);
 const displayValue = computed(() => typeof props.value === "number" && props.max !== undefined
   ? formatWlCount(props.value, { max: props.max })

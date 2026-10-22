@@ -507,7 +507,11 @@ describe("modal focus targets", () => {
       <details><summary id="summary">Summary</summary><button>Closed content</button></details>
       <div id="editor" contenteditable="true">Edit</div><video id="video" controls></video>
       <audio id="audio" controls></audio><iframe id="frame"></iframe><object id="object"></object>
-      <embed id="embed" /><map><area id="area" href="/"></map><button id="last">Last</button>`;
+      <embed id="embed" /><img
+        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='gray'/%3E%3C/svg%3E"
+        usemap="#focus-map" alt="Navigation map" width="100" height="100" />
+      <map name="focus-map"><area id="area" href="/" alt="Home" shape="rect" coords="0,0,100,100"></map>
+      <button id="last">Last</button>`;
     document.body.append(container);
     expect(getFocusableElements(container).map((element) => element.id))
       .toEqual(["summary", "editor", "video", "audio", "frame", "object", "embed", "area", "last"]);

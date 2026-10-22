@@ -1,7 +1,7 @@
 /** A small lossless lexer for documentation, not a language parser. */
 export type CodeLanguage = "auto" | "vue" | "html" | "ts" | "js" | "css" | "shell" | "json" | "text";
 export type ResolvedCodeLanguage = Exclude<CodeLanguage, "auto">;
-export type CodeTokenKind = "plain" | "comment" | "tag" | "attribute" | "directive" | "keyword" | "string"
+type CodeTokenKind = "plain" | "comment" | "tag" | "attribute" | "directive" | "keyword" | "string"
   | "number" | "punctuation" | "selector" | "property" | "value" | "function" | "unit";
 export interface CodeToken { kind: CodeTokenKind; text: string }
 interface TokenRange { kind: CodeTokenKind; start: number; end: number }
@@ -293,7 +293,10 @@ export function highlightCode(source: string, language: CodeLanguage = "auto"): 
         while (cursor < source.length && !whitespace(char()) && char() !== ">" && char() !== "<" && !source.startsWith("/>", cursor)) cursor++;
       }
       if (cursor > valueStart) {
-        const value = source.slice(valueStart + (isQuote ? 1 : 0), cursor - (isQuote && source.charAt(cursor - 1) === source.charAt(valueStart) ? 1 : 0)).toLowerCase();
+        const value = source.slice(
+          valueStart + (isQuote ? 1 : 0),
+          cursor - (isQuote && source.charAt(cursor - 1) === source.charAt(valueStart) ? 1 : 0)
+        ).toLowerCase();
         if (attribute === "lang" && (value === "ts" || value === "typescript")) scriptMode = "ts";
         if (attribute === "type" && value.includes("json")) scriptMode = "json";
         push("string", valueStart);

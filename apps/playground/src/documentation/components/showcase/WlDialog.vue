@@ -5,7 +5,7 @@ import { WlButton, WlCheckbox, WlDialog, WlField, WlInput } from "gavia-ui";
 import { ref } from "vue";
 const visible = ref(false);
 const motion = ref(true);
-const dismissable = ref(false);
+const dismissible = ref(false);
 const title = ref(t("examples.release_plan_0371"));
 const saved = ref("");
 const left = ref(0);
@@ -15,7 +15,7 @@ const left = ref(0);
   <div class="wl-stack" data-space="lg">
     <div class="wl-inline" data-space="md">
       <WlCheckbox v-model="motion">{{ t("examples.dialog_animation_0401") }}</WlCheckbox>
-      <WlCheckbox v-model="dismissable">{{ t("examples.close_on_backdrop_click_0402") }}</WlCheckbox>
+      <WlCheckbox v-model="dismissible">{{ t("examples.close_on_backdrop_click_0402") }}</WlCheckbox>
     </div>
     <div><WlButton variant="primary" @click="visible = true">{{ t("examples.edit_title_0403") }}</WlButton></div>
     <WlDialog
@@ -23,7 +23,7 @@ const left = ref(0);
       :header="t('examples.edit_material_0202')"
       width="min(480px, calc(100vw - 32px))"
       :motion="motion"
-      :dismissable="dismissable"
+      :dismissible="dismissible"
       :pt="{ footer: { style: { flexWrap: 'wrap' } } }"
       @after-leave="left++"
     >

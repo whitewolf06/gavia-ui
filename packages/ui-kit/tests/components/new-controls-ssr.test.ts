@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { createSSRApp, h } from "vue";
 import { renderToString } from "vue/server-renderer";
-import { WlCheckboxGroup, WlRadioGroup, WlTooltipComponent } from "../../src";
+import { WlCheckboxGroup, WlRadioGroup, WlTooltip } from "../../src";
 
 async function renderGroups(prefix: string): Promise<string> {
   const app = createSSRApp({ render: () => h("div", [
     h(WlCheckboxGroup<string>, { options: ["Read", "Share"], modelValue: ["Read"], legend: "Permissions" }),
     h(WlRadioGroup<string>, { options: ["Basic", "Team"], modelValue: "Basic", legend: "Plan" }),
     h(WlRadioGroup<string>, { options: ["Light", "Dark"], legend: "Theme" }),
-    h(WlTooltipComponent, { content: "Details", visible: true }, { default: () => h("button", "Details") })
+    h(WlTooltip, { content: "Details", visible: true }, { default: () => h("button", "Details") })
   ]) });
   (app.config as typeof app.config & { idPrefix?: string }).idPrefix = prefix;
   return renderToString(app);

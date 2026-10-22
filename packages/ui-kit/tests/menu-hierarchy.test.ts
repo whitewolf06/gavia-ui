@@ -124,6 +124,90 @@ describe("hierarchical menus", () => {
     expect(document.activeElement).toBe(item("Project"));
   });
 
+  it("retains a pointer preview while crossing into it and closes it after leaving both regions", async () => {
+    vi.useFakeTimers();
+    const wrapper = mount(WlMenu, {
+      attachTo: document.body,
+      props: { motion: false, items: [{ label: "File", items: [{ label: "Open" }] }, { label: "Help" }] }
+    });
+    wrappers.push(wrapper);
+    const rootMenu = wrapper.get('[role="menu"]').element;
+    const preview = async () => {
+      item("File").closest("li")!.dispatchEvent(new MouseEvent("mouseenter"));
+      await vi.advanceTimersByTimeAsync(150);
+      await nextTick();
+    };
+    await preview();
+    const submenu = document.querySelector<HTMLElement>('[data-wl="menu-submenu"]')!;
+    rootMenu.dispatchEvent(new MouseEvent("mouseleave", { relatedTarget: submenu }));
+    await vi.advanceTimersByTimeAsync(150);
+    expect(document.querySelector('[data-wl="menu-submenu"]')).toBe(submenu);
+
+    rootMenu.dispatchEvent(new MouseEvent("mouseleave"));
+    await vi.advanceTimersByTimeAsync(75);
+    submenu.dispatchEvent(new MouseEvent("mouseenter"));
+    await vi.advanceTimersByTimeAsync(100);
+    expect(document.querySelector('[data-wl="menu-submenu"]')).toBe(submenu);
+
+    submenu.dispatchEvent(new MouseEvent("mouseleave"));
+    await vi.advanceTimersByTimeAsync(149);
+    expect(document.querySelector('[data-wl="menu-submenu"]')).toBe(submenu);
+    await vi.advanceTimersByTimeAsync(1);
+    expect(document.querySelector('[data-wl="menu-submenu"]')).toBeNull();
+
+    await preview();
+    item("Help").closest("li")!.dispatchEvent(new MouseEvent("mouseenter"));
+    await vi.advanceTimersByTimeAsync(150);
+    expect(document.querySelector('[data-wl="menu-submenu"]')).toBeNull();
+    expect(document.activeElement).toBe(document.body);
+  });
+
+  it("closes the open branch when focus changes and forwards a nested checkbox selection once", async () => {
+    const checked = Object.freeze({ label: "Grid", type: "checkbox" as const, checked: false });
+    const wrapper = mount(WlMenu, {
+      attachTo: document.body,
+      props: { motion: false, items: [{ label: "View", items: [checked] }, { label: "Help" }] }
+    });
+    wrappers.push(wrapper);
+    item("View").click();
+    await flushPromises();
+    expect(document.activeElement).toBe(item("Grid"));
+    item("Help").focus();
+    await nextTick();
+    expect(document.querySelector('[data-wl="menu-submenu"]')).toBeNull();
+
+    item("View").click();
+    await flushPromises();
+    item("View").focus();
+    await key(item("View"), "Escape");
+    expect(document.querySelector('[data-wl="menu-submenu"]')).toBeNull();
+    expect(document.activeElement).toBe(item("View"));
+
+    item("View").click();
+    await flushPromises();
+    item("Grid").click();
+    await nextTick();
+    expect(wrapper.emitted("check")).toEqual([[{ item: checked, checked: true }]]);
+    expect(checked.checked).toBe(false);
+    expect(document.querySelectorAll('[role="menu"]')).toHaveLength(1);
+  });
+
+  it("focuses the popup menu itself when every entry is unavailable", async () => {
+    const wrapper = mount(defineComponent({
+      components: { WlMenu },
+      setup: () => ({ items: [{ header: "Actions" }, { label: "Unavailable", disabled: true }] }),
+      template: '<WlMenu popup :motion="false" :items="items"><template #trigger="{ attrs }"><button v-bind="attrs">Actions</button></template></WlMenu>'
+    }), { attachTo: document.body });
+    wrappers.push(wrapper);
+    await key(wrapper.get("button").element as HTMLElement, "ArrowUp");
+    const menu = document.querySelector<HTMLElement>('[role="menu"]')!;
+    expect(document.activeElement).toBe(menu);
+    expect(menu.querySelector('[role="menuitem"]')?.getAttribute("aria-disabled")).toBe("true");
+    await key(menu, "ArrowRight");
+    expect(document.querySelectorAll('[role="menu"]')).toHaveLength(1);
+    expect(document.activeElement).toBe(menu);
+  });
+
   it("keeps nested portal menus usable inside a modal and dismisses Escape in layer order", async () => {
     const Harness = defineComponent({
       components: { WlDialog, WlMenu },

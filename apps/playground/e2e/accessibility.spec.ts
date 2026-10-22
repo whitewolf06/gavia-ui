@@ -46,9 +46,16 @@ async function auditOpenList(
   await control.press("ArrowDown");
   const listbox = page.getByRole("listbox", { name, exact: true });
   await expect(listbox).toBeVisible();
+  await expect(listbox).toHaveAttribute("id", /\S+/);
   await expect(control).toHaveAttribute("aria-controls", (await listbox.getAttribute("id"))!);
-  const selector = ".wl-select-overlay, .wl-multiselect-overlay, .wl-autocomplete-overlay";
-  await expect(page.locator(selector)).not.toHaveClass(/wl-pop-motion-enter-/);
+  const listboxSelector = await listbox.evaluate((element) => `#${CSS.escape(element.id)}`);
+  const selector = `:is(.wl-select-overlay, .wl-multiselect-overlay, .wl-autocomplete-overlay):has(${listboxSelector})`;
+  const overlay = page.locator(selector);
+  await expect(overlay).toHaveCount(1);
+  await expect(overlay).toBeVisible();
+  await expect(overlay).not.toHaveAttribute("inert");
+  await expect(overlay).not.toHaveAttribute("aria-hidden", "true");
+  await expect(overlay).not.toHaveClass(/wl-pop-motion-enter-/);
   await audit(page, testInfo, `${theme}-${component}-open`, selector);
 }
 

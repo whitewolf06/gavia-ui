@@ -1,7 +1,7 @@
 import type { WlComponentManifest, WlPropManifest } from "gavia-ui";
 import { translate as t } from "../i18n";
 
-export type DocumentationEditor = "select" | "checkbox" | "text" | "number" | "icon";
+type DocumentationEditor = "select" | "checkbox" | "text" | "number" | "icon";
 export interface DocumentationControl extends WlPropManifest {
   editor: DocumentationEditor;
   numberMin?: number;

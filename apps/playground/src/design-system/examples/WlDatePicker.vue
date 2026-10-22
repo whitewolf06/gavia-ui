@@ -12,6 +12,8 @@ const forwardedPreview = computed(() => {
 });
 const single = ref<string | null>("2026-10-15");
 const range = ref<WlDateRange | null>(["2026-10-15", "2026-10-20"]);
+// The host app owns WlConfig: locale: wlLocaleRu retains Russian in 1.0.
+// Omitted text follows that locale. Explicit range labels below belong to the app.
 </script>
 
 <template>
@@ -34,6 +36,8 @@ const range = ref<WlDateRange | null>(["2026-10-15", "2026-10-20"]);
       v-model="range"
       selection-mode="range"
       show-icon
+      :start-label="t('examples.from_0696')"
+      :end-label="t('examples.to_0697')"
       min-date="2026-10-01"
       max-date="2026-10-31"
       display-format="locale"

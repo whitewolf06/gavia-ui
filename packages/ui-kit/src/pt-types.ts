@@ -77,9 +77,7 @@ export interface WlPtDayContext extends WlPtSelectedContext {
   otherMonth: boolean;
 }
 
-type SectionAlias<TKey> = TKey extends "pcToggleButton" ? "item"
-  : TKey extends `pc${infer Name}` ? Uncapitalize<Name> : never;
-type Sections<T, TOpen extends boolean> = Partial<T> & { [Key in keyof T as SectionAlias<Key>]?: T[Key] }
+type Sections<T, TOpen extends boolean> = Partial<T>
   & (TOpen extends true ? Record<string, unknown> : Record<never, never>);
 type Root<TOpen extends boolean> = Sections<{ root: WlPtSection }, TOpen>;
 type IconButton<TOpen extends boolean> = Sections<{
@@ -174,15 +172,6 @@ export interface WlPtMap<TOpen extends boolean = true> {
     channelLabel: WlPtSection;
     channelInput: WlPtSection;
   }, TOpen>;
-  table?: WlPtMap<TOpen>["datatable"];
-  input?: WlPtMap<TOpen>["inputtext"];
-  switch?: WlPtMap<TOpen>["toggleswitch"];
-  segmented?: WlPtMap<TOpen>["selectbutton"];
-  pagination?: WlPtMap<TOpen>["paginator"];
-  progress?: WlPtMap<TOpen>["progressbar"];
-  radio?: WlPtMap<TOpen>["radiobutton"];
-  breadcrumbs?: WlPtMap<TOpen>["breadcrumb"];
-  tabs?: WlPtMap<TOpen>["tablist"] & { panels?: Root<TOpen>; panel?: Root<TOpen> };
   contextmenu?: Root<TOpen>;
   tagsinput?: Sections<{
     root: WlPtSection;
@@ -218,12 +207,12 @@ export interface WlPtMap<TOpen extends boolean = true> {
     box: WlPtSection<WlPtCheckboxContext>;
     icon: WlPtSection<WlPtCheckboxContext>;
   }, TOpen>;
-  radiobutton: Sections<{
+  radio: Sections<{
     input: WlPtSection<WlPtCheckedContext>;
     box: WlPtSection<WlPtCheckedContext>;
     icon: WlPtSection;
   }, TOpen>;
-  toggleswitch: Sections<{
+  switch: Sections<{
     input: WlPtSection<WlPtCheckedContext>;
     slider: WlPtSection<WlPtCheckedContext>;
     handle: WlPtSection;
@@ -251,13 +240,13 @@ export interface WlPtMap<TOpen extends boolean = true> {
     labelContainer: WlPtSection;
     label: WlPtSection;
     chipItem: WlPtSection;
-    pcChip: Chip<TOpen>;
+    chip: Chip<TOpen>;
     dropdown: WlPtSection;
     dropdownIcon: WlPtSection;
     overlay: WlPtSection;
     header: WlPtSection;
     footer: WlPtSection;
-    pcFilter: Root<TOpen>;
+    filter: Root<TOpen>;
     filterIcon: WlPtSection;
     listContainer: WlPtSection;
     list: WlPtSection;
@@ -271,10 +260,10 @@ export interface WlPtMap<TOpen extends boolean = true> {
     clearButton: WlPtSection;
     inputMultiple: WlPtSection;
     chipItem: WlPtSection;
-    pcChip: Chip<TOpen>;
+    chip: Chip<TOpen>;
     input: WlPtSection;
     inputChip: WlPtSection;
-    pcInputText: Root<TOpen>;
+    inputText: Root<TOpen>;
     dropdown: WlPtSection;
     dropdownIcon: WlPtSection;
     overlay: WlPtSection;
@@ -357,7 +346,7 @@ export interface WlPtMap<TOpen extends boolean = true> {
     headerActions: WlPtSection;
     content: WlPtSection;
     footer: WlPtSection;
-    pcCloseButton: IconButton<TOpen>;
+    closeButton: IconButton<TOpen>;
   }, TOpen>;
   confirmdialog: Sections<{
     root: WlPtSection<WlPtConfirmationContext>;
@@ -376,9 +365,9 @@ export interface WlPtMap<TOpen extends boolean = true> {
     title: WlPtSection;
     content: WlPtSection;
     footer: WlPtSection;
-    pcCloseButton: IconButton<TOpen>;
+    closeButton: IconButton<TOpen>;
   }, TOpen>;
-  progressbar: Sections<{
+  progress: Sections<{
     root: WlPtSection;
     value: WlPtSection;
     label: WlPtSection;
@@ -405,32 +394,27 @@ export interface WlPtMap<TOpen extends boolean = true> {
   }, TOpen>;
   navitem?: Sections<{ root: WlPtSection; icon: WlPtSection; label: WlPtSection; badge: WlPtSection }, TOpen>;
   divider: Sections<{ root: WlPtSection; content: WlPtSection }, TOpen>;
-  tablist: Sections<{
+  tabs: Sections<{
     panels: Root<TOpen>;
     panel: Root<TOpen>;
     content: WlPtSection;
     tabList: WlPtSection;
     activeBar: WlPtSection;
-    /** Local WlTabs panel configuration; app-level configuration uses the sibling component keys. */
-    tabpanels: Root<TOpen>;
-    tabpanel: Root<TOpen>;
   }, TOpen>;
-  tabpanels: Root<TOpen>;
-  tabpanel: Root<TOpen>;
   tooltip: Sections<{
     trigger: WlPtSection;
     root: WlPtSection<WlPtContext, WlTooltipPtAttributes>;
     text: WlPtSection<WlPtContext, WlTooltipPtAttributes>;
     arrow: WlPtSection<WlPtContext, WlTooltipPtAttributes>;
   }, TOpen>;
-  selectbutton: Sections<{
+  segmented: Sections<{
     root: WlPtSection;
-    pcToggleButton: Sections<{
+    item: Sections<{
       root: WlPtSection<WlPtActiveContext>;
       content: WlPtSection;
     }, TOpen>;
   }, TOpen>;
-  breadcrumb: Sections<{
+  breadcrumbs: Sections<{
     collapseButton: WlPtSection;
     root: WlPtSection;
     list: WlPtSection;
@@ -461,7 +445,7 @@ export interface WlPtMap<TOpen extends boolean = true> {
     closeButton: WlPtSection;
     closeIcon: WlPtSection;
   }, TOpen>;
-  datatable: Sections<{
+  table: Sections<{
     caption: WlPtSection;
     headerCell: WlPtSection;
     sortButton: WlPtSection;
@@ -484,7 +468,7 @@ export interface WlPtMap<TOpen extends boolean = true> {
     root: WlPtSection;
     startLabel: WlPtSection;
     endLabel: WlPtSection;
-    pcInputText: Root<TOpen>;
+    inputText: Root<TOpen>;
     endInput: WlPtSection;
     rangeHint: WlPtSection;
     dropdown: WlPtSection;
@@ -496,8 +480,8 @@ export interface WlPtMap<TOpen extends boolean = true> {
     title: WlPtSection;
     selectMonth: WlPtSection;
     selectYear: WlPtSection;
-    pcPrevButton: IconButton<TOpen>;
-    pcNextButton: IconButton<TOpen>;
+    prevButton: IconButton<TOpen>;
+    nextButton: IconButton<TOpen>;
     dayView: WlPtSection;
     monthView: WlPtSection;
     month: WlPtSection<WlPtSelectedContext>;
@@ -509,7 +493,7 @@ export interface WlPtMap<TOpen extends boolean = true> {
     day: WlPtSection<WlPtDayContext>;
   }, TOpen>;
   badge: Root<TOpen>;
-  inputtext: Sections<{
+  input: Sections<{
     root: WlPtSection;
     clearButton: WlPtSection;
     loadingIcon: WlPtSection;
@@ -517,7 +501,7 @@ export interface WlPtMap<TOpen extends boolean = true> {
   }, TOpen>;
   textarea: Sections<{ root: WlPtSection; counter: WlPtSection }, TOpen>;
   skeleton: Sections<{ root: WlPtSection; line: WlPtSection }, TOpen>;
-  paginator: Root<TOpen>;
+  pagination: Root<TOpen>;
   timepicker: Sections<{ root: WlPtSection; input: WlPtSection }, TOpen>;
   filepicker: Sections<{ root: WlPtSection; input: WlPtSection; trigger: WlPtSection }, TOpen>;
 }

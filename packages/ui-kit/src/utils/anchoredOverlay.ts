@@ -1,8 +1,5 @@
-/** Consumer bundlers replace this literal; no Node type dependency is required. */
-declare const process: { env: { NODE_ENV?: string } };
 import { nextTick, onBeforeUnmount, onMounted, ref, type Ref, watch } from "vue";
 import type { WlPopoverAlign, WlPopoverPlacement, WlPopoverSide } from "../overlay-types";
-import { isWlDevelopment } from "./development";
 import { addOverlayLayer, isTopOverlayLayer, ownsOverlayTarget, refreshOverlayLayers, removeOverlayLayer } from "./overlayStack";
 
 export interface AnchoredOverlay {
@@ -19,8 +16,6 @@ export interface AnchoredOverlay {
 
 type OverlayValue<T> = T | (() => T);
 export interface WlAnchoredOverlayOptions {
-  /** @deprecated Use dismissible. */
-  dismissable?: OverlayValue<boolean>;
   dismissible?: OverlayValue<boolean>;
   closeOnEscape?: OverlayValue<boolean>;
   placement?: OverlayValue<WlPopoverPlacement>;
@@ -64,9 +59,6 @@ export function useAnchoredOverlay(options: WlAnchoredOverlayOptions = {}): Anch
     panel: () => panel.value,
     anchor: () => anchor.value
   };
-  if (isWlDevelopment() && process.env.NODE_ENV !== "production" && options.dismissable !== undefined) {
-    console.warn("useWlAnchoredPosition: dismissable is deprecated; use dismissible instead.");
-  }
 
   function readPanelLayer(element: HTMLElement): number {
     const value = element.style.getPropertyValue("z-index");
@@ -237,7 +229,7 @@ export function useAnchoredOverlay(options: WlAnchoredOverlayOptions = {}): Anch
   }
 
   function onPointer(event: PointerEvent): void {
-    const dismissible = options.dismissible !== undefined ? valueOf(options.dismissible, true) : valueOf(options.dismissable, true);
+    const dismissible = valueOf(options.dismissible, true);
     if (!visible.value || dismissible === false) return;
     const target = event.target;
     if (target instanceof Node && !ownsOverlayTarget(layer, target)) hide();

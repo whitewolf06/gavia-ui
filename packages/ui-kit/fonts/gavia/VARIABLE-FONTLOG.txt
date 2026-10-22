@@ -1,0 +1,11 @@
+Gavia Sans Variable draft, derived from accepted Gavia Sans 0.600.
+Original static binaries and authored drawing module are unchanged.
+Whole-font exact 1000-to-2000 UPM scaling; endpoint-preserving numeral correspondence.
+Weight axis 100-700, default400; separate upright and seven-degree oblique.
+A Latin-1/Cyrillic core and complete fallback retain all original characters and layout features.
+Draft interpolation and optical/native/browser transfer acceptance pending.
+
+2026-10-21 local activation: validated Full/Core assets enabled through the
+existing stylesheet, with conditional static fallbacks. Focused Windows Chromium
+checks pass for home transfer, weights/styles, combining clusters and ZIP assets.
+All-weight optical/native, CLS, owner and full release acceptance remain pending.

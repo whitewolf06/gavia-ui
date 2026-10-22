@@ -4,9 +4,8 @@
  */
 import { computed, useAttrs } from "vue";
 import type { WlPt } from "../pt-types";
-import type { WlProgressVariant, WlTone } from "../types";
+import type { WlTone } from "../types";
 import { mergeWlAttrs, useWlPt } from "../config";
-import { useWlTone } from "../utils/tone";
 
 defineOptions({ inheritAttrs: false });
 const props = withDefaults(
@@ -15,12 +14,9 @@ const props = withDefaults(
      * @default 0
      */
     value?: number;
-    /** Legacy color alias.
-     * @deprecated Use tone instead.
-     * @default "default"
+    /** Semantic progress color.
+     * @default "accent"
      */
-    variant?: WlProgressVariant;
-    /** Semantic progress color; takes precedence over variant. */
     tone?: WlTone;
     /** Positive finite upper bound; invalid values fall back to 100.
      * @default 100
@@ -43,26 +39,23 @@ const props = withDefaults(
      */
     showValue?: boolean;
     /** Attributes for the root, value and label sections. */
-    pt?: WlPt<"progressbar">;
+    pt?: WlPt<"progress">;
   }>(),
   {
     value: 0,
-    variant: "default",
+    tone: "accent",
     thin: false,
     showValue: false
   }
 );
 defineSlots<{}>();
-const tone = useWlTone({
-  component: "WlProgress", tone: () => props.tone, variant: () => props.variant,
-  aliases: { default: "accent", ok: "success" }, fallback: "accent"
-});
+const tone = computed(() => props.tone);
 const rootClass = computed(() => [
   "wl-progress",
   tone.value === "success" ? "wl-progress--ok" : "wl-progress--default",
   props.thin && "wl-progress--thin"
 ]);
-const section = useWlPt("progressbar", computed(() => props.pt));
+const section = useWlPt("progress", computed(() => props.pt));
 const attrs = useAttrs();
 const rootAttrs = computed(() => {
   void attrs.id; // Track additions to Vue 3.4's initially empty attrs proxy.

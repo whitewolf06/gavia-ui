@@ -31,7 +31,7 @@ function open(value: WlDrawerPosition): void {
       :pt="{ footer: { style: { flexWrap: 'wrap' } } }"
     >
       <div class="wl-stack" data-space="md">
-        <WlTag variant="blue">{{ t("examples.draft_0291") }}</WlTag>
+        <WlTag color="blue">{{ t("examples.draft_0291") }}</WlTag>
         <h3 class="wl-text-subheading">{{ t("examples.release_plan_0371") }}</h3>
         <p class="wl-text-body">
           {{ t("examples.drawer_0424") }} {{ positions[position] }}

@@ -5,7 +5,7 @@
 import { computed, nextTick, ref, useAttrs, watch } from "vue";
 import type { WlPt } from "../pt-types";
 import type { WlColorPickerSize } from "../types";
-import { mergeWlAttrs, useWlLocale, useWlLocaleText, useWlPt } from "../config";
+import { mergeWlAttrs, useWlLocale, useWlPt } from "../config";
 import { normalizePickerColor, pickerHex, pickerHsva, type PickerHsva } from "../utils/colorPicker";
 import { getWlControlProps, splitInputAttrs } from "../utils/inputAttrs";
 defineOptions({ inheritAttrs: false });
@@ -46,12 +46,14 @@ const props = withDefaults(
     pt?: WlPt<"colorpicker">;
     /**
      * Accessible colour list name.
-     * @default "Палитра"
+     * Defaults to WlConfig.locale.colorPalette (English when unconfigured).
+     * @default undefined
      */
     paletteLabel?: string;
     /**
      * Accessible HEX field name.
-     * @default "HEX-код цвета"
+     * Defaults to WlConfig.locale.colorHex (English when unconfigured).
+     * @default undefined
      */
     inputLabel?: string;
   }>(),
@@ -74,9 +76,7 @@ const props = withDefaults(
     size: "md",
     disabled: false,
     invalid: false,
-    alpha: false, custom: false,
-    paletteLabel: "Палитра",
-    inputLabel: "HEX-код цвета"
+    alpha: false, custom: false
   }
 );
 
@@ -85,7 +85,6 @@ const emit = defineEmits<{
   "update:modelValue": [value: string];
 }>();
 
-const localeText = useWlLocaleText();
 const locale = useWlLocale();
 const attrs = useAttrs();
 const section = useWlPt("colorpicker", computed(() => props.pt));
@@ -97,7 +96,7 @@ const readonly = computed(() => {
   return value !== undefined && value !== null && value !== false;
 });
 const hexLabel = computed(() => controlProps.value.ariaLabel
-  ?? (controlProps.value.ariaLabelledby ? undefined : localeText("inputLabel", props.inputLabel, "colorHex")));
+  ?? (controlProps.value.ariaLabelledby ? undefined : props.inputLabel ?? locale.value.colorHex));
 function normalizeHex(value: string): string | null {
   return normalizePickerColor(value, props.alpha);
 }
@@ -220,7 +219,7 @@ async function onSwatchKeydown(event: KeyboardEvent, index: number): Promise<voi
       v-bind="section('grid')"
       class="wl-color-picker__grid"
       role="listbox"
-      :aria-label="localeText('paletteLabel', paletteLabel, 'colorPalette')"
+      :aria-label="paletteLabel ?? locale.colorPalette"
       :aria-disabled="disabled || undefined"
     >
       <button

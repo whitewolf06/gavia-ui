@@ -57,7 +57,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "accept", type: "string", description: "Расширения или MIME-типы для окна выбора. Проверку файлов выполняет приложение." },
       { name: "multiple", type: "boolean", default: false, description: "Разрешает выбор нескольких файлов." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает trigger и choose()." },
-      { name: "chooseLabel", type: "string", default: "Выбрать файлы", description: "Подпись стандартной кнопки." },
+      { name: "chooseLabel", type: "string", description: "Default button label; falls back to WlConfig.locale.chooseFiles (Choose files in English)." },
       { name: "ariaLabel", type: "string", description: "Доступное имя стандартной кнопки." },
       { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер кнопки." },
       { name: "density", type: "enum", default: "default", values: WL_DENSITIES, description: "Плотность кнопки." },
@@ -104,7 +104,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "density", type: "enum", default: "default", values: WL_DENSITIES, description: "Плотность." },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает поле." },
-      { name: "placeholder", type: "string", default: "Пароль", description: "Плейсхолдер." },
+      { name: "placeholder", type: "string", description: "Placeholder; falls back to WlConfig.locale.password (Password in English)." },
       { name: "ariaLabel", type: "string", description: "aria-label инпута." }
     ],
     slots: [],
@@ -127,14 +127,12 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       {
         name: "decrementLabel",
         type: "string",
-        default: "Уменьшить",
-        description: "Доступное имя кнопки уменьшения."
+        description: "Accessible decrement button name; falls back to WlConfig.locale.decrease (Decrease in English)."
       },
       {
         name: "incrementLabel",
         type: "string",
-        default: "Увеличить",
-        description: "Доступное имя кнопки увеличения."
+        description: "Accessible increment button name; falls back to WlConfig.locale.increase (Increase in English)."
       }
     ],
     slots: [],
@@ -267,8 +265,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       {
         name: "dropdownLabel",
         type: "string",
-        default: "Показать варианты",
-        description: "Доступное имя кнопки раскрытия списка."
+        description: "Accessible list expansion button name; falls back to WlConfig.locale.showOptions (Show options in English)."
       },
       {
         name: "minLength",
@@ -364,13 +361,13 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
     description:
       "Выбор даты или диапазона. В режиме single модель — ISO-строка/null, в range — [start, end|null]/null. Локаль задаётся через WlConfig.",
     props: [
-      { name: "placeholder", type: "string", default: "дд.мм.гггг", description: "Плейсхолдер." },
+      { name: "placeholder", type: "string", description: "Placeholder; falls back to WlConfig.locale.datePlaceholder (dd.mm.yyyy in English)." },
       { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер поля." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает поле." },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
       { name: "selectionMode", type: "enum", default: "single", values: ["single", "range"], description: "single: ISO-строка/null; range: [start, end|null]/null. Первый выбор задаёт начало, второй завершает и сортирует диапазон, следующий начинает новый." },
-      { name: "startLabel", type: "string", default: "От", description: "Видимая подпись начала диапазона." },
-      { name: "endLabel", type: "string", default: "До", description: "Видимая подпись конца диапазона." },
+      { name: "startLabel", type: "string", description: "Visible range start label; falls back to WlConfig.locale.dateFrom (From in English)." },
+      { name: "endLabel", type: "string", description: "Visible range end label; falls back to WlConfig.locale.dateTo (To in English)." },
       { name: "showIcon", type: "boolean", default: false, description: "Кнопка-иконка календаря." },
       { name: "minDate", type: "string", description: "Минимальная дата в формате \"YYYY-MM-DD\". Пустое или неверное значение не ограничивает выбор." },
       { name: "maxDate", type: "string", description: "Максимальная дата в формате \"YYYY-MM-DD\". Пустое или неверное значение не ограничивает выбор." },
@@ -432,8 +429,8 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "size", type: "enum", default: "md", values: WL_COLOR_PICKER_SIZES, description: "Размер образцов цвета." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает палитру и ввод." },
       { name: "invalid", type: "boolean", default: false, description: "Внешнее состояние ошибки." },
-      { name: "paletteLabel", type: "string", default: "Палитра", description: "Доступное имя списка цветов." },
-      { name: "inputLabel", type: "string", default: "HEX-код цвета", description: "Доступное имя hex-поля." }
+      { name: "paletteLabel", type: "string", description: "Accessible color list name; falls back to WlConfig.locale.colorPalette (Palette in English)." },
+      { name: "inputLabel", type: "string", description: "Accessible HEX field name; falls back to WlConfig.locale.colorHex (Color HEX code in English)." }
     ],
     slots: [],
     emits: [

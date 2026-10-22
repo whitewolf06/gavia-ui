@@ -1,12 +1,70 @@
 import type { Plugin } from "vite";
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, relative } from "node:path";
+import { fileURLToPath, URL } from "node:url";
 import { deflateRawSync } from "node:zlib";
-import { gaviaRelease } from "../src/type-study/font";
+import fontManifest from "../../../packages/ui-kit/fonts/gavia/manifest.json";
 
-export const gaviaDownloadName = "Gavia-Sans-" + gaviaRelease + ".zip";
+const gaviaRelease = Number.parseFloat(fontManifest.version).toFixed(1);
+const gaviaDownloadName = "Gavia-Sans-" + gaviaRelease + ".zip";
 const archivePath = "downloads/" + gaviaDownloadName;
 const fontRoot = new URL("../../../packages/ui-kit/fonts/gavia/", import.meta.url);
+const stylesheetUrl = new URL("../../../packages/ui-kit/styles/fonts/gavia.css", import.meta.url);
+
+interface VariableFontFile {
+  file: string;
+  sha256: string;
+  bytes: number;
+  style: "normal" | "italic";
+  subset: "full" | "core";
+  unicodeRange: string;
+}
+
+/** Read the optional generated payload only after the canonical CSS opts into it. */
+export function gaviaVariableFontFiles(metadata: unknown): readonly VariableFontFile[] {
+  const manifest = metadata as {
+    family?: unknown; axis?: { tag?: unknown; minimum?: unknown; default?: unknown; maximum?: unknown }; files?: unknown;
+  } | null;
+  if (manifest?.family !== "Gavia Sans" || manifest.axis?.tag !== "wght"
+    || manifest.axis.minimum !== 100 || manifest.axis.default !== 400 || manifest.axis.maximum !== 700 || !Array.isArray(manifest.files)) {
+    throw new Error("Invalid Gavia variable-font manifest");
+  }
+  const suffixes = { full: "", core: "-Core" } as const;
+  const files = manifest.files as VariableFontFile[];
+  const names = new Set<string>();
+  for (const record of files) {
+    if (!record || !["normal", "italic"].includes(record.style)
+      || !Object.prototype.hasOwnProperty.call(suffixes, record.subset)
+      || typeof record.sha256 !== "string" || !/^[a-f0-9]{64}$/.test(record.sha256)
+      || !Number.isSafeInteger(record.bytes) || record.bytes <= 0 || typeof record.unicodeRange !== "string") {
+      throw new Error("Invalid Gavia variable-font file record");
+    }
+    const expected = "Gavia-Variable" + (record.style === "italic" ? "-Italic" : "") + suffixes[record.subset] + ".woff2";
+    if (record.file !== expected || names.has(record.file)) throw new Error("Unsafe or duplicate Gavia variable-font filename");
+    names.add(record.file);
+  }
+  if (names.size !== 4) throw new Error("Gavia variable-font payload must contain both styles, each with full and core files");
+  return files;
+}
+
+function variableFontAssets(css: string): { entries: { name: string; bytes: Buffer }[]; core?: string } {
+  if (!css.includes("Gavia-Variable")) return { entries: [] };
+  const manifestUrl = new URL("variable-manifest.json", fontRoot);
+  if (!existsSync(manifestUrl)) throw new Error("Variable-font CSS requires its generated manifest and payload");
+  const manifestBytes = readFileSync(manifestUrl);
+  const files = gaviaVariableFontFiles(JSON.parse(manifestBytes.toString("utf8")));
+  const entries = files.map((record) => {
+    const bytes = readFileSync(new URL(record.file, fontRoot));
+    if (bytes.length !== record.bytes || createHash("sha256").update(bytes).digest("hex") !== record.sha256) {
+      throw new Error("Variable font differs from its generated manifest: " + record.file);
+    }
+    return { name: record.file, bytes };
+  });
+  entries.push({ name: "variable-manifest.json", bytes: manifestBytes });
+  entries.push({ name: "VARIABLE-FONTLOG.txt", bytes: readFileSync(new URL("VARIABLE-FONTLOG.txt", fontRoot)) });
+  return { entries, core: files.find((record) => record.style === "normal" && record.subset === "core")!.file };
+}
 
 // Small deterministic ZIP writer: no archive dependency is shipped to the browser.
 function crc32(bytes: Buffer): number {
@@ -18,7 +76,7 @@ function crc32(bytes: Buffer): number {
   return (value ^ 0xffffffff) >>> 0;
 }
 
-export function createGaviaFontArchive(): Buffer {
+function createGaviaFontArchive(): Buffer {
   const manifest = JSON.parse(readFileSync(new URL("manifest.json", fontRoot), "utf8")) as {
     version: string;
     family: string;
@@ -33,7 +91,9 @@ export function createGaviaFontArchive(): Buffer {
     entries.push({ name: format.file, bytes });
   }
   for (const name of ["OFL.txt", "Onest-OFL.txt", "FONTLOG.txt"]) entries.push({ name, bytes: readFileSync(new URL(name, fontRoot)) });
-  const css = readFileSync(new URL("../../../packages/ui-kit/styles/fonts/gavia.css", import.meta.url), "utf8")
+  const sourceCss = readFileSync(stylesheetUrl, "utf8");
+  entries.push(...variableFontAssets(sourceCss).entries);
+  const css = sourceCss
     .split("../../fonts/gavia/").join("./");
   entries.push({ name: "gavia.css", bytes: Buffer.from(css) });
   entries.push({ name: "README.txt", bytes: Buffer.from([
@@ -99,6 +159,18 @@ export function createGaviaFontArchive(): Buffer {
 export function gaviaFontDownload(): Plugin {
   return {
     name: "gavia-font-download",
+    transformIndexHtml: {
+      order: "pre",
+      handler(_html, context) {
+        const { core } = variableFontAssets(readFileSync(stylesheetUrl, "utf8"));
+        if (!core) return;
+        const source = fileURLToPath(new URL(core, fontRoot));
+        const href = context.server
+          ? "/@fs/" + source.replace(/\\/g, "/")
+          : relative(dirname(context.filename), source).replace(/\\/g, "/");
+        return [{ tag: "link", attrs: { rel: "preload", as: "font", type: "font/woff2", crossorigin: "anonymous", href }, injectTo: "head" }];
+      }
+    },
     configureServer(server) {
       // Build on request so dev never serves a stale copy after font changes.
       server.middlewares.use((request, response, next) => {

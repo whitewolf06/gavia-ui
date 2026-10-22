@@ -15,7 +15,7 @@ describe("basic component behavior", () => {
   it("reports progress value and visual variant", () => {
     const wrapper = mount(WlProgress, {
       global,
-      props: { value: 65, variant: "ok", thin: true }
+      props: { value: 65, tone: "success", thin: true }
     });
     const root = wrapper.find('[data-wl="progress"]');
     expect(root.classes()).toContain("wl-progress--ok");

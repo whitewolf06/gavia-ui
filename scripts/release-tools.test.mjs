@@ -117,11 +117,15 @@ for (const prerelease of [false, true]) {
       assert.match(releaseNotes(result, kit.version), /A checked fix/);
       assert.match(readFileSync(join(fixture, "docs/migration-" + kit.version + ".md"), "utf8"), /TODO/);
       if (prerelease) {
+        assert.equal(existsSync(join(fixture, ".changeset/fixture.md")), false);
+        assert.match(readFileSync(join(fixture, ".changeset/pre/fixture.md"), "utf8"), /A checked fix/);
         const secondPreview = result.replace("## Unreleased\n\n", "## Unreleased\n\n- Editorial note for the second preview.\n\n");
         put("CHANGELOG.md", secondPreview);
         put(".changeset/second.md", '---\n"gavia-ui": patch\n---\n\nSecond checked fix.\n');
         run([wrapper]);
         assert.equal(JSON.parse(readFileSync(join(fixture, "package.json"), "utf8")).version, "0.9.2-beta.1");
+        assert.equal(existsSync(join(fixture, ".changeset/second.md")), false);
+        assert.match(readFileSync(join(fixture, ".changeset/pre/second.md"), "utf8"), /Second checked fix/);
         run([cli, "pre", "exit"]);
         run([wrapper]);
         assert.equal(JSON.parse(readFileSync(join(fixture, "package.json"), "utf8")).version, "0.9.2");
@@ -132,6 +136,9 @@ for (const prerelease of [false, true]) {
         assert.equal(stableNotes.match(/A checked fix/g).length, 1);
         assert.equal(stableNotes.match(/Second checked fix/g).length, 1);
         assert.match(releaseNotes(stable, "0.9.2-beta.0"), /A checked fix/);
+        assert.equal(existsSync(join(fixture, ".changeset/pre/fixture.md")), false);
+        assert.equal(existsSync(join(fixture, ".changeset/pre/second.md")), false);
+        assert.equal(existsSync(join(fixture, ".changeset/pre.json")), false);
       }
     });
   });

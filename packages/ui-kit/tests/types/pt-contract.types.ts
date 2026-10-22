@@ -33,18 +33,18 @@ export function ptConsumerTypes(): void {
 
   const multiple = {
     hiddenInput: { "aria-label": "Choose values" },
-    pcChip: {
+    chip: {
       root: { class: "consumer-chip" },
       label: { "data-chip-label": true },
       removeIcon: { "aria-label": "Remove" }
     },
-    pcFilter: { root: { placeholder: "Search", "data-filter": true } },
+    filter: { root: { placeholder: "Search", "data-filter": true } },
     option: ({ context }) => ({ "data-focused": context.focused, "data-selected": context.selected })
   } satisfies WlPtStrict<"multiselect">;
 
   const calendar = {
-    pcInputText: { root: { "aria-describedby": "date-help" } },
-    pcPrevButton: { root: { "aria-label": "Previous month" }, icon: { class: "previous-icon" } },
+    inputText: { root: { "aria-describedby": "date-help" } },
+    prevButton: { root: { "aria-label": "Previous month" }, icon: { class: "previous-icon" } },
     day: ({ context }) => {
       const inRange: boolean = context.inRange;
       const today: boolean = context.today;
@@ -55,9 +55,9 @@ export function ptConsumerTypes(): void {
 
   const tabs = {
     tabList: { "aria-label": "Settings" },
-    tabpanels: { root: { class: "consumer-panels" } },
-    tabpanel: { root: { "data-panel": "settings" } }
-  } satisfies WlPtStrict<"tablist">;
+    panels: { root: { class: "consumer-panels" } },
+    panel: { root: { "data-panel": "settings" } }
+  } satisfies WlPtStrict<"tabs">;
 
   const app = createWlPt({
     select: {
@@ -66,8 +66,8 @@ export function ptConsumerTypes(): void {
         return { class: { selected } };
       }
     },
-    autocomplete: { pcInputText: { root: { "aria-label": "Search" } } },
-    tabpanels: { root: { class: "app-panels" } }
+    autocomplete: { inputText: { root: { "aria-label": "Search" } } },
+    tabs: { panels: { root: { class: "app-panels" } } }
   });
   const config: WlConfigOptions = { pt: app };
   const strictConfig = { select, multiselect: multiple, datepicker: calendar } satisfies WlPtConfigStrict;
@@ -75,7 +75,7 @@ export function ptConsumerTypes(): void {
   // Existing dynamic records and arbitrary extension sections remain accepted by the open contract.
   const dynamic: Record<string, unknown> = { root: { "data-source": "dynamic" } };
   const open: WlPt<"select"> = dynamic;
-  const extended: WlPt<"multiselect"> = { pcChip: { customSection: { class: "extension" } } };
+  const extended: WlPt<"multiselect"> = { chip: { customSection: { class: "extension" } } };
   const customApp: WlPtConfig = { consumerWidget: { customSection: { "data-value": true } } };
   const legacyApp: Record<string, Record<string, WlPtAttributes>> = { select: { root: { class: "legacy" } } };
   const legacyConfig: WlPtConfig = legacyApp;
@@ -90,15 +90,25 @@ export function ptConsumerTypes(): void {
   // @ts-expect-error Strict section names detect misspelled option hooks.
   const wrongSection: WlPtStrict<"select"> = { optoin: { class: "typo" } };
   // @ts-expect-error Strict validation includes nested section names.
-  const wrongNested: WlPtStrict<"multiselect"> = { pcChip: { removeIocn: { class: "typo" } } };
+  const wrongNested: WlPtStrict<"multiselect"> = { chip: { removeIocn: { class: "typo" } } };
   // @ts-expect-error Known nested groups are objects; callbacks are resolved only at leaf sections.
-  const wrongGroup: WlPt<"multiselect"> = { pcChip: () => ({ root: { class: "ignored-at-runtime" } }) };
+  const wrongGroup: WlPt<"multiselect"> = { chip: () => ({ root: { class: "ignored-at-runtime" } }) };
   // @ts-expect-error Known sections accept attributes or attribute callbacks, not primitive values.
   const wrongValue: WlPt<"select"> = { option: "consumer-option" };
   // @ts-expect-error Selection context is boolean, not a selected item value.
   const wrongContext: WlPt<"select"> = { option: ({ context }: { context: { selected: string } }) => ({ class: context.selected }) };
   // @ts-expect-error Strict application configuration detects misspelled component names.
   const wrongComponent: WlPtConfigStrict = { multiselekt: multiple };
+  // @ts-expect-error Legacy component names were removed from the 1.0 typed contract.
+  const legacyComponent: WlPt<"datatable"> = {};
+  // @ts-expect-error Strict configuration no longer accepts legacy component aliases.
+  const legacyComponentConfig: WlPtConfigStrict = { inputtext: { root: {} } };
+  // @ts-expect-error Strict local configuration no longer accepts pc-prefixed aliases.
+  const legacyNested: WlPtStrict<"dialog"> = { pcCloseButton: { root: {} } };
+  // @ts-expect-error Tabs panels belong to the canonical panels/panel groups.
+  const legacyTabs: WlPtStrict<"tabs"> = { tabpanel: { root: {} } };
+  // @ts-expect-error Application panel configuration belongs inside tabs.
+  const legacyTabsConfig: WlPtConfigStrict = { tabpanels: { root: {} } };
   // @ts-expect-error Attribute event hooks retain their DOM event contract.
   const wrongHook: WlPtStrict<"select"> = { root: { onClick: (event: KeyboardEvent) => {
     void event.key;
@@ -106,5 +116,5 @@ export function ptConsumerTypes(): void {
 
   void [select, multiple, calendar, tabs, config, strictConfig, open, extended, customApp,
     legacyConfig, dynamicConfig, dynamicMerged, opaqueExtensions, declaredExtension, legacyCallback, wrongSection, wrongNested, wrongGroup,
-    wrongValue, wrongContext, wrongComponent, wrongHook];
+    wrongValue, wrongContext, wrongComponent, wrongHook, legacyComponent, legacyComponentConfig, legacyNested, legacyTabs, legacyTabsConfig];
 }

@@ -1,8 +1,8 @@
 import { type Component, defineAsyncComponent } from "vue";
 import { inputDocumentationAccessibility, inputDocumentationExamples } from "./inputs";
 import { showcaseDocumentationAccessibility, showcaseDocumentationExamples } from "./showcase";
-export interface ComponentDocumentationExample { title: string; description: string; sourceName: string }
-export const componentDocumentationExamples: Readonly<Record<string, ComponentDocumentationExample>> = {
+interface ComponentDocumentationExample { title: string; description: string; sourceName: string }
+const componentDocumentationExamples: Readonly<Record<string, ComponentDocumentationExample>> = {
   ...inputDocumentationExamples, ...showcaseDocumentationExamples
 };
 export const componentDocumentationAccessibility: Readonly<Record<string, readonly string[]>> = {

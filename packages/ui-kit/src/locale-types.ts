@@ -1,5 +1,5 @@
 import type { WlPluralForms } from "./utils/format";
-/** Built-in control text. Explicit component props retain priority over these defaults. */
+/** Built-in control text. Omitted values use English; explicit component text, including empty strings, wins. */
 export interface WlControlLocale {
   showBreadcrumbs?: string;
   dateRangePresets?: string;

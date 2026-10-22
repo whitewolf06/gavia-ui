@@ -15,6 +15,8 @@ interface TooltipState {
   timer: ReturnType<typeof setTimeout> | null;
   exitTimer: ReturnType<typeof setTimeout> | null;
   enterFrame: number | null;
+  repositionFrame: number | null;
+  listening: boolean;
   onTransitionEnd: ((event: TransitionEvent) => void) | null;
   phase: "enter" | "leave" | null;
   text: string;
@@ -29,9 +31,26 @@ interface TooltipState {
   onLeave: () => void;
   onKeydown: (event: KeyboardEvent) => void;
   onReposition: () => void;
+  hide: () => void;
 }
 const states = new WeakMap<HTMLElement, TooltipState>();
 let nextId = 0;
+
+function stopRepositioning(state: TooltipState): void {
+  if (state.repositionFrame !== null) cancelAnimationFrame(state.repositionFrame);
+  state.repositionFrame = null;
+  if (!state.listening) return;
+  window.removeEventListener("scroll", state.onReposition, true);
+  window.removeEventListener("resize", state.onReposition);
+  state.listening = false;
+}
+
+function startRepositioning(state: TooltipState): void {
+  if (state.listening) return;
+  window.addEventListener("scroll", state.onReposition, true);
+  window.addEventListener("resize", state.onReposition);
+  state.listening = true;
+}
 
 function applySection(element: HTMLElement, baseClass: string, attrs: Record<string, unknown>): void {
   element.className = normalizeClass([baseClass, attrs.class]);
@@ -123,14 +142,14 @@ function position(element: HTMLElement, state: TooltipState): void {
   state.node.style.top = `${Math.max(4, Math.min(y, window.innerHeight - tip.height - 4))}px`;
 }
 
-export const WlTooltip: Directive<HTMLElement, WlTooltipValue> = {
+export const WlTooltipDirective: Directive<HTMLElement, WlTooltipValue> = {
   mounted(element, binding) {
     const state: TooltipState = {
-      node: null, timer: null, exitTimer: null, enterFrame: null, onTransitionEnd: null,
+      node: null, timer: null, exitTimer: null, enterFrame: null, repositionFrame: null, listening: false, onTransitionEnd: null,
       phase: null, text: "", showDelay: 0, hideDelay: 0, motion: undefined, placement: "top",
       previousDescription: element.getAttribute("aria-describedby"),
       config: wlConfigForDirective(binding.instance), pt: undefined,
-      onEnter: () => {}, onLeave: () => {}, onKeydown: () => {}, onReposition: () => {}
+      onEnter: () => {}, onLeave: () => {}, onKeydown: () => {}, onReposition: () => {}, hide: () => {}
     };
     const clear = (): void => {
       if (state.timer)
@@ -153,12 +172,17 @@ export const WlTooltip: Directive<HTMLElement, WlTooltipValue> = {
     };
     const remove = (): void => {
       cancelTransition();
+      stopRepositioning(state);
       state.node?.remove();
       state.node = null;
       if (state.previousDescription === null)
         element.removeAttribute("aria-describedby");
       else
         element.setAttribute("aria-describedby", state.previousDescription);
+    };
+    state.hide = () => {
+      clear();
+      remove();
     };
     state.onEnter = () => {
       clear();
@@ -167,6 +191,8 @@ export const WlTooltip: Directive<HTMLElement, WlTooltipValue> = {
       if (state.node) {
         cancelTransition();
         restoreOverlayEntering(state.node);
+        position(element, state);
+        startRepositioning(state);
         return;
       }
       state.timer = setTimeout(() => {
@@ -188,6 +214,7 @@ export const WlTooltip: Directive<HTMLElement, WlTooltipValue> = {
         applyTooltipPt(state);
         element.setAttribute("aria-describedby", [state.previousDescription, node.id].filter(Boolean).join(" "));
         position(element, state);
+        startRepositioning(state);
         if (tooltipMotion(state)) {
           state.phase = "enter";
           node.classList.add("wl-tooltip-motion-enter");
@@ -217,6 +244,7 @@ export const WlTooltip: Directive<HTMLElement, WlTooltipValue> = {
           return;
         }
         state.phase = "leave";
+        stopRepositioning(state);
         markOverlayLeaving(node);
         node.classList.add("wl-tooltip-motion-leave");
         state.onTransitionEnd = (event) => {
@@ -228,13 +256,15 @@ export const WlTooltip: Directive<HTMLElement, WlTooltipValue> = {
       }, state.hideDelay);
     };
     state.onKeydown = (event) => {
-      if (event.key === "Escape") {
-        clear();
-
-        remove();
-      }
+      if (event.key === "Escape") state.hide();
     };
-    state.onReposition = () => position(element, state);
+    state.onReposition = () => {
+      if (!state.node || state.repositionFrame !== null) return;
+      state.repositionFrame = requestAnimationFrame(() => {
+        state.repositionFrame = null;
+        if (state.node) position(element, state);
+      });
+    };
     updateState(state, binding);
     states.set(element, state);
     element.addEventListener("mouseenter", state.onEnter);
@@ -242,37 +272,25 @@ export const WlTooltip: Directive<HTMLElement, WlTooltipValue> = {
     element.addEventListener("focus", state.onEnter);
     element.addEventListener("blur", state.onLeave);
     element.addEventListener("keydown", state.onKeydown);
-    window.addEventListener("scroll", state.onReposition, true);
-    window.addEventListener("resize", state.onReposition);
   },
   updated(element, binding) {
     const state = states.get(element);
     if (state) {
       updateState(state, binding);
-
-      position(element, state);
+      if (!state.text) state.hide();
+      else position(element, state);
     }
   },
   unmounted(element) {
     const state = states.get(element);
     if (!state)
       return;
-    if (state.timer)
-      clearTimeout(state.timer);
-    if (state.enterFrame !== null)
-      cancelAnimationFrame(state.enterFrame);
-    if (state.exitTimer)
-      clearTimeout(state.exitTimer);
-    if (state.node && state.onTransitionEnd)
-      state.node.removeEventListener("transitionend", state.onTransitionEnd);
-    state.node?.remove();
+    state.hide();
     element.removeEventListener("mouseenter", state.onEnter);
     element.removeEventListener("mouseleave", state.onLeave);
     element.removeEventListener("focus", state.onEnter);
     element.removeEventListener("blur", state.onLeave);
     element.removeEventListener("keydown", state.onKeydown);
-    window.removeEventListener("scroll", state.onReposition, true);
-    window.removeEventListener("resize", state.onReposition);
     states.delete(element);
   }
 };

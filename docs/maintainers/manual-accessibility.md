@@ -69,7 +69,7 @@ locale and theme; do not turn the entire table green from a single example.
 - Verify reduced motion and a second instance where IDs or live regions exist.
 
 Before accepting the full release, add focused results for the new
-CheckboxGroup/RadioGroup, WlTooltipComponent, Toolbar and TagsInput contracts;
+CheckboxGroup/RadioGroup, WlTooltip, Toolbar and TagsInput contracts;
 for tooltip content, include keyboard dismissal and a disabled trigger wrapper.
 The ten rows above establish a minimum protocol, not coverage of every public
 component or every consumer composition.

@@ -18,8 +18,18 @@
     },
     {
       "groupName": "TypeScript and Vue declarations",
-      "matchPackageNames": ["typescript", "vue-tsc"],
+      "matchPackageNames": ["typescript", "vue-tsc", "@vue/language-core"],
       "automerge": false
+    },
+    {
+      "description": "Vue language tools and API extraction require the JavaScript compiler API",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<7"
+    },
+    {
+      "description": "Hold the newer selector engine until grouped querySelectorAll preserves DOM order in overlay keyboard tests",
+      "matchPackageNames": ["jsdom"],
+      "allowedVersions": "<27"
     },
     {
       "groupName": "Playwright and browser accessibility",

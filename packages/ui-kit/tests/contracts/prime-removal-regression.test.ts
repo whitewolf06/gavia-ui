@@ -4,7 +4,7 @@ import { defineComponent, nextTick } from "vue";
 import {
   createWlPt, useWlConfirm, useWlToast, WlButton, WlConfig,
   WlConfirmationService, WlConfirmDialog, WlDatePicker, WlDialog, WlSelect,
-  WlToast, WlToastService, WlTooltip
+  WlToast, WlToastService, WlTooltipDirective
 } from "../../src";
 
 afterEach(() => {
@@ -20,7 +20,7 @@ describe("PrimeVue-free public behavior", () => {
     const wrapper = mount(Harness, {
       attachTo: document.body,
       global: {
-        directives: { "wl-tooltip": WlTooltip },
+        directives: { "wl-tooltip": WlTooltipDirective },
         plugins: [[WlConfig, { pt: { tooltip: {
           root: { "data-source": "app" }, text: { "data-text": "app" }, arrow: { "data-arrow": "app" }
         } } }]]

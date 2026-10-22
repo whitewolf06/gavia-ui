@@ -9,12 +9,12 @@ describe("WlPasswordInput", () => {
     expect(input.attributes("type")).toBe("password");
 
     const btn = wrapper.find(".wl-input-wrap__btn");
-    expect(btn.attributes("aria-label")).toBe("Показать пароль");
+    expect(btn.attributes("aria-label")).toBe("Show password");
     expect(btn.attributes("aria-pressed")).toBe("false");
 
     await btn.trigger("click");
     expect(input.attributes("type")).toBe("text");
-    expect(btn.attributes("aria-label")).toBe("Скрыть пароль");
+    expect(btn.attributes("aria-label")).toBe("Hide password");
     expect(btn.attributes("aria-pressed")).toBe("true");
 
     await btn.trigger("click");

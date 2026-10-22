@@ -60,7 +60,7 @@ function clear(): void {
           >{{ t("examples.search_0462") }} {{ search }}</WlTag>
           <WlTag
             v-if="status"
-            variant="blue"
+            color="blue"
             removable
             :remove-label="t('examples.remove_status_filter_0192')"
             @remove="status = null"

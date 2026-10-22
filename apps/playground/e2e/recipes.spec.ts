@@ -29,21 +29,24 @@ test.beforeEach(async ({ page }) => {
 test("state combinations change the real component and copied code; keyboard focus remains visible", async ({ page }) => {
   await selectComponent(page, "WlButton");
   const explorer = page.getByTestId("ds-explorer");
-  await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: variant", exact: true }), "danger");
+  await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: variant", exact: true }), "primary");
+  await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: tone", exact: true }), "danger");
   await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: size", exact: true }), "lg");
   await chooseDropdownOption(page, explorer.getByRole("combobox", { name: "Пример: density", exact: true }), "compact");
   await explorer.getByRole("checkbox", { name: "disabled", exact: true }).check();
   const button = page.getByTestId("ds-example-preview").getByRole("button", { name: "Добавить" });
   await expect(button).toBeDisabled();
   await expect(button).toHaveAttribute("data-size", "lg");
-  await expect(button).toHaveAttribute("data-variant", "danger");
+  await expect(button).toHaveAttribute("data-variant", "primary");
+  await expect(button).toHaveAttribute("data-tone", "danger");
   await page.evaluate(() => Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: async (text: string) => {
     document.documentElement.dataset.copied = text;
   } } }));
   await copyCodePanel(explorer);
   await expect(explorer.getByRole("status").last()).toHaveText("Код скопирован.");
   const copied = await page.locator("html").getAttribute("data-copied");
-  expect(copied).toContain('"variant":"danger"');
+  expect(copied).toContain('"variant":"primary"');
+  expect(copied).toContain('"tone":"danger"');
   expect(copied).toContain('"size":"lg"');
   expect(copied).toContain('"density":"compact"');
   expect(copied).toContain('"disabled":true');

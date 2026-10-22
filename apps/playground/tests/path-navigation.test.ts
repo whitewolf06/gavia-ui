@@ -2,6 +2,18 @@
 import { expect, it } from "vitest";
 import { createPlaygroundNavigationUrl, createPlaygroundPathUrl, parsePlaygroundRoute, playgroundBasePath } from "../src/navigation";
 
+it("keeps old tooltip bookmarks usable while writing the canonical component name", () => {
+  const route = { view: "docs", component: "WlTooltip" } as const;
+  expect(parsePlaygroundRoute("?view=docs&component=WlTooltipComponent")).toEqual(route);
+  expect(parsePlaygroundRoute("", "", "/gavia-ui/ru/docs/components/WlTooltipComponent/")).toEqual(route);
+  expect(parsePlaygroundRoute("?view=components", "#component-WlTooltipComponent")).toEqual(route);
+  const current = new URL("https://example.test/gavia-ui/?view=docs&component=WlTooltipComponent&lang=ru&theme=gavia");
+  expect(createPlaygroundNavigationUrl(current, { view: "docs", component: "WlTooltipComponent" }, "/gavia-ui/").href)
+    .toBe("https://example.test/gavia-ui/ru/docs/components/WlTooltip/?theme=gavia");
+  expect(createPlaygroundNavigationUrl(current, { view: "docs", component: "WlTooltipComponent" }, "./").searchParams.get("component"))
+    .toBe("WlTooltip");
+});
+
 it("round trips every page below the Pages directory and preserves preferences", () => {
   const current = new URL("https://example.test/gavia-ui/docs/components/WlInput/?theme=graphite&lang=ru#old");
   for (const route of [{ view: "home" }, { view: "font" }, { view: "system" }, { view: "project" },

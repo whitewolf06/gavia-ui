@@ -9,6 +9,7 @@ import {
   WlAutocomplete,
   WlConfirmationService,
   WlConfirmDialog,
+  wlLocaleRu,
   WlMultiSelect
 } from "../../src";
 
@@ -19,7 +20,7 @@ const global: GlobalMountOptions = {
 };
 
 const confirmGlobal: GlobalMountOptions = {
-  plugins: [[WlConfig, { pt: createWlPt() }], WlConfirmationService]
+  plugins: [[WlConfig, { pt: createWlPt(), locale: wlLocaleRu }], WlConfirmationService]
 };
 
 // PrimeVue overlay positioning schedules timers after show/hide;
@@ -147,7 +148,7 @@ describe("WlAutocomplete", () => {
     });
     const dropdown = wrapper.find(".wl-autocomplete__dropdown");
     expect(dropdown.exists()).toBe(true);
-    expect(dropdown.attributes("aria-label")).toBe("Показать варианты");
+    expect(dropdown.attributes("aria-label")).toBe("Show options");
   });
 
   it("merges a custom dropdown label with consumer pt options", () => {

@@ -9,16 +9,14 @@ import type { WlPopoverAlign, WlPopoverExpose, WlPopoverPlacement, WlPopoverTrig
 import type { WlPt } from "../pt-types";
 import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
 import { useAnchoredOverlay } from "../utils/anchoredOverlay";
-import { useDismissible } from "../utils/overlayProps";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import { useWlId } from "../utils/useWlId";
 
 defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<{
   /** Close by clicking outside the popover.
-   * @deprecated Use dismissible. */
-  dismissable?: boolean;
-  /** Allow the surface to close through its documented dismissal interactions. */
+   * @default true
+   */
   dismissible?: boolean;
   /**
    * Preferred overlay side relative to its anchor.
@@ -54,7 +52,7 @@ const props = withDefaults(defineProps<{
   /** Attributes of internal Gavia UI elements. */
   pt?: WlPt<"popover">;
 }>(), {
-  dismissable: true, dismissible: undefined, closeOnEscape: true, motion: undefined,
+  dismissible: true, closeOnEscape: true, motion: undefined,
   placement: "auto", align: "start", arrow: false, trigger: "manual"
 });
 const emit = defineEmits<{
@@ -72,9 +70,8 @@ defineSlots<{
 const attrs = useAttrs();
 const section = useWlPt("popover", computed(() => props.pt));
 const motion = useWlMotion(computed(() => props.motion));
-const dismissible = useDismissible("WlPopover", computed(() => props.dismissible), computed(() => props.dismissable));
 const { visible, anchor, panel, style, arrowStyle, placement: resolvedPlacement, toggle, show, hide } = useAnchoredOverlay({
-  dismissible: () => dismissible.value,
+  dismissible: () => props.dismissible,
   placement: () => props.placement,
   align: () => props.align,
   offset: () => props.arrow ? 8 : 4,

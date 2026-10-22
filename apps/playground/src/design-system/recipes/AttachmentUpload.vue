@@ -75,13 +75,13 @@ function cancel(): void {
       show-value
       :aria-label="t('examples.uploading_attachments_0148')"
     />
-    <WlAlert v-if="outcome === 'error'" variant="err" :title="t('examples.upload_incomplete_0155')">
+    <WlAlert v-if="outcome === 'error'" tone="danger" :title="t('examples.upload_incomplete_0155')">
       {{ t("examples.the_files_remain_in_the_list_0156") }}
       <template #action>
         <WlButton size="sm" @click="retry">{{ t("examples.retry_upload_0157") }}</WlButton>
       </template>
     </WlAlert>
-    <WlAlert v-if="outcome === 'success'" variant="ok" :title="t('examples.attachments_ready_0158')">
+    <WlAlert v-if="outcome === 'success'" tone="success" :title="t('examples.attachments_ready_0158')">
       {{ files.length }} {{ t("examples.files_processed_0159") }}
     </WlAlert>
     <div class="wl-inline" data-space="sm">

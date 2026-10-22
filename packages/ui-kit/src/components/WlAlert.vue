@@ -7,18 +7,15 @@
  */
 import { computed } from "vue";
 import type { WlPt } from "../pt-types";
-import type { WlAlertVariant, WlIconName, WlTone } from "../types";
-import { useWlLocaleText, useWlPt } from "../config";
-import { useWlTone } from "../utils/tone";
+import type { WlIconName, WlTone } from "../types";
+import { useWlLocale, useWlPt } from "../config";
 import WlIcon from "./WlIcon.vue";
 const props = withDefaults(
   defineProps<{
     /**
-     * Notification type.
+     * Semantic notification color.
      * @default "info"
      */
-    variant?: WlAlertVariant;
-    /** Semantic color role; takes precedence over supported legacy color aliases. */
     tone?: WlTone;
     /** Title. */
     title?: string;
@@ -28,8 +25,8 @@ const props = withDefaults(
      */
     closable?: boolean;
     /**
-     * Close button aria-label.
-     * @default "Закрыть"
+     * Close button aria-label; uses locale.close when omitted or undefined (English: Close).
+     * @default undefined
      */
     closeLabel?: string;
     /** Override live announcements; off renders a static message. */
@@ -38,9 +35,8 @@ const props = withDefaults(
     pt?: WlPt<"alert">;
   }>(),
   {
-    variant: "info",
-    closable: false,
-    closeLabel: "Закрыть"
+    tone: "info",
+    closable: false
   }
 );
 
@@ -49,13 +45,13 @@ const emit = defineEmits<{
   (e: "close", event: MouseEvent): void;
 }>();
 
-const localeText = useWlLocaleText();
+const locale = useWlLocale();
+const closeLabel = computed(() => props.closeLabel ?? locale.value.close);
 const section = useWlPt("alert", computed(() => props.pt));
-const tone = useWlTone({ component: "WlAlert", tone: () => props.tone, variant: () => props.variant,
-  aliases: { info: "info", ok: "success", warn: "warning", err: "danger" }, fallback: "info" });
-const visualVariant = computed<WlAlertVariant>(() => ({ neutral: "info", accent: "info", info: "info", success: "ok", warning: "warn", danger: "err" } as const)[tone.value]);
+const tone = computed(() => props.tone);
+const visualVariant = computed(() => ({ neutral: "info", accent: "info", info: "info", success: "ok", warning: "warn", danger: "err" } as const)[tone.value]);
 
-const ICONS: Record<WlAlertVariant, WlIconName> = {
+const ICONS: Record<"info" | "ok" | "warn" | "err", WlIconName> = {
   info: "info",
   ok: "check",
   warn: "warn",
@@ -77,7 +73,7 @@ const liveRole = computed(() => {
     :class="`wl-alert--${visualVariant}`"
     :role="liveRole"
     data-wl="alert"
-    :data-variant="variant"
+    :data-variant="visualVariant"
     :data-tone="tone"
   >
     <slot name="icon" :tone="tone"><WlIcon
@@ -96,7 +92,7 @@ const liveRole = computed(() => {
       v-bind="section('closeButton')"
       type="button"
       class="wl-alert__close"
-      :aria-label="localeText('closeLabel', closeLabel, 'close')"
+      :aria-label="closeLabel"
       @click="emit('close', $event)"
     >
       <WlIcon v-bind="section('closeIcon')" name="x" :size="13" />

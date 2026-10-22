@@ -33,6 +33,6 @@ const sortRows: WlTableSortFn<MaterialRow> = (value, order) => [...value].sort((
       :sort-fn="sortRows"
       :pt="{ root: { style: { overflowX: 'auto' } } }"
       v-bind="preview"
-    ><template #cell-status="{ value }"><WlPill variant="info" :label="String(value)" /></template></WlTable>
+    ><template #cell-status="{ value }"><WlPill tone="info" :label="String(value)" /></template></WlTable>
   </div>
 </template>

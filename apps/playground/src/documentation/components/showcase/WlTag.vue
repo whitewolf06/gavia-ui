@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlTag, type WlTagVariant } from "gavia-ui";
+import { WlButton, WlTag, type WlTagColor } from "gavia-ui";
 import { nextTick, ref } from "vue";
-const labels = { gray: t("examples.default_0604"), blue: t("examples.release_0605"), green: t("examples.done_0047"), amber: t("examples.in_progress_0066"), red: t("examples.overdue_0606") } satisfies Record<WlTagVariant, string>;
+const labels = { gray: t("examples.default_0604"), blue: t("examples.release_0605"), green: t("examples.done_0047"), amber: t("examples.in_progress_0066"), red: t("examples.overdue_0606") } satisfies Record<WlTagColor, string>;
 const tags = ref([t("examples.design_0079"), t("examples.development_0080"), t("examples.review_0129")]);
 const controls = ref<HTMLElement | null>(null);
 async function remove(tag: string): Promise<void> {
@@ -16,12 +16,12 @@ async function remove(tag: string): Promise<void> {
 <template>
   <div class="wl-stack" data-space="lg">
     <div class="wl-inline" data-space="sm">
-      <WlTag v-for="(label, variant) in labels" :key="variant" :variant="variant">{{ label }}</WlTag>
+      <WlTag v-for="(label, color) in labels" :key="color" :color="color">{{ label }}</WlTag>
     </div>
     <div ref="controls" class="wl-inline" data-space="sm"><WlTag
                                                             v-for="tag in tags"
                                                             :key="tag"
-                                                            variant="blue"
+                                                            color="blue"
                                                             removable
                                                             :remove-label="t('examples.remove_tag_0607') + tag"
                                                             @remove="remove(tag)"

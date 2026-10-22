@@ -6,7 +6,7 @@ export type { WlLocale, WlLocaleInput, WlResolvedLocale } from "./locale-types";
 type WlNormalizedLocale = WlResolvedLocale & Required<WlControlLocale>;
 
 /**
- * Russian locale for Gavia UI controls. Applied by default and overridable per app:
+ * Russian locale for Gavia UI controls. Select it explicitly for each application:
  *   app.use(WlConfig, { locale: wlLocaleRu })
  */
 export const wlLocaleRu: WlNormalizedLocale = {
@@ -147,7 +147,7 @@ export const wlLocaleRu: WlNormalizedLocale = {
   opensInNewTab: "Откроется в новой вкладке"
 };
 
-/** English locale, selected explicitly through WlConfig.locale. */
+/** Default English fallback for Gavia UI controls; WlConfig.locale overrides it per app. */
 export const wlLocaleEn: WlNormalizedLocale = {
   showBreadcrumbs: "Show full path",
   dateRangePresets: "Date range presets",
@@ -384,18 +384,28 @@ function isNames(value: unknown, count: number): value is readonly string[] {
     && Array.from(value).every((item: unknown) => typeof item === "string");
 }
 
-/** Ignore undefined or invalid known values, preserving defaults and application extensions. */
-export function normalizeWlLocale(input?: WlLocaleInput, base: WlResolvedLocale = wlLocaleRu): WlNormalizedLocale {
+function isPluralMessage(value: unknown): value is NonNullable<WlControlLocale["selectedItems"]> {
+  if (typeof value === "string") return true;
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const forms = value as Record<string, unknown>;
+  return typeof forms.other === "string" && Object.values(forms).every((form) => typeof form === "string");
+}
+
+/** Resolve partial locale input against English, or an explicit base, preserving application extensions. */
+export function normalizeWlLocale(input?: WlLocaleInput, base: WlResolvedLocale = wlLocaleEn): WlNormalizedLocale {
   const source: WlLocaleInput = input && typeof input === "object" && !Array.isArray(input) ? input : {};
-  const normalizedBase: WlNormalizedLocale = { ...wlLocaleRu, ...base };
+  const normalizedBase: WlNormalizedLocale = { ...wlLocaleEn, ...base };
   for (const key of controlTextKeys) {
     if (typeof normalizedBase[key] !== "string")
-      normalizedBase[key] = wlLocaleRu[key];
+      normalizedBase[key] = wlLocaleEn[key];
+  }
+  for (const key of ["selectedItems", "resultsFound"] as const) {
+    if (!isPluralMessage(normalizedBase[key])) normalizedBase[key] = wlLocaleEn[key];
   }
   try {
-    normalizedBase.localeCode = Intl.getCanonicalLocales(normalizedBase.localeCode)[0] ?? wlLocaleRu.localeCode;
+    normalizedBase.localeCode = Intl.getCanonicalLocales(normalizedBase.localeCode)[0] ?? wlLocaleEn.localeCode;
   } catch {
-    normalizedBase.localeCode = wlLocaleRu.localeCode;
+    normalizedBase.localeCode = wlLocaleEn.localeCode;
   }
   const result: WlNormalizedLocale = {
     ...normalizedBase,
@@ -403,8 +413,7 @@ export function normalizeWlLocale(input?: WlLocaleInput, base: WlResolvedLocale 
   };
   for (const key of ["selectedItems", "resultsFound"] as const) {
     const value = source[key];
-    if (typeof value === "string" || (value && typeof value === "object" && typeof value.other === "string"
-      && Object.values(value).every((form) => typeof form === "string")))
+    if (isPluralMessage(value))
       result[key] = value;
   }
   const firstDay = source.firstDayOfWeek;

@@ -20,7 +20,7 @@ const query = ref(t("examples.archive_0430"));
       </template>
     </WlEmpty>
     <div v-else class="wl-inline" data-space="sm">
-      <WlTag variant="green">{{ t("examples.first_material_added_0433") }}</WlTag>
+      <WlTag color="green">{{ t("examples.first_material_added_0433") }}</WlTag>
       <WlButton size="sm" variant="ghost" @click="created = false">{{ t("examples.clear_local_list_0434") }}</WlButton>
     </div>
     <WlEmpty

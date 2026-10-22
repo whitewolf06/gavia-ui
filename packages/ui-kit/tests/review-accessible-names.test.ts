@@ -2,6 +2,7 @@ import { mount } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, h, nextTick, ref } from "vue";
 import { WlBadge, WlConfig, WlIconButton, wlLocaleEn, WlProgress } from "../src";
+import RawIconButton from "../src/components/WlIconButton.vue";
 afterEach(() => vi.restoreAllMocks());
 
 describe("accessible action names and badge descriptions", () => {
@@ -15,7 +16,7 @@ describe("accessible action names and badge descriptions", () => {
   });
   it("warns for unresolved label references and checks a slot that becomes empty", async () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-    const unresolved = mount(WlIconButton, { props: { icon: "plus" }, attrs: { "aria-labelledby": "missing-label" } });
+    const unresolved = mount(RawIconButton, { props: { icon: "plus" }, attrs: { "aria-labelledby": "missing-label" } });
     await nextTick();
     expect(warn).toHaveBeenCalledTimes(1);
     unresolved.unmount();

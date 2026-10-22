@@ -38,7 +38,7 @@ function save(): void {
       </template>
       <template #meta>
         <div class="wl-inline" data-space="sm">
-          <WlTag variant="green">{{ t("examples.published_0165") }}</WlTag>
+          <WlTag color="green">{{ t("examples.published_0165") }}</WlTag>
           <WlAvatar
             :label="t('examples.am_0013')"
             :size="24"
@@ -49,7 +49,7 @@ function save(): void {
       </template>
       <template #actions><WlButton @click="edit">{{ t("examples.edit_description_0168") }}</WlButton></template>
     </WlPageHeader>
-    <WlAlert v-if="saved" variant="ok" :title="t('examples.description_saved_0169')">{{ t("examples.material_updated_0170") }}</WlAlert>
+    <WlAlert v-if="saved" tone="success" :title="t('examples.description_saved_0169')">{{ t("examples.material_updated_0170") }}</WlAlert>
     <WlTabs
       v-model="tab"
       :items="[

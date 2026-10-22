@@ -30,6 +30,75 @@ const genericModelRefinements: Readonly<Record<string, { previous: string; curre
   WlRadio: { previous: "unknown", current: "TValue | undefined" }
 };
 
+// Fixed 1.0 migrations only. Check both sides before projecting the current
+// metadata back to 0.3; every other field remains subject to the frozen contract.
+const tones = ["neutral", "accent", "info", "success", "warning", "danger"];
+const reviewedPropMigrations: ReadonlyArray<{
+  component: string;
+  previous: Record<string, unknown> & { name: string };
+  current: Record<string, unknown> & { name: string };
+}> = [
+  {
+    component: "WlButton",
+    previous: { name: "variant", type: "enum", default: "secondary", values: [
+      "primary", "secondary", "ghost", "soft", "danger", "danger-quiet", "soft-danger", "link"
+    ] },
+    current: { name: "variant", type: "enum", default: "secondary", values: [
+      "primary", "secondary", "ghost", "soft", "link"
+    ] }
+  },
+  ...[
+    ["WlAlert", "info", ["info", "ok", "warn", "err"], "info"],
+    ["WlBadge", "accent", ["gray", "accent", "success", "warn", "danger"], "accent"],
+    ["WlPill", "neutral", ["neutral", "info", "ok", "warn", "err"], "neutral"],
+    ["WlProgress", "default", ["default", "ok"], "accent"]
+  ].map(([component, previousDefault, values, currentDefault]) => ({
+    component: component as string,
+    previous: { name: "variant", type: "enum", default: previousDefault, values },
+    current: { name: "tone", type: "enum", default: currentDefault, values: tones }
+  })),
+  {
+    component: "WlTag",
+    previous: { name: "variant", type: "enum", default: "gray", values: ["gray", "blue", "green", "amber", "red"] },
+    current: { name: "color", type: "enum", default: "gray", values: ["gray", "blue", "green", "amber", "red"] }
+  },
+  ...(["WlDialog", "WlDrawer", "WlPopover"] as const).map((component) => ({
+    component,
+    previous: { name: "dismissable", type: "boolean", default: component !== "WlDialog" },
+    current: { name: "dismissible", type: "boolean", default: component !== "WlDialog" }
+  })),
+  ...[
+    ["WlPasswordInput", "placeholder", "Пароль"],
+    ["WlNumberInput", "decrementLabel", "Уменьшить"],
+    ["WlNumberInput", "incrementLabel", "Увеличить"],
+    ["WlAutocomplete", "dropdownLabel", "Показать варианты"],
+    ["WlDatePicker", "placeholder", "дд.мм.гггг"],
+    ["WlColorPicker", "paletteLabel", "Палитра"],
+    ["WlColorPicker", "inputLabel", "HEX-код цвета"],
+    ["WlTable", "emptyMessage", "Нет данных"],
+    ["WlTag", "removeLabel", "Удалить"],
+    ["WlFilterBar", "ariaLabel", "Фильтры"],
+    ["WlFilterBar", "toggleLabel", "Фильтры"],
+    ["WlFilterBar", "panelTitle", "Фильтры"],
+    ["WlFilterBar", "clearLabel", "Сбросить"],
+    ["WlFilterBar", "applyLabel", "Применить"],
+    ["WlFilterBar", "closeLabel", "Закрыть фильтры"],
+    ["WlSidebar", "ariaLabel", "Основная навигация"],
+    ["WlSidebar", "pinLabel", "Закрепить панель"],
+    ["WlSidebar", "unpinLabel", "Открепить панель"],
+    ["WlCommandPalette", "placeholder", "Поиск или переход…"],
+    ["WlCommandPalette", "emptyText", "Ничего не найдено"],
+    ["WlCommandPalette", "loadingText", "Поиск…"],
+    ["WlCommandPalette", "ariaLabel", "Командная палитра"],
+    ["WlAlert", "closeLabel", "Закрыть"],
+    ["WlSpinner", "label", "Загрузка"]
+  ].map(([component, name, previousDefault]) => ({
+    component: component!,
+    previous: { name: name!, type: "string", default: previousDefault },
+    current: { name: name!, type: "string" }
+  }))
+];
+
 const componentsIndex = import.meta.glob<string>("../../src/components/index.ts", {
   eager: true,
   query: "?raw",
@@ -51,7 +120,7 @@ describe("component public contract", () => {
     }
   });
 
-  it("preserves legacy 0.3 metadata with the exact reviewed generic model refinements", () => {
+  it("preserves legacy 0.3 metadata with exact reviewed generic and 1.0 migrations", () => {
     const current = JSON.parse(JSON.stringify(wlManifest, (key, value) =>
       key === "description" || key === "typescriptType" ? undefined : value
     )) as typeof baseline;
@@ -76,9 +145,27 @@ describe("component public contract", () => {
       expect(componentSources[`../../src/components/${name}.vue`], `${name}: generic implementation missing`)
         .toMatch(/<script[^>]+\bgeneric=/);
     }
+    for (const migration of reviewedPropMigrations) {
+      const original = baseline.find((entry) => entry.name === migration.component)!;
+      const entry = current.find((candidate) => candidate.name === migration.component)!;
+      const label = `${migration.component}.${migration.previous.name}`;
+      expect(original.props.find((prop) => prop.name === migration.previous.name), `${label}: frozen baseline changed`)
+        .toEqual(migration.previous);
+      expect(entry.props.find((prop) => prop.name === migration.current.name), `${label}: reviewed 1.0 contract changed`)
+        .toEqual(migration.current);
+    }
+    for (const migration of reviewedPropMigrations.filter((change) => change.previous.name !== change.current.name)) {
+      const entry = current.find((candidate) => candidate.name === migration.component)!;
+      expect(entry.props.find((prop) => prop.name === migration.previous.name), `${migration.component}: legacy alias remains`)
+        .toBeUndefined();
+    }
     for (const original of baseline) {
       const entry = current.find((candidate) => candidate.name === original.name)!;
       const props = original.props.map((previous) => {
+        const migration = reviewedPropMigrations.find((candidate) =>
+          candidate.component === original.name && candidate.previous.name === previous.name
+        );
+        if (migration) return migration.previous;
         const actual = entry.props.find((prop) => prop.name === previous.name);
         expect(actual, `${entry.name}.${previous.name}: original prop removed`).toBeDefined();
         const comparable = { ...actual } as Record<string, unknown>;

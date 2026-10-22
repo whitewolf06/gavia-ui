@@ -2,9 +2,8 @@ import type { Plugin } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-/// <reference types="vitest/config" />
-import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
+import { defineConfig } from "vitest/config";
 import { normalizeDeclarationSpecifiers } from "../../scripts/normalize-declarations.mjs";
 import { wlManifest } from "./src/manifest";
 
@@ -31,6 +30,7 @@ export default defineConfig({
   plugins: [
     vue(),
     dts({
+      processor: "vue",
       entryRoot: "src",
       include: ["src/**/*.ts", "src/**/*.vue"],
       exclude: ["tests/**", "**/*.test.ts", "vite.config.ts"],
@@ -53,14 +53,15 @@ export default defineConfig({
       formats: ["es"],
       fileName: (_format, entryName) => `${entryName}.js`
     },
-    rollupOptions: {
+    rolldownOptions: {
       external: [/^vue($|\/)/]
     }
   },
   test: {
     environment: "jsdom",
     maxWorkers: 4,
-    minWorkers: 1,
+    // Preserve the existing fixture lifecycle while migrating the runner.
+    clearMocks: false,
     include: ["tests/**/*.test.{ts,mjs}"],
     setupFiles: ["tests/setup.ts"],
     coverage: {

@@ -54,10 +54,14 @@ test.afterEach(async ({ page }) => {
 test("button comparisons cover manifest variants and sizes, and every copied example is its canonical SFC", async ({ page, baseURL }) => {
   await openDocumentation(page, baseURL);
   const variants = preview(page, "variants");
-  const variantButtons = variants.locator('button[data-wl="button"]');
+  const variantButtons = variants.locator('button[data-wl="button"]:not([data-tone="danger"])');
   await expect(variantButtons).toHaveCount(buttonManifest.props.find((prop) => prop.name === "variant")!.values!.length);
   expect(await variantButtons.evaluateAll((buttons) => buttons.map((button) => button.getAttribute("data-variant"))))
     .toEqual(buttonManifest.props.find((prop) => prop.name === "variant")!.values);
+  const dangerButtons = variants.locator('button[data-wl="button"][data-tone="danger"]');
+  await expect(dangerButtons).toHaveCount(3);
+  expect(await dangerButtons.evaluateAll((buttons) => buttons.map((button) => button.getAttribute("data-variant"))))
+    .toEqual(["primary", "ghost", "soft"]);
   await variants.getByRole("button", { name: "Создать", exact: true }).click();
   await expect(variants.getByRole("status")).toHaveText("Последнее действие: Создать");
 

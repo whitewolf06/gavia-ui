@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, h, nextTick, ref } from "vue";
-import { useWlAnnouncer, useWlClipboard, useWlControllable, useWlDisclosure, useWlHotkey, useWlMediaQuery, useWlScrollLock, useWlTheme, wlThemeInitScript } from "../src/composables";
+import { useWlAnnouncer, useWlBreakpoint, useWlClipboard, useWlControllable, useWlDisclosure, useWlHotkey, useWlMediaQuery, useWlScrollLock, useWlTheme, wlThemeInitScript } from "../src/composables";
 import { useWlResultsAnnouncement } from "../src/composables/useWlResultsAnnouncement";
 import { WlConfig } from "../src/config";
 import { wlLocaleEn } from "../src/locale";
@@ -33,6 +33,49 @@ describe("public composable lifecycle", () => {
     expect(remove).toHaveBeenCalledWith("change", expect.any(Function));
   });
 
+  it("preserves the explicit media fallback when the browser cannot observe a query", () => {
+    vi.stubGlobal("matchMedia", undefined);
+    const wrapper = mount(defineComponent({ setup() {
+      const matches = useWlMediaQuery("(prefers-contrast: more)", true);
+      return () => h("span", String(matches.value));
+    } }));
+    try {
+      expect(wrapper.text()).toBe("true");
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
+  it("observes all public breakpoints independently and releases each listener on unmount", async () => {
+    const media = new Map<string, MediaQueryList>();
+    vi.stubGlobal("matchMedia", vi.fn((query: string) => {
+      const entry = new EventTarget() as MediaQueryList;
+      Object.assign(entry, { matches: query === "(min-width: 640px)" });
+      vi.spyOn(entry, "removeEventListener");
+      media.set(query, entry);
+      return entry;
+    }));
+    const wrapper = mount(defineComponent({ setup() {
+      const breakpoints = useWlBreakpoint();
+      return () => h("span", `${breakpoints.sm.value}/${breakpoints.md.value}/${breakpoints.lg.value}`);
+    } }));
+    try {
+      expect([...media.keys()]).toEqual(["(min-width: 640px)", "(min-width: 900px)", "(min-width: 1200px)"]);
+      await nextTick();
+      expect(wrapper.text()).toBe("true/false/false");
+      const medium = media.get("(min-width: 900px)")!;
+      Object.assign(medium, { matches: true });
+      medium.dispatchEvent(new Event("change"));
+      await nextTick();
+      expect(wrapper.text()).toBe("true/true/false");
+    } finally {
+      wrapper.unmount();
+    }
+    for (const entry of media.values()) {
+      expect(entry.removeEventListener).toHaveBeenCalledWith("change", expect.any(Function));
+    }
+  });
+
   it("switches themes, persists preference and follows system changes", async () => {
     const dark = new EventTarget() as MediaQueryList;
     Object.assign(dark, { matches: false });
@@ -54,6 +97,37 @@ describe("public composable lifecycle", () => {
     expect(document.documentElement.dataset.wlTheme).toBe("gavia-dark");
     expect(localStorage.getItem("review-theme")).toBe("system");
     wrapper.unmount();
+  });
+
+  it("finishes theme transitions, transfers them to a new target and cancels pending cleanup on unmount", async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal("matchMedia", () => Object.assign(new EventTarget(), { matches: false }) as MediaQueryList);
+    const first = document.createElement("section");
+    const second = document.createElement("section");
+    const target = ref(first);
+    let api!: ReturnType<typeof useWlTheme>;
+    const wrapper = mount(defineComponent({ setup() {
+      api = useWlTheme({ preference: "light", transition: true, target: () => target.value });
+      return () => h("div");
+    } }));
+    try {
+      expect(first.dataset.wlTheme).toBe("gavia");
+      expect(first.classList.contains("wl-theme-transition")).toBe(true);
+      await vi.advanceTimersByTimeAsync(200);
+      expect(first.classList.contains("wl-theme-transition")).toBe(false);
+      api.setPreference("dark");
+      expect(first.classList.contains("wl-theme-transition")).toBe(true);
+      target.value = second;
+      api.setPreference("light");
+      expect(first.classList.contains("wl-theme-transition")).toBe(false);
+      expect(second.dataset.wlTheme).toBe("gavia");
+      expect(second.classList.contains("wl-theme-transition")).toBe(true);
+      expect(document.documentElement.hasAttribute("data-wl-theme")).toBe(false);
+    } finally {
+      wrapper.unmount();
+    }
+    expect(second.classList.contains("wl-theme-transition")).toBe(false);
+    expect(vi.getTimerCount()).toBe(0);
   });
 
   it("initializes a theme despite blocked storage and escapes inline script terminators", () => {

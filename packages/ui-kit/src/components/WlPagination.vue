@@ -39,7 +39,7 @@ const props = withDefaults(
      */
     disabled?: boolean;
     /** Attributes of internal Gavia UI elements. */
-    pt?: WlPt<"paginator">;
+    pt?: WlPt<"pagination">;
   }>(),
   {
     page: 1,
@@ -58,7 +58,7 @@ const emit = defineEmits<{
 
 const locale = useWlLocale();
 
-const section = useWlPt("paginator", computed(() => props.pt));
+const section = useWlPt("pagination", computed(() => props.pt));
 
 type PagerItem = number | "gap";
 const total = computed(() => Math.max(0, Math.floor(Number.isFinite(props.total) ? props.total! : 0)));

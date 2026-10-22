@@ -2,6 +2,7 @@ import { mount } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, h, nextTick, ref } from "vue";
 import { WlAutocomplete, WlMultiSelect, WlSelect } from "../src";
+import { wlLocaleEn } from "../src/locale";
 
 const options = [
   { id: 1, label: "Alpha", disabled: true },
@@ -101,7 +102,7 @@ it.each([WlSelect<string>, WlAutocomplete<string, false>])("clears a single sele
     props: { options: ["One"], suggestions: ["One"], modelValue: "One", clearable: true, motion: false }
   });
   try {
-    const clear = wrapper.get('button[aria-label="Очистить"]');
+    const clear = wrapper.get(`button[aria-label="${wlLocaleEn.clear}"]`);
     await clear.trigger("click");
     await nextTick();
     expect(wrapper.emitted("update:modelValue")).toEqual([[null]]);

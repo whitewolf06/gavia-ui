@@ -5,18 +5,15 @@
  */
 import { computed } from "vue";
 import type { WlPt } from "../pt-types";
-import type { WlPillVariant, WlTone } from "../types";
+import type { WlTone } from "../types";
 import { useWlPt } from "../config";
-import { useWlTone } from "../utils/tone";
 
 const props = withDefaults(
   defineProps<{
     /**
-     * Colour variant.
+     * Semantic status color.
      * @default "neutral"
      */
-    variant?: WlPillVariant;
-    /** Semantic color role; takes precedence over supported legacy color aliases. */
     tone?: WlTone;
     /**
      * Display a compact status dot.
@@ -29,14 +26,11 @@ const props = withDefaults(
     pt?: WlPt<"pill">;
   }>(),
   {
-    variant: "neutral",
+    tone: "neutral",
     dot: true
   }
 );
-const tone = useWlTone({
-  component: "WlPill", tone: () => props.tone, variant: () => props.variant,
-  aliases: { neutral: "neutral", info: "info", ok: "success", warn: "warning", err: "danger" }, fallback: "neutral"
-});
+const tone = computed(() => props.tone);
 const legacyVariant = computed(() => ({ neutral: "neutral", accent: "info", info: "info", success: "ok", warning: "warn", danger: "err" })[tone.value]);
 const section = useWlPt("pill", computed(() => props.pt));
 </script>

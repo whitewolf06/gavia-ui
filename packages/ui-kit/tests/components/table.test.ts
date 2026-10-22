@@ -63,7 +63,7 @@ describe("WlTable", () => {
     const wrapper = mount(WlTable<WlTableRow>, { global, props: { value: [], columns } });
     const empty = wrapper.find(".wl-table__empty-cell");
     expect(empty.exists()).toBe(true);
-    expect(empty.text()).toBe("Нет данных");
+    expect(empty.text()).toBe("No data");
   });
 
   it("honors a custom emptyMessage", () => {

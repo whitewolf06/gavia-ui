@@ -94,4 +94,57 @@ describe("WlColorPicker", () => {
     expect(document.activeElement).toBe(swatches[2]!.element);
     wrapper.unmount();
   });
+
+  it("clears an invalid draft without emitting and accepts the next valid swatch", async () => {
+    const wrapper = mount(WlColorPicker, { global, props: { modelValue: "#112233", swatches: ["not-a-color", "#abc"] } });
+    try {
+      const input = wrapper.get<HTMLInputElement>(".wl-color-picker__hex");
+      await input.setValue("#12");
+      expect(input.attributes("aria-invalid")).toBe("true");
+      await input.setValue("   ");
+      expect(input.classes()).not.toContain("is-invalid");
+      expect(input.attributes("aria-invalid")).toBeUndefined();
+      expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+      await wrapper.findAll(".wl-color-picker__sw")[0]!.trigger("click");
+      expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+      await wrapper.findAll(".wl-color-picker__sw")[1]!.trigger("click");
+      expect(wrapper.emitted("update:modelValue")).toEqual([["#aabbcc"]]);
+      expect(input.element.value).toBe("#aabbcc");
+    } finally {
+      wrapper.unmount();
+    }
+  });
+
+  it("wraps swatch keyboard navigation and keeps one tab stop after the palette shrinks", async () => {
+    const wrapper = mount(WlColorPicker, {
+      global, attachTo: document.body,
+      props: { modelValue: "#333333", swatches: ["#111111", "#222222", "#333333"] }
+    });
+    try {
+      const swatches = wrapper.findAll(".wl-color-picker__sw");
+      expect(swatches[2]!.attributes("tabindex")).toBe("0");
+      (swatches[2]!.element as HTMLButtonElement).focus();
+      await swatches[2]!.trigger("keydown", { key: "ArrowDown" });
+      expect(document.activeElement).toBe(swatches[0]!.element);
+      await swatches[0]!.trigger("keydown", { key: "ArrowLeft" });
+      expect(document.activeElement).toBe(swatches[2]!.element);
+      await swatches[2]!.trigger("keydown", { key: "ArrowUp" });
+      expect(document.activeElement).toBe(swatches[1]!.element);
+      await swatches[1]!.trigger("keydown", { key: "Home" });
+      expect(document.activeElement).toBe(swatches[0]!.element);
+      const tab = new KeyboardEvent("keydown", { key: "Tab", bubbles: true, cancelable: true });
+      swatches[0]!.element.dispatchEvent(tab);
+      expect(tab.defaultPrevented).toBe(false);
+      expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+      await swatches[0]!.trigger("keydown", { key: "End" });
+      await wrapper.setProps({ swatches: ["#111111", "#222222"] });
+      expect(wrapper.findAll('.wl-color-picker__sw[tabindex="0"]')).toHaveLength(1);
+      expect(wrapper.get('.wl-color-picker__sw[tabindex="0"]').attributes("aria-label")).toBe("#222222");
+      await wrapper.setProps({ swatches: [] });
+      expect(wrapper.findAll(".wl-color-picker__sw")).toHaveLength(0);
+      expect(wrapper.find("input").exists()).toBe(true);
+    } finally {
+      wrapper.unmount();
+    }
+  });
 });

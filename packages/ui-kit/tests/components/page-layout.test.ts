@@ -1,8 +1,9 @@
 import { mount, type VueWrapper } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
-import { defineComponent, h, nextTick } from "vue";
+import { defineComponent, h, nextTick, reactive } from "vue";
+import type { WlConfigOptions } from "../../src";
 import type { GlobalMountOptions } from "../mounting-types";
-import { WlConfig } from "../../src";
+import { WlConfig, wlLocaleEn, wlLocaleRu } from "../../src";
 import { createWlPt, WlFilterBar, WlPageHeader } from "../../src";
 
 const global: GlobalMountOptions = {
@@ -67,6 +68,10 @@ describe("WlFilterBar", () => {
 
     const root = wrapper.find('[data-wl="filter-bar"]');
     expect(root.attributes("data-density")).toBe("compact");
+    expect(root.attributes("aria-label")).toBe("Filters");
+    expect(wrapper.get(".wl-filter-bar__title").text()).toBe("Filters");
+    expect(wrapper.get(".wl-filter-bar__actions button").text()).toBe("Reset");
+    expect(wrapper.get(".wl-filter-bar__footer button").text()).toBe("Apply");
     expect(wrapper.find(".search").exists()).toBe(true);
     expect(wrapper.find(".project-filter").exists()).toBe(true);
     expect(wrapper.find(".summary").exists()).toBe(true);
@@ -74,6 +79,60 @@ describe("WlFilterBar", () => {
 
     await wrapper.find(".wl-filter-bar__actions button").trigger("click");
     expect(wrapper.emitted("clear")).toHaveLength(1);
+  });
+
+  it("updates filter text from locale while preserving explicit text and empty overrides", async () => {
+    const config = reactive<WlConfigOptions>({ locale: wlLocaleRu });
+    const wrapper = mount(WlFilterBar, {
+      global: { plugins: [[WlConfig, config]] },
+      props: { activeCount: 1 }
+    });
+    const root = wrapper.get('[data-wl="filter-bar"]');
+    const toggle = wrapper.get(".wl-filter-bar__mobile-toggle button");
+    const title = wrapper.get(".wl-filter-bar__title");
+    const close = wrapper.get(".wl-filter-bar__mobile-head button");
+    const clear = wrapper.get(".wl-filter-bar__actions button");
+    const apply = wrapper.get(".wl-filter-bar__footer button");
+    expect(root.attributes("aria-label")).toBe("Фильтры");
+    expect(toggle.text()).toContain("Фильтры");
+    expect(title.text()).toBe("Фильтры");
+    expect(close.attributes("aria-label")).toBe("Закрыть фильтры");
+    expect(clear.text()).toBe("Сбросить");
+    expect(apply.text()).toBe("Применить");
+
+    await wrapper.setProps({ ariaLabel: "Фильтры", toggleLabel: "Фильтры", panelTitle: "Фильтры", closeLabel: "Закрыть фильтры", clearLabel: "Сбросить", applyLabel: "Применить" });
+    config.locale = wlLocaleEn;
+    await nextTick();
+    expect(root.attributes("aria-label")).toBe("Фильтры");
+    expect(toggle.text()).toContain("Фильтры");
+    expect(title.text()).toBe("Фильтры");
+    expect(close.attributes("aria-label")).toBe("Закрыть фильтры");
+    expect(clear.text()).toBe("Сбросить");
+    expect(apply.text()).toBe("Применить");
+
+    await wrapper.setProps({ ariaLabel: "", toggleLabel: "", panelTitle: "", closeLabel: "", clearLabel: "", applyLabel: "" });
+    expect(root.attributes("aria-label")).toBe("");
+    expect(toggle.text()).toBe("1");
+    expect(title.text()).toBe("");
+    expect(close.attributes("aria-label")).toBe("");
+    expect(clear.text()).toBe("");
+    expect(apply.text()).toBe("");
+
+    await wrapper.setProps({ ariaLabel: undefined, toggleLabel: undefined, panelTitle: undefined, closeLabel: undefined, clearLabel: undefined, applyLabel: undefined });
+    expect(root.attributes("aria-label")).toBe("Filters");
+    expect(toggle.text()).toContain("Filters");
+    expect(title.text()).toBe("Filters");
+    expect(close.attributes("aria-label")).toBe("Close filters");
+    expect(clear.text()).toBe("Reset");
+    expect(apply.text()).toBe("Apply");
+
+    config.locale = wlLocaleRu;
+    await nextTick();
+    expect(root.attributes("aria-label")).toBe("Фильтры");
+    expect(title.text()).toBe("Фильтры");
+    expect(clear.text()).toBe("Сбросить");
+    expect(apply.text()).toBe("Применить");
+    wrapper.unmount();
   });
 
   it("opens from the toggle, closes on Escape and restores focus", async () => {

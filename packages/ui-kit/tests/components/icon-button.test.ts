@@ -27,24 +27,24 @@ describe("WlIconButton", () => {
   it("renders corner count and active state", () => {
     const wrapper = mount(WlIconButton, {
       global,
-      props: { icon: "bell", count: 4, active: true }
+      props: { icon: "bell", count: 4, active: true, ariaLabel: "Inbox" }
     });
     expect(wrapper.find(".wl-iconbtn__count").text()).toBe("4");
     expect(wrapper.find('[data-wl="icon-button"]').classes()).toContain("is-active");
   });
 
   it("renders dot instead of count when dot is set", () => {
-    const wrapper = mount(WlIconButton, { global, props: { icon: "bell", dot: true } });
+    const wrapper = mount(WlIconButton, { global, props: { icon: "bell", dot: true, ariaLabel: "Inbox" } });
     expect(wrapper.find(".wl-iconbtn__dot").exists()).toBe(true);
     expect(wrapper.find(".wl-iconbtn__count").exists()).toBe(false);
   });
 
   it("emits click and respects disabled", async () => {
-    const wrapper = mount(WlIconButton, { global, props: { icon: "search" } });
+    const wrapper = mount(WlIconButton, { global, props: { icon: "search", ariaLabel: "Search" } });
     await wrapper.find('[data-wl="icon-button"]').trigger("click");
     expect(wrapper.emitted("click")).toHaveLength(1);
 
-    const disabled = mount(WlIconButton, { global, props: { icon: "search", disabled: true } });
+    const disabled = mount(WlIconButton, { global, props: { icon: "search", disabled: true, ariaLabel: "Search" } });
     await disabled.find('[data-wl="icon-button"]').trigger("click");
     expect(disabled.emitted("click")).toBeUndefined();
   });

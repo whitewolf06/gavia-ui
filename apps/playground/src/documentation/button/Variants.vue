@@ -9,9 +9,6 @@ const labels = {
   secondary: t("examples.draft_0291"),
   ghost: t("examples.cancel_0038"),
   soft: t("examples.share_0292"),
-  danger: t("examples.delete_0037"),
-  "danger-quiet": t("examples.delete_quietly_0293"),
-  "soft-danger": t("examples.archive_0113"),
   link: t("examples.learn_more_0294")
 } satisfies Record<WlButtonVariant, string>;
 const variants = Object.keys(labels) as WlButtonVariant[];
@@ -29,6 +26,18 @@ const lastAction = ref("");
       >
         <div><WlButton :variant="variant" @click="lastAction = labels[variant]">{{ labels[variant] }}</WlButton></div>
         <code class="wl-text-small">{{ variant }}</code>
+      </div>
+      <div class="wl-stack" data-space="sm">
+        <div><WlButton variant="primary" tone="danger" @click="lastAction = t('examples.delete_0037')">{{ t('examples.delete_0037') }}</WlButton></div>
+        <code class="wl-text-small">primary + danger</code>
+      </div>
+      <div class="wl-stack" data-space="sm">
+        <div><WlButton variant="ghost" tone="danger" @click="lastAction = t('examples.delete_quietly_0293')">{{ t('examples.delete_quietly_0293') }}</WlButton></div>
+        <code class="wl-text-small">ghost + danger</code>
+      </div>
+      <div class="wl-stack" data-space="sm">
+        <div><WlButton variant="soft" tone="danger" @click="lastAction = t('examples.archive_0113')">{{ t('examples.archive_0113') }}</WlButton></div>
+        <code class="wl-text-small">soft + danger</code>
       </div>
     </div>
     <p class="wl-text-small wl-text-muted" role="status">

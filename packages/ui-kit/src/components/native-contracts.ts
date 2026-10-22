@@ -1,5 +1,6 @@
 import type { ComponentPublicInstance } from "vue";
-import type { WlButtonAttributes, WlElementAttributes, WlFileInputAttributes, WlInputAttributes, WlLinkAttributes, WlNumberInputAttributes, WlPasswordInputAttributes, WlSliderAttributes, WlTextareaAttributes, WlTimeInputAttributes, WlToggleAttributes } from "../native-types";
+import type { WlActionAccessibleName, WlButtonAttributes, WlElementAttributes, WlFileInputAttributes, WlInputAttributes, WlLinkAttributes, WlNumberInputAttributes, WlPasswordInputAttributes, WlSliderAttributes, WlTextareaAttributes, WlTimeInputAttributes, WlToggleAttributes } from "../native-types";
+import type { WlPt, WlPtAttributes, WlPtContext, WlPtSection } from "../pt-types";
 import RawAlert from "./WlAlert.vue";
 import RawAvatar from "./WlAvatar.vue";
 import RawBadge from "./WlBadge.vue";
@@ -43,7 +44,7 @@ import RawTextarea from "./WlTextarea.vue";
 import RawTimePicker from "./WlTimePicker.vue";
 import RawToast from "./WlToast.vue";
 import RawToolbar from "./WlToolbar.vue";
-import RawTooltipComponent from "./WlTooltipComponent.vue";
+import RawTooltip from "./WlTooltip.vue";
 
 /** Preserve the SFC's props, slots, events, exposed methods and static metadata. */
 type ComponentConstructor = abstract new (...args: never[]) => { $props: object };
@@ -67,6 +68,27 @@ type ActionContract<Component extends ComponentConstructor> = Pick<Component, ke
   new (...args: ConstructorParameters<Component>): Omit<InstanceType<Component>, "$props"> & {
     $props: WithActionAttributes<InstanceType<Component>["$props"]>;
   };
+};
+
+type IconButtonBaseProps = WithActionAttributes<InstanceType<typeof RawIconButton>["$props"]>;
+type IconButtonNamedPt = { pt: WlPt<"iconButton"> & {
+  root: WlPtSection<WlPtContext, WlPtAttributes & ({ "aria-label": string } | { "aria-labelledby": string })>;
+}; };
+type IconButtonNamedProps = IconButtonBaseProps & (WlActionAccessibleName | IconButtonNamedPt);
+/** With no icon prop, the default slot supplies the action text (and may include a custom icon). */
+type IconButtonTextProps = IconButtonBaseProps & { icon?: undefined };
+type IconButtonSlots = InstanceType<typeof RawIconButton>["$slots"];
+type IconButtonProps = IconButtonNamedProps | IconButtonTextProps;
+
+// Keep $props on one object so Vue's h() overload infers props rather than the
+// entire instance. Constructor inference still requires the text slot when the
+// supplied props do not provide their own accessible name.
+type IconButtonInstance<Props extends IconButtonProps = IconButtonProps> = Omit<InstanceType<typeof RawIconButton>, "$props" | "$slots"> & {
+  $props: Props;
+  $slots: IconButtonSlots & (Props extends IconButtonNamedProps ? unknown : { default: NonNullable<IconButtonSlots["default"]> });
+};
+type IconButtonContract = Pick<typeof RawIconButton, keyof typeof RawIconButton> & {
+  new<Props extends IconButtonProps>(props: Props): IconButtonInstance<Props>;
 };
 
 /** Link attributes apply only while NavItem actually renders an anchor. */
@@ -93,8 +115,14 @@ type SliderContract = Pick<typeof RawSlider, keyof typeof RawSlider> & {
   };
 };
 
-type CheckboxProps<Value = undefined> = Parameters<typeof RawCheckbox<Value>>[0]
-  & Omit<WlToggleAttributes, keyof Parameters<typeof RawCheckbox<Value>>[0]>
+// Vue's generic SFC tooling adds an open fallback index. Preserve declared props
+// while allowing native attributes to provide their precise listener types.
+type DeclaredProps<Props> = { [Key in keyof Props as string extends Key ? never : number extends Key ? never : Key]: Props[Key] };
+
+type CheckboxSfcProps<Value> = DeclaredProps<Parameters<typeof RawCheckbox<Value>>[0]>;
+
+type CheckboxProps<Value = undefined> = CheckboxSfcProps<Value>
+  & Omit<WlToggleAttributes, keyof CheckboxSfcProps<Value>>
   & ([Value] extends [undefined] ? unknown : { value: Value });
 type CheckboxInstance<Value> = Omit<ComponentPublicInstance, "$props" | "$slots" | "$emit"> & {
   $props: CheckboxProps<Value>;
@@ -132,7 +160,7 @@ export const WlFileUpload = RawFileUpload as unknown as WithNativeAttributes<typ
 export const WlFilePicker = RawFilePicker as unknown as WithNativeAttributes<typeof RawFilePicker, WlFileInputAttributes>;
 export const WlFilterBar = RawFilterBar as unknown as WithNativeAttributes<typeof RawFilterBar, WlElementAttributes>;
 export const WlIcon = RawIcon as unknown as WithNativeAttributes<typeof RawIcon, WlElementAttributes>;
-export const WlIconButton = RawIconButton as unknown as ActionContract<typeof RawIconButton>;
+export const WlIconButton = RawIconButton as unknown as IconButtonContract;
 export const WlInput = RawInput as unknown as WithNativeAttributes<typeof RawInput, WlInputAttributes>;
 export const WlLink = RawLink as unknown as WithNativeAttributes<typeof RawLink, WlLinkAttributes>;
 export const WlNavItem = RawNavItem as unknown as NavItemContract;
@@ -155,4 +183,4 @@ export const WlTimePicker = RawTimePicker as unknown as WithNativeAttributes<typ
 export const WlToast = RawToast as unknown as WithNativeAttributes<typeof RawToast, WlElementAttributes>;
 export const WlToolbar = RawToolbar as unknown as WithNativeAttributes<typeof RawToolbar, WlElementAttributes>;
 export const WlTagsInput = RawTagsInput as unknown as WithNativeAttributes<typeof RawTagsInput, WlInputAttributes>;
-export const WlTooltipComponent = RawTooltipComponent as unknown as WithNativeAttributes<typeof RawTooltipComponent, WlElementAttributes>;
+export const WlTooltip = RawTooltip as unknown as WithNativeAttributes<typeof RawTooltip, WlElementAttributes>;

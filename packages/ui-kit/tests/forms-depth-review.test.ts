@@ -2,6 +2,7 @@ import { mount } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
 import { nextTick } from "vue";
 import { WlInput, WlNumberInput, WlPasswordInput, WlSlider, WlSwitch, WlTextarea } from "../src";
+import { wlLocaleEn } from "../src/locale";
 
 describe("form component depth", () => {
   it("Input clears to a string, restores focus and exposes a non-live character counter", async () => {
@@ -13,7 +14,7 @@ describe("form component depth", () => {
       const input = wrapper.get<HTMLInputElement>("input");
       expect(input.attributes("aria-describedby")).toContain("hint");
       expect(input.attributes("aria-describedby")).toContain(wrapper.get(".wl-input-counter").attributes("id"));
-      await wrapper.get('button[aria-label="Очистить"]').trigger("click");
+      await wrapper.get(`button[aria-label="${wlLocaleEn.clear}"]`).trigger("click");
       await nextTick();
       expect(wrapper.emitted("update:modelValue")).toEqual([[""]]);
       expect(document.activeElement).toBe(input.element);

@@ -12,7 +12,7 @@ import type { WlPt } from "../pt-types";
 import type { WlAutocompleteCompleteEvent, WlAutocompleteModel, WlAutocompleteOptionLabel, WlOptionDisabled, WlOptionKeyResolver } from "../selection-types";
 import type { WlDensity, WlSizeSm } from "../types";
 import { useWlResultsAnnouncement } from "../composables/useWlResultsAnnouncement";
-import { mergeWlAttrs, useWlLocale, useWlLocaleText, useWlMotion, useWlPt } from "../config";
+import { mergeWlAttrs, useWlLocale, useWlMotion, useWlPt } from "../config";
 import { formatWlLocaleText } from "../locale";
 import { useAnchoredOverlay } from "../utils/anchoredOverlay";
 import { getWlControlProps, splitInputAttrs } from "../utils/inputAttrs";
@@ -72,7 +72,8 @@ const props = withDefaults(defineProps<{
   dropdown?: boolean;
   /**
    * Accessible list expansion button name.
-   * @default "Показать варианты"
+   * Defaults to WlConfig.locale.showOptions (English when unconfigured).
+   * @default undefined
    */
   dropdownLabel?: string;
   /**
@@ -96,7 +97,7 @@ const props = withDefaults(defineProps<{
   pt?: WlPt<"autocomplete">;
 }>(), {
   suggestions: () => [], invalid: false, disabled: false, size: "md", density: "default",
-  multiple: () => false as TMultiple, dropdown: false, dropdownLabel: "Показать варианты", minLength: 1,
+  multiple: () => false as TMultiple, dropdown: false, minLength: 1,
   debounce: 300, loading: false, motion: undefined
 });
 const emit = defineEmits<{
@@ -118,7 +119,6 @@ defineSlots<{
   /** Content displayed while consumer-provided work is pending. */
   loading?(props: Record<never, never>): unknown;
 }>();
-const localeText = useWlLocaleText();
 const locale = useWlLocale();
 
 const attrs = useAttrs();
@@ -129,7 +129,7 @@ const generatedListId = `wl-autocomplete-list-${useWlId()}`;
 const listAttrs = computed(() => {
   const inputAttrs = props.multiple
     ? mergeWlAttrs(attrGroups.value.inputAttrs, section("input"), section("inputChip"))
-    : mergeWlAttrs(attrGroups.value.inputAttrs, section("pcInputText.root"));
+    : mergeWlAttrs(attrGroups.value.inputAttrs, section("inputText.root"));
   const control = getWlControlProps(inputAttrs);
   return mergeWlAttrs({ id: generatedListId, "aria-label": control.ariaLabel ?? props.placeholder ?? locale.value.options, "aria-labelledby": control.ariaLabelledby }, section("list"));
 });
@@ -260,13 +260,13 @@ useWlResultsAnnouncement({
       <span
         v-for="(item, index) in selected"
         :key="keyOf(item, index)"
-        v-bind="mergeWlAttrs(section('chipItem'), section('pcChip.root'))"
+        v-bind="mergeWlAttrs(section('chipItem'), section('chip.root'))"
         class="wl-multiselect__chip"
       >
         <slot name="chip" :option="item" :remove="() => remove(index)">
-          <span v-bind="section('pcChip.label')" class="wl-multiselect__chip-label">{{ resolveOptionLabel(item, props.optionLabel) }}</span>
+          <span v-bind="section('chip.label')" class="wl-multiselect__chip-label">{{ resolveOptionLabel(item, props.optionLabel) }}</span>
           <button
-            v-bind="section('pcChip.removeIcon')"
+            v-bind="section('chip.removeIcon')"
             type="button"
             class="wl-multiselect__chip-remove"
             :aria-label="formatWlLocaleText(locale.removeItem, { label: resolveOptionLabel(item, props.optionLabel) })"
@@ -296,7 +296,7 @@ useWlResultsAnnouncement({
     <input
       v-else
       ref="control"
-      v-bind="mergeWlAttrs(attrGroups.inputAttrs, section('pcInputText.root'))"
+      v-bind="mergeWlAttrs(attrGroups.inputAttrs, section('inputText.root'))"
       v-model="query"
       class="wl-input"
       :class="[`wl-input--${props.size}`, { 'is-invalid': props.invalid }]"
@@ -326,7 +326,7 @@ useWlResultsAnnouncement({
       v-bind="section('dropdown')"
       type="button"
       class="wl-autocomplete__dropdown"
-      :aria-label="localeText('dropdownLabel', props.dropdownLabel, 'showOptions')"
+      :aria-label="props.dropdownLabel ?? locale.showOptions"
       :disabled="props.disabled"
       @click="open"
     >

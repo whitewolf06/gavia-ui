@@ -1,14 +1,13 @@
 import { type App, type Component, computed, type ComputedRef, type DirectiveBinding, getCurrentInstance, inject, isReactive, normalizeClass, shallowReactive } from "vue";
-import type { WlControlLocale } from "./locale-types";
-import type { WlPtCallbackOptions, WlPtConfig } from "./pt-types";
+import type { WlPtCallbackOptions, WlPtComponent, WlPtConfig } from "./pt-types";
 import { mergeWlAttrs } from "./utils/attrs";
 export { mergeWlAttrs } from "./utils/attrs";
 import { normalizeWlLocale, type WlLocaleInput } from "./locale";
 import { createWlPt } from "./theme";
-import { canonicalWlPtPath, warnWlPtAlias, wlPtNames } from "./utils/pt-aliases";
 
 export interface WlConfigOptions {
   pt?: WlPtConfig;
+  /** Partial app-scoped locale. Omitted or invalid values use the English fallback. */
   locale?: WlLocaleInput;
   /** Animate overlay entry and exit; individual components may override this. */
   motion?: boolean;
@@ -90,16 +89,13 @@ function resolveSection(value: unknown, context: WlPtCallbackOptions["context"])
 
 /** Resolves a named DOM section: defaults, app configuration, local prop. */
 export function useWlPt(
-  component: string,
+  component: WlPtComponent,
   local: ComputedRef<Record<string, unknown> | undefined>
 ): (section: string, context?: WlPtCallbackOptions["context"]) => Record<string, unknown> {
   const config = injectedConfig();
   return (section, context) => {
-    const fallback = component === "iconButton" ? "button" : component;
-    const canonical = wlPtNames(component, section);
-    if (config.pt?.[component] === undefined && config.pt?.[fallback] === undefined
-      && config.pt?.[canonical.component] === undefined && local.value === undefined) {
-      const value = atPath(defaults[fallback], section);
+    if (config.pt?.[component] === undefined && local.value === undefined) {
+      const value = atPath(defaults[component], section);
       // Context-dependent sections must be evaluated for each option/control state.
       if (typeof value !== "function" || context === undefined) {
         const key = `${component}.${section}`;
@@ -120,27 +116,16 @@ export function useWlPt(
 }
 
 export function resolveWlPt(
-  component: string,
+  component: WlPtComponent,
   section: string,
   config: WlConfigOptions = {},
   local?: Record<string, unknown>,
   context: WlPtCallbackOptions["context"] = {}
 ): Record<string, unknown> {
-  const canonical = wlPtNames(component, section);
-  const fallback = component === "iconButton" ? "button" : component;
-  const appLegacy = config.pt?.[component] ?? config.pt?.[fallback];
-  const appCanonical = config.pt?.[canonical.component];
-  const canonicalSection = canonicalWlPtPath(section);
-  warnWlPtAlias(config.pt, `${component}.${section}`, `${canonical.component}.${canonical.section}`);
-  warnWlPtAlias(local, section, canonicalSection);
   return mergeWlAttrs(
-    resolveSection(atPath(defaults[fallback], section), context),
-    resolveSection(atPath(appLegacy, section), context),
-    ...(canonical.component === component && canonical.section === section
-      ? []
-      : [resolveSection(atPath(appCanonical, canonical.section), context)]),
-    resolveSection(atPath(local, section), context),
-    ...(canonicalSection === section ? [] : [resolveSection(atPath(local, canonicalSection), context)])
+    resolveSection(atPath(defaults[component], section), context),
+    resolveSection(atPath(config.pt?.[component], section), context),
+    resolveSection(atPath(local, section), context)
   );
 }
 
@@ -188,16 +173,4 @@ export function useWlIcons(): ComputedRef<Readonly<Record<string, Component>>> {
 
 export function useWlIdPrefix(): string | undefined {
   return injectedConfig().idPrefix;
-}
-
-/** Resolve a rendered default while retaining public prop defaults and explicit overrides. */
-export function useWlLocaleText(): (propName: string, value: string | undefined, key: Exclude<keyof WlControlLocale, "selectedItems" | "resultsFound">) => string {
-  const instance = getCurrentInstance();
-  const locale = useWlLocale();
-  return (propName, value, key) => {
-    const raw = instance?.vnode.props;
-    const kebabName = propName.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
-    const supplied = raw?.[propName] !== undefined || raw?.[kebabName] !== undefined;
-    return supplied && value !== undefined ? value : locale.value[key];
-  };
 }

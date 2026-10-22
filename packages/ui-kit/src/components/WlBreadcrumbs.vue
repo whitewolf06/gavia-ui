@@ -27,7 +27,7 @@ const props = withDefaults(
     /** Accessible name for the collapsed-items trigger. */
     collapseLabel?: string;
     /** Attributes of internal Gavia UI elements. */
-    pt?: WlPt<"breadcrumb">;
+    pt?: WlPt<"breadcrumbs">;
   }>(),
   {
     items: () => [], separator: "/"
@@ -88,7 +88,7 @@ async function showAll(): Promise<void> {
   const first = root.value?.querySelector<HTMLElement>('[data-breadcrumb-index="1"]');
   (first?.querySelector<HTMLElement>("a[href], button") ?? first)?.focus();
 }
-const section = useWlPt("breadcrumb", computed(() => props.pt));
+const section = useWlPt("breadcrumbs", computed(() => props.pt));
 </script>
 
 <template>

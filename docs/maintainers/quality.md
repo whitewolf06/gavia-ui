@@ -27,6 +27,19 @@ describes the command. Do not update the baseline just to pass.
 A migration note alone does not disable the gate. Type checks do not prove
 identical behavior; unit/E2E checks remain necessary.
 
+The prepared 1.0 source adds an exact policy in
+`scripts/migrations/public-api-1.0.json` against the immutable 0.11.1 baseline.
+The existing checker still reports original inventory, semantic and consumer
+differences before applying fixed projections for canonical PT, reviewed status
+types/props, dismissal spelling, Tooltip naming and icon-action names. Explicit
+Toast/Confirm PT context additions preserve prior fields, callback parameters
+and returns. Unrelated API drift, CSS classes, tokens, DOM markers and package
+paths remain strict. Only preparation at 0.12.1 with the specific major changeset,
+or 1.0 stable/RC versions, can select this policy; intervening 0.x releases do not
+inherit it. Policy/consumer hashes and negative regression cases are authored
+but have not run. No historical fixture has been replaced. The policy does not
+authorize publication or establish that the 0.x deprecation period was released.
+
 New compile-only consumer fixtures check accepted props and expected errors:
 model/resolver/mode, column keys, slot values, select payloads and pt sections.
 They import the public entry point. `verify:package` copies the same TypeScript/Vue

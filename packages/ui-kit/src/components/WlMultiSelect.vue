@@ -254,16 +254,16 @@ useWlResultsAnnouncement({
         <span
           v-for="(option, index) in selectedOptions"
           :key="keyOf(option, index)"
-          v-bind="mergeWlAttrs(section('chipItem'), section('pcChip.root'))"
+          v-bind="mergeWlAttrs(section('chipItem'), section('chip.root'))"
           class="wl-multiselect__chip"
         >
           <slot name="chip" :option="option" :remove="() => remove(valueOf(option))">
             <span
-              v-bind="section('pcChip.label')"
+              v-bind="section('chip.label')"
               class="wl-multiselect__chip-label"
             >{{ resolveOptionLabel(option, props.optionLabel) }}</span>
             <button
-              v-bind="section('pcChip.removeIcon')"
+              v-bind="section('chip.removeIcon')"
               type="button"
               class="wl-multiselect__chip-remove"
               :disabled="disabled"
@@ -351,7 +351,7 @@ useWlResultsAnnouncement({
           <input
             v-if="filter"
             ref="filterInput"
-            v-bind="section('pcFilter.root')"
+            v-bind="section('filter.root')"
             v-model="query"
             class="wl-input wl-input--sm wl-multiselect__filter"
             type="search"

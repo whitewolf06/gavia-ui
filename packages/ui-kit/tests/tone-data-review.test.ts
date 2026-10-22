@@ -4,18 +4,17 @@ import { WlAvatar, WlBadge, WlButton, WlConfig, WlDivider, wlLocaleEn, WlPill, W
 
 afterEach(() => vi.restoreAllMocks());
 
-describe("semantic tone aliases", () => {
-  it("keeps legacy classes and warns only when a deprecated variant is supplied", () => {
+describe("semantic tones", () => {
+  it("resolves the canonical default and preserves visual classes without warnings", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     const baseline = mount(WlBadge);
     expect(warn).not.toHaveBeenCalled();
     baseline.unmount();
-    const legacy = mount(WlBadge, { props: { variant: "warn", value: 2 } });
-    expect(legacy.classes()).toContain("wl-badge--warn");
-    expect(legacy.attributes("data-tone")).toBe("warning");
-    expect(warn).toHaveBeenCalledTimes(1);
-    expect(String(warn.mock.calls[0]?.[0])).toContain('tone="warning"');
-    legacy.unmount();
+    const warning = mount(WlBadge, { props: { tone: "warning", value: 2 } });
+    expect(warning.classes()).toContain("wl-badge--warn");
+    expect(warning.attributes("data-tone")).toBe("warning");
+    expect(warn).not.toHaveBeenCalled();
+    warning.unmount();
   });
 
   it("maps normalized tones to released visual classes and keeps button variants as the form axis", () => {

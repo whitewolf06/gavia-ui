@@ -45,7 +45,7 @@ const props = withDefaults(
      */
     orientation?: "horizontal" | "vertical";
     /** Attributes of internal Gavia UI elements. */
-    pt?: WlPt<"selectbutton">;
+    pt?: WlPt<"segmented">;
   }>(),
   {
     options: () => [],
@@ -60,7 +60,7 @@ const props = withDefaults(
  * @default null
  */
 const model = defineModel<NoInfer<Value> | null, never>({ type: String as unknown as PropType<Value | null>, default: null });
-const section = useWlPt("selectbutton", computed(() => props.pt));
+const section = useWlPt("segmented", computed(() => props.pt));
 const root = ref<HTMLElement | null>(null);
 const roving = useWlRovingFocus({
   count: () => props.options.length,
@@ -98,7 +98,7 @@ function onKeydown(event: KeyboardEvent, index: number): void {
     <button
       v-for="(option, index) in options"
       :key="option.value"
-      v-bind="section('pcToggleButton.root', { active: model === option.value, disabled: Boolean(disabled || option.disabled) })"
+      v-bind="section('item.root', { active: model === option.value, disabled: Boolean(disabled || option.disabled) })"
       type="button"
       class="wl-segmented__item"
       :class="{ 'is-active': model === option.value }"
@@ -109,7 +109,7 @@ function onKeydown(event: KeyboardEvent, index: number): void {
       @keydown="onKeydown($event, index)"
       @click="choose(option)"
     >
-      <span v-bind="section('pcToggleButton.content')" class="wl-segmented__item-content">
+      <span v-bind="section('item.content')" class="wl-segmented__item-content">
         <WlIcon
           v-if="option.icon"
           :name="option.icon"

@@ -34,7 +34,6 @@ export const buttonPtSections: readonly DocumentationPtSection[] = localizeDocum
   { name: "loadingIcon", element: "span.wl-btn__spinner", description: "documentation.strings.s0119" }
 ]);
 
-export const installationCommand = "pnpm add gavia-ui vue";
 export const installationSource = [
   'import { createApp } from "vue";',
   'import "gavia-ui/styles/reset.css";',
@@ -48,7 +47,7 @@ export const installationSource = [
 ].join("\n");
 
 export interface DocumentationHeading { id: string; title: string }
-export interface DocumentationExampleHeading extends DocumentationHeading { name: string; description: string }
+interface DocumentationExampleHeading extends DocumentationHeading { name: string; description: string }
 export interface DocumentationFoundation {
   label: string;
   description: string;

@@ -197,7 +197,7 @@ const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.
                 <span class="tb-demo-eyebrow wl-text-small">{{ t('shell.ThemeBuilderPage.text325') }}</span>
                 <h3 class="wl-text-heading">{{ t('shell.ThemeBuilderPage.text326') }}</h3>
               </div>
-              <WlTag variant="blue">{{ t('shell.ThemeBuilderPage.text327') }}</WlTag>
+              <WlTag color="blue">{{ t('shell.ThemeBuilderPage.text327') }}</WlTag>
             </div>
             <p class="wl-text-body wl-text-muted">{{ t('shell.ThemeBuilderPage.text328') }}</p>
             <div class="tb-demo-fields">
@@ -250,16 +250,21 @@ const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.
               <WlButton variant="soft" size="sm" :disabled="demoDisabled">Soft</WlButton>
               <WlButton variant="secondary" size="sm" :disabled="demoDisabled">Secondary</WlButton>
               <WlButton variant="ghost" size="sm" :disabled="demoDisabled">Ghost</WlButton>
-              <WlButton variant="danger" size="sm" :disabled="demoDisabled">Danger</WlButton>
+              <WlButton
+                variant="primary"
+                tone="danger"
+                size="sm"
+                :disabled="demoDisabled"
+              >Danger</WlButton>
             </div>
           </div>
           <div class="wl-inline" data-space="sm">
-            <WlTag variant="green">{{ t('shell.ThemeBuilderPage.text338') }}</WlTag>
-            <WlTag variant="amber">{{ t('shell.ThemeBuilderPage.text339') }}</WlTag>
-            <WlTag variant="red">{{ t('shell.ThemeBuilderPage.text340') }}</WlTag>
-            <WlTag variant="gray">{{ t('shell.ThemeBuilderPage.text341') }}</WlTag>
+            <WlTag color="green">{{ t('shell.ThemeBuilderPage.text338') }}</WlTag>
+            <WlTag color="amber">{{ t('shell.ThemeBuilderPage.text339') }}</WlTag>
+            <WlTag color="red">{{ t('shell.ThemeBuilderPage.text340') }}</WlTag>
+            <WlTag color="gray">{{ t('shell.ThemeBuilderPage.text341') }}</WlTag>
           </div>
-          <WlAlert variant="info" :title="t('shell.ThemeBuilderPage.text342')">{{ t('shell.ThemeBuilderPage.text343') }}</WlAlert>
+          <WlAlert tone="info" :title="t('shell.ThemeBuilderPage.text342')">{{ t('shell.ThemeBuilderPage.text343') }}</WlAlert>
         </section>
         <section class="tb-contrast wl-stack" data-space="md" aria-labelledby="tb-contrast-title">
           <div class="tb-section-header">

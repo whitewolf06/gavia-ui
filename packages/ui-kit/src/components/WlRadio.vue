@@ -42,7 +42,7 @@ const props = withDefaults(
      */
     invalid?: boolean;
     /** Attributes of internal Gavia UI elements. */
-    pt?: WlPt<"radiobutton">;
+    pt?: WlPt<"radio">;
   }>(),
   {
     disabled: false,
@@ -64,7 +64,7 @@ const inputAttrs = computed(() => attrGroups.value.inputAttrs);
 const rootAttrs = computed(() => attrGroups.value.rootAttrs);
 const controlProps = computed(() => getWlControlProps(inputAttrs.value));
 const mergedPt = computed(() => deepMerge({ input: inputAttrs.value }, props.pt));
-const section = useWlPt("radiobutton", mergedPt);
+const section = useWlPt("radio", mergedPt);
 
 const rootClass = computed(() => [
   "wl-radio",

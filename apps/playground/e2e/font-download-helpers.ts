@@ -42,18 +42,30 @@ export async function expectGaviaFontDownload(page: Page, link: Locator): Promis
   const manifest = JSON.parse(readFileSync(new URL("manifest.json", fontRoot), "utf8")) as {
     faces: { ttf: { file: string; sha256: string }; woff2: { file: string; sha256: string } }[];
   };
-  expect(files.size).toBe(29);
+  const variableBytes = readFileSync(new URL("variable-manifest.json", fontRoot));
+  const variable = JSON.parse(variableBytes.toString("utf8")) as {
+    files: { file: string; bytes: number; sha256: string; subset: string }[];
+  };
+  expect(files.size).toBe(35);
+  expect(files.get(prefix + "variable-manifest.json")?.equals(variableBytes)).toBe(true);
+  expect(variable.files).toHaveLength(4);
+  for (const file of variable.files) {
+    const bytes = files.get(prefix + file.file);
+    expect(bytes, file.file).toHaveLength(file.bytes);
+    expect(createHash("sha256").update(bytes!).digest("hex"), file.file).toBe(file.sha256);
+    if (file.subset === "core") expect(file.bytes).toBeLessThanOrEqual(80_000);
+  }
   for (const face of manifest.faces) for (const format of [face.ttf, face.woff2]) {
     const bytes = files.get(prefix + format.file);
     expect(bytes, format.file).toBeDefined();
     expect(createHash("sha256").update(bytes!).digest("hex"), format.file).toBe(format.sha256);
   }
-  for (const name of ["OFL.txt", "Onest-OFL.txt", "FONTLOG.txt"]) {
+  for (const name of ["OFL.txt", "Onest-OFL.txt", "FONTLOG.txt", "VARIABLE-FONTLOG.txt"]) {
     expect(files.get(prefix + name)?.equals(readFileSync(new URL(name, fontRoot))), name).toBe(true);
   }
   const css = files.get(prefix + "gavia.css")!.toString("utf8");
-  expect(css.match(/@font-face/g)).toHaveLength(24);
-  for (const family of ["Gavia Sans", "Gavia"]) expect(Array.from(css.matchAll(/font-family:\s*"([^"]+)"\s*;/g)).filter((match) => match[1] === family)).toHaveLength(12);
+  expect(css.match(/@font-face/g)).toHaveLength(34);
+  for (const family of ["Gavia Sans", "Gavia"]) expect(Array.from(css.matchAll(/font-family:\s*"([^"]+)"\s*;/g)).filter((match) => match[1] === family)).toHaveLength(16);
   for (const match of css.matchAll(/url\("([^"]+)"\)/g)) expect(files.has(prefix + match[1]!.replace("./", ""))).toBe(true);
   expect(files.get(prefix + "README.txt")!.toString("utf8")).toContain("SIL Open Font License 1.1");
 }

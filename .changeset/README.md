@@ -1,10 +1,15 @@
 # Changesets for Gavia UI
 
-Use `pnpm changeset` to describe a user-visible package change and select patch/minor.
+Use `pnpm changeset` to describe a user-visible package change and select patch/minor/major.
 `pnpm changeset:status` previews the plan. `pnpm release:version` applies it and
 synchronizes workspace/package versions and the canonical root changelog. The
 prepack hook generates package README/LICENSE/CHANGELOG copies. Versioning does
 not publish, commit or push; run it only on the owner's explicit release command.
+
+Source **1.0.0-rc.1** is prepared in Changesets 3 RC mode. Consumed candidate
+notes are retained in `pre/` and `pre.json` records `mode: pre`, `tag: rc`.
+Keep those notes for stable promotion. Version metadata does not establish
+verification or publication; see the [candidate record](../docs/maintainers/release-candidate.md).
 
 Development supports Node 22.13+ on22.x and Node 24. ESLint, Changesets, Playwright,
 Vitest/V8, publint and attw are development tools and never runtime dependencies.

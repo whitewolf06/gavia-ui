@@ -9,7 +9,6 @@ import type { WlPt } from "../pt-types";
 import type { WlButtonVariant, WlDensity, WlSize, WlTone } from "../types";
 import { useWlPt } from "../config";
 import { useWlButtonGroupDefaults } from "../utils/buttonGroup";
-import { useWlTone } from "../utils/tone";
 import WlLink from "./WlLink.vue";
 
 const props = withDefaults(
@@ -18,7 +17,7 @@ const props = withDefaults(
      * @default "secondary"
      */
     variant?: WlButtonVariant;
-    /** Semantic color. Legacy danger variants remain compatibility aliases. */
+    /** Semantic color, independent of the visual treatment. */
     tone?: WlTone;
     /** Control size; inherits an enclosing WlButtonGroup when omitted.
      * @default "md"
@@ -74,22 +73,14 @@ const emit = defineEmits<{
 }>();
 const groupDefaults = useWlButtonGroupDefaults(props);
 const isLink = computed(() => props.as === "a" || props.href !== undefined || props.to !== undefined);
-const tone = useWlTone({
-  component: "WlButton", tone: () => props.tone, variant: () => groupDefaults.value.variant,
-  aliases: { danger: "danger", "danger-quiet": "danger", "soft-danger": "danger" },
-  fallback: () => ["primary", "soft", "link"].includes(groupDefaults.value.variant) ? "accent" : "neutral"
-});
+const tone = computed(() => props.tone ?? (["primary", "soft", "link"].includes(groupDefaults.value.variant) ? "accent" : "neutral"));
 const visualVariant = computed(() => {
   const variant = groupDefaults.value.variant;
   if (tone.value === "danger") {
-    if (variant === "primary" || variant === "danger") return "danger";
-    return variant === "soft" || variant === "soft-danger" ? "soft-danger" : "danger-quiet";
+    if (variant === "primary") return "danger";
+    return variant === "soft" ? "soft-danger" : "danger-quiet";
   }
-  return variant === "danger"
-    ? "primary"
-    : variant === "danger-quiet"
-      ? "ghost"
-      : variant === "soft-danger" ? "soft" : variant;
+  return variant;
 });
 
 const rootClass = computed(() => [

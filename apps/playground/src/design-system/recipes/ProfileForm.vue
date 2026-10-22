@@ -102,13 +102,13 @@ async function save(): Promise<void> {
       :disabled="pending"
       :aria-label="t('examples.simulate_save_failure_0233')"
     >{{ t("examples.simulate_save_failure_0233") }}</WlSwitch>
-    <WlAlert v-if="outcome === 'error'" variant="err" :title="t('examples.could_not_save_0145')">
+    <WlAlert v-if="outcome === 'error'" tone="danger" :title="t('examples.could_not_save_0145')">
       {{ t("examples.your_entries_remain_in_the_form_try_again_0234") }}
       <template #action>
         <WlButton size="sm" @click="failure = false; save()">{{ t("examples.retry_saving_0235") }}</WlButton>
       </template>
     </WlAlert>
-    <WlAlert v-if="outcome === 'success'" variant="ok" :title="t('examples.profile_saved_0236')">
+    <WlAlert v-if="outcome === 'success'" tone="success" :title="t('examples.profile_saved_0236')">
       {{ t("examples.contact_details_updated_0237") }}
     </WlAlert>
     <div><WlButton variant="primary" type="submit" :loading="pending">{{ t("examples.save_profile_0238") }}</WlButton></div>

@@ -1,7 +1,7 @@
 import { flushPromises, mount, type VueWrapper } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { defineComponent, h, nextTick, ref } from "vue";
-import { WlAutocomplete, WlMultiSelect, WlSelect } from "../src";
+import { defineComponent, h, nextTick, reactive, ref } from "vue";
+import { WlAutocomplete, WlConfig, type WlConfigOptions, WlMultiSelect, WlSelect } from "../src";
 
 interface Item { id: number; label: string; disabled?: boolean }
 interface Group { title: string; items: readonly Item[] }
@@ -139,6 +139,61 @@ describe("grouped Select", () => {
 });
 
 describe("MultiSelect select all", () => {
+  it("summarizes selected values and toggles a typeahead match while preserving native control focus", async () => {
+    const config = reactive<WlConfigOptions>({ locale: {} });
+    const wrapper = mount(WlMultiSelect<string>, {
+      attachTo: document.body, global: { plugins: [[WlConfig, config]] },
+      props: { options: ["Alpha", "Beta", "Bravo"], modelValue: ["Alpha", "Beta"], maxSelectedLabels: 1, motion: false }
+    });
+    wrappers.push(wrapper);
+    expect(wrapper.get(".wl-multiselect__label").text()).toBe("2 selected");
+    config.locale = { selectedItems: { one: "{count} selected item", other: "{count} selected items" } };
+    await nextTick();
+    expect(wrapper.get(".wl-multiselect__label").text()).toBe("2 selected items");
+    const control = wrapper.get('[role="combobox"]');
+    for (const modifier of ["ctrlKey", "metaKey", "altKey"]) {
+      await control.trigger("keydown", { key: "b", [modifier]: true });
+      expect(control.attributes("aria-expanded")).toBe("false");
+    }
+    await control.trigger("keydown", { key: "b" });
+    expect(control.attributes("aria-expanded")).toBe("true");
+    expect(document.getElementById(control.attributes("aria-activedescendant")!)?.textContent?.trim()).toBe("Beta");
+    await control.trigger("keydown", { key: "Enter" });
+    expect(wrapper.emitted("update:modelValue")).toEqual([[["Alpha"]]]);
+    await wrapper.setProps({ modelValue: ["Alpha"] });
+    expect(wrapper.get(".wl-multiselect__label").text()).toBe("Alpha");
+    wrapper.vm.close();
+    await nextTick();
+    wrapper.vm.focus();
+    expect(document.activeElement).toBe(control.element);
+    await wrapper.setProps({ disabled: true });
+    wrapper.vm.open();
+    control.element.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+    await nextTick();
+    expect(control.attributes("aria-expanded")).toBe("false");
+  });
+
+  it("guards a consumer select-all callback while loading or after all options become unavailable", async () => {
+    let toggle: (() => void) | undefined;
+    const wrapper = mount(WlMultiSelect<string>, {
+      attachTo: document.body,
+      props: { options: ["Alpha"], showSelectAll: true, loading: true, motion: false },
+      slots: { selectall: (scope) => {
+        toggle = scope.toggle;
+        return h("button", { onClick: scope.toggle }, "Toggle all");
+      } }
+    });
+    wrappers.push(wrapper);
+    wrapper.vm.open();
+    await nextTick();
+    expect(document.querySelector('[role="listbox"]')?.textContent).toBe("Loading");
+    toggle!();
+    expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+    await wrapper.setProps({ loading: false, options: [] });
+    toggle!();
+    expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+  });
+
   it("toggles only visible enabled leaves, preserving disabled and external values", async () => {
     const wrapper = mount(WlMultiSelect<Group, "id", "items">, {
       attachTo: document.body,
@@ -202,6 +257,63 @@ describe("MultiSelect select all", () => {
 });
 
 describe("Autocomplete request state", () => {
+  it("falls back to a finite debounce and cancels pending completion when a suggestion is chosen or cleared", async () => {
+    vi.useFakeTimers();
+    const wrapper = mount(WlAutocomplete<string, false>, {
+      attachTo: document.body,
+      props: { suggestions: ["Alpha", "Beta"], debounce: Number.NaN, clearable: true, motion: false }
+    });
+    wrappers.push(wrapper);
+    const input = wrapper.get<HTMLInputElement>("input");
+    await input.setValue("Al");
+    await vi.advanceTimersByTimeAsync(299);
+    expect(wrapper.emitted("complete")).toBeUndefined();
+    await vi.advanceTimersByTimeAsync(1);
+    expect(wrapper.emitted("complete")).toHaveLength(1);
+    await input.setValue("Be");
+    document.querySelectorAll<HTMLElement>('[role="option"]')[1]!.click();
+    await nextTick();
+    await vi.advanceTimersByTimeAsync(300);
+    expect(wrapper.emitted("complete")).toHaveLength(1);
+    expect(input.element.value).toBe("Beta");
+    expect(document.activeElement).toBe(input.element);
+    await input.setValue("Pending");
+    await wrapper.get(".wl-autocomplete__clear").trigger("click");
+    await vi.advanceTimersByTimeAsync(300);
+    expect(wrapper.emitted("complete")).toHaveLength(1);
+    expect(wrapper.emitted("update:modelValue")?.at(-1)).toEqual([null]);
+    expect(input.element.value).toBe("");
+    await wrapper.setProps({ disabled: true });
+    const updates = wrapper.emitted("update:modelValue")!.length;
+    input.element.value = "Stale input";
+    input.element.dispatchEvent(new Event("input", { bubbles: true }));
+    input.element.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+    await vi.advanceTimersByTimeAsync(300);
+    expect(wrapper.emitted("update:modelValue")).toHaveLength(updates);
+    expect(wrapper.emitted("complete")).toHaveLength(1);
+    expect(input.attributes("aria-expanded")).toBe("false");
+  });
+
+  it("keeps multiple-mode drafts out of the selected model and cancels their request on selection", async () => {
+    vi.useFakeTimers();
+    const wrapper = mount(WlAutocomplete<string, true>, {
+      attachTo: document.body,
+      props: { suggestions: ["Alpha"], modelValue: null, multiple: true, loading: true, debounce: 80, motion: false }
+    });
+    wrappers.push(wrapper);
+    const input = wrapper.get<HTMLInputElement>("input");
+    await input.setValue("Al");
+    expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+    expect(document.querySelector('[role="listbox"]')?.textContent).toBe("Loading");
+    await wrapper.setProps({ loading: false });
+    document.querySelector<HTMLElement>('[role="option"]')!.click();
+    await nextTick();
+    await vi.advanceTimersByTimeAsync(80);
+    expect(wrapper.emitted("complete")).toBeUndefined();
+    expect(wrapper.emitted("update:modelValue")).toEqual([[["Alpha"]]]);
+    expect(input.element.value).toBe("");
+  });
+
   it("debounces the latest query and cancels requests below minLength, on disable and on unmount", async () => {
     vi.useFakeTimers();
     const completed = vi.fn();

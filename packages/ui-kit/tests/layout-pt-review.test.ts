@@ -2,6 +2,7 @@ import { enableAutoUnmount, flushPromises, mount } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import { WlCommandPalette, WlConfig, WlFilterBar, WlPageHeader, WlSidebar } from "../src";
+import { wlLocaleEn } from "../src/locale";
 
 enableAutoUnmount(afterEach);
 afterEach(() => vi.unstubAllGlobals());
@@ -58,7 +59,7 @@ describe("layout components expose their existing DOM through PT", () => {
         footerItem: { "data-footer-item": "yes" }, pinButton: { "data-pin": "yes" }
       } }
     });
-    expect(wrapper.classes()).toEqual(expect.arrayContaining(["wl-sidebar-shell", "app-sidebar", "local-sidebar", "caller-sidebar"]));
+    expect(wrapper.get(".wl-sidebar-shell").classes()).toEqual(expect.arrayContaining(["wl-sidebar-shell", "app-sidebar", "local-sidebar", "caller-sidebar"]));
     const item = wrapper.findAll(".local-item")[0]!;
     expect(item.attributes()).toMatchObject({ "data-layer": "local", "data-active": "false", "data-disabled": "false", "data-expanded": "true" });
     expect(item.classes()).toContain("app-item");
@@ -67,8 +68,11 @@ describe("layout components expose their existing DOM through PT", () => {
     expect(click).toHaveBeenCalledOnce();
     expect(wrapper.emitted("update:modelValue")).toEqual([["home"]]);
     expect(wrapper.get("[data-footer-item]").text()).toContain("Help");
+    expect(wrapper.get("[data-pin]").text()).toContain(wlLocaleEn.unpinSidebar);
     await wrapper.get("[data-pin]").trigger("click");
     expect(wrapper.emitted("update:pinned")).toEqual([[false]]);
+    await wrapper.setProps({ pinned: false });
+    expect(wrapper.get("[data-pin]").attributes("aria-label")).toBe(wlLocaleEn.pinSidebar);
   });
 
   it("CommandPalette supplies active/disabled group contexts and retains selection and root attributes", async () => {

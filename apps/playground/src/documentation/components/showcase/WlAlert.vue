@@ -16,9 +16,9 @@ async function showError(visible: boolean, retry = false): Promise<void> {
 
 <template>
   <div class="wl-stack" data-space="lg">
-    <WlAlert variant="info" :title="t('examples.tip_0309')">{{ t("examples.your_application_saves_the_settings_0310") }}</WlAlert>
-    <WlAlert variant="ok" :title="t('examples.saved_0311')">{{ t("examples.all_changes_are_recorded_in_the_local_example_0312") }}</WlAlert>
-    <WlAlert variant="warn" :title="t('examples.low_on_space_0313')">
+    <WlAlert tone="info" :title="t('examples.tip_0309')">{{ t("examples.your_application_saves_the_settings_0310") }}</WlAlert>
+    <WlAlert tone="success" :title="t('examples.saved_0311')">{{ t("examples.all_changes_are_recorded_in_the_local_example_0312") }}</WlAlert>
+    <WlAlert tone="warning" :title="t('examples.low_on_space_0313')">
       {{ t("examples.free_up_space_before_adding_another_attachment_0314") }}
       <template #action>
         <WlButton size="sm" @click="attempts++">{{ t("examples.check_space_0315") }}</WlButton>
@@ -27,7 +27,7 @@ async function showError(visible: boolean, retry = false): Promise<void> {
     <div ref="errorRegion">
       <WlAlert
         v-if="error"
-        variant="err"
+        tone="danger"
         :title="t('examples.could_not_save_0145')"
         closable
         :close-label="t('examples.hide_error_message_0316')"

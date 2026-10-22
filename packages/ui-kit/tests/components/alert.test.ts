@@ -1,11 +1,13 @@
 import { mount } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
-import { WlAlert } from "../../src";
+import { nextTick, reactive } from "vue";
+import type { WlConfigOptions } from "../../src";
+import { WlAlert, WlConfig, wlLocaleEn, wlLocaleRu } from "../../src";
 
 describe("WlAlert", () => {
   it("applies variant class and data attributes", () => {
     const wrapper = mount(WlAlert, {
-      props: { variant: "warn", title: "Внимание" },
+      props: { tone: "warning", title: "Внимание" },
       slots: { default: "Проверьте данные" }
     });
     const root = wrapper.find('[data-wl="alert"]');
@@ -20,8 +22,34 @@ describe("WlAlert", () => {
       props: { closable: true },
       slots: { default: "Сообщение" }
     });
+    expect(wrapper.find(".wl-alert__close").attributes("aria-label")).toBe("Close");
     await wrapper.find(".wl-alert__close").trigger("click");
     expect(wrapper.emitted("close")).toHaveLength(1);
+  });
+
+  it("reacts to locale changes while preserving explicit close labels", async () => {
+    const config = reactive<WlConfigOptions>({ locale: wlLocaleRu });
+    const wrapper = mount(WlAlert, {
+      global: { plugins: [[WlConfig, config]] },
+      props: { closable: true }
+    });
+    const close = wrapper.get(".wl-alert__close");
+    expect(close.attributes("aria-label")).toBe("Закрыть");
+
+    await wrapper.setProps({ closeLabel: "Закрыть" });
+    config.locale = wlLocaleEn;
+    await nextTick();
+    expect(close.attributes("aria-label")).toBe("Закрыть");
+
+    await wrapper.setProps({ closeLabel: "" });
+    expect(close.attributes("aria-label")).toBe("");
+    await wrapper.setProps({ closeLabel: undefined });
+    expect(close.attributes("aria-label")).toBe("Close");
+
+    config.locale = wlLocaleRu;
+    await nextTick();
+    expect(close.attributes("aria-label")).toBe("Закрыть");
+    wrapper.unmount();
   });
 
   it("hides close button when not closable", () => {

@@ -8,7 +8,7 @@ import { computed, ref, useAttrs, watch } from "vue";
 import type { WlNoModelModifiers } from "../model-types";
 import type { WlPt } from "../pt-types";
 import type { WlDensity, WlSizeSm } from "../types";
-import { mergeWlAttrs, useWlLocale, useWlLocaleText, useWlPt } from "../config";
+import { mergeWlAttrs, useWlLocale, useWlPt } from "../config";
 import { formatWlNumber } from "../utils/format";
 import { getWlControlProps, splitInputAttrs } from "../utils/inputAttrs";
 import { clamp as clampNumber, roundToStep } from "../utils/number";
@@ -59,12 +59,14 @@ const props = withDefaults(
     ariaLabel?: string;
     /**
      * Accessible decrement button name.
-     * @default "Уменьшить"
+     * Defaults to WlConfig.locale.decrease (English when unconfigured).
+     * @default undefined
      */
     decrementLabel?: string;
     /**
      * Accessible increment button name.
-     * @default "Увеличить"
+     * Defaults to WlConfig.locale.increase (English when unconfigured).
+     * @default undefined
      */
     incrementLabel?: string;
     /** Enable localized number parsing and display formatting. */
@@ -92,8 +94,6 @@ const props = withDefaults(
     density: "default",
     disabled: false,
     invalid: false,
-    decrementLabel: "Уменьшить",
-    incrementLabel: "Увеличить",
     format: undefined
   }
 );
@@ -109,7 +109,6 @@ defineSlots<{
   prefix?(props: { value: number }): unknown;
   /** Content after the numeric input; receives the current value. */
   suffix?(props: { value: number }): unknown; }>();
-const localeText = useWlLocaleText();
 const appLocale = useWlLocale();
 const section = useWlPt("numberinput", computed(() => props.pt));
 const attrs = useAttrs();
@@ -225,7 +224,7 @@ function onKeydown(event: KeyboardEvent): void {
       type="button"
       class="wl-stepper__btn"
       :disabled="disabled || readonly"
-      :aria-label="localeText('decrementLabel', decrementLabel, 'decrease')"
+      :aria-label="decrementLabel ?? appLocale.decrease"
       @click="bump(-1)"
     >
       <WlIcon v-bind="section('decrementIcon')" name="minus" :size="14" />
@@ -266,7 +265,7 @@ function onKeydown(event: KeyboardEvent): void {
       type="button"
       class="wl-stepper__btn"
       :disabled="disabled || readonly"
-      :aria-label="localeText('incrementLabel', incrementLabel, 'increase')"
+      :aria-label="incrementLabel ?? appLocale.increase"
       @click="bump(1)"
     >
       <WlIcon v-bind="section('incrementIcon')" name="plus" :size="14" />

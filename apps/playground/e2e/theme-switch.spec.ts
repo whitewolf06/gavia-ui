@@ -218,8 +218,18 @@ test("native theme snapshots suppress inner transitions and restore physical inp
     await expect.poll(() => toggle.evaluate((element) => {
       const bounds = element.getBoundingClientRect();
       const hit = document.elementFromPoint(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-      return window.scrollY === 0 && element.contains(hit);
-    }), { message: "The live hero icon is the actual pointer target below the sticky header" }).toBe(true);
+      return {
+        scrollY: window.scrollY,
+        hitIsToggle: element.contains(hit),
+        hitTag: hit?.tagName,
+        hitClass: hit?.getAttribute("class"),
+        bounds: { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height },
+        marker: document.documentElement.dataset.wlPlaygroundThemeTransition,
+        theme: document.documentElement.dataset.wlTheme,
+        focusedElementTag: document.activeElement?.tagName
+      };
+    }), { message: "The live hero icon is the actual pointer target below the sticky header" })
+      .toMatchObject({ scrollY: 0, hitIsToggle: true });
   };
   await expectLivePointerTarget();
   let box = await toggle.boundingBox();
@@ -235,6 +245,9 @@ test("native theme snapshots suppress inner transitions and restore physical inp
   // Safari's pointer policy may leave BODY focused; establish the keyboard case explicitly.
   await toggle.evaluate((element) => (element as HTMLButtonElement).focus({ preventScroll: true }));
   await expect(toggle).toBeFocused();
+  // WebKit scrolls the captured DOM during this programmatic focus setup even
+  // with preventScroll. Restore the setup viewport before real keyboard input.
+  await page.evaluate(() => window.scrollTo({ top: 0, left: 0, behavior: "instant" }));
   await expect(page.locator("html")).toHaveAttribute("data-wl-playground-theme-transition", "native");
   await page.keyboard.press("Enter");
   await expectTheme(page, "gavia", url);
@@ -252,6 +265,7 @@ test("native theme snapshots suppress inner transitions and restore physical inp
   // Same-task button activation exercises three newer intents during an active snapshot.
   await toggle.evaluate((element) => (element as HTMLButtonElement).focus({ preventScroll: true }));
   await expect(toggle).toBeFocused();
+  await page.evaluate(() => window.scrollTo({ top: 0, left: 0, behavior: "instant" }));
   const markerAtActivation = await toggle.evaluate((element) => {
     const marker = document.documentElement.dataset.wlPlaygroundThemeTransition;
     const button = element as HTMLButtonElement;

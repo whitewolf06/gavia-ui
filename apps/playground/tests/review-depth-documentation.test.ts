@@ -62,13 +62,19 @@ describe("review depth documentation contracts", () => {
     });
   }
 
-  it("keeps canonical nested paths beside their supported 0.x aliases", () => {
+  it("documents only the canonical 1.0 section paths", () => {
     for (const name of ["WlDialog", "WlDrawer"]) {
-      expect(rawMetadata[name]!.map((entry) => entry.name)).toEqual(expect.arrayContaining(["closeButton.root", "pcCloseButton.root"]));
+      expect(rawMetadata[name]!.map((entry) => entry.name)).toEqual(expect.arrayContaining(["closeButton.root", "closeButton.icon"]));
     }
-    expect(rawMetadata.WlMultiSelect!.map((entry) => entry.name)).toEqual(expect.arrayContaining(["chip.root", "pcChip.root", "filter.root", "pcFilter.root", "selectAllInput", "footer"]));
-    expect(rawMetadata.WlTabs!.map((entry) => entry.name)).toEqual(expect.arrayContaining(["panels.root", "panel.root", "tabpanels.root", "tabpanel.root"]));
+    expect(rawMetadata.WlMultiSelect!.map((entry) => entry.name)).toEqual(expect.arrayContaining(["chip.root", "filter.root", "selectAllInput", "footer"]));
+    expect(rawMetadata.WlTabs!.map((entry) => entry.name)).toEqual(expect.arrayContaining(["panels.root", "panel.root"]));
     expect(rawMetadata.WlTable!.map((entry) => entry.name)).toEqual(expect.arrayContaining(["caption", "headerCell", "sortButton", "selectionInput"]));
+    for (const entries of Object.values(rawMetadata)) {
+      for (const entry of entries) {
+        expect(entry.name).not.toMatch(/^(?:pc[A-Z]|tabpanels\.|tabpanel\.)/);
+        expect(entry.description).not.toContain("ptReviewAlias");
+      }
+    }
   });
 
   for (const name of ["WlField", "WlSteps", "WlFileUpload"]) {

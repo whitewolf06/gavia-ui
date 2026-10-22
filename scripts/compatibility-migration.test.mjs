@@ -5,7 +5,9 @@ import { dirname, join, resolve } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { compilerOptions, typeSource } from "./check-compatibility.mjs";
-import { declarationInventoryHash, normalizedHash, validateMigrationPolicy } from "./compatibility-migration.mjs";
+import {
+  declarationInventoryHash, migrationInventoryProjection, normalizedHash, validateMigrationPolicy
+} from "./compatibility-migration.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 function approvalInput() {
@@ -20,6 +22,122 @@ function approvalInput() {
     migrationNoteText: "# Обновление до Gavia UI 0.11.0\n\nReviewed migration.\n"
   };
 }
+function majorApprovalInput() {
+  const fixture = join(root, "packages/ui-kit/tests/fixtures/compatibility-0.11.1");
+  const contractText = readFileSync(join(fixture, "contract.json"), "utf8");
+  return {
+    policy: JSON.parse(readFileSync(join(root, "scripts/migrations/public-api-1.0.json"), "utf8")),
+    baseline: JSON.parse(contractText), contractText,
+    consumerText: readFileSync(join(fixture, "consumer.vue"), "utf8"),
+    currentVersion: "0.12.1", changesetText: '---\n"gavia-ui": major\n---\n\nReviewed canonical 1.0 API.\n',
+    migrationNoteText: '# Migration\n\n<a id="migration-1-0-public-api"></a>\n## Canonical 1.0 API\n'
+  };
+}
+test("the 1.0 approval pins 0.11.1 and exactly migrates the released danger button", () => {
+  const input = majorApprovalInput();
+  const approval = validateMigrationPolicy(input);
+  assert.equal(declarationInventoryHash(input.baseline), input.policy.baseline.inventorySha256);
+  assert.equal(approval.migratedConsumer, input.consumerText.replaceAll("\r\n", "\n").replace('variant="soft-danger"', 'variant="soft" tone="danger"'));
+  assert.equal(normalizedHash(approval.migratedConsumer), input.policy.consumer.migratedSha256);
+  for (const currentVersion of ["1.0.0-rc.1", "1.0.0", "1.0.2"])
+    validateMigrationPolicy({ ...input, currentVersion, changesetText: undefined });
+  assert.deepEqual(migrationInventoryProjection(approval, "pt", ["datatable.bodyRow.class", "dialog.pcCloseButton.root", "tabpanels.root", "tablist.tabList", "multiselect.pcChip.label"]),
+    ["table.bodyRow.class", "dialog.closeButton.root", "tabs.panels.root", "tabs.tabList", "multiselect.chip.label"]);
+  for (const kind of ["classes", "tokens", "components", "themes", "markers", "exports"]) {
+    const values = ["wl-dialog__header", "--wl-color-danger", "datatable", "pcChip"];
+    assert.deepEqual(migrationInventoryProjection(approval, kind, values), values, kind);
+  }
+});
+test("the 1.0 approval rejects other releases, widened policy and altered frozen input", () => {
+  const input = majorApprovalInput();
+  const cases = [
+    ...["0.12.0", "0.12.2", "0.13.0", "1.0.0-beta.1", "1.1.0", "2.0.0"].map((currentVersion) => [currentVersion, { currentVersion }]),
+    ["missing major changeset", { changesetText: undefined }],
+    ["minor changeset", { changesetText: input.changesetText.replace(": major", ": minor") }],
+    ["missing migration anchor", { migrationNoteText: "# Migration\nUnrelated release." }],
+    ["different baseline", { baseline: { ...input.baseline, version: "0.9.1" } }],
+    ["changed contract", { contractText: input.contractText + " " }],
+    ["changed consumer", { consumerText: input.consumerText + "\n<!-- extra -->" }],
+    ["repinned contract", { policy: { ...input.policy, baseline: { ...input.policy.baseline, contractSha256: "0".repeat(64) } } }],
+    ["unapproved consumer edit", { policy: { ...input.policy, consumer: { ...input.policy.consumer, to: 'variant="primary"' } } }],
+    ["diagnostic exclusion", { policy: { ...input.policy, ignoredDiagnostics: [2344] } }],
+    ["whole-type replacement", { policy: { ...input.policy, approvedChanges: [...input.policy.approvedChanges, "all-types"] } }]
+  ];
+  for (const [label, overrides] of cases)
+    assert.throws(() => validateMigrationPolicy({ ...input, ...overrides }), /Migration policy:/, label);
+});
+
+test("typed 1.0 projections preserve unrelated fields, callback results and strict semantic contexts", () => {
+  const approval = validateMigrationPolicy(majorApprovalInput());
+  const ts = createRequire(join(root, "packages/ui-kit/package.json"))("typescript");
+  const base = join(root, ".tmp");
+  mkdirSync(base, { recursive: true });
+  const fixture = mkdtempSync(join(base, "compatibility-major-"));
+  const common = [
+    'import type { ComponentPublicInstance } from "vue";',
+    "type Context = { checked?: boolean; [key: string]: unknown };",
+    "type Attributes = { class?: string; title?: string };",
+    "type Section<C = Context> = Attributes | ((options: { context: C; extra?: boolean }) => Attributes);",
+    'export type WlButtonVariant = "primary" | "soft-danger";',
+    'export type WlAlertVariant = "info" | "ok" | "warn" | "err";',
+    "export interface WlPtMap { inputtext: { root?: Section }; dialog: { pcCloseButton?: { root?: Section } }; toast: { message?: Section; messageIcon?: Section } }",
+    "export type WlPtComponent = keyof WlPtMap;",
+    "export type WlPtConfig = Partial<WlPtMap>;",
+    "export declare function createWlPt(overrides?: WlPtConfig): WlPtConfig;",
+    ""
+  ].join("\n");
+  const constructor = (name, props) => `export declare const ${name}: { new (): ComponentPublicInstance & { $props: { ${props} }; $slots: { default?: (props: { label: string }) => unknown }; clear(): boolean } };`;
+  const previous = common + [
+    constructor("WlButton", "variant?: WlButtonVariant; label?: string; onClick?: (event: MouseEvent) => void"),
+    constructor("WlAlert", "variant?: WlAlertVariant; label?: string"),
+    constructor("WlDialog", "dismissable?: boolean; label?: string"),
+    constructor("WlOther", "label?: string; onChange?: (value: string) => void")
+  ].join("\n");
+  const currentHeader = common
+    .replace('"primary" | "soft-danger"', '"primary" | "soft"')
+    .replace('export type WlAlertVariant = "info" | "ok" | "warn" | "err";', 'export type WlTone = "neutral" | "accent" | "info" | "success" | "warning" | "danger";')
+    .replace("inputtext: {", "input: {").replace("pcCloseButton?:", "closeButton?:")
+    .replace("message?: Section; messageIcon?: Section", "message?: Section<Context & { id: number; tone: WlTone; severity: 'success' | 'info' | 'warn' | 'error' }>; messageIcon?: Section<Context & { id: number; tone: WlTone; severity: 'success' | 'info' | 'warn' | 'error' }>");
+  const button = constructor("WlButton", "variant?: WlButtonVariant; label?: string; onClick?: (event: MouseEvent) => void");
+  const alert = constructor("WlAlert", "tone?: WlTone; label?: string");
+  const dialog = constructor("WlDialog", "dismissible?: boolean; label?: string");
+  const other = constructor("WlOther", "label?: string; onChange?: (value: string) => void");
+  const current = currentHeader + [button, alert, dialog, other].join("\n");
+  const baseline = {
+    components: ["WlButton", "WlAlert", "WlDialog", "WlOther"],
+    declarationExports: ["WlButtonVariant", "WlAlertVariant", "WlPtMap", "WlPtConfig", "WlPtComponent"].map((name) => ({ name, type: true, requiredParameters: 0 }))
+      .concat({ name: "createWlPt", callable: true })
+  };
+  try {
+    for (const name of ["previous", "current"]) mkdirSync(join(fixture, name));
+    writeFileSync(join(fixture, "previous/index.d.ts"), previous);
+    const path = join(fixture, "adapted.ts");
+    writeFileSync(path, typeSource(baseline, approval));
+    const diagnostics = (candidate) => {
+      writeFileSync(join(fixture, "current/index.d.ts"), candidate);
+      return ts.getPreEmitDiagnostics(ts.createProgram([path], compilerOptions(ts)));
+    };
+    assert.deepEqual(diagnostics(current).map((failure) => ts.flattenDiagnosticMessageText(failure.messageText, "\n")), []);
+    const mutations = [
+      ["unrelated label removed", current.replace(other, other.replace("label?: string; ", ""))],
+      ["unrelated handler changed", current.replace(other, other.replace("value: string", "value: number"))],
+      ["button event changed", current.replace(button, button.replace("MouseEvent", "KeyboardEvent"))],
+      ["dismissible narrowed", current.replace(dialog, dialog.replace("dismissible?: boolean", "dismissible?: number"))],
+      ["slot payload changed", current.replace(alert, alert.replace("props: { label: string }", "props: { label: number }"))],
+      ["exposed method removed", current.replace(other, other.replace("clear(): boolean", ""))],
+      ["PT callback return changed", current.replace("title?: string", "title?: number")],
+      ["PT callback context adds an unapproved requirement", current.replaceAll("id: number; tone: WlTone;", "id: number; revision: number; tone: WlTone;")],
+      ["PT factory stops returning a config", current.replace("overrides?: WlPtConfig): WlPtConfig;", "overrides?: WlPtConfig): number;")]
+    ];
+    for (const [label, candidate] of mutations) {
+      assert.notEqual(candidate, current, label);
+      assert.ok(diagnostics(candidate).length, `${label} must not be hidden by 1.0 migration`);
+    }
+  } finally {
+    assert.equal(dirname(fixture), base, "cleanup must stay inside worktree .tmp");
+    rmSync(fixture, { recursive: true, force: true });
+  }
+});
 test("approved migration pins the release and performs one exact consumer change", () => {
   const input = approvalInput();
   const approval = validateMigrationPolicy(input);

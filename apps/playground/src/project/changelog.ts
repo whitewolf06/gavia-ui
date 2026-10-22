@@ -3,12 +3,12 @@ export type ChangelogInline
     | { kind: "code"; value: string }
     | { kind: "link"; label: string; href: string };
 
-export type ChangelogBlock
+type ChangelogBlock
   = | { kind: "paragraph"; content: ChangelogInline[] }
     | { kind: "heading"; content: ChangelogInline[] }
     | { kind: "list"; items: ChangelogInline[][] };
 
-export interface ChangelogSection {
+interface ChangelogSection {
   id: string;
   title: string;
   version?: string;

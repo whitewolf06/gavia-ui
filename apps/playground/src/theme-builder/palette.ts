@@ -50,7 +50,7 @@ export const themePaletteFields = [
   } }
 ] as const;
 
-export type ThemePaletteKey = (typeof themePaletteFields)[number]["key"];
+type ThemePaletteKey = (typeof themePaletteFields)[number]["key"];
 export type ThemePalette = Record<ThemePaletteKey, string>;
 export type ThemeOverrides = Partial<Record<WlDesignTokenName, string>>;
 export interface ThemeContrast {
@@ -67,7 +67,7 @@ export interface ThemeDraft {
   baseTheme: WlThemeName;
   palette: ThemePalette;
 }
-export interface ThemeSpec extends ThemeDraft {
+interface ThemeSpec extends ThemeDraft {
   schemaVersion: typeof THEME_DRAFT_SCHEMA_VERSION;
   colorScheme: "light" | "dark";
   overrides: ThemeOverrides;

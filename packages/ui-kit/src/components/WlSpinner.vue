@@ -2,9 +2,10 @@
 /** WlSpinner public component contract.
  * @since 0.1.0
  */
+import { computed } from "vue";
 import type { WlSpinnerSize } from "../types";
-import { useWlLocaleText } from "../config";
-withDefaults(
+import { useWlLocale } from "../config";
+const props = withDefaults(
   defineProps<{
     /**
      * Size.
@@ -17,20 +18,19 @@ withDefaults(
      */
     light?: boolean;
     /**
-     * aria-label.
-     * @default "Загрузка"
+     * aria-label; uses locale.loading when omitted or undefined (English: Loading).
+     * @default undefined
      */
     label?: string;
   }>(),
   {
     size: "md",
-    light: false,
-    label: "Загрузка"
+    light: false
   }
 );
 
-const localeText = useWlLocaleText();
-
+const locale = useWlLocale();
+const label = computed(() => props.label ?? locale.value.loading);
 </script>
 
 <template>
@@ -38,7 +38,7 @@ const localeText = useWlLocaleText();
     class="wl-spinner"
     :class="[`wl-spinner--${size}`, light && 'wl-spinner--light']"
     role="status"
-    :aria-label="localeText('label', label, 'loading')"
+    :aria-label="label"
     data-wl="spinner"
     :data-size="size"
   ></span>

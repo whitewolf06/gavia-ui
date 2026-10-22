@@ -8,7 +8,7 @@ Unify overlay ownership/focus/inert behavior and add reactive configuration, ric
 
 Initialize anchored layers and menu focus after their rendered panel is available, including settled mounts, replacement anchors or panels and reopening. Rebind observers and scheduled positioning without repeating the initial focus handoff.
 
-Add CheckboxGroup, RadioGroup, Toolbar, TagsInput, ContextMenu and TooltipComponent while preserving the existing Tooltip directive and 0.x aliases. Expand checked/nested menus, stable-key tables, pickers, actions and typed native/router links.
+Add CheckboxGroup, RadioGroup, Toolbar, TagsInput, ContextMenu and the WlTooltip component. Register the directive through WlTooltipDirective and follow the canonical 1.0 API migration for removed 0.x aliases. Expand checked/nested menus, stable-key tables, pickers, actions and typed native/router links.
 
 Prepare canonical EN/RU documentation paths, portable query compatibility, full-text search, copied-SFC StackBlitz projects, consumer starters and a separately executed production prerender pipeline. Keep Windows visual baselines and manual screen-reader acceptance distinct from focused tests.
 

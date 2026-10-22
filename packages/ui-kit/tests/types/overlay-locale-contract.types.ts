@@ -4,7 +4,10 @@ import type {
 } from "../../src";
 /** Compile-only public overlay, locale, service-routing and model-modifier assertions. */
 import {
-  normalizeWlLocale, useWlConfirm, useWlToast, type WlDialog, type WlDrawer, type WlFilterBar, type WlPopover
+  normalizeWlLocale, useWlConfirm, useWlToast,
+  type WlAlert, type WlAutocomplete, type WlColorPicker, type WlCommandPalette, type WlDatePicker,
+  type WlDialog, type WlDrawer, type WlFilePicker, type WlFilterBar, type WlNumberInput,
+  type WlPasswordInput, type WlPopover, type WlSidebar, type WlSpinner, type WlTable, type WlTag
 } from "../../src";
 
 type DialogProps = InstanceType<typeof WlDialog>["$props"];
@@ -34,6 +37,35 @@ export function overlayLocaleConsumerTypes(
   };
   const optionalControl: string | undefined = legacyResolvedLocale.close;
   const normalizedControl: string = normalizeWlLocale(undefined, legacyResolvedLocale).close;
+  // Locale-derived defaults do not make a component's text overrides required.
+  const localizedText: {
+    alert: Pick<InstanceType<typeof WlAlert>["$props"], "closeLabel">;
+    autocomplete: Pick<Parameters<typeof WlAutocomplete>[0], "dropdownLabel">;
+    color: Pick<InstanceType<typeof WlColorPicker>["$props"], "paletteLabel" | "inputLabel">;
+    commands: Pick<Parameters<typeof WlCommandPalette>[0], "placeholder" | "emptyText" | "loadingText" | "ariaLabel">;
+    date: Pick<Parameters<typeof WlDatePicker>[0], "placeholder" | "startLabel" | "endLabel">;
+    files: Pick<InstanceType<typeof WlFilePicker>["$props"], "chooseLabel">;
+    filters: Pick<FilterProps, "ariaLabel" | "toggleLabel" | "panelTitle" | "clearLabel" | "applyLabel" | "closeLabel">;
+    number: Pick<InstanceType<typeof WlNumberInput>["$props"], "decrementLabel" | "incrementLabel">;
+    password: Pick<InstanceType<typeof WlPasswordInput>["$props"], "placeholder">;
+    sidebar: Pick<Parameters<typeof WlSidebar>[0], "ariaLabel" | "pinLabel" | "unpinLabel">;
+    spinner: Pick<InstanceType<typeof WlSpinner>["$props"], "label">;
+    table: Pick<Parameters<typeof WlTable>[0], "emptyMessage">;
+    tag: Pick<InstanceType<typeof WlTag>["$props"], "removeLabel">;
+  } = {
+    alert: {}, autocomplete: {}, color: {}, commands: {}, date: {}, files: {}, filters: {},
+    number: {}, password: {}, sidebar: {}, spinner: {}, table: {}, tag: {}
+  };
+  const emptyActionLabel: typeof localizedText.alert = { closeLabel: "" };
+  const omittedFileLabel: typeof localizedText.files = { chooseLabel: undefined };
+  const customDateLabel: typeof localizedText.date = { startLabel: "From" };
+  const customEmptyText: typeof localizedText.commands = { emptyText: "No matches" };
+  // @ts-expect-error Localized text overrides remain strings, not booleans.
+  const wrongSpinnerLabel: typeof localizedText.spinner = { label: false };
+  // @ts-expect-error Table empty-state text does not accept numeric values.
+  const wrongTableText: typeof localizedText.table = { emptyMessage: 0 };
+  // @ts-expect-error Locale selection does not widen action labels to objects.
+  const wrongApplyLabel: typeof localizedText.filters = { applyLabel: { text: "Apply" } };
   if (typeof input.customMessage === "object" && input.customMessage !== null)
     void input.customMessage;
   const exposedPopover: WlPopoverExpose = popover;
@@ -92,6 +124,8 @@ export function overlayLocaleConsumerTypes(
   // @ts-expect-error Filter-bar visibility is not an input event's lazy model.
   const lazyBar: FilterProps = { openModifiers: { lazy: true } };
 
-  void [input, calendar, knownText, legacyLocale, legacyResolvedLocale, optionalControl, normalizedControl, slots, dialog, drawer, bar,
+  void [input, calendar, knownText, legacyLocale, legacyResolvedLocale, optionalControl, normalizedControl, localizedText,
+    emptyActionLabel, omittedFileLabel, customDateLabel, customEmptyText,
+    wrongSpinnerLabel, wrongTableText, wrongApplyLabel, slots, dialog, drawer, bar,
     wrongLocale, wrongGroup, trimmedDialog, numberedDrawer, lazyBar];
 }

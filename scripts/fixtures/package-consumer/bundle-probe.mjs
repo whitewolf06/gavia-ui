@@ -9,8 +9,8 @@ let metrics;
 await build({
   configFile: false, logLevel: "warn", resolve: { dedupe: ["vue"] },
   build: {
-    outDir: "button-dist", minify: "esbuild",
-    rollupOptions: { input: "button.html" }
+    outDir: "button-dist", minify: "oxc",
+    rolldownOptions: { input: "button.html" }
   },
   plugins: [{
     name: "packed-button-budget",
@@ -37,7 +37,7 @@ await build({
         fixture: "WlButton only, Vue runtime included, no CSS or fonts",
         jsBytes: Buffer.byteLength(code), jsGzipBytes: gzipSync(code).byteLength,
         kitRenderedBytes: kitModules.reduce((total, [, entry]) => total + entry.renderedLength, 0),
-        retainedKitExports: module.renderedExports.sort(), removedKitExportCount: module.removedExports.length,
+        retainedKitExports: module.renderedExports.sort(),
         kitModules: kitModules.map(([id, entry]) => ({ path: id.replaceAll("\\", "/").slice(kitPrefix.length), bytes: entry.renderedLength, exports: entry.renderedExports }))
       };
       // Keep measurement evidence even when an invariant fails and the clean
@@ -46,7 +46,9 @@ await build({
       mkdirSync(evidence, { recursive: true });
       writeFileSync(resolve(evidence, "button-probe-latest.json"), JSON.stringify(metrics, null, 2) + "\n");
       console.log("Measured installed button graph: " + JSON.stringify(metrics));
-      assert.deepEqual(module.renderedExports.sort(), budget.baseline.retainedKitExports,
+      // Rolldown emits helpers in shared package chunks; their complete bytes
+      // and unused component markers are checked above, independently of names.
+      assert.deepEqual(module.renderedExports.sort(), budget.expectedEntryExports,
         "Button-only fixture retained unreviewed public code or editor metadata");
       assert.ok(metrics.jsGzipBytes <= budget.maxJsGzipBytes,
         "Button JS gzip budget exceeded: " + metrics.jsGzipBytes + " > " + budget.maxJsGzipBytes);

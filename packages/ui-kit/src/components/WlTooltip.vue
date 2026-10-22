@@ -1,5 +1,5 @@
 <script setup lang="ts">
-/** WlTooltipComponent public component contract.
+/** WlTooltip public component contract.
  * @slot default - Default component content.
  * @slot content - Custom content.
  */

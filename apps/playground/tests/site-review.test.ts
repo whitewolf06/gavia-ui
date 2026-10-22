@@ -53,7 +53,7 @@ it("emits canonical multilingual sitemap, prerender input and complete machine-r
   expect(files.get("llms-full.txt")).toContain("rowKey");
   const paths = JSON.parse(files.get("route-manifest.json")!).routes;
   for (const entry of wlManifest) expect(paths).toContain(`docs/components/${entry.name}/`);
-  const tooltip = wlManifest.find((entry) => entry.name === "WlTooltipComponent")!;
+  const tooltip = wlManifest.find((entry) => entry.name === "WlTooltip")!;
   expect(tooltip.props.some((prop) => prop.name === "content")).toBe(true);
   expect(tooltip.props.some((prop) => prop.name === "variant")).toBe(false);
 });

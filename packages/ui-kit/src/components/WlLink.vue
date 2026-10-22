@@ -11,7 +11,7 @@ defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<{
   /** Router location passed unchanged to WlConfig.linkComponent. */
   to?: unknown;
-  /** Semantic color role; takes precedence over supported legacy color aliases. */
+  /** Semantic color role. */
   tone?: WlTone;
   /** Native URL. */
   href?: string;

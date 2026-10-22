@@ -77,7 +77,7 @@ describe("DatePicker additive range contract", () => {
     await flushPromises();
     await choose("2026-10-20");
     expect(wrapper.emitted("update:modelValue")?.at(-1)).toEqual([["2026-10-20", null]]);
-    expect(document.querySelector(".wl-dp__range-hint")?.textContent).toContain("До");
+    expect(document.querySelector(".wl-dp__range-hint")?.textContent).toContain("To");
     expect(day("2026-10-20").getAttribute("aria-selected")).toBe("true");
     await choose("2026-10-10");
     expect(wrapper.emitted("update:modelValue")?.at(-1)).toEqual([["2026-10-10", "2026-10-20"]]);
@@ -131,11 +131,11 @@ describe("DatePicker additive range contract", () => {
     expect(day("2026-10-20").disabled).toBe(false);
     await wrapper.setProps({ minDate: "2026-02-31", maxDate: "not-a-date" });
     expect(day("2026-10-20").disabled).toBe(false);
-    document.querySelector<HTMLButtonElement>('[aria-label^="Выбрать месяц"]')!.click();
+    document.querySelector<HTMLButtonElement>('[aria-label^="Choose month"]')!.click();
 
     await flushPromises();
     expect(Array.from(document.querySelectorAll<HTMLButtonElement>(".wl-dp__choice")).every((button) => !button.disabled)).toBe(true);
-    document.querySelector<HTMLButtonElement>('[aria-label^="Выбрать год"]')!.click();
+    document.querySelector<HTMLButtonElement>('[aria-label^="Choose year"]')!.click();
 
     await flushPromises();
     expect(Array.from(document.querySelectorAll<HTMLButtonElement>(".wl-dp__choice")).every((button) => !button.disabled)).toBe(true);
@@ -266,8 +266,8 @@ describe("DatePicker additive range contract", () => {
     mounted.push(wrapper);
     expect(wrapper.get('[data-local="end"]').classes()).toEqual(expect.arrayContaining(["app-end", "local-end"]));
     expect(wrapper.get('[data-app="end"]').attributes("data-local")).toBe("end");
-    expect(wrapper.get('[data-pt="start-label"]').text()).toBe("От");
-    expect(wrapper.get('[data-pt="end-label"]').text()).toBe("До");
+    expect(wrapper.get('[data-pt="start-label"]').text()).toBe("From");
+    expect(wrapper.get('[data-pt="end-label"]').text()).toBe("To");
     await wrapper.get(".wl-dp__trigger").trigger("click");
 
     await flushPromises();

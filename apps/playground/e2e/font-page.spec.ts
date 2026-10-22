@@ -32,20 +32,47 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
     const loaded = [];
     for (const weight of fontWeights) for (const style of ["normal", "italic"]) {
       const fonts = await document.fonts.load(`${style} ${weight} 16px 'Gavia Sans'`, "Гавиа Gavia 0123456789");
-      loaded.push({ weight, style, faces: fonts.length });
+      loaded.push({ weight, style, faces: fonts.length, ranges: fonts.map((font) => font.weight) });
     }
     return loaded;
   }, weights);
   expect(faces).toHaveLength(12);
   expect(await page.evaluate(async () => (await document.fonts.load("normal 400 16px Gavia", "Гавиа 0123456789")).length)).toBe(1);
-  for (const face of faces) expect(face.faces, `${face.weight} ${face.style} loads a real font face`).toBe(1);
+  for (const face of faces) {
+    expect(face.faces, `${face.weight} ${face.style} loads a real font face`).toBe(1);
+    expect(face.ranges).toEqual(["100 700"]);
+  }
 
   await fontPage.getByRole("textbox", { name: "Свой текст", exact: true }).fill("Гагара / Loon 0123456789");
-  await chooseDropdownOption(page, fontPage.getByRole("combobox", { name: "Вес", exact: true }), "600 — Полужирный");
+  const proof = fontPage.locator(".wl-type-proof-sample");
+  const weight = fontPage.getByRole("slider", { name: "Вес", exact: true });
+  const preset = fontPage.getByRole("combobox", { name: "Готовый вес", exact: true });
+  await expect(weight).toHaveAttribute("min", "100");
+  await expect(weight).toHaveAttribute("max", "700");
+  await expect(weight).toHaveAttribute("step", "1");
+  await weight.focus();
+  await weight.press("Home");
+  await expect(proof).toHaveCSS("font-weight", "100");
+  await weight.press("ArrowRight");
+  await expect(proof).toHaveCSS("font-weight", "101");
+  await expect(preset).toContainText("Промежуточный вес");
+  await weight.press("End");
+  await expect(proof).toHaveCSS("font-weight", "700");
+  await expect(preset).toContainText("700");
+  await weight.evaluate((element: HTMLInputElement) => {
+    element.value = "450";
+    element.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  await expect(proof).toHaveCSS("font-weight", "450");
+  await expect(fontPage.locator('output[for="wl-type-proof-variable-weight"]')).toHaveText("450");
+  for (const alphabet of await fontPage.locator(".wl-type-alphabet-sample").all()) {
+    await expect(alphabet).toHaveCSS("font-weight", "450");
+  }
+  await chooseDropdownOption(page, preset, "600 — Полужирный");
+  await expect(weight).toHaveValue("600");
   const size = fontPage.getByRole("slider", { name: "Размер", exact: true });
   await size.focus();
   await size.press("End");
-  const proof = fontPage.locator(".wl-type-proof-sample");
   await expect(proof).toHaveText("Гагара / Loon 0123456789");
   await expect(proof).toHaveAttribute("data-weight", "600");
   await expect(proof).toHaveAttribute("data-size", "72");

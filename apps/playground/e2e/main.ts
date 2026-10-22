@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import {
-  createWlPt, WlConfig, WlConfirmationService, wlLocaleRu, WlToastService, WlTooltip
+  createWlPt, WlConfig, WlConfirmationService, wlLocaleRu, WlToastService, WlTooltipDirective
 } from "../../../packages/ui-kit/src";
 import Fixture from "./Fixture.vue";
 import "gavia-ui/styles/reset.css";
@@ -19,5 +19,5 @@ app.use(WlConfig, {
 });
 app.use(WlToastService);
 app.use(WlConfirmationService);
-app.directive("wl-tooltip", WlTooltip);
+app.directive("wl-tooltip", WlTooltipDirective);
 app.mount("#app");

@@ -61,11 +61,19 @@ without a corresponding runtime breaking change. The type-only overloads and
 `CallbackInference` parameters also preserve consumer inference; do not remove
 them as unused code without checking their template and TSX behavior.
 
-Both the library and Playground pin `vue-tsc` to `2.2.12`, the version already
-resolved in the lockfile. The review's `2.2.10` recommendation was a historical
-snapshot, not a reason to downgrade the checked compiler. Keep both package
-specifiers and their lockfile importers in sync. Treat compiler upgrades as a
-separate change from component behavior or formatting:
+The prepared toolchain pins both projects to `vue-tsc`/`@vue/language-core`
+3.3.13 and TypeScript 6.0.3. The preceding checked compiler was 2.2.12 with
+TypeScript 5.8.3; those results do not validate the new pins. Source and lockfile
+are updated; dependencies have not been installed and checks are deferred.
+The upstream 3.3.13 code generator still emits `__ctx` with slots/emit/expose.
+Consumer compilation must nevertheless confirm the exact declarations.
+
+TypeScript 7.0 has no stable programmatic API, which this generator, Vue tools,
+ESLint and API extraction need. Keep the compatible JavaScript compiler on 6.x
+instead of adding a second compiler or weakening types. The consumer minimum
+remains TypeScript 5.4. See [Microsoft's transition guidance](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/).
+Keep package specifiers and lockfile importers in sync. Treat future compiler
+upgrades as a separate change from component behavior or formatting:
 
 1. Review Vue language-tools release notes and compare the generated generic SFC
    signatures, especially `__ctx`, slots, emits, expose and optional arguments.
@@ -79,6 +87,15 @@ separate change from component behavior or formatting:
 4. Record the exact old/new compiler versions and consumer results before
    accepting the pin. Revisit this internal-field dependency when Vue exposes a
    supported generic-component contract that preserves the same inference.
+
+The other prepared groups are Vite 8.3.4/plugin-vue 6.0.10/Vitest and V8 coverage
+5.0.5/vite-plugin-dts 5.1.2, jsdom 29.1.1 and Changesets 3.0.3. Declaration
+generation explicitly selects the Vue processor and installs its language-core
+peer. Vite uses Rolldown options and the existing shared-runtime chunk policy;
+the size probe uses Oxc. Vitest retains the preceding mock lifecycle explicitly.
+jsdom 30 requires a newer Node minimum, so 29 remains the selected line under
+Node 22.13+/24. Registry engine/peer resolution and lockfile authoring are not
+test/build/consumer acceptance; all named checks remain pending.
 
 ## Themes and public DOM
 
@@ -118,7 +135,8 @@ Current section names and default attributes are defined in
 [`src/pt-types.ts`](../../packages/ui-kit/src/pt-types.ts). Component guides expose the applicable
 sections from shared documentation metadata. A section applies only when its
 DOM exists, such as a dialog footer supplied through a slot. Keep compatibility
-aliases and migrations explicit when normalizing section names.
+migrations explicit when normalizing section names. The 1.0 source resolves only
+canonical PT keys; historical 0.x aliases are documented in the migration guide.
 
 ## Checking a change
 

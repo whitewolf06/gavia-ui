@@ -342,7 +342,7 @@ const tokenCode = t("shell.DesignSystem.text167");
               <WlButton variant="primary">{{ t('shell.DesignSystem.text220') }}</WlButton>
               <WlButton variant="secondary">{{ t('shell.DesignSystem.text221') }}</WlButton>
               <WlButton variant="ghost">Ghost</WlButton>
-              <WlButton variant="danger">{{ t('shell.DesignSystem.text222') }}</WlButton>
+              <WlButton variant="primary" tone="danger">{{ t('shell.DesignSystem.text222') }}</WlButton>
             </div>
             <div class="wl-inline" data-space="sm">
               <WlButton size="sm">{{ t('shell.DesignSystem.text223') }}</WlButton>
@@ -480,7 +480,7 @@ const tokenCode = t("shell.DesignSystem.text167");
                 autocomplete="email"
               /></WlField>
               <WlButton variant="primary" type="submit">{{ t('shell.DesignSystem.text252') }}</WlButton>
-              <WlAlert v-if="saved" variant="ok" :title="t('shell.DesignSystem.text253')">{{ t('shell.DesignSystem.text254') }}</WlAlert>
+              <WlAlert v-if="saved" tone="success" :title="t('shell.DesignSystem.text253')">{{ t('shell.DesignSystem.text254') }}</WlAlert>
             </form>
             <article class="wl-surface wl-stack" data-space="lg">
               <h3 class="wl-text-heading">{{ t('shell.DesignSystem.text255') }}</h3>
@@ -525,7 +525,7 @@ const tokenCode = t("shell.DesignSystem.text167");
                   <WlButton @click="contentState = 'ready'">{{ t('shell.DesignSystem.text267') }}</WlButton>
                 </template>
               </WlEmpty>
-              <WlAlert v-else-if="contentState === 'error'" variant="err" :title="t('shell.DesignSystem.text268')">
+              <WlAlert v-else-if="contentState === 'error'" tone="danger" :title="t('shell.DesignSystem.text268')">
                 {{ t('shell.DesignSystem.text269') }}
                 <template #action>
                   <WlButton size="sm" @click="contentState = 'ready'">{{ t('shell.DesignSystem.text270') }}</WlButton>

@@ -47,7 +47,7 @@ async function submit(): Promise<void> {
       :items="[{ label: t('examples.data_0127') }, { label: t('examples.access_0128') }, { label: t('examples.review_0129') }]"
       :current="step"
     />
-    <WlAlert v-if="complete" variant="ok" :title="t('examples.project_created_0243')">
+    <WlAlert v-if="complete" tone="success" :title="t('examples.project_created_0243')">
       {{ title }} · {{ access === 'team' ? t("examples.for_the_entire_team_0244") : t("examples.private_0245") }}
     </WlAlert>
     <template v-else>

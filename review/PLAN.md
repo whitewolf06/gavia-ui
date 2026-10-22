@@ -2,6 +2,15 @@
 
 > Execution authority: [approved decisions and live task ledger](IMPLEMENTATION.md) override the original recommendations and template permissions below. Vue 3.4 support and Windows primary baselines are retained. No commits or heavy checks are authorised implicitly.
 
+Current source: **1.0.0-rc.1, archive distribution checks passed on 2026-10-22**.
+Build/pack, strict publint/attw, contents/fonts/documents and one installed
+pnpm/Vue 3.4.38/TS 6.0.3 lane pass under sequential hard resource limits;
+remaining candidate release gates are pending. The owner approved the
+RC transition in place of a separate 0.x warning release: npm `next`, then two
+to four weeks of feedback after actual publication before stable 1.0. Font visual
+acceptance is confirmed. See the [current archive checkpoint](IMPLEMENTATION.md#rc1-archive-verification-2026-10-22);
+original phased versions and old pending statements below are historical planning.
+
 
 Этот документ — **исполняемый план** по итогам ревью (октябрь 2026, версия 0.12.1). Он написан так, чтобы его можно было отдать агенту-исполнителю (Codex, Claude Code) или выполнять самому задача за задачей.
 
@@ -169,6 +178,11 @@
 - все правила кроме `max-len` переведены в `error`, `pnpm lint` проходит без ошибок;
 - `max-len` — `warn` с порогом 140, оставшиеся предупреждения ≤ 50;
 - новый `knip`-прогон (`pnpm dlx knip`, без установки) выполнен, мёртвый код удалён или отмечен в отчёте.
+
+Current audit: [T0.4 unused-code/export report](T0.4-unused-code-audit-2026-10-21.md)
+records the pinned Knip run, removed private exports and retained public PT types.
+The approved correction preserves `CallbackInference` inference overload helpers.
+Current lint verification and release acceptance remain separate in the ledger.
 
 ---
 
@@ -668,11 +682,30 @@
 
 ### T5.3 — Переменный шрифт   [PERF-7, PG-PERF-5] · P1 · M · нет (имена `font-family` и веса те же)
 
+See the [bounded Core/full checkpoint](IMPLEMENTATION.md#t53-bounded-fonts-2026-10-21)
+and [font acceptance record](../docs/maintainers/font-variation-audit.md).
+The completed four-file draft has normal Core 75428 bytes and italic Core 79696
+bytes, both below 80000. Full faces retain all original coverage and are unchanged
+from the prior draft. CSS declares Full first and Core last; Core retains Latin-1,
+common Cyrillic and signs, while combining marks remain available in complete
+coverage. Exact original endpoint/shaping guards pass all six weights/styles;
+all static binaries and authored artwork are unchanged. Core omits only private
+glyph names, with the original GID aliases restored during serialization checks.
+The build ran in a one-process OS job with 1 GiB/CPU/time caps: 129.27 s, 160.67 MiB.
+27 focused Python units pass. The per-file size gate is complete; T5.3 remains
+Partial for measured CLS and exact-candidate checks; the owner confirmed visual
+font acceptance on 2026-10-22. Canonical
+assets are now active through the existing stylesheet; focused Windows Chromium
+checks pass for one 75428-byte Russian Gavia home request, weights/styles,
+Core/full cluster raster and the standalone ZIP. See the
+[activation checkpoint](IMPLEMENTATION.md#t53-browser-activation-2026-10-21).
+No new full verification sequence is claimed.
+
 **Файлы:** `scripts/fonts/build_font.py`, `verify_fonts.py`, `packages/ui-kit/styles/fonts/gavia.css`, `fonts/gavia/manifest.json`, `font-assets.test.ts`.
 
 **Шаги:**
-1. Собирать `Gavia-Variable.woff2` и `Gavia-Variable-Italic.woff2` (`font-weight: 100 900`).
-2. Сабсеты `unicode-range`: latin, latin-ext, cyrillic (+ знаки).
+1. Собирать `Gavia-Variable.woff2` и `Gavia-Variable-Italic.woff2` (`font-weight: 100 700` — accepted authored range; no accepted 900 master exists).
+2. Superseding delivery: Latin-1/common Cyrillic Core, plus complete international Full faces for extended characters and combining clusters. Declare Full before Core, retain original Unicode/layout, and enforce each Core below 80000 bytes.
 3. В `gavia.css` переменные `@font-face` идут первыми. Статические оставить на один минорный цикл, либо удалить с заметкой в миграции.
 4. Метрики fallback (`size-adjust`, `ascent-override`, `descent-override`) для системного шрифта, чтобы уменьшить CLS.
 5. Playground: `<link rel="preload">` для основного сабсета.
@@ -886,12 +919,14 @@ Issue-шаблоны (T2.2), `.changeset/README.md`, `AGENTS.md` (T0.1), стр�
 - имена pt-секций;
 - `dismissible`;
 - `tone`;
-- минимальный Vue 3.5 (сделано в T1.4);
-- Node 20.19+.
+- Vue peer `^3.4.0`, consumer matrix 3.4/3.5;
+- Node 22.13+ in the 22.x line and Node 24.
 
 Зафиксировать решения до начала T9.2–T9.3.
 
 ### T9.2 — Локализация: английский fallback, текст только из locale   [CMP-4, ARCH-4, UTIL-8] · P1 · M · **да (1.0)**
+
+Current implementation and deferred acceptance: [T9.2 source checkpoint](IMPLEMENTATION.md#t92--10-localization-implementation-prepared).
 
 - русские дефолты props (13 компонентов: Alert, Autocomplete, ColorPicker, CommandPalette, DatePicker, FilePicker, FilterBar, NumberInput, PasswordInput, Sidebar, Spinner, Table, Tag) → `undefined`;
 - текст `props.x ?? locale.value.x`;
@@ -901,6 +936,12 @@ Issue-шаблоны (T2.2), `.changeset/README.md`, `AGENTS.md` (T0.1), стр�
 - миграция: «если приложение рассчитывало на русские тексты без `WlConfig`, подключите `wlLocaleRu`».
 
 ### T9.3 — Нормализация имён pt-секций и удаление алиасов   [CMP-7] · P1 · M · **да (1.0)**
+
+Canonical-only major source, Tooltip exports and icon-action name contracts are
+prepared. See the [current source checkpoint](IMPLEMENTATION.md#pre-10-source-completion--2026-10-21)
+and [migration](../docs/migration.md#migration-1-0-public-api). The owner-approved
+RC transition replaces the separate 0.x warning-release requirement. Exact-candidate
+verification, publication and the two-to-four-week RC feedback period remain pending.
 
 - `pcCloseButton.*` → `closeButton.*`;
 - `pcChip.*` → `chip.*`;

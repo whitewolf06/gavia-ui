@@ -41,7 +41,6 @@
   },
   "WlAlert": {
     "props": {
-      "variant": "WlAlertVariant",
       "tone": "WlTone",
       "title": "string",
       "closable": "boolean",
@@ -55,17 +54,15 @@
     },
     "models": {},
     "defaults": {
-      "variant": "info",
-      "closable": false,
-      "closeLabel": "Закрыть"
+      "tone": "info",
+      "closable": false
     },
     "required": [],
     "descriptions": {
-      "variant": "Notification type.",
-      "tone": "Semantic color role; takes precedence over supported legacy color aliases.",
+      "tone": "Semantic notification color.",
       "title": "Title.",
       "closable": "Button that closes the surface.",
-      "closeLabel": "Close button aria-label.",
+      "closeLabel": "Close button aria-label; uses locale.close when omitted or undefined (English: Close).",
       "live": "Override live announcements; off renders a static message.",
       "pt": "Attributes for internal DOM sections."
     },
@@ -115,7 +112,6 @@
       "size": "md",
       "density": "default",
       "dropdown": false,
-      "dropdownLabel": "Показать варианты",
       "minLength": 1,
       "debounce": 300,
       "loading": false
@@ -135,7 +131,7 @@
       "density": "Density.",
       "multiple": "Multiple selection (chips).",
       "dropdown": "List expansion button.",
-      "dropdownLabel": "Accessible list expansion button name.",
+      "dropdownLabel": "Accessible list expansion button name.\nDefaults to WlConfig.locale.showOptions (English when unconfigured).",
       "minLength": "Minimum characters to start a search.",
       "debounce": "Delay in milliseconds before requesting completion for changed text.",
       "loading": "Indicate pending work supplied by the application.",
@@ -187,7 +183,6 @@
   "WlBadge": {
     "props": {
       "value": "string | number",
-      "variant": "WlBadgeVariant",
       "tone": "WlTone",
       "max": "number",
       "ariaLabel": "string",
@@ -200,14 +195,13 @@
     "emits": {},
     "models": {},
     "defaults": {
-      "variant": "accent",
+      "tone": "accent",
       "dot": false
     },
     "required": [],
     "descriptions": {
       "value": "Text or count shown when dot is false.",
-      "variant": "Legacy color alias.",
-      "tone": "Semantic badge color; takes precedence over variant.",
+      "tone": "Semantic badge color.",
       "max": "Display numeric values above this limit as a capped count.",
       "ariaLabel": "Accessible label; required for a meaningful dot indicator.",
       "dot": "Show a dot instead of the value; unlabeled dots are decorative.",
@@ -224,7 +218,7 @@
       "separator": "string",
       "maxItems": "number",
       "collapseLabel": "string",
-      "pt": "WlPt<\"breadcrumb\">"
+      "pt": "WlPt<\"breadcrumbs\">"
     },
     "slots": {
       "item": "item?(props: { item: WlBreadcrumbItem; index: number; current: boolean }): unknown;",
@@ -283,7 +277,7 @@
     "required": [],
     "descriptions": {
       "variant": "Visual treatment; inherits an enclosing WlButtonGroup when omitted.",
-      "tone": "Semantic color. Legacy danger variants remain compatibility aliases.",
+      "tone": "Semantic color, independent of the visual treatment.",
       "size": "Control size; inherits an enclosing WlButtonGroup when omitted.",
       "density": "Spacing density; inherits an enclosing WlButtonGroup when omitted.",
       "loading": "Display a spinner and prevent activation.",
@@ -576,9 +570,7 @@
       "disabled": false,
       "invalid": false,
       "alpha": false,
-      "custom": false,
-      "paletteLabel": "Палитра",
-      "inputLabel": "HEX-код цвета"
+      "custom": false
     },
     "required": [],
     "descriptions": {
@@ -590,8 +582,8 @@
       "alpha": "Enable an alpha channel in the selected color.",
       "custom": "Allow entering a custom color beyond the swatch palette.",
       "pt": "Attributes and callbacks for the component's documented pass-through sections.",
-      "paletteLabel": "Accessible colour list name.",
-      "inputLabel": "Accessible HEX field name."
+      "paletteLabel": "Accessible colour list name.\nDefaults to WlConfig.locale.colorPalette (English when unconfigured).",
+      "inputLabel": "Accessible HEX field name.\nDefaults to WlConfig.locale.colorHex (English when unconfigured)."
     },
     "slotDescriptions": {},
     "eventDescriptions": {
@@ -636,10 +628,6 @@
     },
     "defaults": {
       "groups": [],
-      "placeholder": "Поиск или переход…",
-      "emptyText": "Ничего не найдено",
-      "loadingText": "Поиск…",
-      "ariaLabel": "Командная палитра",
       "filter": true,
       "shortcut": false,
       "closeOnSelect": true,
@@ -655,10 +643,10 @@
       "groups": "WlCommandPaletteGroup[] with quick links and search results. group.filter selects local or external filtering.",
       "visibleModifiers": "Modifier contract for visibility; built-in modifiers are unsupported.",
       "queryModifiers": "Modifiers accepted by the query model; trim normalizes surrounding whitespace.",
-      "placeholder": "Hint shown when the control has no displayed text.",
-      "emptyText": "Text shown when no matching items are available.",
-      "loadingText": "Localized text describing pending results.",
-      "ariaLabel": "Accessible name when an external label is not referenced.",
+      "placeholder": "Input hint; uses locale.searchPlaceholder when omitted or undefined (English: Search or navigate…).",
+      "emptyText": "Empty state; uses locale.noResults when omitted or undefined (English: Nothing found).",
+      "loadingText": "Loading text; uses locale.searching when omitted or undefined (English: Searching…).",
+      "ariaLabel": "Accessible name; uses locale.commandPalette when omitted or undefined (English: Command palette).",
       "filter": "Filter items locally.",
       "shortcut": "Open with Ctrl/Cmd+K.",
       "closeOnSelect": "Close the surface after an enabled item is selected.",
@@ -785,21 +773,18 @@
       "modelValue": "WlDatePickerModel<NoInfer<Mode>>"
     },
     "defaults": {
-      "placeholder": "дд.мм.гггг",
       "size": "md",
       "density": "default",
       "disabled": false,
       "invalid": false,
       "showIcon": false,
-      "startLabel": "От",
-      "endLabel": "До",
       "displayFormat": "dd.mm.yyyy",
       "modelValue": null
     },
     "required": [],
     "descriptions": {
       "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
-      "placeholder": "Placeholder.",
+      "placeholder": "Placeholder.\nDefaults to WlConfig.locale.datePlaceholder (English when unconfigured).",
       "size": "Field size.",
       "density": "Spacing density for this component family.",
       "disabled": "Disables the field.",
@@ -812,8 +797,8 @@
       "disabledDates": "Date list or predicate identifying dates that cannot be selected.",
       "rangePresets": "Consumer-provided predefined date ranges.",
       "selectionMode": "single: ISO string/null; range: [start, end|null]/null. The first selection sets the start, the second\ncompletes and sorts the range, and the next starts a new one.",
-      "startLabel": "Visible range start label.",
-      "endLabel": "Visible range end label.",
+      "startLabel": "Visible range start label.\nDefaults to WlConfig.locale.dateFrom (English when unconfigured).",
+      "endLabel": "Visible range end label.\nDefaults to WlConfig.locale.dateTo (English when unconfigured).",
       "motion": "Calendar animation; defaults to WlConfig.motion (true).",
       "pt": "Attributes of internal Gavia UI elements."
     },
@@ -826,7 +811,6 @@
       "visibleModifiers": "WlNoModelModifiers",
       "modal": "boolean",
       "closable": "boolean",
-      "dismissable": "boolean",
       "dismissible": "boolean",
       "closeOnEscape": "boolean",
       "blockScroll": "boolean",
@@ -855,7 +839,7 @@
     "defaults": {
       "modal": true,
       "closable": true,
-      "dismissable": false,
+      "dismissible": false,
       "closeOnEscape": true,
       "blockScroll": true,
       "visible": false
@@ -866,8 +850,7 @@
       "visibleModifiers": "Modifier contract for visibility; built-in modifiers are unsupported.",
       "modal": "Modal mode with backdrop.",
       "closable": "Button that closes the surface.",
-      "dismissable": "Close by clicking the backdrop.",
-      "dismissible": "Allow the surface to close through its documented dismissal interactions.",
+      "dismissible": "Close by clicking the backdrop.",
       "closeOnEscape": "Close with Escape.",
       "blockScroll": "Locks page scrolling while the dialog is open.",
       "ariaLabel": "Accessible dialog name without a text heading.",
@@ -913,7 +896,6 @@
       "visibleModifiers": "WlNoModelModifiers",
       "position": "WlDrawerPosition",
       "modal": "boolean",
-      "dismissable": "boolean",
       "dismissible": "boolean",
       "closable": "boolean",
       "size": "WlOverlaySize",
@@ -942,7 +924,7 @@
     "defaults": {
       "position": "right",
       "modal": true,
-      "dismissable": true,
+      "dismissible": true,
       "closable": true,
       "closeOnEscape": true,
       "blockScroll": true,
@@ -954,8 +936,7 @@
       "visibleModifiers": "Modifier contract for visibility; built-in modifiers are unsupported.",
       "position": "Opening side.",
       "modal": "Modal mode with backdrop.",
-      "dismissable": "Close by clicking the backdrop.",
-      "dismissible": "Allow the surface to close through its documented dismissal interactions.",
+      "dismissible": "Close by clicking the backdrop.",
       "closable": "Show the explicit close action.",
       "size": "Size within the component family's documented scale.",
       "width": "Explicit surface width as a CSS length or a pixel number.",
@@ -1056,7 +1037,6 @@
     "defaults": {
       "multiple": false,
       "disabled": false,
-      "chooseLabel": "Выбрать файлы",
       "size": "md",
       "density": "default"
     },
@@ -1065,7 +1045,7 @@
       "accept": "Extensions or MIME types for the file picker. The application validates files.",
       "multiple": "Allows multiple file selection.",
       "disabled": "Disables the trigger and choose().",
-      "chooseLabel": "Default button label.",
+      "chooseLabel": "Default button label.\nDefaults to WlConfig.locale.chooseFiles (English when unconfigured).",
       "ariaLabel": "Default button accessible name.",
       "size": "Button size.",
       "density": "Button density.",
@@ -1156,12 +1136,6 @@
     },
     "defaults": {
       "activeCount": 0,
-      "ariaLabel": "Фильтры",
-      "toggleLabel": "Фильтры",
-      "panelTitle": "Фильтры",
-      "clearLabel": "Сбросить",
-      "applyLabel": "Применить",
-      "closeLabel": "Закрыть фильтры",
       "showClear": true,
       "showApply": true,
       "disabled": false,
@@ -1172,12 +1146,12 @@
     "descriptions": {
       "activeCount": "Number of active filters.",
       "openModifiers": "Modifier contract for open state; built-in modifiers are unsupported.",
-      "ariaLabel": "Accessible name when an external label is not referenced.",
-      "toggleLabel": "Accessible name of the filter panel's toggle action.",
-      "panelTitle": "Visible title of the mobile filter panel.",
-      "clearLabel": "Accessible text for the clear action.",
-      "applyLabel": "Accessible text for the apply action.",
-      "closeLabel": "Accessible text for the close action.",
+      "ariaLabel": "Accessible name; uses locale.filters when omitted or undefined (English: Filters).",
+      "toggleLabel": "Toggle text; uses locale.filters when omitted or undefined (English: Filters).",
+      "panelTitle": "Mobile panel title; uses locale.filters when omitted or undefined (English: Filters).",
+      "clearLabel": "Clear action text; uses locale.reset when omitted or undefined (English: Reset).",
+      "applyLabel": "Apply action text; uses locale.apply when omitted or undefined (English: Apply).",
+      "closeLabel": "Close action text; uses locale.closeFilters when omitted or undefined (English: Close filters).",
       "showClear": "Show the filter panel's clear action when applicable.",
       "showApply": "Show the filter panel's apply action.",
       "disabled": "Disable user interaction with this component.",
@@ -1237,7 +1211,9 @@
       "ariaLabel": "string",
       "pt": "WlPt<\"iconButton\">"
     },
-    "slots": {},
+    "slots": {
+      "default": "default?(props: Record<never, never>): unknown;"
+    },
     "emits": {
       "click": "[event: MouseEvent]"
     },
@@ -1252,7 +1228,7 @@
     "required": [],
     "descriptions": {
       "variant": "Visual variant.",
-      "tone": "Semantic color role; takes precedence over supported legacy color aliases.",
+      "tone": "Semantic color, independent of the visual treatment.",
       "size": "Button size.",
       "icon": "Icon (when no slot is provided).",
       "active": "Highlight as active.",
@@ -1264,10 +1240,12 @@
       "countLabel": "Badge description; the action still needs its own accessible name.",
       "dot": "Indicator dot (when count is absent).",
       "dotLabel": "Accessible description for a meaningful status dot.",
-      "ariaLabel": "Required when no named default slot, native label or aria-labelledby is supplied.",
+      "ariaLabel": "Required for the icon prop unless native aria-label, aria-labelledby or a named pt.root is supplied.",
       "pt": "Attributes of internal Gavia UI elements."
     },
-    "slotDescriptions": {},
+    "slotDescriptions": {
+      "default": "Action text, optionally with a custom icon; descriptions alone do not name the action."
+    },
     "eventDescriptions": {
       "click": "Click (not emitted when disabled)."
     }
@@ -1284,7 +1262,7 @@
       "showCount": "boolean",
       "placeholder": "string",
       "type": "string",
-      "pt": "WlPt<\"inputtext\">"
+      "pt": "WlPt<\"input\">"
     },
     "slots": {},
     "emits": {},
@@ -1341,7 +1319,7 @@
     "required": [],
     "descriptions": {
       "to": "Router location passed unchanged to WlConfig.linkComponent.",
-      "tone": "Semantic color role; takes precedence over supported legacy color aliases.",
+      "tone": "Semantic color role.",
       "href": "Native URL.",
       "external": "Opens a new tab with a safe rel and an accessible hint.",
       "disabled": "Disable user interaction with this component.",
@@ -1580,8 +1558,6 @@
       "density": "default",
       "disabled": false,
       "invalid": false,
-      "decrementLabel": "Уменьшить",
-      "incrementLabel": "Увеличить",
       "modelValue": 0
     },
     "required": [],
@@ -1595,8 +1571,8 @@
       "disabled": "Disables the field.",
       "invalid": "Error state.",
       "ariaLabel": "Input aria-label.",
-      "decrementLabel": "Accessible decrement button name.",
-      "incrementLabel": "Accessible increment button name.",
+      "decrementLabel": "Accessible decrement button name.\nDefaults to WlConfig.locale.decrease (English when unconfigured).",
+      "incrementLabel": "Accessible increment button name.\nDefaults to WlConfig.locale.increase (English when unconfigured).",
       "format": "Enable localized number parsing and display formatting.",
       "locale": "Locale override for numeric display formatting.",
       "precision": "Decimal precision used by numeric formatting.",
@@ -1656,7 +1632,7 @@
       "siblings": "number",
       "compact": "boolean",
       "disabled": "boolean",
-      "pt": "WlPt<\"paginator\">"
+      "pt": "WlPt<\"pagination\">"
     },
     "slots": {},
     "emits": {
@@ -1711,7 +1687,6 @@
       "density": "default",
       "invalid": false,
       "disabled": false,
-      "placeholder": "Пароль",
       "modelValue": ""
     },
     "required": [],
@@ -1721,7 +1696,7 @@
       "density": "Density.",
       "invalid": "Error state.",
       "disabled": "Disables the field.",
-      "placeholder": "Placeholder.",
+      "placeholder": "Placeholder.\nDefaults to WlConfig.locale.password (English when unconfigured).",
       "ariaLabel": "Input aria-label.",
       "strength": "Consumer-provided password-strength status.",
       "strengthLabel": "Readable description of the password-strength status.",
@@ -1732,7 +1707,6 @@
   },
   "WlPill": {
     "props": {
-      "variant": "WlPillVariant",
       "tone": "WlTone",
       "dot": "boolean",
       "label": "string",
@@ -1742,13 +1716,12 @@
     "emits": {},
     "models": {},
     "defaults": {
-      "variant": "neutral",
+      "tone": "neutral",
       "dot": true
     },
     "required": [],
     "descriptions": {
-      "variant": "Colour variant.",
-      "tone": "Semantic color role; takes precedence over supported legacy color aliases.",
+      "tone": "Semantic status color.",
       "dot": "Display a compact status dot.",
       "label": "Text (when no slot is provided).",
       "pt": "Attributes and callbacks for the component's documented pass-through sections."
@@ -1758,7 +1731,6 @@
   },
   "WlPopover": {
     "props": {
-      "dismissable": "boolean",
       "dismissible": "boolean",
       "placement": "WlPopoverPlacement",
       "align": "WlPopoverAlign",
@@ -1781,7 +1753,7 @@
     },
     "models": {},
     "defaults": {
-      "dismissable": true,
+      "dismissible": true,
       "closeOnEscape": true,
       "placement": "auto",
       "align": "start",
@@ -1790,8 +1762,7 @@
     },
     "required": [],
     "descriptions": {
-      "dismissable": "Close by clicking outside the popover.",
-      "dismissible": "Allow the surface to close through its documented dismissal interactions.",
+      "dismissible": "Close by clicking outside the popover.",
       "placement": "Preferred overlay side relative to its anchor.",
       "align": "Alignment of the overlay along its anchor.",
       "arrow": "Show an arrow pointing to the overlay anchor.",
@@ -1815,7 +1786,6 @@
   "WlProgress": {
     "props": {
       "value": "number",
-      "variant": "WlProgressVariant",
       "tone": "WlTone",
       "max": "number",
       "indeterminate": "boolean",
@@ -1823,22 +1793,21 @@
       "ariaLabelledby": "string",
       "thin": "boolean",
       "showValue": "boolean",
-      "pt": "WlPt<\"progressbar\">"
+      "pt": "WlPt<\"progress\">"
     },
     "slots": {},
     "emits": {},
     "models": {},
     "defaults": {
       "value": 0,
-      "variant": "default",
+      "tone": "accent",
       "thin": false,
       "showValue": false
     },
     "required": [],
     "descriptions": {
       "value": "Current value, clamped to the range from zero to max.",
-      "variant": "Legacy color alias.",
-      "tone": "Semantic progress color; takes precedence over variant.",
+      "tone": "Semantic progress color.",
       "max": "Positive finite upper bound; invalid values fall back to 100.",
       "indeterminate": "Show activity without exposing a known current value.",
       "ariaLabel": "Accessible name when no external label is referenced.",
@@ -1859,7 +1828,7 @@
       "name": "string",
       "disabled": "boolean",
       "invalid": "boolean",
-      "pt": "WlPt<\"radiobutton\">"
+      "pt": "WlPt<\"radio\">"
     },
     "slots": {},
     "emits": {},
@@ -1959,7 +1928,7 @@
       "density": "WlDensity",
       "block": "boolean",
       "orientation": "\"horizontal\" | \"vertical\"",
-      "pt": "WlPt<\"selectbutton\">"
+      "pt": "WlPt<\"segmented\">"
     },
     "slots": {},
     "emits": {},
@@ -2102,12 +2071,9 @@
       "footerItems": [],
       "brand": "",
       "brandMark": "",
-      "ariaLabel": "Основная навигация",
       "collapsible": true,
       "expandOnHover": true,
       "showPin": true,
-      "pinLabel": "Закрепить панель",
-      "unpinLabel": "Открепить панель",
       "density": "default",
       "pinned": false,
       "mobileOpen": false
@@ -2121,12 +2087,12 @@
       "footerItems": "WlSidebarItem[] for the pinned bottom region.",
       "brand": "Product name.",
       "brandMark": "Short text brand mark.",
-      "ariaLabel": "Accessible name when an external label is not referenced.",
+      "ariaLabel": "Accessible name; uses locale.mainNavigation when omitted or undefined (English: Main navigation).",
       "collapsible": "Allow the sidebar to collapse to its compact state.",
       "expandOnHover": "Temporarily expand an unpinned sidebar on pointer hover.",
       "showPin": "Show the sidebar pin/unpin action.",
-      "pinLabel": "Accessible text for pinning the sidebar open.",
-      "unpinLabel": "Accessible text for releasing the sidebar's pinned state.",
+      "pinLabel": "Pin action text; uses locale.pinSidebar when omitted or undefined (English: Pin sidebar).",
+      "unpinLabel": "Unpin action text; uses locale.unpinSidebar when omitted or undefined (English: Unpin sidebar).",
       "density": "Spacing density for this component family.",
       "pt": "Attributes and callbacks for the component's documented pass-through sections."
     },
@@ -2238,14 +2204,13 @@
     "models": {},
     "defaults": {
       "size": "md",
-      "light": false,
-      "label": "Загрузка"
+      "light": false
     },
     "required": [],
     "descriptions": {
       "size": "Size.",
       "light": "Light variant for dark backgrounds.",
-      "label": "aria-label."
+      "label": "aria-label; uses locale.loading when omitted or undefined (English: Loading)."
     },
     "slotDescriptions": {},
     "eventDescriptions": {}
@@ -2332,7 +2297,7 @@
       "loading": "boolean",
       "labelPosition": "\"start\" | \"end\"",
       "density": "WlDensity",
-      "pt": "WlPt<\"toggleswitch\">"
+      "pt": "WlPt<\"switch\">"
     },
     "slots": {},
     "emits": {},
@@ -2377,7 +2342,7 @@
       "selectionMode": "WlTableSelectionMode",
       "loading": "boolean",
       "emptyMessage": "string",
-      "pt": "WlPt<\"datatable\">"
+      "pt": "WlPt<\"table\">"
     },
     "slots": {
       "default": "default?: (props: {}) => unknown;",
@@ -2398,7 +2363,6 @@
       "value": [],
       "stickyHeader": false,
       "loading": false,
-      "emptyMessage": "Нет данных",
       "sort": null,
       "selection": []
     },
@@ -2416,7 +2380,7 @@
       "sortFn": "Application sorting callback receiving readonly rows and returning their desired order.",
       "selectionMode": "Enable single or multiple row selection; the selection model stores row keys.",
       "loading": "Loading state.",
-      "emptyMessage": "Empty-state text.",
+      "emptyMessage": "Empty-state text.\r\nDefaults to WlConfig.locale.noData (English when unconfigured).",
       "pt": "Attributes of internal Gavia UI elements."
     },
     "slotDescriptions": {
@@ -2438,7 +2402,7 @@
       "orientation": "\"horizontal\" | \"vertical\"",
       "lazy": "boolean",
       "keepAlive": "boolean",
-      "pt": "WlPt<\"tablist\">"
+      "pt": "WlPt<\"tabs\">"
     },
     "slots": {
       "panel": "panel?(props: { item: Item }): unknown;"
@@ -2470,7 +2434,6 @@
   },
   "WlTag": {
     "props": {
-      "variant": "WlTagVariant",
       "color": "string",
       "tone": "WlTone",
       "icon": "WlIconInput",
@@ -2491,24 +2454,22 @@
     },
     "models": {},
     "defaults": {
-      "variant": "gray",
+      "color": "gray",
       "removable": false,
       "size": "md",
       "density": "default",
-      "disabled": false,
-      "removeLabel": "Удалить"
+      "disabled": false
     },
     "required": [],
     "descriptions": {
-      "variant": "Colour variant.",
-      "color": "Palette color; other strings preserve the legacy native color attribute.",
-      "tone": "Semantic color role; takes precedence over supported legacy color aliases.",
+      "color": "Palette color, independent of semantic tone. Other strings remain native color attributes.",
+      "tone": "Semantic color role.",
       "icon": "Icon name or supported custom icon descriptor.",
       "size": "Size within the component family's documented scale.",
       "density": "Spacing density for this component family.",
       "disabled": "Disable user interaction with this component.",
       "removable": "Show the remove button.",
-      "removeLabel": "Remove button aria-label.",
+      "removeLabel": "Remove button aria-label; uses locale.remove when omitted or undefined (English: Remove).",
       "pt": "Attributes of internal Gavia UI elements."
     },
     "slotDescriptions": {
@@ -2750,7 +2711,7 @@
     },
     "eventDescriptions": {}
   },
-  "WlTooltipComponent": {
+  "WlTooltip": {
     "props": {
       "content": "string",
       "placement": "WlPopoverPlacement",

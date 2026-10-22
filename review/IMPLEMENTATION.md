@@ -1,10 +1,475 @@
 # Approved implementation programme
 
-Approved on 2026-10-17. Accounting updated on 2026-10-20.
+Approved on 2026-10-17. Accounting updated on 2026-10-22.
 The dated [verification record](VERIFICATION-2026-10-18.md) retains confirmed
 historical checks; release, manual acceptance and publication remain separate.
 
+<a id="rc1-ci-handoff-2026-10-22"></a>
+
+## 1.0.0-rc.1 — commit, push and CI handoff authorized, 2026-10-22
+
+The owner authorized committing the RC changes, pushing a separate branch and
+running the required existing GitHub checks. The delivery branch is
+`codex/gavia-1-0-rc-1`; a draft pull request into `main` triggers `ci.yml`.
+The PR head and Actions run identify the committed revision. CI results remain
+pending until reported by GitHub; the local archive evidence below retains its
+original pre-commit snapshot and hash.
+
+Use the existing Node 22.13/24, browser, Windows visual and consumer jobs remotely.
+No heavy local validation or new verification infrastructure is part of this
+handoff. Local tooling/settings, build archives and the unrelated `.kvorum/`
+bootstrap files are excluded from the RC commit. Existing local commits remain
+in the branch history. No merge to `main`, tag, npm/Pages publication or external
+announcement is authorized. Pages only accepts a successful `main` push and
+therefore cannot deploy from this PR; Release requires a version tag.
+
+<a id="rc1-archive-verification-2026-10-22"></a>
+
+## 1.0.0-rc.1 — exact archive checked, 2026-10-22
+
+**Distribution: PASS. Installed consumer: PASS on pnpm / Vue 3.4.38 /
+TypeScript 6.0.3. Remaining release acceptance: pending. Publication: not performed.**
+The owner separately authorized the archive build/check, with up to four wrapper
+processes in one sequential step and a shared hard resource limit. No new
+repository harness, source fix, commit, push, tag or publication was needed.
+
+The [checked archive](../.tmp/rc1-package-2026-10-22/gavia-ui-1.0.0-rc.1.tgz)
+is **1250887 bytes**, SHA256
+`0748a7e32277e7ebeaaa1aef0306a65f8af3e756aeeabb344c2545d9f315081a`.
+It was built from local changes on base HEAD `9c2be71fa6bbd3378aacdd4b8f5332775a75645d`;
+there is no candidate commit. The installed verification records the same hash.
+The [candidate record](../docs/maintainers/release-candidate.md#archive-verification-2026-10-22)
+contains commands, environment, individual resource results and logs.
+
+Passing checks: library build with strict declaration generation, existing
+prepack/pack and canonical package documents, strict publint, every JS/JSON
+entrypoint under attw's existing ESM-only profile, installed-archive strict
+templates/TSX and 21 contract files, all **66 copied SFC examples**, native Node
+import, DOM-free SSR with seven stable IDs/no warnings, consumer production build,
+button tree-shaking/budget, font hashes/licenses/CSS/emission and tar contents.
+The archive has 192 files, five themes, 12 static plus four variable WOFF2s,
+and no node_modules, source/tests/scripts, TTF or font QA report. Core font sizes
+remain 75428 / 79696 bytes. The full-catalog consumer fixture's 548.71 kB Vite
+chunk warning is recorded; the separate button graph passes unchanged budgets
+at 30383 gzip bytes including Vue and 24035 rendered kit bytes.
+
+All steps ran sequentially under aggregate **1 GiB**, one logical processor,
+at most four processes, 90 user-CPU seconds per process and 30–180 s wall bounds.
+The library build took 68.98 s / 884.07 MiB peak; the installed consumer took
+134.90 s / 649.72 MiB. The initial default-loader attempt failed when Vite's
+Windows `net use` helper exceeded the earlier one-process cap; the subsequently
+approved wrapper limit and existing config-loader `runner` resolved the launch
+without changing repository verification code or increasing RAM/CPU limits.
+
+Still pending for this exact candidate: full lint/type/unit/coverage and generated
+asset checks, Playground/E2E/visual/Pages/browser runs, minimum and Vue 3.5 consumer
+lanes, compatibility rerun, complete SSR/hydration matrix, performance/CLS, formal
+NVDA/VoiceOver/mobile acceptance, remote CI and authorized RC delivery/feedback.
+Earlier results below retain their original boundaries. The owner's font visual
+acceptance remains valid; this run does not ask for it again.
+
+<a id="rc1-preparation-2026-10-22"></a>
+
+## 1.0.0-rc.1 — source and release materials prepared, 2026-10-22
+
+This preparation checkpoint predates the separately authorized archive check
+above. Its no-run and pending-archive statements describe that earlier boundary.
+
+**Code/version preparation: complete. Exact-candidate verification: pending.
+Publication: not performed.** The owner authorized local preparation without
+new runs, infrastructure, commits, push or publication. Root and library versions
+are **1.0.0-rc.1**; the private Playground remains 0.1.0 / `workspace:*`.
+Dependency ranges and lockfile resolutions were not changed by this preparation.
+
+Read-only [npm history](https://registry.npmjs.org/gavia-ui) on 2026-10-22 shows
+`latest: 0.12.1`, published on 2026-10-12, and no later 0.x or RC version:
+[observation](../.tmp/rc-deprecation-registry-2026-10-22.json).
+The 0.x aliases/warnings were added in local commit `5bfc00f`, after the
+`v0.12.1` tag at `fc7792d`; no released warning period is claimed. The owner
+explicitly replaced that planned intermediate release with **an opt-in RC
+transition through npm next and two to four weeks of feedback after confirmed
+RC publication**. This supersedes older deprecation prerequisites below.
+Feedback start/end and publication date remain pending.
+
+Prepared materials: [accepted RFC](../docs/rfc/0001-public-api-1.0.md),
+[canonical candidate migration](../docs/migration.md#migration-1-0-rc-1),
+[version-specific entry](../docs/migration-1.0.0-rc.1.md),
+[root changelog](../CHANGELOG.md) and
+[candidate record](../docs/maintainers/release-candidate.md).
+The package README template agrees with the candidate/localization policy;
+ignored generated package copies await authorized prepack. The changelog's
+0.12.1 publication date now reflects the registry observation.
+Playground published-version metadata now reports that observed 0.12.1 separately
+from source RC1. New-component badges read the package version, and EN/RU guide
+copy no longer claims the source is still 0.12.1.
+
+Changesets 3 RC metadata is prepared in `.changeset/pre.json` (`pre` / `rc`).
+All six consumed notes are retained in `.changeset/pre/` for stable promotion.
+Metadata was edited directly; no Changesets/version/validation command ran.
+The explicitly requested first candidate is rc.1; no rc.0 release is claimed.
+New component introduction metadata uses **1.0.0-rc.1**, correcting the
+unpublished 0.12.1 attribution; its existing contract check now accepts RC
+suffixes and was not run. Historical compatibility pins and saved
+quality-report versions remain unchanged. The existing compatibility policy
+already supports 1.0 stable/RC versions; no gate or fixture was broadened.
+
+The owner confirmed the font's visual acceptance on 2026-10-22. Font appearance
+is no longer an outstanding manual task. Geometry, size and earlier focused
+browser evidence remain as recorded; no new font build or browser run occurred.
+This acceptance does not establish measured CLS or formal screen-reader results.
+
+Remaining acceptance: exact-candidate lint/types/units/build/package/consumer/
+SSR/browser/visual/Pages gates, performance/CLS measurements, formal NVDA/
+VoiceOver/mobile acceptance, remote CI, actual RC publication and its feedback
+period. Base HEAD is still `9c2be71` with local changes; there is no candidate
+commit, tag, built archive or integrity hash. Earlier successful checks below
+retain their original source boundaries and do not certify this RC archive.
+
+<a id="t04-unused-code-audit-2026-10-21"></a>
+
+## T0.4 — audit complete; scoped ESLint verified, 2026-10-22
+
+**Remaining dead-code audit: complete. Scoped ESLint: 11/11 PASS, zero errors/warnings.**
+The [audit report](T0.4-unused-code-audit-2026-10-21.md) records Knip 6.42.1,
+the source/entry profile, all dispositions and resource evidence. One unused
+installation-command constant was deleted; 15 private Playground/build-tool
+declarations became module-local. Fresh results contain **0 unused files,
+0 ordinary/namespace exports, 0 duplicates/unused members**, and seven retained
+PT type-name findings. Those seven types are used by public section contracts
+and present in historical declarations; they remain explicitly documented.
+The raw Knip exit is 1 for those retained names, not a clean unfiltered exit.
+The 123 initial file findings were resolved through Vite glob discovery and
+documented executable/consumer-fixture inputs, without deleting live examples.
+Library export lists, `CallbackInference`, immutable fixtures and dependency
+manifests were not changed by this cleanup.
+
+The final audit took **10.85 s**, peak **256.89 MiB**, in one process under a
+1 GiB Windows Job cap, approximately one-quarter CPU core, 30 user-CPU seconds
+and a 120-second wall bound. The earlier batch ESLint reached its **120.07 s**
+deadline (peak **348.72 MiB**) without a passing report. Its scoped follow-up is
+now complete: all **11 files pass individually** under the unchanged ESLint
+configuration, one file/process at a time. One line wrap in the tokenizer clears
+two length warnings; only that file was repeated. No lint rule was weakened.
+The successful checks used a hard **one-logical-processor** affinity bound,
+**1 GiB** commitment, **30 user-CPU seconds** and **120 seconds wall time** each.
+The CPU bound was explicitly changed after startup timeouts under the previous
+rate, without increasing RAM or wall-time limits. Final passing invocations took
+5.42–36.26 s each, 121.51 s combined; peak across completed checks, including
+the tokenizer's first pass, was **395.03 MiB**. Failed startup attempts remain
+recorded in the [scoped follow-up](T0.4-unused-code-audit-2026-10-21.md#t04-scoped-eslint-2026-10-22).
+The existing declaration-normalization regression file passes **6/6**, including
+strict Node16/NodeNext fixture resolution, in 13.39 s / 279.52 MiB. This was one
+process with a 60-second wall bound; no full test suite ran.
+No full tests/build/package/browser/visual/Pages sequence, new repository
+harness, commit, push or publication occurred. Overall release acceptance stays
+open for the current working tree.
+
+<a id="t53-browser-activation-2026-10-21"></a>
+
+## T5.3 — local activation and focused browser checks, 2026-10-21
+
+The font specimen now has a live **100–700 weight slider, step 1**, a numeric
+readout and synchronized authored presets. Intermediate values update the custom
+sample and both alphabets as the slider moves, including italic; switching a
+preset updates the slider, while intermediate values show a localized placeholder.
+EN/RU labels, the existing font-page browser scenario and the font guides agree.
+[Targeted Vite compilation](../.tmp/font-weight-slider-sfc-2026-10-21.json)
+passes for the changed SFC/CSS and EN/RU labels. The manual preview route returns
+HTTP 200 with the existing Vite entry and variable-font preload. This is compiler
+and preview evidence; automated interaction of the slider remains pending. The
+owner's later font visual acceptance is recorded in the RC checkpoint above.
+The extended existing font-page scenario was not run as a full test file.
+The first limited browser attempt hit its 180-second startup deadline; the direct
+browser-API attempt failed when Chromium's network service terminated before the
+page loaded. Separate one-process Vite CLI/API attempts reached memory/heap
+limits and stopped. Those attempts are failures, not passing interaction tests.
+The working preview reuses the existing temporary Vite API launch under aggregate
+1 GiB, quarter-core CPU and 15-minute bounds, without starting Chromium; peak
+commitment at handoff was 354.54 MiB. No repository config/dependency/harness,
+full run, commit, push or publication was added. Earlier activation results below
+belong to the preceding font check.
+
+**Canonical activation and focused Windows Chromium check: PASS. Overall T5.3:
+Partial for CLS and exact-candidate verification; owner visual acceptance was
+confirmed on 2026-10-22.** This supersedes the
+activation/browser-pending statements in the earlier bounded checkpoint below.
+The four validated Full/Core WOFF2s, generated provenance and notices are now
+canonical package assets. The existing `gavia.css` import enables them in the
+Playground and standalone ZIP. All accepted static binaries and artwork remain
+unchanged. Static faces are conditional on missing variable-font support: a real
+browser exposed exact static weights competing with the variable range, causing
+redundant downloads, and that CSS error is fixed. Rebuilding the stylesheet does
+not duplicate its generated block; its single targeted Python unit passes.
+
+[Focused browser report](../.tmp/font-browser-2026-10-21.json), Chromium
+145.0.7632.6 on Windows: Russian Gavia home loads only normal Core, **75,428 body
+bytes / 75,728 transfer bytes**. All six presets plus 450/550 and the `Gavia`
+alias load real 100–700 variable faces. Existing specimen controls render real
+italic Gavia. Eighteen Core/full raster comparisons at 400/450/500 in both styles,
+including combining clusters and extended Cyrillic, match exactly; weight 450
+differs from both adjacent masters. The standalone ZIP contains all 35 expected,
+verified entries. No page exception or failed font request occurred.
+[The actual screenshot](../.tmp/gavia-variable-browser-2026-10-21.png) was viewed;
+no Windows/Linux visual baseline was updated.
+
+The successful browser check took **43.92 seconds**. One browser/context and its
+local Vite server shared a Windows Job limit of **1 GiB**, one processor affinity,
+**156/10000 total CPU** on 16 logical processors (about one quarter of one core),
+a 180-second automated deadline and a 15-minute total manual-preview lifetime.
+Peak job commitment was **811.86 MiB** at the manual handoff:
+[resource checkpoint](../.tmp/font-browser-resource-checkpoint-2026-10-21.json).
+Chromium's single-system-process mode crashed twice; those attempts are retained
+as failures, and the successful check used one normal Chromium instance under
+the same aggregate RAM/CPU limits. No concurrent verification ran.
+
+The existing font-download and font-page checks now cover variable assets and
+weight-range selection; their full runners were not invoked. Earlier lint and
+Vitest resource-limit failures remain pending. No new full tests/build/pack,
+visual-baseline/Pages sequence, dependency or repository harness was added.
+Owner review, remaining optical/native/browser acceptance, CLS, full release
+verification and publication are separate. No commit, push or publication occurred.
+
+<a id="t53--coreextended-delivery-revision-2026-10-21"></a>
+<a id="t53-bounded-fonts-2026-10-21"></a>
+
+## T5.3 — bounded Core/full delivery, 2026-10-21
+
+**Core file-size gate: PASS. Overall T5.3: Partial.** This supersedes the
+unsuccessful Core/Extended experiment and former separate Latin/Cyrillic pair.
+The complete automated checkpoint below describes the preceding source; no
+new full test, build/package, browser/visual or Pages sequence was run here.
+
+The draft contains four WOFF2 files: Full/Core in normal and italic styles.
+Core covers Latin-1/common Cyrillic, numbers, punctuation and currencies.
+The normal Core is **75,428 bytes**, italic Core **79,696 bytes**; each is below
+80,000 bytes. Full files remain 131,620/138,676 bytes and are byte-identical to
+the previous draft, retaining every original character and layout feature.
+CSS declares Full first and Core last. Core excludes combining marks, while
+complete coverage remains available for complex clusters. Precomposed Latin-1
+letters stay in Core; the source's canonical-composition drawing is retained.
+Only private Core glyph names are omitted; serialized glyph IDs are mapped back
+to original aliases before all existing exact geometry, metric and HarfBuzz
+guards. The experimental OTL/shape-equivalence rewrite was removed.
+
+[Bounded font build PASS](../.tmp/font-bounded-build-2026-10-21-run02.log):
+all four files passed all six accepted weights in both styles, after WOFF2
+serialization. [Identity checks PASS](../.tmp/font-bounded-identity-2026-10-21.log):
+all 24 static font binaries and authored source retain their hashes; Full draft
+files are unchanged. [Focused Python units PASS: 27/27](../.tmp/font-bounded-unit-2026-10-21.log).
+The completed artifact is [.tmp/gavia-variable-bounded-2026-10-21-run02/](../.tmp/gavia-variable-bounded-2026-10-21-run02/).
+Scoped integration checks did not complete under the retained limits:
+[Vitest attempt 1](../.tmp/font-bounded-kit-tests-resources-2026-10-21.json)
+reached the 1 GiB job memory limit; [attempt 2](../.tmp/font-bounded-kit-tests-resources-2026-10-21-run02.json)
+used one native thread and a 256 MiB JS heap, then stopped at its heap limit.
+Neither is a passing test report. [ESLint on four touched integration files](../.tmp/font-bounded-eslint-resources-2026-10-21.json)
+was terminated at 90.06 seconds (peak 337.64 MiB); no successful lint result is
+claimed. No further Vitest/lint retry, full typecheck, package verification or
+browser check was started. The checks remain pending without raising memory/CPU
+limits or changing repository tooling.
+
+Every calculation ran in one temporary Windows Job Object with a 1 GiB memory
+limit, one processor affinity, CPU hard cap 156/10000 on 16 logical processors
+(about one quarter of one processor), below-normal priority and a hard deadline.
+Memory-allocation and timeout probes confirmed enforcement. A 90-second font
+build was stopped at its deadline; the complete build passed with a 180-second
+wall / 40-second user-CPU bound in **129.27 seconds**, peak **160.67 MiB**:
+[resource record](../.tmp/font-bounded-build-resources-2026-10-21-run02.json).
+The launcher was session-only; no repository harness/dependency was added.
+
+Earlier Core/Extended attempts failed exact shaping checks and were not promoted.
+An unbounded mutable-glyph-list experiment from that earlier iteration consumed
+40 GiB and was explicitly stopped; it is not part of the builder. This resumed
+iteration used enforced limits, not a priority setting alone.
+
+These sizes are per-Core assets, not a total browser transfer measurement.
+Using both styles or complete international coverage can add requests.
+Canonical activation, main-page transfer/CLS, browser fallback, intermediate
+optical/native rendering and owner acceptance remain pending. Accepted static
+fonts/CSS and Windows/Linux PNG baselines are unchanged. No commit, push or
+publication occurred. See [font evidence and acceptance](../docs/maintainers/font-variation-audit.md).
+
+<a id="verification-checkpoint--2026-10-21-in-progress"></a>
+
+## Verification checkpoint — 2026-10-21
+
+The user authorized the complete existing verification sequence and resulting
+fixes after restarting Windows. **The authorized automated sequence is complete;
+no verification job remains running.** Commands ran sequentially without a new
+verification wrapper, commit, push or publication. HEAD remains `9c2be71` and
+package version 0.12.1 is unchanged. The variable-font size target, manual review
+and release acceptance remain open; the initial failed E2E batch is preserved
+separately from its successful focused repairs.
+
+This checkpoint supersedes every source-only/no-runs statement below. All earlier
+sections, including headings containing “Current”, remain historical records of
+their named source and instruction; their results do not certify later edits.
+
+| Gate | Confirmed evidence at this checkpoint | Remaining work |
+| --- | --- | --- |
+| Lockfile installation | Initial frozen installation completed in 31.8 seconds. The [dependency repair](../.tmp/dependency-fix-2026-10-21-run02.log) pins jsdom 26.1.0 in both projects; [final frozen install PASS](../.tmp/install-frozen-final-2026-10-21.log) in 733 ms, with resolution skipped and dependencies already current | The final lockfile has now been installed and verified |
+| Lint and strict types | [Final full ESLint PASS](../.tmp/lint-complete-2026-10-21.json): 716 files, zero errors and **50** length warnings, all `@stylistic/max-len`/`vue/max-len`; <=50 target met. [Final library and Playground strict types PASS](../.tmp/typecheck-complete-2026-10-21.log). Current scoped lint also passes with zero errors/warnings | Three compile-only fixture arrays were line-wrapped without contract changes. Earlier failed reports remain recorded; the separate T0.4 knip/dead-export audit has not run |
+| Full library tests and coverage | [Run 04 PASS](../.tmp/unit-coverage-2026-10-21-run04.log): 989/989 tests in 123 files, 129.58 seconds. Statements **97.41% (4831/4959)**, lines **98.66% (3979/4033)**, branches 92.65%, functions 98.12%; all existing thresholds pass | The preceding [run-03 coverage failure](../.tmp/unit-coverage-2026-10-21-run03.log) remains historical evidence. Behavioral coverage was added; thresholds were not lowered |
+| Full Playground units | [Current full suite PASS: 428/428](../.tmp/playground-unit-current-2026-10-21.log), 36 files, 83.69 seconds, after the resolver repair. The restored transition file also [passes 14/14](../.tmp/playground-restored-theme-2026-10-21-run02.log), 2.60 seconds | The earlier [436/436 run](../.tmp/playground-unit-final-2026-10-21.log) included eight experimental tests later reverted; the final suite count is 428 and focused repeats are not added |
+| Generated unit quality report | Existing [quality update PASS](../.tmp/quality-update-2026-10-21.log), recording 989/989 tests and 98.66% line coverage for version 0.12.1 | This generated report labels unit evidence only; it does not claim browser/manual acceptance |
+| Existing Node tool tests | The [95-case batch](../.tmp/tool-tests-2026-10-21.log) recorded 87 pass, seven failures and one filesystem-capability skip. [Selected retry](../.tmp/tool-tests-retry-2026-10-21.log) passed the skipped case and six release cases; the remaining Changesets prerelease failure then passed in the [7/7 repaired release subset](../.tmp/release-tools-fixed-2026-10-21.log) | All 95 original cases have passing evidence across these overlapping runs; the failed original batch is not relabelled as one clean full run |
+| Library build and local archive | [Build PASS](../.tmp/build-kit-2026-10-21.log), including declarations, 7.98 seconds; [library pack PASS](../.tmp/pack-2026-10-21.log) | Local artifacts only; subsequent runtime/declaration changes would require renewed artifacts |
+| Package metadata and compatibility | [Strict publint PASS](../.tmp/publint-2026-10-21.log), [attw PASS for the supported ESM resolutions](../.tmp/attw-2026-10-21.log), [0.11.1 compatibility PASS after the exact approved 1.0 migration](../.tmp/compatibility-2026-10-21.log): 53 components, 418 CSS classes, 447 tokens and preserved exports/contracts | Raw historical differences remain visible before the reviewed migration is applied. Immutable fixtures, unsupported CJS/Node10 boundaries and the released deprecation requirement remain unchanged |
+| Installed archive consumers | PASS for npm/Vue 3.4.0/TS 5.4.5, pnpm/Vue 3.4.38/TS 6.0.3 and Bun/Vue 3.5.40/TS 6.0.3. Each verifies native Node import/DOM-free SSR, strict contracts, 66 copied example typechecks/builds, desktop/mobile interaction and stable DOM/IDs through hydration | See the three consumer logs and evidence below; this does not substitute for the full Playground browser suite |
+| Source and size boundaries | [Dependency boundary](../.tmp/verify-dependencies-2026-10-21.log), [113 icons](../.tmp/icons-check-2026-10-21.log), [447 tokens/five themes/115 contrast pairs](../.tmp/tokens-check-2026-10-21.log), [API metadata](../.tmp/api-check-2026-10-21.log), [12 brand derivatives](../.tmp/brand-check-2026-10-21.log) and [all eight bundle budgets](../.tmp/size-2026-10-21.log) PASS | Existing byte limits were retained; these results do not establish the variable-font transfer target |
+| Font compilation and acceptance | [Static QA PASS for all 12 faces](../.tmp/font-static-qa-2026-10-21.log); [25/25 Python invariants PASS](../.tmp/font-unit-final-2026-10-21.log). The [run-03 draft manifest](../.tmp/gavia-variable-candidate-2026-10-21-run03/fonts/gavia/variable-manifest.json) records eight compiled/reopened variable WOFF2 files with endpoint/shaping guards | Normal Latin+Cyrillic subsets total **101356 bytes**, exceeding the 80000-byte target. No promotion to canonical font assets/CSS occurred. Intermediate optical/native rendering, loading and broader subset acceptance remain pending; T5.3 is not fully accepted |
+| Production Playground/E2E fixture build | Initial [PASS](../.tmp/build-playground-e2e-2026-10-21.log), 920 modules, 1.99 seconds; [final rebuilt fixture PASS](../.tmp/build-playground-e2e-final-2026-10-21.log), 2.63 seconds, after reverting the runtime experiment | Build success is separate from the browser results |
+| Complete reduced E2E batch | [FAILED: 271 passed, 20 failed](../.tmp/e2e-2026-10-21.json), 291 total, one worker, 8.8 minutes; [console log](../.tmp/e2e-2026-10-21.log) retained | The full batch is not relabelled PASS. All 291 distinct scenarios now have passing evidence across the full batch and focused repairs below; no subsequent clean full-matrix run is claimed |
+| E2E repairs | [Open-list Axe: 15/15 PASS](../.tmp/e2e-a11y-fixed-2026-10-21.json), 43.6 seconds, across five themes. [Focus/theme subset: 7/8](../.tmp/e2e-focus-theme-2026-10-21.json) includes all four CommandPalette focus cases passing; its remaining WebKit native case failed. [Theme suite: 13/13 PASS](../.tmp/e2e-theme-final-2026-10-21.json), 50.8 seconds; [clean WebKit confirmation: 1/1 PASS](../.tmp/e2e-native-clean-2026-10-21.json), 7.9 seconds, after the runtime experiment was reverted | Counts overlap and are not added to 291. WCAG rules, real input, focus, stable viewport and post-transition hit-target assertions are retained |
+| Primary Windows visuals | [PASS: 24/24](../.tmp/visual-2026-10-21.json), 1.0 minute; [console log](../.tmp/visual-2026-10-21.log). All 122 PNG comparisons passed unchanged with `--update-snapshots=none` | Windows/Chromium remains the primary visual reference. This does not replace optical acceptance of the unpromoted variable-font draft |
+| Pages | [Production build PASS](../.tmp/build-pages-2026-10-21.log), 2.36 seconds; [156 routes prerendered](../.tmp/pages-prerender-2026-10-21.log); [desktop/mobile tests 22/22 PASS](../.tmp/pages-2026-10-21.json), 1.0 minute. After the resolver repair, [validation build PASS](../.tmp/build-pages-resolver-final-2026-10-21.log), 2.92 seconds, with [all 390 JS/CSS/font/image/download assets byte-identical](../.tmp/production-asset-identity-2026-10-21.log) to the accepted Pages build | Local `/gavia-ui/` acceptance only; no deployment or public publication occurred |
+| Supplemental Docker/Linux visuals | [PASS: 24/24](../.tmp/docker-visual-2026-10-21.log), 1.7 minutes, fresh image/library/Playground build; one CPU, 2 GB RAM, one worker, zero retries. Linux references mounted read-only with `--update-snapshots=none` | Supplemental Linux evidence uses its own references and does not replace primary Windows visual acceptance. Windows/Linux baseline hashes and accepted static-font assets are unchanged |
+
+Installed-consumer evidence: [minimum Vue/TS log](../.tmp/package-consumer-minimum-2026-10-21-run02.log)
+and [JSON](../.tmp/package-verification/npm-vue-3.4.0-browser.json);
+[Vue 3.4.38 log](../.tmp/package-consumer-vue34-2026-10-21-run04.log)
+and [JSON](../.tmp/package-verification/pnpm-vue-3.4.38-browser.json);
+[Vue 3.5/Bun log](../.tmp/package-consumer-vue35-bun-2026-10-21.log)
+and [JSON](../.tmp/package-verification/bun-vue-3.5.40-browser.json).
+All three refer to archive SHA-256
+`d7d6592d35d94fa763d6dc2e9a24145e39b2ffa26c02302c85cba5aaa684628b`.
+
+The toolchain fixes preserve the supported minimums. jsdom 29/28 produced a
+selector-order/focus regression in the existing CommandPalette scenario; pinning
+26.1.0 restores the supported test DOM instead of changing the focus assertions.
+The TS 5.4.5 consumer uses compatible vue-tsc 2.2.12 because language-tools 3
+requires newer compiler internals; workspace TS 6 and Vue peer `^3.4.0` remain.
+Coverage accounting also separates DOM unit assertions from actual SSR: the
+public-export/manifest units no longer compile every SFC again in a Node SSR
+environment, while real DOM-free Node checks run against each installed archive.
+No public assertions or coverage thresholds were removed. The existing release
+preparation reads Changesets 3's consumed `.changeset/pre/` notes, fixing its
+prerelease test without versioning this checkout.
+
+Browser repairs follow the current contracts. Open-list Axe checks resolve the
+actual named listbox and its owning overlay, verify the combobox link and wait
+for the painted entry state; no WCAG rules are disabled. CommandPalette keeps
+focus on its combobox while `aria-activedescendant` identifies the active option;
+the cross-browser scenario now checks that input ownership instead of moving
+DOM focus into a roving listbox option.
+
+The [native WebKit timeline](../.tmp/e2e-native-timeline-2026-10-21.json) records
+start/ready at scrollY 0, then scrollY 96 after the test's programmatic
+`focus({ preventScroll: true })`, followed by the second transition correctly
+preserving its starting 96. The fix normalizes the setup viewport immediately
+after those explicit focus preparations and before real keyboard/rapid-click
+input. All post-finished viewport, focus and pointer-target assertions remain.
+The speculative finished-stage runtime ownership change and its eight tests were
+fully reverted; temporary timeline instrumentation was removed. The original
+theme-transition runtime and its unit source have no diff from their preceding
+state. The final clean WebKit run verifies that restored runtime with the fixed
+test setup; it is not evidence of a product-runtime repair.
+
+The first [restored-transition retry](../.tmp/playground-restored-theme-2026-10-21.log)
+failed during common test setup because Vite requested the existing virtual
+translation module as `/src/i18n/precompiled/shell.en.json?import`; none of its
+14 test bodies ran. The existing i18n build resolver now recognizes that
+root-relative request and returns the same canonical virtual resource. The
+14/14 retry passes without changing theme runtime, assertions or thresholds.
+The complete current Playground suite, current Playground types and direct
+scoped lint now pass. A separate production validation build confirms all 390
+runtime assets are byte-identical to the already accepted Pages build. Final
+full lint confirms 50 length warnings and zero errors, and both strict project
+typechecks pass after the compile-only fixture line wraps. Snapshot updates were
+disabled for both visual platforms; Windows/Linux baseline and accepted static
+font asset diffs are empty.
+
+Automated completion, variable-font acceptance, manual NVDA/VoiceOver and owner
+acceptance, the released 0.x deprecation period, RC delivery and publication are
+separate states. Local automated work is complete for this instruction, with
+the failed full E2E batch and all successful repairs explicitly recorded.
+Remaining review obligations include the T0.4 knip/dead-export audit, unmeasured
+performance targets and the variable-font size/optical acceptance; manual/owner
+acceptance, remote CI, the deprecation period and RC/publication are not complete.
+All 25 post-1.0 tasks remain queued.
+
+## T5.3 — variable-font source prepared, 2026-10-21
+
+Historical source-only checkpoint, superseded by the verification record above.
+
+The user authorized finishing variable-font code while preserving the authored
+Gavia drawing, before any new runs. **T5.3 is Implemented in source; generated
+artifacts and verification are pending.** No Python/font command, test, lint,
+typecheck, build, pack, browser/visual/Pages check or measurement was started.
+No new verification wrapper, dependency installation, commit, push, publication
+or font installation was added. Accepted TTF/WOFF2 binaries, drawing source,
+static manifest/frozen identities and canonical font CSS remain unchanged.
+
+| Scope | Authored result | Remaining acceptance |
+| --- | --- | --- |
+| Compatible master representations | Tracked `variable_geometry.py` derives exact midpoint, line-elevation and constant-span constructions for all eight affected numerals, three numeric forms, six weights and both styles. Original points/full flags/cyclic direction and metrics have explicit recovery guards; no `.tmp` recipe is loaded | Guards have not executed. The finite K/seam-A four correspondence and adaptive internal cuts require intermediate optical/native review |
+| Real variable build | Existing `build_variable.py` scales complete in-memory font copies to 2000 UPM and supplies direct integer nodal `gvar` deltas, including phantom metrics, with 100–700/default400 knots. Approximate IUP, residual rounding and automatic overlap-flag changes are avoided | Actual compilation, reopened WOFF2 endpoint recovery and HarfBuzz/layout/numeric shaping guards are deferred |
+| Subsets and CSS | Full upright/oblique VFs, Latin/Latin-ext/Cyrillic subsets with shared combining marks and all layout features; staged CSS retains all static faces and family aliases. Optional fallback aligns the line box, with no unmeasured x-height matching claim | No binary/CSS payload was generated or activated. The 80 KB total main-page font-transfer target, loading/CLS, five themes and Windows screenshots remain unmeasured |
+| Delivery integration | Existing download/preload plugin and package/consumer/asset checks recognize the optional generated manifest, safe filenames, hashes and CSS subset references. The primary Latin preload activates only when canonical CSS uses the promoted payload | Current pages use static fonts. Future artifact promotion follows acceptance; no additional runtime flag, plugin, wrapper or public export path |
+| Regression source and documentation | Existing Python/unit/installed-consumer files contain authored invariants and negative cases; font guide, build README, changelog, changeset and [acceptance record](../docs/maintainers/font-variation-audit.md) describe the model and limits | No passing result, generated font, optical approval, size improvement or release readiness is claimed |
+
+The former topology blocker is addressed by tracked implementation rather than
+redrawing accepted masters. No additional known pre-1.0 implementation task is
+left queued; code readiness does not certify that the new model passes. Remaining
+work is the separately authorized build/verification/optical acceptance stage,
+any resulting fixes, the released deprecation period and RC/release procedures.
+All 25 post-1.0 tasks remain queued. Earlier blocked-font notes below describe
+the state before this source iteration, not a newly executed audit.
+
+## Pre-1.0 source completion — 2026-10-21
+
+Historical source-only checkpoint; it predates T5.3 and the authorized checks above.
+
+The latest instruction is to finish the remaining pre-1.0 code before one later
+verification stage. Changes are uncommitted on top of `9c2be71`; package version
+0.12.1 is unchanged. No lint, typecheck, tests, build, pack, browser, visual,
+Pages, benchmark or Docker operation was started. No new verification wrapper,
+commit, push, versioning, publication or external announcement was introduced.
+
+| Remaining source scope | Implementation prepared | Acceptance boundary |
+| --- | --- | --- |
+| T9.3 / CMP-7: canonical PT | Default theme, config resolver, types, all affected SFC calls and live documentation use canonical component/nested keys. Removed alias resolver/warnings and `iconButton` fallback to `button`; Tabs uses one `tabs` resolver | Existing CSS classes, app isolation, merge order and callback contexts are retained. Source regressions and negative consumer cases are authored; execution is deferred |
+| T9.3: tone and dismissal | Removed status `variant` props on Alert/Badge/Pill/Progress, destructive Button variant aliases, Tag `variant`, and overlay `dismissable`. Appearance stays independent; Tag exposes `color` / `WlTagColor` | Live examples, recipe/browser source and manifests use canonical props. Toast severity/helper and confirmation adapters remain independent supported contracts |
+| T9.4 / RFC: Tooltip and action names | Component/source/example is `WlTooltip`; directive is `WlTooltipDirective`. Old documentation links normalize to the new name. Icon-prop actions require a typed name source; text/custom-icon slots and runtime DOM-name warnings remain | Source/packed-consumer positive and negative examples are authored. Types cannot prove rendered slot text, nonempty translated labels, global PT naming or referenced-label resolution |
+| T5.1: remaining directive lifecycle | Tooltip scroll/resize listeners are active only while shown; reposition is coalesced through rAF and work is cleaned up on hide, leaving and unmount, including reopen and an empty reactive value | Existing directive regression source covers lifecycle; no execution or new harness |
+| T2.8: compatible toolchain groups | Manifests and resolved lockfile select Vite 8.3.4, plugin-vue 6.0.10, Vitest/V8 5.0.5, dts 5.1.2, TS 6.0.3, vue-tsc/language-core 3.3.13, jsdom 29.1.1 and Changesets 3.0.3. Existing Vite/test/consumer/size configurations are migrated | Only registry metadata and `pnpm install --lockfile-only --ignore-scripts` were used; no dependency installation or lifecycle scripts. Existing node_modules still contains the preceding tools. Install the frozen lock before the later checks; Vue 3.4 and TS 5.4 consumer minimums stay |
+| Migration and metadata | [Canonical API migration](../docs/migration.md#migration-1-0-public-api), RFC, major changeset, EN/RU descriptions and examples agree with the authored source. `api.generated.json` was renewed using the existing `api:sync` generator | Generation is source authoring, not a passing API check/build. Package documentation copies remain generated by the existing prepack procedure during later packaging |
+| Existing compatibility gate | A separate, exact 1.0 policy prepares the approved changes against immutable 0.11.1, with fixed source/consumer hashes and a named major changeset. Original differences remain reported; unrelated declarations, CSS/tokens/DOM and package exports remain gated | The policy and its regression source are authored, not executed. No historical fixture was rewritten and the 0.11 policy is preserved; a migration note alone does not waive verification |
+| T5.3: variable font | **Blocked, not complete.** The accepted masters remain unchanged; no variable font/subsets/CSS replacement was authored or built | All 24 incompatible glyphs per style remain a prerequisite. In particular numeral 4 changes contour topology at 600–700; endpoint-preserving padding does not approve authored intermediate correspondence. See the [font audit](../docs/maintainers/font-variation-audit.md) |
+
+At that checkpoint T5.3 remained an implementation blocker; its tracked model is
+now prepared in the section above. Static faces remain available. Performance
+measurements/budgets, all automated acceptance,
+NVDA/VoiceOver, physical mobile/owner acceptance, the released deprecation period
+and RC/stable delivery are separate pending work. No previous green result is
+carried forward to this tree. The 25 post-1.0 tasks remain explicitly queued.
+
+## T9.2 — 1.0 localization, implementation prepared
+
+This historical source checkpoint is retained for traceability; the completion
+checkpoint above records the later T9.3/toolchain work and API renewal.
+
+The user authorized T9.2 source, types, examples, migration and review updates
+after commit `9c2be71`, with no new runs, harness, commit, push or publication.
+The working source now prepares the explicit 1.0 breaking localization contract;
+the package version remains 0.12.1 and no published release is implied.
+
+| Finding / scope | Prepared implementation | Acceptance boundary |
+|---|---|---|
+| CMP-4 / ARCH-4: fallback and text defaults | `normalizeWlLocale()` uses `wlLocaleEn` for omitted/invalid known input; `wlLocaleRu` remains an explicit application preset. All 13 listed components resolve optional text as `prop ?? locale.key`; Russian runtime defaults and `useWlLocaleText` are removed | Source reviewed only. Lint, strict source/consumer types, units, SSR/hydration and browser checks for this migration have not run |
+| Public types and manifests | Optional string props and app-scoped locale configuration are documented; source manifests omit localized prop defaults. Existing compile-only consumer cases now include all 13 components and invalid text values | Source contracts are authored, not compiled. Generated `api.generated.json` still belongs to the preceding checkpoint; regenerate through the existing API tool before its next verification/build, never by hand |
+| Runtime regressions | Authored cases cover implicit English, explicit Russian, partial/invalid locale input, app reset/isolation, parallel/repeated SSR, reactive text and explicit strings/empty strings/undefined. Existing calendar, pagination and overlay fixtures use the intended language explicitly | No tests executed. Historical compatibility fixtures are preserved; authored cases do not establish passing results |
+| Examples, documentation and migration | Canonical DatePicker example, EN/RU site guide, localization/TypeScript guides, starters, README template, RFC and [1.0 migration](../docs/migration.md#migration-1-0-localization) describe the new contract | Playground already selects EN/RU explicitly; no new public composable, routing dependency or test harness. Generated package copies remain for the existing prepack procedure |
+
+T9.2 is **Implemented**, with verification and generated-artifact renewal
+deferred. The major changeset records a future 1.0 breaking release; it does not
+bump a version. T9.3 aliases, Tooltip naming and required icon-action names were
+completed in the subsequent source iteration above. Earlier green checks and the browser results
+below apply to their named pre-T9.2 source, not this working tree.
+
 ## Current verification — 2026-10-20
+
+This section records the preceding lint/browser iteration, committed as
+`9c2be71`; the T9.2 implementation above supersedes its source-readiness claims.
 
 The user authorized the existing linter, strict typechecks, affected-code tests
 and production builds, including fixes, followed by one commit and sequential
@@ -31,8 +496,9 @@ type-only imports, import ordering, a literal test title, one callback's stateme
 layout and obsolete lint directives. Source API metadata was updated only through
 its existing generator. No new verification machinery or dependencies were added.
 Browser results and outstanding repairs are recorded below. Installed-archive,
-knip and manual accessibility/owner acceptance remain separate. Root HEAD is
-`5bfc00f`; the two pre-existing local commits are preserved.
+knip and manual accessibility/owner acceptance remain separate. That checkpoint
+started from `5bfc00f`; the browser follow-up was committed as `9c2be71`.
+The two pre-existing local commits are preserved.
 
 ## E2E reduction and browser follow-up
 
@@ -103,8 +569,10 @@ token/icon/API files were not regenerated. Source/diff reading and local social
 image inspection are the only reviews performed; they do not establish executable or
 release readiness. Earlier successful checks below do not validate this new code.
 
-Remaining implementation is explicit: T2.8 major tooling groups, versioned T9.2/T9.3 breaking
-1.0 migrations and T9.8 RC/release preparation. T5.3 variable font is blocked by
+At this historical checkpoint, T2.8 and T9.3 source work was still pending;
+the 2026-10-21 source completion section supersedes that status. T9.8 release
+materials are prepared, while actual RC/release actions remain separate.
+At that earlier checkpoint, T5.3 was blocked by
 24 incompatible glyphs per style; accepted static faces stay in place. Runtime
 performance targets in T5.2/T5.4/T5.5, full production E2E, Pages/portable,
 NVDA/VoiceOver and owner acceptance remain unproved. All 25 post-1.0 tasks in
@@ -140,16 +608,20 @@ are not carried forward. No future browser or release pass is inferred.
   primary visual baseline; Docker/Linux is supplemental with its own PNGs.
 - Wl/wl/--wl namespaces, explicit CSS and app-isolated configuration/services
   remain. Router, requests and business state belong to the consuming app.
-- Canonical tone/PT/dismissible names coexist with 0.x aliases and development
-  warnings. English fallback and alias removal remain versioned 1.0 work.
+- Canonical tone/PT/dismissible names and English fallback are prepared in the
+  future-major source; old aliases are removed through the documented 1.0
+  migration. Delivery remains subject to the released 0.x deprecation period;
+  preparing source does not establish that a compatibility release shipped.
 - The user previously authorized all deferred local checks and fixes on
   2026-10-18, including builds, archives, full tests/coverage and browser/visual/Pages
   checks. That authorization was superseded on 2026-10-19 by the instruction to
   implement the current stage, then lint debt and brand assets, without new
   verification runs or harness work. On 2026-10-20, existing checks and fixes,
   one commit (`5bfc00f`) and sequential native E2E, visual and Pages checks were
-  authorized. That commit precedes the current browser changes; no further
-  commit, push, publication, external post or remote setting change is authorized.
+  authorized. The browser iteration was subsequently committed with explicit
+  approval as `9c2be71`. The latest instruction authorizes completion of remaining
+  pre-1.0 source before one later verification stage: no new checks, harness,
+  commits, push, publication or remote changes.
 - Preserve CallbackInference overload guards, template Teleport/Transition
   adapters, historical compatibility fixtures, accepted font drawings and the
   two existing local commits. Generated files follow their generators.
@@ -239,77 +711,87 @@ below remain explicit.
 
 ## Execution ledger
 
+Live status updated on 2026-10-22; dated historical checkpoints above retain
+their original scope. “Verified” here means the named local automated gates
+passed, as detailed in the [current verification checkpoint](#verification-checkpoint--2026-10-21-in-progress).
+Rows marked Verified retain those recorded source boundaries; exact RC1
+verification is pending in the [candidate checkpoint](#rc1-preparation-2026-10-22).
+Manual accessibility/overall owner acceptance, unmeasured performance targets,
+remote CI, the RC feedback period and publication remain separate obligations.
+Font visual acceptance is confirmed; the separate 0.x deprecation prerequisite
+was replaced by the owner's 2026-10-22 RC decision.
+
 | Task | Work | Status | Evidence / remaining scope |
 |---|---|---|---|
 | T0.1 | `AGENTS.md`, `CLAUDE.md`, локальное окружение | Implemented | AGENTS/CLAUDE and local environment rules prepared; case-only rename staged; existing local commits retained, no new commit. |
 | T0.2 | Node 22.13+/24 в CI и `engines` | Implemented | Node ^22.13.0 or ^24.0.0 in engines and authored CI matrix; actual workflow execution pending. |
 | T0.3 | Собственный ESLint-конфиг, форматирующий коммит, CI | Implemented | Flat config/editor/CI setup exists; the manual lint follow-up applies source formatting and stricter rule severities with documented exceptions. No autofix or formatter was run. A formatting commit, its actual blame-ignore hash and remote CI remain intentionally pending; tool rationale is in [.changeset/README.md](../.changeset/README.md). |
-| T0.4 | Ручная доводка линтера | Verified | 2026-10-20 full ESLint: 715 files, zero errors, 39 max-len warnings (<=50), no other warnings. Actual errors repaired without weakening rules; final strict types, affected tests and both builds pass. CallbackInference/adapters and immutable fixtures retained. This verifies the lint gate; the separate knip/dead-export audit was not requested or run. |
-| T1.1 | `useWlListbox`: доступная навигация в списках | Verified | Shared listbox keyboard/disabled/scroll/ARIA and single-emit regressions passed; browser geometry and long-list acceptance pending. |
+| T0.4 | Ручная доводка линтера | Verified | Unused-code audit complete: Knip 6.42.1 finds 0 unused files/ordinary exports, with 7 documented public PT type names retained. Deleted one dead constant and 15 unnecessary private exports; library contracts, CallbackInference and immutable fixtures preserved. Fresh scoped ESLint passes all 11 audit-touched files individually, with 0 errors/warnings after one tokenizer line wrap. Hard bounds: one process, one logical CPU, 1 GiB, 30 user-CPU seconds and 120 s per file; peak 395.03 MiB. Earlier batch/startup timeouts remain recorded. The earlier full lint/type checkpoint is historical; this does not verify the complete current tree. See [audit and scope](T0.4-unused-code-audit-2026-10-21.md). |
+| T1.1 | `useWlListbox`: доступная навигация в списках | Verified | Current full library units and strict contracts pass, with long-list/disabled/typeahead/ARIA and single-emit regressions. Production browser scenarios verify End scrolling, active-descendant links and clear/focus behavior; all 291 distinct scenarios have passing evidence across the full batch and focused repairs. |
 | T1.2 | Уникальные ID и связи в `WlTabs` | Verified | Per-instance tab/panel IDs, ARIA links, disabled/vertical/lazy/link scenarios have focused tests. |
-| T1.3 | Контракт уникальности ID для всех компонентов | Verified | Unique-ID contract covers all 60 public components twice; Field/DatePicker endpoint collision fixed. Installed Vue 3.4.0/3.4.38/3.5.40 desktop/mobile and SSR hydration passed; final full production E2E awaits corrected-revision renewal. |
+| T1.3 | Контракт уникальности ID для всех компонентов | Verified | Current 989-test suite includes repeated-instance ID contracts; three installed Vue 3.4.0/3.4.38/3.5.40 lanes pass native SSR and desktop/mobile hydration with stable DOM/IDs. Relevant production browser scenarios pass; the failed full E2E batch and focused repairs remain separately accounted. |
 | T1.4 | Vue ^3.4.0 и root-scoped ID без namespace-импорта | Verified | Named Vue APIs and application-root ID allocator retain Vue 3.4. Repeated/parallel SSR regressions and three installed Vue 3.4/3.5 browser/hydration lanes passed. |
 | T1.5 | Бюджет размера бандла в CI | Verified | Eight fresh Vue 3.4/3.5 production fixtures and three installed consumer probes establish limits with 5% headroom; ordinary size verification passed. Installed raw-kit accounting includes every retained shared chunk; historical index-only results are incomparable. Remote CI execution remains separate. |
-| T1.6 | Логотип Playground: PNG 410 КБ → SVG | Implemented | Playground uses the smaller existing SVG mark; fresh production output and Windows/Linux visual acceptance passed. No separate logo transfer benchmark is claimed. |
-| T1.7 | Мелкие остатки PrimeVue | Implemented | Dead Pagination handler and obsolete PrimeVue setup rationale removed; released names remain only through documented compatibility. |
+| T1.6 | Логотип Playground: PNG 410 КБ → SVG | Verified | Smaller SVG mark is present in the fresh production build; current Windows and supplemental Linux visuals each pass 24 cases with unchanged references. No separate logo transfer benchmark is claimed. |
+| T1.7 | Мелкие остатки PrimeVue | Verified | Dead handler/setup remnants are removed; the current dependency/source/lockfile boundary check passes with Vue as the only required library peer. Historical compatibility fixtures remain intact. |
 | T2.1 | Первый экран README | Verified | Quick start, project summary, badges and install-version consistency prepared. Real two-theme, five-component EN UI capture reviewed: 848 × 454, 31,762 bytes; reproducible capture script retained. |
 | T2.2 | Файлы сообщества | Implemented | Community/security/contact/issue/PR templates and repository metadata material prepared; remote topics/social preview/settings not changed. |
 | T2.3 | CONTRIBUTING для внешнего участника | Implemented | CONTRIBUTING expanded with contribution workflow and allowed verification boundaries; local links/YAML reviewed. |
-| T2.4 | Расхождения версий и устаревшие утверждения | Implemented | Installation pins/source-version mismatch and stale document structure corrected; preserved historical version statements remain history. Final release audit pending. |
-| T2.5 | Генерировать копии CHANGELOG, LICENSE и README пакета | Verified | Canonical root docs generate package README/LICENSE/CHANGELOG during prepack. Integrated pack passed; the final archive and five installed lanes share the SHA recorded above. |
-| T2.6 | Облегчить npm-пакет | Verified | WOFF2-only npm allowlist and archive inspection passed; source TTFs preserved. Separate desktop-font archive validation passed with 15 verified font/notice files; no publication. |
-| T2.7 | Проверки пакета в CI и Renovate | Implemented | publint/attw, declaration normalizer, installed-package CI and Renovate groups authored. Actual integrated archive passed all declaration entry points, historical compatibility and five clean consumer lanes; remote CI execution remains pending. |
+| T2.4 | Расхождения версий и устаревшие утверждения | Implemented | Root/library versions agree at 1.0.0-rc.1; new component introduction metadata names that candidate and its existing contract accepts RC suffixes. README/template, changelog and migration agree with preparation; historical quality/compatibility versions remain unchanged. Generated package copies now match canonical sources in the installed RC archive; broader candidate/site checks remain pending. |
+| T2.5 | Генерировать копии CHANGELOG, LICENSE и README пакета | Verified | RC1 prepack generated README/LICENSE/CHANGELOG; exact-archive installation verifies all three against canonical sources. The 2026-10-22 distribution and pnpm/Vue 3.4.38/TS 6.0.3 lane pass; earlier multi-lane results retain their historical hashes. |
+| T2.6 | Облегчить npm-пакет | Verified | RC1 tar inspection and installed font checks pass: 192 files, 16 WOFF2s, five themes, no TTF/QA/source/tests/scripts/node_modules. Source TTFs are preserved. Earlier separate desktop-font archive validation retains its recorded scope; no publication. |
+| T2.7 | Проверки пакета в CI и Renovate | Implemented | Existing publint/attw, declaration normalization, installed-package checks and Renovate groups are configured. RC1 strict publint, all six JS/JSON attw exports and one installed pnpm consumer pass locally. Renewed minimum/3.5/other-manager lanes, compatibility and remote CI remain pending; earlier results retain their original hashes. |
 | T3.1 | `WlAlert`: правильная live-семантика | Verified | Alert status/alert/live-off semantics, icon/action slots and PT covered by focused accessibility tests. |
 | T3.2 | Гарантированные доступные имена | Verified | Field labelId/native routing, IconButton action/count descriptions, icon titles and consumer labels covered by focused name regressions, including 17 Field cases. Real AT pending. |
-| T3.3 | `inert` для фона модальных окон | Verified | Nested modal/nonmodal ownership, recursive background inert, inline backdrops and restoration covered by overlay suites; browser/manual AT pending. |
-| T3.4 | Toast: настраиваемое API и доступность | Verified | Canonical tone/show/PT/roles/icons, same-tone promise lifetime, explicit sticky results and legacy adapters pass affected service/component tests and strict types on 2026-10-20, including the post-lint rerun. Real browser/AT acceptance remains separate. |
-| T3.5 | `WlMenu`: roving tabindex | Verified | Menu roving focus and nested menus retain keyboard/modified-link contracts; Menu/ContextMenu focused slice 25 passed. Browser Tab order pending. |
+| T3.3 | `inert` для фона модальных окон | Verified | Current overlay suites and production browser scenarios cover nested modal/nonmodal ownership, inert/focus restoration and inline backdrops. Windows/Linux visuals pass; real assistive-technology acceptance remains pending. |
+| T3.4 | Toast: настраиваемое API и доступность | Verified | Tone/show/PT/live roles, timers/pause/update/removal, sticky results and supported service adapters pass the current 989-test suite, strict contracts and installed consumers. Production toast/confirmation/tooltip scenarios pass across four profiles; real AT announcements remain pending. |
+| T3.5 | `WlMenu`: roving tabindex | Verified | Current units, installed consumers and production Menu/ContextMenu browser scenarios pass keyboard, Tab/focus handoff, nested menus and modified-link contracts. Manual AT remains separate. |
 | T3.6 | `WlField`: ошибка и подсказка | Verified | Hint and error coexist, optional/horizontal/label slot and labelId work; native and non-native control examples plus Field name matrix passed. |
 | T3.7 | `WlSteps` как список | Verified | Steps retains ol/li semantics, descriptions/error text, controlled click and horizontal/vertical navigation; example runtime check passed. |
 | T3.8 | Полный `FOCUSABLE_SELECTOR` | Verified | Expanded focusable selection, top-layer focus ownership and focus restoration covered by overlay/focus suites. |
-| T3.9 | Реактивный `WlConfig` | Verified | Library config and Playground bootstrap tests pass on 2026-10-20: public locale updates, app isolation and watcher disposal after unmount or mount failure. Final source types and production builds pass; no installed/browser acceptance is inferred. |
+| T3.9 | Реактивный `WlConfig` | Verified | Current library/Playground suites pass reactive locale/PT updates, application isolation and watcher cleanup. Three installed archive consumers pass strict contracts and SSR/hydration; explicit locale/theme browser scenarios also pass. |
 | T4.1 | Select / MultiSelect / Autocomplete: слоты, `clearable`, disabled-опции, typeahead, объявления | Verified | Grouped leaf inference, typed slots, disabled/typeahead, loading/filter, Select expose, MultiSelect select-all and Auto debounce/announcements implemented; focused runtime and strict negatives passed. |
 | T4.2 | Ключи по данным: `rowKey`, `optionKey` | Verified | Stable option/row keys and compatibility fallback; Table regressions preserve child state after reordering. |
 | T4.3 | Table: минимальный набор до 1.0 | Verified | Controlled sort/selection, caption/names/sticky header, alignment/rowClass and typed header/cell/loading/empty slots; Table slice 23 passed. |
 | T4.4 | Интеграция с роутером: `linkComponent` и `WlLink` | Verified | WlLink and app-owned linkComponent adapter cover Button/IconButton/Menu/NavItem/Sidebar/Tabs navigation; native, modified and cancelled links have focused checks. |
-| T4.5 | Единый словарь статусов `tone` | Verified | Six-tone Toast/Confirm behavior, typed PT contexts, explicit-tone priority and legacy severity/danger compatibility pass affected units and strict source/consumer fixtures on 2026-10-20. Example compilation and builds pass. Alias removal stays deferred to 1.0; fresh installed/browser gates remain separate. |
-| T4.6 | Контракт осей и единые API семейств | Implemented | Form/button/layout/PT families had unit/type/visual checks on the recorded baseline. Follow-up closes the Toast/Confirm tone gap; changed contracts and appearance await renewed verification. Final full production E2E and manual acceptance remain separate. |
-| T4.7 | Мелкие улучшения компонентов | Implemented | Pre-1.0 depth is tracked in all 50 rows below. Follow-up changes to Toast/Confirm/FileUpload and Avatar examples are unverified; AvatarGroup and datetime composition remain explicitly queued post-1.0. |
-| T5.1 | Оверлеи: слушатели только при открытии | Verified | Open-only listeners, rAF/ResizeObserver positioning, close/unmount cleanup and motion/focus cancellation covered by focused overlay suites. |
-| T5.2 | Быстрый путь `useWlPt` и кэш locale | Implemented | Shared locale cache and immutable PT fast path have earlier functional regressions. A before/after 500-option runtime benchmark remains unproved; package-size results do not establish that performance target. |
-| T5.3 | Переменный шрифт | Blocked | Unmodified accepted masters still have 24 incompatible glyphs per style. Ignored endpoint-data proofs now cover all eight affected numerals, some on hypothetical 2000 UPM data. Four has a bounded duplicate-K/seam-A candidate; boundary-role/optical review, continuous containment/topology and real whole-font UPM/hint/binary/shaping/raster acceptance remain unproved. No font built, saved or replaced. See [font audit](../docs/maintainers/font-variation-audit.md). |
-| T5.4 | Playground: ленивые словари и предкомпиляция | Implemented | Lazy/precompiled catalogs and examples had app/dedup checks. Historical documentation chunks were 389,779 bytes EN and 462,753 bytes RU; this does not establish the <=80 KB gzip main-entry target. New bootstrap/catalog edits and that target await verification. |
-| T5.5 | Playground: изображения и чанки | Implemented | Twelve responsive artwork variants and lazy loading are prepared. Recorded visuals passed; <=400 KB home transfer, final E2E/Pages requests and static-output acceptance remain unproved. |
+| T4.5 | Единый словарь статусов `tone` | Verified | Canonical six-tone component props/PT contexts and migrated Button/Tag/status APIs have passing unit/type/installed-consumer evidence under the exact 1.0 compatibility policy. Supported Toast severity/helpers and confirmation adapters retain their contracts. The owner replaced the separate 0.x warning release with the RC transition; exact RC checks, feedback and delivery remain pending. |
+| T4.6 | Контракт осей и единые API семейств | Verified | Current family contracts, 989 library tests, three installed strict/66-example consumer lanes and unchanged Windows/Linux visual references pass. Production behavior is covered across the full batch plus exact repairs; manual acceptance remains separate. |
+| T4.7 | Мелкие улучшения компонентов | Verified | All 50 component-table rows remain tracked. Current full units/types, copied examples, archive consumers, visuals and production browser evidence cover the implemented pre-1.0 depth. AvatarGroup and separate datetime composition remain explicitly queued post-1.0. |
+| T5.1 | Оверлеи: слушатели только при открытии | Verified | Open-only listeners, frame/observer positioning and Tooltip hide/reopen/unmount/empty-value cleanup pass the current full unit suite and relevant production browser scenarios. No new lifecycle wrapper or runtime experiment remains. |
+| T5.2 | Быстрый путь `useWlPt` и кэш locale | Implemented | Current full units verify shared locale caching, PT merge priority and the immutable fast path. The before/after 500-option runtime benchmark remains unproved; bundle-size passes do not establish that target. |
+| T5.3 | Переменный шрифт | Partial | Canonical CSS/assets activated; Core size gate PASS: normal 75428, italic 79696 bytes. Recorded exact six-master geometry/metric/shaping, 27 Python units and the focused CSS-regeneration unit pass. Earlier Windows Chromium evidence covers one home font, presets/intermediate weights, real italic, Core/full cluster raster and the ZIP. Owner visual acceptance is confirmed on 2026-10-22. RC1 archive font hashes/licenses/CSS/emission pass; static binaries/artwork remain unchanged. Measured CLS and remaining fresh browser/regression acceptance stay pending; see [archive state](#rc1-archive-verification-2026-10-22). |
+| T5.4 | Playground: ленивые словари и предкомпиляция | Implemented | Current 428 Playground tests, production builds and Pages lazy-example/source scenarios pass; the virtual-resource resolver repair yields 390 byte-identical production assets. The separate <=80 KB gzip main-entry performance target remains unmeasured, not implied by functional acceptance. |
+| T5.5 | Playground: изображения и чанки | Implemented | Twelve derivative hashes/dimensions, lazy-image source, current production output and Windows/Linux visuals pass; Pages download/request scenarios pass. The separate <=400 KB home transfer target remains unmeasured. |
 | T5.6 | Один стек оверлеев | Verified | One global ownership stack preserves cross-app/nested portal behavior, scroll locks, focus and inert; reported overlay/service slice 92 passed. |
-| T6.1 | Плюрализация и числа | Verified | 2026-10-20 affected units/types pass for plural/Intl compatibility, byte labels/rounding/unit cap and fractional FileUpload limits; post-lint upload tests also pass. Installed-package and browser acceptance are separate. |
-| T6.2 | Контраст и hex в одном месте | Verified | Shared hex/contrast and getWlColorFromString determinism/NFC/palette tests pass in the pure Node utility suite; strict fixtures and Avatar example compilation pass on 2026-10-20. No automatic avatar recoloring was added. |
+| T6.1 | Плюрализация и числа | Verified | Current full units and installed strict/examples consumers pass plural/Intl formatting, byte labels/rounding/unit caps and fractional FileUpload limits. Browser picker/locale scenarios pass; manual spoken announcements remain separate. |
+| T6.2 | Контраст и hex в одном месте | Verified | Current pure utility/full units, strict consumer fixtures and copied Avatar examples pass shared hex/contrast and deterministic NFC/palette behavior. Token checks pass 115 contrast pairs; no automatic avatar recoloring was added. |
 | T6.3 | `useWlAnnouncer` | Verified | Per-app announcer, debounce/cancel/unmount cleanup and result announcements have focused tests; real NVDA/VoiceOver output remains pending. |
-| T6.4 | `useWlTheme` + `wlThemeInitScript` | Verified | Public theme helper and early-init script handle system/storage/SSR; preference/history regressions authored and scoped checks passed. Browser transition acceptance pending. |
-| T6.5 | Даты, инициалы, числа, attrs | Implemented | Pure utility units, strict new byte/color fixtures and current declaration build pass on 2026-10-20. EN/RU guides/examples are checked in the affected Playground suite. Earlier installed archive lacks these additions; fresh packing/installed-entry checks remain pending. |
+| T6.4 | `useWlTheme` + `wlThemeInitScript` | Verified | Current units/SSR cover system/storage/theme lifecycle; all 13 theme-browser cases pass with a final clean WebKit confirmation. The test-only focus setup repair retains real input and post-finished viewport/hit assertions; the runtime experiment was reverted. |
+| T6.5 | Даты, инициалы, числа, attrs | Verified | Current 989 library units, strict declarations and three installed utility/composable entry consumers pass; 428 Playground tests, 66 copied examples per consumer and Pages verify EN/RU guides and examples. |
 | T6.6 | `useWlRovingFocus`, публичный `useWlListbox` | Verified | Public listbox, roving focus with loop and extracted typeahead retain disabled/repeated-character behavior; focused helper/list regressions passed. |
 | T6.7 | Прочие composables | Verified | Public disclosure/media/clipboard/hotkey/controllable/announcer/focus/dismissal/anchored/overlay helpers have lifecycle tests; full library units and installed declaration/entry-point gates passed. Manual/browser lifecycle acceptance beyond the named fixtures remains separate. |
-| T7.1 | Тесты по компонентам | Verified | Eight monoliths split into 38 component files; original callback hash inventory preserved and 55 existing suites relocated by purpose. Renewed 122-file / 849-test library runs passed on Node 22 and 24 without scenario removal. |
+| T7.1 | Тесты по компонентам | Verified | Purpose-separated component/unit/contract tests retain historical scenarios and immutable fixtures. Current Node 24 run passes 989/989 tests in 123 files with all coverage thresholds; earlier Node 22 evidence remains historical, and the new remote Node matrix is not claimed executed. |
 | T7.2 | Генератор компонента | Verified | Generator 10 scoped tests cover registration, source/type fixtures, dry-run and path/junction safety; new controls use the generator. |
-| T7.3 | Playground через `gavia-ui` | Implemented | Public gavia-ui imports/source aliases and five earlier installed-consumer lanes exist. New bootstrap config and public utility examples continue using public entries; their strict/unit/installed checks remain pending. |
+| T7.3 | Playground через `gavia-ui` | Verified | Public package imports pass current Playground types/428 tests, production/Pages builds and three installed archive lanes. Each consumer compiles/builds all 66 copied examples through the published entries. |
 | T7.4 | Разбить CI | Implemented | CI/Pages/Release split, common setup, SHA pins, browser cache and exact-SHA Pages provenance authored; no workflow run or deployment claimed. |
-| T7.5 | Тесты Playground отдельно; дописать покрытие; ускорить | Implemented | Separate Playground tests and strict types pass. The browser matrix is reduced from 878 to 291; consumer units passed 132/132 plus the expanded 20-case foundation contract. Full E2E recorded 289 passes/two failures, then all five affected repair cases passed; see the browser follow-up above. Earlier unit counts overlap and are not a new full-suite total. |
-| T7.6 | Визуальные эталоны в Docker | Implemented | Last Windows and supplemental Linux runs each passed 24 cases/122 PNG comparisons at 1155/f5e6c272 with unchanged baselines and exact cleanup. Follow-up component styles/examples/config are unverified; Windows remains primary. No baselines or visual tooling changed in the follow-up. |
+| T7.5 | Тесты Playground отдельно; дописать покрытие; ускорить | Verified | Current separate Playground suite passes 428/428 in 83.69 seconds. The 878-to-291 browser reduction remains: full batch 271 pass/20 fail in 8.8 minutes, followed by exact passing repairs for all 20 failures. All 291 distinct cases have passing evidence across runs, not one relabelled full PASS. |
+| T7.6 | Визуальные эталоны в Docker | Verified | Current Windows and supplemental Docker/Linux runs each pass 24 cases using distinct references. Windows compares 122 unchanged PNGs; Docker uses a fresh build, one CPU/2 GB/one worker/zero retries and read-only Linux PNGs with updates disabled. Primary Windows references are unchanged. |
 | T8.1 | Пользовательская и мейнтейнерская документация | Implemented | English guide/reference/maintainer split and document index prepared; historical URLs retained as compatibility links. |
 | T8.2 | Один `migration.md` | Implemented | Canonical migration.md with preserved historical anchors/stubs and review-programme migration prepared; local link audits passed. |
 | T8.3 | ROADMAP как план | Implemented | Prospective Now/Next/Later/Non-goals roadmap and separate historical ledger prepared; remaining work stays explicit here. |
-| T8.4 | Английский во всём публичном | Implemented | Public Markdown/contribution/tooling prose is English; Playground remains EN/RU. Released Russian component defaults are intentionally preserved until 1.0. |
-| T8.5 | JSDoc у публичного API и API-таблицы на сайте | Implemented | Current API metadata is regenerated through its existing tool and --check passes; strict types, declarations, EN/RU/docs/example units and production builds pass on 2026-10-20. FileUpload row-slot formatting changed only a trailing semicolon. Fresh installed-archive acceptance remains pending; historical API-member counts are not recounted. |
-| T8.6 | Раздел Accessibility и навигация сайта | Verified | Accessibility guide, keyboard tables, component/section navigation and concrete examples authored; full app units and desktop/mobile visual gates passed. Final production E2E, Pages and manual AT acceptance remain unfinished. |
-| T8.7 | CHANGELOG и releases | Implemented | Canonical Unreleased changelog, generated package-copy procedure, changeset and release/history split prepared; retained EN/RU Playground changelog overlay. No release created. |
-| T8.8 | Бренд-ассеты | Implemented | Repository-local source archive/index and source links prepared; twenty originals relocated unchanged and square social PNG preserved. New 1280x640 SVG/PNG inspected locally. On 2026-10-20 home-assets tests verify archived-source/output hashes and dimensions for all 12 responsive derivatives, and Playground production builds pass. Fresh regeneration, external social-provider/browser acceptance and upload remain separate. |
-| T9.1 | RFC решений к 1.0 | Implemented | RFC0001 retains Vue 3.4, namespaces, Node 22.13+/24 and versioned migrations. ARCH-2 follow-up pins vue-tsc to the existing 2.2.12 lock resolution and documents __ctx risk/upgrade procedure; no install or check was run. External discussion/publication not performed. |
-| T9.2 | Локализация: английский fallback, текст только из locale | Partial | 0.x locale services/Intl helpers and explicit EN/RU opt-in are implemented; English fallback, undefined text defaults and useWlLocaleText removal remain versioned 1.0 work. |
-| T9.3 | Нормализация имён pt-секций и удаление алиасов | Partial | Canonical component/nested PT names, 0.x aliases/warnings and semantic tone/dismissible migration implemented; alias removals remain deferred to 1.0. |
-| T9.4 | Новые компоненты базового набора | Verified | Six generated controls: CheckboxGroup, RadioGroup, TooltipComponent, ContextMenu, Toolbar, TagsInput. With WlLink, seven public additions; group slice 15 and other focused behavior/type checks passed. |
-| T9.5 | Типы для `node16`/`nodenext` | Implemented | AST normalization, Node16/NodeNext fixtures, publint/attw and five consumer lanes passed on the earlier archive without ignored rules. Follow-up service/PT/utility declarations and compiler pins await renewed current-source/archive verification. |
-| T9.6 | Поведенческие a11y-тесты и ручная проверка | Partial | Keyboard/ARIA units, 60 five-theme Axe cases and the critical behavior/accessibility-tree browser scenarios passed in the reduced matrix. Its two documentation failures and the five-case successful repair retry are recorded separately above. Dated NVDA/Firefox and VoiceOver/Safari/macOS/iOS protocol remains prepared but unexecuted. |
-| T9.7 | Сайт: пути, пререндер, StackBlitz, examples | Implemented | Router/canonical EN-RU paths, query compatibility and prerender/SEO/search/StackBlitz are authored; three earlier starter builds/SSR/hydration passed. New bootstrap/examples are unverified; final Pages/prerender/portable smoke and actual StackBlitz/external listing remain pending. |
-| T9.8 | Релиз 1.0 | Partial | RC checklist, manual protocol, changelog/migration and announcement material prepared. Named affected units, lint/strict checks, builds and primary Windows visual passed with the source boundaries above. Reduced E2E recorded 289 passes/two failures, followed by five passing repair cases; no full post-repair repeat. Fresh Pages build, 156-route prerender and all 22 Pages cases passed after the Home fix. Current release/package acceptance, portable preview, RC versioning, feedback window, manual/owner acceptance and publication remain pending. |
+| T8.4 | Английский во всём публичном | Verified | English technical documentation/tooling and full EN/RU site content remain available. Current locale regressions, types, copied examples and installed SSR consumers verify English fallback with explicit Russian configuration. |
+| T8.5 | JSDoc у публичного API и API-таблицы на сайте | Verified | Current source-derived API metadata passes api:check, strict types, declarations, installed consumers/66 copied examples, Playground units and Pages. EN/RU guides and live API tables agree with the canonical 1.0 source; no manual generated-file edits. |
+| T8.6 | Раздел Accessibility и навигация сайта | Verified | Current app units, production navigation/keyboard/browser scenarios, desktop/mobile Windows visuals and Pages 22/22 pass for guides, keyboard tables and examples. Manual NVDA/VoiceOver/owner acceptance remains pending. |
+| T8.7 | CHANGELOG и releases | Implemented | Canonical changelog has a prepared 1.0.0-rc.1 section with breaking changes, migration and explicit pending publication; 0.12.1 date matches npm history. Six Changesets notes are archived in pre/ for stable promotion; EN/RU historical heading metadata agrees. RC1 generated package copies pass canonical comparison after prepack; no release created. |
+| T8.8 | Бренд-ассеты | Verified | Source archive/index and source links preserve original artwork. Current checks verify hashes/dimensions for all 12 derivatives; production assets, Windows/Linux visuals and Pages/download tests pass. External social-provider presentation/upload remains separate and unexecuted. |
+| T9.1 | RFC решений к 1.0 | Implemented | RFC0001 retains Vue 3.4, namespaces, Node 22.13+/24 and the 1.0 migrations. On 2026-10-22 the owner approved opt-in RC publication to next and two to four weeks of feedback instead of a separate 0.x warning release. RC1 versions/materials are prepared; exact-candidate verification, published feedback and delivery remain pending. Earlier tool/minimum-consumer evidence retains its scope. |
+| T9.2 | Локализация: английский fallback, текст только из locale | Verified | Current units/strict types/API checks, three installed consumers and SSR/hydration verify English fallback, all 13 locale-derived component texts, explicit/empty/undefined inputs, reactivity and application isolation. EN/RU examples/migration build and pass Pages; this is local automated acceptance of prepared 1.0 source. |
+| T9.3 | Нормализация имён pt-секций и удаление алиасов | Verified | Canonical PT, independent iconButton PT, tone/status/Tag and dismissible migrations have passing units/types/API, exact version/hash-scoped 1.0 compatibility and three installed-consumer records. Major notes are retained in .changeset/pre/ and canonical migration links remain stable. The separate 0.x warning-release requirement was replaced by the approved RC transition; exact-candidate acceptance, RC feedback and publication remain pending. |
+| T9.4 | Новые компоненты базового набора | Verified | CheckboxGroup, RadioGroup, ContextMenu, Toolbar, TagsInput, WlTooltip/WlTooltipDirective and typed icon-action names pass current units/strict consumer fixtures, copied examples and browser scenarios. Old documentation links normalize; manual AT and release remain separate. |
+| T9.5 | Типы для `node16`/`nodenext` | Verified | Current declaration normalization, supported Node16/NodeNext ESM fixtures, strict publint/attw and native installed-archive consumers pass. Vue 3.4.0/TS 5.4.5 uses compatible vue-tsc 2.2.12; two TS 6 consumer lanes also pass. Unsupported Node10/CJS boundaries are explicit, not newly waived. |
+| T9.6 | Поведенческие a11y-тесты и ручная проверка | Partial | Current keyboard/ARIA units, five-theme Axe and critical accessibility-tree/browser scenarios have passing evidence across the full 291-case batch and exact repairs. Windows/Linux visuals and desktop/mobile Pages pass. Dated NVDA/Firefox and VoiceOver/Safari/macOS/iOS protocol remains prepared but unexecuted; owner acceptance is pending. |
+| T9.7 | Сайт: пути, пререндер, StackBlitz, examples | Partial | Current 428 Playground tests, production builds, 156 prerendered routes and 22/22 desktop/mobile Pages cases pass. Resolver repair preserves all 390 production assets byte-for-byte. StackBlitz/external listing/provider verification, remote deployment and actual public publication remain pending. |
+| T9.8 | Релиз 1.0 | Partial | RC1 versions, Changesets state, changelog and migration are prepared. The exact local archive passes build/pack, contents/docs/fonts, strict publint/attw and pnpm/Vue 3.4.38/TS 6.0.3 consumer checks. The approved RC transition and owner font acceptance remain recorded. Commit/push and existing remote CI are now authorized through a separate RC branch and draft PR. Remaining gates, matrix/hydration, performance/CLS, formal AT/overall acceptance, publication and feedback stay pending. No new infrastructure, merge, tag or publication is authorized. See [CI handoff](#rc1-ci-handoff-2026-10-22) and [archive verification](#rc1-archive-verification-2026-10-22). |
 | T10.1 | NEW-8: WlVirtualList and opt-in list virtualization | Queued | Accepted group; see the 25 individual tasks in [10-post-1.0.md](10-post-1.0.md). No implementation or validation claimed. |
 | T10.2 | NEW-7: WlDataTable (controlled data, sort, selection and pagination; sticky/expandable columns) | Queued | Accepted group; see the 25 individual tasks in [10-post-1.0.md](10-post-1.0.md). No implementation or validation claimed. |
 | T10.3 | NEW-9: WlTree with APG keyboard navigation | Queued | Accepted group; see the 25 individual tasks in [10-post-1.0.md](10-post-1.0.md). No implementation or validation claimed. |
@@ -323,8 +805,8 @@ below remain explicit.
 | T10.11 | PERF-5/6: named internal icons and component CSS entry points | Queued | Accepted group; see the 25 individual tasks in [10-post-1.0.md](10-post-1.0.md). No implementation or validation claimed. |
 | T10.12 | LINT-2 and reusable ESLint workspace package | Queued | Accepted group; see the 25 individual tasks in [10-post-1.0.md](10-post-1.0.md). No implementation or validation claimed. |
 | T10.13 | TEST-6/7/10: Browser Mode, role queries and opt-in mutation tests | Queued | Accepted group; see the 25 individual tasks in [10-post-1.0.md](10-post-1.0.md). No implementation or validation claimed. |
-| T8.9 | Theming recipe, Recipes navigation, full-text documentation search, llms-full.txt and How it is built | Implemented | Existing guides/search/llms resources had app/visual checks. New utility guides and service/catalog examples are authored in EN/RU but unrun; final static prerender/Pages acceptance and publication remain separate. |
-| T2.8 | Upgrade compatible tooling groups, preserving Vue/TypeScript consumer minimums | Partial | Renovate groups exist; both vue-tsc ranges now exactly pin the already resolved 2.2.12 and lock specifiers match without reinstall. Major toolchain upgrades and their independent verification remain; no broad upgrade is claimed. |
+| T8.9 | Theming recipe, Recipes navigation, full-text documentation search, llms-full.txt and How it is built | Verified | Current Playground 428-test suite, production/prerender builds and Pages verify local EN/RU guides, search/navigation, resources and service/catalog examples. Actual external deployment/publication remains separate. |
+| T2.8 | Upgrade compatible tooling groups, preserving Vue/TypeScript consumer minimums | Verified | Frozen installation and current Vite 8.3.4/plugin-vue 6.0.10/Vitest+V8 5.0.5/dts 5.1.2/TS 6.0.3/vue-tsc+language-core 3.3.13/jsdom 26.1.0/Changesets 3.0.3 gates pass locally. Vue 3.4/3.5 and the Vue 3.4.0/TS 5.4.5 minimum pass installed consumers. Existing CI configuration preserves Node 22.13+/24; external workflow execution remains pending. |
 
 ## Component table: all 50 additional rows
 
@@ -518,6 +1000,10 @@ or optical gate was promoted; the 24-glyph-per-style blocker remains explicit.
 
 ## Remaining work and release boundaries
 
+This older checkpoint retains its historical evidence. The T9.2 section and
+the current execution ledger above supersede expired source/Pages/lint pending
+statements; do not treat the older counts below as fresh results.
+
 1. **Retain the confirmed integration evidence:** the dated
    [verification record](VERIFICATION-2026-10-18.md) and local reports above cover
    full units, library coverage, builds, declarations, compatibility, installed
@@ -556,9 +1042,10 @@ or optical gate was promoted; the 24-glyph-per-style blocker remains explicit.
    with Firefox; VoiceOver with Safari on macOS and physical iOS; include focus,
    live announcements, nested overlays, controls and restored states. See the
    [prepared manual protocol](../docs/maintainers/manual-accessibility.md).
-8. **Complete the agreed 1.0 migration deliberately:** English fallback and text
-   default cleanup, removal of deprecated tone/PT/dismissable aliases and the
-   Tooltip component naming migration. Current 0.x compatibility is retained.
+8. **Complete the agreed 1.0 migration deliberately:** T9.2 English fallback,
+   text default cleanup and helper removal are now implemented in source, with
+   verification/API regeneration deferred. Deprecated tone/PT/dismissable alias
+   removal, Tooltip naming and strict icon-action names remain separate work.
 9. **Keep all 25 individual post-1.0 tasks queued:** see
    [10-post-1.0.md](10-post-1.0.md). The 13 T10 groups above are indexes, not
    implementations. DateTimePicker, AvatarGroup and selective icon/component
@@ -836,7 +1323,7 @@ prove boundary-role/optical intent, continuous containment/topology, global UPM/
 hint/metadata treatment or real variable-font binary round-trip, shaping and
 native raster behavior. Accepted static masters/assets remain unchanged and
 still report 24 incompatible glyphs per style; no font was saved or built and
-T5.3 stays Blocked. The audit was excluded from frozen browser inputs before
+At that 2026-10-18 checkpoint, T5.3 stayed Blocked. The audit was excluded from frozen browser inputs before
 root's documentation-only application. No source or browser job was launched by
 this observer.
 

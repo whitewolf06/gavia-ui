@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { describe, expect, it } from "vitest";
 import type { WlManifestCategory } from "../../src/manifest";
 import * as components from "../../src/components";
@@ -41,7 +40,7 @@ describe("wlManifest", () => {
     for (const entry of wlManifest) {
       expect(entry.name.length).toBeGreaterThan(0);
       expect(entry.introducedIn, `${entry.name}: missing introducedIn`).toMatch(
-        /^\d+\.\d+\.\d+$/
+        /^\d+\.\d+\.\d+(?:-rc\.\d+)?$/
       );
       expect(CATEGORIES, `${entry.name}: bad category`).toContain(entry.category);
       expect(Array.isArray(entry.props)).toBe(true);
@@ -87,6 +86,63 @@ describe("wlManifest", () => {
           prop.default
         );
       }
+    }
+  });
+
+  it.each([
+    ["WlAlert", "info"],
+    ["WlBadge", "accent"],
+    ["WlPill", "neutral"],
+    ["WlProgress", "accent"]
+  ] as const)("documents canonical tone without the removed status variant for %s", (name, fallback) => {
+    const props = wlManifest.find((entry) => entry.name === name)!.props;
+    expect(props.find((prop) => prop.name === "variant")).toBeUndefined();
+    expect(props.find((prop) => prop.name === "tone")).toMatchObject({
+      type: "enum", default: fallback,
+      values: ["neutral", "accent", "info", "success", "warning", "danger"]
+    });
+  });
+
+  it("keeps button appearance and tag palette independent of semantic tone", () => {
+    const button = wlManifest.find((entry) => entry.name === "WlButton")!;
+    expect(button.props.find((prop) => prop.name === "variant")!.values)
+      .toEqual(["primary", "secondary", "ghost", "soft", "link"]);
+    const tag = wlManifest.find((entry) => entry.name === "WlTag")!;
+    expect(tag.props.find((prop) => prop.name === "variant")).toBeUndefined();
+    expect(tag.props.find((prop) => prop.name === "color")).toMatchObject({
+      default: "gray", values: ["gray", "blue", "green", "amber", "red"]
+    });
+  });
+
+  it.each([
+    ["WlDialog", false], ["WlDrawer", true], ["WlPopover", true]
+  ] as const)("documents canonical dismissal and preserves the default for %s", (name, fallback) => {
+    const props = wlManifest.find((entry) => entry.name === name)!.props;
+    expect(props.find((prop) => prop.name === "dismissable")).toBeUndefined();
+    expect(props.find((prop) => prop.name === "dismissible")).toMatchObject({ type: "boolean", default: fallback });
+  });
+
+  it.each([
+    ["WlAlert", ["closeLabel"]],
+    ["WlAutocomplete", ["dropdownLabel"]],
+    ["WlColorPicker", ["paletteLabel", "inputLabel"]],
+    ["WlCommandPalette", ["placeholder", "emptyText", "loadingText", "ariaLabel"]],
+    ["WlDatePicker", ["placeholder", "startLabel", "endLabel"]],
+    ["WlFilePicker", ["chooseLabel"]],
+    ["WlFilterBar", ["ariaLabel", "toggleLabel", "panelTitle", "clearLabel", "applyLabel", "closeLabel"]],
+    ["WlNumberInput", ["decrementLabel", "incrementLabel"]],
+    ["WlPasswordInput", ["placeholder"]],
+    ["WlSidebar", ["ariaLabel", "pinLabel", "unpinLabel"]],
+    ["WlSpinner", ["label"]],
+    ["WlTable", ["emptyMessage"]],
+    ["WlTag", ["removeLabel"]]
+  ] as const)("does not inject a translated prop default into consumer examples for %s", (name, labels) => {
+    const component = wlManifest.find((entry) => entry.name === name)!;
+    for (const label of labels) {
+      const prop = component.props.find((entry) => entry.name === label);
+      expect(prop, `${name}.${label}: missing localized prop`).toBeDefined();
+      expect(prop!.default, `${name}.${label}: locale text must not become an explicit prop override`).toBeUndefined();
+      expect(prop!.required).not.toBe(true);
     }
   });
 });

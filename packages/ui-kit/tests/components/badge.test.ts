@@ -13,7 +13,7 @@ afterAll(async () => {
 });
 describe("basic component behavior", () => {
   it("switches badge between value and dot modes", async () => {
-    const wrapper = mount(WlBadge, { global, props: { value: 8, variant: "danger" } });
+    const wrapper = mount(WlBadge, { global, props: { value: 8, tone: "danger" } });
     expect(wrapper.text()).toContain("8");
     expect(wrapper.find('[data-wl="badge"]').attributes("data-variant")).toBe("danger");
     await wrapper.setProps({ dot: true });

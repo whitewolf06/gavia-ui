@@ -21,7 +21,7 @@ const message = ref(t("examples.popover_closed_0524"));
       @close="message = t('examples.popover_closed_0524')"
     >
       <div class="showcase-popover wl-stack" data-space="md">
-        <WlTag variant="green">{{ t("examples.available_to_the_team_0527") }}</WlTag>
+        <WlTag color="green">{{ t("examples.available_to_the_team_0527") }}</WlTag>
         <h3 class="wl-text-subheading">{{ t("examples.release_plan_0371") }}</h3>
         <p class="wl-text-body">{{ t("examples.the_panel_is_anchored_to_the_button_close_it_by_clicking_outsi_0528") }}</p>
         <div><WlButton size="sm" @click="panel?.hide()">{{ t("examples.done_0047") }}</WlButton></div>

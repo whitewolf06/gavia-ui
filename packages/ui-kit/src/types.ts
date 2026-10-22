@@ -8,15 +8,9 @@ export type WlButtonVariant
     | "secondary"
     | "ghost"
     | "soft"
-    | "danger"
-    | "danger-quiet"
-    | "soft-danger"
     | "link";
 
-export type WlTagVariant = "gray" | "blue" | "green" | "amber" | "red";
-export type WlBadgeVariant = "gray" | "accent" | "success" | "warn" | "danger";
-export type WlAlertVariant = "info" | "ok" | "warn" | "err";
-export type WlProgressVariant = "default" | "ok";
+export type WlTagColor = "gray" | "blue" | "green" | "amber" | "red";
 
 export type WlAvatarSize = 24 | 28 | 32 | 36 | 48;
 export type WlAvatarPresence = "online" | "busy" | "offline";
@@ -51,7 +45,6 @@ export interface WlTabItem<Key extends string = string> {
 }
 
 export type WlIconButtonVariant = "ghost" | "secondary" | "soft";
-export type WlPillVariant = "neutral" | "info" | "ok" | "warn" | "err";
 
 export interface WlSegmentedOption<Value extends string = string> {
   label: string;

@@ -1,6 +1,251 @@
 # Review programme verification — 2026-10-18
 
+## Exact RC1 archive verification — 2026-10-22
+
+The [current archive checkpoint](IMPLEMENTATION.md#rc1-archive-verification-2026-10-22)
+records the separately authorized, sequential distribution verification.
+**PASS:** strict declaration-producing library build, existing prepack/pack,
+strict publint, all six JS/JSON attw exports under the existing ESM-only profile,
+tar inspection and installed pnpm / Vue 3.4.38 / TypeScript 6.0.3 consumer.
+The consumer passes 21 contract files, 66 copied SFCs, Node import/DOM-free SSR,
+production build, button budgets and canonical documents/font assets.
+
+Archive: `.tmp/rc1-package-2026-10-22/gavia-ui-1.0.0-rc.1.tgz`, 1250887 bytes,
+SHA256 `0748a7e32277e7ebeaaa1aef0306a65f8af3e756aeeabb344c2545d9f315081a`.
+The [candidate record](../docs/maintainers/release-candidate.md#archive-verification-2026-10-22)
+links logs, environment and resource results. Aggregate RAM stayed below 1 GiB,
+CPU affinity was one logical processor, wrappers were capped at four, and every
+step had a 30–180 s wall deadline. The build peaked at 884.07 MiB; the consumer
+took 134.90 s / 649.72 MiB. The initial failed one-process/default-loader build
+and the full-catalog fixture's Vite chunk warning are retained in that record.
+No assertions, budgets or repository checks were weakened.
+
+Full lint/type/unit/coverage, generated asset checks, compatibility/minimum/3.5
+lanes, browser/SSR-hydration/E2E/visual/Pages and manual/performance acceptance
+were not rerun. No new infrastructure, source fix, commit, push or publication
+was required. Earlier checkpoints below describe their own historical boundaries.
+
+## RC1 source preparation and owner decisions — 2026-10-22
+
+This checkpoint predates the separately authorized archive verification above.
+
+Root/library source versions are **1.0.0-rc.1**. The
+[candidate checkpoint](IMPLEMENTATION.md#rc1-preparation-2026-10-22) records
+the prepared versions, Changesets 3 RC state, retained notes, changelog and migration.
+The owner replaced the separate 0.x warning release with an opt-in `next`
+candidate and two to four weeks of feedback after confirmed publication.
+Read-only npm history still reports latest 0.12.1; no RC has been published.
+
+The owner confirmed visual font acceptance on 2026-10-22. Repeating that visual
+acceptance is not an outstanding task. Performance/CLS and formal NVDA/VoiceOver/
+mobile results remain separate. **No new validation, build, pack, commit, push,
+tag or publication ran.** Exact-candidate gates remain pending in the
+[RC record](../docs/maintainers/release-candidate.md).
+Older checkpoints below retain their original source versions/results; their
+deprecation/font-owner-pending statements are superseded by this decision.
+
+## Current T0.4 audit and scoped ESLint — 2026-10-22
+
+The [fresh audit](T0.4-unused-code-audit-2026-10-21.md) closes the outstanding
+Knip/dead-export analysis: 0 unused files, 0 ordinary/namespace exports, and seven
+explicitly retained PT declaration types. One dead constant and 15 unnecessary
+private export modifiers were removed. The final run took 10.85 s / 256.89 MiB
+under one-process RAM/CPU/time limits. The earlier batch ESLint stopped at
+120.07 s without a passing report. Its [single-file follow-up](T0.4-unused-code-audit-2026-10-21.md#t04-scoped-eslint-2026-10-22)
+now passes **11/11 files, 0 errors and 0 warnings**, through the unchanged config.
+One line wrap clears both length warnings in the tokenizer; only that file was
+repeated. Successful checks ran sequentially under one active process, one logical
+CPU, 1 GiB commitment, 30 user-CPU seconds and 120 s wall time per invocation.
+Final passing runs took 5.42–36.26 s each, 121.51 s combined; peak across completed
+checks was 395.03 MiB. Earlier startup timeouts remain explicitly recorded;
+the CPU bound changed in the session without increasing RAM/wall-time limits.
+The existing declaration-normalization tests pass 6/6,
+including strict Node16/NodeNext fixtures, in 13.39 s / 279.52 MiB. The audit and
+the scoped lint follow-up do not confirm the complete current tree or overall
+release readiness. No full verification, commit or publication ran.
+
+## Current local font activation — 2026-10-21
+
+The [activation/browser checkpoint](IMPLEMENTATION.md#t53-browser-activation-2026-10-21)
+supersedes activation/browser-pending statements below. Canonical variable assets
+are active. One focused Windows Chromium session passes home transfer (75428 body
+bytes), presets/intermediate weights, real italic, exact Core/full cluster raster
+and the 35-entry ZIP. The CSS-regeneration unit passes. The browser check took
+43.92 seconds under a shared 1 GiB/quarter-core cap, with 811.86 MiB peak at the
+manual handoff. No new full build/test/pack/visual-baseline/Pages sequence ran;
+earlier lint/Vitest failures, CLS, remaining optical/native and owner/release
+acceptance remain pending. No commit, push or publication occurred.
+
+## Current bounded T5.3 checkpoint — 2026-10-21
+
+Follow the [bounded font checkpoint](IMPLEMENTATION.md#t53-bounded-fonts-2026-10-21)
+and [font acceptance record](../docs/maintainers/font-variation-audit.md).
+Four Full/Core WOFF2 files passed the original exact six-master geometry,
+metric and HarfBuzz checks. Core sizes are **75428 bytes normal / 79696 italic**;
+each passes its 80000-byte limit. Full files are byte-identical to the previous
+draft; all 24 static fonts and the authored source keep their hashes.
+27/27 focused Python tests pass. The complete font build passed in 129.27 s,
+peak160.67 MiB, within a one-process Windows Job with 1 GiB memory, one processor
+affinity, about one-quarter processor CPU cap and a 180 s hard deadline.
+Earlier 90 s timeout and targeted Vitest memory-limit failures remain failures;
+see the current ledger for scoped integration results and remaining acceptance.
+
+File-size success is not a total browser-transfer result. The full international
+fallback is retained, Core excludes combining marks, and CSS declares Full before
+Core. Browser fallback/CLS, intermediate optical/native acceptance and activation
+remain pending; T5.3 is Partial. No new full lint/type/unit/package/browser/visual/
+Pages sequence, commit, push or publication occurred. The complete verification
+checkpoint below is historical evidence for the preceding source, including
+its eight-file/101356-byte draft.
+
+<a id="verification-checkpoint--2026-10-21-in-progress"></a>
+
+## Verification checkpoint — 2026-10-21
+
+The user authorized all existing checks and necessary fixes after restarting
+Windows, strictly sequentially, without new verification wrappers, commits,
+pushes or publication. **All authorized command runs are complete; no check is
+still running.** HEAD remains `9c2be71`, version 0.12.1. Variable-font size/manual
+and release acceptance remain open, and the failed full E2E batch is recorded
+separately from successful repairs. The detailed
+[current checkpoint](IMPLEMENTATION.md#verification-checkpoint--2026-10-21-in-progress)
+records completed checks separately from failed gates and pending work.
+
+Every source-only/no-runs statement and every older “Current” section below is
+historical. Preserve those records and their original source boundaries; they
+do not describe the latest instruction or certify the latest edits.
+
+| Check | Evidence and current boundary |
+| --- | --- |
+| Dependencies | Initial frozen install completed in 31.8 seconds. After the [jsdom 26.1.0 repair](../.tmp/dependency-fix-2026-10-21-run02.log), the [final frozen install PASS](../.tmp/install-frozen-final-2026-10-21.log) took 733 ms: lockfile current, resolution skipped, dependencies already installed |
+| Lint/types | [Final full lint PASS](../.tmp/lint-complete-2026-10-21.json): 716 files, zero errors, **50** `max-len` warnings, meeting <=50. [Final library/Playground strict types PASS](../.tmp/typecheck-complete-2026-10-21.log) after three compile-only fixture line wraps; no contracts changed. The separate T0.4 knip/dead-export audit remains unexecuted |
+| Library full tests | [Run 04 PASS](../.tmp/unit-coverage-2026-10-21-run04.log): **989/989**, 123 files, 129.58 seconds; statements **97.41% (4831/4959)**, lines **98.66% (3979/4033)**, branches 92.65%, functions 98.12%. All existing thresholds pass. The [preceding run-03 coverage failure](../.tmp/unit-coverage-2026-10-21-run03.log) remains historical; meaningful behavioral tests were added without lowering thresholds |
+| Playground full units | [Current full suite: 428/428 PASS](../.tmp/playground-unit-current-2026-10-21.log), 36 files, 83.69 seconds, after the resolver repair. Restored transition units [14/14 PASS](../.tmp/playground-restored-theme-2026-10-21-run02.log), 2.60 seconds. The earlier [436/436 experimental run](../.tmp/playground-unit-final-2026-10-21.log) included eight later-reverted tests and is not the final count |
+| Generated quality report | [Existing quality update PASS](../.tmp/quality-update-2026-10-21.log): 989/989 unit tests, 98.66% line coverage, package version 0.12.1 |
+| Existing Node tools | [Initial 95-case batch](../.tmp/tool-tests-2026-10-21.log): 87 pass, seven fail, one skip. The [selected retry](../.tmp/tool-tests-retry-2026-10-21.log) recovered the capability skip and six release cases; the remaining prerelease failure passed in the [final 7/7 release subset](../.tmp/release-tools-fixed-2026-10-21.log). All 95 original cases have passing evidence across overlapping runs, not one clean full-batch exit |
+| Library artifact | [Production build PASS](../.tmp/build-kit-2026-10-21.log), declarations included, 7.98 seconds; [local package archive PASS](../.tmp/pack-2026-10-21.log). Package version remains 0.12.1 |
+| Package gates | [Strict publint PASS](../.tmp/publint-2026-10-21.log); [attw PASS](../.tmp/attw-2026-10-21.log) for supported ESM resolutions; [compatibility PASS after the exact approved 1.0 migration](../.tmp/compatibility-2026-10-21.log). Original differences remain reported; immutable fixtures remain unchanged |
+| Installed consumers | [npm/Vue 3.4.0/TS 5.4.5 PASS](../.tmp/package-consumer-minimum-2026-10-21-run02.log), [pnpm/Vue 3.4.38/TS 6.0.3 PASS](../.tmp/package-consumer-vue34-2026-10-21-run04.log), [Bun/Vue 3.5.40/TS 6.0.3 PASS](../.tmp/package-consumer-vue35-bun-2026-10-21.log). Each includes native Node import/DOM-free SSR, strict types, 66 copied example builds, desktop/mobile and hydration with stable DOM/IDs |
+| Source boundaries/assets | [Dependency boundary](../.tmp/verify-dependencies-2026-10-21.log), [icons](../.tmp/icons-check-2026-10-21.log), [tokens/contrast](../.tmp/tokens-check-2026-10-21.log), [API](../.tmp/api-check-2026-10-21.log), [brand derivatives](../.tmp/brand-check-2026-10-21.log) and [eight bundle budgets](../.tmp/size-2026-10-21.log) PASS |
+| Fonts | [12 static faces PASS](../.tmp/font-static-qa-2026-10-21.log); [25 Python tests PASS](../.tmp/font-unit-final-2026-10-21.log). [Run-03 draft](../.tmp/gavia-variable-candidate-2026-10-21-run03/fonts/gavia/variable-manifest.json): eight variable WOFF2 files compiled with endpoint/shaping guards; normal Latin+Cyrillic **101356 bytes > 80000-byte target**. No canonical asset/CSS promotion; optical/native/loading and broader subset acceptance remain pending |
+| Production Playground fixture build | Initial [PASS](../.tmp/build-playground-e2e-2026-10-21.log): 920 modules, 1.99 seconds. [Final fixture rebuild PASS](../.tmp/build-playground-e2e-final-2026-10-21.log), 2.63 seconds, after reverting the runtime experiment |
+| Complete reduced E2E | [FAILED: 271 pass, 20 fail](../.tmp/e2e-2026-10-21.json), 291 total, one worker, 8.8 minutes; [console log](../.tmp/e2e-2026-10-21.log). The failed full run remains failed. All 291 distinct scenarios have passing evidence across that batch and the focused repairs; no clean full-matrix rerun is claimed |
+| Focused E2E repairs | [15/15 open-list Axe PASS](../.tmp/e2e-a11y-fixed-2026-10-21.json), 43.6 seconds. [7/8 focus/theme](../.tmp/e2e-focus-theme-2026-10-21.json): all four focus cases passed, only native WebKit failed. [13/13 theme suite PASS](../.tmp/e2e-theme-final-2026-10-21.json), 50.8 seconds; [1/1 clean WebKit PASS](../.tmp/e2e-native-clean-2026-10-21.json), 7.9 seconds, after reverting the runtime experiment. Overlapping counts are not added to 291 |
+| Windows visual checks | [24/24 PASS](../.tmp/visual-2026-10-21.json), 1.0 minute, all 122 PNG comparisons unchanged; [console log](../.tmp/visual-2026-10-21.log). `--update-snapshots=none`; no baseline replacement |
+| Pages | [Build PASS](../.tmp/build-pages-2026-10-21.log), 2.36 seconds; [156 routes prerendered](../.tmp/pages-prerender-2026-10-21.log); [22/22 desktop/mobile tests PASS](../.tmp/pages-2026-10-21.json), 1.0 minute. After the resolver repair, [validation build PASS](../.tmp/build-pages-resolver-final-2026-10-21.log), 2.92 seconds; [390 production assets byte-identical](../.tmp/production-asset-identity-2026-10-21.log) to the accepted Pages build. No deployment/publication |
+| Supplemental Docker/Linux visuals | [24/24 PASS](../.tmp/docker-visual-2026-10-21.log), 1.7 minutes, fresh image/library/Playground build; one CPU, 2 GB RAM, one worker, zero retries. Linux PNGs mounted read-only with `--update-snapshots=none`. Windows/Linux baseline hashes and accepted static-font assets are unchanged; Linux references remain separate from primary Windows acceptance |
+
+The jsdom rollback addresses observed selector-order/focus behavior in versions
+29/28 without weakening the focus assertions. TS 5.4.5 is verified with its
+compatible vue-tsc 2.2.12; workspace TS 6 and the Vue 3.4 peer remain. Duplicate
+SSR compilation in public-export/manifest unit files produced uncovered
+synthetic SFC statements: their public API assertions remain in the DOM unit
+suite, while real Node/SSR checks now execute through the existing installed
+archive fixture. This is coverage separation, not an SSR-runtime repair or a
+coverage-threshold change. Changesets 3 prerelease preparation now reads its
+consumed `.changeset/pre/` notes; no repository version bump was performed.
+
+Open-list Axe checks retain all WCAG rules and inspect the named listbox's owning
+overlay after entry motion. CommandPalette's browser assertions now preserve
+combobox focus and verify its `aria-activedescendant`, matching the current
+keyboard ownership contract. The [WebKit timeline](../.tmp/e2e-native-timeline-2026-10-21.json)
+identifies scrollY 0 at start/ready, scrollY 96 after explicit programmatic focus
+inside the held snapshot, then a second transition preserving its actual 96
+starting viewport. Test setup now restores its initial viewport before real
+input; every post-finished focus/scroll/hit-target assertion remains. The runtime
+experiment and eight associated tests were reverted, and temporary timeline
+instrumentation was removed. The clean WebKit pass uses the restored runtime;
+it does not claim a theme-controller product fix.
+
+The first [restored-theme unit retry](../.tmp/playground-restored-theme-2026-10-21.log)
+failed before its 14 test bodies: Vite's common setup could not resolve the
+root-relative virtual translation request ending in `?import`. The existing
+i18n resolver now maps that request to the canonical virtual resource, and
+the [14/14 retry](../.tmp/playground-restored-theme-2026-10-21-run02.log) passes.
+No theme runtime or assertions changed. Current full Playground units, current
+Playground types and direct scoped lint pass; a production validation build
+confirms all 390 runtime assets are byte-identical to the accepted Pages build.
+Final full lint confirms zero errors and 50 length warnings after compile-only
+fixture formatting; both strict typechecks pass. Windows/Linux baseline and
+accepted static-font asset diffs are empty, with no snapshot updates enabled.
+
+Manual NVDA/VoiceOver/owner acceptance, the released deprecation period and
+RC/stable publication remain separate from these automated checks. T5.3's draft
+build does not establish its size or optical acceptance, and post-1.0 work stays
+queued. The authorized automated sequence is finished. Separate review debt
+includes the PLAN-required knip/dead-export audit and unmeasured performance
+targets; the compiled variable-font draft is still above its size target and
+has not received optical/native/loading acceptance. No release readiness or
+publication is implied.
+
+## T5.3 source-only completion — 2026-10-21
+
+Historical source-only checkpoint, superseded by the authorized checks above.
+
+The user authorized variable-font code before any new runs. Tracked exact
+numeral normalization, the existing variable builder, full/subset payload and
+staged CSS, plus the existing Playground/archive/package integration are
+prepared. The strict raw master audit remains distinct from the derived model.
+Source invariants cover exact directed endpoint recovery, whole-font scaling,
+direct integer nodal deltas, reopened WOFF2 and shaping; they have not executed.
+
+No Python/font command, test, lint/typecheck, build, package, browser/visual/Pages
+check, measurement, generator, installation, new wrapper, commit, push or
+publication ran. Accepted font binaries, original drawing, source manifest,
+canonical CSS and frozen verification identities remain untouched. No variable
+font was produced or activated. T5.3 is **Implemented; generation/verification
+and optical acceptance pending**, not Verified. See the
+[current source ledger](IMPLEMENTATION.md#t53--variable-font-source-prepared-2026-10-21)
+and [font acceptance boundary](../docs/maintainers/font-variation-audit.md).
+
+## Pre-1.0 source follow-up — 2026-10-21
+
+This historical checkpoint predates T5.3 and the authorized verification above.
+
+The latest user instruction is implementation first, with all checks deferred.
+Canonical PT/tone/dismissible names, Tooltip exports, icon-action name contracts,
+remaining Tooltip directive lifecycle and compatible toolchain configuration/
+lockfile are prepared. Existing API metadata was generated through `api:sync`;
+this is source authoring, not verification. The lockfile-only resolution ran
+with scripts disabled; node_modules was not updated. Package docs remain for
+the normal later prepack. The existing compatibility mechanism has a separate
+exact version/hash-scoped 1.0 migration; immutable fixtures remain unchanged.
+
+No lint/typecheck/tests/build/pack/browser/visual/Pages/benchmark/Docker check,
+commit, push, publication, new wrapper or remote write was performed. All new
+source and migration-policy regressions remain unexecuted. Old green results
+below apply only to their recorded source. T5.3 is still blocked on authored
+master/interpolation correspondence; no variable font was built or substituted.
+See the [current implementation record](IMPLEMENTATION.md#pre-10-source-completion--2026-10-21).
+
+## T9.2 source-only follow-up — 2026-10-21
+
+The following historical checkpoint predates the completion/API renewal above.
+
+After commit `9c2be71`, the user authorized the 1.0 localization implementation
+without new runs, harness, commits, push or publication. English normalization,
+locale-derived optional text in 13 components and removal of internal
+`useWlLocaleText` are prepared. Explicit Russian configuration, explicit strings
+including empty text, undefined fallback and per-application reactivity remain
+documented contracts. The source package version is unchanged.
+
+Source manifests and consumer type examples, meaningful runtime/SSR regressions,
+EN/RU guides, canonical SFC examples and migration notes were updated by editing
+files. No lint, typecheck, test, build, pack, browser/visual/Pages check, generator
+or external operation was run. In particular `api.generated.json` and generated
+package documentation have not been renewed; use their existing generators
+before the next separately authorized acceptance. Historical fixtures remain
+unchanged. No new source-readiness or release pass is inferred from older results.
+
+Current T9.2 status is **Implemented; verification deferred**, as recorded in
+[the implementation ledger](IMPLEMENTATION.md#t92--10-localization-implementation-prepared).
+T9.3 alias removal, Tooltip naming and strict icon-action names are not part of
+this change. The dated results below retain their original source boundaries.
+
 ## Current authorized checks — 2026-10-20
+
+The following section predates the T9.2 working source and records the browser
+iteration later committed as `9c2be71`.
 
 The user subsequently authorized existing lint, strict types, affected-code tests
 and builds with fixes, followed by one commit and sequential native E2E, visual

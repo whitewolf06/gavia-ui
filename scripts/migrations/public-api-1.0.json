@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "public-api-1.0",
+  "baseline": {
+    "version": "0.11.1",
+    "contractSha256": "7e9ec21394223b0daff9bead96002806a1d72e4cf867fb0242e256e77c903443",
+    "inventorySha256": "b09293446c322dfcad1e6726e1c4555cfb6ac9f5b152e22cc9fccd0de2aef7cf",
+    "consumerSha256": "e0a130adf7dba8ffafb4b41ef53a7fcc28f26312c8fc5fd8cba59a63b9f8ae06"
+  },
+  "targetMinor": "1.0",
+  "prepareVersion": "0.12.1",
+  "changeset": ".changeset/canonical-api-1-0.md",
+  "migrationNote": "docs/migration.md#migration-1-0-public-api",
+  "approvedChanges": [
+    "canonical-pt-paths",
+    "semantic-status-props-and-types",
+    "semantic-pt-callback-contexts",
+    "dismissible-spelling",
+    "tooltip-component-and-directive-names",
+    "icon-action-accessible-name"
+  ],
+  "consumer": {
+    "from": "variant=\"soft-danger\"",
+    "to": "variant=\"soft\" tone=\"danger\"",
+    "migratedSha256": "9c202025b5238f0a6a94dc6653566de1b4ce229b73ba9c90f0b2cf9716f9d169"
+  }
+}

@@ -18,7 +18,13 @@ import RawSidebar from "./WlSidebar.vue";
 import RawTable from "./WlTable.vue";
 import RawTabs from "./WlTabs.vue";
 
-type WithNativeAttributes<Props, Attributes> = Props & Omit<Attributes, keyof Props>;
+// Vue's generic SFC fallback may append Record<string, unknown>. Keep the
+// declared props before composing native attributes or using Omit for inference;
+// a broad index signature would hide those props and accept unsupported attrs.
+type DeclaredProps<Props> = {
+  [Key in keyof Props as string extends Key ? never : number extends Key ? never : Key]: Props[Key]
+};
+type WithNativeAttributes<Props, Attributes> = DeclaredProps<Props> & Omit<Attributes, keyof DeclaredProps<Props>>;
 
 /** Retain every optional Vue context, expose and setup argument from the SFC declaration. */
 type VueArguments<T extends readonly unknown[]> = T extends readonly [unknown, ...infer Rest] ? Rest : never;

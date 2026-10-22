@@ -1,5 +1,5 @@
 import { mount } from "@vue/test-utils";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { h, nextTick, ref } from "vue";
 import WlToolbar from "../../src/components/WlToolbar.vue";
 describe("WlToolbar", () => {
@@ -27,6 +27,29 @@ describe("WlToolbar", () => {
     expect(document.activeElement).toBe(wrapper.findAll("button")[1]!.element);
     wrapper.unmount();
     expect(first.getAttribute("tabindex")).toBe("4");
+  });
+  it("blocks slotted actions while disabled and restores their native interaction when enabled", async () => {
+    const activate = vi.fn();
+    const wrapper = mount(WlToolbar, {
+      attachTo: document.body, props: { disabled: true },
+      slots: { default: () => [h("button", { onClick: activate }, "Save"), h("button", "Cancel")] }
+    });
+    try {
+      await nextTick();
+      const buttons = wrapper.findAll("button");
+      expect(wrapper.attributes("aria-disabled")).toBe("true");
+      expect(buttons.map((button) => button.attributes("tabindex"))).toEqual(["-1", "-1"]);
+      const click = new MouseEvent("click", { bubbles: true, cancelable: true });
+      buttons[0]!.element.dispatchEvent(click);
+      expect(click.defaultPrevented).toBe(true);
+      expect(activate).not.toHaveBeenCalled();
+      await buttons[0]!.trigger("keydown", { key: "ArrowRight" });
+      expect(document.activeElement).not.toBe(buttons[1]!.element);
+      await wrapper.setProps({ disabled: false });
+      await buttons[0]!.trigger("click");
+      expect(activate).toHaveBeenCalledTimes(1);
+      expect(wrapper.attributes("aria-disabled")).toBeUndefined();
+    } finally { wrapper.unmount(); }
   });
   it("recomputes the tab stop when the active control is removed or disabled", async () => {
     const first = ref(true);

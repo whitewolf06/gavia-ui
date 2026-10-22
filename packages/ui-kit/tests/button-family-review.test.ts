@@ -41,20 +41,27 @@ describe("button families and pagination", () => {
     wrapper.unmount();
   });
 
-  it("isolates icon button pt while retaining the old button fallback", async () => {
+  it("isolates icon button PT from button defaults even without an iconButton configuration", async () => {
+    const buttonRoot = vi.fn(() => ({ "data-fallback": "button-only" }));
     const wrapper = mount(WlIconButton, { props: { ariaLabel: "Save", loading: true, href: "/save" }, global: { plugins: [[WlConfig, { pt: {
-      button: { root: { "data-fallback": "old" } }, iconButton: { root: { "data-specific": "new" } }
+      button: { root: buttonRoot }, iconButton: { root: { "data-specific": "icon-only" } }
     } }]] } });
-    expect(wrapper.attributes("data-specific")).toBe("new");
+    expect(wrapper.attributes("data-specific")).toBe("icon-only");
     expect(wrapper.attributes("data-fallback")).toBeUndefined();
+    expect(buttonRoot).not.toHaveBeenCalled();
     expect(wrapper.attributes("aria-busy")).toBe("true");
     expect(wrapper.attributes("href")).toBeUndefined();
     await wrapper.trigger("click");
     expect(wrapper.emitted("click")).toBeUndefined();
     wrapper.unmount();
-    const old = mount(WlIconButton, { props: { ariaLabel: "Save" }, global: { plugins: [[WlConfig, { pt: { button: { root: { "data-fallback": "old" } } } }]] } });
-    expect(old.attributes("data-fallback")).toBe("old");
-    old.unmount();
+    const iconButton = mount(WlIconButton, { props: { ariaLabel: "Save" }, global: { plugins: [[WlConfig, { pt: { button: { root: buttonRoot } } }]] } });
+    expect(iconButton.attributes("data-fallback")).toBeUndefined();
+    expect(buttonRoot).not.toHaveBeenCalled();
+    iconButton.unmount();
+    const button = mount(WlButton, { slots: { default: "Save" }, global: { plugins: [[WlConfig, { pt: { button: { root: buttonRoot } } }]] } });
+    expect(button.attributes("data-fallback")).toBe("button-only");
+    expect(buttonRoot).toHaveBeenCalled();
+    button.unmount();
   });
 
   it("warns about unnamed icon-only actions during development", async () => {

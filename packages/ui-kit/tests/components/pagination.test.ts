@@ -44,11 +44,11 @@ describe("WlPagination", () => {
     await five!.trigger("click");
     expect(wrapper.emitted("update:page")?.[0]).toEqual([5]);
 
-    const next = wrapper.find('[aria-label="Следующая страница"]');
+    const next = wrapper.find('[aria-label="Next page"]');
     await next.trigger("click");
     expect(wrapper.emitted("update:page")?.[1]).toEqual([4]);
 
-    const first = wrapper.find('[aria-label="Первая страница"]');
+    const first = wrapper.find('[aria-label="First page"]');
     await first.trigger("click");
     expect(wrapper.emitted("update:page")?.[2]).toEqual([1]);
   });
@@ -58,8 +58,8 @@ describe("WlPagination", () => {
       global,
       props: { page: 1, pageCount: 3 }
     });
-    expect(wrapper.find('[aria-label="Предыдущая страница"]').attributes("disabled")).toBeDefined();
-    expect(wrapper.find('[aria-label="Следующая страница"]').attributes("disabled")).toBeUndefined();
+    expect(wrapper.find('[aria-label="Previous page"]').attributes("disabled")).toBeDefined();
+    expect(wrapper.find('[aria-label="Next page"]').attributes("disabled")).toBeUndefined();
   });
 
   it("compact: clamps the input into range on Enter", async () => {
@@ -67,7 +67,7 @@ describe("WlPagination", () => {
       global,
       props: { page: 4, pageCount: 9, compact: true }
     });
-    expect(wrapper.find(".wl-pager__total").text()).toBe("из 9");
+    expect(wrapper.find(".wl-pager__total").text()).toBe("of 9");
 
     const input = wrapper.find(".wl-pager__input");
     expect((input.element as HTMLInputElement).value).toBe("4");
@@ -88,5 +88,50 @@ describe("WlPagination", () => {
     await input.trigger("blur");
     expect(wrapper.emitted("update:page")).toBeUndefined();
     expect((input.element as HTMLInputElement).value).toBe("4");
+  });
+  it("pins the last page window and keeps previous/last navigation in the public one-based page domain", async () => {
+    const wrapper = mount(WlPagination, { global, props: { page: 11, pageCount: 12, siblings: 1 } });
+    try {
+      expect(numericButtons(wrapper).map((button) => button.text())).toEqual(["1", "8", "9", "10", "11", "12"]);
+      expect(wrapper.findAll(".wl-pager__gap")).toHaveLength(1);
+      await wrapper.get('[aria-label="Previous page"]').trigger("click");
+      await wrapper.get('[aria-label="Last page"]').trigger("click");
+      expect(wrapper.emitted("update:page")).toEqual([[10], [12]]);
+      await wrapper.setProps({ disabled: true });
+      wrapper.get('[aria-label="Previous page"]').element.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      expect(wrapper.emitted("update:page")).toHaveLength(2);
+    } finally { wrapper.unmount(); }
+  });
+  it("compact: navigates both directions and normalizes a nonfinite current page", async () => {
+    const wrapper = mount(WlPagination, { global, props: { page: 4, pageCount: 9, compact: true } });
+    try {
+      await wrapper.get('[aria-label="Previous page"]').trigger("click");
+      await wrapper.get('[aria-label="Next page"]').trigger("click");
+      expect(wrapper.emitted("update:page")).toEqual([[3], [5]]);
+      await wrapper.setProps({ page: Number.NaN });
+      expect(wrapper.get<HTMLInputElement>("input").element.value).toBe("1");
+      await wrapper.get('[aria-label="Next page"]').trigger("click");
+      expect(wrapper.emitted("update:page")?.at(-1)).toEqual([2]);
+    } finally { wrapper.unmount(); }
+  });
+  it("ignores unchanged, invalid and disabled page-size requests while normalizing nonfinite totals", async () => {
+    const wrapper = mount(WlPagination, { global, props: { page: 3, pageSize: 10, pageSizes: [10, 20], total: 45 } });
+    try {
+      const select = wrapper.get<HTMLSelectElement>("select");
+      await select.setValue("10");
+      expect(wrapper.emitted("update:pageSize")).toBeUndefined();
+      await select.setValue("999");
+      expect(wrapper.emitted("update:pageSize")).toBeUndefined();
+      await wrapper.setProps({ disabled: true });
+      select.element.value = "20";
+      select.element.dispatchEvent(new Event("change", { bubbles: true }));
+      expect(wrapper.emitted("update:pageSize")).toBeUndefined();
+      await wrapper.setProps({ disabled: false });
+      await select.setValue("20");
+      expect(wrapper.emitted("update:pageSize")).toEqual([[20]]);
+      expect(wrapper.emitted("update:page")).toEqual([[1]]);
+      await wrapper.setProps({ total: Infinity, page: 1 });
+      expect(wrapper.get(".wl-pagination__range").text()).toBe("Showing 0–0 of 0");
+    } finally { wrapper.unmount(); }
   });
 });

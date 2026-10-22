@@ -13,7 +13,8 @@ export default defineConfig({
     include: ["tests/**/*.test.ts"],
     setupFiles: ["tests/setup.ts"],
     maxWorkers: 4,
-    minWorkers: 1,
+    // Preserve the existing fixture lifecycle while migrating the runner.
+    clearMocks: false,
     testTimeout: 20000
   }
 });

@@ -6,9 +6,10 @@ provenance are described in [performance maintenance](playground-performance.md)
 ## Languages and shared sources
 
 Public GitHub Markdown, including README, guides and the root CHANGELOG.md,
-is English-only. The Playground defaults to English and supports a complete
-Russian interface through `lang=en` and `lang=ru`. Missing or invalid language
-values use English. Switching language preserves the current route, theme,
+is English-only. The Playground supports complete English and Russian interfaces.
+It selects a valid `lang=en` or `lang=ru` query first, then the canonical path's
+language, the saved preference and the first supported browser language; English
+is the final fallback. Switching language preserves the current route, theme,
 query parameters and hash; Back/Forward restores the language from the URL.
 
 EN and RU use the same SFCs, API contracts, examples and recipes. Localised
@@ -17,10 +18,11 @@ tokens or route identifiers. The Playground reads the English root changelog
 and applies a Russian prose overlay when RU is selected; release versions,
 dates, links and code remain shared.
 
-The library keeps its Russian fallback locale for compatibility. English
-applications explicitly configure `wlLocaleEn` through `WlConfig`. The
-Playground's language selection configures the library locale as well as site
-copy; it does not change the library's default for other consumers.
+The 1.0 library source uses English fallback text. Russian applications explicitly
+configure `wlLocaleRu` through `WlConfig`. The Playground's language selection
+continues to configure either preset as well as site copy; copying an SFC does
+not copy that host configuration. Source version 0.12.1 remains unchanged until
+a separate release; the 0.x Russian default is historical release behavior.
 See [localization](../guide/localization.md) for preset availability and consumer setup.
 
 ## Quality and compatibility

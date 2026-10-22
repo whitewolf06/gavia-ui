@@ -121,7 +121,7 @@ function remove(id: number): void {
     ><WlTable :columns="columns" :value="visibleRows" :pt="{ root: { style: { minWidth: '640px' } } }">
       <template #cell-status="{ value }">
         <WlPill
-          :variant="value === 'done' ? 'ok' : 'info'"
+          :tone="value === 'done' ? 'success' : 'info'"
           :label="value === 'done' ? t('examples.done_0047') : t('examples.in_progress_0066')"
         />
       </template>
@@ -132,7 +132,8 @@ function remove(id: number): void {
         @click="edit(materials.find((item) => item.id === row.id))"
       >{{ t("examples.edit_0194") }}</WlButton><WlButton
         size="sm"
-        variant="danger-quiet"
+        variant="ghost"
+        tone="danger"
         :aria-label="`${t('examples.delete_0195')}${row.title}`"
         @click="remove(Number(row.id))"
       >{{ t("examples.delete_0037") }}</WlButton></div></template>

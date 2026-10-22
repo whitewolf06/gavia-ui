@@ -42,7 +42,7 @@ export async function measureBundles(record = false) {
         logLevel: "error",
         define: { __VUE_OPTIONS_API__: "false", __VUE_PROD_DEVTOOLS__: "false", __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: "false", "process.env.NODE_ENV": '"production"' },
         resolve: { alias: [{ find: /^gavia-ui$/, replacement: entry }, { find: /^vue$/, replacement: runtime }], dedupe: ["vue"] },
-        build: { write: false, minify: "esbuild", target: "es2020", rollupOptions: { input } }
+        build: { write: false, minify: "oxc", target: "es2020", rolldownOptions: { input } }
       });
       const output = (Array.isArray(result) ? result : [result]).flatMap((value) => value.output);
       const bundle = Object.fromEntries(output.map((chunk) => [chunk.fileName, chunk]));

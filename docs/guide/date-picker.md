@@ -25,8 +25,11 @@ const date = ref<string | null>("2026-10-15");
 With `selectionMode="range"`, the model is `WlDateRange | null`.
 `WlDateRange` is an ISO-date tuple `[string, string | null]`.
 Two inputs with `startLabel`/`endLabel` labels share one calendar panel.
-The compatibility fallback uses Russian labels “От” and “До”.
-Configure the English preset explicitly or pass labels as in this example.
+The 1.0 English fallback uses “From” and “To”. The released 0.x fallback was
+Russian (“От” and “До”); install `WlConfig` with `locale: wlLocaleRu` to retain it.
+Omitted or `undefined` text props follow the current locale. Explicit labels,
+including empty strings, take priority; keep both inputs meaningfully named.
+Pass application-specific labels as in this example.
 See [localization](localization.md) for preset availability and setup.
 
 ```vue

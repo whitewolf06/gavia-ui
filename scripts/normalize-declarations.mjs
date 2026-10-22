@@ -6,7 +6,7 @@ const requireKit = createRequire(new URL("../packages/ui-kit/package.json", impo
 const ts = requireKit("typescript");
 
 /** TypeScript replaces .js with .d.ts and .vue.js with .vue.d.ts in ESM resolution. */
-export function declarationSpecifier(specifier, filePath, { sourceRoot, outDir }) {
+function declarationSpecifier(specifier, filePath, { sourceRoot, outDir }) {
   if (!/^(?:\.\.?\/|\.\.?$)/.test(specifier) || /\.(?:[cm]?js|json|css|svg|png|woff2?)$/i.test(specifier)) return specifier;
   const source = resolve(sourceRoot, relative(outDir, dirname(filePath)), specifier);
   for (const [extension, output] of [[".d.mts", ".mjs"], [".d.cts", ".cjs"], [".d.ts", ".js"], [".mts", ".mjs"], [".cts", ".cjs"], [".tsx", ".js"], [".ts", ".js"]]) {

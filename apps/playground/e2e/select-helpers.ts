@@ -9,10 +9,12 @@ export async function chooseDropdownOption(page: Page, control: Locator, label: 
   const listbox = page.getByRole("listbox");
   await expect(listbox).toHaveCount(1);
   await expect(listbox).toBeVisible();
+  await expect(listbox).toHaveAttribute("id", /\S+/);
+  const listboxSelector = await listbox.evaluate((element) => `#${CSS.escape(element.id)}`);
   await listbox.getByRole("option", { name: label, exact: true }).click();
   await expect(control).toHaveAttribute("aria-expanded", "false");
-  // Wait for motion cleanup before another dropdown or a screenshot.
-  await expect(listbox).toHaveCount(0);
+  // Leaving panels become inert before their animation removes the DOM.
+  await expect(page.locator(listboxSelector)).toHaveCount(0);
 }
 
 export async function chooseShowcaseTheme(page: Page, label: string): Promise<void> {

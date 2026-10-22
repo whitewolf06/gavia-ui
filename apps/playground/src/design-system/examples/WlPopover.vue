@@ -7,8 +7,8 @@ import { ref } from "vue";
 const popover = ref<WlPopoverExpose | null>(null);
 const dialogPopover = ref<WlPopoverExpose | null>(null);
 const dialogVisible = ref(false);
-const type = ref("all");
-const dialogType = ref("all");
+const type = ref<string | null>("all");
+const dialogType = ref<string | null>("all");
 const dialogDate = ref<string | null>("2026-10-05");
 const options = [
   { label: t("examples.all_materials_0091"), value: "all" },

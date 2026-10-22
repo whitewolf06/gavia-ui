@@ -32,7 +32,7 @@ async function openOverlay(component: Component, content: string) {
   await nextTick();
   await nextTick();
   const overlay = document.body.querySelector<HTMLElement>('[role="dialog"]')!;
-  const close = overlay.querySelector<HTMLButtonElement>('button[aria-label="Закрыть"]')!;
+  const close = overlay.querySelector<HTMLButtonElement>('button[aria-label="Close"]')!;
   return { wrapper, opener: opener.element, overlay, close };
 }
 

@@ -12,7 +12,7 @@ import type { WlPt } from "../pt-types";
 import type { WlDrawerPosition } from "../types";
 import { mergeWlAttrs, useWlLocale, useWlMotion, useWlPt } from "../config";
 import { useOverlayLifecycle } from "../utils/overlayLifecycle";
-import { overlayWidth, resolveOverlayInitialFocus, useDismissible } from "../utils/overlayProps";
+import { overlayWidth, resolveOverlayInitialFocus } from "../utils/overlayProps";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
 import { useWlId } from "../utils/useWlId";
 import WlIcon from "./WlIcon.vue";
@@ -34,9 +34,8 @@ const props = withDefaults(defineProps<{
    */
   modal?: boolean;
   /** Close by clicking the backdrop.
-   * @deprecated Use dismissible. */
-  dismissable?: boolean;
-  /** Allow the surface to close through its documented dismissal interactions. */
+   * @default true
+   */
   dismissible?: boolean;
   /**
    * Show the explicit close action.
@@ -68,8 +67,8 @@ const props = withDefaults(defineProps<{
   /** Attributes of internal Gavia UI elements. */
   pt?: WlPt<"drawer">;
 }>(), {
-  position: "right", modal: true, dismissable: true, closable: true, closeOnEscape: true, blockScroll: true,
-  motion: undefined, dismissible: undefined
+  position: "right", modal: true, dismissible: true, closable: true, closeOnEscape: true, blockScroll: true,
+  motion: undefined
 });
 
 const emit = defineEmits<{
@@ -101,7 +100,6 @@ const titleId = useWlId();
 const attrs = useAttrs();
 const section = useWlPt("drawer", computed(() => props.pt));
 const motion = useWlMotion(computed(() => props.motion));
-const dismissible = useDismissible("WlDrawer", computed(() => props.dismissible), computed(() => props.dismissable));
 useOverlayLifecycle({
   visible, container: drawer,
   initialFocus: () => resolveOverlayInitialFocus(props.initialFocus, drawer.value),
@@ -113,7 +111,7 @@ useOverlayLifecycle({
   onClose: () => emit("close")
 });
 function onMask(event: MouseEvent): void {
-  if (event.target === event.currentTarget && dismissible.value) visible.value = false;
+  if (event.target === event.currentTarget && props.dismissible) visible.value = false;
 }
 </script>
 
@@ -156,12 +154,12 @@ function onMask(event: MouseEvent): void {
             </slot>
             <button
               v-if="closable"
-              v-bind="section('pcCloseButton.root')"
+              v-bind="section('closeButton.root')"
               type="button"
               class="wl-overlay-close"
               :aria-label="locale.close"
               @click="visible = false"
-            ><WlIcon v-bind="section('pcCloseButton.icon')" name="x" :size="14" /></button>
+            ><WlIcon v-bind="section('closeButton.icon')" name="x" :size="14" /></button>
           </header>
           <div v-bind="section('content')" class="wl-drawer__content"><slot></slot></div>
           <footer v-if="$slots.footer" v-bind="section('footer')" class="wl-drawer__footer"><slot name="footer"></slot></footer>
