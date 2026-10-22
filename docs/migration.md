@@ -221,9 +221,9 @@ compatibility does not restore the removed package export.
 <a id="migration-package-assets"></a>
 ## Package documentation and font assets
 
-The npm archive now contains Gavia Sans WOFF2 web fonts, their licenses, FONTLOG
-and face manifest. TTF files and `qa-report.json` remain in the source repository
-and are excluded from the npm archive.
+The npm archive contains Gavia Sans WOFF2 web fonts, their licenses, FONTLOG and
+the small face manifest. TTF files, `qa-report.json` and the variable-font audit
+manifest remain in the repository and are excluded from npm.
 
 Applications importing `gavia-ui/styles/fonts/gavia.css` need no change. If you
 previously imported a TTF or QA report through `gavia-ui/fonts/gavia/*`, obtain

@@ -9,6 +9,7 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 ### Changed
 
+- Exclude variable-font audit data from npm and use neutral names for shared library chunks.
 - Keep rendered documentation visible while the next Playground page and its translations load.
 
 ## 1.0.0-rc.1 — prepared

@@ -54,7 +54,8 @@ export default defineConfig({
       fileName: (_format, entryName) => `${entryName}.js`
     },
     rolldownOptions: {
-      external: [/^vue($|\/)/]
+      external: [/^vue($|\/)/],
+      output: { chunkFileNames: "chunks/[hash].js" }
     }
   },
   test: {

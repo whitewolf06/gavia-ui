@@ -308,8 +308,11 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   }
   const packedFontFiles = readdirSync(packedFontDirectory).filter((file) => /\.(?:ttf|woff2)$/.test(file)).sort();
   const acceptedWebFonts = Object.keys(acceptedHashes).filter((file) => file.endsWith(".woff2")).sort();
-  const variableManifestPath = join(packedFontDirectory, "variable-manifest.json");
-  const variableManifest = existsSync(variableManifestPath) ? JSON.parse(readFileSync(variableManifestPath, "utf8")) : null;
+  if (existsSync(join(packedFontDirectory, "variable-manifest.json"))) {
+    throw new Error("Packed package must not contain the repository-only variable font audit manifest");
+  }
+  const variableManifestPath = join(canonicalFontDirectory, "variable-manifest.json");
+  const variableManifest = JSON.parse(readFileSync(variableManifestPath, "utf8"));
   const variableFiles = variableManifest?.files ?? [];
   if (variableManifest) {
     if (variableManifest.family !== "Gavia Sans" || variableManifest.axis?.tag !== "wght"
@@ -366,10 +369,6 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     }
     if (JSON.stringify(sorted(coverage.get("normal/full"))) !== JSON.stringify(sorted(coverage.get("italic/full")))) {
       throw new Error("Packed variable-font styles have different full coverage");
-    }
-    if (readFileSync(variableManifestPath, "utf8").replaceAll("\r\n", "\n")
-      !== readFileSync(join(canonicalFontDirectory, "variable-manifest.json"), "utf8").replaceAll("\r\n", "\n")) {
-      throw new Error("Packed variable-font manifest differs from its canonical source");
     }
     if (readFileSync(join(packedFontDirectory, "VARIABLE-FONTLOG.txt"), "utf8").replaceAll("\r\n", "\n")
       !== readFileSync(join(canonicalFontDirectory, "VARIABLE-FONTLOG.txt"), "utf8").replaceAll("\r\n", "\n")) {

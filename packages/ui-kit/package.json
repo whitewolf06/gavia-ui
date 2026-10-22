@@ -54,7 +54,6 @@
     "fonts/gavia/*.woff2",
     "fonts/gavia/*.txt",
     "fonts/gavia/manifest.json",
-    "fonts/gavia/variable-manifest.json",
     "themes",
     "README.md",
     "LICENSE",

@@ -127,6 +127,7 @@ describe("Gavia Sans font distribution", () => {
       "fonts/gavia/manifest.json"
     ]));
     expect(packageManifest.files).not.toContain("fonts");
+    expect(packageManifest.files).not.toContain("fonts/gavia/variable-manifest.json");
     expect(packageManifest.files.some((path) => /\.ttf|qa-report/i.test(path))).toBe(false);
   });
 
