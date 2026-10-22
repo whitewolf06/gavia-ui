@@ -57,6 +57,16 @@ old/new hashes and exact paths. The ZIP download/hash/PNG extraction took 2.97 s
 peak 33.62 MiB under the existing resource limits; it did not run a browser.
 The next committed revision still requires a renewed successful CI result.
 
+The reviewed-baseline revision `4a5b641af1ee6aba00323f06029bd0b3315e37c9`
+ran in [CI 39745570322](https://github.com/whitewolf06/gavia-ui/actions/runs/39745570322).
+Windows visual comparisons, lint and all **990 library unit tests** passed.
+Playground passed 427/428 tests; its API-localization contract found the two
+English reverse-alias values still using escaped CRLF while API metadata now
+uses LF. Those two catalog values now match the canonical descriptions without
+changing translation keys or text. The existing complete EN/RU lookup contract
+remains the regression check. No additional local suite was run; further CI
+results remain pending for the next committed revision.
+
 The owner authorized committing the RC changes, pushing a separate branch and
 running the required existing GitHub checks. The delivery branch is
 `codex/gavia-1-0-rc-1`; a draft pull request into `main` triggers `ci.yml`.
