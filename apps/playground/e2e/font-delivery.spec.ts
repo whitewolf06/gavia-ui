@@ -29,10 +29,19 @@ test("home uses only Core within its transfer budget", async ({ page, baseURL })
   expect(Math.max(transfer, fonts[0]!.bytes)).toBeLessThanOrEqual(90_000);
 });
 
-test("complete grapheme shaping @cross-browser", async ({ page, baseURL }, testInfo) => {
+test("complete grapheme shaping @cross-browser", async ({ page, baseURL, browserName }, testInfo) => {
+  const initialFonts: Promise<{ url: string; bytes: number }>[] = [];
+  const observeFont = (response: Response) => recordFontResponse(response, initialFonts);
+  if (browserName === "firefox") page.on("response", observeFont);
   await page.goto(new URL("?lang=en&theme=gavia", baseURL!).href);
   await expect(page.getByTestId("home-page")).toBeVisible();
   await page.evaluate(() => document.fonts.ready);
+  if (browserName === "firefox") {
+    page.off("response", observeFont);
+    expect((await Promise.all(initialFonts)).map((font) => font.url)).toEqual([
+      expect.stringMatching(/Gavia-Variable(?!-Core|-Italic)[^/]*\.woff2(?:[?#].*)?$/u)
+    ]);
+  }
   const comparisons = await page.evaluate(async () => {
     function fontRules(rules: CSSRuleList): CSSFontFaceRule[] {
       return Array.from(rules).flatMap((rule) => {
