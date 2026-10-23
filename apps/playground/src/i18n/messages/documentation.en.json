@@ -82,7 +82,7 @@
     "s0080": "slot; the icon",
     "s0081": "goes in",
     "s0082": "Focus the example",
-    "s0083": "Tab → Enter or Space",
+    "s0083": "Tab, then Enter or Space",
     "s0084": "Loading replaces the icon with a spinner and blocks repeated clicks. Disabled also blocks the action. This example has no form: submit and reset change the type attribute; check form behaviour in your application.",
     "s0085": "Vue SFC · current settings",
     "s0086": " — example",
