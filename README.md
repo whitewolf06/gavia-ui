@@ -55,7 +55,8 @@ Set `data-wl-theme="gavia"` on the root element. Import
 
 **Gavia Sans** supplies Cyrillic and Latin, variable weights 100–700 and upright/italic faces.
 Gavia themes use `"Gavia Sans Core", "Gavia Sans", ...` for compact ordinary
-text and complete fallback for combining clusters. Both original family names remain available.
+text and complete fallback for combining clusters. Firefox uses the complete face
+to preserve mark placement. Both original family names remain available.
 WOFF2 web fonts ship in npm; TTF desktop files are available through the
 [font download](https://whitewolf06.github.io/gavia-ui/font/).
 Classic, Classic Dark and Newspaper retain their own typography.

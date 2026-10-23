@@ -440,6 +440,7 @@ class VariableDeliveryTests(unittest.TestCase):
         self.assertTrue(css.startswith('@supports not (font-variation-settings: normal) {'))
         self.assertIn(static_css.rstrip(), css)
         self.assertIn('@supports (font-variation-settings: normal)', css)
+        self.assertIn('@supports not (-moz-appearance: none)', css)
         for family in ('font-family: "Gavia Sans";', 'font-family: "Gavia";'):
             self.assertIn(family, css)
         self.assertIn('../../fonts/gavia/Gavia-Variable-Core.woff2', css)

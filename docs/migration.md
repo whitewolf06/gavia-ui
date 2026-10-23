@@ -235,7 +235,9 @@ Versioned font attachments are listed with the corresponding GitHub Release.
 The Gavia themes now prefer the optional `Gavia Sans Core` family and fall back
 to complete `Gavia Sans` for extended text and combining clusters. Custom font
 stacks can use `"Gavia Sans Core", "Gavia Sans", sans-serif` for the same compact
-delivery. Keep the complete family in that stack. Existing `Gavia Sans` and
+delivery in Chromium/WebKit. Firefox skips Core registrations and uses the
+complete face to keep base letters and combining marks together. Keep the
+complete family in that stack. Existing `Gavia Sans` and
 legacy `Gavia` names still provide the complete font; the accepted WOFF2 drawings,
 metrics and variable axis are unchanged.
 

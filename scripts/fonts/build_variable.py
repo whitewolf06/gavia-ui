@@ -330,21 +330,29 @@ def draft_css(static_css, files, metrics):
     static_support = "@supports not (font-variation-settings: normal) {"
     if static_css.startswith(static_support) and static_css.endswith("}"):
         static_css = static_css[len(static_support):-1].strip()
-    # Separate family names let cluster fallback try the complete face rather
-    # than split a marked cluster across slices of one composite family.
+    # Separate families permit cluster fallback in Chromium/WebKit. Gecko still
+    # splits base/mark runs (Mozilla bug 543200), so it uses the complete family.
     subsets = sorted(files, key=lambda record: (record["style"], record["subset"] != "full"))
     # Exact static weights otherwise compete with the variable range in native
     # face matching, causing redundant requests despite the variable preload.
     lines = [static_support, static_css, "}", "", marker,
+             "/* Gecko uses complete faces until cluster fallback supports combining marks (Mozilla bug 543200). */",
              "@supports (font-variation-settings: normal) {"]
     for family in ("Gavia Sans", "Gavia"):
         for record in subsets:
             css_family = family + " Core" if record["subset"] == "core" else family
-            lines.extend(["  @font-face {", f'    font-family: "{css_family}";',
-                          f'    src: url("../../fonts/gavia/{record["file"]}") format("woff2");',
-                          f'    font-style: {record["style"]};', "    font-weight: 100 700;",
-                          "    font-display: swap;",
-                          f'    unicode-range: {record["unicodeRange"]};', "  }", ""])
+            compact = record["subset"] == "core"
+            if compact:
+                lines.append("  @supports not (-moz-appearance: none) {")
+            indent = "    " if compact else "  "
+            lines.extend([indent + "@font-face {", indent + f'  font-family: "{css_family}";',
+                          indent + f'  src: url("../../fonts/gavia/{record["file"]}") format("woff2");',
+                          indent + f'  font-style: {record["style"]};', indent + "  font-weight: 100 700;",
+                          indent + "  font-display: swap;",
+                          indent + f'  unicode-range: {record["unicodeRange"]};', indent + "}"])
+            if compact:
+                lines.append("  }")
+            lines.append("")
     lines.extend(["}", "", "/* Line-box alignment only; local face x-height/advance matching is not claimed. */"])
     upm = metrics["unitsPerEm"]
     for style in ("normal", "italic"):

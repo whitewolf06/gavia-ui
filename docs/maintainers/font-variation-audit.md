@@ -20,8 +20,13 @@ Final-candidate loading, CLS and archive acceptance belong to
 Full CSS uses the complete canonical `Gavia Sans` / `Gavia` families. Compact
 faces have separate `Gavia Sans Core` / `Gavia Core` family names. Themes prefer
 `"Gavia Sans Core", "Gavia Sans", ...` so a marked grapheme can fall back as a
-whole to the complete family. Disjoint ranges split base/mark rendering; even
-overlapping slices of one family differ in Firefox. See the
+whole to the complete family in Chromium and WebKit. Firefox still splits font
+runs within clusters ([Mozilla bug 543200](https://bugzilla.mozilla.org/show_bug.cgi?id=543200)).
+Core registrations therefore sit inside `@supports not (-moz-appearance: none)`;
+Firefox skips the optional family and uses the complete variable Gavia face.
+This adds 56,192 upright bytes in Firefox while preserving authored marks and
+the 80,000-byte Core assets. Disjoint ranges and overlapping slices of one family
+also fail the browser raster comparison. See the
 [cluster-matching rules](https://www.w3.org/TR/css-fonts-4/#cluster-matching).
 The first Core family remains preferred for ordinary text. Home decorations
 use SVG so they do not require the international face. Real network requests and
@@ -53,8 +58,10 @@ hard aggregate RAM/CPU/process/time limits; use CI for full matrices.
 - Check Gavia and Gavia Dark with the actual loaded font, not a system fallback.
 - Check EN/RU home, extended alphabets, combining clusters and real italic.
 - Check presets and intermediate weights, including the 100–700 slider.
-- Confirm the normal home Core request is ≤90 KB transfer without redundant
-  Full/static downloads when the page's text fits Core.
+- In Chromium/WebKit, confirm the normal home Core request is ≤90 KB transfer
+  without redundant Full/static downloads when the page's text fits Core.
+- In Firefox, confirm the complete face renders both ordinary text and marked
+  clusters correctly; Core is intentionally unavailable while the workaround applies.
 - Measure font-loading CLS and total page transfer on desktop and mobile.
 - Compare Core/Full rendering where their retained glyphs are shared.
 

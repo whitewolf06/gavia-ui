@@ -97,7 +97,7 @@
   "buildSources": {
     "audit_variable.py": "5121d3f4c4ceef11d1bc44279ca9366b7811fbf5bcbaf55bdddcac9ad41d929a",
     "variable_geometry.py": "a8cdf65f286e149af408246b699056f5b8f0fb656a85a2a9787ace34dab9ab9a",
-    "build_variable.py": "33f6fa0c2f40879312342f37d0f99ebdf48827b5ad555c26b43596ee6a9ed9ee"
+    "build_variable.py": "f14caa0c6416e3a07c58b267a44f7d6ba35e9215e09c760dec2c9047c071912a"
   },
   "authoredGeometry": {
     "file": "scripts/fonts/draw_gavia.py",
@@ -89045,7 +89045,7 @@
   ],
   "css": {
     "file": "styles/fonts/gavia-variable.css",
-    "sha256": "ab122e81ae3afa7992d89857329152ad448c639218e55d5a93c47dcf8ae39400"
+    "sha256": "4afc0003f642f87a6b54908d3a5c71d20e3cf2bbb727c4e297c621e3a52c7d05"
   },
   "sizeBudget": {
     "targetMainPageFontBytes": 80000,

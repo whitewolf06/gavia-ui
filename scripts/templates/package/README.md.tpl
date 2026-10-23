@@ -83,7 +83,8 @@ The package also exports `manifest.json` and `design-tokens.json` for tooling.
 ## Gavia Sans
 
 Gavia themes use `"Gavia Sans Core", "Gavia Sans", ...` for compact ordinary
-text and complete fallback for combining clusters. Both original family names remain available.
+text and complete fallback for combining clusters. Firefox uses the complete face
+to preserve mark placement. Both original family names remain available.
 
 The npm package contains the WOFF2 web fonts and their OFL notices. TTF files and
 the font QA report stay in the source repository. Download the full font family
