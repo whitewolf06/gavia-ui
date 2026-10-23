@@ -1,6 +1,13 @@
 import { expect, type Response, test } from "@playwright/test";
 import { writeFileSync } from "node:fs";
 
+const compactFontUrl = /Gavia-Variable-Core[^/]*\.woff2(?:[?#].*)?$/u;
+const homeFontByEngine = {
+  chromium: compactFontUrl,
+  webkit: compactFontUrl,
+  firefox: /Gavia-Variable(?!-Core|-Italic)[^/]*\.woff2(?:[?#].*)?$/u
+};
+
 function recordFontResponse(response: Response, pending: Promise<{ url: string; bytes: number }>[]) {
   if (response.request().resourceType() === "font") {
     pending.push(response.body().then((body) => ({ url: response.url(), bytes: body.length })));
@@ -19,7 +26,7 @@ test("home uses only Core within its transfer budget", async ({ page, baseURL })
   const fonts = await Promise.all(pending);
   page.off("response", observeFont);
   expect(fonts.map((font) => font.url)).toEqual([
-    expect.stringMatching(/Gavia-Variable-Core[^/]*\.woff2(?:[?#].*)?$/u)
+    expect.stringMatching(compactFontUrl)
   ]);
   expect(fonts[0]!.bytes).toBeGreaterThan(0);
   expect(fonts[0]!.bytes).toBeLessThanOrEqual(80_000);
@@ -32,16 +39,14 @@ test("home uses only Core within its transfer budget", async ({ page, baseURL })
 test("complete grapheme shaping @cross-browser", async ({ page, baseURL, browserName }, testInfo) => {
   const initialFonts: Promise<{ url: string; bytes: number }>[] = [];
   const observeFont = (response: Response) => recordFontResponse(response, initialFonts);
-  if (browserName === "firefox") page.on("response", observeFont);
+  page.on("response", observeFont);
   await page.goto(new URL("?lang=en&theme=gavia", baseURL!).href);
   await expect(page.getByTestId("home-page")).toBeVisible();
   await page.evaluate(() => document.fonts.ready);
-  if (browserName === "firefox") {
-    page.off("response", observeFont);
-    expect((await Promise.all(initialFonts)).map((font) => font.url)).toEqual([
-      expect.stringMatching(/Gavia-Variable(?!-Core|-Italic)[^/]*\.woff2(?:[?#].*)?$/u)
-    ]);
-  }
+  page.off("response", observeFont);
+  expect((await Promise.all(initialFonts)).map((font) => font.url)).toEqual([
+    expect.stringMatching(homeFontByEngine[browserName])
+  ]);
   const comparisons = await page.evaluate(async () => {
     function fontRules(rules: CSSRuleList): CSSFontFaceRule[] {
       return Array.from(rules).flatMap((rule) => {
