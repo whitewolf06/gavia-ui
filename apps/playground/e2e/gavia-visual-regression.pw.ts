@@ -16,7 +16,7 @@ async function readyForDrawing(page: Page, theme: string): Promise<void> {
     const loaded = [];
     for (const weight of [100, 300, 400, 500, 600, 700]) {
       for (const style of ["normal", "italic"]) {
-        const fonts = await document.fonts.load(`${style} ${weight} 16px 'Gavia Sans'`, "Гавиа Gavia 0123456789");
+        const fonts = await document.fonts.load(`${style} ${weight} 16px 'Gavia Sans'`, "Гавиа Gavia 0123456789 Ĩ Қ a\u0323\u0301");
         loaded.push(fonts.map((font) => ({
           family: font.family, weight: font.weight, style: font.style, status: font.status, unicodeRange: font.unicodeRange
         })));

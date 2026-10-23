@@ -1,12 +1,14 @@
 import { expect, type Response, test } from "@playwright/test";
 
-test("Core delivery and complete grapheme shaping @cross-browser", async ({ page, baseURL }, testInfo) => {
+function recordFontResponse(response: Response, pending: Promise<{ url: string; bytes: number }>[]) {
+  if (response.request().resourceType() === "font") {
+    pending.push(response.body().then((body) => ({ url: response.url(), bytes: body.length })));
+  }
+}
+
+test("home uses only Core within its transfer budget", async ({ page, baseURL }) => {
   const pending: Promise<{ url: string; bytes: number }>[] = [];
-  const observeFont = (response: Response) => {
-    if (response.request().resourceType() === "font") {
-      pending.push(response.body().then((body) => ({ url: response.url(), bytes: body.length })));
-    }
-  };
+  const observeFont = (response: Response) => recordFontResponse(response, pending);
   page.on("response", observeFont);
   const url = new URL(baseURL!);
   url.search = "?lang=en&theme=gavia";
@@ -15,7 +17,7 @@ test("Core delivery and complete grapheme shaping @cross-browser", async ({ page
   await page.evaluate(() => document.fonts.ready);
   const fonts = await Promise.all(pending);
   page.off("response", observeFont);
-  expect(fonts).toHaveLength(1);
+  expect(fonts.length).toBe(1);
   expect(fonts[0]!.url).toMatch(/Gavia-Variable-Core[^/]*\.woff2(?:[?#].*)?$/u);
   expect(fonts[0]!.bytes).toBeGreaterThan(0);
   expect(fonts[0]!.bytes).toBeLessThanOrEqual(80_000);
@@ -23,7 +25,12 @@ test("Core delivery and complete grapheme shaping @cross-browser", async ({ page
     .filter((entry) => /\.woff2(?:[?#].*)?$/u.test(entry.name))
     .reduce((sum, entry) => sum + (entry as PerformanceResourceTiming).transferSize, 0));
   expect(Math.max(transfer, fonts[0]!.bytes)).toBeLessThanOrEqual(90_000);
+});
 
+test("complete grapheme shaping @cross-browser", async ({ page, baseURL }, testInfo) => {
+  await page.goto(new URL("?lang=en&theme=gavia", baseURL!).href);
+  await expect(page.getByTestId("home-page")).toBeVisible();
+  await page.evaluate(() => document.fonts.ready);
   const comparisons = await page.evaluate(async () => {
     function fontRules(rules: CSSRuleList): CSSFontFaceRule[] {
       return Array.from(rules).flatMap((rule) => {
@@ -69,7 +76,7 @@ test("Core delivery and complete grapheme shaping @cross-browser", async ({ page
     }
     return results;
   });
-  await testInfo.attach("font-delivery", { body: JSON.stringify({ fonts, transfer, comparisons }, null, 2), contentType: "application/json" });
+  await testInfo.attach("font-shaping", { body: JSON.stringify(comparisons, null, 2), contentType: "application/json" });
   expect(comparisons).toHaveLength(12);
   for (const result of comparisons) {
     expect(result.differentBytes, result.style + " " + result.text).toBe(0);

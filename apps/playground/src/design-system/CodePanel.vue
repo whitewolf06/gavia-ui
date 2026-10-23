@@ -73,7 +73,10 @@ defineExpose({ copy });
         variant="ghost"
         type="submit"
         :disabled="loading || loadError"
-      >Open in StackBlitz ↗</WlButton>
+      >
+        Open in StackBlitz
+        <WlIcon name="arrow-up-right" :size="14" />
+      </WlButton>
     </form>
     <div class="ds-source-frame">
       <details :open="expanded">

@@ -110,16 +110,22 @@ export async function checkPackedBrowser(consumerDir, artifactLabel = "consumer"
         const font = '400 14px "Gavia Sans"';
         const text = "Gavia Гавиа 0123456789";
         const faces = await document.fonts.load(font, text);
+        const extended = await document.fonts.load(font, "Gavia Ĩ Қ a\u0323\u0301");
+        const describe = (face) => ({ family: face.family, weight: face.weight, style: face.style,
+          status: face.status, unicodeRange: face.unicodeRange });
         return {
           ready: document.fonts.check(font, text),
-          faces: faces.map((face) => ({ family: face.family, weight: face.weight, style: face.style, status: face.status,
-            unicodeRange: face.unicodeRange }))
+          extendedReady: document.fonts.check(font, "Gavia Ĩ Қ a\u0323\u0301"),
+          faces: faces.map(describe),
+          extended: extended.map(describe)
         };
-      }), 5_000, "Load consumer Gavia Full/Core faces");
+      }), 5_000, "Load consumer Core and complementary Full coverage");
       assert.equal(fonts.ready, true, "Packed Gavia Sans font did not finish loading");
-      assert.equal(fonts.faces.length, 2, "Packed consumer must load the Full/Core pair");
-      assert.equal(new Set(fonts.faces.map((face) => face.unicodeRange)).size, 2, "Packed subsets must have distinct coverage");
-      for (const face of fonts.faces) {
+      assert.equal(fonts.faces.length, 1, "Ordinary packed consumer text must need only Core");
+      assert.equal(fonts.extendedReady, true, "Packed extended Gavia text did not finish loading");
+      assert.equal(fonts.extended.length, 2, "Extended text must resolve Core and complementary Full");
+      assert.equal(new Set(fonts.extended.map((face) => face.unicodeRange)).size, 2, "Packed subsets must have distinct coverage");
+      for (const face of [...fonts.faces, ...fonts.extended]) {
         assert.equal(face.family, "Gavia Sans");
         assert.equal(face.weight, "100 700");
         assert.equal(face.style, "normal");

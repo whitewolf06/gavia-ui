@@ -86,7 +86,7 @@ describe("Gavia Sans font distribution", () => {
           const file = variableFiles.find((record) => record.style === style && record.subset === subset)!;
           const face = faces.find((block) => block.includes('font-family: "' + family + '";')
             && block.includes("../../fonts/gavia/" + file.file))!;
-          return unicodeCharacters(face.match(/unicode-range:\s*([^;]+);/)![1]!);
+          return unicodeCharacters(face.match(/unicode-range:([^;]+);/)![1]!);
         };
         const core = ranges("core");
         const full = ranges("full");
