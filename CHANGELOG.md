@@ -9,6 +9,7 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 ### Changed
 
+- Keep prerendered Playground pages visible before startup and simplify displayed API types and component badges.
 - Use complementary Core/Full font delivery while preserving every accepted Gavia font binary.
 - Exclude variable-font audit data from npm and use neutral names for shared library chunks.
 - Keep rendered documentation visible while the next Playground page and its translations load.

@@ -188,8 +188,8 @@ onBeforeUnmount(() => {
       >
         <template v-if="entry" #meta>
           <span>{{ t('documentation.strings.s0830') }} {{ categoryLabel }}</span>
-          <span v-if="entry.introducedIn === gaviaProjectInfo.version" class="docs-version">
-            {{ playgroundLocale === 'ru' ? 'Новое' : 'New' }}
+          <span class="docs-version" :title="t('documentation.strings.s0841') + entry.introducedIn">
+            v{{ entry.introducedIn }}
           </span>
         </template>
         <template v-if="entry" #actions>
@@ -350,16 +350,18 @@ onBeforeUnmount(() => {
                         type="button"
                         class="docs-component-link"
                         :aria-label="item.name"
-                        :aria-describedby="'docs-catalog-version-' + item.name"
+                        :aria-describedby="item.introducedIn === gaviaProjectInfo.version
+                          ? 'docs-catalog-version-' + item.name : undefined"
                         :aria-current="component === item.name ? 'page' : undefined"
                         @click="navigateComponent(item.name)"
                       >
                         <span class="docs-component-name">{{ item.name }}</span>
                         <span
+                          v-if="item.introducedIn === gaviaProjectInfo.version"
                           :id="'docs-catalog-version-' + item.name"
                           class="docs-component-version"
                           :title="t('documentation.strings.s0841') + item.introducedIn"
-                        >{{ t('documentation.strings.s0842') }} {{ item.introducedIn }}</span>
+                        >{{ playgroundLocale === 'ru' ? 'Новое' : 'New' }}</span>
                       </button>
                     </li>
                   </ul>

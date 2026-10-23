@@ -24,6 +24,8 @@ function assertOutputParent(root, target) {
 /** Runs in the browser; retain public paths without recording the owned preview origin. */
 export function serializePrerenderHtml({ origin, root = document.documentElement }) {
   const clone = root.cloneNode(true);
+  clone.removeAttribute("data-wl-boot");
+  clone.setAttribute("data-playground-prerendered", "");
   clone.querySelector("#app")?.removeAttribute("data-v-app");
   for (const node of clone.querySelectorAll("body > :not(#app):not(script):not(noscript)")) node.remove();
   for (const element of clone.querySelectorAll("[href], [src], [action], [formaction], [poster]")) {

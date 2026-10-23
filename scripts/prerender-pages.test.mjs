@@ -26,7 +26,10 @@ test("serialized HTML rewrites only owned-origin DOM URLs and retains public/ext
   ];
   let mounted = true;
   let portalRemoved = false;
+  const rootAttributes = new Map([["data-wl-boot", "loading"]]);
   const clone = {
+    removeAttribute: (name) => rootAttributes.delete(name),
+    setAttribute: (name, value) => rootAttributes.set(name, value),
     querySelector: () => ({ removeAttribute: (name) => {
       assert.equal(name, "data-v-app");
       mounted = false;
@@ -56,4 +59,6 @@ test("serialized HTML rewrites only owned-origin DOM URLs and retains public/ext
   assert.equal(html.startsWith("<!doctype html>\n"), true);
   assert.equal(html.includes(origin), false);
   assert.equal(html.includes("data-v-app"), false);
+  assert.equal(rootAttributes.has("data-wl-boot"), false);
+  assert.equal(rootAttributes.get("data-playground-prerendered"), "");
 });

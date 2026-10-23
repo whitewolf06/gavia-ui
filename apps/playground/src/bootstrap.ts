@@ -35,13 +35,15 @@ async function mount(): Promise<void> {
   try {
     app.mount("#app");
     delete document.documentElement.dataset.wlBoot;
+    document.documentElement.removeAttribute("data-playground-prerendered");
   } catch (error) {
     localeScope.stop();
     throw error;
   }
 }
 function start(): void {
-  document.documentElement.dataset.wlBoot = "loading";
+  if (document.documentElement.hasAttribute("data-playground-prerendered")) delete document.documentElement.dataset.wlBoot;
+  else document.documentElement.dataset.wlBoot = "loading";
   void mount().catch(() => {
     document.documentElement.dataset.wlBoot = "error";
     const notice = document.createElement("div");

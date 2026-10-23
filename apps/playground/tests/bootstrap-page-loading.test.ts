@@ -46,11 +46,30 @@ beforeEach(() => {
 });
 afterEach(() => {
   delete document.documentElement.dataset.wlBoot;
+  document.documentElement.removeAttribute("data-playground-prerendered");
   document.body.replaceChildren();
   window.history.replaceState(null, "", "/");
 });
 
 describe("initial page preparation", () => {
+  it("keeps prerendered route content outside the startup screen until mounting", async () => {
+    const page = deferred<unknown>();
+    const messages = deferred<boolean>();
+    startup.preload.mockReturnValue(page.promise);
+    startup.messages.mockReturnValue(messages.promise);
+    document.documentElement.setAttribute("data-playground-prerendered", "");
+    document.getElementById("app")!.innerHTML = "<main><h1>WlSelect</h1></main>";
+    await import("../src/bootstrap");
+    expect(document.documentElement.dataset.wlBoot).toBeUndefined();
+    expect(document.querySelector("h1")?.textContent).toBe("WlSelect");
+    expect(startup.app.mount).not.toHaveBeenCalled();
+    page.resolve({ default: {} });
+    messages.resolve(true);
+    await flushPromises();
+    expect(startup.app.mount).toHaveBeenCalledExactlyOnceWith("#app");
+    expect(document.documentElement.hasAttribute("data-playground-prerendered")).toBe(false);
+  });
+
   it.each(["page", "messages"])("starts route and catalogs together and retains fallback until both finish (%s first)", async (first) => {
     const page = deferred<unknown>();
     const messages = deferred<boolean>();

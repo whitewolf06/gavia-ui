@@ -9,6 +9,7 @@ defineProps<{
 const { t } = usePlaygroundI18n();
 import type { WlComponentManifest } from "gavia-ui";
 import { type DocumentationPtSection, propDefault, propType } from "./catalog";
+import TypeSignature from "./TypeSignature.vue";
 
 </script>
 
@@ -18,9 +19,9 @@ import { type DocumentationPtSection, propDefault, propType } from "./catalog";
       <h2 :id="anchors?.props" class="wl-text-heading">Props</h2>
       <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0674') }}</p>
       <p v-if="entry.model" class="docs-model">
-        <code>v-model{{ entry.model.name === 'modelValue' ? '' : ':' + entry.model.name }}: {{
-          entry.model.typescriptType ?? entry.model.type
-        }}</code>
+        <span><code>v-model{{ entry.model.name === 'modelValue' ? '' : ':' + entry.model.name }}: </code><TypeSignature
+          :value="entry.model.typescriptType ?? entry.model.type"
+        /></span>
         <span v-if="entry.model.description">{{ entry.model.description }}</span>
       </p>
       <div
@@ -42,7 +43,7 @@ import { type DocumentationPtSection, propDefault, propType } from "./catalog";
           <tbody>
             <tr v-for="prop in entry.props" :key="prop.name" :data-prop="prop.name">
               <th scope="row"><code>{{ prop.name }}{{ prop.required ? ' *' : '' }}</code></th>
-              <td><code>{{ propType(prop) }}</code></td>
+              <td><TypeSignature :value="propType(prop)" /></td>
               <td><code>{{ propDefault(prop) }}</code></td>
               <td>{{ prop.description ?? '—' }}</td>
             </tr>
@@ -72,7 +73,7 @@ import { type DocumentationPtSection, propDefault, propType } from "./catalog";
           <tbody>
             <tr v-for="event in entry.emits" :key="event.name">
               <th scope="row"><code>{{ event.name }}</code></th>
-              <td><code>{{ event.typescriptType ?? event.payload ?? '—' }}</code></td>
+              <td><TypeSignature :value="event.typescriptType ?? event.payload ?? '—'" /></td>
               <td>{{ event.description ?? '—' }}</td>
             </tr>
           </tbody>
@@ -101,7 +102,7 @@ import { type DocumentationPtSection, propDefault, propType } from "./catalog";
           <tbody>
             <tr v-for="slot in entry.slots" :key="slot.name">
               <th scope="row"><code>{{ slot.name }}</code></th>
-              <td><code>{{ slot.typescriptType ?? '—' }}</code></td>
+              <td><TypeSignature :value="slot.typescriptType ?? '—'" /></td>
               <td>{{ slot.description ?? '—' }}</td>
             </tr>
           </tbody>

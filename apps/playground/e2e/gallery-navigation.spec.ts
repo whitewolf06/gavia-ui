@@ -90,16 +90,19 @@ test("legacy component input resolves to a canonical hosted route without losing
   await expect(page.locator("#docs-wltabs-props")).toBeInViewport();
 });
 
-test("Docs catalog opens the real button example with its accessible version", async ({ page }) => {
+test("Docs catalog marks new components and opens the real button example", async ({ page }) => {
   const docs = await openDocumentationMenu(page);
   const catalog = docs.getByRole("navigation", { name: "Каталог компонентов", exact: true });
   const item = catalog.getByRole("button", { name: "WlButton", exact: true });
-  await expect(item.locator(".docs-component-version")).toBeVisible();
-  await expect(item.locator(".docs-component-version")).toHaveText(/^С \d+\.\d+\.\d+$/);
-  await expect(item).toHaveAccessibleDescription(await item.locator(".docs-component-version").innerText());
+  await expect(item.locator(".docs-component-version")).toHaveCount(0);
+  await expect(item).not.toHaveAttribute("aria-describedby");
+  const newItem = catalog.getByRole("button", { name: "WlLink", exact: true });
+  await expect(newItem.locator(".docs-component-version")).toHaveText("Новое");
+  await expect(newItem).toHaveAccessibleDescription("Новое");
 
   // Header controls also use WlButton; catalog navigation must reach its actual example.
   const buttonWorkspace = await navigateDocumentationComponent(page, "WlButton");
+  await expect(docs.locator(".docs-version")).toHaveText("v0.1.0");
   const button = buttonWorkspace.getByTestId("docs-button-preview").getByRole("button", { name: "Добавить", exact: true });
   await button.click();
   await expect(buttonWorkspace.getByTestId("docs-button-preview").getByRole("status")).toHaveText("Нажатий: 1");

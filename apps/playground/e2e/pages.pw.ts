@@ -61,6 +61,25 @@ test.afterEach(async ({ page }) => {
   expect(resources.get(page)!.failures, "Production assets and scripts must load without errors").toEqual([]);
 });
 
+test("prerendered component content stays visible before JavaScript runs", async ({ browser, baseURL }, testInfo) => {
+  const mobile = testInfo.project.name.includes("mobile");
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    viewport: mobile ? { width: 390, height: 844 } : { width: 1440, height: 900 }
+  });
+  try {
+    const page = await context.newPage();
+    const response = await page.goto(new URL("docs/components/WlSelect/", baseURL!).href);
+    expect(response?.ok()).toBe(true);
+    await expect(page.locator("html")).toHaveAttribute("data-playground-prerendered", "");
+    await expect(page.locator("html")).not.toHaveAttribute("data-wl-boot");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("WlSelect");
+    await expect(page.locator('[data-docs-component="WlSelect"]')).toBeVisible();
+  } finally {
+    await context.close();
+  }
+});
+
 test("canonical EN/RU pages retain their language, public links and static documentation HTML", async ({ page }) => {
   for (const language of ["en", "ru"]) {
     const prefixes: Record<string, string> = { en: "", ru: "ru/" };

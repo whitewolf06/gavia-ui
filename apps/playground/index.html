@@ -20,7 +20,7 @@
           ? typeof matchMedia === "function" && matchMedia("(prefers-color-scheme: dark)").matches ? "gavia-dark" : "gavia"
           : preference;
         const root = document.documentElement;
-        root.dataset.wlBoot = "loading";
+        if (!root.hasAttribute("data-playground-prerendered")) root.dataset.wlBoot = "loading";
         root.dataset.wlTheme = theme;
         root.style.colorScheme = theme === "gavia-dark" || theme === "graphite" ? "dark" : "light";
         const supported = (value) => value === "en" || value === "ru";
