@@ -76,15 +76,7 @@ def unicode_range(characters):
 
 
 def subset_coverage(characters):
-    """Keep Latin-1/common Cyrillic light; full coverage handles complex clusters.
-
-    The full face is registered first, then the core face. Core intentionally
-    excludes combining marks: a marked cluster must use the complete face,
-    retaining its original canonical composition and authored positioning.
-    Core includes precomposed Latin-1 letters so ordinary accented Latin words
-    stay in a single face, with their original kerning. No glyph is removed
-    from the full international face or the package's accepted static fonts.
-    """
+    """Keep common text compact; a separate Full family owns marked clusters."""
     coverage = set(characters)
     marks = {char for char in coverage if 0x300 <= char <= 0x36F or 0x1AB0 <= char <= 0x1AFF
              or 0x1DC0 <= char <= 0x1DFF or 0x20D0 <= char <= 0x20FF or 0xFE20 <= char <= 0xFE2F}
@@ -338,9 +330,8 @@ def draft_css(static_css, files, metrics):
     static_support = "@supports not (font-variation-settings: normal) {"
     if static_css.startswith(static_support) and static_css.endswith("}"):
         static_css = static_css[len(static_support):-1].strip()
-    # Full must cover complete grapheme clusters, including Core base characters.
-    # Disjoint ranges split marks from their bases in Chromium and WebKit.
-    # Reverse matching still prefers the later Core face for ordinary text.
+    # Separate family names let cluster fallback try the complete face rather
+    # than split a marked cluster across slices of one composite family.
     subsets = sorted(files, key=lambda record: (record["style"], record["subset"] != "full"))
     # Exact static weights otherwise compete with the variable range in native
     # face matching, causing redundant requests despite the variable preload.
@@ -348,7 +339,8 @@ def draft_css(static_css, files, metrics):
              "@supports (font-variation-settings: normal) {"]
     for family in ("Gavia Sans", "Gavia"):
         for record in subsets:
-            lines.extend(["  @font-face {", f'    font-family: "{family}";',
+            css_family = family + " Core" if record["subset"] == "core" else family
+            lines.extend(["  @font-face {", f'    font-family: "{css_family}";',
                           f'    src: url("../../fonts/gavia/{record["file"]}") format("woff2");',
                           f'    font-style: {record["style"]};', "    font-weight: 100 700;",
                           "    font-display: swap;",

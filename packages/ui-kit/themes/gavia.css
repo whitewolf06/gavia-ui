@@ -63,7 +63,7 @@
   --wl-dur-4: 0.18s;
   --wl-dur-5: 0.2s;
   --wl-ease: ease;
-  --wl-font: "Gavia Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --wl-font: "Gavia Sans Core", "Gavia Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   --wl-font-text-rendering: geometricPrecision;
   --wl-font-heading: var(--wl-font);
   --wl-mono: "SF Mono", ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;

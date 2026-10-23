@@ -48,7 +48,7 @@ test("complete grapheme shaping @cross-browser", async ({ page, baseURL }, testI
     const context = canvas.getContext("2d")!;
     function draw(text: string, style: string, family: string) {
       context.clearRect(0, 0, canvas.width, canvas.height);
-      context.font = `${style} 450 42px "${family}"`;
+      context.font = `${style} 450 42px ${family}`;
       context.textBaseline = "alphabetic";
       context.fillText(text, 30, 85);
       return { pixels: context.getImageData(0, 0, canvas.width, canvas.height).data, width: context.measureText(text).width };
@@ -61,12 +61,14 @@ test("complete grapheme shaping @cross-browser", async ({ page, baseURL }, testI
       const family = "Gavia complete reference " + style;
       const reference = new FontFace(family, full.style.getPropertyValue("src"), { style, weight: "100 700" });
       document.fonts.add(await reference.load());
+      await document.fonts.load(`${style} 450 42px "Gavia Sans"`, cases.join(" "));
+      const stack = getComputedStyle(document.body).fontFamily;
       for (const text of cases) {
-        await document.fonts.load(`${style} 450 42px "Gavia Sans"`, text);
+        await document.fonts.load(`${style} 450 42px ${stack}`, text);
         await document.fonts.ready;
         await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-        const actual = draw(text, style, "Gavia Sans");
-        const expected = draw(text, style, family);
+        const actual = draw(text, style, stack);
+        const expected = draw(text, style, JSON.stringify(family));
         let differentBytes = 0;
         for (let index = 0; index < actual.pixels.length; index++) {
           if (actual.pixels[index] !== expected.pixels[index]) differentBytes++;

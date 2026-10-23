@@ -112,7 +112,7 @@ describe("design system public contract", () => {
     for (const token of wlDesignTokens.filter((token) => token.type !== "color" && token.type !== "shadow")) {
       expect(dark[token.name], token.name).toBe(light[token.name]);
     }
-    expect(dark["--wl-font"]).toMatch(/^"Gavia Sans",/);
+    expect(dark["--wl-font"]).toMatch(/^"Gavia Sans Core", "Gavia Sans",/);
     expect(dark["--wl-bg"]).not.toBe(light["--wl-bg"]);
     expect(dark["--wl-bg"]).not.toBe(resolveWlToken("--wl-bg", "graphite"));
     expect(dark["--wl-action-danger-bg"]).toBe("#ab4448");

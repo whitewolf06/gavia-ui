@@ -2,5 +2,6 @@
 "gavia-ui": patch
 ---
 
-Preserve complete Full-font fallback for combining clusters and verify Core-only
-painting for ordinary home-page text without changing the accepted font binaries.
+Add optional Core font families with a separate complete Gavia Sans/Gavia fallback
+so compact theme loading preserves combining-cluster shaping. The accepted font
+binaries and authored drawing stay unchanged.

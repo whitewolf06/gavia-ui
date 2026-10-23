@@ -210,7 +210,7 @@
   }
 
   @font-face {
-    font-family: "Gavia Sans";
+    font-family: "Gavia Sans Core";
     src: url("../../fonts/gavia/Gavia-Variable-Italic-Core.woff2") format("woff2");
     font-style: italic;
     font-weight: 100 700;
@@ -228,7 +228,7 @@
   }
 
   @font-face {
-    font-family: "Gavia Sans";
+    font-family: "Gavia Sans Core";
     src: url("../../fonts/gavia/Gavia-Variable-Core.woff2") format("woff2");
     font-style: normal;
     font-weight: 100 700;
@@ -246,7 +246,7 @@
   }
 
   @font-face {
-    font-family: "Gavia";
+    font-family: "Gavia Core";
     src: url("../../fonts/gavia/Gavia-Variable-Italic-Core.woff2") format("woff2");
     font-style: italic;
     font-weight: 100 700;
@@ -264,7 +264,7 @@
   }
 
   @font-face {
-    font-family: "Gavia";
+    font-family: "Gavia Core";
     src: url("../../fonts/gavia/Gavia-Variable-Core.woff2") format("woff2");
     font-style: normal;
     font-weight: 100 700;

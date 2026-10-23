@@ -65,7 +65,9 @@ export async function expectGaviaFontDownload(page: Page, link: Locator): Promis
   }
   const css = files.get(prefix + "gavia.css")!.toString("utf8");
   expect(css.match(/@font-face/g)).toHaveLength(34);
-  for (const family of ["Gavia Sans", "Gavia"]) expect(Array.from(css.matchAll(/font-family:\s*"([^"]+)"\s*;/g)).filter((match) => match[1] === family)).toHaveLength(16);
+  const families = Array.from(css.matchAll(/font-family:\s*"([^"]+)"\s*;/g));
+  for (const family of ["Gavia Sans", "Gavia"]) expect(families.filter((match) => match[1] === family)).toHaveLength(14);
+  for (const family of ["Gavia Sans Core", "Gavia Core"]) expect(families.filter((match) => match[1] === family)).toHaveLength(2);
   for (const match of css.matchAll(/url\("([^"]+)"\)/g)) expect(files.has(prefix + match[1]!.replace("./", ""))).toBe(true);
   expect(files.get(prefix + "README.txt")!.toString("utf8")).toContain("SIL Open Font License 1.1");
 }

@@ -111,20 +111,27 @@ export async function checkPackedBrowser(consumerDir, artifactLabel = "consumer"
         const text = "Gavia Гавиа 0123456789";
         const faces = await document.fonts.load(font, text);
         const extended = await document.fonts.load(font, "Gavia Ĩ Қ a\u0323\u0301");
+        const core = await document.fonts.load('400 14px "Gavia Sans Core"', text);
         const describe = (face) => ({ family: face.family, weight: face.weight, style: face.style,
           status: face.status, unicodeRange: face.unicodeRange });
         return {
           ready: document.fonts.check(font, text),
           extendedReady: document.fonts.check(font, "Gavia Ĩ Қ a\u0323\u0301"),
           faces: faces.map(describe),
-          extended: extended.map(describe)
+          extended: extended.map(describe),
+          core: core.map(describe)
         };
       }), 5_000, "Load consumer Core and complete cluster fallback");
       assert.equal(fonts.ready, true, "Packed Gavia Sans font did not finish loading");
-      assert.equal(fonts.faces.length, 2, "FontFaceSet.load must resolve both overlapping fallback declarations");
+      assert.equal(fonts.faces.length, 1, "The canonical family must provide one complete face");
       assert.equal(fonts.extendedReady, true, "Packed extended Gavia text did not finish loading");
-      assert.equal(fonts.extended.length, 2, "Extended text must resolve Core and complete Full fallback");
-      assert.equal(new Set(fonts.extended.map((face) => face.unicodeRange)).size, 2, "Packed subsets must have distinct coverage");
+      assert.equal(fonts.extended.length, 1, "Extended text must resolve the complete canonical face");
+      assert.equal(fonts.core.length, 1, "The optional Core family must resolve ordinary text");
+      assert.equal(fonts.core[0].family, "Gavia Sans Core");
+      assert.equal(fonts.core[0].status, "loaded");
+      assert.equal(fonts.core[0].weight, "100 700");
+      assert.equal(fonts.core[0].style, "normal");
+      assert.notEqual(fonts.core[0].unicodeRange, fonts.faces[0].unicodeRange, "Core must retain its compact coverage");
       for (const face of [...fonts.faces, ...fonts.extended]) {
         assert.equal(face.family, "Gavia Sans");
         assert.equal(face.weight, "100 700");

@@ -358,7 +358,7 @@ class VariableDeliveryTests(unittest.TestCase):
                     expected = values[lower] * (1 - progress) + values[upper] * progress
                     self.assertEqual(actual, expected)
 
-    def test_core_retains_latin1_and_common_cyrillic_and_defers_combining_clusters_to_full(self):
+    def test_core_retains_common_text_and_defers_combining_clusters_to_full(self):
         marks = {0x301, 0x1AB0, 0x1DC0, 0x20D0, 0xFE20, 0xFE2E}
         coverage = {0x41, 0xAB, 0xBB, 0xD7, 0xF7, 0xE9, 0x130, 0x401, 0x416, 0x451, 0x1C80, 0x1E00, 0x2014,
                     0x20BD, 0x2713, 0xA641, 0xFFFD} | marks
@@ -372,7 +372,7 @@ class VariableDeliveryTests(unittest.TestCase):
         self.assertFalse({0x130, 0x1E00, 0x2713, 0x1C80, 0xA641, 0xFE2E} & subsets["core"])
         self.assertEqual(coverage, before)
 
-    def test_ordinary_english_russian_and_latin1_use_core_without_claiming_combining_marks(self):
+    def test_common_text_uses_core_without_claiming_marks_or_extended_bases(self):
         text = 'Gavia UI: «Ёж, йога, съёмка» café Í Ï 0123456789 — ₽ × ÷'
         extra = 'Ĩ Ī Қ Ӝ Ґ Ѣ a\u0301'
         coverage = {ord(char) for char in text + extra}
@@ -420,6 +420,8 @@ class VariableDeliveryTests(unittest.TestCase):
         css = draft_css("", files, metrics)
         self.assertIn("unicode-range: U+0041, U+0301;", css)
         self.assertIn("unicode-range: U+0041;", css)
+        self.assertIn('font-family: "Gavia Sans Core";', css)
+        self.assertIn('font-family: "Gavia Core";', css)
         self.assertLess(css.index("Gavia-Variable.woff2"), css.index("Gavia-Variable-Core.woff2"))
         self.assertEqual(files, before)
         self.assertEqual(draft_css(css, files, metrics), css)

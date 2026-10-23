@@ -41,7 +41,7 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
   expect(faces).toHaveLength(12);
   expect(await page.evaluate(async () => (await document.fonts.load("normal 400 16px Gavia", "Гавиа 0123456789")).length)).toBe(1);
   for (const face of faces) {
-    expect(face.fonts, `${face.weight} ${face.style} loads the matching Core face`).toHaveLength(1);
+    expect(face.fonts, `${face.weight} ${face.style} loads the complete face`).toHaveLength(1);
     expect(new Set(face.fonts.map((font) => font.unicodeRange)).size).toBe(1);
     for (const font of face.fonts) {
       expect(font).toMatchObject({ family: "Gavia Sans", weight: "100 700", style: face.style, status: "loaded" });
@@ -97,7 +97,7 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
     const headingFamily = await fontPage.locator(".wl-page-header__title").evaluate((element) => getComputedStyle(element).fontFamily);
     await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", headingFamily);
     await expect(fontPage.locator(".wl-type-display")).toHaveCSS("text-rendering", theme.startsWith("Gavia") ? "geometricprecision" : "optimizelegibility");
-    await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
+    await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Gavia Sans(?: Core)?"?,/);
     await expect(fontPage.locator(".wl-weights-digits").first()).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
     await expect(page.locator("body")).toHaveCSS("text-rendering", theme.startsWith("Gavia") ? "geometricprecision" : "optimizelegibility");
     for (const sample of [".wl-type-number-sample", ".wl-weights-digits"]) {
@@ -206,7 +206,7 @@ test("tabular and proportional numbers use different spacing without changing th
   expect(matrix).toHaveLength(72);
   for (const row of matrix) {
     const label = `${row.weight} ${row.fontStyle} ${row.size}px`;
-    expect(row.faces, `${label} uses its loaded variable Full/Core pair`).toEqual(Array.from({ length: 2 }, () => ({
+    expect(row.faces, `${label} uses its complete variable face`).toEqual(Array.from({ length: 1 }, () => ({
       family: "Gavia Sans", weight: "100 700", style: row.fontStyle, status: "loaded"
     })));
     expect(row.numeric).toBe("tabular-nums");

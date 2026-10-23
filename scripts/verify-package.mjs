@@ -420,13 +420,13 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     }
   }
   const variableFaces = fontFaces.filter(([, block]) => /font-weight:\s*100\s+700\s*;/.test(block)
-    && /font-family:\s*["']Gavia(?: Sans)?["']\s*;/.test(block));
+    && /font-family:\s*["']Gavia(?: Sans)?(?: Core)?["']\s*;/.test(block));
   if (variableFaces.length !== (variableFiles.length ? 8 : 0)) throw new Error("Packed variable-font CSS has an incomplete subset registration");
   for (const record of variableFiles) {
     const matching = variableFaces.filter(([, block]) => block.includes("../../fonts/gavia/" + record.file));
     if (matching.length !== 2
       || JSON.stringify(matching.map(([, block]) => block.match(/font-family:\s*["']([^"']+)["']\s*;/)?.[1]).sort())
-      !== JSON.stringify(["Gavia", "Gavia Sans"])
+      !== JSON.stringify(record.subset === "core" ? ["Gavia Core", "Gavia Sans Core"] : ["Gavia", "Gavia Sans"])
       || matching.some(([, block]) => !block.includes("font-style: " + record.style + ";")
         || !block.includes("unicode-range: " + record.unicodeRange + ";") || !/font-display:\s*swap\s*;/.test(block))) {
       throw new Error("Packed variable-font CSS has a broken style, subset or URL: " + record.file);
@@ -434,9 +434,10 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     if (record.subset === "core") {
       const fullFile = variableFiles.find((file) => file.style === record.style && file.subset === "full");
       for (const family of ["Gavia Sans", "Gavia"]) {
-        const familyBlock = (block) => block.includes('font-family: "' + family + '";');
-        const fullIndex = variableFaces.findIndex(([, block]) => familyBlock(block) && block.includes(fullFile.file));
-        const coreIndex = variableFaces.findIndex(([, block]) => familyBlock(block) && block.includes(record.file));
+        const fullIndex = variableFaces.findIndex(([, block]) => block.includes('font-family: "' + family + '";')
+          && block.includes(fullFile.file));
+        const coreIndex = variableFaces.findIndex(([, block]) => block.includes('font-family: "' + family + ' Core";')
+          && block.includes(record.file));
         if (fullIndex < 0 || coreIndex <= fullIndex) throw new Error("Core must follow its complete fallback: " + record.file);
       }
     }
@@ -452,7 +453,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   const builtCss = readdirSync(builtAssets).filter((file) => file.endsWith(".css"))
     .map((file) => readFileSync(join(builtAssets, file), "utf8")).join("\n");
   const builtFontFaces = [...builtCss.matchAll(/@font-face\s*\{([^}]+)\}/g)]
-    .filter(([, block]) => /font-family:["']?Gavia(?: Sans)?["';]/.test(block));
+    .filter(([, block]) => /font-family:["']?Gavia(?: Sans)?(?: Core)?["';]/.test(block));
   if (builtFontFaces.length !== 24 + variableFaces.length) throw new Error("Consumer CSS did not preserve Gavia faces, subsets and legacy aliases");
   for (const [, block] of builtFontFaces) {
     const fontUrl = block.match(/url\(["']?([^"')]+)["']?\)/)?.[1];

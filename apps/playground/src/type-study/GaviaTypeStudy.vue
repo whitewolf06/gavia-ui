@@ -124,14 +124,14 @@ function chooseStyle(value: string | null): void {
 function chooseWeight(value: unknown): void {
   if (typeof value === "number" && gaviaWeights.some((weight) => weight.value === value)) proofWeight.value = value;
 }
-const standaloneCode = '<link rel="stylesheet" href="./gavia.css">\n<style>body { font-family: "Gavia Sans", sans-serif; text-rendering: geometricPrecision; }</style>';
+const standaloneCode = '<link rel="stylesheet" href="./gavia.css">\n<style>body { font-family: "Gavia Sans Core", "Gavia Sans", sans-serif; text-rendering: geometricPrecision; }</style>';
 const paragraphs = computed(() => samples[language.value].body.split("\n\n"));
 const proofSample = computed(() => proofText.value.trim() ? proofText.value : content.value.proofExample);
 const exampleBalance = computed(() => language.value === "ru" ? "12 480 ₽" : "€128.40");
 const playgroundUrl = computed(() => withPlaygroundTheme("?view=docs", playgroundThemePreference.value));
 const numeralRows = computed(() => language.value === "ru" ? ["11 111,00", "88 888,00", "10 240,50"] : ["11,111.00", "88,888.00", "10,240.50"]);
 const fontImportCode = 'import "gavia-ui/styles/fonts/gavia.css";';
-const fontFamilyCode = ".app {\n  font-family: \"Gavia Sans\", \"Segoe UI\", sans-serif;\n  text-rendering: geometricPrecision;\n}";
+const fontFamilyCode = ".app {\n  font-family: \"Gavia Sans Core\", \"Gavia Sans\", \"Segoe UI\", sans-serif;\n  text-rendering: geometricPrecision;\n}";
 
 function saveProject(): void {
   saved.value = true;

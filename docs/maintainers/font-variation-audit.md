@@ -17,14 +17,16 @@ coverage. These byte sizes describe the prepared assets, not final-page transfer
 Final-candidate loading, CLS and archive acceptance belong to
 [the candidate gates](release-candidate.md#candidate-gates).
 
-Full CSS retains coverage of Core base characters so a marked grapheme can use
-one complete face. Disjoint ranges split base/mark rendering in browser checks;
-they are unsuitable for this font contract. See the
+Full CSS uses the complete canonical `Gavia Sans` / `Gavia` families. Compact
+faces have separate `Gavia Sans Core` / `Gavia Core` family names. Themes prefer
+`"Gavia Sans Core", "Gavia Sans", ...` so a marked grapheme can fall back as a
+whole to the complete family. Disjoint ranges split base/mark rendering; even
+overlapping slices of one family differ in Firefox. See the
 [cluster-matching rules](https://www.w3.org/TR/css-fonts-4/#cluster-matching).
-The later Core declaration remains preferred for ordinary text. Home decorations
+The first Core family remains preferred for ordinary text. Home decorations
 use SVG so they do not require the international face. Real network requests and
 cross-browser cluster raster comparisons are separate acceptance checks;
-`document.fonts.load()` may force both overlapping declarations during a probe.
+font probes must name the intended Core or complete family explicitly.
 
 ## Reproduce through the existing pipeline
 

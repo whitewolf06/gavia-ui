@@ -232,6 +232,13 @@ builds its archive from repository sources and includes both TTF and WOFF2:
 [Gavia Sans download](https://whitewolf06.github.io/gavia-ui/?view=font).
 Versioned font attachments are listed with the corresponding GitHub Release.
 
+The Gavia themes now prefer the optional `Gavia Sans Core` family and fall back
+to complete `Gavia Sans` for extended text and combining clusters. Custom font
+stacks can use `"Gavia Sans Core", "Gavia Sans", sans-serif` for the same compact
+delivery. Keep the complete family in that stack. Existing `Gavia Sans` and
+legacy `Gavia` names still provide the complete font; the accepted WOFF2 drawings,
+metrics and variable axis are unchanged.
+
 Root `LICENSE` and `CHANGELOG.md` are canonical. Package LICENSE, changelog and
 README are generated during `pnpm run pack` by `prepack` and are not maintained
 as tracked copies. Maintainers edit `scripts/templates/package/README.md.tpl`

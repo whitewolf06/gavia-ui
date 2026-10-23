@@ -21,6 +21,10 @@ Select `<html data-wl-theme="gavia">`. For Gavia Dark, import
 Both themes use Gavia Sans through `--wl-font`; headings inherit it through
 `--wl-font-heading`. Import CSS explicitly: the library does not load styles
 from JS. Without font CSS, the browser uses a system font.
+The theme stack starts with `"Gavia Sans Core", "Gavia Sans", ...`: common text
+uses the compact family, while a complex grapheme falls back to the complete
+family. Custom stacks should keep both names in that order. Existing
+`font-family: "Gavia Sans"` continues to select the complete face.
 Classic, Classic Dark and Newspaper keep their typography.
 Token names and `--wl-mono` are unchanged.
 
@@ -102,38 +106,25 @@ to unreleased development.
 
 ## Variable-font delivery
 
-The repository now contains source for a 100–700 variable weight axis, default
-400, in upright and oblique styles. It derives exact common representations of
-the accepted master outlines instead of replacing the Gavia drawing. A Core
-subset combines Latin-1, common Cyrillic, numbers and punctuation in one
-request. Complete international faces retain every original character and
-numeric alternative. They are declared before Core; Core deliberately defers
-combining clusters to complete coverage to retain canonical composition and
-authored mark positioning. No characters or layout features are removed.
-Both styles
-recover all six accepted masters exactly, including geometry, metrics and
-shaping checks after WOFF2 serialization. The latest draft uses exact IUP with
-zero tolerance and verifies every reconstructed tuple delta.
+The variable axis spans 100–700, default 400, in upright and italic styles.
+It derives exact common representations of the accepted master outlines and
+recovers their geometry, metrics and shaping at all six authored weights.
 
-Four variable WOFF2 files (Full/Core in both styles) are now included in the
-canonical package assets and enabled by the existing CSS import. The Playground
-uses the same stylesheet, preloads normal Core and includes all four files in its
-standalone ZIP. Static faces are enabled only when variable fonts are unsupported;
-this prevents exact static weights competing with the variable range.
+Four variable WOFF2 files provide compact Core and complete international faces
+in both styles. Core combines Latin-1, common Cyrillic, numbers and punctuation.
+The complete family retains all characters and numeric alternatives. Separate
+family names allow an entire combining cluster to use the complete face rather
+than splitting its base and accents across subsets of one family.
 
-The builder enforces an **80,000-byte Core limit in both styles** before writing any
-output. This replaces the earlier 101,356-byte Latin/Cyrillic pair. The target
-applies to the primary English/Russian request; the full international font
-is still available and using extended characters can load it as well. Focused
-Windows Chromium checks measured one 75,428-byte font response on the Russian
-Gavia home page. Both styles load at all six presets and intermediate weights;
-Core/full combining-cluster rendering matches the complete face. The owner
-accepted the font visually on 2026-10-22. Measured layout shift and automated
-verification of the exact release candidate remain pending.
+Normal Core is 75,428 bytes and italic Core is 79,696 bytes. The builder enforces
+an **80,000-byte Core limit in both styles**. Text using both styles, extended
+characters or combining marks can load additional files. Keep complete
+`Gavia Sans` after `Gavia Sans Core` in a custom stack.
 
-The existing font CSS import, family names and static-file paths remain valid.
-No JavaScript font loader is needed. This local activation and focused browser
-check do not constitute publication or full release verification.
+The existing CSS import enables these faces; the standalone ZIP contains all
+four files. Static faces are enabled only when variable fonts are unsupported,
+and existing canonical/legacy family names and static-file paths remain valid.
+No JavaScript font loader is needed.
 
 The CSS also defines an optional metric-aligned local fallback:
 

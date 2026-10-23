@@ -11,7 +11,7 @@ function gaviaUrl(baseURL: string | undefined, view: string, theme: string): str
 async function readyForDrawing(page: Page, theme: string): Promise<void> {
   // Unlike the classic geometry baselines, this suite must use the shipped font.
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme);
-  await expect(page.locator("body")).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
+  await expect(page.locator("body")).toHaveCSS("font-family", /^"?Gavia Sans Core"?,.*Gavia Sans/);
   const faces = await page.evaluate(async () => {
     const loaded = [];
     for (const weight of [100, 300, 400, 500, 600, 700]) {
@@ -27,8 +27,8 @@ async function readyForDrawing(page: Page, theme: string): Promise<void> {
   });
   expect(faces).toHaveLength(12);
   for (const [index, pair] of faces.entries()) {
-    expect(pair).toHaveLength(2);
-    expect(new Set(pair.map((font) => font.unicodeRange)).size).toBe(2);
+    expect(pair).toHaveLength(1);
+    expect(new Set(pair.map((font) => font.unicodeRange)).size).toBe(1);
     for (const font of pair) {
       expect(font).toMatchObject({
         family: "Gavia Sans", weight: "100 700", style: index % 2 === 0 ? "normal" : "italic", status: "loaded"

@@ -411,12 +411,12 @@ test("font presentation preserves theme, faces and anchors under the Pages subpa
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "graphite");
   const headingFamily = await fontPage.locator(".wl-page-header__title").evaluate((element) => getComputedStyle(element).fontFamily);
   await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", headingFamily);
-  await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
+  await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Gavia Sans(?: Core)?"?,/);
   const loaded = await page.evaluate(async () => {
     const faces = await document.fonts.load("italic 600 16px 'Gavia Sans'", "Гавиа Gavia 0123456789");
     return faces.map((face) => ({ family: face.family, weight: face.weight, style: face.style, status: face.status }));
   });
-  expect(loaded).toEqual(Array.from({ length: 2 }, () => ({
+  expect(loaded).toEqual(Array.from({ length: 1 }, () => ({
     family: "Gavia Sans", weight: "100 700", style: "italic", status: "loaded"
   })));
   expectPagesLocation(page, "font");
