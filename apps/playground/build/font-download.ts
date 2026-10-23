@@ -1,8 +1,7 @@
 import type { Plugin } from "vite";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
-import { dirname, relative } from "node:path";
-import { fileURLToPath, URL } from "node:url";
+import { URL } from "node:url";
 import { deflateRawSync } from "node:zlib";
 import fontManifest from "../../../packages/ui-kit/fonts/gavia/manifest.json";
 
@@ -48,7 +47,7 @@ export function gaviaVariableFontFiles(metadata: unknown): readonly VariableFont
   return files;
 }
 
-function variableFontAssets(css: string): { entries: { name: string; bytes: Buffer }[]; core?: string } {
+function variableFontAssets(css: string): { entries: { name: string; bytes: Buffer }[] } {
   if (!css.includes("Gavia-Variable")) return { entries: [] };
   const manifestUrl = new URL("variable-manifest.json", fontRoot);
   if (!existsSync(manifestUrl)) throw new Error("Variable-font CSS requires its generated manifest and payload");
@@ -63,7 +62,7 @@ function variableFontAssets(css: string): { entries: { name: string; bytes: Buff
   });
   entries.push({ name: "variable-manifest.json", bytes: manifestBytes });
   entries.push({ name: "VARIABLE-FONTLOG.txt", bytes: readFileSync(new URL("VARIABLE-FONTLOG.txt", fontRoot)) });
-  return { entries, core: files.find((record) => record.style === "normal" && record.subset === "core")!.file };
+  return { entries };
 }
 
 // Small deterministic ZIP writer: no archive dependency is shipped to the browser.
@@ -159,18 +158,6 @@ function createGaviaFontArchive(): Buffer {
 export function gaviaFontDownload(): Plugin {
   return {
     name: "gavia-font-download",
-    transformIndexHtml: {
-      order: "pre",
-      handler(_html, context) {
-        const { core } = variableFontAssets(readFileSync(stylesheetUrl, "utf8"));
-        if (!core) return;
-        const source = fileURLToPath(new URL(core, fontRoot));
-        const href = context.server
-          ? "/@fs/" + source.replace(/\\/g, "/")
-          : relative(dirname(context.filename), source).replace(/\\/g, "/");
-        return [{ tag: "link", attrs: { rel: "preload", as: "font", type: "font/woff2", crossorigin: "anonymous", href }, injectTo: "head" }];
-      }
-    },
     configureServer(server) {
       // Build on request so dev never serves a stale copy after font changes.
       server.middlewares.use((request, response, next) => {

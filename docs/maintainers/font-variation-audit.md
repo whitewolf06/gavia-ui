@@ -32,6 +32,8 @@ The first Core family remains preferred for ordinary text. Home decorations
 use SVG so they do not require the international face. Real network requests and
 cross-browser cluster raster comparisons are separate acceptance checks;
 font probes must name the intended Core or complete family explicitly.
+Playground lets CSS request the active face; a global Core preload would waste
+an additional download when Firefox selects the complete family.
 
 ## Reproduce through the existing pipeline
 
