@@ -211,8 +211,8 @@ here. Preserve budgets of CLS <0.1, home ≤600 KB, docs ≤650 KB and home font
 
 ### Measured RC cleanup snapshot
 
-Recorded on 2026-10-24 for `d74dfde60aa06404f00f20d1cbc74e099dd0f77f` in
-[successful CI](https://github.com/whitewolf06/gavia-ui/actions/runs/40038206849).
+Recorded on 2026-10-24 for `90512bcf2e1bdfbe9ce4d33bf65f8d284251b4fb` in the
+[passing Pages preflight](https://github.com/whitewolf06/gavia-ui/actions/runs/40040006467/job/120708696559).
 The Chromium artifact retains all 40 rows and their resource breakdowns in
 `cold-loading-measurements.json`. All transfer columns below are bytes;
 documentation values are WlButton / WlSelect / WlDialog, in that order.
@@ -220,19 +220,21 @@ LCP ranges and maximum CLS cover all four routes in each row.
 
 | Theme | Width | Home | Documentation | Home fonts | LCP, ms | Maximum CLS |
 | --- | ---: | ---: | --- | ---: | --- | ---: |
-| Gavia | 1440 | 449681 | 527757 / 535700 / 533429 | 75728 | 128–276 | 0.042110 |
-| Gavia Dark | 1440 | 512851 | 527757 / 535700 / 533429 | 75728 | 144–264 | 0.042110 |
-| Classic | 1440 | 449681 | 527757 / 535700 / 533429 | 75728 | 160–432 | 0.042110 |
-| Classic Dark | 1440 | 512851 | 527757 / 535700 / 533429 | 75728 | 136–256 | 0.042110 |
-| Newspaper | 1440 | 449681 | 527757 / 535700 / 533429 | 75728 | 132–292 | 0.042110 |
-| Gavia | 390 | 465213 | 527757 / 535700 / 533429 | 75728 | 260–444 | 0 |
-| Gavia Dark | 390 | 545067 | 527757 / 535700 / 533429 | 75728 | 244–424 | 0 |
-| Classic | 390 | 465213 | 527757 / 535700 / 533429 | 75728 | 120–508 | 0 |
-| Classic Dark | 390 | 545067 | 527757 / 535700 / 533429 | 75728 | 268–456 | 0 |
-| Newspaper | 390 | 465213 | 527757 / 535700 / 533429 | 75728 | 260–456 | 0 |
+| Gavia | 1440 | 449633 | 527704 / 535648 / 533376 | 75728 | 172–648 | 0.042546 |
+| Gavia Dark | 1440 | 512803 | 527704 / 535648 / 533376 | 75728 | 156–596 | 0.042546 |
+| Classic | 1440 | 373905 | 451976 / 459920 / 457648 | 0 | 176–324 | 0.042110 |
+| Classic Dark | 1440 | 437075 | 451976 / 459920 / 457648 | 0 | 180–320 | 0.042110 |
+| Newspaper | 1440 | 373905 | 451976 / 459920 / 457648 | 0 | 168–184 | 0.042110 |
+| Gavia | 390 | 465165 | 527704 / 535648 / 533376 | 75728 | 168–572 | 0 |
+| Gavia Dark | 390 | 545019 | 527704 / 535648 / 533376 | 75728 | 148–560 | 0 |
+| Classic | 390 | 389437 | 451976 / 459920 / 457648 | 0 | 304–544 | 0 |
+| Classic Dark | 390 | 469291 | 451976 / 459920 / 457648 | 0 | 300–536 | 0 |
+| Newspaper | 390 | 389437 | 451976 / 459920 / 457648 | 0 | 304–604 | 0 |
 
 These observations pass every configured budget. They include initial
 prerendered loading and do not claim zero layout shift or throttled-device LCP.
+Classic, Classic Dark and Newspaper request no Gavia files after removing the
+unconditional Core preload; Gavia themes retain one compact upright request.
 The existing CI Chromium job runs Pages build, prerender, smoke checks and this
 measurement independently of the browser-test step's outcome. Public Pages
 deployment remains limited to a successful CI for the same current `main` SHA.
