@@ -119,11 +119,11 @@ export async function checkPackedBrowser(consumerDir, artifactLabel = "consumer"
           faces: faces.map(describe),
           extended: extended.map(describe)
         };
-      }), 5_000, "Load consumer Core and complementary Full coverage");
+      }), 5_000, "Load consumer Core and complete cluster fallback");
       assert.equal(fonts.ready, true, "Packed Gavia Sans font did not finish loading");
-      assert.equal(fonts.faces.length, 1, "Ordinary packed consumer text must need only Core");
+      assert.equal(fonts.faces.length, 2, "FontFaceSet.load must resolve both overlapping fallback declarations");
       assert.equal(fonts.extendedReady, true, "Packed extended Gavia text did not finish loading");
-      assert.equal(fonts.extended.length, 2, "Extended text must resolve Core and complementary Full");
+      assert.equal(fonts.extended.length, 2, "Extended text must resolve Core and complete Full fallback");
       assert.equal(new Set(fonts.extended.map((face) => face.unicodeRange)).size, 2, "Packed subsets must have distinct coverage");
       for (const face of [...fonts.faces, ...fonts.extended]) {
         assert.equal(face.family, "Gavia Sans");

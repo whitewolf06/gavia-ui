@@ -97,7 +97,12 @@ static fallbacks, CSS, provenance and notices.
 The four-file delivery uses Full/Core for upright and italic. Core combines
 Latin-1 and common Cyrillic, numbers and punctuation; Full retains all original
 characters, including complete combining clusters. Full is declared before
-Core, with a complementary CSS range; retained binary coverage remains complete.
+Core, with complete coverage including Core base characters for marked clusters.
+Disjoint CSS ranges split those clusters in browser rendering. Ordinary unmarked
+text prefers the later Core face; decorative arrows use SVG on the home page.
+`document.fonts.load()` can load both overlapping declarations during a font
+probe. Measure real home-page requests without forcing that probe; the browser
+transfer regression separately requires only Core and at most 90 KB.
 Core intentionally does not claim combining marks. Browser regressions compare
 whole clusters with the complete face. Canonical composition
 can differ from separate base/mark positioning in authored masters; retaining

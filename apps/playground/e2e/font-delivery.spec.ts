@@ -17,8 +17,9 @@ test("home uses only Core within its transfer budget", async ({ page, baseURL })
   await page.evaluate(() => document.fonts.ready);
   const fonts = await Promise.all(pending);
   page.off("response", observeFont);
-  expect(fonts.length).toBe(1);
-  expect(fonts[0]!.url).toMatch(/Gavia-Variable-Core[^/]*\.woff2(?:[?#].*)?$/u);
+  expect(fonts.map((font) => font.url)).toEqual([
+    expect.stringMatching(/Gavia-Variable-Core[^/]*\.woff2(?:[?#].*)?$/u)
+  ]);
   expect(fonts[0]!.bytes).toBeGreaterThan(0);
   expect(fonts[0]!.bytes).toBeLessThanOrEqual(80_000);
   const transfer = await page.evaluate(() => performance.getEntriesByType("resource")
@@ -53,8 +54,8 @@ test("complete grapheme shaping @cross-browser", async ({ page, baseURL }, testI
       return { pixels: context.getImageData(0, 0, canvas.width, canvas.height).data, width: context.measureText(text).width };
     }
     for (const style of ["normal", "italic"]) {
-      const full = declarations.find((rule) => rule.style.fontFamily.replace(/["']/gu, "") === "Gavia Sans"
-        && rule.style.fontWeight === "100 700" && rule.style.fontStyle === style
+      const full = declarations.find((rule) => rule.style.getPropertyValue("font-family").replace(/["']/gu, "") === "Gavia Sans"
+        && rule.style.getPropertyValue("font-weight") === "100 700" && rule.style.getPropertyValue("font-style") === style
         && !rule.style.getPropertyValue("src").includes("-Core"));
       if (!full) throw new Error("Missing complete Gavia face: " + style);
       const family = "Gavia complete reference " + style;

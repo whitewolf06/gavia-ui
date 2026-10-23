@@ -410,17 +410,17 @@ class VariableDeliveryTests(unittest.TestCase):
                          "U+0041-0042, U+0044, U+00E9, U+1F600")
         self.assertEqual(unicode_range(set()), "")
 
-    def test_css_delivery_ranges_do_not_replace_retained_binary_coverage(self):
+    def test_css_keeps_complete_cluster_fallback_before_the_preferred_core(self):
         files = [{"file": "Gavia-Variable.woff2", "style": "normal", "subset": "full",
-                  "unicodeRange": "U+0041, U+0301", "cssUnicodeRange": "U+0301"},
+                  "unicodeRange": "U+0041, U+0301"},
                  {"file": "Gavia-Variable-Core.woff2", "style": "normal", "subset": "core",
-                  "unicodeRange": "U+0041", "cssUnicodeRange": "U+0041"}]
+                  "unicodeRange": "U+0041"}]
         before = copy.deepcopy(files)
         metrics = {"unitsPerEm": 2000, "ascent": 2000, "descent": -500, "lineGap": 0}
         css = draft_css("", files, metrics)
-        self.assertIn("unicode-range: U+0301;", css)
+        self.assertIn("unicode-range: U+0041, U+0301;", css)
         self.assertIn("unicode-range: U+0041;", css)
-        self.assertNotIn("unicode-range: U+0041, U+0301;", css)
+        self.assertLess(css.index("Gavia-Variable.woff2"), css.index("Gavia-Variable-Core.woff2"))
         self.assertEqual(files, before)
         self.assertEqual(draft_css(css, files, metrics), css)
 

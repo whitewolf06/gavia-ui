@@ -17,6 +17,15 @@ coverage. These byte sizes describe the prepared assets, not final-page transfer
 Final-candidate loading, CLS and archive acceptance belong to
 [the candidate gates](release-candidate.md#candidate-gates).
 
+Full CSS retains coverage of Core base characters so a marked grapheme can use
+one complete face. Disjoint ranges split base/mark rendering in browser checks;
+they are unsuitable for this font contract. See the
+[cluster-matching rules](https://www.w3.org/TR/css-fonts-4/#cluster-matching).
+The later Core declaration remains preferred for ordinary text. Home decorations
+use SVG so they do not require the international face. Real network requests and
+cross-browser cluster raster comparisons are separate acceptance checks;
+`document.fonts.load()` may force both overlapping declarations during a probe.
+
 ## Reproduce through the existing pipeline
 
 See [font tooling](../../scripts/fonts/README.md) for supported commands, Python
