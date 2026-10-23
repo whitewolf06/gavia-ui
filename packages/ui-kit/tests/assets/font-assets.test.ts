@@ -16,7 +16,9 @@ const fontRoot = resolve(kitRoot, "fonts/gavia");
 const cssPath = resolve(kitRoot, "styles/fonts/gavia.css");
 const variableManifestPath = resolve(fontRoot, "variable-manifest.json");
 const variableManifest = JSON.parse(readFileSync(variableManifestPath, "utf8"));
-const variableFiles: { file: string; sha256: string; bytes: number; subset: string; style: string; unicodeRange: string }[]
+const variableFiles: {
+  file: string; sha256: string; bytes: number; subset: string; style: string; unicodeRange: string; cssUnicodeRange: string;
+}[]
   = variableManifest.files;
 const hash = (content: Buffer) => createHash("sha256").update(content).digest("hex");
 const acceptedBlock = /APPROVED_SANS_0600_SHA256 = \{([\s\S]*?)\r?\n\}/
@@ -75,6 +77,27 @@ function windowsName(font: Buffer, id: number): string {
 }
 
 describe("Gavia Sans font distribution", () => {
+  it("declares complementary Core and Full CSS ranges without losing any characters", () => {
+    const css = readFileSync(cssPath, "utf8");
+    const faces = [...css.matchAll(/@font-face\s*\{([^}]+)\}/g)].map((match) => match[1]!);
+    for (const family of ["Gavia Sans", "Gavia"]) {
+      for (const style of ["normal", "italic"]) {
+        const ranges = (subset: string) => {
+          const file = variableFiles.find((record) => record.style === style && record.subset === subset)!;
+          const face = faces.find((block) => block.includes('font-family: "' + family + '";')
+            && block.includes("../../fonts/gavia/" + file.file))!;
+          return unicodeCharacters(face.match(/unicode-range:\s*([^;]+);/)![1]!);
+        };
+        const core = ranges("core");
+        const full = ranges("full");
+        expect([...core].filter((character) => full.has(character)), family + " " + style + " duplicated range").toEqual([]);
+        const fullRecord = variableFiles.find((record) => record.style === style && record.subset === "full")!;
+        const coverage = unicodeCharacters(fullRecord.unicodeRange);
+        expect([...new Set([...core, ...full])].sort((a, b) => a - b)).toEqual([...coverage].sort((a, b) => a - b));
+      }
+    }
+  });
+
   it("keeps both variable styles with compact cores and complete cluster fallbacks", () => {
     expect(variableManifest.family).toBe(manifest.family);
     expect(variableManifest.version).toBe(manifest.version);
@@ -204,7 +227,7 @@ describe("Gavia Sans font distribution", () => {
         .toEqual(["Gavia", "Gavia Sans"]);
       for (const block of matching) {
         expect(block).toContain("font-style: " + file.style + ";");
-        expect(block).toContain("unicode-range: " + file.unicodeRange + ";");
+        expect(block).toContain("unicode-range: " + file.cssUnicodeRange + ";");
         expect(block).toMatch(/font-display:\s*swap\s*;/);
       }
     }

@@ -97,7 +97,9 @@ static fallbacks, CSS, provenance and notices.
 The four-file delivery uses Full/Core for upright and italic. Core combines
 Latin-1 and common Cyrillic, numbers and punctuation; Full retains all original
 characters, including complete combining clusters. Full is declared before
-Core, which intentionally does not claim combining marks. Canonical composition
+Core, with a complementary CSS range; retained binary coverage remains complete.
+Core intentionally does not claim combining marks. Browser regressions compare
+whole clusters with the complete face. Canonical composition
 can differ from separate base/mark positioning in authored masters; retaining
 the complete face avoids replacing that drawing with an approximate equivalent.
 Only private Core glyph names are omitted (`post` format 3); reopening restores

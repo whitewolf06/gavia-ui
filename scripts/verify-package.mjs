@@ -324,6 +324,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     const names = new Set();
     const suffixes = { full: "", core: "-Core" };
     const coverage = new Map();
+    const deliveryCoverage = new Map();
     const unicodeCharacters = (range) => {
       if (typeof range !== "string" || !range.trim()) throw new Error("Packed variable font has no unicode range");
       const characters = new Set();
@@ -346,6 +347,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
       }
       names.add(record.file);
       coverage.set(record.style + "/" + record.subset, unicodeCharacters(record.unicodeRange));
+      deliveryCoverage.set(record.style + "/" + record.subset, unicodeCharacters(record.cssUnicodeRange));
       const bytes = readFileSync(join(packedFontDirectory, record.file));
       if (bytes.length !== record.bytes || bytes.toString("ascii", 0, 4) !== "wOF2"
         || bytes.readUInt32BE(4) !== 0x00010000 || bytes.readUInt32BE(8) !== bytes.length
@@ -365,6 +367,14 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
       const core = coverage.get(style + "/core");
       if (!full || !core || [...core].some((character) => !full.has(character) || combiningMark(character))) {
         throw new Error("Packed Core must stay inside complete fallback coverage and defer combining marks: " + style);
+      }
+      const deliveredCore = deliveryCoverage.get(style + "/core");
+      const deliveredFull = deliveryCoverage.get(style + "/full");
+      const delivered = new Set([...deliveredCore, ...deliveredFull]);
+      if (deliveredCore.size !== core.size || [...core].some((character) => !deliveredCore.has(character))
+        || [...deliveredCore].some((character) => deliveredFull.has(character))
+        || delivered.size !== full.size || [...full].some((character) => !delivered.has(character))) {
+        throw new Error("Packed font CSS ranges must complement each other without losing coverage: " + style);
       }
     }
     if (JSON.stringify(sorted(coverage.get("normal/full"))) !== JSON.stringify(sorted(coverage.get("italic/full")))) {
@@ -428,7 +438,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
       || JSON.stringify(matching.map(([, block]) => block.match(/font-family:\s*["']([^"']+)["']\s*;/)?.[1]).sort())
       !== JSON.stringify(["Gavia", "Gavia Sans"])
       || matching.some(([, block]) => !block.includes("font-style: " + record.style + ";")
-        || !block.includes("unicode-range: " + record.unicodeRange + ";") || !/font-display:\s*swap\s*;/.test(block))) {
+        || !block.includes("unicode-range: " + record.cssUnicodeRange + ";") || !/font-display:\s*swap\s*;/.test(block))) {
       throw new Error("Packed variable-font CSS has a broken style, subset or URL: " + record.file);
     }
     if (record.subset === "core") {

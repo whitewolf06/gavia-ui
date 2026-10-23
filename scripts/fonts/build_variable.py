@@ -327,17 +327,19 @@ def _variable_names(font, style):
 
 def draft_css(static_css, files, metrics):
     """A staged replacement keeps existing static faces and family aliases first."""
-    marker = "/* Gavia Sans variable faces; full coverage first, Core preferred for matching text. */"
+    marker = "/* Gavia Sans variable faces; complementary Core/Full delivery. */"
     # The canonical stylesheet can already contain a promoted generated payload.
     # Rebuilding must replace that block, preserving the original static faces.
     static_css = static_css.split(marker, 1)[0].split(
+        "/* Gavia Sans variable faces; full coverage first, Core preferred for matching text. */", 1
+    )[0].split(
         "/* Draft variable candidate; activate only after font acceptance. */", 1
     )[0].strip()
     static_support = "@supports not (font-variation-settings: normal) {"
     if static_css.startswith(static_support) and static_css.endswith("}"):
         static_css = static_css[len(static_support):-1].strip()
-    # Reverse source-order matching prefers core for its coverage. The full face
-    # remains eligible for every original character and whole marked clusters.
+    # Binary Full coverage retains every original glyph for shaping. CSS claims
+    # only its complementary range, so common text cannot also request Full.
     subsets = sorted(files, key=lambda record: (record["style"], record["subset"] != "full"))
     # Exact static weights otherwise compete with the variable range in native
     # face matching, causing redundant requests despite the variable preload.
@@ -348,7 +350,8 @@ def draft_css(static_css, files, metrics):
             lines.extend(["  @font-face {", f'    font-family: "{family}";',
                           f'    src: url("../../fonts/gavia/{record["file"]}") format("woff2");',
                           f'    font-style: {record["style"]};', "    font-weight: 100 700;",
-                          "    font-display: swap;", f'    unicode-range: {record["unicodeRange"]};', "  }", ""])
+                          "    font-display: swap;",
+                          f'    unicode-range: {record.get("cssUnicodeRange", record["unicodeRange"])};', "  }", ""])
     lines.extend(["}", "", "/* Line-box alignment only; local face x-height/advance matching is not claimed. */"])
     upm = metrics["unitsPerEm"]
     for style in ("normal", "italic"):
@@ -429,7 +432,8 @@ def build(root, output):
         _assert_variable(variable, masters, style + " in-memory", coverage)
         _assert_shaping(variable, masters, style + " in-memory")
         stem = "Gavia-Variable" + ("-Italic" if style == "italic" else "")
-        for subset_name, characters in {"full": coverage, **subset_coverage(coverage)}.items():
+        core_characters = subset_coverage(coverage)["core"]
+        for subset_name, characters in {"full": coverage, "core": core_characters}.items():
             if not characters:
                 raise ValueError("An expected Gavia script subset is empty: " + subset_name)
             candidate = deepcopy(variable)
@@ -459,7 +463,9 @@ def build(root, output):
             records.append({"file": filename, "sha256": hashlib.sha256(payload).hexdigest(),
                             "bytes": len(payload), "style": style, "subset": subset_name,
                             "postFormat": candidate["post"].formatType,
-                            "unicodeRange": unicode_range(characters)})
+                            "unicodeRange": unicode_range(characters),
+                            "cssUnicodeRange": unicode_range(characters - core_characters
+                                                             if subset_name == "full" else characters)})
             print(f"{filename}: {len(payload)} bytes; all six endpoint/shaping checks passed", flush=True)
     fallback_files = []
     approved = _frozen_font_hashes(root)
