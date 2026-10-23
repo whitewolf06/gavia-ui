@@ -174,7 +174,7 @@ const token: WlDesignTokenName = "--wl-space-lg";
 if (wlManifest.length !== packageManifest.length) throw new Error("Runtime and JSON manifests differ");
 if (wlDesignTokens.length !== designCatalog.tokens.length || resolveWlToken(token) !== "16px") throw new Error("Design token exports differ");
 if (getWlThemeTokens("graphite")[token] !== "16px" || spacing !== "lg") throw new Error("Theme snapshot differs");
-if (!resolveWlToken("--wl-font", "gavia").startsWith('"Gavia Sans",')) throw new Error("Gavia typography was not packaged");
+if (!resolveWlToken("--wl-font", "gavia").startsWith('"Gavia Sans Core", "Gavia Sans",')) throw new Error("Gavia typography was not packaged");
 createApp(App).use(WlConfig, { pt: createWlPt(), locale: wlLocaleRu })
   .use(WlToastService).use(WlConfirmationService).mount("#app");
 `

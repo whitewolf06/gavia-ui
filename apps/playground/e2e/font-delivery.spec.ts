@@ -1,4 +1,5 @@
 import { expect, type Response, test } from "@playwright/test";
+import { writeFileSync } from "node:fs";
 
 function recordFontResponse(response: Response, pending: Promise<{ url: string; bytes: number }>[]) {
   if (response.request().resourceType() === "font") {
@@ -41,7 +42,10 @@ test("complete grapheme shaping @cross-browser", async ({ page, baseURL }, testI
     }
     const declarations = Array.from(document.styleSheets).flatMap((sheet) => fontRules(sheet.cssRules));
     const cases = ["a\u0301", "a\u0323\u0301", "Ж\u0301", "Ĩ Ī", "Қ Ӝ Ґ Ѣ", "Гавиа Gavia 0123456789"];
-    const results: { style: string; text: string; differentBytes: number; widthDifference: number }[] = [];
+    const results: {
+      style: string; text: string; differentBytes: number; widthDifference: number;
+      canonicalDifferentBytes: number; actualFont: string;
+    }[] = [];
     const canvas = document.createElement("canvas");
     canvas.width = 1000;
     canvas.height = 128;
@@ -51,7 +55,10 @@ test("complete grapheme shaping @cross-browser", async ({ page, baseURL }, testI
       context.font = `${style} 450 42px ${family}`;
       context.textBaseline = "alphabetic";
       context.fillText(text, 30, 85);
-      return { pixels: context.getImageData(0, 0, canvas.width, canvas.height).data, width: context.measureText(text).width };
+      return {
+        pixels: context.getImageData(0, 0, canvas.width, canvas.height).data,
+        width: context.measureText(text).width, font: context.font
+      };
     }
     for (const style of ["normal", "italic"]) {
       const full = declarations.find((rule) => rule.style.getPropertyValue("font-family").replace(/["']/gu, "") === "Gavia Sans"
@@ -59,7 +66,9 @@ test("complete grapheme shaping @cross-browser", async ({ page, baseURL }, testI
         && !rule.style.getPropertyValue("src").includes("-Core"));
       if (!full) throw new Error("Missing complete Gavia face: " + style);
       const family = "Gavia complete reference " + style;
-      const reference = new FontFace(family, full.style.getPropertyValue("src"), { style, weight: "100 700" });
+      const reference = new FontFace(family, full.style.getPropertyValue("src"), {
+        style, weight: "100 700", unicodeRange: full.style.getPropertyValue("unicode-range")
+      });
       document.fonts.add(await reference.load());
       await document.fonts.load(`${style} 450 42px "Gavia Sans"`, cases.join(" "));
       const stack = getComputedStyle(document.body).fontFamily;
@@ -68,20 +77,29 @@ test("complete grapheme shaping @cross-browser", async ({ page, baseURL }, testI
         await document.fonts.ready;
         await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
         const actual = draw(text, style, stack);
-        const expected = draw(text, style, JSON.stringify(family));
+        const expected = draw(text, style, JSON.stringify(family) + ", " + stack);
+        const canonical = draw(text, style, '"Gavia Sans", ' + stack);
         let differentBytes = 0;
+        let canonicalDifferentBytes = 0;
         for (let index = 0; index < actual.pixels.length; index++) {
           if (actual.pixels[index] !== expected.pixels[index]) differentBytes++;
+          if (canonical.pixels[index] !== expected.pixels[index]) canonicalDifferentBytes++;
         }
-        results.push({ style, text, differentBytes, widthDifference: actual.width - expected.width });
+        results.push({
+          style, text, differentBytes, widthDifference: actual.width - expected.width,
+          canonicalDifferentBytes, actualFont: actual.font
+        });
       }
       document.fonts.delete(reference);
     }
     return results;
   });
-  await testInfo.attach("font-shaping", { body: JSON.stringify(comparisons, null, 2), contentType: "application/json" });
+  const evidence = testInfo.outputPath("font-shaping.json");
+  writeFileSync(evidence, JSON.stringify(comparisons, null, 2));
+  await testInfo.attach("font-shaping", { path: evidence, contentType: "application/json" });
   expect(comparisons).toHaveLength(12);
   for (const result of comparisons) {
+    expect(result.canonicalDifferentBytes, "reference control: " + result.style + " " + result.text).toBe(0);
     expect(result.differentBytes, result.style + " " + result.text).toBe(0);
     expect(result.widthDifference, result.style + " " + result.text).toBe(0);
   }
