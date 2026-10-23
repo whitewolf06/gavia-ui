@@ -2,6 +2,11 @@ import { spawn } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { stripVTControlCharacters } from "node:util";
+
+export function prerenderServerReady(output, origin) {
+  return stripVTControlCharacters(output).includes(origin);
+}
 
 export function prerenderTargets(directory, routes) {
   const root = resolve(directory);
@@ -52,7 +57,7 @@ export async function prerenderPages(workspace) {
   if (!index.includes('type="module"')) throw new Error("Missing production application entry");
   const port = 4177;
   const origin = `http://127.0.0.1:${port}`;
-  const server = spawn(process.execPath, [resolve(app, "node_modules/vite/bin/vite.js"), "preview", "--host", "127.0.0.1", "--port", String(port), "--strictPort", `--base=${manifest.base}`], { cwd: app, windowsHide: true, stdio: ["ignore", "pipe", "pipe"] });
+  const server = spawn(process.execPath, [resolve(app, "node_modules/vite/bin/vite.js"), "preview", "--configLoader=runner", "--host", "127.0.0.1", "--port", String(port), "--strictPort", `--base=${manifest.base}`], { cwd: app, windowsHide: true, stdio: ["ignore", "pipe", "pipe"] });
   let output = "";
   server.stdout.on("data", (value) => {
     output += value;
@@ -67,7 +72,7 @@ export async function prerenderPages(workspace) {
     for (let attempt = 0; attempt < 100; attempt++) {
       if (server.exitCode !== null) throw new Error(`Preview did not start: ${output}`);
       try {
-        ready = output.includes(origin) && (await fetch(origin + manifest.base)).ok;
+        ready = prerenderServerReady(output, origin) && (await fetch(origin + manifest.base)).ok;
       } catch { /* Wait only for this owned server. */ }
       if (ready) break;
       await new Promise((done) => setTimeout(done, 100));

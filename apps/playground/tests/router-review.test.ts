@@ -30,7 +30,7 @@ it("canonicalizes legacy links once and retains pinned English home visits", asy
 it("resolves direct path language before bootstrap and before saved browser preferences", () => {
   const source = /<script>([\s\S]*?)<\/script>/.exec(html)![1]!;
   for (const [pathname, expected] of [["/gavia-ui/ru/docs/", "ru"], ["/gavia-ui/docs/", "en"]]) {
-    const root = { dataset: {}, style: {}, lang: "" };
+    const root = document.createElement("html");
     new Function("location", "localStorage", "navigator", "document", "matchMedia", source)(
       { pathname, search: "" }, { getItem: () => expected === "ru" ? "en" : "ru" },
       { languages: [expected === "ru" ? "en-US" : "ru-RU"] }, { documentElement: root }, () => ({ matches: false })

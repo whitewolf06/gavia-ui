@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import { resolve } from "node:path";
 import { test } from "node:test";
-import { prerenderTargets, serializePrerenderHtml } from "./prerender-pages.mjs";
+import { prerenderServerReady, prerenderTargets, serializePrerenderHtml } from "./prerender-pages.mjs";
+
+test("recognizes its owned preview origin when terminal colors split the port", () => {
+  const output = "Local: \u001b[36mhttp://127.0.0.1:\u001b[1m4177\u001b[22m/gavia-ui/\u001b[39m";
+  assert.equal(prerenderServerReady(output, "http://127.0.0.1:4177"), true);
+  assert.equal(prerenderServerReady(output, "http://127.0.0.1:4178"), false);
+});
 
 test("plans separate English/Russian HTML inside the production output", () => {
   const root = resolve(".tmp/prerender-plan");
