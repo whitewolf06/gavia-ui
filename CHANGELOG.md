@@ -10,6 +10,7 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 ### Changed
 
 - Keep prerendered Playground pages visible before startup and simplify displayed API types and component badges.
+- Keep home-only preloads out of prerendered documentation and size artwork for high-density mobile screens.
 - Use SVG decorations to avoid an unnecessary Full-font download on the Playground home page.
 - Separate optional Core font families from complete Gavia fallback so compact loading preserves combining clusters.
 - Exclude variable-font audit data from npm and use neutral names for shared library chunks.

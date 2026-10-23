@@ -10,13 +10,16 @@ export function prerenderServerReady(output, origin) {
 
 export function prerenderTargets(directory, routes) {
   const root = resolve(directory);
-  return routes.map((route) => {
+  const targets = routes.map((route) => {
     if (typeof route !== "string" || !/^(?:[\w-]+\/)*$/.test(route)) throw new Error(`Unsafe prerender route: ${route}`);
     const target = resolve(root, route, "index.html");
     const child = relative(root, target);
     if (isAbsolute(child) || child.startsWith(`..${sep}`)) throw new Error(`Prerender target escapes output: ${target}`);
     return { route, target };
   });
+  // Keep the clean SPA index as the fallback until every direct route has been
+  // rendered. Otherwise its home-only preloads leak into subsequent documents.
+  return targets.sort((left, right) => Number(left.route === "") - Number(right.route === ""));
 }
 
 function assertOutputParent(root, target) {

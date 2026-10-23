@@ -6,7 +6,7 @@ import process from "node:process";
 import { fileURLToPath, URL as NodeURL, pathToFileURL } from "node:url";
 
 const root = fileURLToPath(new NodeURL("../../../", import.meta.url));
-export const widths = [640, 1024, 1600];
+export const widths = [640, 1024, 1600, 1920];
 export const images = ["gavia-lake-hero-v2", "gavia-lake-night-v2", "gavia-forest-card-v1", "gavia-reeds-card-v1"];
 const relativeOutput = "apps/playground/src/assets/brand";
 const sourceDirectory = "archives/brand";

@@ -1,4 +1,5 @@
 import { devices, expect, test } from "@playwright/test";
+import { writeFileSync } from "node:fs";
 
 interface LoadingMetrics {
   lcpMs: number;
@@ -96,10 +97,9 @@ test("cold production loading budgets across five themes", async ({ browser, bas
       }
     }
   }
-  await testInfo.attach("cold-loading-measurements", {
-    body: JSON.stringify({ viewport, deviceScaleFactor, measurements }, null, 2),
-    contentType: "application/json"
-  });
+  const evidence = testInfo.outputPath("cold-loading-measurements.json");
+  writeFileSync(evidence, JSON.stringify({ viewport, deviceScaleFactor, measurements }, null, 2));
+  await testInfo.attach("cold-loading-measurements", { path: evidence, contentType: "application/json" });
   expect(measurements).toHaveLength(20);
   for (const row of measurements) {
     const label = `${row.theme} ${row.route} ${viewport.width}px`;

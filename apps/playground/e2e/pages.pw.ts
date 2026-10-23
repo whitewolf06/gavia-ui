@@ -71,6 +71,7 @@ test("prerendered component content stays visible before JavaScript runs", async
     const page = await context.newPage();
     const response = await page.goto(new URL("docs/components/WlSelect/", baseURL!).href);
     expect(response?.ok()).toBe(true);
+    expect(await response!.text()).not.toMatch(/<link\b[^>]+href=["'][^"']*\/HomePage-/u);
     await expect(page.locator("html")).toHaveAttribute("data-playground-prerendered", "");
     await expect(page.locator("html")).not.toHaveAttribute("data-wl-boot");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("WlSelect");

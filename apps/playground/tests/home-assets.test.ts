@@ -74,15 +74,15 @@ describe("home-page asset loading", () => {
 
   it("preserves authored source hashes and every responsive derivative's bytes and dimensions", async () => {
     const manifest = await checkBrandImages();
-    expect(manifest.images).toHaveLength(12);
-    expect(manifest.images.every((entry: { width: number }) => [640, 1024, 1600].includes(entry.width))).toBe(true);
+    expect(manifest.images).toHaveLength(16);
+    expect(manifest.images.every((entry: { width: number }) => [640, 1024, 1600, 1920].includes(entry.width))).toBe(true);
   });
 
   it("keeps the night illustration out of a light visit and retains loaded art for later theme transitions", async () => {
     const wrapper = mount(HomePage, { props: { theme: "gavia" }, global: { plugins: [playgroundI18n as unknown as Plugin] } });
     expect(wrapper.find(".home-hero-layer--night").exists()).toBe(false);
     const day = wrapper.get(".home-hero-layer");
-    expect(day.attributes("srcset")).toMatch(/640w, .*1024w, .*1600w, .*2172w$/);
+    expect(day.attributes("srcset")).toMatch(/640w, .*1024w, .*1600w, .*1920w, .*2172w$/);
     expect(wrapper.findAll(".home-project-art").map((image) => image.attributes("loading"))).toEqual(["lazy", "lazy"]);
     await wrapper.setProps({ theme: "gavia-dark" });
     await wrapper.get(".home-hero-layer--night").trigger("load");

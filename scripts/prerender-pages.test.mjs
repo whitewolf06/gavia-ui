@@ -12,7 +12,7 @@ test("recognizes its owned preview origin when terminal colors split the port", 
 test("plans separate English/Russian HTML inside the production output", () => {
   const root = resolve(".tmp/prerender-plan");
   assert.deepEqual(prerenderTargets(root, ["", "docs/", "ru/docs/components/WlButton/"]).map((entry) => entry.target),
-    [resolve(root, "index.html"), resolve(root, "docs/index.html"), resolve(root, "ru/docs/components/WlButton/index.html")]);
+    [resolve(root, "docs/index.html"), resolve(root, "ru/docs/components/WlButton/index.html"), resolve(root, "index.html")]);
 });
 test("rejects traversal, query and encoded filesystem paths before writing", () => {
   for (const path of ["../", "docs/../", "/docs/", "docs?lang=ru", "%2e%2e/", "C:/", "docs\\"]) {

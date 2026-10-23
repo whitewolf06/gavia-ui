@@ -7,7 +7,7 @@ defineProps<{
   anchors?: Partial<Record<"props" | "events" | "slots" | "pt", string>>;
 }>();
 const { t } = usePlaygroundI18n();
-import type { WlComponentManifest } from "gavia-ui";
+import { type WlComponentManifest, WlIcon } from "gavia-ui";
 import { type DocumentationPtSection, propDefault, propType } from "./catalog";
 import TypeSignature from "./TypeSignature.vue";
 
@@ -115,7 +115,9 @@ import TypeSignature from "./TypeSignature.vue";
       <h2 :id="anchors?.pt" class="wl-text-heading">Pass-through: pt</h2>
       <p class="wl-text-small wl-text-muted">
         {{ t('documentation.strings.s0687') }} {{ entry.name }} {{ t('documentation.strings.s0688') }}
-        <code>createWlPt()</code> → <code>WlConfig.pt{{ ptKey ? '.' + ptKey : '' }}</code> →
+        <code>createWlPt()</code> <WlIcon class="docs-merge-arrow" name="arrow-right" :size="14" />
+        <code>WlConfig.pt{{ ptKey ? '.' + ptKey : '' }}</code>
+        <WlIcon class="docs-merge-arrow" name="arrow-right" :size="14" />
         <code>pt</code> {{ t('documentation.strings.s0689') }}
       </p>
       <div
@@ -153,6 +155,7 @@ import TypeSignature from "./TypeSignature.vue";
 
 <style>
 .docs-contract { min-width: 0; }
+.docs-merge-arrow { vertical-align: -0.15em; }
 .docs-table-scroll {
   max-width: 100%;
   min-width: 0;
