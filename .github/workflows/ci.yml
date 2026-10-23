@@ -189,6 +189,9 @@ jobs:
           name: gavia-ui-visual-results
           path: apps/playground/test-results/
           if-no-files-found: ignore
+  visual-linux:
+    name: Supplemental Linux visuals
+    uses: ./.github/workflows/visual-linux.yml
   consumer:
     timeout-minutes: 15
     name: Packed consumer (${{ matrix.manager }}, Vue ${{ matrix.vue }})

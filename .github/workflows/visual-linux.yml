@@ -1,5 +1,6 @@
 name: Supplemental Linux visuals
 on:
+  workflow_call: {}
   workflow_dispatch:
     inputs:
       update-snapshots:
