@@ -36,8 +36,8 @@ Toast/Confirm PT context additions preserve prior fields, callback parameters
 and returns. Unrelated API drift, CSS classes, tokens, DOM markers and package
 paths remain strict. Only preparation at 0.12.1 with the specific major changeset,
 or 1.0 stable/RC versions, can select this policy; intervening 0.x releases do not
-inherit it. Policy/consumer hashes and negative regression cases are authored
-but have not run. No historical fixture has been replaced. The policy does not
+inherit it. CI checks the policy/consumer hashes and negative regression cases.
+No historical fixture has been replaced. The policy does not
 authorize publication or establish that the 0.x deprecation period was released.
 
 New compile-only consumer fixtures check accepted props and expected errors:
@@ -190,6 +190,24 @@ validation belong primarily to unit and contract tests. Keep representative
 browser checks for actual rendering and clipboard interaction. Removing a
 matrix duplicate must retain the underlying behavior, assertions and relevant
 engine coverage; a smaller suite is not evidence that a check has passed.
+
+## Performance
+
+The Pages preflight measures cold production loading in Chromium at 1440×900
+and 390×844, using a fresh browser context for every page/theme combination.
+Mobile uses the pinned Pixel 7 device scale and touch/mobile emulation. The
+sample covers home, WlButton, WlSelect and WlDialog in all five themes: 40 loads.
+There is no CPU or network throttling; these are lab observations, not field
+percentiles or a claim about every user's connection.
+
+Measure after the route has mounted, normal document loading and font readiness.
+Record LCP, the largest CLS session, navigation/resource transfer and font
+transfer. CLS follows the [session-window definition](https://web.dev/articles/cls):
+exclude recent-input shifts and use the largest burst within a five-second
+window, with less than one second between shifts. Keep the resource breakdown
+and per-load JSON in the Chromium CI artifact; publish only the measured summary
+here. Preserve budgets of CLS <0.1, home ≤600 KB, docs ≤650 KB and home fonts
+≤90 KB. A budget is not a measurement or acceptance result.
 
 ## Coverage and size
 
