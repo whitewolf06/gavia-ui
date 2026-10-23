@@ -12,10 +12,14 @@ Root and library versions are `1.0.0-rc.1`. Vue `^3.4.0`, TypeScript 5.4+,
 The owner accepted an RC transition instead of a separate 0.x warning release.
 The owner visually accepted the Gavia font on 2026-10-22.
 
-The preparation baseline is `b141d905d48069c347f228baeba0ad07d3fbc747`:
-[nine successful CI jobs](https://github.com/whitewolf06/gavia-ui/actions/runs/39759728383),
-990 library tests and 432 Playground tests. These results describe that revision,
-not subsequent candidate cleanup. Work is tracked in Kvorum, epic **GAVIAUI-1**.
+Cleanup snapshot `d74dfde60aa06404f00f20d1cbc74e099dd0f77f` passed
+[all ten CI jobs](https://github.com/whitewolf06/gavia-ui/actions/runs/40038206849):
+991 library tests, 439 Playground tests, 98.66% unit line coverage, 296 browser
+cases, 24 visual scenarios on each platform and 26 Pages cases including 40 cold
+loads. The table below records that snapshot; later commits require their own
+[PR checks](https://github.com/whitewolf06/gavia-ui/pull/2/checks).
+Work is tracked in Kvorum, epic **GAVIAUI-1**. The original review is preserved
+at `archive/review-2026-10`, commit `b141d905d48069c347f228baeba0ad07d3fbc747`.
 
 ## Candidate gates
 
@@ -25,14 +29,14 @@ Do not commit execution journals or links to ignored local files.
 
 | Gate | Evidence required before delivery | Current acceptance |
 | --- | --- | --- |
-| Source contracts | Strict types, lint, API metadata, compatibility, tokens/icons and dependency boundaries | Recheck after cleanup |
-| Tests | Full library/Playground suites, coverage and release/package tooling | Recheck after cleanup |
-| Exact distribution | Build, pack, contents/licenses/fonts, external Vue, strict publint and ESM declarations | Recheck the final archive |
-| Installed consumers | pnpm/Vue 3.4, npm/Vue 3.4.0/TS 5.4 and Bun/Vue 3.5; SSR/hydration | Recheck the final archive |
-| Browsers | Production keyboard/ARIA, overlays and desktop/mobile interaction projects | Recheck after cleanup |
-| Visuals | Five themes on Windows/Chromium; separate supplemental Linux comparison | Recheck; review every unexpected diff before changing PNGs |
-| Pages | Production subpath, prerender, canonical/legacy links and direct routes | Final-candidate preflight required |
-| Performance | LCP, CLS, total transfer and fonts on home plus three docs pages, desktop/mobile and five themes | Measure final candidate |
+| Source contracts | Strict types, lint, API metadata, compatibility, tokens/icons and dependency boundaries | Passed on Node 22.13/24 in the linked CI |
+| Tests | Full library/Playground suites, coverage and release/package tooling | Passed in the linked CI; thresholds retained |
+| Exact distribution | Build, pack, contents/licenses/fonts, external Vue, strict publint and ESM declarations | Passed for the archive identified below |
+| Installed consumers | pnpm/Vue 3.4, npm/Vue 3.4.0/TS 5.4 and Bun/Vue 3.5; SSR/hydration | Passed; consumer reports identify the same archive |
+| Browsers | Production keyboard/ARIA, overlays and desktop/mobile interaction projects | Passed in Chromium, Firefox, WebKit and mobile Chromium |
+| Visuals | Five themes on Windows/Chromium; separate supplemental Linux comparison | Passed; 12 intentional changes reviewed as expected/actual/diff before adoption |
+| Pages | Production subpath, prerender, canonical/legacy links and direct routes | Preflight passed; public deployment remains separately authorized |
+| Performance | LCP, CLS, total transfer and fonts on home plus three docs pages, desktop/mobile and five themes | All budgets passed; measured table in quality.md |
 | Manual accessibility | Ten key controls: NVDA/Firefox, macOS VoiceOver/Safari and iOS VoiceOver | Pending owner results; no pass or waiver |
 | Owner acceptance | Candidate scope, known limitations and exact delivery actions | Pending |
 
@@ -40,6 +44,18 @@ Performance targets: CLS <0.1, home transfer ≤600 KB, documentation ≤650 KB,
 home font transfer ≤90 KB. Record measured values in
 [quality](quality.md#performance), with environment and sample scope.
 Bundle-size budgets remain independent gates.
+
+The [verified CI archive](https://github.com/whitewolf06/gavia-ui/actions/runs/40038206849/artifacts/12537763131)
+is `gavia-ui-1.0.0-rc.1.tgz`: 1,188,531 bytes packed, 2,677,869 bytes unpacked,
+191 files. SHA-256:
+`0a5bd3e18bea8837ae9473ba6bce37f1b37b450396ae3693abc3bad44617fa73`.
+This identifies a checked candidate, not a published npm package.
+
+Firefox intentionally uses the complete Gavia variable face to preserve
+combining clusters; ordinary upright transfer is 56,192 bytes above Core.
+Chromium/WebKit retain compact Core delivery. Authored font binaries are unchanged.
+Manual NVDA/VoiceOver acceptance has no pass or waiver; the owner must supply
+results or explicitly accept an RC limitation before delivery.
 
 ## Prepare the decision
 

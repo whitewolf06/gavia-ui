@@ -102,8 +102,11 @@ and `Gavia Core` families expose compact faces. Gavia themes use
 `"Gavia Sans Core", "Gavia Sans", ...` so cluster fallback can select one
 complete face when Core lacks a mark. Splitting one family into disjoint ranges
 breaks clusters; keeping those slices overlapping still differs in Firefox.
+Firefox also splits clusters across separate families (Mozilla bug 543200), so
+Core registrations use `@supports not (-moz-appearance: none)`. Gecko falls back
+to the complete variable family; font bytes and authored geometry stay unchanged.
 Decorative arrows use SVG on home. Real transfer is checked independently of
-explicit font probes and must stay at most 90 KB on the Core-only home.
+explicit font probes and must stay at most 90 KB on the Core-only Chromium/WebKit home.
 Core intentionally does not claim combining marks. Browser regressions compare
 whole clusters with the complete face. Canonical composition
 can differ from separate base/mark positioning in authored masters; retaining

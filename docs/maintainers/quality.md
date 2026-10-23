@@ -163,8 +163,8 @@ Keep real focus, native input and file selection, portals, history, transitions,
 scrolling and responsive layout in browser tests. Playground-only report,
 catalog and documentation presentation runs in the primary Chromium project.
 
-The default matrix registers 291 cases: 174 in Chromium, including 60 Axe
-audits, and 39 critical scenarios in each of mobile Chromium, Firefox and
+The default matrix registers 296 cases: 176 in Chromium, including 60 Axe
+audits, and 40 critical scenarios in each of mobile Chromium, Firefox and
 WebKit. The `@cross-browser` tag selects that critical subset for the three
 secondary profiles. This replaces the earlier 878-case matrix; historical runs
 of that matrix do not establish acceptance of the current suite.
@@ -208,6 +208,36 @@ window, with less than one second between shifts. Keep the resource breakdown
 and per-load JSON in the Chromium CI artifact; publish only the measured summary
 here. Preserve budgets of CLS <0.1, home ≤600 KB, docs ≤650 KB and home fonts
 ≤90 KB. A budget is not a measurement or acceptance result.
+
+### Measured RC cleanup snapshot
+
+Recorded on 2026-10-24 for `d74dfde60aa06404f00f20d1cbc74e099dd0f77f` in
+[successful CI](https://github.com/whitewolf06/gavia-ui/actions/runs/40038206849).
+The Chromium artifact retains all 40 rows and their resource breakdowns in
+`cold-loading-measurements.json`. All transfer columns below are bytes;
+documentation values are WlButton / WlSelect / WlDialog, in that order.
+LCP ranges and maximum CLS cover all four routes in each row.
+
+| Theme | Width | Home | Documentation | Home fonts | LCP, ms | Maximum CLS |
+| --- | ---: | ---: | --- | ---: | --- | ---: |
+| Gavia | 1440 | 449681 | 527757 / 535700 / 533429 | 75728 | 128–276 | 0.042110 |
+| Gavia Dark | 1440 | 512851 | 527757 / 535700 / 533429 | 75728 | 144–264 | 0.042110 |
+| Classic | 1440 | 449681 | 527757 / 535700 / 533429 | 75728 | 160–432 | 0.042110 |
+| Classic Dark | 1440 | 512851 | 527757 / 535700 / 533429 | 75728 | 136–256 | 0.042110 |
+| Newspaper | 1440 | 449681 | 527757 / 535700 / 533429 | 75728 | 132–292 | 0.042110 |
+| Gavia | 390 | 465213 | 527757 / 535700 / 533429 | 75728 | 260–444 | 0 |
+| Gavia Dark | 390 | 545067 | 527757 / 535700 / 533429 | 75728 | 244–424 | 0 |
+| Classic | 390 | 465213 | 527757 / 535700 / 533429 | 75728 | 120–508 | 0 |
+| Classic Dark | 390 | 545067 | 527757 / 535700 / 533429 | 75728 | 268–456 | 0 |
+| Newspaper | 390 | 465213 | 527757 / 535700 / 533429 | 75728 | 260–456 | 0 |
+
+These observations pass every configured budget. They include initial
+prerendered loading and do not claim zero layout shift or throttled-device LCP.
+The existing CI Chromium job runs Pages build, prerender, smoke checks and this
+measurement independently of the browser-test step's outcome. Public Pages
+deployment remains limited to a successful CI for the same current `main` SHA.
+Supplemental Linux visuals reuse the existing container workflow; their PNGs
+remain separate from the primary Windows baselines.
 
 ## Coverage and size
 
