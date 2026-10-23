@@ -102,6 +102,13 @@ jobs:
         run: |-
           pnpm exec publint --strict "packages/ui-kit/${{ steps.package.outputs.archive }}"
           pnpm verify:types "packages/ui-kit/${{ steps.package.outputs.archive }}"
+      - name: Save verified candidate archive
+        if: matrix.node-version == '24'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: gavia-ui-candidate-package
+          path: packages/ui-kit/${{ steps.package.outputs.archive }}
+          if-no-files-found: error
   browser:
     timeout-minutes: 20
     name: Browser regression tests (${{ matrix.project }})
@@ -138,6 +145,12 @@ jobs:
         run: pnpm verify:package:browser
       - name: Run browser tests
         run: pnpm test:e2e --project="${{ matrix.project }}"
+      - name: Verify prerendered Pages and cold loading budgets
+        if: matrix.project == 'chromium'
+        run: |
+          pnpm build:pages
+          pnpm pages:prerender
+          pnpm test:pages
       - name: Save theme screenshots and traces
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

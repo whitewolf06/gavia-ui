@@ -9,7 +9,8 @@ const chromiumChannel = process.env.GAVIA_E2E_CHROMIUM_CHANNEL;
 
 export default defineConfig({
   testDir: "./e2e",
-  testMatch: "pages.pw.ts",
+  testMatch: ["pages.pw.ts", "pages-performance.pw.ts"],
+  outputDir: "./test-results/pages",
   timeout: 60_000,
   retries: process.env.CI ? 1 : 0,
   workers: 1,
