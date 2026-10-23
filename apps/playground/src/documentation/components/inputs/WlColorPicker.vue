@@ -36,15 +36,16 @@ const swatches = ["#2563eb", "#2e9e68", "#bf8615", "#d2494f", "#22252b", "#f7f7f
           role="group"
           :aria-label="t('examples.color_with_an_external_error_0675')"
           aria-describedby="docs-color-error"
-        ><WlColorPicker
-          v-model="color"
-          :swatches="swatches"
-          invalid
-          :palette-label="t('examples.palette_with_an_error_0676')"
-          :input-label="t('examples.hex_with_an_error_0677')"
-        />
-        <p id="docs-color-error" class="wl-text-small" role="alert">{{ t("examples.approve_the_selected_color_before_saving_0678") }}</p>
-      </div>
+        >
+          <WlColorPicker
+            v-model="color"
+            :swatches="swatches"
+            invalid
+            :palette-label="t('examples.palette_with_an_error_0676')"
+            :input-label="t('examples.hex_with_an_error_0677')"
+          />
+          <p id="docs-color-error" class="wl-text-small" role="alert">{{ t("examples.approve_the_selected_color_before_saving_0678") }}</p>
+        </div>
         <div class="wl-stack" data-space="sm"><p class="wl-text-small">{{ t("examples.unavailable_color_0679") }}</p><WlColorPicker
           model-value="#2e9e68"
           :swatches="swatches"
