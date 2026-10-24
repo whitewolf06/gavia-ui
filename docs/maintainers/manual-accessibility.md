@@ -1,12 +1,15 @@
 # Manual accessibility acceptance
 
-Status: **protocol prepared; all execution and acceptance pending**.
-Prepared on 2026-10-17 for review task T9.6. No NVDA, VoiceOver, Safari, mobile
-device or owner acceptance is claimed by this document.
+Status: **manual execution pending; unverified accessibility accepted as an RC limitation**.
+Prepared on 2026-10-17 for review task T9.6. No NVDA, VoiceOver, Safari or mobile
+device pass is claimed by this document.
 
 On 2026-10-22 the owner reported being unable to perform the manual checks now.
-The protocol remains Pending / unavailable now; no manual pass or waiver was
-granted. Successful automated CI at `e66ed54` does not fill these result cells.
+At that time no manual pass or waiver was granted. On 2026-10-24 the owner
+explicitly accepted `1.0.0-rc.1` with unverified manual accessibility as a known
+limitation and authorized merge and CI/Pages delivery. This RC-specific decision
+does not supply manual results or stable-release acceptance. All execution cells
+remain Pending. Successful automated CI does not fill these result cells.
 The owner's separate font appearance acceptance is retained in the RC record.
 
 Use this protocol against the exact release candidate and its production

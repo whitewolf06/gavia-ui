@@ -55,8 +55,8 @@ Install the candidate: pnpm add gavia-ui@next vue
 This is a prerelease. Stable 1.0 timing depends on feedback and acceptance.
 ```
 
-Manual NVDA/VoiceOver results are currently pending. If the owner explicitly
-accepts an RC skip, include this known limitation in the actual release body:
+Manual NVDA/VoiceOver results remain pending. The owner accepted this gap as an
+RC limitation on 2026-10-24; retain this limitation in the actual release body:
 “Manual NVDA/Firefox, macOS VoiceOver/Safari and iOS VoiceOver acceptance is
 pending. Automated browser and Axe checks do not replace those checks.”
 Do not present the prepared protocol as a pass or omit a known manual gap.

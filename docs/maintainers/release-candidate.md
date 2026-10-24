@@ -11,9 +11,12 @@ Root and library versions are `1.0.0-rc.1`. Vue `^3.4.0`, TypeScript 5.4+,
 `Wl*` / `wl-*` / `--wl-*`, explicit CSS imports and five themes remain supported.
 The owner accepted an RC transition instead of a separate 0.x warning release.
 The owner visually accepted the Gavia font on 2026-10-22.
+On 2026-10-24 the owner accepted this RC with unverified manual accessibility
+as a known limitation and authorized G1: merge PR #2, then verify CI and public
+Pages on GitHub. Release tags and npm publication remain unauthorized.
 
-Cleanup snapshot `d74dfde60aa06404f00f20d1cbc74e099dd0f77f` passed
-[all ten CI jobs](https://github.com/whitewolf06/gavia-ui/actions/runs/40038206849):
+Candidate snapshot `06c726437806d43371f25e933ffffb82ca8158d4` passed
+[all ten CI jobs](https://github.com/whitewolf06/gavia-ui/actions/runs/40041135927):
 991 library tests, 439 Playground tests, 98.66% unit line coverage, 296 browser
 cases, 24 visual scenarios on each platform and 26 Pages cases including 40 cold
 loads. The table below records that snapshot; later commits require their own
@@ -35,17 +38,17 @@ Do not commit execution journals or links to ignored local files.
 | Installed consumers | pnpm/Vue 3.4, npm/Vue 3.4.0/TS 5.4 and Bun/Vue 3.5; SSR/hydration | Passed; consumer reports identify the same archive |
 | Browsers | Production keyboard/ARIA, overlays and desktop/mobile interaction projects | Passed in Chromium, Firefox, WebKit and mobile Chromium |
 | Visuals | Five themes on Windows/Chromium; separate supplemental Linux comparison | Passed; 12 intentional changes reviewed as expected/actual/diff before adoption |
-| Pages | Production subpath, prerender, canonical/legacy links and direct routes | Preflight passed; public deployment remains separately authorized |
+| Pages | Production subpath, prerender, canonical/legacy links and direct routes | Preflight passed; G1 deployment authorized on 2026-10-24; main delivery pending |
 | Performance | LCP, CLS, total transfer and fonts on home plus three docs pages, desktop/mobile and five themes | All budgets passed; measured table in quality.md |
-| Manual accessibility | Ten key controls: NVDA/Firefox, macOS VoiceOver/Safari and iOS VoiceOver | Pending owner results; no pass or waiver |
-| Owner acceptance | Candidate scope, known limitations and exact delivery actions | Pending |
+| Manual accessibility | Ten key controls: NVDA/Firefox, macOS VoiceOver/Safari and iOS VoiceOver | Unverified; owner accepted the RC limitation on 2026-10-24; no manual pass claimed |
+| Owner acceptance | Candidate scope, known limitations and exact delivery actions | RC accepted and G1 authorized on 2026-10-24; G2 remains unauthorized |
 
 Performance targets: CLS <0.1, home transfer ≤600 KB, documentation ≤650 KB,
 home font transfer ≤90 KB. Record measured values in
 [quality](quality.md#performance), with environment and sample scope.
 Bundle-size budgets remain independent gates.
 
-The [verified CI archive](https://github.com/whitewolf06/gavia-ui/actions/runs/40038206849/artifacts/12537763131)
+The [verified CI archive](https://github.com/whitewolf06/gavia-ui/actions/runs/40041135927/artifacts/12539093723)
 is `gavia-ui-1.0.0-rc.1.tgz`: 1,188,531 bytes packed, 2,677,869 bytes unpacked,
 191 files. SHA-256:
 `0a5bd3e18bea8837ae9473ba6bce37f1b37b450396ae3693abc3bad44617fa73`.
@@ -54,8 +57,9 @@ This identifies a checked candidate, not a published npm package.
 Firefox intentionally uses the complete Gavia variable face to preserve
 combining clusters; ordinary upright transfer is 56,192 bytes above Core.
 Chromium/WebKit retain compact Core delivery. Authored font binaries are unchanged.
-Manual NVDA/VoiceOver acceptance has no pass or waiver; the owner must supply
-results or explicitly accept an RC limitation before delivery.
+Manual NVDA/VoiceOver checks remain unperformed. The owner's 2026-10-24 decision
+accepts that gap for this RC as a known limitation; it is not a manual pass or
+stable-release acceptance. Keep the individual protocol result cells Pending.
 
 ## Prepare the decision
 

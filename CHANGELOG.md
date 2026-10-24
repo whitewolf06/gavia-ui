@@ -61,6 +61,10 @@ Follow the [1.0 upgrade guide](docs/migration.md#migration-1-0-rc-1).
 - Remove internal locale adapters and Russian prop defaults; public locale overrides remain optional.
 - Exclude TTF desktop files and font QA reports from npm ([font assets](docs/migration.md#migration-package-assets)).
 
+### Known limitations
+
+- Manual NVDA/Firefox, macOS VoiceOver/Safari and iOS VoiceOver checks remain unperformed. The owner accepted this gap for the RC on 2026-10-24; automated browser and Axe checks do not establish manual accessibility acceptance ([protocol](docs/maintainers/manual-accessibility.md)).
+
 ## 0.12.1 — 2026-10-12
 
 - The Playground follows the system color scheme and supported browser language on first visit, remembers manual choices, and offers a System theme option. Explicit language/theme links keep their priority.
