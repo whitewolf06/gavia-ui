@@ -7,6 +7,63 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 ## Unreleased
 
+## 1.0.0 — 2026-10-25
+
+Stable 1.0 promotes the RC public API to npm `latest`. The library API is unchanged from 1.0.0-rc.1; the Playground now translates all changelog prose into Russian.
+Follow the [1.0 upgrade guide](docs/migration.md#migration-1-0).
+
+### Breaking changes
+
+- Built-in text falls back to English; install `WlConfig` with `wlLocaleRu` to keep Russian ([localization](docs/migration.md#migration-1-0-localization)).
+- Use canonical PT names and separate `iconButton` overrides from `button` ([PT mapping](docs/migration.md#migration-1-0-public-api)).
+- Replace status variants with semantic `tone` and overlay `dismissable` with `dismissible` ([appearance and dismissal](docs/migration.md#semantic-tone-appearance-and-dismissal)).
+- Import the Tooltip component as `WlTooltip`, register `WlTooltipDirective`, and provide names for icon actions ([Tooltip and names](docs/migration.md#tooltip-imports-and-action-names)).
+
+### Added
+
+- Add CheckboxGroup, RadioGroup, Tooltip, nested menus, ContextMenu, Toolbar and TagsInput.
+- Add pure utilities through `gavia-ui/utils` and Vue helpers through `gavia-ui/composables`.
+- Add optional router adaptation through WlLink and controlled Table sorting/selection with stable row keys.
+- Add typed option slots, disabled options, stable keys and clearable single selection.
+- Add Toast IDs, updates, promise messages, actions, positions and pause/queue controls; confirmation also returns a Promise.
+- Add Gavia Sans variable weights 100–700, real italic and a live Playground weight slider.
+- Add canonical documentation routes, prerendering, full-text search, recipes and starter applications.
+
+### Changed
+
+- Normalize configuration reactively and isolate locale, services and generated IDs per Vue application.
+- Share overlay stacking, modal inert/focus ownership and active-only positioning listeners.
+- Use one copyable SFC source for examples and source-derived public API metadata.
+- Ship WOFF2 web fonts in npm and provide licensed TTF desktop downloads separately.
+- Preserve Vue 3.4+, TypeScript 5.4+, five themes and explicit CSS imports.
+- Keep prerendered Playground pages visible before startup and simplify displayed API types and component badges.
+- Keep home-only preloads out of prerendered documentation and size artwork for high-density mobile screens.
+- Use SVG decorations to avoid an unnecessary Full-font download on the Playground home page.
+- Separate optional Core font families from complete Gavia fallback; use the complete face in Firefox to preserve combining clusters.
+- Exclude variable-font audit data from npm and use neutral names for shared library chunks.
+- Keep rendered documentation visible while the next Playground page and its translations load.
+
+### Fixed
+
+- Translate the complete Playground changelog into Russian, including new releases, and check translation coverage.
+- Correct listbox keyboard navigation, active-option scrolling and duplicate click selection.
+- Give Tabs unique tab/panel relationships and support disabled, vertical and retained/lazy panels.
+- Restore anchored-panel positioning and focus after rendering, rebinding and reopening.
+- Correct Alert/Field/Steps semantics and avoid duplicate Toast announcements.
+- Reset settled Toast lifetimes and consistently cancel replaced confirmation requests.
+- Support native Node16/NodeNext ESM declarations and independent installed-package consumers.
+- Recognize dated alpha, beta and RC changelog entries while preserving the separate published stable version.
+
+### Deprecated / removed
+
+- Remove the 0.x PT/status/dismissal aliases in the 1.0 release; use the [canonical-name migration](docs/migration.md#migration-1-0-public-api).
+- Remove internal locale adapters and Russian prop defaults; public locale overrides remain optional.
+- Exclude TTF desktop files and font QA reports from npm ([font assets](docs/migration.md#migration-package-assets)).
+
+### Known limitations
+
+- Manual NVDA/Firefox, macOS VoiceOver/Safari and iOS VoiceOver checks remain unperformed. On 2026-10-25 the owner accepted this known limitation for stable 1.0 and chose immediate publication without the planned RC feedback period; automated checks do not establish manual accessibility acceptance ([protocol](docs/maintainers/manual-accessibility.md)).
+
 ## 1.0.0-rc.1 — 2026-10-24
 
 An opt-in release candidate for npm `next`; stable `latest` remains unchanged.

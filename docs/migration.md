@@ -7,7 +7,8 @@ publication. Stable public namespaces remain `Wl*`, `wl-*` and `--wl-*`.
 Start with the 1.0 checklist. Detailed component and service changes are
 included below; historical upgrade sections remain available at their anchors.
 
-- [Upgrading from 0.12.1 to 1.0.0-rc.1](#migration-1-0-rc-1)
+- [Upgrading from 0.12.1 or the RC to 1.0.0](#migration-1-0)
+- [Historical 1.0.0-rc.1 upgrade](#migration-1-0-rc-1)
 - [1.0 localization: English fallback](#migration-1-0-localization)
 - [1.0 public API: canonical names](#migration-1-0-public-api)
 - [Package documentation and font assets](#migration-package-assets)
@@ -25,13 +26,38 @@ included below; historical upgrade sections remain available at their anchors.
 - [Migration to Gavia UI](#migration-gavia)
 - [Theme names and Gavia Dark](#migration-themes)
 
+<a id="migration-1-0"></a>
+## Upgrading from 0.12.1 or the RC to 1.0.0
+
+Stable 1.0 targets npm **`latest`**. After registry publication, install the
+exact version with:
+
+```sh
+pnpm add gavia-ui@1.0.0 vue
+```
+
+From **1.0.0-rc.1**, the library public API is unchanged. The Playground also
+includes complete Russian changelog translations. From **0.12.1**, apply the
+[upgrade checklist below](#migration-1-0-rc-1), especially English fallback,
+canonical PT and `tone` names, `dismissible`, Tooltip exports and accessible
+names for icon actions. Add a stable Table `rowKey` where rows hold state or
+selection, and configure the application router adapter for object link targets.
+Vue `^3.4.0`, TypeScript 5.4+, CSS paths and public namespaces are preserved.
+
+The owner chose immediate stable delivery on 2026-10-25, ending the planned RC
+feedback period early. Manual NVDA/VoiceOver checks remain unperformed and were
+accepted as a known limitation; automated checks do not establish a manual pass.
+See the [dated decision](rfc/0001-public-api-1.0.md#early-stable-acceptance--2026-10-25).
+Before updating an application, check its strict types, Russian labels, PT
+customizations, keyboard/focus behavior and SSR hydration where used.
+
 <a id="migration-1-0-rc-1"></a>
 ## Upgrading from 0.12.1 to 1.0.0-rc.1
 
 This major candidate changes locale defaults and several public names.
 It is intended for npm **`next`** after publication. Stable consumers keep the
-ordinary package name. The RC feedback period is two to four weeks; see the
-[transition policy](rfc/0001-public-api-1.0.md#accepted-rc-transition--2026-10-22).
+ordinary package name. The original two-to-four-week feedback policy was
+superseded by the [2026-10-25 stable decision](rfc/0001-public-api-1.0.md#early-stable-acceptance--2026-10-25).
 
 After publication, opt into this exact candidate in a consumer application:
 
@@ -124,7 +150,7 @@ The companion [public API migration](#migration-1-0-public-api) removes the
 <a id="migration-1-0-public-api"></a>
 ## 1.0 public API: canonical names
 
-Apply these public-name changes when opting into the major candidate.
+Apply these public-name changes when upgrading from 0.x to the 1.0 line.
 
 ### Pass-through configuration
 

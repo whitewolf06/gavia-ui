@@ -1,6 +1,6 @@
 {
   "name": "gavia-ui-workspace",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0",
   "private": true,
   "description": "Gavia UI workspace: an independent Vue 3 design system and component library",
   "license": "MIT",

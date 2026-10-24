@@ -20,17 +20,20 @@ For 1.0 preparation, use the [RC checklist](release-candidate.md),
    `prepack` during `pnpm run pack`.
 
 For a new prerelease cycle, use `pnpm changeset pre enter rc` on the agreed branch
-before preparing versions. The current **1.0.0-rc.1** is already prepared in RC
-mode; do not re-enter it or run version preparation merely to build/pack it.
+before preparing versions. The current **1.0.0** source has already exited RC
+mode and consumed its changesets; do not re-enter RC or run version preparation
+merely to build/pack this release.
 Alpha/beta/rc.N archives use npm `next`; stable releases use
 `latest`. Exit prerelease mode with `pnpm changeset pre exit` and prepare/check
 the stable version separately. Do not use `changeset publish`.
 
 The owner-approved [1.0 RC transition](../rfc/0001-public-api-1.0.md#accepted-rc-transition--2026-10-22)
-replaces the originally planned separate 0.x warning release. Keep the feedback
-window open for two to four weeks after confirmed RC publication; record its
-actual dates before stable acceptance. No new local runs or delivery actions were
-authorized by the 2026-10-22 source-preparation instruction.
+replaces the originally planned separate 0.x warning release. The RC was
+published on 2026-10-24. The owner approved
+[early stable delivery on 2026-10-25](../rfc/0001-public-api-1.0.md#early-stable-acceptance--2026-10-25),
+superseding the feedback window and accepting unperformed manual accessibility
+as a known limitation. Stable delivery is authorized through the existing
+GitHub workflow; all heavy checks stay on GitHub.
 
 ## Verify and authorize delivery
 

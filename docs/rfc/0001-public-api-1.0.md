@@ -1,10 +1,13 @@
 # RFC 0001: public API migration to 1.0
 
 Status: direction accepted on 2026-10-17; RC transition accepted by the owner on
-2026-10-22. Source version **1.0.0-rc.1** is prepared with English fallback,
+2026-10-22; early stable delivery accepted on 2026-10-25. Source version
+**1.0.0** retains the RC English fallback,
 canonical PT/tone/dismissible names, Tooltip exports and icon-action name types.
-Exact-candidate verification and publication remain pending. The RC transition
-below supersedes the previously required intervening 0.x deprecation release.
+The RC was verified and published on 2026-10-24. Stable verification and
+publication require their own exact source/archive evidence. The RC transition
+below supersedes the previously required intervening 0.x deprecation release;
+the dated stable decision below supersedes its feedback window.
 
 ## Preserved contracts
 
@@ -56,8 +59,8 @@ Partial locale fields fall back to English; spread the complete preset before
 custom overrides. Omitted/`undefined` text props follow the current locale;
 explicit strings, including empty strings, keep priority. Reactive app/SSR
 isolation is preserved by the existing configuration API. The root and library
-source versions are now `1.0.0-rc.1`; this does not establish candidate verification
-or publication. See the
+source versions are now `1.0.0`; source preparation does not establish registry
+publication. See the
 [locale migration](../migration.md#migration-1-0-localization).
 
 The current major source removes old status variants/PT aliases and the
@@ -75,8 +78,9 @@ delivered in `1.0.0-rc.1` through npm **`next`** after separate verification and
 publication authorization. Stable **`latest`** stays on 0.12.1 until an authorized
 stable release; do not deliver these changes as a 0.12.x patch.
 
-Keep a **two-to-four-week feedback period after confirmed RC publication**.
-Its dates are pending; preparing source, committing or creating a tag does not
+The original policy required a **two-to-four-week feedback period after confirmed
+RC publication**. It began on 2026-10-24 and was ended early by the owner's
+2026-10-25 decision below. Preparing source, committing or creating a tag does not
 start it. Record migration feedback, fixes and explicit stable-release acceptance.
 Further candidates stay on `next`; each needs evidence for its exact archive.
 This changes the transition policy only. Required automated and manual release
@@ -86,6 +90,21 @@ See [the candidate migration](../migration.md#migration-1-0-rc-1) and
 [preparation record](../maintainers/release-candidate.md). Public version history:
 [npm registry](https://registry.npmjs.org/gavia-ui). Candidate acceptance is
 tracked through [the release gates](../maintainers/release-candidate.md).
+
+## Early stable acceptance — 2026-10-25
+
+After reviewing the stable requirements, the owner requested immediate stable
+1.0.0 delivery as the current sole consumer, with upgrade warnings. This
+supersedes the remaining RC feedback window and accepts unperformed
+NVDA/Firefox, macOS VoiceOver/Safari and iOS VoiceOver checks as a known stable
+limitation. No manual pass is claimed; protocol cells remain Pending.
+
+The authorization covers stable metadata, logical commits/push, the new
+`v1.0.0` tag and publication to npm `latest` through the existing Release
+workflow. Heavy verification runs on GitHub. It does not waive automated gates,
+allow rewriting the published RC tag, or authorize external announcements.
+The library public API remains the same as 1.0.0-rc.1; the Playground changelog
+translation is completed before this stable delivery.
 
 ## Acceptance and release
 

@@ -1,4 +1,23 @@
-# Preparing Gavia UI 1.0.0-rc.1
+# Gavia UI 1.0.0-rc.1 release record
+
+## Publication and stable follow-up
+
+The RC was published to npm `next` on 2026-10-24 from
+`dad984f9c605b941e3e847966a794ef09ddc2ce5`.
+[Release passed all twelve jobs](https://github.com/whitewolf06/gavia-ui/actions/runs/40096772997),
+and the registry archive integrity and source provenance were read back.
+The published archive has 191 files, 1,188,720 packed bytes, and SHA-256
+`5ceace450ad4d2848b9eb9f2e86f0ca4af310e0b23872f64f5afc11ef282c1f6`.
+This is distinct from the earlier candidate archive recorded below.
+
+On 2026-10-25 the owner authorized immediate stable 1.0.0 delivery, ending the
+feedback period early and accepting unverified manual accessibility as a known
+stable limitation. See the [dated RFC decision](../rfc/0001-public-api-1.0.md#early-stable-acceptance--2026-10-25).
+Root/library source versions are now 1.0.0. This RC record is historical;
+stable gates and the published stable archive require their own CI/registry
+evidence and must not reuse RC hashes as stable results.
+
+## Historical RC preparation
 
 The candidate targets npm **`next`**. The owner authorized G2 on 2026-10-24:
 date the release, commit/push, create `v1.0.0-rc.1` and run Release on GitHub.
@@ -8,7 +27,7 @@ The pre-release registry baseline is **`latest = 0.12.1`**; preserve that tag.
 The [1.0 migration](../migration.md#migration-1-0-rc-1) describes consumer changes.
 The [release procedure](releases.md) governs delivery.
 
-## Current candidate
+## Candidate at preparation time
 
 Root and library versions are `1.0.0-rc.1`. Vue `^3.4.0`, TypeScript 5.4+,
 `Wl*` / `wl-*` / `--wl-*`, explicit CSS imports and five themes remain supported.
