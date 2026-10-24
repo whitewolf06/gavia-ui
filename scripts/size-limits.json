@@ -1,0 +1,57 @@
+{
+  "margin": 0.05,
+  "measuredAt": "2026-10-17T22:04:18.286Z",
+  "librarySha256": "33cee2c296c8720f7d4481849c0bdceeb2fd28e0fa4df5aa24236396601e5c2d",
+  "measurements": [
+    {
+      "name": "vue34/button",
+      "bytes": 69756,
+      "gzip": 26514
+    },
+    {
+      "name": "vue34/select",
+      "bytes": 110577,
+      "gzip": 41783
+    },
+    {
+      "name": "vue34/form",
+      "bytes": 140154,
+      "gzip": 50471
+    },
+    {
+      "name": "vue34/all",
+      "bytes": 577899,
+      "gzip": 145432
+    },
+    {
+      "name": "vue35/button",
+      "bytes": 77082,
+      "gzip": 28927
+    },
+    {
+      "name": "vue35/select",
+      "bytes": 119952,
+      "gzip": 45267
+    },
+    {
+      "name": "vue35/form",
+      "bytes": 148977,
+      "gzip": 53737
+    },
+    {
+      "name": "vue35/all",
+      "bytes": 587062,
+      "gzip": 148730
+    }
+  ],
+  "limits": {
+    "vue34/button": 27840,
+    "vue34/select": 43873,
+    "vue34/form": 52995,
+    "vue34/all": 152704,
+    "vue35/button": 30374,
+    "vue35/select": 47531,
+    "vue35/form": 56424,
+    "vue35/all": 156167
+  }
+}

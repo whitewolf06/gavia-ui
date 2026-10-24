@@ -2,6 +2,22 @@ import { defineComponentManifest } from "./types";
 
 export const navigationManifest = /* @__PURE__ */ defineComponentManifest([
   {
+    name: "WlContextMenu",
+    category: "navigation",
+    description: "Pointer and keyboard context menu with nested and checked items.",
+    props: [],
+    slots: [],
+    emits: []
+  },
+  {
+    name: "WlToolbar",
+    category: "navigation",
+    description: "One keyboard stop for a labelled group of related actions.",
+    props: [],
+    slots: [],
+    emits: []
+  },
+  {
     name: "WlBreadcrumbs",
     category: "navigation",
     description: "Хлебные крошки: путь к текущей странице. Последний пункт — без ссылки.",

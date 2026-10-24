@@ -1,22 +1,37 @@
 {
   "name": "gavia-ui",
-  "version": "0.12.1",
+  "version": "1.0.0-rc.1",
   "description": "Gavia UI — a free, open source Vue 3 and TypeScript component library and design system",
   "type": "module",
   "license": "MIT",
+  "author": {
+    "name": "Gorbach Dmitry",
+    "url": "https://github.com/whitewolf06"
+  },
+  "homepage": "https://github.com/whitewolf06/gavia-ui#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/whitewolf06/gavia-ui.git",
     "directory": "packages/ui-kit"
   },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org",
-    "access": "public"
+  "bugs": {
+    "url": "https://github.com/whitewolf06/gavia-ui/issues"
   },
+  "keywords": [
+    "vue",
+    "vue3",
+    "components",
+    "ui",
+    "design-system",
+    "typescript",
+    "gavia"
+  ],
   "sideEffects": [
     "**/*.css"
   ],
   "exports": {
+    "./utils": { "types": "./dist/utils/index.d.ts", "import": "./dist/utils.js" },
+    "./composables": { "types": "./dist/composables/index.d.ts", "import": "./dist/composables.js" },
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
@@ -31,16 +46,21 @@
     "./styles/fonts/gavia.css": "./styles/fonts/gavia.css",
     "./fonts/gavia/*": "./fonts/gavia/*"
   },
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist",
     "styles",
-    "fonts",
+    "fonts/gavia/*.woff2",
+    "fonts/gavia/*.txt",
+    "fonts/gavia/manifest.json",
     "themes",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"
   ],
   "scripts": {
+    "prepack": "node scripts/prepack.mjs",
     "build": "vite build",
     "test": "vitest run",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
@@ -54,32 +74,21 @@
     "vue": "^3.4.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.4",
-    "@vitest/coverage-v8": "3.2.7",
+    "@types/node": "^22.15.0",
+    "@vitejs/plugin-vue": "6.0.10",
+    "@vitest/coverage-v8": "5.0.5",
+    "@vue/language-core": "3.3.13",
     "@vue/test-utils": "2.4.6",
-    "jsdom": "^26.1.0",
-    "typescript": "~5.8.3",
-    "vite": "^6.3.5",
-    "vite-plugin-dts": "^4.5.4",
-    "vitest": "^3.2.4",
+    "jsdom": "26.1.0",
+    "typescript": "6.0.3",
+    "vite": "8.3.4",
+    "vite-plugin-dts": "5.1.2",
+    "vitest": "5.0.5",
     "vue": "3.4.38",
-    "vue-tsc": "^2.2.10"
+    "vue-tsc": "3.3.13"
   },
-  "homepage": "https://github.com/whitewolf06/gavia-ui#readme",
-  "bugs": {
-    "url": "https://github.com/whitewolf06/gavia-ui/issues"
-  },
-  "keywords": [
-    "vue",
-    "vue3",
-    "components",
-    "ui",
-    "design-system",
-    "typescript",
-    "gavia"
-  ],
-  "author": {
-    "name": "Gorbach Dmitry",
-    "url": "https://github.com/whitewolf06"
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
   }
 }

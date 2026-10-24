@@ -1,11 +1,14 @@
-import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
-import { mkdirSync, readFileSync, readdirSync, writeFileSync, existsSync, mkdtempSync, rmSync } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import { loadMigrationPolicy, isApprovedMigration, migrationTypeHelpers, migrationPropsProjection } from "./compatibility-migration.mjs";
+import {
+  isApprovedMigration, loadMigrationPolicy, migrationCallableProjection, migrationInventoryProjection,
+  migrationPropsProjection, migrationPublicTypeProjection, migrationTypeHelpers
+} from "./compatibility-migration.mjs";
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const kitDir = join(repoRoot, "packages/ui-kit");
@@ -36,17 +39,25 @@ function files(directory, extension) {
 function removeTemporary(path) {
   const target = resolve(path);
   const within = relative(join(kitDir, ".tmp"), target);
-  if (!within || within.startsWith("..") || isAbsolute(within)) throw new Error(`Unsafe cleanup target: ${target}`);
+  if (!within || within.startsWith("..") || isAbsolute(within))
+    throw new Error(`Unsafe cleanup target: ${target}`);
   rmSync(target, { recursive: true, force: true });
 }
-function readJson(path) { return JSON.parse(readFileSync(path, "utf8")); }
-function sorted(values) { return [...new Set(values)].sort(); }
+function readJson(path) {
+  return JSON.parse(readFileSync(path, "utf8"));
+}
+function sorted(values) {
+  return [...new Set(values)].sort();
+}
 export function subset(previous, current, label, errors) {
   const available = new Set(current);
-  for (const value of previous) if (!available.has(value)) errors.push(`${label}: removed ${value}`);
+  for (const value of previous)
+    if (!available.has(value))
+      errors.push(`${label}: removed ${value}`);
 }
 function ptPaths(value, prefix = "") {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return [];
+  if (!value || typeof value !== "object" || Array.isArray(value))
+    return [];
   return Object.entries(value).flatMap(([name, item]) => {
     const path = prefix ? `${prefix}.${name}` : name;
     return [path, ...ptPaths(item, path)];
@@ -55,7 +66,8 @@ function ptPaths(value, prefix = "") {
 async function inventory(root) {
   const kit = join(root, "packages/ui-kit");
   const dist = join(kit, "dist");
-  if (!existsSync(join(dist, "index.d.ts"))) throw new Error(`Build the library first: ${dist}`);
+  if (!existsSync(join(dist, "index.d.ts")))
+    throw new Error(`Build the library first: ${dist}`);
   const api = await import(pathToFileURL(join(dist, "index.js")).href);
   const markers = {};
   for (const file of files(join(kit, "src/components"), ".vue")) {
@@ -71,7 +83,7 @@ async function inventory(root) {
     exports: Object.fromEntries(Object.entries(packageJson.exports).map(([name, target]) => [name, typeof target === "string" ? [] : Object.keys(target).sort()])),
     runtimeExports: Object.keys(api).sort(),
     components: api.wlManifest.map((component) => component.name).sort(),
-    classes: sorted([...css.matchAll(/(?<![A-Za-z0-9_-])\.(wl-[A-Za-z0-9_-]+)/g)].map((match) => match[1])),
+    classes: sorted([...css.matchAll(/(?<![\w-])\.(wl-[\w-]+)/g)].map((match) => match[1])),
     markers,
     tokens: tokens.tokens.map((token) => token.name).sort(),
     themes: tokens.themes.map((theme) => theme.name).sort(),
@@ -90,40 +102,51 @@ function publicTypes(ts, entry) {
     const declarations = target.declarations ?? [];
     const typeDeclaration = declarations.find((node) => ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node));
     const valueType = target.flags & ts.SymbolFlags.Value ? checker.getTypeOfSymbolAtLocation(target, declarations[0]) : undefined;
-    const genericParameters = Math.max(0, ...(valueType?.getCallSignatures() ?? []).map((signature) => signature.typeParameters?.length ?? 0));
-    return { name: symbol.name, type: !!(target.flags & ts.SymbolFlags.Type), value: !!(target.flags & ts.SymbolFlags.Value), callable: declarations.some((node) => ts.isFunctionDeclaration(node)), requiredParameters: (typeDeclaration?.typeParameters ?? []).filter((parameter) => !parameter.default).length, ...(genericParameters ? { genericParameters } : {}) };
+    const genericParameters = Math.max(
+      0, ...(valueType?.getCallSignatures() ?? []).map((signature) => signature.typeParameters?.length ?? 0)
+    );
+    return {
+      name: symbol.name,
+      type: !!(target.flags & ts.SymbolFlags.Type),
+      value: !!(target.flags & ts.SymbolFlags.Value),
+      callable: declarations.some((node) => ts.isFunctionDeclaration(node)),
+      requiredParameters: (typeDeclaration?.typeParameters ?? []).filter((parameter) => !parameter.default).length,
+      ...(genericParameters ? { genericParameters } : {})
+    };
   }).sort((a, b) => a.name.localeCompare(b.name, "en"));
 }
 // Historical self-checks can disable candidate data generics. New baselines
 // record callable generic parameters from the released declarations, so each
 // side is specialized in the same runtime domain without migration approval.
 export function typeSource(baseline, migration = null, { currentHasGenericDataContracts = true } = {}) {
-  if (migration && !isApprovedMigration(migration)) throw new Error("Typed migration projections require validated approval");
+  if (migration && !isApprovedMigration(migration))
+    throw new Error("Typed migration projections require validated approval");
   const lines = [
     'import type * as Previous from "./previous/index";',
     'import * as Current from "./current/index";',
     'import type { ComponentPublicInstance, VNodeProps, AllowedComponentProps, ComponentCustomProps } from "vue";',
-    'type Assert<T extends true> = T;',
-    'type Assignable<A, B> = [A] extends [B] ? true : false;',
+    "type Assert<T extends true> = T;",
+    "type Assignable<A, B> = [A] extends [B] ? true : false;",
     // Conditional extraction + Omit can retain misleading object variance.
     // Check each field too, especially handler payloads; whole object assignment
     // still catches newly required fields that are absent from the old contract.
-    'type InputsAccepted<A, B> = Assignable<A, B> extends true ? { [K in keyof A]-?: K extends keyof B ? Assignable<A[K], B[K]> : false }[keyof A] extends true | never ? true : false : false;',
-    'type VueProps = VNodeProps & AllowedComponentProps & ComponentCustomProps;',
-    'type Instance<T> = T extends abstract new (...args: any[]) => infer I ? I : never;',
-    'type RawProps<T> = [Instance<T>] extends [never] ? T extends (...args: any[]) => any ? Parameters<T>[0] : never : Instance<T> extends { $props: infer P } ? P : never;',
-    'type Props<T> = Omit<RawProps<T>, keyof VueProps>;',
-    'type RuntimeDomain<P, Key extends keyof P, Value, Required extends boolean> = Omit<P, Key> & (Required extends true ? { [K in Key]-?: Value } : { [K in Key]?: Value });',
-    'type Named<T> = { [K in keyof T as string extends K ? never : number extends K ? never : symbol extends K ? never : K]: T[K] };',
-    'type RawSlots<T> = [Instance<T>] extends [never] ? T extends (props: any, context?: infer C, ...args: any[]) => any ? NonNullable<C> extends { slots: infer S } ? S : {} : {} : Instance<T> extends { $slots: infer S } ? S : {};',
-    'type Slots<T> = Named<RawSlots<T>>;',
-    'type CallableContext<T> = T extends (...args: any[]) => { __ctx?: infer C } ? NonNullable<C> : never;',
-    'type CallableExposed<T> = [CallableContext<T>] extends [never] ? {} : CallableContext<T> extends { expose: (exposed: infer E) => any } ? E : {};',
-    'type Exposed<T> = Omit<[Instance<T>] extends [never] ? CallableExposed<T> : Instance<T>, keyof ComponentPublicInstance | keyof RawProps<T>>;',
-    'type KeysPreserved<A, B> = Exclude<keyof A, keyof B> extends never ? true : false;',
-    'type AcceptedSlots<A, B> = { [K in keyof A]-?: K extends keyof B ? Assignable<A[K], B[K]> : false }[keyof A] extends true | never ? true : false;'
+    "type InputsAccepted<A, B> = Assignable<A, B> extends true ? { [K in keyof A]-?: K extends keyof B ? Assignable<A[K], B[K]> : false }[keyof A] extends true | never ? true : false : false;",
+    "type VueProps = VNodeProps & AllowedComponentProps & ComponentCustomProps;",
+    "type Instance<T> = T extends abstract new (...args: any[]) => infer I ? I : never;",
+    "type RawProps<T> = [Instance<T>] extends [never] ? T extends (...args: any[]) => any ? Parameters<T>[0] : never : Instance<T> extends { $props: infer P } ? P : never;",
+    "type Props<T> = Omit<RawProps<T>, keyof VueProps>;",
+    "type RuntimeDomain<P, Key extends keyof P, Value, Required extends boolean> = Omit<P, Key> & (Required extends true ? { [K in Key]-?: Value } : { [K in Key]?: Value });",
+    "type Named<T> = { [K in keyof T as string extends K ? never : number extends K ? never : symbol extends K ? never : K]: T[K] };",
+    "type RawSlots<T> = [Instance<T>] extends [never] ? T extends (props: any, context?: infer C, ...args: any[]) => any ? NonNullable<C> extends { slots: infer S } ? S : {} : {} : Instance<T> extends { $slots: infer S } ? S : {};",
+    "type Slots<T> = Named<RawSlots<T>>;",
+    "type CallableContext<T> = T extends (...args: any[]) => { __ctx?: infer C } ? NonNullable<C> : never;",
+    "type CallableExposed<T> = [CallableContext<T>] extends [never] ? {} : CallableContext<T> extends { expose: (exposed: infer E) => any } ? E : {};",
+    "type Exposed<T> = Omit<[Instance<T>] extends [never] ? CallableExposed<T> : Instance<T>, keyof ComponentPublicInstance | keyof RawProps<T>>;",
+    "type KeysPreserved<A, B> = Exclude<keyof A, keyof B> extends never ? true : false;",
+    "type AcceptedSlots<A, B> = { [K in keyof A]-?: K extends keyof B ? Assignable<A[K], B[K]> : false }[keyof A] extends true | never ? true : false;"
   ];
-  if (migration) lines.push(...migrationTypeHelpers(migration));
+  if (migration)
+    lines.push(...migrationTypeHelpers(migration));
   for (const name of baseline.components) {
     const previous = `typeof Previous.${name}`;
     const previousGeneric = baseline.declarationExports.some((item) => item.name === name && item.genericParameters > 0);
@@ -132,27 +155,30 @@ export function typeSource(baseline, migration = null, { currentHasGenericDataCo
       branches = ['"single"', '"range"'].map((mode) => ({
         old: `${previous}<${mode}>`, current: `typeof Current.${name}<${mode}>`, props: `Props<${previous}<${mode}>>`
       }));
-    } else if (currentHasGenericDataContracts && name === "WlTable") {
+    } else
+      if (currentHasGenericDataContracts && name === "WlTable") {
       // Generic erasure uses Row=object instead of the declared dictionary default.
-      branches[0].current += "<Current.WlTableRow>";
-      if (previousGeneric) {
-        branches[0].old += "<Previous.WlTableRow>";
-        branches[0].props = `Props<${branches[0].old}>`;
-      }
-    } else if (currentHasGenericDataContracts && name === "WlAutocomplete") {
-      branches = ["false", "true", "boolean"].map((mode, index) => {
-        const old = previousGeneric ? `${previous}<unknown, ${mode}>` : previous;
-        return { old, current: `typeof Current.${name}<unknown, ${mode}>`,
-          props: `RuntimeDomain<Props<${old}>, "multiple", ${mode}, ${index !== 0}>` };
-      });
-    } else if (currentHasGenericDataContracts && (name === "WlSelect" || name === "WlMultiSelect")) {
-      const resolver = `NonNullable<Props<${previous}>["optionValue"]>`;
-      branches = ["undefined", resolver].map((mode, index) => {
-        const old = previousGeneric ? `${previous}<unknown, ${mode}>` : previous;
-        return { old, current: `typeof Current.${name}<unknown, ${mode}>`,
-          props: `RuntimeDomain<Props<${old}>, "optionValue", ${mode}, ${index !== 0}>` };
-      });
-    }
+        branches[0].current += "<Current.WlTableRow>";
+        if (previousGeneric) {
+          branches[0].old += "<Previous.WlTableRow>";
+          branches[0].props = `Props<${branches[0].old}>`;
+        }
+      } else
+        if (currentHasGenericDataContracts && name === "WlAutocomplete") {
+          branches = ["false", "true", "boolean"].map((mode, index) => {
+            const old = previousGeneric ? `${previous}<unknown, ${mode}>` : previous;
+            return { old, current: `typeof Current.${name}<unknown, ${mode}>`,
+              props: `RuntimeDomain<Props<${old}>, "multiple", ${mode}, ${index !== 0}>` };
+          });
+        } else
+          if (currentHasGenericDataContracts && (name === "WlSelect" || name === "WlMultiSelect")) {
+            const resolver = `NonNullable<Props<${previous}>["optionValue"]>`;
+            branches = ["undefined", resolver].map((mode, index) => {
+              const old = previousGeneric ? `${previous}<unknown, ${mode}>` : previous;
+              return { old, current: `typeof Current.${name}<unknown, ${mode}>`,
+                props: `RuntimeDomain<Props<${old}>, "optionValue", ${mode}, ${index !== 0}>` };
+            });
+          }
     // Compare every matching runtime domain. The unapproved path specializes
     // only the mode prop; approved migrations replace exact reviewed fields.
     // Slot and exposed contracts are always compared with the released original.
@@ -160,7 +186,7 @@ export function typeSource(baseline, migration = null, { currentHasGenericDataCo
       const { old, current, props: originalProps } = branches[index];
       const props = migration ? migrationPropsProjection(migration, name, index, originalProps) : originalProps;
       const id = `${name}_${index}`;
-      lines.push(`type ${id}_propNames = Assert<KeysPreserved<Props<${old}>, Props<${current}>>>;`);
+      lines.push(`type ${id}_propNames = Assert<KeysPreserved<${props}, Props<${current}>>>;`);
       lines.push(`type ${id}_inputsAndHandlers = Assert<InputsAccepted<${props}, Props<${current}>>>;`);
       lines.push(`type ${id}_slotNames = Assert<KeysPreserved<Slots<${old}>, Slots<${current}>>>;`);
       lines.push(`type ${id}_slotPayloads = Assert<AcceptedSlots<Slots<${old}>, Slots<${current}>>>;`);
@@ -172,16 +198,21 @@ export function typeSource(baseline, migration = null, { currentHasGenericDataCo
   }
   for (const item of baseline.declarationExports) {
     if (item.type && !item.requiredParameters) {
-      lines.push(`type Public_${item.name} = Assert<Assignable<Previous.${item.name}, Current.${item.name}>>;`);
-      lines.push(`type Public_${item.name}_keys = Assert<KeysPreserved<Named<Previous.${item.name}>, Named<Current.${item.name}>>>;`);
+      const projection = migration
+        ? migrationPublicTypeProjection(migration, item.name, `Previous.${item.name}`)
+        : { name: item.name, previous: `Previous.${item.name}` };
+      lines.push(`type Public_${item.name} = Assert<Assignable<${projection.previous}, Current.${projection.name}>>;`);
+      lines.push(`type Public_${item.name}_keys = Assert<KeysPreserved<Named<${projection.previous}>, Named<Current.${projection.name}>>>;`);
     }
     if (item.callable) {
-      lines.push(`declare const args_${item.name}: Parameters<typeof Previous.${item.name}>;`);
+      const projection = migration
+        ? migrationCallableProjection(migration, item.name, `Parameters<typeof Previous.${item.name}>`, `ReturnType<typeof Previous.${item.name}>`)
+        : { args: `Parameters<typeof Previous.${item.name}>`, result: `ReturnType<typeof Previous.${item.name}>` };
+      lines.push(`declare const args_${item.name}: ${projection.args};`);
       lines.push(`Current.${item.name}(...args_${item.name});`);
       // Icon names are an extensible catalog: new names may appear in resolver output.
       if (item.name !== "resolveWlIconName") {
-        const previousReturn = migration && item.name === "createWlPt" ? "Record<string, unknown>" : `ReturnType<typeof Previous.${item.name}>`;
-        lines.push(`type Return_${item.name} = Assert<Assignable<ReturnType<typeof Current.${item.name}>, ${previousReturn}>>;`);
+        lines.push(`type Return_${item.name} = Assert<Assignable<ReturnType<typeof Current.${item.name}>, ${projection.result}>>;`);
       }
     }
   }
@@ -203,23 +234,28 @@ async function main() {
     return;
   }
   if (args[0] === "--capture-baseline") {
-    if (args.length !== 3 || !/^\d+\.\d+\.\d+$/.test(args[1])) throw new Error("Usage: node scripts/check-compatibility.mjs --capture-baseline <stable version> <built release checkout>");
+    if (args.length !== 3 || !/^\d+\.\d+\.\d+$/.test(args[1]))
+      throw new Error("Usage: node scripts/check-compatibility.mjs --capture-baseline <stable version> <built release checkout>");
     const previousBaselineDir = baselineDir;
     const previousBaseline = readJson(join(previousBaselineDir, "contract.json"));
     baselineDir = join(fixtureDir, `compatibility-${args[1]}`);
-    if (existsSync(baselineDir)) throw new Error(`A release baseline is immutable; refusing to overwrite ${args[1]}`);
+    if (existsSync(baselineDir))
+      throw new Error(`A release baseline is immutable; refusing to overwrite ${args[1]}`);
     const sourceRoot = resolve(args[2]);
     const releaseRef = `v${args[1]}`;
     const releaseCommit = execFileSync("git", ["rev-parse", `${releaseRef}^{commit}`], { cwd: sourceRoot, encoding: "utf8" }).trim();
     const sourceCommit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: sourceRoot, encoding: "utf8" }).trim();
-    if (sourceCommit !== releaseCommit) throw new Error("Release baseline source must be checked out at the exact release tag");
+    if (sourceCommit !== releaseCommit)
+      throw new Error("Release baseline source must be checked out at the exact release tag");
     // Pin API source and the reviewed policy used to freeze its consumer.
-    const publicPaths = ["packages/ui-kit/src", "packages/ui-kit/styles", "packages/ui-kit/themes", "packages/ui-kit/tokens", "packages/ui-kit/package.json", "packages/ui-kit/tests/fixtures", "scripts/migrations", "docs/migration-0.11.0.md"];
+    const publicPaths = ["packages/ui-kit/src", "packages/ui-kit/styles", "packages/ui-kit/themes", "packages/ui-kit/tokens", "packages/ui-kit/package.json", "packages/ui-kit/tests/fixtures", "scripts/migrations", "scripts/compatibility-migration.mjs", "scripts/check-compatibility.mjs", "docs/migration-0.11.0.md", "docs/migration.md", ".changeset/canonical-api-1-0.md"];
     execFileSync("git", ["diff", "--quiet", releaseRef, "--", ...publicPaths], { cwd: sourceRoot });
     const dirty = execFileSync("git", ["status", "--porcelain", "--untracked-files=all", "--", ...publicPaths], { cwd: sourceRoot, encoding: "utf8" }).trim();
-    if (dirty) throw new Error("Release baseline source must have no uncommitted public API files");
+    if (dirty)
+      throw new Error("Release baseline source must have no uncommitted public API files");
     const snapshot = await inventory(sourceRoot);
-    if (snapshot.version !== args[1]) throw new Error("Source checkout must match the released version");
+    if (snapshot.version !== args[1])
+      throw new Error("Source checkout must match the released version");
     const ts = createRequire(join(sourceRoot, "packages/ui-kit/package.json"))("typescript");
     snapshot.declarationExports = publicTypes(ts, join(sourceRoot, "packages/ui-kit/dist/index.d.ts"));
     const consumer = capturedConsumer(sourceRoot, previousBaselineDir, previousBaseline, snapshot.version);
@@ -239,25 +275,43 @@ async function main() {
     console.log(`Captured released ${snapshot.version}: ${snapshot.components.length} components, ${snapshot.tokens.length} tokens, ${snapshot.declarationExports.length} public declarations.`);
     return;
   }
-  if (args.length) throw new Error("Usage: node scripts/check-compatibility.mjs");
+  if (args.length)
+    throw new Error("Usage: node scripts/check-compatibility.mjs");
   const baseline = readJson(join(baselineDir, "contract.json"));
   const current = await inventory(repoRoot);
   const migration = loadMigrationPolicy(repoRoot, baselineDir, baseline, current.version);
   const errors = [];
   for (const [name, conditions] of Object.entries(baseline.exports)) {
-    if (!(name in current.exports)) errors.push(`package exports: removed ${name}`);
-    else subset(conditions, current.exports[name], `package exports ${name}`, errors);
+    if (!(name in current.exports))
+      errors.push(`package exports: removed ${name}`);
+    else
+      subset(conditions, current.exports[name], `package exports ${name}`, errors);
   }
-  for (const key of ["runtimeExports", "components", "classes", "tokens", "themes", "pt"]) subset(baseline[key], current[key], key, errors);
-  for (const [file, markers] of Object.entries(baseline.markers)) subset(markers, current.markers[file] ?? [], `data-wl ${file}`, errors);
+  const rawInventory = [];
+  for (const key of ["runtimeExports", "components", "classes", "tokens", "themes", "pt"]) {
+    subset(baseline[key], current[key], key, rawInventory);
+    const expected = migration ? migrationInventoryProjection(migration, key, baseline[key]) : baseline[key];
+    subset(expected, current[key], key, errors);
+  }
+  for (const [file, markers] of Object.entries(baseline.markers))
+    subset(markers, current.markers[file] ?? [], `data-wl ${file}`, errors);
   for (const [name, expected] of Object.entries(baseline.declarationHashes)) {
     const actual = createHash("sha256").update(readFileSync(join(baselineDir, "declarations", name), "utf8").replaceAll("\r\n", "\n")).digest("hex");
-    if (actual !== expected) errors.push(`Released declaration fixture changed: ${name}`);
+    if (actual !== expected)
+      errors.push(`Released declaration fixture changed: ${name}`);
   }
   const ts = require("typescript");
   const names = publicTypes(ts, join(kitDir, "dist/index.d.ts"));
-  subset(baseline.declarationExports.map((item) => item.name), names.map((item) => item.name), "declaration exports", errors);
-  if (errors.length) throw new Error(errors.join("\n"));
+  const previousNames = baseline.declarationExports.map((item) => item.name);
+  subset(previousNames, names.map((item) => item.name), "declaration exports", rawInventory);
+  const expectedNames = migration ? migrationInventoryProjection(migration, "declarationExports", previousNames) : previousNames;
+  subset(expectedNames, names.map((item) => item.name), "declaration exports", errors);
+  if (migration) {
+    console.log(`Released ${baseline.version} inventory differences before approved ${migration.targetMinor} migration (${migration.migrationNote}):`);
+    console.log(rawInventory.join("\n") || "Released inventory passed without migration.");
+  }
+  if (errors.length)
+    throw new Error(errors.join("\n"));
   const temporaryBase = join(kitDir, ".tmp");
   mkdirSync(temporaryBase, { recursive: true });
   const temporary = mkdtempSync(join(temporaryBase, "compatibility-"));
@@ -286,7 +340,8 @@ async function main() {
         return "";
       } catch (error) {
         // Infrastructure failures are not API migrations.
-        if (![1, 2].includes(error.status) || !error.stdout?.includes("error TS")) throw error;
+        if (![1, 2].includes(error.status) || !error.stdout?.includes("error TS"))
+          throw error;
         return error.stdout + (error.stderr ?? "");
       }
     };
@@ -299,20 +354,31 @@ async function main() {
       console.log(rawContract || "Released declaration contract passed without migration.");
       console.log(rawConsumer || "Released Vue consumer passed without migration.");
       const migratedContract = semanticCheck("migrated-contract", migration);
-      if (migratedContract) errors.push(migratedContract);
+      if (migratedContract)
+        errors.push(migratedContract);
       const migratedConsumerPath = join(temporary, "migrated-consumer.vue");
       writeFileSync(migratedConsumerPath, migration.migratedConsumer);
       const migratedConsumer = consumerCheck("migrated-consumer", migratedConsumerPath);
-      if (migratedConsumer) errors.push(`Approved ${migration.targetMinor} migrated consumer failed:\n${migratedConsumer}`);
+      if (migratedConsumer)
+        errors.push(`Approved ${migration.targetMinor} migrated consumer failed:\n${migratedConsumer}`);
     } else {
-      if (rawContract) errors.push(rawContract);
-      if (rawConsumer) errors.push(`Released ${baseline.version} Vue consumer failed:\n${rawConsumer}`);
+      if (rawContract)
+        errors.push(rawContract);
+      if (rawConsumer)
+        errors.push(`Released ${baseline.version} Vue consumer failed:\n${rawConsumer}`);
     }
-  } finally { removeTemporary(temporary); }
-  if (errors.length) throw new Error(errors.join("\n"));
+  } finally {
+    removeTemporary(temporary);
+  }
+  if (errors.length)
+    throw new Error(errors.join("\n"));
   const boundary = migration ? `Compatibility with ${baseline.version} after approved ${migration.targetMinor} migration passed` : `Compatibility with ${baseline.version} passed`;
   console.log(`${boundary}: ${baseline.components.length} components, public types/events/slots/models, ${baseline.classes.length} CSS classes, ${baseline.tokens.length} tokens, exports, data-wl and pt sections.`);
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  main().catch((error) => { console.error(error.message); process.exitCode = 1; });
+  main().catch((error) => {
+    console.error(error.message);
+
+    process.exitCode = 1;
+  });
 }

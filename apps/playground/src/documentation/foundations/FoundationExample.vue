@@ -1,23 +1,46 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
-const { t } = usePlaygroundI18n();
-import { computed, type Component } from "vue";
-import CodePanel from "../../design-system/CodePanel.vue";
-import { consumerSource } from "../../design-system/code";
-
 const props = defineProps<{ name: string; id: string; title: string; description: string; example: Component; source: string }>();
+const { t } = usePlaygroundI18n();
+import { type Component, computed } from "vue";
+import { consumerSource } from "../../design-system/code";
+import CodePanel from "../../design-system/CodePanel.vue";
+
 const consumerCode = computed(() => consumerSource(props.source));
 </script>
 
 <template>
-  <section class="docs-foundation-example wl-stack" data-space="lg" :data-docs-example="name" :aria-labelledby="id">
-    <div class="wl-stack" data-space="sm"><h2 :id="id" class="docs-foundation-anchor wl-text-heading">{{ title }}</h2><p class="wl-text-body wl-text-muted">{{ description }}</p></div>
-    <div class="docs-foundation-preview" data-testid="docs-foundation-preview" role="region" :aria-label="title + t('documentation.strings.s0001')"><component :is="example" /></div>
-    <div data-testid="docs-foundation-source"><CodePanel :source="consumerCode" :title="t('documentation.strings.s0002')" :expanded="true" /></div>
+  <section
+    class="docs-foundation-example wl-stack"
+    data-space="lg"
+    :data-docs-example="name"
+    :aria-labelledby="id"
+  >
+    <div class="wl-stack" data-space="sm">
+      <h2 :id="id" class="docs-foundation-anchor wl-text-heading">{{ title }}</h2>
+      <p class="wl-text-body wl-text-muted">{{ description }}</p>
+    </div>
+    <div
+      class="docs-foundation-preview"
+      data-testid="docs-foundation-preview"
+      role="region"
+      :aria-label="title + t('documentation.strings.s0001')"
+    ><component :is="example" /></div>
+    <div data-testid="docs-foundation-source">
+      <CodePanel :source="consumerCode" :title="t('documentation.strings.s0002')" :expanded="true" />
+    </div>
   </section>
 </template>
 
 <style>
 .docs-foundation-example { min-width: 0; }
-.docs-foundation-preview { min-width: 0; padding: var(--wl-space-lg); border: 1px solid var(--wl-border); border-radius: var(--wl-corner-surface); background: var(--wl-bg); color: var(--wl-text); overflow-wrap: anywhere; }
+.docs-foundation-preview {
+  min-width: 0;
+  padding: var(--wl-space-lg);
+  border: 1px solid var(--wl-border);
+  border-radius: var(--wl-corner-surface);
+  background: var(--wl-bg);
+  color: var(--wl-text);
+  overflow-wrap: anywhere;
+}
 </style>

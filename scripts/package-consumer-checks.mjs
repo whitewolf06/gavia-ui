@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { createServer } from "node:http";
 import { mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { createServer } from "node:http";
 import { dirname, extname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -13,7 +13,8 @@ export function preparePackedRuntimeFixtures(write) {
     ["fixture.mjs", "src/packed-fixture.mjs"], ["node-smoke.mjs", "node-smoke.mjs"],
     ["hydrate.mjs", "src/hydrate.mjs"], ["button-entry.mjs", "src/button-entry.mjs"],
     ["bundle-probe.mjs", "bundle-probe.mjs"]
-  ]) write(destination, readFileSync(join(fixturesDir, file), "utf8"));
+  ])
+    write(destination, readFileSync(join(fixturesDir, file), "utf8"));
   write("button.html", '<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="icon" href="data:,"><title>Button bundle probe</title></head><body><div id="app"></div><script type="module" src="/src/button-entry.mjs"></script></body></html>\n');
   write("src/PackedSmoke.vue", '<script setup>\nimport { PackedFixture } from "./packed-fixture.mjs";\n</script>\n<template><PackedFixture /></template>\n');
 }
@@ -40,11 +41,21 @@ export async function checkPackedBrowser(consumerDir, artifactLabel = "consumer"
     try {
       const url = new URL(request.url ?? "/", "http://localhost");
       const path = resolve(dist, "." + decodeURIComponent(url.pathname === "/" ? "/index.html" : url.pathname));
-      if (!path.startsWith(dist + sep)) { response.writeHead(403).end(); return; }
-      if (!statSync(path).isFile()) { response.writeHead(404).end(); return; }
+      if (!path.startsWith(dist + sep)) {
+        response.writeHead(403).end();
+
+        return;
+      }
+      if (!statSync(path).isFile()) {
+        response.writeHead(404).end();
+
+        return;
+      }
       response.writeHead(200, { "Content-Type": mime[extname(path)] ?? "application/octet-stream" });
       response.end(readFileSync(path));
-    } catch { response.writeHead(404).end(); }
+    } catch {
+      response.writeHead(404).end();
+    }
   });
   let browser;
   let browserServer;
@@ -55,7 +66,8 @@ export async function checkPackedBrowser(consumerDir, artifactLabel = "consumer"
   mkdirSync(evidenceDir, { recursive: true });
   assert.match(artifactLabel, /^[a-z0-9.-]+$/);
   const failurePath = (extension) => join(evidenceDir, artifactLabel + "-failure." + extension);
-  for (const extension of ["json", "html", "png"]) rmSync(failurePath(extension), { force: true });
+  for (const extension of ["json", "html", "png"])
+    rmSync(failurePath(extension), { force: true });
   try {
     await new Promise((resolveListen, reject) => {
       server.once("error", reject);
@@ -78,10 +90,12 @@ export async function checkPackedBrowser(consumerDir, artifactLabel = "consumer"
       failures.push({ stage, errors });
       page.on("pageerror", (error) => errors.push(error.message));
       page.on("console", (message) => {
-        if (["error", "warning"].includes(message.type())) errors.push(message.text() + " " + message.location().url);
+        if (["error", "warning"].includes(message.type()))
+          errors.push(message.text() + " " + message.location().url);
       });
       page.on("response", (response) => {
-        if (response.status() >= 400) errors.push(response.status() + " " + response.url());
+        if (response.status() >= 400)
+          errors.push(response.status() + " " + response.url());
       });
       page.setDefaultTimeout(5_000);
       await page.goto(origin, { waitUntil: "domcontentloaded", timeout: 20_000 });
@@ -92,11 +106,38 @@ export async function checkPackedBrowser(consumerDir, artifactLabel = "consumer"
         width: button.getBoundingClientRect().width
       })), 5_000, "Read consumer theme styles");
       assert.ok(styles.font.includes("Gavia Sans"), "Packed font CSS did not apply: " + styles.font);
-      await expect.poll(() => withinDeadline(
-        page.evaluate(() => document.fonts.check('14px "Gavia Sans"')), 5_000, "Read consumer font readiness"
-      ), {
-        timeout: 5_000, message: "Packed Gavia Sans font did not finish loading"
-      }).toBe(true);
+      const fonts = await withinDeadline(page.evaluate(async () => {
+        const font = '400 14px "Gavia Sans"';
+        const text = "Gavia Гавиа 0123456789";
+        const faces = await document.fonts.load(font, text);
+        const extended = await document.fonts.load(font, "Gavia Ĩ Қ a\u0323\u0301");
+        const core = await document.fonts.load('400 14px "Gavia Sans Core"', text);
+        const describe = (face) => ({ family: face.family, weight: face.weight, style: face.style,
+          status: face.status, unicodeRange: face.unicodeRange });
+        return {
+          ready: document.fonts.check(font, text),
+          extendedReady: document.fonts.check(font, "Gavia Ĩ Қ a\u0323\u0301"),
+          faces: faces.map(describe),
+          extended: extended.map(describe),
+          core: core.map(describe)
+        };
+      }), 5_000, "Load consumer Core and complete cluster fallback");
+      assert.equal(fonts.ready, true, "Packed Gavia Sans font did not finish loading");
+      assert.equal(fonts.faces.length, 1, "The canonical family must provide one complete face");
+      assert.equal(fonts.extendedReady, true, "Packed extended Gavia text did not finish loading");
+      assert.equal(fonts.extended.length, 1, "Extended text must resolve the complete canonical face");
+      assert.equal(fonts.core.length, 1, "The optional Core family must resolve ordinary text");
+      assert.equal(fonts.core[0].family, "Gavia Sans Core");
+      assert.equal(fonts.core[0].status, "loaded");
+      assert.equal(fonts.core[0].weight, "100 700");
+      assert.equal(fonts.core[0].style, "normal");
+      assert.notEqual(fonts.core[0].unicodeRange, fonts.faces[0].unicodeRange, "Core must retain its compact coverage");
+      for (const face of [...fonts.faces, ...fonts.extended]) {
+        assert.equal(face.family, "Gavia Sans");
+        assert.equal(face.weight, "100 700");
+        assert.equal(face.style, "normal");
+        assert.equal(face.status, "loaded");
+      }
       assert.notEqual(styles.background, "rgba(0, 0, 0, 0)", "Packed component/theme CSS did not apply");
       assert.ok(styles.width > 0);
       const overflow = await withinDeadline(
@@ -104,7 +145,9 @@ export async function checkPackedBrowser(consumerDir, artifactLabel = "consumer"
       );
       assert.equal(overflow, false, "Packed consumer overflows its viewport");
       assert.deepEqual(errors, [], "Packed browser consumer reported errors");
-      evidence.push({ viewport: viewport.width, render: true, input: true, select: true, click: true, fontAndTheme: true, errors });
+      evidence.push({
+        viewport: viewport.width, render: true, input: true, select: true, click: true, menuFocus: true, fontAndTheme: true, errors
+      });
       await withinDeadline(page.close(), 5_000, "Close consumer page");
     }
 
@@ -116,7 +159,8 @@ export async function checkPackedBrowser(consumerDir, artifactLabel = "consumer"
     failures.push({ stage, errors });
     page.on("pageerror", (error) => errors.push(error.message));
     page.on("console", (message) => {
-      if (["error", "warning"].includes(message.type())) errors.push(message.text() + " " + message.location().url);
+      if (["error", "warning"].includes(message.type()))
+        errors.push(message.text() + " " + message.location().url);
     });
     await page.goto(origin + "/ssr.html", { waitUntil: "domcontentloaded", timeout: 20_000 });
     await expect(page.locator("html")).toHaveAttribute("data-hydrated", "true");
@@ -134,8 +178,8 @@ export async function checkPackedBrowser(consumerDir, artifactLabel = "consumer"
     assert.deepEqual(hydration.afterIds, hydration.beforeIds, "Hydration changed generated IDs");
     await exercise(page, expect);
     assert.deepEqual(errors, [], "SSR hydration emitted errors or warnings");
-    evidence.push({ hydration: true, ...hydration, eventsAfterHydration: true, errors });
-    console.log("Packed browser consumer passed: desktop, mobile, SSR hydration with stable DOM/IDs and working events");
+    evidence.push({ hydration: true, ...hydration, eventsAfterHydration: true, menuFocus: true, errors });
+    console.log("Packed browser consumer passed: desktop, mobile, SSR hydration with stable DOM/IDs, working events and keyboard menu focus");
     return evidence;
   } catch (error) {
     const diagnosticErrors = [];
@@ -161,12 +205,14 @@ export async function checkPackedBrowser(consumerDir, artifactLabel = "consumer"
     server.closeAllConnections();
     await withinDeadline(new Promise((resolveClose) => server.close(resolveClose)), 5_000, "Close consumer server")
       .catch(() => {});
-    if (browser) await withinDeadline(browser.close(), 5_000, "Disconnect consumer browser").catch(() => {});
+    if (browser)
+      await withinDeadline(browser.close(), 5_000, "Disconnect consumer browser").catch(() => {});
     if (browserServer) {
       // This process belongs solely to this check, including on a failed assertion.
       const ownedProcess = browserServer.process();
       await withinDeadline(browserServer.close(), 5_000, "Close owned browser server").catch(() => {
-        if (ownedProcess.exitCode === null) ownedProcess.kill("SIGKILL");
+        if (ownedProcess.exitCode === null)
+          ownedProcess.kill("SIGKILL");
       });
     }
   }
@@ -187,8 +233,60 @@ async function exercise(page, expect) {
   await expect(select).toHaveAttribute("aria-expanded", "false");
   await fixture.getByRole("button", { name: "Увеличить", exact: true }).click();
   await expect(fixture.getByTestId("click-count")).toHaveText("1");
+  await exerciseMenus(page, expect, fixture);
 }
 
+async function exerciseMenus(page, expect, fixture) {
+  const contextTrigger = fixture.getByTestId("context-menu-trigger");
+  const contextMenu = page.getByRole("menu", { name: "Packed context actions", exact: true });
+  const popupTrigger = fixture.getByTestId("popup-menu-trigger");
+  const popupMenu = page.getByRole("menu", { name: "Packed popup actions", exact: true });
+  async function chooseNested(menu, trigger, kind, count) {
+    await expect(menu.getByRole("menuitem", { name: "First", exact: true })).toBeFocused();
+    await page.keyboard.press("ArrowDown");
+    const more = menu.getByRole("menuitem", { name: "More", exact: true });
+    await expect(more).toBeFocused();
+    await page.keyboard.press("ArrowRight");
+    const nested = page.getByRole("menuitem", { name: "Nested choice", exact: true });
+    await expect(nested).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(nested).toHaveCount(0);
+    await expect(more).toBeFocused();
+    await page.keyboard.press("ArrowRight");
+    await expect(nested).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(page.getByRole("menu")).toHaveCount(0);
+    await expect(trigger).toBeFocused();
+    await expect(fixture.getByTestId("menu-result")).toHaveText(kind + " nested");
+    await expect(fixture.getByTestId("menu-actions")).toHaveText(String(count));
+  }
+
+  await contextTrigger.focus();
+  await contextTrigger.press("Shift+F10");
+  await expect(contextMenu).toBeVisible();
+  await chooseNested(contextMenu, contextTrigger, "context", 1);
+  await contextTrigger.press("ContextMenu");
+  await expect(contextMenu.getByRole("menuitem", { name: "First", exact: true })).toBeFocused();
+  await page.keyboard.press("End");
+  await expect(contextMenu.getByRole("menuitem", { name: "Last", exact: true })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(contextMenu).toHaveCount(0);
+  await expect(contextTrigger).toBeFocused();
+
+  await popupTrigger.focus();
+  await popupTrigger.press("ArrowDown");
+  await expect(popupMenu).toBeVisible();
+  await chooseNested(popupMenu, popupTrigger, "popup", 2);
+  await popupTrigger.press("ArrowUp");
+  await expect(popupMenu.getByRole("menuitem", { name: "Last", exact: true })).toBeFocused();
+  await page.keyboard.press("Home");
+  await expect(popupMenu.getByRole("menuitem", { name: "First", exact: true })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(popupMenu).toHaveCount(0);
+  await expect(popupTrigger).toBeFocused();
+  await expect(fixture.getByTestId("menu-actions")).toHaveText("2");
+  await expect(fixture.getByTestId("menu-result")).toHaveText("popup nested");
+}
 
 async function withinDeadline(operation, timeout, label) {
   let timer;
@@ -196,5 +294,7 @@ async function withinDeadline(operation, timeout, label) {
     return await Promise.race([operation, new Promise((_, reject) => {
       timer = setTimeout(() => reject(new Error(label + " timed out after " + timeout + "ms")), timeout);
     })]);
-  } finally { clearTimeout(timer); }
+  } finally {
+    clearTimeout(timer);
+  }
 }

@@ -1,6 +1,6 @@
 import type { WlThemeName } from "../types";
 import type { WlDesignTokenDefinition } from "./types";
-import { wlDesignThemes, wlDesignTokens, type WlDesignTokenName } from "./tokens.generated";
+import { wlDesignThemes, type WlDesignTokenName, wlDesignTokens } from "./tokens.generated";
 
 export * from "./types";
 export * from "./tokens.generated";
@@ -29,5 +29,7 @@ export function resolveWlToken(name: WlDesignTokenName, theme: WlThemeName = "wh
 
 /** Returns a new, immutable snapshot suitable for editors and server rendering. */
 export function getWlThemeTokens(theme: WlThemeName = "white"): Readonly<Record<WlDesignTokenName, string>> {
-  return Object.freeze(Object.fromEntries(wlDesignTokens.map((token) => [token.name, resolveWlToken(token.name, theme)]))) as Readonly<Record<WlDesignTokenName, string>>;
+  return Object.freeze(
+    Object.fromEntries(wlDesignTokens.map((token) => [token.name, resolveWlToken(token.name, theme)]))
+  ) as Readonly<Record<WlDesignTokenName, string>>;
 }

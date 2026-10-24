@@ -1,7 +1,7 @@
-import { russianPlaygroundUrl } from "./playground-url";
-import { expect, test, type Locator, type Page } from "@playwright/test";
-import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 import { resolveWlToken, wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
+import { WL_ICON_NAMES } from "../../../packages/ui-kit/src/icons.generated";
+import { playgroundBasePath, playgroundRouteParams, russianPlaygroundUrl } from "./playground-url";
 import { chooseDropdownOption, chooseShowcaseTheme, copyCodePanel } from "./select-helpers";
 
 const errors = new WeakMap<Page, string[]>();
@@ -18,7 +18,9 @@ async function clipboardCapture(page: Page): Promise<void> {
   }));
 }
 async function noOverflow(page: Page, element: Locator): Promise<void> {
-  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+  await expect.poll(() => page.evaluate(() =>
+    document.documentElement.scrollWidth - document.documentElement.clientWidth
+  )).toBeLessThanOrEqual(1);
   await expect.poll(() => element.evaluate((node) => node.scrollWidth - node.clientWidth)).toBeLessThanOrEqual(1);
 }
 async function exactCodeCopy(page: Page, example: Locator): Promise<void> {
@@ -39,7 +41,10 @@ test.beforeEach(async ({ page }) => {
   errors.set(page, messages);
   page.on("pageerror", (error) => messages.push(error.message));
 });
-test.afterEach(async ({ page }) => { expect(errors.get(page), "Assets pages have no runtime errors").toEqual([]); });
+
+test.afterEach(async ({ page }) => {
+  expect(errors.get(page), "Assets pages have no runtime errors").toEqual([]);
+});
 
 test("icons expose the complete registry, real selection, sizes, accessibility and exact consumer code", async ({ page, baseURL }) => {
   await page.goto(russianPlaygroundUrl(docsUrl(baseURL, "icons")), { waitUntil: "domcontentloaded" });
@@ -146,7 +151,7 @@ test("asset routes and TOC remain usable at 320px with light and dark themes", a
   await docs.locator(".docs-menu-summary").click();
   await docs.getByRole("navigation", { name: "Оформление", exact: true }).getByRole("button", { name: "Цвета и темы", exact: true }).click();
   await expect(assets).toHaveAttribute("data-docs-section", "colors");
-  expect(new URL(page.url()).searchParams.get("section")).toBe("colors");
+  expect(playgroundRouteParams(new URL(page.url())).get("section")).toBe("colors");
   for (const theme of wlDesignThemes.filter((theme) => theme.name === "gavia" || theme.name === "gavia-dark" || theme.name === "white" || theme.name === "graphite")) {
     await chooseShowcaseTheme(page, theme.label);
     await expect(assets).toHaveAttribute("data-docs-theme", theme.name);
@@ -160,7 +165,7 @@ test("asset routes and TOC remain usable at 320px with light and dark themes", a
   expect(new URL(page.url()).hash).toBe("#docs-colors-borders");
   await page.reload();
   await expect(assets.locator("#docs-colors-borders")).toBeInViewport();
-  expect(new URL(page.url()).pathname).toBe(new URL(baseURL ?? "http://127.0.0.1:4173/").pathname);
+  expect(playgroundBasePath(new URL(page.url()))).toBe(new URL(baseURL ?? "http://127.0.0.1:4173/").pathname);
   await noOverflow(page, docs);
   await docs.locator(".docs-menu-summary").click();
   const overview = docs.getByRole("navigation", { name: "Разделы начала работы", exact: true });
@@ -171,10 +176,10 @@ test("asset routes and TOC remain usable at 320px with light and dark themes", a
   await expect(docs.locator("#docs-tokens")).toBeInViewport();
   await expect(docs.locator(".docs-menu")).toHaveJSProperty("open", false);
   const overviewUrl = new URL(page.url());
-  expect(overviewUrl.pathname).toBe(new URL(baseURL ?? "http://127.0.0.1:4173/").pathname);
-  expect(overviewUrl.searchParams.get("view")).toBe("docs");
-  expect(overviewUrl.searchParams.get("component")).toBeNull();
-  expect(overviewUrl.searchParams.get("section")).toBeNull();
+  expect(playgroundBasePath(overviewUrl)).toBe(new URL(baseURL ?? "http://127.0.0.1:4173/").pathname);
+  expect(playgroundRouteParams(overviewUrl).get("view")).toBe("docs");
+  expect(playgroundRouteParams(overviewUrl).get("component")).toBeNull();
+  expect(playgroundRouteParams(overviewUrl).get("section")).toBeNull();
   expect(overviewUrl.hash).toBe("#docs-tokens");
   await noOverflow(page, docs);
 });

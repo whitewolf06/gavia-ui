@@ -15,8 +15,8 @@ export function validateIcon(file, source) {
   if (document.querySelector("parsererror")) throw new Error(file + ": malformed SVG");
   if (document.doctype) throw new Error(file + ": DOCTYPE is forbidden");
   const root = document.documentElement;
-  if (root.localName !== "svg" || root.namespaceURI !== "http://www.w3.org/2000/svg" ||
-      root.getAttribute("viewBox") !== "0 0 24 24") {
+  if (root.localName !== "svg" || root.namespaceURI !== "http://www.w3.org/2000/svg"
+    || root.getAttribute("viewBox") !== "0 0 24 24") {
     throw new Error(file + ": expected svg with viewBox 0 0 24 24");
   }
   for (const attribute of root.attributes) {

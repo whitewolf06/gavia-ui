@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
-const { t } = usePlaygroundI18n();
-import { WlPill } from "../../../../../packages/ui-kit/src";
 defineProps<{ preview?: Record<string, unknown> }>();
-
+const { t } = usePlaygroundI18n();
+import { WlPill } from "gavia-ui";
 </script>
 
 <template>

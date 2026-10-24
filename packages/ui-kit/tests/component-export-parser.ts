@@ -1,8 +1,55 @@
 import ts from "typescript";
+import { parse as parseSfc } from "vue/compiler-sfc";
 
 export interface ComponentExport {
   name: string;
   file: string;
+}
+
+/** Read real template attributes; a bound expression requires a literal fallback. */
+export function parseComponentMarkers(source: string): string[] {
+  const ast = parseSfc(source).descriptor.template?.ast;
+  if (!ast) throw new Error("Component template is required");
+  const result: string[] = [];
+  function visit(node: NonNullable<typeof ast>["children"][number]): void {
+    if (node.type !== 1) return;
+    for (const prop of node.props) {
+      if (prop.type === 6 && prop.name === "data-wl") result.push(prop.value?.content ?? "");
+      if (prop.type !== 7 || prop.name !== "bind" || prop.arg?.type !== 4
+        || prop.arg.content !== "data-wl") continue;
+      if (prop.exp?.type !== 4) throw new Error("Bound data-wl requires an expression");
+      const script = ts.createSourceFile("marker.ts", `(${prop.exp.content})`, ts.ScriptTarget.Latest, true);
+      const statement = script.statements[0];
+      if (!statement || !ts.isExpressionStatement(statement)) throw new Error("Invalid data-wl expression");
+      let expression = statement.expression;
+      while (ts.isParenthesizedExpression(expression)) expression = expression.expression;
+      while (ts.isBinaryExpression(expression) && expression.operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken) {
+        expression = expression.right;
+      }
+      if (!ts.isStringLiteralLike(expression)) throw new Error("Bound data-wl requires a stable literal fallback");
+      result.push(expression.text);
+    }
+    node.children.forEach(visit);
+  }
+  ast.children.forEach(visit);
+  return result;
+}
+
+/** Vue generates update events for the exact names declared by defineModel. */
+export function parseComponentModels(source: string): Set<string> {
+  const script = parseSfc(source).descriptor.scriptSetup?.content;
+  if (script === undefined) throw new Error("Component setup script is required");
+  const ast = ts.createSourceFile("models.ts", script, ts.ScriptTarget.Latest, true);
+  const names = new Set<string>();
+  function visit(node: ts.Node): void {
+    if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === "defineModel") {
+      const argument = node.arguments[0];
+      names.add(argument && ts.isStringLiteralLike(argument) ? argument.text : "modelValue");
+    }
+    ts.forEachChild(node, visit);
+  }
+  visit(ast);
+  return names;
 }
 
 /** Resolve the supported barrel forms without accepting rendering wrappers as type-only facades. */

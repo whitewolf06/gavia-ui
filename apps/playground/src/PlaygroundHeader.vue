@@ -1,18 +1,17 @@
 <script setup lang="ts">
+import type { WlIconName } from "gavia-ui";
+import type { WlMenuExpose, WlMenuItem } from "gavia-ui";
+import type { WlThemeName } from "gavia-ui";
+import { WlButton } from "gavia-ui";
+import { WlDrawer } from "gavia-ui";
+import { WlIcon } from "gavia-ui";
+import { WlMenu } from "gavia-ui";
+import { WlSelect } from "gavia-ui";
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { usePlaygroundI18n, type PlaygroundLocale } from "./i18n";
-import WlButton from "../../../packages/ui-kit/src/components/WlButton.vue";
-import WlDrawer from "../../../packages/ui-kit/src/components/WlDrawer.vue";
-import WlIcon from "../../../packages/ui-kit/src/components/WlIcon.vue";
-import WlMenu from "../../../packages/ui-kit/src/components/WlMenu.vue";
-import WlSelect from "../../../packages/ui-kit/src/components/WlSelect.vue";
-import type { WlIconName } from "../../../packages/ui-kit/src/icons.generated";
-import type { WlMenuExpose, WlMenuItem } from "../../../packages/ui-kit/src/navigation-types";
-import type { WlThemeName } from "../../../packages/ui-kit/src/types";
-import type { PlaygroundView, PlaygroundRoute } from "./navigation";
-import { isPlaygroundThemePreference, withPlaygroundTheme, type PlaygroundThemePreference } from "./themes";
+import type { PlaygroundRoute, PlaygroundView } from "./navigation";
+import { type PlaygroundLocale, usePlaygroundI18n } from "./i18n";
+import { isPlaygroundThemePreference, type PlaygroundThemePreference, withPlaygroundTheme } from "./themes";
 
-const { t, locale } = usePlaygroundI18n();
 const props = defineProps<{
   activeView: PlaygroundView;
   route?: PlaygroundRoute;
@@ -28,6 +27,7 @@ const emit = defineEmits<{
   search: [];
   locale: [locale: PlaygroundLocale];
 }>();
+const { t, locale } = usePlaygroundI18n();
 const sections = computed(() => [
   { view: "home", label: t("shell.PlaygroundHeader.text122"), icon: "home" },
   { view: "docs", label: t("shell.PlaygroundHeader.text123"), icon: "book" },
@@ -61,7 +61,9 @@ function rememberNavigationFocus(event: FocusEvent): void {
   const target = event.target instanceof HTMLElement ? event.target : null;
   if (target === document.body) return;
   lastNavigationFocus = target && (desktopNavigation.value?.contains(target)
-    || headerElement.value?.querySelector(".pg-menu-trigger")?.contains(target)) ? target : null;
+    || headerElement.value?.querySelector(".pg-menu-trigger")?.contains(target))
+    ? target
+    : null;
 }
 function clearNavigationFocus(event: PointerEvent): void {
   if (!(event.target instanceof Node) || !lastNavigationFocus?.contains(event.target)) lastNavigationFocus = null;
@@ -170,8 +172,13 @@ function selectTheme(value: unknown): void {
 function selectLocale(value: unknown): void {
   if (value === "en" || value === "ru") emit("locale", value);
 }
-watch(() => props.activeView, () => { menuVisible.value = false; closeOverflow(); });
-watch(() => [props.theme, props.themePreference, locale.value], () => { void nextTick(scheduleMeasurement); });
+watch(() => props.activeView, () => {
+  menuVisible.value = false;
+  closeOverflow();
+});
+watch(() => [props.theme, props.themePreference, locale.value], () => {
+  void nextTick(scheduleMeasurement);
+});
 onMounted(() => {
   mounted = true;
   compactViewport = window.matchMedia("(max-width: 760px)");
@@ -198,64 +205,150 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="headerElement" class="pg-header-inner wl-container">
-    <a class="pg-brand" :href="withPlaygroundTheme('?', themePreference)" :aria-label="t('shell.PlaygroundHeader.text127')" @click.prevent="navigate('home')">
-      <span class="pg-logo pg-logo-mask" aria-hidden="true" :style="{ maskImage: 'url(' + logo + ')', WebkitMaskImage: 'url(' + logo + ')' }" />
+    <a
+      class="pg-brand"
+      :href="withPlaygroundTheme('?', themePreference)"
+      :aria-label="t('shell.PlaygroundHeader.text127')"
+      @click.prevent="navigate('home')"
+    >
+      <span
+        class="pg-logo pg-logo-mask"
+        aria-hidden="true"
+        :style="{ maskImage: 'url(' + logo + ')', WebkitMaskImage: 'url(' + logo + ')' }"
+      ></span>
       <b class="pg-title">Gavia UI</b>
       <span class="pg-kit-version" :aria-label="t('shell.PlaygroundHeader.text128') + version">v{{ version }}</span>
     </a>
     <nav ref="desktopNavigation" class="pg-views" :aria-label="t('shell.PlaygroundHeader.text129')">
-      <WlButton v-for="section in visibleSections" :key="section.view" size="sm" variant="ghost"
-        :aria-current="activeView === section.view ? 'page' : undefined" @click="navigate(section.view)">
+      <WlButton
+        v-for="section in visibleSections"
+        :key="section.view"
+        size="sm"
+        variant="ghost"
+        :aria-current="activeView === section.view ? 'page' : undefined"
+        @click="navigate(section.view)"
+      >
         <template #icon><WlIcon :name="section.icon" :size="14" /></template>{{ section.label }}
       </WlButton>
-      <WlButton v-if="overflowSections.length" class="pg-overflow-trigger" size="sm" variant="ghost"
-        :aria-label="t('shell.header.moreSections')" :aria-current="overflowCurrent ? 'page' : undefined"
-        aria-haspopup="menu" aria-controls="pg-overflow-navigation" :aria-expanded="overflowOpen"
-        @click="openOverflow" @keydown.down.prevent="openOverflow">
+      <WlButton
+        v-if="overflowSections.length"
+        class="pg-overflow-trigger"
+        size="sm"
+        variant="ghost"
+        :aria-label="t('shell.header.moreSections')"
+        :aria-current="overflowCurrent ? 'page' : undefined"
+        aria-haspopup="menu"
+        aria-controls="pg-overflow-navigation"
+        :aria-expanded="overflowOpen"
+        @click="openOverflow"
+        @keydown.down.prevent="openOverflow"
+      >
         {{ t('shell.header.more') }}<WlIcon name="chevron-down" :size="14" />
       </WlButton>
     </nav>
     <div class="pg-actions">
       <div class="pg-utility-controls">
-        <WlButton class="pg-search" size="sm" variant="secondary" :aria-label="t('shell.PlaygroundHeader.text130')"
-          :title="t('shell.PlaygroundHeader.text131')" @click="emit('search')">
-          <template #icon><WlIcon name="search" :size="16" /></template><span class="pg-search-text">{{ t('shell.PlaygroundHeader.text132') }}</span>
+        <WlButton
+          class="pg-search"
+          size="sm"
+          variant="secondary"
+          :aria-label="t('shell.PlaygroundHeader.text130')"
+          :title="t('shell.PlaygroundHeader.text131')"
+          @click="emit('search')"
+        >
+          <template #icon><WlIcon name="search" :size="16" /></template>
+          <span class="pg-search-text">{{ t('shell.PlaygroundHeader.text132') }}</span>
         </WlButton>
         <div class="pg-theme-control">
-          <WlSelect class="pg-theme" size="sm" :model-value="themePreference" :options="themeOptions"
-            option-label="label" option-value="value" :aria-label="t('shell.PlaygroundHeader.text133')"
-            :title="t('shell.PlaygroundHeader.text134') + (themePreference === 'system' ? t('shell.theme.system') : theme)" data-testid="pg-theme-selector" @update:model-value="selectTheme" />
+          <WlSelect
+            class="pg-theme"
+            size="sm"
+            :model-value="themePreference"
+            :options="themeOptions"
+            option-label="label"
+            option-value="value"
+            :aria-label="t('shell.PlaygroundHeader.text133')"
+            :title="t('shell.PlaygroundHeader.text134') + (themePreference === 'system' ? t('shell.theme.system') : theme)"
+            data-testid="pg-theme-selector"
+            @update:model-value="selectTheme"
+          />
           <WlIcon class="pg-theme-mobile-icon" name="sliders-h" :size="18" />
         </div>
       </div>
-      <WlSelect class="pg-language" size="sm" :model-value="locale" :options="languageOptions"
-        option-label="label" option-value="value" :aria-label="t('shell.language')" data-testid="pg-language-selector"
-        @update:model-value="selectLocale" />
+      <WlSelect
+        class="pg-language"
+        size="sm"
+        :model-value="locale"
+        :options="languageOptions"
+        option-label="label"
+        option-value="value"
+        :aria-label="t('shell.language')"
+        data-testid="pg-language-selector"
+        @update:model-value="selectLocale"
+      />
     </div>
-    <WlButton class="pg-menu-trigger" size="sm" variant="secondary" :aria-label="t('shell.PlaygroundHeader.text135')"
-      :title="t('shell.PlaygroundHeader.text136')" aria-haspopup="dialog" aria-controls="pg-adaptive-navigation" :aria-expanded="menuVisible"
-      @click="openMenu"><template #icon><WlIcon name="bars" :size="18" /></template></WlButton>
+    <WlButton
+      class="pg-menu-trigger"
+      size="sm"
+      variant="secondary"
+      :aria-label="t('shell.PlaygroundHeader.text135')"
+      :title="t('shell.PlaygroundHeader.text136')"
+      aria-haspopup="dialog"
+      aria-controls="pg-adaptive-navigation"
+      :aria-expanded="menuVisible"
+      @click="openMenu"
+    ><template #icon><WlIcon name="bars" :size="18" /></template></WlButton>
     <div class="pg-measure-clip" aria-hidden="true" inert>
       <div ref="measurement" class="pg-nav-measure">
-        <WlButton v-for="section in sections" :key="section.view" size="sm" variant="ghost" data-nav-measure="section" tabindex="-1">
+        <WlButton
+          v-for="section in sections"
+          :key="section.view"
+          size="sm"
+          variant="ghost"
+          data-nav-measure="section"
+          tabindex="-1"
+        >
           <template #icon><WlIcon :name="section.icon" :size="14" /></template>{{ section.label }}
         </WlButton>
-        <WlButton class="pg-overflow-trigger" size="sm" variant="ghost" data-nav-measure="overflow" tabindex="-1">
+        <WlButton
+          class="pg-overflow-trigger"
+          size="sm"
+          variant="ghost"
+          data-nav-measure="overflow"
+          tabindex="-1"
+        >
           {{ t('shell.header.more') }}<WlIcon name="chevron-down" :size="14" />
         </WlButton>
       </div>
     </div>
   </div>
-  <WlMenu :key="visibleCount" ref="overflowMenu" class="pg-overflow-menu" popup :items="overflowItems"
+  <WlMenu
+    :key="visibleCount"
+    ref="overflowMenu"
+    class="pg-overflow-menu"
+    popup
+    :items="overflowItems"
     :aria-label="t('shell.PlaygroundHeader.text138')"
     :pt="{ list: { id: 'pg-overflow-navigation' }, itemLink: { onKeydown: activateMenuItem } }"
-    @open="focusOverflow" @close="overflowOpen = false" />
-  <WlDrawer v-model:visible="menuVisible" :header="t('shell.PlaygroundHeader.text138')" position="right" @close="restoreMenuFocus"
-    :pt="{ root: { id: 'pg-adaptive-navigation', style: { width: 'min(360px, 100%)' } } }">
+    @open="focusOverflow"
+    @close="overflowOpen = false"
+  />
+  <WlDrawer
+    v-model:visible="menuVisible"
+    :header="t('shell.PlaygroundHeader.text138')"
+    position="right"
+    :pt="{ root: { id: 'pg-adaptive-navigation', style: { width: 'min(360px, 100%)' } } }"
+    @close="restoreMenuFocus"
+  >
     <nav class="pg-menu-links" :aria-label="t('shell.PlaygroundHeader.text139')">
-      <WlButton v-for="section in sections" :key="section.view" block
+      <WlButton
+        v-for="section in sections"
+        :key="section.view"
+        block
         :variant="activeView === section.view ? 'soft' : 'ghost'"
-        :aria-current="activeView === section.view ? 'page' : undefined" @click="navigate(section.view)">
+        :aria-current="activeView === section.view ? 'page' : undefined"
+        @click="navigate(section.view)"
+      >
         <template #icon><WlIcon :name="section.icon" :size="18" /></template>{{ section.label }}
       </WlButton>
     </nav>
@@ -264,13 +357,47 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-.pg-header-inner { max-width: 1440px; min-height: 64px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--wl-space-md); padding-block: var(--wl-space-md); }
-.pg-brand { color: var(--wl-text); text-decoration: none; border-radius: var(--wl-radius-sm); display: inline-flex; justify-self: start; align-items: center; gap: 8px; white-space: nowrap; }
+.pg-header-inner {
+  max-width: 1440px;
+  min-height: 64px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--wl-space-md);
+  padding-block: var(--wl-space-md);
+}
+.pg-brand {
+  color: var(--wl-text);
+  text-decoration: none;
+  border-radius: var(--wl-radius-sm);
+  display: inline-flex;
+  justify-self: start;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
 .pg-brand:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 4px; }
 .pg-logo { width: 36px; height: 36px; display: block; flex: none; }
 .pg-logo-mask { background-color: var(--wl-action-primary-bg); mask-size: contain; mask-repeat: no-repeat; mask-position: center; }
-.pg-title { display: block; font-family: var(--wl-font-heading); font-size: 20px; font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
-.pg-kit-version { display: block; flex: none; padding: 3px 6px; border: 1px solid var(--wl-border); border-radius: var(--wl-radius-sm); color: var(--wl-text-2); font-family: var(--wl-mono); font-size: 11px; line-height: 1; }
+.pg-title {
+  display: block;
+  font-family: var(--wl-font-heading);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.pg-kit-version {
+  display: block;
+  flex: none;
+  padding: 3px 6px;
+  border: 1px solid var(--wl-border);
+  border-radius: var(--wl-radius-sm);
+  color: var(--wl-text-2);
+  font-family: var(--wl-mono);
+  font-size: 11px;
+  line-height: 1;
+}
 .pg-views, .pg-nav-measure { display: flex; flex-wrap: nowrap; align-items: center; gap: 4px; }
 .pg-views { justify-content: center; min-width: 0; }
 .pg-views :deep(.wl-btn), .pg-nav-measure :deep(.wl-btn) { flex: none; white-space: nowrap; }

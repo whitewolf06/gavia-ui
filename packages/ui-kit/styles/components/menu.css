@@ -1,0 +1,33 @@
+@layer wl.components {
+  .wl-menu--submenu {
+    z-index: var(--wl-overlay-z);
+  }
+
+  .wl-menu__check {
+    flex: none;
+    color: var(--wl-accent);
+  }
+
+  .wl-menu__check--hidden {
+    visibility: hidden;
+  }
+
+  .wl-menu__submenu-icon {
+    flex: none;
+    margin-inline-start: auto;
+    color: var(--wl-text-3);
+  }
+
+  .wl-context-menu {
+    border-radius: var(--wl-radius-sm);
+  }
+
+  .wl-context-menu:focus-visible {
+    outline: 2px solid var(--wl-focus-color);
+    outline-offset: 2px;
+  }
+
+  .wl-context-menu__panel {
+    z-index: var(--wl-overlay-z);
+  }
+}

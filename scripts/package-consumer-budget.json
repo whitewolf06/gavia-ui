@@ -1,6 +1,6 @@
 {
-  "description": "WlButton-only production JS, including Vue. CSS/fonts excluded. Raise limits only after inspecting the Rollup evidence; unused components and editor metadata must stay removed.",
-  "baseline": {
+  "description": "Installed WlButton production graph, including every shared kit chunk and Vue. CSS/fonts excluded. Required link locale helpers are accounted for; unused components and editor catalogs remain prohibited.",
+  "previousMeasurement": {
     "vueVersion": "3.5.40",
     "viteVersion": "6.4.3",
     "jsGzipBytes": 27629,
@@ -10,7 +10,46 @@
       "createWlPt"
     ]
   },
-  "maxJsGzipBytes": 30500,
-  "maxKitRenderedBytes": 13500
+  "baseline": {
+    "vueVersion": "3.5.40",
+    "viteVersion": "6.4.3",
+    "nodeVersion": "24.19.0",
+    "measuredAt": "2026-10-17T22:38:11.304Z",
+    "packageVersion": "0.12.1",
+    "archiveSha256": "29aee93e8efa2a342bc4dd85a09170f86bc9a9f6b5f4386c7408958df3a4594d",
+    "jsGzipBytes": 33093,
+    "kitRenderedBytes": 27145,
+    "retainedKitExports": [
+      "WlButton",
+      "createWlPt",
+      "normalizeWlLocale",
+      "wlLocaleRu"
+    ]
+  },
+  "measurements": [
+    {
+      "vueVersion": "3.4.0",
+      "typescriptVersion": "5.4.5",
+      "jsGzipBytes": 29250,
+      "kitRenderedBytes": 27145
+    },
+    {
+      "vueVersion": "3.4.38",
+      "typescriptVersion": "5.8.3",
+      "jsGzipBytes": 30090,
+      "kitRenderedBytes": 27145
+    },
+    {
+      "vueVersion": "3.5.40",
+      "typescriptVersion": "5.8.3",
+      "jsGzipBytes": 33093,
+      "kitRenderedBytes": 27145
+    }
+  ],
+  "margin": 0.05,
+  "expectedEntryExports": ["WlButton"],
+  "toolchainMigrationNote": "Vite 8/Rolldown splits required helpers into shared package chunks, so only WlButton remains in the root entry's renderedExports. The probe still sums every retained package chunk, rejects unused component render markers across all JS and enforces the unchanged byte limits below. Historical baseline export names describe Vite 6, not the current chunk layout. Current measurements are saved under .tmp/package-verification.",
+  "maxJsGzipBytes": 34748,
+  "maxKitRenderedBytes": 28503,
+  "measurementNote": "Fresh installed-archive measurements use Node 24.19.0, pnpm 10.34.5 and Vite 6.4.3 across Vue 3.4.0/3.4.38/3.5.40. Each final limit is ceil(maximum measured bytes * 1.05). The raw kit metric sums every retained package chunk, including shared helpers; the earlier index-only 11597-byte number is not comparable. Tree-shaking export and unused-render-marker assertions remain unchanged. Probe records are saved separately under .tmp/verification-2026-10-18/consumer-*-button-probe.json."
 }
-

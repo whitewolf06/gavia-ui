@@ -1,4 +1,4 @@
-import { wlManifest, type WlComponentManifest } from "../../../../packages/ui-kit/src/manifest";
+import { type WlComponentManifest, wlManifest } from "gavia-ui";
 import { translateDocumentationText } from "./localize";
 
 const entries = new WeakMap<object, object>();

@@ -1,5 +1,5 @@
+import type { WlThemeName } from "gavia-ui";
 import type { InjectionKey, Ref } from "vue";
-import type { WlThemeName } from "../../../packages/ui-kit/src/types";
 import type { PlaygroundRoute } from "./navigation";
 import type { PlaygroundThemePreference } from "./themes";
 

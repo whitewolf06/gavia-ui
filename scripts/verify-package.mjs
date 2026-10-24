@@ -1,11 +1,13 @@
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, mkdtempSync, mkdirSync, readFileSync, readdirSync, realpathSync, rmSync, statSync, symlinkSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, symlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { consumerSource } from "./example-source.mjs";
 import { consumerManager } from "./consumer-manager.mjs";
-import { preparePackedRuntimeFixtures, checkPackedNode, checkPackedButtonBundle, checkPackedBrowser } from "./package-consumer-checks.mjs";
+import { consumerSource } from "./example-source.mjs";
+import { checkPackedBrowser, checkPackedButtonBundle, checkPackedNode, preparePackedRuntimeFixtures } from "./package-consumer-checks.mjs";
+import { packageDocumentation } from "./package-docs.mjs";
+import { assertPureUtilityEntry } from "./utility-boundary.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(scriptDir, "..");
@@ -20,7 +22,7 @@ for (let index = 0; index < args.length; index += 1) {
   if (args[index] === "--browser" && !browserRequested) browserRequested = true;
   else if (args[index] === "--archive" && !requestedArchive && args[index + 1]?.trim()) requestedArchive = resolve(args[++index]);
   else if (args[index] === "--manager" && ["pnpm", "npm", "bun"].includes(args[index + 1])) selectedManager = args[++index];
-  else if (/^--manager=(pnpm|npm|bun)$/.test(args[index])) selectedManager = args[index].split("=")[1];
+  else if (/^--manager=(?:pnpm|npm|bun)$/.test(args[index])) selectedManager = args[index].split("=")[1];
   else if (args[index] === "--vue" && /^\d+\.\d+\.\d+$/.test(args[index + 1] ?? "")) requestedVue = args[++index];
   else if (args[index] === "--typescript" && /^\d+\.\d+\.\d+$/.test(args[index + 1] ?? "")) requestedTypescript = args[++index];
   else throw new Error("Usage: pnpm verify:package [--archive <path>] [--browser] [--manager=pnpm|npm|bun] [--vue <exact-version>] [--typescript <exact-version>]");
@@ -39,9 +41,15 @@ const consumerTool = selectedManager === "pnpm" ? undefined : consumerManager(se
 const packageJson = JSON.parse(readFileSync(join(uiKitDir, "package.json"), "utf8"));
 const workspaceVueVersion = JSON.parse(readFileSync(join(uiKitDir, "node_modules", "vue", "package.json"), "utf8")).version;
 const registryVueVersion = requestedVue ?? (selectedManager === "bun" ? workspaceVueVersion : undefined);
+// Language-tools 3 requires compiler internals absent in TypeScript 5.4.
+// Exercise the supported consumer minimum with its compatible pinned runner.
+const minimumCompiler = requestedTypescript?.startsWith("5.4.") === true;
 const temporaryBase = join(repoRoot, ".tmp");
 mkdirSync(temporaryBase, { recursive: true });
 const temporaryRoot = mkdtempSync(join(temporaryBase, "gavia-ui-consumer-"));
+// Validate the immutable cleanup target before work starts, preserving the original
+// failure if a consumer check later throws. Cleanup never computes another path.
+if (dirname(temporaryRoot) !== temporaryBase) throw new Error("Consumer must stay inside the task temporary directory");
 const packDir = join(temporaryRoot, "package");
 const consumerDir = join(temporaryRoot, "consumer");
 
@@ -97,12 +105,14 @@ try {
       "gavia-ui": `file:${archivePath.replaceAll("\\", "/")}`,
       vue: registryVueVersion ?? localPackage("vue")
     },
-    devDependencies: selectedManager === "bun" ? (requestedTypescript ? { typescript: requestedTypescript } : undefined) : {
-      "@vitejs/plugin-vue": localPackage("@vitejs/plugin-vue"),
-      typescript: requestedTypescript ?? localPackage("typescript"),
-      vite: localPackage("vite"),
-      "vue-tsc": localPackage("vue-tsc")
-    }
+    devDependencies: selectedManager === "bun"
+      ? (requestedTypescript ? { typescript: requestedTypescript } : undefined)
+      : {
+          "@vitejs/plugin-vue": localPackage("@vitejs/plugin-vue"),
+          typescript: requestedTypescript ?? localPackage("typescript"),
+          vite: localPackage("vite"),
+          "vue-tsc": minimumCompiler ? "2.2.12" : localPackage("vue-tsc")
+        }
   };
 
   write("package.json", `${JSON.stringify(consumerPackage, null, 2)}\n`);
@@ -135,7 +145,7 @@ try {
   );
   write(
     "vite.config.ts",
-    `import { defineConfig } from "vite";\nimport vue from "@vitejs/plugin-vue";\nimport { resolve } from "node:path";\n\nexport default defineConfig({ plugins: [vue()], resolve: { dedupe: ["vue"] }, build: { rollupOptions: { input: { consumer: resolve("index.html"), hydration: resolve("ssr.html") } } } });\n`
+    "import { defineConfig } from \"vite\";\nimport vue from \"@vitejs/plugin-vue\";\nimport { resolve } from \"node:path\";\n\nexport default defineConfig({ plugins: [vue()], resolve: { dedupe: [\"vue\"] }, build: { rolldownOptions: { input: { consumer: resolve(\"index.html\"), hydration: resolve(\"ssr.html\") } } } });\n"
   );
   write("index.html", '<!doctype html><html lang="ru"><head><meta charset="utf-8"><link rel="icon" href="data:,"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Packed Gavia consumer</title></head><body><div id="app"></div><script type="module" src="/src/main.ts"></script></body></html>\n');
   preparePackedRuntimeFixtures(write);
@@ -164,7 +174,7 @@ const token: WlDesignTokenName = "--wl-space-lg";
 if (wlManifest.length !== packageManifest.length) throw new Error("Runtime and JSON manifests differ");
 if (wlDesignTokens.length !== designCatalog.tokens.length || resolveWlToken(token) !== "16px") throw new Error("Design token exports differ");
 if (getWlThemeTokens("graphite")[token] !== "16px" || spacing !== "lg") throw new Error("Theme snapshot differs");
-if (!resolveWlToken("--wl-font", "gavia").startsWith('"Gavia Sans",')) throw new Error("Gavia typography was not packaged");
+if (!resolveWlToken("--wl-font", "gavia").startsWith('"Gavia Sans Core", "Gavia Sans",')) throw new Error("Gavia typography was not packaged");
 createApp(App).use(WlConfig, { pt: createWlPt(), locale: wlLocaleRu })
   .use(WlToastService).use(WlConfirmationService).mount("#app");
 `
@@ -181,14 +191,14 @@ createApp(App).use(WlConfig, { pt: createWlPt(), locale: wlLocaleRu })
   // Check positive and negative API type contracts against declarations from the actual archive.
   // These are compile-only files: they are not imported by the runtime application.
   const apiContractFiles = [
-    "selection-contracts.types.ts", "table-contract.types.ts", "pt-contract.types.ts",
-    "navigation-contract.types.ts", "generic-mode-contract.types.ts", "date-picker.types.ts",
+    "types/selection-contracts.types.ts", "types/table-contract.types.ts", "types/pt-contract.types.ts",
+    "types/navigation-contract.types.ts", "types/generic-mode-contract.types.ts", "types/date-picker.types.ts",
     "fixtures/selection-contracts-consumer.vue", "fixtures/table-contract-consumer.vue",
     "fixtures/navigation-contract-consumer.vue", "fixtures/date-picker-consumer.vue",
-    "collection-contract.types.ts", "fixtures/collection-contract-consumer.vue",
-    "input-model-modifiers.types.ts", "fixtures/input-model-modifiers-consumer.vue",
-    "overlay-locale-contract.types.ts", "fixtures/overlay-model-modifiers-consumer.vue", "pt-tooltip-contract.types.ts",
-    "native-contract.types.ts", "native-contract.tsx", "field-slot-contract.types.ts", "fixtures/public-components-consumer.vue"
+    "types/collection-contract.types.ts", "fixtures/collection-contract-consumer.vue",
+    "types/input-model-modifiers.types.ts", "fixtures/input-model-modifiers-consumer.vue",
+    "types/overlay-locale-contract.types.ts", "fixtures/overlay-model-modifiers-consumer.vue", "types/pt-tooltip-contract.types.ts",
+    "types/native-contract.types.ts", "types/native-contract.tsx", "types/field-slot-contract.types.ts", "fixtures/public-components-consumer.vue"
   ];
   for (const relativePath of apiContractFiles) {
     const source = readFileSync(join(uiKitDir, "tests", relativePath), "utf8")
@@ -234,6 +244,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
 
   const installedPackageDir = join(consumerDir, "node_modules", ...packageJson.name.split("/"));
   const requiredFiles = [
+    "README.md",
     "LICENSE",
     "CHANGELOG.md",
     "dist/index.js",
@@ -250,7 +261,6 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     "themes/gavia-dark.css",
     "styles/fonts/gavia.css",
     "fonts/gavia/manifest.json",
-    "fonts/gavia/qa-report.json",
     "fonts/gavia/OFL.txt",
     "fonts/gavia/Onest-OFL.txt",
     "fonts/gavia/FONTLOG.txt"
@@ -268,6 +278,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     }
   }
   const installedManifest = JSON.parse(readFileSync(join(installedPackageDir, "package.json"), "utf8"));
+  assertPureUtilityEntry(installedPackageDir);
   if (installedManifest.name !== packageJson.name || installedManifest.version !== packageJson.version) {
     throw new Error(`Packed package must be ${packageJson.name}@${packageJson.version}, received ${installedManifest.name}@${installedManifest.version}`);
   }
@@ -296,11 +307,81 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     throw new Error("Packed font family differs from the accepted Gavia Sans 0.600 release");
   }
   const packedFontFiles = readdirSync(packedFontDirectory).filter((file) => /\.(?:ttf|woff2)$/.test(file)).sort();
-  if (JSON.stringify(packedFontFiles) !== JSON.stringify(Object.keys(acceptedHashes).sort())) {
-    throw new Error("Packed font family must contain exactly the 24 current font files");
+  const acceptedWebFonts = Object.keys(acceptedHashes).filter((file) => file.endsWith(".woff2")).sort();
+  if (existsSync(join(packedFontDirectory, "variable-manifest.json"))) {
+    throw new Error("Packed package must not contain the repository-only variable font audit manifest");
+  }
+  const variableManifestPath = join(canonicalFontDirectory, "variable-manifest.json");
+  const variableManifest = JSON.parse(readFileSync(variableManifestPath, "utf8"));
+  const variableFiles = variableManifest?.files ?? [];
+  if (variableManifest) {
+    if (variableManifest.family !== "Gavia Sans" || variableManifest.axis?.tag !== "wght"
+      || variableManifest.axis.minimum !== 100 || variableManifest.axis.default !== 400
+      || variableManifest.axis.maximum !== 700 || !Array.isArray(variableFiles) || variableFiles.length !== 4
+      || variableManifest.version !== packedFontManifest.version || variableManifest.license !== packedFontManifest.license) {
+      throw new Error("Packed variable font has an invalid family, axis or subset inventory");
+    }
+    const names = new Set();
+    const suffixes = { full: "", core: "-Core" };
+    const coverage = new Map();
+    const unicodeCharacters = (range) => {
+      if (typeof range !== "string" || !range.trim()) throw new Error("Packed variable font has no unicode range");
+      const characters = new Set();
+      for (const part of range.split(/\s*,\s*/)) {
+        const match = /^U\+([\dA-F]{4,6})(?:-([\dA-F]{4,6}))?$/i.exec(part);
+        if (!match) throw new Error("Packed variable font has an invalid unicode range: " + part);
+        const first = Number.parseInt(match[1], 16);
+        const last = Number.parseInt(match[2] ?? match[1], 16);
+        if (last < first || last > 0x10ffff) throw new Error("Packed variable font has invalid unicode bounds: " + part);
+        for (let character = first; character <= last; character += 1) characters.add(character);
+      }
+      return characters;
+    };
+    for (const record of variableFiles) {
+      const expected = "Gavia-Variable" + (record?.style === "italic" ? "-Italic" : "") + suffixes[record?.subset] + ".woff2";
+      if (!record || !["normal", "italic"].includes(record.style) || !Object.hasOwn(suffixes, record.subset)
+        || record.file !== expected || names.has(record.file) || typeof record.sha256 !== "string" || !/^[a-f0-9]{64}$/.test(record.sha256)
+        || !Number.isSafeInteger(record.bytes) || record.bytes <= 0) {
+        throw new Error("Packed variable font has an unsafe, duplicate or invalid file record");
+      }
+      names.add(record.file);
+      coverage.set(record.style + "/" + record.subset, unicodeCharacters(record.unicodeRange));
+      const bytes = readFileSync(join(packedFontDirectory, record.file));
+      if (bytes.length !== record.bytes || bytes.toString("ascii", 0, 4) !== "wOF2"
+        || bytes.readUInt32BE(4) !== 0x00010000 || bytes.readUInt32BE(8) !== bytes.length
+        || createHash("sha256").update(bytes).digest("hex") !== record.sha256) {
+        throw new Error("Packed variable font differs from its generated manifest: " + record.file);
+      }
+      if (record.subset === "core" && bytes.length > 80_000) {
+        throw new Error("Packed Core font exceeds its 80,000-byte budget: " + record.style);
+      }
+    }
+    const sorted = (characters) => [...characters].sort((left, right) => left - right);
+    const combiningMark = (character) => (character >= 0x300 && character <= 0x36f)
+      || (character >= 0x1ab0 && character <= 0x1aff) || (character >= 0x1dc0 && character <= 0x1dff)
+      || (character >= 0x20d0 && character <= 0x20ff) || (character >= 0xfe20 && character <= 0xfe2f);
+    for (const style of ["normal", "italic"]) {
+      const full = coverage.get(style + "/full");
+      const core = coverage.get(style + "/core");
+      if (!full || !core || [...core].some((character) => !full.has(character) || combiningMark(character))) {
+        throw new Error("Packed Core must stay inside complete fallback coverage and defer combining marks: " + style);
+      }
+    }
+    if (JSON.stringify(sorted(coverage.get("normal/full"))) !== JSON.stringify(sorted(coverage.get("italic/full")))) {
+      throw new Error("Packed variable-font styles have different full coverage");
+    }
+    if (readFileSync(join(packedFontDirectory, "VARIABLE-FONTLOG.txt"), "utf8").replaceAll("\r\n", "\n")
+      !== readFileSync(join(canonicalFontDirectory, "VARIABLE-FONTLOG.txt"), "utf8").replaceAll("\r\n", "\n")) {
+      throw new Error("Packed variable-font notices differ from their canonical source");
+    }
+  }
+  const expectedPackedFonts = [...acceptedWebFonts, ...variableFiles.map((record) => record.file)].sort();
+  if (JSON.stringify(packedFontFiles) !== JSON.stringify(expectedPackedFonts)
+    || existsSync(join(packedFontDirectory, "qa-report.json"))) {
+    throw new Error("Packed font family must retain accepted static WOFF2s, declared variable files and exclude TTF/QA artifacts");
   }
   for (const face of packedFontManifest.faces) {
-    for (const format of ["ttf", "woff2"]) {
+    for (const format of ["woff2"]) {
       const asset = face[format];
       const actual = createHash("sha256").update(readFileSync(join(packedFontDirectory, asset.file))).digest("hex");
       if (asset.sha256 !== acceptedHashes[asset.file] || actual !== acceptedHashes[asset.file]) {
@@ -308,7 +389,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
       }
     }
   }
-  for (const filename of ["OFL.txt", "Onest-OFL.txt", "FONTLOG.txt", "manifest.json", "qa-report.json"]) {
+  for (const filename of ["OFL.txt", "Onest-OFL.txt", "FONTLOG.txt", "manifest.json"]) {
     const normalize = (text) => text.replaceAll("\r\n", "\n");
     if (normalize(readFileSync(join(packedFontDirectory, filename), "utf8"))
       !== normalize(readFileSync(join(canonicalFontDirectory, filename), "utf8"))) {
@@ -323,9 +404,11 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   const fontStylesheetPath = join(installedPackageDir, "styles", "fonts", "gavia.css");
   const fontStylesheet = readFileSync(fontStylesheetPath, "utf8");
   const fontFaces = [...fontStylesheet.matchAll(/@font-face\s*\{([^}]+)\}/g)];
-  if (fontFaces.length !== 24) throw new Error("Packed font stylesheet must register 12 canonical faces and 12 legacy aliases");
+  const staticFaces = fontFaces.filter(([, block]) => /font-weight:\s*\d+\s*;/.test(block)
+    && /font-family:\s*["']Gavia(?: Sans)?["']\s*;/.test(block));
+  if (staticFaces.length !== 24) throw new Error("Packed font stylesheet must retain 12 canonical static faces and 12 legacy aliases");
   for (const family of ["Gavia Sans", "Gavia"]) for (const face of packedFontManifest.faces) {
-    const matches = fontFaces.filter(([, block]) => block.match(/font-weight:\s*(\d+)\s*;/)?.[1] === String(face.weight)
+    const matches = staticFaces.filter(([, block]) => block.match(/font-weight:\s*(\d+)\s*;/)?.[1] === String(face.weight)
       && block.match(/font-style:\s*(normal|italic)\s*;/)?.[1] === face.style
       && block.match(/font-family:\s*["']([^"']+)["']\s*;/)?.[1] === family);
     const block = matches[0]?.[1];
@@ -336,24 +419,48 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
       throw new Error("Packed font CSS has a broken face or URL: " + face.name);
     }
   }
+  const variableFaces = fontFaces.filter(([, block]) => /font-weight:\s*100\s+700\s*;/.test(block)
+    && /font-family:\s*["']Gavia(?: Sans)?(?: Core)?["']\s*;/.test(block));
+  if (variableFaces.length !== (variableFiles.length ? 8 : 0)) throw new Error("Packed variable-font CSS has an incomplete subset registration");
+  for (const record of variableFiles) {
+    const matching = variableFaces.filter(([, block]) => block.includes("../../fonts/gavia/" + record.file));
+    if (matching.length !== 2
+      || JSON.stringify(matching.map(([, block]) => block.match(/font-family:\s*["']([^"']+)["']\s*;/)?.[1]).sort())
+      !== JSON.stringify(record.subset === "core" ? ["Gavia Core", "Gavia Sans Core"] : ["Gavia", "Gavia Sans"])
+      || matching.some(([, block]) => !block.includes("font-style: " + record.style + ";")
+        || !block.includes("unicode-range: " + record.unicodeRange + ";") || !/font-display:\s*swap\s*;/.test(block))) {
+      throw new Error("Packed variable-font CSS has a broken style, subset or URL: " + record.file);
+    }
+    if (record.subset === "core") {
+      const fullFile = variableFiles.find((file) => file.style === record.style && file.subset === "full");
+      for (const family of ["Gavia Sans", "Gavia"]) {
+        const fullIndex = variableFaces.findIndex(([, block]) => block.includes('font-family: "' + family + '";')
+          && block.includes(fullFile.file));
+        const coreIndex = variableFaces.findIndex(([, block]) => block.includes('font-family: "' + family + ' Core";')
+          && block.includes(record.file));
+        if (fullIndex < 0 || coreIndex <= fullIndex) throw new Error("Core must follow its complete fallback: " + record.file);
+      }
+    }
+  }
   const builtAssets = join(consumerDir, "dist", "assets");
   const emittedFonts = readdirSync(builtAssets).filter((file) => file.endsWith(".woff2"));
   const emittedHashes = emittedFonts.map((file) => createHash("sha256").update(readFileSync(join(builtAssets, file))).digest("hex")).sort();
-  const expectedWebHashes = packedFontManifest.faces.map((face) => face.woff2.sha256).sort();
+  const expectedWebHashes = [...packedFontManifest.faces.map((face) => face.woff2.sha256),
+    ...variableFiles.map((file) => file.sha256)].sort();
   if (JSON.stringify(emittedHashes) !== JSON.stringify(expectedWebHashes)) {
-    throw new Error("Consumer build did not emit exactly the 12 accepted WOFF2 assets");
+    throw new Error("Consumer build did not emit the accepted static fonts and CSS-referenced variable subsets");
   }
   const builtCss = readdirSync(builtAssets).filter((file) => file.endsWith(".css"))
     .map((file) => readFileSync(join(builtAssets, file), "utf8")).join("\n");
   const builtFontFaces = [...builtCss.matchAll(/@font-face\s*\{([^}]+)\}/g)]
-    .filter(([, block]) => /font-family:["']?Gavia(?: Sans)?(?:["']|;)/.test(block));
-  if (builtFontFaces.length !== 24) throw new Error("Consumer CSS did not preserve the 12 Gavia Sans faces and legacy aliases");
+    .filter(([, block]) => /font-family:["']?Gavia(?: Sans)?(?: Core)?["';]/.test(block));
+  if (builtFontFaces.length !== 24 + variableFaces.length) throw new Error("Consumer CSS did not preserve Gavia faces, subsets and legacy aliases");
   for (const [, block] of builtFontFaces) {
     const fontUrl = block.match(/url\(["']?([^"')]+)["']?\)/)?.[1];
     const emittedPath = fontUrl?.startsWith("/") ? join(consumerDir, "dist", fontUrl.slice(1)) : resolve(builtAssets, fontUrl ?? "");
     if (!fontUrl || !existsSync(emittedPath)) throw new Error("Consumer font CSS has an unresolved emitted URL: " + fontUrl);
   }
-  console.log("Packed font smoke passed: 24 accepted binaries, OFL notices, 12 canonical CSS faces plus legacy aliases and emitted WOFF2 assets");
+  console.log("Packed font smoke passed: 12 accepted WOFF2 files, OFL notices, 12 canonical CSS faces plus legacy aliases");
 
   // Git checkouts may use CRLF on Windows and LF on the publishing runner.
   const packedLicense = readFileSync(join(installedPackageDir, "LICENSE"), "utf8").replaceAll("\r\n", "\n");
@@ -361,10 +468,10 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   if (packedLicense !== canonicalLicense) {
     throw new Error("Packed LICENSE differs from the repository license");
   }
-  const canonicalChangelog = readFileSync(join(repoRoot, "CHANGELOG.md"), "utf8")
-    .replaceAll("(docs/", "(https://github.com/whitewolf06/gavia-ui/blob/main/docs/");
-  if (readFileSync(join(installedPackageDir, "CHANGELOG.md"), "utf8") !== canonicalChangelog) {
-    throw new Error("Packed changelog is out of sync with the repository");
+  for (const [name, content] of Object.entries(packageDocumentation(repoRoot))) {
+    if (readFileSync(join(installedPackageDir, name), "utf8").replaceAll("\r\n", "\n") !== content) {
+      throw new Error(`Packed ${name} is out of sync with canonical repository sources`);
+    }
   }
   if (readFileSync(join(installedPackageDir, "dist", "index.js"), "utf8").match(/primevue|primeicons|@primeuix/i)) {
     throw new Error("Published JavaScript still references PrimeVue or PrimeIcons");
@@ -393,6 +500,5 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   console.log(`Consumer smoke passed for ${packageJson.name}@${packageJson.version}`);
   console.log(`Copied showcase sources passed typecheck and build: ${copiedExamples.length}`);
 } finally {
-  if (dirname(temporaryRoot) !== temporaryBase) throw new Error("Refusing to remove a consumer outside the task temporary directory");
   rmSync(temporaryRoot, { recursive: true, force: true });
 }

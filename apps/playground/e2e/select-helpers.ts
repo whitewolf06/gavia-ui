@@ -9,10 +9,12 @@ export async function chooseDropdownOption(page: Page, control: Locator, label: 
   const listbox = page.getByRole("listbox");
   await expect(listbox).toHaveCount(1);
   await expect(listbox).toBeVisible();
+  await expect(listbox).toHaveAttribute("id", /\S+/);
+  const listboxSelector = await listbox.evaluate((element) => `#${CSS.escape(element.id)}`);
   await listbox.getByRole("option", { name: label, exact: true }).click();
   await expect(control).toHaveAttribute("aria-expanded", "false");
-  // Wait for motion cleanup before another dropdown or a screenshot.
-  await expect(listbox).toHaveCount(0);
+  // Leaving panels become inert before their animation removes the DOM.
+  await expect(page.locator(listboxSelector)).toHaveCount(0);
 }
 
 export async function chooseShowcaseTheme(page: Page, label: string): Promise<void> {
@@ -21,7 +23,6 @@ export async function chooseShowcaseTheme(page: Page, label: string): Promise<vo
   if (!theme) throw new Error("Unknown showcase theme: " + label);
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme.name);
 }
-
 
 /** The persistent language selector uses the same keyboard and dismissal contract as other selects. */
 export async function chooseShowcaseLanguage(page: Page, language: "en" | "ru"): Promise<void> {
@@ -101,8 +102,8 @@ export async function navigateMainView(page: Page, label: string): Promise<void>
 /** Hidden desktop destinations retain their current-page state on the overflow trigger and menu item. */
 export async function expectMainViewCurrent(page: Page, label: string): Promise<void> {
   const markers: Record<string, string> = {
-    "Главная": '[data-testid="home-page"]', "Документация": '[data-testid="docs-page"]',
-    "Шрифт": '[data-testid="font-page"]', "Дизайн-система": "main#ds-top",
+    Главная: '[data-testid="home-page"]', Документация: '[data-testid="docs-page"]',
+    Шрифт: '[data-testid="font-page"]', "Дизайн-система": "main#ds-top",
     "Подбор темы": '[data-testid="theme-builder-page"]', Changelog: '[data-testid="changelog-page"]'
   };
   const marker = markers[label];
@@ -171,7 +172,7 @@ export async function nativeReload(page: Page): Promise<void> {
   // Playwright's Firefox reload has injected history entries; exercise the
   // browser's native operation: https://github.com/microsoft/playwright/issues/22640
   await Promise.all([
-    page.waitForNavigation({ waitUntil: "domcontentloaded" }),
+    page.waitForEvent("domcontentloaded"),
     page.evaluate(() => window.location.reload())
   ]);
   await expect(page).toHaveURL(url);

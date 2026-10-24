@@ -32,9 +32,9 @@ const NATIVE_INPUT_ATTRS = new Set([
 function belongsToInput(key: string): boolean {
   const normalized = key.toLowerCase();
   return (
-    NATIVE_INPUT_ATTRS.has(normalized) ||
-    normalized.startsWith("aria-") ||
-    /^on[A-Z]/.test(key)
+    NATIVE_INPUT_ATTRS.has(normalized)
+    || normalized.startsWith("aria-")
+    || /^on[A-Z]/.test(key)
   );
 }
 
@@ -42,6 +42,9 @@ export function splitInputAttrs(attrs: Record<string, unknown>): {
   inputAttrs: Record<string, unknown>;
   rootAttrs: Record<string, unknown>;
 } {
+  // Vue 3.4's attrs proxy tracks reads, not key enumeration. Keep an empty
+  // attrs object tracked so adding the first native attribute invalidates consumers.
+  void attrs.id;
   const inputAttrs: Record<string, unknown> = {};
   const rootAttrs: Record<string, unknown> = {};
 

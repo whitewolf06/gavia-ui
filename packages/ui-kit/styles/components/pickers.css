@@ -1,0 +1,46 @@
+@layer wl.components {
+  .wl-dp__presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-block-end: 1px solid var(--wl-border);
+  }
+
+  .wl-dp__preset {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--wl-border);
+    border-radius: var(--wl-radius-sm);
+    background: var(--wl-bg);
+    color: var(--wl-text);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .wl-dp__preset:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .wl-dp__preset:focus-visible {
+    outline: 2px solid var(--wl-focus-color);
+    outline-offset: 2px;
+  }
+
+  .wl-color-picker__controls {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .wl-color-picker__channel {
+    display: grid;
+    gap: 0.25rem;
+    color: var(--wl-text);
+    font-size: 0.8125rem;
+  }
+
+  .wl-color-picker__channel-input {
+    width: 100%;
+    accent-color: var(--wl-accent);
+  }
+}

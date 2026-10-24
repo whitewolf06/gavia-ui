@@ -4,10 +4,60 @@ import {
   WL_DENSITIES,
   WL_ICON_BUTTON_VARIANTS,
   WL_ICON_NAMES,
-  WL_SIZES
+  WL_SIZES,
+  WL_TONES
 } from "./values";
 
 export const actionsManifest = /* @__PURE__ */ defineComponentManifest([
+  {
+    name: "WlLink",
+    category: "actions",
+    description: "Accessible links with an optional application-provided router adapter.",
+    props: [
+      {
+        name: "href",
+        type: "string",
+        description: "Native URL."
+      },
+      {
+        name: "to",
+        type: "union",
+        description: "Router location passed unchanged to WlConfig.linkComponent."
+      },
+      {
+        name: "external",
+        type: "boolean",
+        default: false,
+        description: "Opens a new tab with a safe rel and an accessible hint."
+      },
+      {
+        name: "disabled",
+        type: "boolean",
+        default: false
+      },
+      {
+        name: "active",
+        type: "boolean",
+        default: false
+      },
+      {
+        name: "pt",
+        type: "object"
+      }
+    ],
+    slots: [
+      {
+        name: "default",
+        description: "Link content; scope { isActive, href }."
+      }
+    ],
+    emits: [
+      {
+        name: "click",
+        payload: "MouseEvent"
+      }
+    ]
+  },
   {
     name: "WlButton",
     category: "actions",
@@ -20,6 +70,7 @@ export const actionsManifest = /* @__PURE__ */ defineComponentManifest([
         values: WL_BUTTON_VARIANTS,
         description: "Визуальный вариант кнопки."
       },
+      { name: "tone", type: "enum", values: WL_TONES, description: "Semantic color, independent of the visual treatment." },
       {
         name: "size",
         type: "enum",
@@ -70,10 +121,10 @@ export const actionsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "disabled", type: "boolean", default: false, description: "Отключает кнопку." },
       { name: "count", type: "number", description: "Числовой бейдж (показывается при > 0)." },
       { name: "dot", type: "boolean", default: false, description: "Точка-индикатор (если нет count)." },
-      { name: "ariaLabel", type: "string", description: "aria-label кнопки." },
+      { name: "ariaLabel", type: "string", description: "Action name. With icon, provide ariaLabel, native aria-label/aria-labelledby or a named pt.root. Without icon, default-slot text can name the action; badge and tooltip text remain descriptions." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
-    slots: [{ name: "default", description: "Своё содержимое вместо иконки." }],
+    slots: [{ name: "default", description: "Action text, optionally with a custom icon. Icon-only slot content still needs its own accessible name." }],
     emits: [{ name: "click", payload: "MouseEvent", description: "Клик (не срабатывает при disabled)." }]
   },
   {

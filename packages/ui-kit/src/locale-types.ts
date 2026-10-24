@@ -1,5 +1,14 @@
-/** Built-in control text. Explicit component props retain priority over these defaults. */
+import type { WlPluralForms } from "./utils/format";
+/** Built-in control text. Omitted values use English; explicit component text, including empty strings, wins. */
 export interface WlControlLocale {
+  showBreadcrumbs?: string;
+  dateRangePresets?: string;
+  colorHue?: string;
+  colorSaturation?: string;
+  colorValue?: string;
+  colorAlpha?: string;
+  badgeCount?: string;
+  badgeDot?: string;
   localeCode?: string;
   close?: string;
   remove?: string;
@@ -7,7 +16,8 @@ export interface WlControlLocale {
   options?: string;
   noOptions?: string;
   filter?: string;
-  selectedItems?: string;
+  selectedItems?: string | WlPluralForms;
+  resultsFound?: string | WlPluralForms;
   removeItem?: string;
   breadcrumbs?: string;
   showOptions?: string;
@@ -63,6 +73,27 @@ export interface WlControlLocale {
   eventOne?: string;
   eventFew?: string;
   eventMany?: string;
+  stepCompleted?: string;
+  stepCurrent?: string;
+  opensInNewTab?: string;
+  rowsPerPage?: string;
+  pageRange?: string;
+  selectAll?: string;
+  selectAllRows?: string;
+  selectRow?: string;
+  sortAscending?: string;
+  sortDescending?: string;
+  clearSort?: string;
+  fileProgress?: string;
+  optional?: string;
+  stepError?: string;
+  passwordStrength?: string;
+  rangeStart?: string;
+  rangeEnd?: string;
+  slider?: string;
+  presenceOnline?: string;
+  presenceBusy?: string;
+  presenceOffline?: string;
 }
 
 /** Date-picker locale input accepts regular arrays and readonly application constants. */

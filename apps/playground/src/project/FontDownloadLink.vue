@@ -1,16 +1,22 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../i18n";
+withDefaults(defineProps<{ variant?: "primary" | "secondary" }>(), { variant: "primary" });
 const { t } = usePlaygroundI18n();
-import WlIcon from "../../../../packages/ui-kit/src/components/WlIcon.vue";
+import { WlIcon } from "gavia-ui";
 import { gaviaFontDownloadName, gaviaFontDownloadUrl } from "./font-download";
 
-withDefaults(defineProps<{ variant?: "primary" | "secondary" }>(), { variant: "primary" });
 </script>
 
 <template>
-  <a :href="gaviaFontDownloadUrl" :download="gaviaFontDownloadName"
-    class="wl-btn wl-btn--md pg-font-download" :class="'wl-btn--' + variant"
-    data-wl="font-download" :data-variant="variant" data-size="md">
+  <a
+    :href="gaviaFontDownloadUrl"
+    :download="gaviaFontDownloadName"
+    class="wl-btn wl-btn--md pg-font-download"
+    :class="'wl-btn--' + variant"
+    data-wl="font-download"
+    :data-variant="variant"
+    data-size="md"
+  >
     <WlIcon name="download" :size="16" />
     <span class="wl-btn__label"><slot>{{ t('shell.project.FontDownloadLink.text495') }}</slot></span>
   </a>

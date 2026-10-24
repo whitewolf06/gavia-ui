@@ -73,7 +73,7 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "header", type: "string", description: "Заголовок (если не задан слот header)." },
       { name: "modal", type: "boolean", default: true, description: "Модальный режим с подложкой." },
       { name: "closable", type: "boolean", default: true, description: "Кнопка закрытия." },
-      { name: "dismissable", type: "boolean", default: false, description: "Закрытие кликом по подложке." },
+      { name: "dismissible", type: "boolean", default: false, description: "Close by clicking the backdrop." },
       { name: "closeOnEscape", type: "boolean", default: true, description: "Закрытие клавишей Escape." },
       { name: "blockScroll", type: "boolean", default: true, description: "Блокирует прокрутку страницы, пока диалог открыт." },
       { name: "ariaLabel", type: "string", description: "Доступное имя диалога без текстового заголовка." },
@@ -108,7 +108,7 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
         description: "Сторона появления."
       },
       { name: "modal", type: "boolean", default: true, description: "Модальный режим с подложкой." },
-      { name: "dismissable", type: "boolean", default: true, description: "Закрытие кликом по подложке." },
+      { name: "dismissible", type: "boolean", default: true, description: "Close by clicking the backdrop." },
       { name: "closeOnEscape", type: "boolean", default: true, description: "Закрытие клавишей Escape." },
       { name: "blockScroll", type: "boolean", default: true, description: "Блокирует прокрутку страницы, пока панель открыта." },
       { name: "ariaLabel", type: "string", description: "Доступное имя панели без текстового заголовка." },
@@ -132,7 +132,7 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
     category: "containers",
     description: "Поповер с императивным управлением toggle/show/hide.",
     props: [
-      { name: "dismissable", type: "boolean", default: true, description: "Закрытие кликом вне поповера." },
+      { name: "dismissible", type: "boolean", default: true, description: "Close by clicking outside the popover." },
       { name: "closeOnEscape", type: "boolean", default: true, description: "Закрытие клавишей Escape." },
       { name: "ariaLabel", type: "string", description: "Доступное имя поповера." },
       { name: "ariaLabelledby", type: "string", description: "ID элемента с подписью поповера." },

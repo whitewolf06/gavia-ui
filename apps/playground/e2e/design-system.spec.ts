@@ -1,8 +1,8 @@
-import { russianPlaygroundUrl } from "./playground-url";
-import { expect, test, type Page } from "@playwright/test";
-import { chooseDropdownOption, chooseShowcaseTheme, expectMainViewCurrent } from "./select-helpers";
-import { resolveWlToken, wlDesignTokens, wlDesignThemes, wlContrastReport } from "../../../packages/ui-kit/src/design-system";
+import { expect, type Page, test } from "@playwright/test";
+import { resolveWlToken, wlContrastReport, wlDesignThemes, wlDesignTokens } from "../../../packages/ui-kit/src/design-system";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
+import { russianPlaygroundUrl } from "./playground-url";
+import { chooseDropdownOption, chooseShowcaseTheme, expectMainViewCurrent } from "./select-helpers";
 
 type RuntimeCounts = { pageErrors: number; warnings: number; errors: number };
 const nestedRuntime = new WeakMap<Page, RuntimeCounts>();
@@ -15,13 +15,16 @@ test.beforeEach(async ({ page }, testInfo) => {
   if (testInfo.title.startsWith("nested anchored portals:")) {
     const counts = { pageErrors: 0, warnings: 0, errors: 0 };
     nestedRuntime.set(page, counts);
-    page.on("pageerror", () => { counts.pageErrors += 1; });
+    page.on("pageerror", () => {
+      counts.pageErrors += 1;
+    });
     page.on("console", (message) => {
       if (message.type() === "warning") counts.warnings += 1;
       if (message.type() === "error") counts.errors += 1;
     });
     await page.setViewportSize(testInfo.project.use.isMobile
-      ? { width: 390, height: 844 } : { width: 1440, height: 900 });
+      ? { width: 390, height: 844 }
+      : { width: 1440, height: 900 });
   }
   await page.goto(russianPlaygroundUrl("/?view=system"));
   const heading = page.getByRole("heading", { name: "Дизайн-система" });
@@ -73,19 +76,43 @@ test("form preserves input and connects errors to controls", async ({ page }) =>
   await form.getByRole("button", { name: "Сохранить пример" }).click();
   await expect(form.getByRole("textbox", { name: "Имя", exact: true })).toBeFocused();
   await expect(form.getByRole("textbox", { name: "Имя", exact: true })).toHaveAttribute("aria-invalid", "true");
-  await expect(form.getByRole("textbox", { name: "Имя", exact: true })).toHaveAttribute("aria-describedby", "ds-name-desc");
-  await expect(form.getByRole("alert").first()).toHaveText("Введите имя.");
+  await expect(form.getByRole("textbox", { name: "Имя", exact: true })).toHaveAttribute("aria-describedby", "ds-name-desc ds-name-error");
+  await expect(form.locator("#ds-name-desc")).toHaveCount(1);
+  await expect(form.locator("#ds-name-error")).toHaveCount(1);
+  const nameError = form.locator("#ds-name-error");
+  await expect(nameError).toHaveText("Введите имя.");
+  await expect(nameError).not.toHaveAttribute("role");
+  await expect(nameError).not.toHaveAttribute("aria-live");
+  await expect(form.getByRole("alert")).toHaveCount(0);
   await form.getByRole("textbox", { name: "Имя", exact: true }).fill("Тестовый пользователь");
   await form.getByRole("textbox", { name: "Email", exact: true }).fill("incorrect");
   await form.getByRole("button", { name: "Сохранить пример" }).click();
   await expect(form.getByRole("textbox", { name: "Email", exact: true })).toBeFocused();
+  await expect(form.getByRole("textbox", { name: "Email", exact: true })).toHaveAttribute("aria-invalid", "true");
+  await expect(form.getByRole("textbox", { name: "Email", exact: true })).toHaveAttribute("aria-describedby", "ds-email-desc ds-email-error");
+  await expect(form.locator("#ds-email-desc")).toHaveCount(1);
+  const emailError = form.locator("#ds-email-error");
+  await expect(emailError).toHaveCount(1);
+  await expect(emailError).toHaveText("Введите адрес в формате name@example.com.");
+  await expect(emailError).not.toHaveAttribute("role");
+  await expect(emailError).not.toHaveAttribute("aria-live");
+  await expect(nameError).toHaveCount(0);
+  await expect(form.getByRole("textbox", { name: "Имя", exact: true })).not.toHaveAttribute("aria-invalid", "true");
+  await expect(form.getByRole("textbox", { name: "Имя", exact: true })).toHaveAttribute("aria-describedby", "ds-name-desc");
   await expect(form.getByRole("textbox", { name: "Имя", exact: true })).toHaveValue("Тестовый пользователь");
   await form.getByRole("textbox", { name: "Email", exact: true }).fill("test@example.com");
   await form.getByRole("button", { name: "Сохранить пример" }).click();
-  await expect(form.getByRole("alert")).toContainText("Данные проверены");
+  await expect(form.getByRole("status")).toContainText("Данные проверены");
   await expect(form.getByRole("textbox", { name: "Email", exact: true })).not.toHaveAttribute("aria-invalid", "true");
+  await expect(form.getByRole("textbox", { name: "Email", exact: true })).toHaveAttribute("aria-describedby", "ds-email-desc");
+  await expect(emailError).toHaveCount(0);
   await form.getByRole("textbox", { name: "Email", exact: true }).fill("changed-invalid");
-  await expect(form.getByRole("alert")).toHaveText("Введите адрес в формате name@example.com.");
+  await expect(form.getByRole("textbox", { name: "Email", exact: true })).toHaveAttribute("aria-invalid", "true");
+  await expect(form.getByRole("textbox", { name: "Email", exact: true })).toHaveAttribute("aria-describedby", "ds-email-desc ds-email-error");
+  await expect(emailError).toHaveText("Введите адрес в формате name@example.com.");
+  await expect(emailError).not.toHaveAttribute("role");
+  await expect(emailError).not.toHaveAttribute("aria-live");
+  await expect(form.getByRole("alert")).toHaveCount(0);
   await expect(form.getByText("Данные проверены", { exact: true })).toHaveCount(0);
 });
 
@@ -146,7 +173,9 @@ test("themes, nested previews and responsive layout agree with the catalog", asy
       expect(colors.actionText).toBe(rgb(resolveWlToken("--wl-action-primary-text", preview.name)));
     }
     await expect(page.getByRole("region", { name: "Контраст темы" }).getByRole("row")).toHaveCount(1 + wlContrastReport.filter((pair) => pair.theme === theme.name).length);
-    const width = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
+    const width = await page.evaluate(() => ({
+      scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth
+    }));
     expect(width.scroll).toBeLessThanOrEqual(width.client);
     await page.screenshot({ path: testInfo.outputPath(`design-system-${theme.name}.png`), fullPage: false });
   }

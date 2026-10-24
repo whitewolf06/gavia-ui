@@ -1,6 +1,13 @@
 import { localizeDocumentation } from "../localize";
 /** Additional canonical SFC scenarios; primary prop controls stay in the shared preview. */
-export const showcaseDocumentationExamples: Record<string, { title: string; description: string; sourceName: string }> = localizeDocumentation({
+export const showcaseDocumentationExamples: Record<
+  string,
+  { title: string; description: string; sourceName: string }
+> = localizeDocumentation({
+  WlContextMenu: { title: "documentation.strings.generatedWlContextMenuTitle", description: "documentation.strings.generatedWlContextMenuDescription", sourceName: "showcase/WlContextMenu.vue" },
+  WlTooltip: { title: "documentation.strings.generatedWlTooltipTitle", description: "documentation.strings.generatedWlTooltipDescription", sourceName: "showcase/WlTooltip.vue" },
+  WlToolbar: { title: "documentation.strings.generatedWlToolbarTitle", description: "documentation.strings.generatedWlToolbarDescription", sourceName: "showcase/WlToolbar.vue" },
+  WlLink: { title: "documentation.strings.review_link_title", description: "documentation.strings.review_link_description", sourceName: "showcase/WlLink.vue" },
   WlIconButton: { title: "documentation.strings.s0499", description: "documentation.strings.s0500", sourceName: "showcase/WlIconButton.vue" },
   WlButtonGroup: { title: "documentation.strings.s0501", description: "documentation.strings.s0502", sourceName: "showcase/WlButtonGroup.vue" },
   WlSegmented: { title: "documentation.strings.s0503", description: "documentation.strings.s0504", sourceName: "showcase/WlSegmented.vue" },
@@ -40,6 +47,10 @@ export const showcaseDocumentationExamples: Record<string, { title: string; desc
 
 /** Rules reflect each component's actual native DOM and public contract. */
 export const showcaseDocumentationAccessibility: Record<string, readonly string[]> = localizeDocumentation({
+  WlLink: ["documentation.strings.review_link_a11y_content", "documentation.strings.review_link_a11y_semantics", "documentation.strings.review_link_a11y_keyboard"],
+  WlContextMenu: ["documentation.strings.generatedWlContextMenuA11yContent", "documentation.strings.generatedWlContextMenuA11ySemantics", "documentation.strings.generatedWlContextMenuA11yKeyboard"],
+  WlTooltip: ["documentation.strings.generatedWlTooltipA11yContent", "documentation.strings.generatedWlTooltipA11ySemantics", "documentation.strings.generatedWlTooltipA11yKeyboard"],
+  WlToolbar: ["documentation.strings.generatedWlToolbarA11yContent", "documentation.strings.generatedWlToolbarA11ySemantics", "documentation.strings.generatedWlToolbarA11yKeyboard"],
   WlIconButton: [
     "documentation.strings.s0569",
     "documentation.strings.s0570",

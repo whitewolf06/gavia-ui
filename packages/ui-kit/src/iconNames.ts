@@ -19,15 +19,17 @@ const aliases: Readonly<Record<string, WlIconName>> = /* @__PURE__ */ Object.fre
   thumbtack: "pin",
   times: "x",
   "alert-circle": "exclamation-circle",
-  zap: "lightning",
+  zap: "lightning"
 });
 
 /** Resolve names for display only; callers retain their original stored value. */
 export function resolveWlIconName(input?: string | null): WlIconName | undefined {
   if (typeof input !== "string") return undefined;
   const tokens = input.trim().split(/\s+/);
-  const identifier = tokens.length === 1 ? tokens[0] : tokens
-    .filter((token) => token !== "pi" && token !== "pi-spin");
+  const identifier = tokens.length === 1
+    ? tokens[0]
+    : tokens
+        .filter((token) => token !== "pi" && token !== "pi-spin");
   // Only recognized legacy tokens are accepted, never arbitrary CSS classes.
   if (Array.isArray(identifier) && identifier.length !== 1) return undefined;
   const name = (Array.isArray(identifier) ? identifier[0] : identifier)?.replace(/^pi-/, "");

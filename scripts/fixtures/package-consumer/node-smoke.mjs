@@ -8,7 +8,21 @@ assert.equal(typeof window, "undefined");
 assert.equal(typeof document, "undefined");
 assert.ok(kit.WlButton && kit.WlInput && kit.WlSelect && kit.WlDatePicker);
 assert.ok(kit.wlManifest.length >= 53);
+for (const entry of kit.wlManifest) {
+  assert.ok(kit[entry.name], entry.name + ": missing from the installed root entry");
+}
+assert.equal(typeof kit.createWlPt, "function");
+assert.ok(kit.WlTooltip);
+assert.ok(kit.WlTooltipDirective);
+assert.notEqual(kit.WlTooltip, kit.WlTooltipDirective);
+assert.equal(Object.hasOwn(kit, "WlTooltipComponent"), false);
+assert.equal(typeof kit.useWlToast, "function");
+assert.ok(kit.WlToastService);
+assert.ok(kit.wlDesignTokens.length > 0);
 assert.equal(kit.resolveWlToken("--wl-space-lg"), "16px");
+const pt = kit.createWlPt({ button: { root: { "data-test": "app-button" } } });
+assert.deepEqual(pt.button?.root, { "data-test": "app-button" });
+assert.ok(pt.checkbox);
 const warnings = [];
 const app = createPackedSSRApp();
 app.config.warnHandler = (message) => { warnings.push(message); };

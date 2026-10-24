@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
-const { t } = usePlaygroundI18n();
-import { ref } from "vue";
-import { WlButton, WlIcon } from "../../../../../packages/ui-kit/src";
 defineProps<{ preview?: Record<string, unknown> }>();
+const { t } = usePlaygroundI18n();
+import { WlButton, WlIcon } from "gavia-ui";
+import { ref } from "vue";
 const count = ref(0);
 </script>
 

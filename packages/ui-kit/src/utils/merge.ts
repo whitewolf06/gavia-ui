@@ -1,7 +1,8 @@
 type AnyRecord = Record<string, unknown>;
 
 function isRecord(value: unknown): value is AnyRecord {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
+  return typeof value === "object" && value !== null
+    && [Object.prototype, null].includes(Object.getPrototypeOf(value));
 }
 
 /**
@@ -14,6 +15,7 @@ export function deepMerge<T extends AnyRecord>(target: T, source?: AnyRecord): T
   if (!source) return out as T;
 
   for (const [key, value] of Object.entries(source)) {
+    if (["__proto__", "constructor", "prototype"].includes(key)) continue;
     const prev = out[key];
     if (isRecord(prev) && isRecord(value)) {
       out[key] = deepMerge(prev, value);

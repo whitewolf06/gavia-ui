@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
+import { WlButton, WlMenu, type WlMenuExpose, type WlMenuItem } from "gavia-ui";
 import { ref } from "vue";
-import { WlMenu, WlButton, type WlMenuItem, type WlMenuExpose } from "../../../../../../packages/ui-kit/src";
 const popup = ref<WlMenuExpose | null>(null);
 const message = ref(t("examples.no_command_selected_yet_0488"));
 const items: WlMenuItem[] = [
@@ -14,10 +14,16 @@ const items: WlMenuItem[] = [
   { key: "remove", label: t("examples.delete_0037"), icon: "trash", danger: true, command: () => message.value = t("examples.deletion_selected_the_application_adds_confirmation_0493") }
 ];
 </script>
+
 <template>
   <div class="wl-stack" data-space="lg">
     <div><WlMenu :items="items" :aria-label="t('examples.static_material_commands_0494')" /></div>
-    <div><WlButton @click="popup?.toggle($event)">{{ t("examples.open_popup_menu_0495") }}</WlButton><WlMenu ref="popup" popup :items="items" :aria-label="t('examples.material_popup_commands_0496')" /></div>
+    <div><WlButton @click="popup?.toggle($event)">{{ t("examples.open_popup_menu_0495") }}</WlButton><WlMenu
+      ref="popup"
+      popup
+      :items="items"
+      :aria-label="t('examples.material_popup_commands_0496')"
+    /></div>
     <p class="wl-text-small" role="status">{{ message }}</p>
     <p class="wl-text-small wl-text-muted">{{ t("examples.home_and_end_move_focus_escape_closes_the_popup_shortcut_displ_0497") }}</p>
   </div>

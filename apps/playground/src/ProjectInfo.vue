@@ -3,11 +3,11 @@ import { usePlaygroundI18n } from "./i18n";
 const { t } = usePlaygroundI18n();
 import { computed, ref } from "vue";
 import changelogSource from "../../../CHANGELOG.md?raw";
-import { gaviaProjectInfo as project } from "./project/project-info";
-import { localizeChangelogMarkdown } from "./project/changelog-localization";
-import { parseChangelog } from "./project/changelog";
-import ChangelogInline from "./project/ChangelogInline.vue";
 import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
+import { parseChangelog } from "./project/changelog";
+import { localizeChangelogMarkdown } from "./project/changelog-localization";
+import ChangelogInline from "./project/ChangelogInline.vue";
+import { gaviaProjectInfo as project } from "./project/project-info";
 import { usePageAnchor } from "./usePageAnchor";
 
 const changelog = computed(() => parseChangelog(localizeChangelogMarkdown(changelogSource), project.documentationBaseUrl));
@@ -17,10 +17,20 @@ usePageAnchor(projectElement);
 </script>
 
 <template>
-  <main ref="projectElement" class="project-main wl-container wl-stack" data-space="2xl" id="project-top" data-testid="changelog-page" aria-labelledby="project-title">
-    <PlaygroundPageHeader title="Changelog" title-id="project-title"
+  <main
+    id="project-top"
+    ref="projectElement"
+    class="project-main wl-container wl-stack"
+    data-space="2xl"
+    data-testid="changelog-page"
+    aria-labelledby="project-title"
+  >
+    <PlaygroundPageHeader
+      title="Changelog"
+      title-id="project-title"
       :description="t('shell.ProjectInfo.text356')"
-      :breadcrumbs="[{ label: 'Changelog' }]">
+      :breadcrumbs="[{ label: 'Changelog' }]"
+    >
       <template #navigation>
         <nav class="wl-inline" data-space="lg" :aria-label="t('shell.ProjectInfo.text357')">
           <a class="project-link" href="#project-changelog">{{ t('shell.ProjectInfo.text358') }}</a>
@@ -28,7 +38,13 @@ usePageAnchor(projectElement);
       </template>
     </PlaygroundPageHeader>
 
-    <section id="project-changelog" data-testid="project-changelog" aria-labelledby="project-changelog-title" class="wl-stack" data-space="xl">
+    <section
+      id="project-changelog"
+      data-testid="project-changelog"
+      aria-labelledby="project-changelog-title"
+      class="wl-stack"
+      data-space="xl"
+    >
       <header class="wl-stack" data-space="sm">
         <p class="project-eyebrow wl-text-small">Changelog</p>
         <h2 id="project-changelog-title" class="wl-text-title">{{ t('shell.ProjectInfo.text359') }}</h2>
@@ -36,25 +52,48 @@ usePageAnchor(projectElement);
         <p class="wl-text-small"><a class="project-link" :href="project.changelogUrl">{{ t('shell.ProjectInfo.text361') }}</a></p>
       </header>
       <nav class="project-history-nav wl-inline" data-space="md" :aria-label="t('shell.ProjectInfo.text362')">
-        <a v-for="section in changelog.sections" :key="section.id" class="project-link" :href="`#${section.id}`">{{ section.title }}</a>
+        <a
+          v-for="section in changelog.sections"
+          :key="section.id"
+          class="project-link"
+          :href="`#${section.id}`"
+        >{{ section.title }}</a>
       </nav>
       <div class="wl-stack" data-space="md">
         <template v-for="(block, index) in changelog.introduction" :key="index">
           <p v-if="block.kind === 'paragraph'" class="wl-text-body wl-text-muted"><ChangelogInline :content="block.content" /></p>
+          <!-- ChangelogInline renders the heading as accessible text, code and links. -->
+          <!-- eslint-disable-next-line vuejs-accessibility/heading-has-content -->
           <h3 v-else-if="block.kind === 'heading'" class="wl-text-heading"><ChangelogInline :content="block.content" /></h3>
-          <ul v-else class="project-list wl-text-body"><li v-for="(item, itemIndex) in block.items" :key="itemIndex"><ChangelogInline :content="item" /></li></ul>
+          <ul v-else class="project-list wl-text-body">
+            <li v-for="(item, itemIndex) in block.items" :key="itemIndex"><ChangelogInline :content="item" /></li>
+          </ul>
         </template>
       </div>
-      <article v-for="section in changelog.sections" :key="section.id" :id="section.id" class="project-release wl-surface wl-stack" data-space="lg" :aria-labelledby="`${section.id}-title`" data-testid="project-changelog-section">
+      <article
+        v-for="section in changelog.sections"
+        :id="section.id"
+        :key="section.id"
+        class="project-release wl-surface wl-stack"
+        data-space="lg"
+        :aria-labelledby="`${section.id}-title`"
+        data-testid="project-changelog-section"
+      >
         <header class="wl-stack" data-space="xs">
-          <h3 :id="`${section.id}-title`" class="wl-text-heading">{{ section.version ? t('shell.ProjectInfo.text363', { arg0: section.version }) : section.title }}</h3>
+          <h3 :id="`${section.id}-title`" class="wl-text-heading">
+            {{ section.version ? t('shell.ProjectInfo.text363', { arg0: section.version }) : section.title }}
+          </h3>
           <p v-if="section.date" class="wl-text-small wl-text-muted"><time :datetime="section.date">{{ section.date }}</time></p>
           <p v-if="section.unreleased" class="wl-text-small wl-text-muted">{{ t('shell.ProjectInfo.text364') }}</p>
         </header>
         <template v-for="(block, index) in section.blocks" :key="index">
+          <!-- ChangelogInline renders the heading as accessible text, code and links. -->
+          <!-- eslint-disable-next-line vuejs-accessibility/heading-has-content -->
           <h4 v-if="block.kind === 'heading'" class="wl-text-subheading"><ChangelogInline :content="block.content" /></h4>
           <p v-else-if="block.kind === 'paragraph'" class="wl-text-body wl-text-muted"><ChangelogInline :content="block.content" /></p>
-          <ul v-else class="project-list wl-text-body"><li v-for="(item, itemIndex) in block.items" :key="itemIndex"><ChangelogInline :content="item" /></li></ul>
+          <ul v-else class="project-list wl-text-body">
+            <li v-for="(item, itemIndex) in block.items" :key="itemIndex"><ChangelogInline :content="item" /></li>
+          </ul>
         </template>
       </article>
     </section>

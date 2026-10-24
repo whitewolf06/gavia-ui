@@ -1,0 +1,16 @@
+.git
+**/node_modules
+**/dist
+**/coverage
+**/test-results*
+**/playwright-report
+**/visual-baselines
+**/visual-baselines-linux
+.tools
+.pnpm-store
+.tmp
+review
+AGENTS.local.md
+.npmrc.local
+**/*.tgz
+**/*.log

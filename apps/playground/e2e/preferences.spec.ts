@@ -1,17 +1,20 @@
-import { expect, test, type Page } from "@playwright/test";
-import { wlManifest } from "../../../packages/ui-kit/src/manifest";
+import { expect, type Page, test } from "@playwright/test";
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
+import { wlManifest } from "../../../packages/ui-kit/src/manifest";
+import { playgroundRouteParams } from "./playground-url";
 import { chooseDropdownOption, chooseShowcaseLanguage, nativeReload, openDocumentationMenu } from "./select-helpers";
 
 test.use({ locale: "ru-RU", colorScheme: "light", contextOptions: { reducedMotion: "reduce" } });
 
 const pageErrors = new WeakMap<Page, string[]>();
 const graphiteLabel = wlDesignThemes.find((theme) => theme.name === "graphite")!.label;
+
 test.beforeEach(async ({ page }) => {
   const errors: string[] = [];
   pageErrors.set(page, errors);
   page.on("pageerror", (error) => errors.push(error.message));
 });
+
 test.afterEach(async ({ page }) => {
   expect(pageErrors.get(page), "Preference and catalog interactions have no runtime errors").toEqual([]);
 });
@@ -21,8 +24,17 @@ async function expectPreferences(page: Page, language: "en" | "ru", preference: 
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme);
   await expect.poll(() => {
     const url = new URL(page.url());
-    return { language: url.searchParams.get("lang"), preference: url.searchParams.get("theme") };
+    return { language: playgroundRouteParams(url).get("lang"), preference: url.searchParams.get("theme") };
   }).toEqual({ language, preference });
+}
+
+async function expectMetricAnchor(page: Page, target: string, anchor: string | undefined): Promise<void> {
+  if (!anchor) return;
+  await expect.poll(() => page.locator(target).evaluate((element) => {
+    const headerBottom = document.querySelector(".pg-top")!.getBoundingClientRect().bottom;
+    const top = element.getBoundingClientRect().top;
+    return top >= headerBottom - 1 && top < window.innerHeight / 2;
+  }), { message: "Metric anchor is visible below the sticky header" }).toBe(true);
 }
 
 async function chooseTheme(page: Page, label: string): Promise<void> {
@@ -55,8 +67,9 @@ for (const detection of [
   });
 }
 
-test("manual theme and language persist, explicit links override them, and System restores OS tracking", async ({ page }) => {
+test("manual theme and language persist, explicit links override them, and System restores OS tracking", { tag: "@cross-browser" }, async ({ page }) => {
   await page.goto("/");
+  await expect(page.getByTestId("home-page")).toBeVisible();
   await expectPreferences(page, "ru", "system", "gavia");
   await chooseTheme(page, graphiteLabel);
   await chooseShowcaseLanguage(page, "en");
@@ -65,19 +78,23 @@ test("manual theme and language persist, explicit links override them, and Syste
     theme: localStorage.getItem("gavia-ui.theme"), locale: localStorage.getItem("gavia-ui.locale")
   }))).toEqual({ theme: "graphite", locale: "en" });
   await page.goto("/");
+  await expect(page.getByTestId("home-page")).toBeVisible();
   await expectPreferences(page, "en", "graphite", "graphite");
   await page.emulateMedia({ colorScheme: "dark" });
   await page.emulateMedia({ colorScheme: "light" });
   await expectPreferences(page, "en", "graphite", "graphite");
   await page.goto("/?theme=gavia&lang=ru");
+  await expect(page.getByTestId("home-page")).toBeVisible();
   await expectPreferences(page, "ru", "gavia", "gavia");
   await page.goto("/");
+  await expect(page.getByTestId("home-page")).toBeVisible();
   await expectPreferences(page, "en", "graphite", "graphite");
   await chooseTheme(page, "System");
   await expectPreferences(page, "en", "system", "gavia");
   await page.emulateMedia({ colorScheme: "dark" });
   await expectPreferences(page, "en", "system", "gavia-dark");
   await page.goto("/");
+  await expect(page.getByTestId("home-page")).toBeVisible();
   await expectPreferences(page, "en", "system", "gavia-dark");
 });
 
@@ -120,11 +137,11 @@ test("all four home metric links open their section and preserve preferences and
     await expect(metrics).toHaveCount(4);
     const link = metrics.nth(destination.index);
     const href = new URL((await link.getAttribute("href"))!, page.url());
-    expect(href.searchParams.get("view")).toBe(destination.view);
-    expect(href.searchParams.get("section")).toBe(destination.section);
+    expect(playgroundRouteParams(href).get("view")).toBe(destination.view);
+    expect(playgroundRouteParams(href).get("section")).toBe(destination.section);
     expect(href.hash).toBe(destination.anchor ? "#" + destination.anchor : "");
     expect(href.searchParams.get("theme")).toBe("system");
-    expect(href.searchParams.get("lang")).toBe("ru");
+    expect(playgroundRouteParams(href).get("lang")).toBe("ru");
     // Enter exercises the real link's keyboard activation as well as its focus state.
     await link.focus();
     await expect(link).toBeFocused();
@@ -133,13 +150,7 @@ test("all four home metric links open their section and preserve preferences and
     await expect.poll(() => new URL(page.url()).hash).toBe(href.hash);
     await expect(page.locator(destination.target)).toBeVisible();
     await expect(page.locator(destination.target)).toBeInViewport();
-    if (destination.anchor) {
-      await expect.poll(() => page.locator(destination.target).evaluate((element) => {
-        const headerBottom = document.querySelector(".pg-top")!.getBoundingClientRect().bottom;
-        const top = element.getBoundingClientRect().top;
-        return top >= headerBottom - 1 && top < window.innerHeight / 2;
-      }), { message: "Metric anchor is visible below the sticky header" }).toBe(true);
-    }
+    await expectMetricAnchor(page, destination.target, destination.anchor);
     await page.goBack();
     await expect(page.getByTestId("home-page")).toBeVisible();
     await page.goForward();
@@ -165,12 +176,12 @@ test("sidebar components are alphabetical, searchable, clearable, and keep the c
   await expect(catalog.locator(".docs-catalog-group")).toHaveCount(1);
   await catalog.getByRole("button", { name: "WlFilePicker", exact: true }).click();
   await expect(docs.getByRole("heading", { name: "WlFilePicker", level: 1, exact: true })).toBeVisible();
-  if (compact) await expect(menu).toHaveJSProperty("open", false);
+  await expect(menu).toHaveJSProperty("open", !compact);
   await openDocumentationMenu(page);
   await expect(search).toHaveValue("FiLe");
   // Selecting the current component must also close compact navigation.
   await catalog.getByRole("button", { name: "WlFilePicker", exact: true }).click();
-  if (compact) await expect(menu).toHaveJSProperty("open", false);
+  await expect(menu).toHaveJSProperty("open", !compact);
   await openDocumentationMenu(page);
   await search.fill("zzzx-no-component");
   await expect(catalog.locator(".docs-catalog-group")).toHaveCount(0);
@@ -191,8 +202,12 @@ test("sidebar components are alphabetical, searchable, clearable, and keep the c
 
 test("blocked local storage still permits automatic detection and manual preference changes", async ({ page }) => {
   await page.addInitScript(() => {
-    Storage.prototype.getItem = () => { throw new DOMException("Storage unavailable", "SecurityError"); };
-    Storage.prototype.setItem = () => { throw new DOMException("Storage unavailable", "SecurityError"); };
+    Storage.prototype.getItem = () => {
+      throw new DOMException("Storage unavailable", "SecurityError");
+    };
+    Storage.prototype.setItem = () => {
+      throw new DOMException("Storage unavailable", "SecurityError");
+    };
   });
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");

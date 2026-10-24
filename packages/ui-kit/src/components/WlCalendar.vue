@@ -1,30 +1,68 @@
-<script setup lang="ts">
-import { useWlLocale } from "../config";
-import { computed, nextTick, ref, watch } from "vue";
-import WlIcon from "./WlIcon.vue";
-import type { WlCalendarEvent } from "../types";
+<script setup lang="ts" generic="Multiple extends boolean = false">
+/** WlCalendar public component contract.
+ * @since 0.1.0
+ * @slot day - Custom day content.
+ */
+import { computed, nextTick, ref, useAttrs, watch } from "vue";
 import type { WlNoModelModifiers } from "../model-types";
-const locale = useWlLocale();
-
+import type { WlCalendarDaySlotProps, WlCalendarModel } from "../picker-types";
+import type { WlPt } from "../pt-types";
+import type { WlCalendarEvent } from "../types";
+import { mergeWlAttrs, useWlLocale, useWlPt } from "../config";
+import { wlPlural } from "../utils/format";
+import WlIcon from "./WlIcon.vue";
+defineOptions({ inheritAttrs: false });
 const props = withDefaults(
   defineProps<{
+    /**
+     * WlCalendarEvent[]: { date (ISO), label, tone?: "blue" | "gray" }.
+     * @default []
+     */
     events?: readonly WlCalendarEvent[];
+    /** Modifier flags accepted by the component's typed model contract. */
     modelModifiers?: WlNoModelModifiers;
+    /** Modifier contract for the displayed-month model; built-in modifiers are unsupported. */
     monthModifiers?: WlNoModelModifiers;
+    /** Enable selection of more than one value. */
+    multiple?: Multiple & boolean;
+    /**
+     * Disable user interaction with this component.
+     * @default false
+     */
+    disabled?: boolean;
+    /** Attributes and callbacks for the component's documented pass-through sections. */
+    pt?: WlPt<"calendar">;
   }>(),
   {
-    events: () => []
+    events: () => [], multiple: () => false as Multiple, disabled: false
   }
 );
 
 /**
- * v-model — selected date as ISO "YYYY-MM-DD" string (serializable).
+ * v-model — selected ISO "YYYY-MM-DD" date, or ISO date array in multiple mode.
  * v-model:month — displayed month as "YYYY-MM"; uncontrolled default = current month.
  */
-const selected = defineModel<string, never>({ default: "" });
+const selected = defineModel<WlCalendarModel<NoInfer<Multiple>>, never>({ default: "" as never });
+/** Displayed month in YYYY-MM format.
+ * Paired with update:month.
+ * @default ""
+ */
 const viewMonth = defineModel<string, never>("month", { default: "" });
 
-const weekdays = computed(() => Array.from({ length: 7 }, (_, index) => locale.value.dayNamesMin[(index + 1) % 7]));
+defineSlots<{
+  /** Custom calendar day content with its date and selection state. */
+  day?(props: WlCalendarDaySlotProps): unknown; }>();
+
+const locale = useWlLocale();
+const attrs = useAttrs();
+const section = useWlPt("calendar", computed(() => props.pt));
+const selection = computed<string[]>(() => props.multiple ? Array.isArray(selected.value) ? selected.value : [] : typeof selected.value === "string" && selected.value ? [selected.value] : []);
+const dateLabel = computed(() => new Intl.DateTimeFormat(locale.value.localeCode, { dateStyle: "long" }));
+
+const weekdays = computed(() => Array.from(
+  { length: 7 },
+  (_, index) => locale.value.dayNamesMin[(index + locale.value.firstDayOfWeek) % 7]
+));
 
 const pad2 = (n: number): string => String(n).padStart(2, "0");
 const toIso = (y: number, mo: number, d: number): string => `${y}-${pad2(mo + 1)}-${pad2(d)}`;
@@ -36,7 +74,7 @@ function currentMonth(): string {
 
 /** Effective "YYYY-MM" (falls back to the current month on missing/invalid input). */
 const monthIso = computed(() =>
-  /^\d{4}-(0[1-9]|1[0-2])$/.test(viewMonth.value) ? viewMonth.value : currentMonth()
+  /^\d{4}-(?:0[1-9]|1[0-2])$/.test(viewMonth.value) ? viewMonth.value : currentMonth()
 );
 
 const monthParts = computed(() => {
@@ -71,7 +109,7 @@ interface CalCell {
 /** Mon-first grid; adjacent-month days included to complete the weeks. */
 const cells = computed<CalCell[]>(() => {
   const { y, mo } = monthParts.value;
-  const lead = (new Date(y, mo, 1).getDay() + 6) % 7; // days borrowed from previous month
+  const lead = (new Date(y, mo, 1).getDay() - locale.value.firstDayOfWeek + 7) % 7;
   const daysIn = new Date(y, mo + 1, 0).getDate();
   const daysInPrev = new Date(y, mo, 0).getDate();
   const total = Math.ceil((lead + daysIn) / 7) * 7;
@@ -106,7 +144,7 @@ const cells = computed<CalCell[]>(() => {
       day: cd,
       inMonth,
       today: iso === todayIso,
-      selected: iso === selected.value,
+      selected: selection.value.includes(iso),
       events: eventsByDate.value.get(iso) ?? []
     });
   }
@@ -127,28 +165,33 @@ const focusedIso = ref("");
 watch(
   [cells, selected],
   ([nextCells]) => {
-    if (selected.value && nextCells.some((cell) => cell.iso === selected.value)) {
-      focusedIso.value = selected.value;
+    if (!props.multiple && selection.value[0] && nextCells.some((cell) => cell.iso === selection.value[0])) {
+      focusedIso.value = selection.value[0];
     } else if (!nextCells.some((cell) => cell.iso === focusedIso.value)) {
-      focusedIso.value =
-        nextCells.find((cell) => cell.today)?.iso ??
-        nextCells.find((cell) => cell.inMonth)?.iso ??
-        nextCells[0]?.iso ??
-        "";
+      focusedIso.value
+        = selection.value.find((iso) => nextCells.some((cell) => cell.iso === iso))
+          ?? nextCells.find((cell) => cell.today)?.iso
+          ?? nextCells.find((cell) => cell.inMonth)?.iso
+          ?? nextCells[0]?.iso
+          ?? "";
     }
   },
   { immediate: true }
 );
 
 function shift(delta: number): void {
+  if (props.disabled) return;
   const { y, mo } = monthParts.value;
   const d = new Date(y, mo + delta, 1);
   viewMonth.value = `${d.getFullYear()}-${pad2(d.getMonth() + 1)}`;
 }
 
 function pick(cell: CalCell): void {
+  if (props.disabled) return;
   focusedIso.value = cell.iso;
-  selected.value = cell.iso;
+  selected.value = (props.multiple
+    ? selection.value.includes(cell.iso) ? selection.value.filter((iso) => iso !== cell.iso) : [...selection.value, cell.iso]
+    : cell.iso) as WlCalendarModel<Multiple>;
   if (!cell.inMonth) {
     viewMonth.value = cell.iso.slice(0, 7);
   }
@@ -160,12 +203,12 @@ function dateFromIso(iso: string): Date {
 }
 
 function cellLabel(cell: CalCell): string {
-  const date = new Intl.DateTimeFormat(locale.value.localeCode, { dateStyle: "long" }).format(
-    dateFromIso(cell.iso)
-  );
+  const date = dateLabel.value.format(dateFromIso(cell.iso));
   const events = cell.events.length;
   if (!events) return date;
-  const suffix = events === 1 ? locale.value.eventOne : events < 5 ? locale.value.eventFew : locale.value.eventMany;
+  const suffix = wlPlural(locale.value.localeCode, events, {
+    one: locale.value.eventOne, few: locale.value.eventFew, other: locale.value.eventMany
+  });
   return `${date}, ${events} ${suffix}`;
 }
 
@@ -187,6 +230,7 @@ function shiftedIso(iso: string, months: number): string {
 }
 
 function onDayKeydown(event: KeyboardEvent, cell: CalCell): void {
+  if (props.disabled) return;
   const index = cells.value.findIndex((entry) => entry.iso === cell.iso);
   let targetIndex = index;
 
@@ -222,27 +266,70 @@ function onDayKeydown(event: KeyboardEvent, cell: CalCell): void {
 </script>
 
 <template>
-  <div class="wl-cal" data-wl="calendar">
-    <div class="wl-cal__head">
-      <button type="button" class="wl-cal__nav" :aria-label="locale.prevMonth" @click="shift(-1)">
+  <div
+    v-bind="mergeWlAttrs(section('root'), attrs)"
+    class="wl-cal"
+    data-wl="calendar"
+    :aria-disabled="props.disabled || undefined"
+  >
+    <div v-bind="section('header')" class="wl-cal__head">
+      <button
+        type="button"
+        v-bind="section('prevButton')"
+        class="wl-cal__nav"
+        :aria-label="locale.prevMonth"
+        :disabled="props.disabled"
+        @click="shift(-1)"
+      >
         <WlIcon name="chevron-left" :size="15" />
       </button>
-      <span class="wl-cal__title" aria-live="polite">{{ title }}</span>
-      <button type="button" class="wl-cal__nav" :aria-label="locale.nextMonth" @click="shift(1)">
+      <span v-bind="section('title')" class="wl-cal__title" aria-live="polite">{{ title }}</span>
+      <button
+        type="button"
+        v-bind="section('nextButton')"
+        class="wl-cal__nav"
+        :aria-label="locale.nextMonth"
+        :disabled="props.disabled"
+        @click="shift(1)"
+      >
         <WlIcon name="chevron-right" :size="15" />
       </button>
     </div>
-    <div class="wl-cal__body" role="grid" :aria-label="title">
-      <div class="wl-cal__week" role="row">
-        <span v-for="wd in weekdays" :key="wd" class="wl-cal__wd" role="columnheader">
+    <div
+      v-bind="section('body')"
+      class="wl-cal__body"
+      role="grid"
+      :aria-label="title"
+      :aria-multiselectable="props.multiple || undefined"
+    >
+      <div v-bind="section('week')" class="wl-cal__week" role="row">
+        <span
+          v-for="wd in weekdays"
+          :key="wd"
+          v-bind="section('weekday')"
+          class="wl-cal__wd"
+          role="columnheader"
+        >
           {{ wd }}
         </span>
       </div>
-      <div ref="gridRef" class="wl-cal__grid" role="rowgroup">
-        <div v-for="(week, weekIndex) in weeks" :key="weekIndex" class="wl-cal__row" role="row">
+      <div
+        ref="gridRef"
+        v-bind="section('grid')"
+        class="wl-cal__grid"
+        role="rowgroup"
+      >
+        <div
+          v-for="(week, weekIndex) in weeks"
+          :key="weekIndex"
+          v-bind="section('row')"
+          class="wl-cal__row"
+          role="row"
+        >
           <button
             v-for="cell in week"
             :key="cell.iso"
+            v-bind="section('day', { selected: cell.selected, today: cell.today, otherMonth: !cell.inMonth, disabled: props.disabled })"
             type="button"
             class="wl-cal__day"
             :class="{
@@ -256,18 +343,21 @@ function onDayKeydown(event: KeyboardEvent, cell: CalCell): void {
             :aria-label="cellLabel(cell)"
             :aria-selected="cell.selected"
             :aria-current="cell.today ? 'date' : undefined"
+            :disabled="props.disabled"
             @focus="focusedIso = cell.iso"
             @click="pick(cell)"
             @keydown="onDayKeydown($event, cell)"
           >
-            <span class="wl-cal__dnum">{{ cell.day }}</span>
-            <span
-              v-for="(ev, eventIndex) in cell.events"
-              :key="ev.id ?? `${ev.label}:${eventIndex}`"
-              class="wl-cal__ev"
-              :class="{ 'wl-cal__ev--blue': ev.tone === 'blue' }"
-              >{{ ev.label }}</span
-            >
+            <slot name="day" v-bind="cell">
+              <span v-bind="section('dayNumber')" class="wl-cal__dnum">{{ cell.day }}</span>
+              <span
+                v-for="(ev, eventIndex) in cell.events"
+                :key="ev.id ?? `${ev.label}:${eventIndex}`"
+                v-bind="section('event')"
+                class="wl-cal__ev"
+                :class="{ 'wl-cal__ev--blue': ev.tone === 'blue' }"
+              >{{ ev.label }}</span>
+            </slot>
           </button>
         </div>
       </div>

@@ -1,21 +1,16 @@
 export type WlSize = "xs" | "sm" | "md" | "lg";
 export type WlSizeSm = "sm" | "md" | "lg";
 export type WlDensity = "default" | "compact";
+export type WlTone = "neutral" | "accent" | "info" | "success" | "warning" | "danger";
 
-export type WlButtonVariant =
-  | "primary"
-  | "secondary"
-  | "ghost"
-  | "soft"
-  | "danger"
-  | "danger-quiet"
-  | "soft-danger"
-  | "link";
+export type WlButtonVariant
+  = | "primary"
+    | "secondary"
+    | "ghost"
+    | "soft"
+    | "link";
 
-export type WlTagVariant = "gray" | "blue" | "green" | "amber" | "red";
-export type WlBadgeVariant = "gray" | "accent" | "success" | "warn" | "danger";
-export type WlAlertVariant = "info" | "ok" | "warn" | "err";
-export type WlProgressVariant = "default" | "ok";
+export type WlTagColor = "gray" | "blue" | "green" | "amber" | "red";
 
 export type WlAvatarSize = 24 | 28 | 32 | 36 | 48;
 export type WlAvatarPresence = "online" | "busy" | "offline";
@@ -26,8 +21,8 @@ export type WlMultiSelectDisplay = "comma" | "chip";
 export type WlDatePickerSelectionMode = "single" | "range";
 /** Inclusive ISO range. A null end means the first date has been selected. */
 export type WlDateRange = [start: string, end: string | null];
-export type WlDatePickerModel<Mode extends WlDatePickerSelectionMode = "single"> =
-  (Mode extends "range" ? WlDateRange : string) | null;
+export type WlDatePickerModel<Mode extends WlDatePickerSelectionMode = "single">
+  = (Mode extends "range" ? WlDateRange : string) | null;
 
 export type WlSwitchSize = "sm" | "md";
 export type WlSpinnerSize = "sm" | "md" | "lg";
@@ -42,10 +37,14 @@ export interface WlTabItem<Key extends string = string> {
   label: string;
   icon?: WlIconInput;
   count?: number;
+  disabled?: boolean;
+  /** Native URL for a tab that also navigates when activated. */
+  href?: string;
+  /** Router destination consumed by the configured WlLink adapter. */
+  to?: unknown;
 }
 
 export type WlIconButtonVariant = "ghost" | "secondary" | "soft";
-export type WlPillVariant = "neutral" | "info" | "ok" | "warn" | "err";
 
 export interface WlSegmentedOption<Value extends string = string> {
   label: string;
@@ -55,19 +54,24 @@ export interface WlSegmentedOption<Value extends string = string> {
 }
 
 export interface WlBreadcrumbItem {
+  key?: string | number;
   label: string;
-  to?: string;
+  to?: unknown;
   href?: string;
   icon?: WlIconInput;
 }
 
 export interface WlStepItem {
   label: string;
+  key?: string | number;
+  description?: string;
+  disabled?: boolean;
+  error?: boolean;
 }
 
-export type { WlTableRow, WlTableColumn, WlTableFieldColumn, WlTableVirtualColumn, WlTableFieldKey, WlTableCellSlotProps, WlTableSlots } from "./table-types";
+export type { WlTableCellSlotProps, WlTableColumn, WlTableFieldColumn, WlTableFieldKey, WlTableRow, WlTableSlots, WlTableVirtualColumn } from "./table-types";
 
-export type WlStatCardTone = "accent" | "success";
+export type WlStatCardTone = WlTone;
 
 export type WlColorPickerSize = "sm" | "md";
 
@@ -91,5 +95,7 @@ export interface WlFileReject {
 
 export type WlThemeName = "gavia" | "white" | "graphite" | "newspaper" | "gavia-dark";
 
-export type { WlMenuItemBase, WlMenuItem, WlMenuExpose, WlAccordionItem, WlAccordionSlots, WlSidebarItem, WlSidebarGroup, WlSidebarExpose, WlCommandPaletteItem, WlCommandPaletteGroup, WlCommandPaletteExpose } from "./navigation-types";
+export type { WlAccordionItem, WlAccordionSlots, WlCommandPaletteExpose, WlCommandPaletteGroup, WlCommandPaletteItem, WlMenuExpose, WlMenuItem, WlMenuItemBase, WlSidebarExpose, WlSidebarGroup, WlSidebarItem } from "./navigation-types";
 export type { WlDatePickerLocale } from "./locale-types";
+
+export type { WlTableClass, WlTableHeaderSlotProps, WlTableRowClass, WlTableRowKey, WlTableSelectionMode, WlTableSort, WlTableSortDirection, WlTableSortFn } from "./table-types";

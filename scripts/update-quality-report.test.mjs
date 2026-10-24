@@ -1,16 +1,21 @@
-import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, writeFileSync, mkdirSync, mkdtempSync, cpSync, rmSync, existsSync } from "node:fs";
-import { resolve, join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import { createQualityReport, validateQualityReport, coverageBadge } from "./update-quality-report.mjs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { test } from "node:test";
+import { fileURLToPath } from "node:url";
+import { coverageBadge, createQualityReport, validateQualityReport } from "./update-quality-report.mjs";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const version = "0.9.1";
 const measuredAt = "2026-10-07T22:42:02.947Z";
-const summary = () => ({ total: { lines: { pct: 98.28 }, statements: { pct: 98.28 }, branches: { pct: 87.04 }, functions: { pct: 82.73 } } });
-const run = () => ({ success: true, startTime: Date.parse(measuredAt), numTotalTests: 12, numPassedTests: 12, numFailedTests: 0, numFailedTestSuites: 0 });
+const summary = () => ({
+  total: { lines: { pct: 98.28 }, statements: { pct: 98.28 }, branches: { pct: 87.04 }, functions: { pct: 82.73 } }
+});
+const run = () => ({
+  success: true, startTime: Date.parse(measuredAt), numTotalTests: 12,
+  numPassedTests: 12, numFailedTests: 0, numFailedTestSuites: 0
+});
 const source = { revision: "a".repeat(40), dirty: true, environment: "local" };
 const report = () => createQualityReport(summary(), run(), version, source);
 
@@ -58,13 +63,13 @@ test("restore validates schema, version, date and source without changing measur
 
 test("offline accessible SVG snapshot labels only unit line coverage", () => {
   assert.equal(coverageBadge(98.28), '<svg xmlns="http://www.w3.org/2000/svg" width="188" height="24" viewBox="0 0 188 24" role="img" aria-labelledby="unit-coverage-title">\n'
-    + '  <title id="unit-coverage-title">unit coverage: 98.28%</title>\n'
-    + '  <rect x="0.5" y="0.5" width="187" height="23" rx="3" fill="#eef0f2" stroke="#c5cbd1"/>\n'
-    + '  <path d="M119 1v22" stroke="#c5cbd1"/>\n'
-    + '  <g fill="#26323d" font-family="Verdana, DejaVu Sans, sans-serif" font-size="11" text-anchor="middle">\n'
-    + '    <text x="60" y="16">unit coverage</text>\n'
-    + '    <text x="153" y="16" font-weight="600">98.28%</text>\n'
-    + '  </g>\n</svg>\n');
+  + '  <title id="unit-coverage-title">unit coverage: 98.28%</title>\n'
+  + '  <rect x="0.5" y="0.5" width="187" height="23" rx="3" fill="#eef0f2" stroke="#c5cbd1"/>\n'
+  + '  <path d="M119 1v22" stroke="#c5cbd1"/>\n'
+  + '  <g fill="#26323d" font-family="Verdana, DejaVu Sans, sans-serif" font-size="11" text-anchor="middle">\n'
+  + '    <text x="60" y="16">unit coverage</text>\n'
+  + '    <text x="153" y="16" font-weight="600">98.28%</text>\n'
+  + "  </g>\n</svg>\n");
   assert.match(coverageBadge(100), /unit coverage: 100%/);
   assert.throws(() => coverageBadge("98.28"));
 });

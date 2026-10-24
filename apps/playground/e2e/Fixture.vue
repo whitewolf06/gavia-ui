@@ -1,12 +1,23 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
 import {
-  WlAutocomplete, WlButton, WlCommandPalette, WlConfirmDialog, WlDatePicker, WlDialog, WlDrawer,
-  WlMenu, WlMultiSelect, WlPopover, WlSelect, WlTable, WlToast,
-  useWlConfirm, useWlToast, type WlMenuExpose, type WlPopoverExpose } from "../../../packages/ui-kit/src";
+  useWlConfirm, useWlToast, WlAutocomplete, WlButton, WlCheckbox, WlCommandPalette, WlConfirmDialog, WlDatePicker,
+  WlDialog, WlDrawer, WlField, WlMenu, type WlMenuExpose, WlMultiSelect, WlPopover,
+  type WlPopoverExpose, WlSelect, WlTable, WlTimePicker, WlToast } from "gavia-ui";
+import { computed, ref } from "vue";
 
 const choices = [{ label: "Альфа", value: "a" }, { label: "Бета", value: "b" }];
 const select = ref<string | null>(null);
+const reviewListbox = new URLSearchParams(window.location.search).has("review-listbox");
+const reviewTimePicker = new URLSearchParams(window.location.search).has("review-time-picker");
+const nativeTime = ref<string | null>("09:30");
+const nativeTimeDisabled = ref(false);
+const nativeTimeInvalid = ref(false);
+const longSelection = ref<string | null>(null);
+const longOptions = Array.from({ length: 30 }, (_, index) => ({
+  value: `option-${index + 1}`,
+  label: index === 1 ? "Beta disabled" : index === 5 ? "Beta enabled" : `Option ${index + 1}`,
+  disabled: index === 1
+}));
 const multi = ref<string[]>([]);
 const automatic = ref<unknown>("");
 const automaticValue = computed(() => {
@@ -24,31 +35,98 @@ const popover = ref<WlPopoverExpose | null>(null);
 const status = ref("Ожидание");
 const toast = useWlToast();
 const { confirmDanger } = useWlConfirm();
-const items = [{ label: "Выполнить", command: () => { status.value = "Меню выполнено"; } }];
+const items = [{ label: "Выполнить", command: () => {
+  status.value = "Меню выполнено";
+} }];
 const commands = [{ id: "actions", label: "Действия", items: [{ id: "save", label: "Сохранить" }] }];
 function openDialog(motion?: boolean): void {
   dialogMotion.value = motion;
   dialog.value = true;
 }
+function focusNativeTime(): void {
+  document.getElementById("example-time")?.focus();
+}
 function ask(): void {
-  confirmDanger({ message: "Удалить элемент?", acceptLabel: "Удалить", accept: () => { status.value = "Подтверждено"; } });
+  confirmDanger({ message: "Удалить элемент?", acceptLabel: "Удалить", accept: () => {
+    status.value = "Подтверждено";
+  } });
 }
 </script>
 
 <template>
   <main class="fixture">
     <h1>Gavia UI regression</h1>
+    <section v-if="reviewTimePicker" class="fixture-card" data-testid="native-time-explorer">
+      <WlCheckbox v-model="nativeTimeDisabled">disabled</WlCheckbox>
+      <WlCheckbox v-model="nativeTimeInvalid">invalid</WlCheckbox>
+      <div class="wl-stack" data-testid="native-time-preview">
+        <WlField
+          id="example-time"
+          v-slot="field"
+          label="Время встречи"
+          hint="С 08:00 до 18:00. Очистка поля устанавливает модель в null."
+        >
+          <WlTimePicker
+            :id="field.id"
+            v-model="nativeTime"
+            :aria-describedby="field.ariaDescribedby"
+            min-time="08:00"
+            max-time="18:00"
+            :disabled="nativeTimeDisabled"
+            :invalid="nativeTimeInvalid"
+          />
+        </WlField>
+        <p role="status">Выбрано: {{ nativeTime ?? 'время не задано' }}</p>
+      </div>
+      <WlButton @click="focusNativeTime">Проверить фокус</WlButton>
+    </section>
+    <section v-if="reviewListbox" class="fixture-card" aria-label="Listbox review">
+      <h2>Long option list</h2>
+      <WlSelect
+        v-model="longSelection"
+        data-testid="review-long-select"
+        :options="longOptions"
+        option-label="label"
+        option-value="value"
+        option-key="value"
+        option-disabled="disabled"
+        clearable
+        aria-label="Long option list"
+        :motion="false"
+      />
+      <output data-testid="review-long-value" aria-label="Selected option">{{ longSelection }}</output>
+    </section>
     <section class="fixture-grid">
       <div class="fixture-card">
         <h2>Формы</h2>
-        <WlSelect v-model="select" :options="choices" option-label="label" option-value="value"
-          aria-label="Выбор" placeholder="Выберите" />
+        <WlSelect
+          v-model="select"
+          :options="choices"
+          option-label="label"
+          option-value="value"
+          aria-label="Выбор"
+          placeholder="Выберите"
+        />
         <output id="select-value">{{ select }}</output>
-        <WlMultiSelect v-model="multi" :options="choices" option-label="label" option-value="value"
-          display="chip" filter aria-label="Множественный выбор" placeholder="Несколько" />
+        <WlMultiSelect
+          v-model="multi"
+          :options="choices"
+          option-label="label"
+          option-value="value"
+          display="chip"
+          filter
+          aria-label="Множественный выбор"
+          placeholder="Несколько"
+        />
         <output id="multi-value">{{ multi.join(',') }}</output>
-        <WlAutocomplete v-model="automatic" :suggestions="suggestions" option-label="label"
-          aria-label="Подсказки" placeholder="Поиск" @complete="suggestions = choices.filter((item) => item.label.toLowerCase().includes($event.query.toLowerCase()))" />
+        <WlAutocomplete
+          v-model="automatic"
+          :suggestions="suggestions"
+          option-label="label"
+          aria-label="Подсказки"
+          placeholder="Поиск"
+          @complete="suggestions = choices.filter((item) => item.label.toLowerCase().includes($event.query.toLowerCase()))"
+        />
         <output id="auto-value">{{ automaticValue }}</output>
         <WlDatePicker v-model="date" show-icon aria-label="Дата" />
         <output id="date-value">{{ date }}</output>
@@ -70,15 +148,24 @@ function ask(): void {
       </div>
       <div class="fixture-card fixture-card--wide">
         <h2>Таблица</h2>
-        <WlTable :columns="[{ key: 'name', label: 'Имя' }, { key: 'value', label: 'Значение' }]"
-          :value="[{ name: 'Первый', value: 1 }, { name: 'Второй', value: 2 }]" />
+        <WlTable
+          :columns="[{ key: 'name', label: 'Имя' }, { key: 'value', label: 'Значение' }]"
+          :value="[{ name: 'Первый', value: 1 }, { name: 'Второй', value: 2 }]"
+        />
       </div>
     </section>
   </main>
-  <WlDialog v-model:visible="dialog" :motion="dialogMotion" header="Проверка диалога"><WlButton id="dialog-action">Действие</WlButton></WlDialog>
+  <WlDialog v-model:visible="dialog" :motion="dialogMotion" header="Проверка диалога">
+    <WlButton id="dialog-action">Действие</WlButton>
+  </WlDialog>
   <WlDrawer v-model:visible="drawer" header="Проверка панели">Содержимое панели</WlDrawer>
   <WlCommandPalette v-model:visible="palette" :groups="commands" />
-  <WlMenu ref="menu" popup aria-label="Действия" :items="items" />
+  <WlMenu
+    ref="menu"
+    popup
+    aria-label="Действия"
+    :items="items"
+  />
   <WlPopover ref="popover" aria-label="Детали">Содержимое поповера</WlPopover>
   <WlToast />
   <WlConfirmDialog />

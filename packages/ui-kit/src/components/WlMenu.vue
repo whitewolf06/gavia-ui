@@ -1,78 +1,147 @@
 <script setup lang="ts" generic="Item extends WlMenuItemBase = WlMenuItem">
+/** WlMenu public component contract.
+ * @since 0.1.0
+ * @slot trigger - Custom trigger content.
+ */
+import { computed, ref, useAttrs } from "vue";
+import type { WlMenuCheckEvent, WlMenuExpose, WlMenuItem, WlMenuItemBase, WlMenuTriggerSlotProps } from "../navigation-types";
+import type { WlPopoverAlign, WlPopoverPlacement } from "../overlay-types";
 import type { WlPt } from "../pt-types";
-import { computed, mergeProps, ref, useAttrs } from "vue";
-import { useWlMotion, useWlPt } from "../config";
-import type { WlMenuItem, WlMenuItemBase, WlMenuExpose } from "../navigation-types";
+import type { MenuDismissReason, MenuPanelExpose } from "../utils/menu";
+import { mergeWlAttrs, useWlMotion, useWlPt } from "../config";
 import { useAnchoredOverlay } from "../utils/anchoredOverlay";
 import { markOverlayLeaving, restoreOverlayEntering } from "../utils/overlayTransition";
-import WlIcon from "./WlIcon.vue";
+import { useWlId } from "../utils/useWlId";
+import MenuPanel from "./internal/MenuPanel.vue";
 
 defineOptions({ inheritAttrs: false });
-const attrs = useAttrs();
-
 const props = withDefaults(defineProps<{
+  /**
+   * WlMenuItem[]: { key?, label?, icon?, shortcut?, danger?, disabled?, separator?, header?, command? }.
+   * @default []
+   */
   items?: readonly (Item & WlMenuItem<NoInfer<Item>>)[];
+  /**
+   * Popup menu; opened through toggle/show.
+   * @default false
+   */
   popup?: boolean;
+  /**
+   * Preferred overlay side relative to its anchor.
+   * @default "auto"
+   */
+  placement?: WlPopoverPlacement;
+  /**
+   * Alignment of the overlay along its anchor.
+   * @default "start"
+   */
+  align?: WlPopoverAlign;
+  /** Accessible menu name. */
   ariaLabel?: string;
+  /** ID of the element labelling the menu. */
   ariaLabelledby?: string;
+  /** Popup menu animation; defaults to WlConfig.motion (true). */
   motion?: boolean;
+  /** Attributes of internal Gavia UI elements. */
   pt?: WlPt<"menu">;
-}>(), { items: () => [], popup: false, motion: undefined });
-const emit = defineEmits<{ open: []; close: [] }>();
+}>(), { items: () => [], popup: false, placement: "auto", align: "start", motion: undefined });
+const emit = defineEmits<{
+  /** Popup menu opened. */
+  open: [];
+  /** Popup menu closed. */
+  close: [];
+  /** Emitted when a menu checkbox or radio item changes its checked state. */
+  check: [event: WlMenuCheckEvent<Item>]; }>();
+defineSlots<{
+  /** Custom trigger; bind its supplied attributes and use the provided open/close actions. */
+  trigger?(props: WlMenuTriggerSlotProps): unknown; }>();
+const attrs = useAttrs();
 const section = useWlPt("menu", computed(() => props.pt));
 const motion = useWlMotion(computed(() => props.motion));
-const { visible, panel, style, toggle, show, hide } = useAnchoredOverlay({
-  onOpen: () => emit("open"),
+const generatedId = `wl-menu-list-${useWlId()}`;
+const listId = computed(() => String(section("list").id ?? generatedId));
+const content = ref<MenuPanelExpose | null>(null);
+let last = false;
+const { visible, anchor, panel, style, show: showOverlay, hide: hideOverlay } = useAnchoredOverlay({
+  placement: () => props.placement, align: () => props.align,
+  onOpen: () => {
+    emit("open");
+    if (last) content.value?.focusLast();
+    else content.value?.focusFirst();
+  },
   onClose: () => emit("close")
 });
-const links = ref<HTMLElement[]>([]);
-function activate(item: Item & WlMenuItem<NoInfer<Item>>, event: MouseEvent): void {
-  event.preventDefault();
-  if (item.disabled) return;
-  item.command?.(item);
-  if (props.popup) hide();
+function hide(event?: Event): void {
+  content.value?.closeChildren();
+  hideOverlay(event);
 }
-function onKeydown(event: KeyboardEvent): void {
-  if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
-  const enabled = links.value.filter((node) => node.getAttribute("aria-disabled") !== "true");
-  if (!enabled.length) return;
-  event.preventDefault();
-  const current = enabled.indexOf(document.activeElement as HTMLElement);
-  const next = event.key === "Home" ? 0 : event.key === "End" ? enabled.length - 1
-    : event.key === "ArrowDown" ? (current + 1) % enabled.length
-    : (current + enabled.length - 1) % enabled.length;
-  enabled[next]?.focus();
+function show(event?: Event): void {
+  last = event instanceof KeyboardEvent && event.key === "ArrowUp";
+  const target = event?.currentTarget ?? event?.target;
+  if (target instanceof HTMLElement) target.focus();
+  showOverlay(event);
 }
+function toggle(event?: Event): void {
+  if (visible.value) hide();
+  else show(event);
+}
+function dismiss(reason: MenuDismissReason): void {
+  const hadChildren = content.value?.closeChildren() ?? false;
+  if (props.popup) {
+    anchor.value?.focus();
+    hide();
+  } else if (hadChildren || reason === "tab") content.value?.focusActive();
+}
+function onTriggerKeydown(event: KeyboardEvent): void {
+  if (!["ArrowDown", "ArrowUp", "Enter", " "].includes(event.key)) return;
+  event.preventDefault();
+  show(event);
+}
+const triggerAttrs = computed<Record<string, unknown>>(() => ({
+  "aria-haspopup": "menu", "aria-expanded": visible.value,
+  "aria-controls": visible.value ? listId.value : undefined,
+  onClick: toggle, onKeydown: onTriggerKeydown
+}));
 defineExpose({ toggle, show, hide } satisfies WlMenuExpose);
 </script>
 
 <template>
+  <slot
+    name="trigger"
+    :attrs="triggerAttrs"
+    :visible="visible"
+    :show="show"
+    :hide="hide"
+    :toggle="toggle"
+  ></slot>
   <Teleport to="body" :disabled="!popup">
-    <Transition name="wl-pop-motion" :css="popup && motion"
-      @before-leave="markOverlayLeaving" @before-enter="restoreOverlayEntering"
-      @leave-cancelled="restoreOverlayEntering">
-    <div v-if="!popup || visible" ref="panel" v-bind="mergeProps(section('root'), attrs)"
-      class="wl-menu" :style="popup ? style : undefined" data-wl="menu">
-      <ul v-bind="section('list')" class="wl-menu__list" role="menu"
-        :aria-label="ariaLabel" :aria-labelledby="ariaLabelledby" @keydown="onKeydown">
-        <li v-for="(item, index) in items" :key="item.key ?? index" v-bind="section('item')"
-          class="wl-menu__item" :role="item.separator ? 'separator' : 'none'">
-          <div v-if="item.header !== undefined" v-bind="section('submenuLabel')" class="wl-menu__head">{{ item.header }}</div>
-          <div v-else-if="item.separator" v-bind="section('separator')" class="wl-menu__sep" />
-          <div v-else v-bind="section('itemContent')" class="wl-menu__item-content">
-            <a :ref="(element) => { if (element) links[index] = element as HTMLElement; }"
-              v-bind="section('itemLink')" class="wl-menu__link"
-              :class="{ 'is-danger': item.danger, 'is-disabled': item.disabled }"
-              role="menuitem" :aria-disabled="item.disabled || undefined" :tabindex="item.disabled ? -1 : 0"
-              @click="activate(item, $event)">
-              <WlIcon v-if="item.icon" :name="item.icon" :size="16" class="wl-menu__icon" />
-              <span class="wl-menu__label">{{ item.label }}</span>
-              <span v-if="item.shortcut" class="wl-menu__meta">{{ item.shortcut }}</span>
-            </a>
-          </div>
-        </li>
-      </ul>
-    </div>
+    <Transition
+      name="wl-pop-motion"
+      :css="popup && motion"
+      @before-leave="markOverlayLeaving"
+      @before-enter="restoreOverlayEntering"
+      @leave-cancelled="restoreOverlayEntering"
+    >
+      <div
+        v-if="!popup || visible"
+        ref="panel"
+        v-bind="mergeWlAttrs(section('root'), attrs)"
+        class="wl-menu"
+        :style="popup ? style : undefined"
+        data-wl="menu"
+      >
+        <MenuPanel
+          :id="listId"
+          ref="content"
+          :items="items"
+          :aria-label="ariaLabel"
+          :aria-labelledby="ariaLabelledby"
+          :motion="motion"
+          :pt="pt"
+          @check="emit('check', $event)"
+          @dismiss="dismiss"
+        />
+      </div>
     </Transition>
   </Teleport>
 </template>

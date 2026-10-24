@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { mount } from "@vue/test-utils";
+import { describe, expect, it } from "vitest";
 import { WlAutocomplete, WlMultiSelect, WlSelect } from "../src";
 
 const components = [
@@ -30,7 +30,11 @@ describe.each(components)("$name accessible listbox", ({ component, props }) => 
       await control.trigger("keydown", { key: "Escape" });
       expect(control.attributes("aria-controls")).toBeUndefined();
       expect(document.body.querySelector('[role="listbox"]')).toBeNull();
-    } finally { wrapper.unmount(); label.remove(); }
+    } finally {
+      wrapper.unmount();
+
+      label.remove();
+    }
   });
 
   it("honors the consumer list name and id through pt", async () => {
@@ -45,6 +49,8 @@ describe.each(components)("$name accessible listbox", ({ component, props }) => 
       const listbox = document.getElementById("consumer-list")!;
       expect(listbox.getAttribute("aria-label")).toBe("Consumer choices");
       expect(control.attributes("aria-controls")).toBe(listbox.id);
-    } finally { wrapper.unmount(); }
+    } finally {
+      wrapper.unmount();
+    }
   });
 });

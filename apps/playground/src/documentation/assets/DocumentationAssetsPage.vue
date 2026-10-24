@@ -1,14 +1,20 @@
 <script setup lang="ts">
-import type { WlThemeName } from "../../../../../packages/ui-kit/src";
-import { documentationAssetPages, type DocumentationAssetSection } from "./assets";
-import IconsDocumentation from "./IconsDocumentation.vue";
+import type { WlThemeName } from "gavia-ui";
+import { type DocumentationAssetSection } from "./assets";
 import ColorsDocumentation from "./ColorsDocumentation.vue";
+import IconsDocumentation from "./IconsDocumentation.vue";
 
 defineProps<{ section: DocumentationAssetSection; theme: WlThemeName }>();
 </script>
 
 <template>
-  <article class="docs-assets-page wl-stack" data-space="2xl" data-testid="docs-assets-page" :data-docs-section="section" :data-docs-theme="theme">
+  <article
+    class="docs-assets-page wl-stack"
+    data-space="2xl"
+    data-testid="docs-assets-page"
+    :data-docs-section="section"
+    :data-docs-theme="theme"
+  >
     <IconsDocumentation v-if="section === 'icons'" />
     <ColorsDocumentation v-else :theme="theme" />
   </article>

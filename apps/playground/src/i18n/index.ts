@@ -1,81 +1,123 @@
+import { shallowReactive, watch } from "vue";
 import { createI18n, useI18n } from "vue-i18n";
-import { watch } from "vue";
+import { catalogTextKey, createCatalogLoader, type PlaygroundNamespace } from "./catalog";
 import { playgroundLocale, type PlaygroundLocale } from "./locale";
-export { playgroundLocale, parsePlaygroundLocale, detectPlaygroundLocale, type PlaygroundLocale } from "./locale";
+import { loadPlaygroundCatalogResource, namespacesForPlaygroundView } from "./preload";
+export { namespacesForPlaygroundView } from "./preload";
+export { detectPlaygroundLocale, parsePlaygroundLocale, playgroundLocale, type PlaygroundLocale } from "./locale";
+export type { PlaygroundNamespace } from "./catalog";
 
+const originals: Record<PlaygroundLocale, Record<string, string>> = { en: {}, ru: {} };
+const aliases = shallowReactive(new Map<PlaygroundNamespace, Record<string, string>>());
+const parameters: Record<string, string[]> = {};
+let activeNamespaces: PlaygroundNamespace[] = ["shell"];
+let languageRequest = 0;
+let pageRequest = 0;
 
-import shellEN from "./messages/shell.en.json" with { type: "json" };
-import shellRU from "./messages/shell.ru.json" with { type: "json" };
-import documentationEN from "./messages/documentation.en.json" with { type: "json" };
-import documentationRU from "./messages/documentation.ru.json" with { type: "json" };
-import examplesEN from "./messages/examples.en.json" with { type: "json" };
-import examplesRU from "./messages/examples.ru.json" with { type: "json" };
-import tokensEN from "./messages/tokens.en.json" with { type: "json" };
-import tokensRU from "./messages/tokens.ru.json" with { type: "json" };
-import changelogEN from "./messages/changelog.en.json" with { type: "json" };
-import changelogRU from "./messages/changelog.ru.json" with { type: "json" };
-
-const catalogs: Record<string, Record<string, unknown>> = {
-  "./messages/shell.en.json": shellEN,
-  "./messages/shell.ru.json": shellRU,
-  "./messages/documentation.en.json": documentationEN,
-  "./messages/documentation.ru.json": documentationRU,
-  "./messages/examples.en.json": examplesEN,
-  "./messages/examples.ru.json": examplesRU,
-  "./messages/tokens.en.json": tokensEN,
-  "./messages/tokens.ru.json": tokensRU,
-  "./messages/changelog.en.json": changelogEN,
-  "./messages/changelog.ru.json": changelogRU
-};
-const messages: Record<PlaygroundLocale, Record<string, string>> = { en: {}, ru: {} };
-function flatten(value: Record<string, unknown>, target: Record<string, string>, prefix = ""): void {
-  for (const [key, item] of Object.entries(value)) {
-    const path = prefix ? prefix + "." + key : key;
-    if (typeof item === "string") target[path] = item;
-    else if (item && typeof item === "object" && !Array.isArray(item)) flatten(item as Record<string, unknown>, target, path);
-  }
-}
-for (const [path, catalog] of Object.entries(catalogs)) {
-  const language = path.endsWith(".ru.json") ? "ru" : "en";
-  const namespace = path.split("/").pop()!.split(".")[0]!;
-  const prefix = Object.keys(catalog).some((key) => key.includes(".") || key === namespace) ? "" : namespace;
-  flatten(catalog, messages[language], prefix);
-}
-type LiteralContext = { named: (name: string) => unknown };
-/** Technical text (code, emails, pipes) stays literal; only named placeholders interpolate. */
-function literalMessages(source: Record<string, string>): Record<string, (context: LiteralContext) => string> {
-  return Object.fromEntries(Object.entries(source).map(([key, message]) => [
-    key, (context: LiteralContext) => message.replace(/\{(\w+)\}/g, (placeholder, name: string) => {
-      const value = context.named(name);
-      return value === undefined ? placeholder : String(value);
-    })
-  ]));
-}
 export const playgroundI18n = createI18n({
   legacy: false,
   globalInjection: false,
   locale: playgroundLocale.value,
-  fallbackLocale: "en",
+  fallbackLocale: false,
   flatJson: true,
-  messages: { en: literalMessages(messages.en), ru: literalMessages(messages.ru) },
+  messages: { en: {}, ru: {} },
   missingWarn: Boolean(import.meta.env?.DEV),
   fallbackWarn: Boolean(import.meta.env?.DEV)
 });
-watch(playgroundLocale, (value) => { playgroundI18n.global.locale.value = value; }, { flush: "sync" });
-export function usePlaygroundI18n() { return useI18n({ useScope: "global" }); }
-export function translate(key: string, values: Record<string, string | number> = {}): string {
-  return playgroundI18n.global.t(key, values);
+const loadCatalog = createCatalogLoader(
+  (locale: PlaygroundLocale, namespace: PlaygroundNamespace) => loadPlaygroundCatalogResource(locale, namespace),
+  (locale, namespace, resource) => {
+    // Save flat keys before Intlify expands the precompiled resource in place.
+    const sourceKeys = resource.sourceMessages === true ? Object.keys(resource.default) : [];
+    playgroundI18n.global.mergeLocaleMessage(locale, { ...resource.default });
+    Object.assign(parameters, resource.parameters);
+    // Reuse the AST for copyable source instead of transferring its text twice.
+    const sourceMessages = resource.sourceMessages === true
+      ? Object.fromEntries(sourceKeys.map((key) => [key,
+          playgroundI18n.global.t(key, Object.fromEntries((resource.parameters[key] ?? [])
+            .map((name) => [name, "{" + name + "}"])), { locale })
+        ]))
+      : resource.sourceMessages;
+    Object.assign(originals[locale], sourceMessages);
+    aliases.set(namespace, resource.aliases);
+  }
+);
+
+/** Fetch only the requested language/namespaces; failed imports can be retried. */
+export async function ensurePlaygroundMessages(namespaces: readonly PlaygroundNamespace[], locale = playgroundLocale.value): Promise<void> {
+  await Promise.all(Array.from(new Set(["shell", ...namespaces] as PlaygroundNamespace[]), (namespace) => {
+    return loadCatalog(locale, namespace);
+  }));
 }
-export function setPlaygroundLocale(locale: PlaygroundLocale): void {
+
+/** Keep the previous page visible until all of its replacement's text is ready. */
+export async function preparePlaygroundPage(view: string, locale?: PlaygroundLocale): Promise<boolean> {
+  const current = ++pageRequest;
+  const namespaces = ["shell", ...namespacesForPlaygroundView(view)] as PlaygroundNamespace[];
+  let language = locale ?? playgroundI18n.global.locale.value;
+  await ensurePlaygroundMessages(namespaces, language);
+  if (current !== pageRequest) return false;
+  while (locale === undefined && language !== playgroundI18n.global.locale.value) {
+    language = playgroundI18n.global.locale.value;
+    await ensurePlaygroundMessages(namespaces, language);
+  }
+  if (current !== pageRequest) return false;
+  activeNamespaces = namespaces;
+  return true;
+}
+
+function commitLocale(locale: PlaygroundLocale): void {
+  playgroundI18n.global.locale.value = locale;
   playgroundLocale.value = locale;
   if (typeof document !== "undefined") document.documentElement.lang = locale;
+}
+
+export async function setPlaygroundLocale(locale: PlaygroundLocale): Promise<boolean> {
+  const current = ++languageRequest;
+  await loadActiveNamespaces(locale);
+  if (current !== languageRequest) return false;
+  commitLocale(locale);
+  return true;
+}
+
+async function loadActiveNamespaces(locale: PlaygroundLocale): Promise<void> {
+  let required: PlaygroundNamespace[];
+  do {
+    required = activeNamespaces;
+    await ensurePlaygroundMessages(required, locale);
+  } while (required !== activeNamespaces);
+}
+
+// Direct preference refs remain supported; visible translations stay in the
+// previous language until the requested resources have finished loading.
+watch(playgroundLocale, (value) => {
+  if (value === playgroundI18n.global.locale.value) return;
+  const current = ++languageRequest;
+  void loadActiveNamespaces(value).then(() => {
+    if (current === languageRequest && playgroundLocale.value === value) commitLocale(value);
+  }).catch(() => { /* Keep the last complete visible locale; a later choice retries. */ });
+}, { flush: "sync" });
+
+export function translate(key: string, values: Record<string, string | number> = {}): string {
+  const defaults = Object.fromEntries((parameters[key] ?? []).map((name) => [name, "{" + name + "}"]));
+  return playgroundI18n.global.t(key, { ...defaults, ...values });
+}
+export function usePlaygroundI18n() {
+  const composer = useI18n({ useScope: "global" });
+  return { ...composer, t: translate };
+}
+export function hasPlaygroundMessage(key: string): boolean {
+  return playgroundI18n.global.te(key);
+}
+export function playgroundTranslationKey(namespace: PlaygroundNamespace, text: string): string | undefined {
+  return aliases.get(namespace)?.[catalogTextKey(text)];
 }
 export function createPlaygroundLocaleUrl(current: URL, locale: PlaygroundLocale): URL {
   const target = new URL(current.href);
   target.searchParams.set("lang", locale);
   return target;
 }
-/** Literal catalogs for exporting examples without a playground dependency. */
+/** Literal example copy follows the complete visible locale. */
 export function playgroundMessages(): Record<string, string> {
-  return messages[playgroundLocale.value === "ru" ? "ru" : "en"];
+  return originals[playgroundI18n.global.locale.value === "ru" ? "ru" : "en"];
 }

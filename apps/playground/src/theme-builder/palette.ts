@@ -1,25 +1,56 @@
-import { translate as t } from "../i18n";
-import { localizeContrastLabel } from "../design-system/localized-tokens";
+import type { WlThemeName } from "gavia-ui";
 import {
-  resolveWlToken, wlContrastPairs, wlDesignThemes, wlDesignTokens,
-  type WlDesignTokenName, type WlDesignTokenDefinition
-} from "../../../../packages/ui-kit/src/design-system";
-import type { WlThemeName } from "../../../../packages/ui-kit/src/types";
+  resolveWlToken, wlContrastPairs, wlDesignThemes, type WlDesignTokenDefinition,
+  type WlDesignTokenName, wlDesignTokens
+} from "gavia-ui";
+import { getWlContrastRatio, normalizeWlHex } from "gavia-ui/utils";
+import { localizeContrastLabel } from "../design-system/localized-tokens";
+import { translate as t } from "../i18n";
 
 export const THEME_DRAFT_SCHEMA_VERSION = 1 as const;
 
 export const themePaletteFields = [
-  { key: "background", get label() { return t("shell.theme_builder.palette.text595"); }, get description() { return t("shell.theme_builder.palette.text596"); } },
-  { key: "surface", get label() { return t("shell.theme_builder.palette.text597"); }, get description() { return t("shell.theme_builder.palette.text598"); } },
-  { key: "softSurface", label: "Soft surface", get description() { return t("shell.theme_builder.palette.text599"); } },
-  { key: "text", get label() { return t("shell.theme_builder.palette.text600"); }, get description() { return t("shell.theme_builder.palette.text601"); } },
-  { key: "mutedText", get label() { return t("shell.theme_builder.palette.text602"); }, get description() { return t("shell.theme_builder.palette.text603"); } },
-  { key: "border", get label() { return t("shell.theme_builder.palette.text604"); }, get description() { return t("shell.theme_builder.palette.text605"); } },
-  { key: "primary", get label() { return t("shell.theme_builder.palette.text606"); }, get description() { return t("shell.theme_builder.palette.text607"); } },
-  { key: "link", get label() { return t("shell.theme_builder.palette.text608"); }, get description() { return t("shell.theme_builder.palette.text609"); } }
+  { key: "background", get label() {
+    return t("shell.theme_builder.palette.text595");
+  }, get description() {
+    return t("shell.theme_builder.palette.text596");
+  } },
+  { key: "surface", get label() {
+    return t("shell.theme_builder.palette.text597");
+  }, get description() {
+    return t("shell.theme_builder.palette.text598");
+  } },
+  { key: "softSurface", label: "Soft surface", get description() {
+    return t("shell.theme_builder.palette.text599");
+  } },
+  { key: "text", get label() {
+    return t("shell.theme_builder.palette.text600");
+  }, get description() {
+    return t("shell.theme_builder.palette.text601");
+  } },
+  { key: "mutedText", get label() {
+    return t("shell.theme_builder.palette.text602");
+  }, get description() {
+    return t("shell.theme_builder.palette.text603");
+  } },
+  { key: "border", get label() {
+    return t("shell.theme_builder.palette.text604");
+  }, get description() {
+    return t("shell.theme_builder.palette.text605");
+  } },
+  { key: "primary", get label() {
+    return t("shell.theme_builder.palette.text606");
+  }, get description() {
+    return t("shell.theme_builder.palette.text607");
+  } },
+  { key: "link", get label() {
+    return t("shell.theme_builder.palette.text608");
+  }, get description() {
+    return t("shell.theme_builder.palette.text609");
+  } }
 ] as const;
 
-export type ThemePaletteKey = (typeof themePaletteFields)[number]["key"];
+type ThemePaletteKey = (typeof themePaletteFields)[number]["key"];
 export type ThemePalette = Record<ThemePaletteKey, string>;
 export type ThemeOverrides = Partial<Record<WlDesignTokenName, string>>;
 export interface ThemeContrast {
@@ -36,7 +67,7 @@ export interface ThemeDraft {
   baseTheme: WlThemeName;
   palette: ThemePalette;
 }
-export interface ThemeSpec extends ThemeDraft {
+interface ThemeSpec extends ThemeDraft {
   schemaVersion: typeof THEME_DRAFT_SCHEMA_VERSION;
   colorScheme: "light" | "dark";
   overrides: ThemeOverrides;
@@ -78,24 +109,18 @@ const definitions = new Map<WlDesignTokenName, WlDesignTokenDefinition>(wlDesign
 
 function getBaseTheme(baseTheme: WlThemeName) {
   const theme = wlDesignThemes.find((item) => item.name === baseTheme);
-  if (!theme) throw new Error(t("shell.theme_builder.palette.text610"));
+  if (!theme)
+    throw new Error(t("shell.theme_builder.palette.text610"));
   return theme;
 }
 
-/** Only opaque RGB hexadecimal values enter the generated style and export. */
-export function normalizeHex(value: string): string | null {
-  const input = value.trim().toLowerCase();
-  if (/^#[0-9a-f]{6}$/.test(input)) return input;
-  if (/^#[0-9a-f]{3}$/.test(input)) {
-    return "#" + input.slice(1).split("").map((character) => character + character).join("");
-  }
-  return null;
-}
+export const normalizeHex = normalizeWlHex;
 
 function normalizedPalette(palette: ThemePalette): ThemePalette {
   return Object.fromEntries(themePaletteFields.map(({ key }) => {
     const value = typeof palette[key] === "string" ? normalizeHex(palette[key]) : null;
-    if (!value) throw new Error(t("shell.theme_builder.palette.text611", { arg0: key }));
+    if (!value)
+      throw new Error(t("shell.theme_builder.palette.text611", { arg0: key }));
     return [key, value];
   })) as ThemePalette;
 }
@@ -110,20 +135,12 @@ export function createThemePalette(baseTheme: WlThemeName): ThemePalette {
 function channels(color: string): [number, number, number] {
   return [1, 3, 5].map((offset) => Number.parseInt(color.slice(offset, offset + 2), 16)) as [number, number, number];
 }
-function luminance(color: string): number {
-  const linear = channels(color).map((value) => {
-    const channel = value / 255;
-    return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
-  });
-  return 0.2126 * linear[0]! + 0.7152 * linear[1]! + 0.0722 * linear[2]!;
-}
 export function getContrastRatio(foreground: string, background: string): number {
-  const fg = normalizeHex(foreground);
-  const bg = normalizeHex(background);
-  if (!fg || !bg) throw new Error(t("shell.theme_builder.palette.text612"));
-  const first = luminance(fg);
-  const second = luminance(bg);
-  return (Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05);
+  try {
+    return getWlContrastRatio(foreground, background);
+  } catch {
+    throw new Error(t("shell.theme_builder.palette.text612"));
+  }
 }
 function mix(color: string, target: string, weight: number): string {
   const from = channels(color);
@@ -133,9 +150,11 @@ function mix(color: string, target: string, weight: number): string {
   ).toString(16).padStart(2, "0")).join("");
 }
 function readableForeground(background: string): string {
-  if (getContrastRatio("#211a12", background) >= 4.5) return "#211a12";
+  if (getContrastRatio("#211a12", background) >= 4.5)
+    return "#211a12";
   return getContrastRatio("#ffffff", background) >= getContrastRatio("#000000", background)
-    ? "#ffffff" : "#000000";
+    ? "#ffffff"
+    : "#000000";
 }
 function primaryState(color: string, weight: number): string {
   // Move toward the side which strengthens the chosen foreground contrast.
@@ -154,7 +173,8 @@ export function createThemeOverrides(input: ThemePalette, baseTheme: WlThemeName
   const changed = (key: ThemePaletteKey) => palette[key] !== baseline[key];
   const overrides: ThemeOverrides = {};
   for (const key of Object.keys(foundationFields) as (keyof typeof foundationFields)[]) {
-    if (changed(key)) overrides[foundationFields[key]] = palette[key];
+    if (changed(key))
+      overrides[foundationFields[key]] = palette[key];
   }
   if (changed("background") && !changed("surface")) {
     // White/Graphite/Newspaper raised surfaces otherwise follow the page alias.
@@ -178,11 +198,14 @@ export function createThemeOverrides(input: ThemePalette, baseTheme: WlThemeName
     Object.assign(overrides, primaryBindings);
     overrides["--wl-palette-action-primary-bg"] = palette.primary;
     overrides["--wl-palette-action-primary-hover"] = changed("primary")
-      ? primaryState(palette.primary, 0.08) : resolveWlToken("--wl-action-primary-hover", baseTheme);
+      ? primaryState(palette.primary, 0.08)
+      : resolveWlToken("--wl-action-primary-hover", baseTheme);
     overrides["--wl-palette-action-primary-active"] = changed("primary")
-      ? primaryState(palette.primary, 0.16) : resolveWlToken("--wl-action-primary-active", baseTheme);
+      ? primaryState(palette.primary, 0.16)
+      : resolveWlToken("--wl-action-primary-active", baseTheme);
     overrides["--wl-palette-action-primary-text"] = changed("primary")
-      ? readableForeground(palette.primary) : resolveWlToken("--wl-action-primary-text", baseTheme);
+      ? readableForeground(palette.primary)
+      : resolveWlToken("--wl-action-primary-text", baseTheme);
   }
   if (changed("primary") || changed("link") || changed("background") || changed("surface")) {
     const dark = getBaseTheme(baseTheme).colorScheme === "dark";
@@ -196,9 +219,11 @@ export function createThemeOverrides(input: ThemePalette, baseTheme: WlThemeName
 
 function resolveWithOverrides(name: WlDesignTokenName, baseTheme: WlThemeName, overrides: ThemeOverrides): string {
   function resolve(reference: WlDesignTokenName, trail: WlDesignTokenName[]): string {
-    if (trail.includes(reference)) throw new Error(t("shell.theme_builder.palette.text613"));
+    if (trail.includes(reference))
+      throw new Error(t("shell.theme_builder.palette.text613"));
     const token = definitions.get(reference);
-    if (!token) throw new Error(t("shell.theme_builder.palette.text614", { arg0: reference }));
+    if (!token)
+      throw new Error(t("shell.theme_builder.palette.text614", { arg0: reference }));
     const value = overrides[reference] ?? token.themes?.[baseTheme] ?? token.value;
     return value.replace(/var\((--wl-[a-z0-9-]+)\)/g, (_, dependency: WlDesignTokenName) =>
       resolve(dependency, [...trail, reference]));
@@ -217,7 +242,9 @@ export function getThemeContrast(palette: ThemePalette, baseTheme: WlThemeName):
   }));
   rows.push({
     key: "checked",
-    get label() { return t("shell.theme_builder.palette.text615"); },
+    get label() {
+      return t("shell.theme_builder.palette.text615");
+    },
     foreground: resolveWithOverrides("--wl-on-accent", baseTheme, overrides),
     background: resolveWithOverrides("--wl-accent", baseTheme, overrides),
     minimum: 3
@@ -233,11 +260,13 @@ export function isThemeNameValid(name: string): boolean {
 }
 
 export function parseThemeDraft(value: unknown): ThemeDraft | null {
-  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  if (!value || typeof value !== "object" || Array.isArray(value))
+    return null;
   const draft = value as Record<string, unknown>;
   if (draft.schemaVersion !== THEME_DRAFT_SCHEMA_VERSION || typeof draft.name !== "string"
     || !isThemeNameValid(draft.name) || !wlDesignThemes.some((theme) => theme.name === draft.baseTheme)
-    || !draft.palette || typeof draft.palette !== "object" || Array.isArray(draft.palette)) return null;
+    || !draft.palette || typeof draft.palette !== "object" || Array.isArray(draft.palette))
+    return null;
   try {
     return {
       name: draft.name,
@@ -250,7 +279,8 @@ export function parseThemeDraft(value: unknown): ThemeDraft | null {
 }
 
 export function createThemeExport(name: string, baseTheme: WlThemeName, palette: ThemePalette): ThemeExport {
-  if (!isThemeNameValid(name)) throw new Error(t("shell.theme_builder.palette.text616"));
+  if (!isThemeNameValid(name))
+    throw new Error(t("shell.theme_builder.palette.text616"));
   const theme = getBaseTheme(baseTheme);
   const values = normalizedPalette(palette);
   const delta = createThemeOverrides(values, baseTheme);

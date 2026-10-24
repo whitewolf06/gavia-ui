@@ -2,12 +2,10 @@ import { defineComponentManifest } from "./types";
 import {
   WL_AVATAR_PRESENCES,
   WL_AVATAR_SIZES,
-  WL_BADGE_VARIANTS,
   WL_ICON_NAMES,
-  WL_PILL_VARIANTS,
-  WL_PROGRESS_VARIANTS,
   WL_STAT_CARD_TONES,
-  WL_TAG_VARIANTS
+  WL_TAG_COLORS,
+  WL_TONES
 } from "./values";
 
 export const dataManifest = /* @__PURE__ */ defineComponentManifest([
@@ -25,7 +23,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
           "readonly WlTableColumn<Row>[] проверяет ключи полей строки. Для виртуальной колонки (actions) явно укажите kind: \"virtual\". Без columns используется default-слот."
       },
       { name: "loading", type: "boolean", default: false, description: "Состояние загрузки." },
-      { name: "emptyMessage", type: "string", default: "Нет данных", description: "Текст пустого состояния." },
+      { name: "emptyMessage", type: "string", description: "Empty-state text; falls back to WlConfig.locale.noData (No data in English)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [
@@ -59,7 +57,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
     description: "Бейдж со значением или точкой.",
     props: [
       { name: "value", type: "union", description: "Значение: string | number." },
-      { name: "variant", type: "enum", default: "accent", values: WL_BADGE_VARIANTS, description: "Цветовой вариант." },
+      { name: "tone", type: "enum", default: "accent", values: WL_TONES, description: "Semantic badge color." },
       { name: "dot", type: "boolean", default: false, description: "Режим точки (value игнорируется)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
@@ -71,9 +69,10 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
     category: "data",
     description: "Тег. Можно добавить кнопку удаления.",
     props: [
-      { name: "variant", type: "enum", default: "gray", values: WL_TAG_VARIANTS, description: "Цветовой вариант." },
+      { name: "color", type: "enum", default: "gray", values: WL_TAG_COLORS, description: "Palette color, independent of semantic tone." },
+      { name: "tone", type: "enum", values: WL_TONES, description: "Semantic tag color." },
       { name: "removable", type: "boolean", default: false, description: "Показать кнопку удаления." },
-      { name: "removeLabel", type: "string", default: "Удалить", description: "aria-label кнопки удаления." },
+      { name: "removeLabel", type: "string", description: "Accessible remove button name; falls back to WlConfig.locale.remove (Remove in English)." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
     ],
     slots: [{ name: "default", description: "Текст тега." }],
@@ -99,7 +98,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
     category: "data",
     description: "Компактная метка статуса.",
     props: [
-      { name: "variant", type: "enum", default: "neutral", values: WL_PILL_VARIANTS, description: "Цветовой вариант." },
+      { name: "tone", type: "enum", default: "neutral", values: WL_TONES, description: "Semantic status color." },
       { name: "label", type: "string", description: "Текст (если не задан слот)." }
     ],
     slots: [{ name: "default", description: "Свой текст вместо label." }],
@@ -143,7 +142,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
     description: "Линейный прогресс-бар от 0 до 100%.",
     props: [
       { name: "value", type: "number", default: 0, description: "Процент 0–100." },
-      { name: "variant", type: "enum", default: "default", values: WL_PROGRESS_VARIANTS, description: "Цветовой вариант." },
+      { name: "tone", type: "enum", default: "accent", values: WL_TONES, description: "Semantic progress color." },
       { name: "thin", type: "boolean", default: false, description: "Тонкая полоска." },
       { name: "showValue", type: "boolean", default: false, description: "Показывать процент." },
       { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }

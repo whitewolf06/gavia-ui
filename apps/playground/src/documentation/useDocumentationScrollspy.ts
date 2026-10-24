@@ -1,4 +1,4 @@
-import { onBeforeUnmount, onMounted, readonly, shallowRef, watch, type Ref } from "vue";
+import { onBeforeUnmount, onMounted, readonly, type Ref, shallowRef, watch } from "vue";
 
 export interface DocumentationScrollspyHeading {
   id: string;
@@ -107,7 +107,10 @@ export function useDocumentationScrollspy(options: DocumentationScrollspyOptions
 
   function schedule(): void {
     if (!mounted || !view || frame !== undefined) return;
-    frame = view.requestAnimationFrame(() => { frame = undefined; update(); });
+    frame = view.requestAnimationFrame(() => {
+      frame = undefined;
+      update();
+    });
   }
 
   function observeRoot(): void {
@@ -131,7 +134,9 @@ export function useDocumentationScrollspy(options: DocumentationScrollspyOptions
     schedule();
   }
 
-  watch(options.root, () => { if (mounted) observeRoot(); }, { flush: "post" });
+  watch(options.root, () => {
+    if (mounted) observeRoot();
+  }, { flush: "post" });
   watch(options.key, () => {
     setHeadings([]);
     activeId.value = null;

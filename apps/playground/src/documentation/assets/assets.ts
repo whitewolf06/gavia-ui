@@ -1,9 +1,9 @@
-import { localizeDocumentation, documentationMetadataSource } from "../localize";
-import type { wlDesignTokens } from "../../../../../packages/ui-kit/src";
-
+import type { wlDesignTokens } from "gavia-ui";
 import type { DocumentationAssetSection } from "../../navigation";
+
+import { documentationMetadataSource, localizeDocumentation } from "../localize";
 export type { DocumentationAssetSection } from "../../navigation";
-export interface DocumentationAssetHeading { id: string; title: string; }
+interface DocumentationAssetHeading { id: string; title: string }
 export interface DocumentationAssetPage {
   label: string;
   description: string;

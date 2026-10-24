@@ -1,7 +1,7 @@
+import type { WlComponentManifest, WlPropManifest } from "gavia-ui";
 import { translate as t } from "../i18n";
-import type { WlComponentManifest, WlPropManifest } from "../../../../packages/ui-kit/src/manifest";
 
-export type DocumentationEditor = "select" | "checkbox" | "text" | "number" | "icon";
+type DocumentationEditor = "select" | "checkbox" | "text" | "number" | "icon";
 export interface DocumentationControl extends WlPropManifest {
   editor: DocumentationEditor;
   numberMin?: number;
@@ -18,16 +18,18 @@ const namedModelProps: Record<string, readonly string[]> = { WlSidebar: ["pinned
 /** Read literals only: documentation must never execute an example to discover defaults. */
 function literal(expression: string): Scalar | undefined {
   const text = expression.trim();
-  const message = /^t\((['"])(examples\.[a-zA-Z0-9_.-]+)\1\)$/.exec(text);
+  const message = /^t\((['"])(examples\.[\w.-]+)\1\)$/.exec(text);
   if (message) return t(message[2]!);
   if (text === "true" || text === "false") return text === "true";
-  if (/^-?(?:\d+\.?\d*|\.\d+)$/.test(text)) return Number(text);
+  if (/^-?(?:\d+(?:\.\d*)?|\.\d+)$/.test(text)) return Number(text);
   const quote = text[0];
   if ((quote === "'" || quote === '"') && text[text.length - 1] === quote
     && !text.slice(1, -1).includes(quote) && !text.includes("\\")) return text.slice(1, -1);
   return undefined;
 }
-function camelCase(name: string): string { return name.replace(/-([a-z])/g, (_, letter: string) => letter.toUpperCase()); }
+function camelCase(name: string): string {
+  return name.replace(/-([a-z])/g, (_, letter: string) => letter.toUpperCase());
+}
 function targetTags(entry: WlComponentManifest, source: string): string[] {
   return Array.from(source.matchAll(/<(Wl\w+)\b(?:[^"'>]|"[^"]*"|'[^']*')*>/g))
     .filter((match) => match[1] === entry.name && /\bv-bind="(?:preview|forwardedPreview)"/.test(match[0]))
@@ -66,7 +68,7 @@ export function documentationDefaults(entry: WlComponentManifest, source: string
     const value = instances[0]?.[prop.name];
     if (value !== undefined && instances.every((instance) => Object.is(instance[prop.name], value))) defaults[prop.name] = value;
     else if (typeof prop.default === "string" || typeof prop.default === "boolean"
-      || typeof prop.default === "number" && Number.isFinite(prop.default)) defaults[prop.name] = prop.default;
+      || ((typeof prop.default === "number") && Number.isFinite(prop.default))) defaults[prop.name] = prop.default;
     else if (prop.name === "motion") defaults.motion = true;
   }
   return defaults;
@@ -76,25 +78,34 @@ function numericControl(entry: WlComponentManifest, prop: WlPropManifest): Docum
   let numberMin = -1e12, numberMax = 1e12, numberStep = 1;
   if (["count", "activeCount", "minLength", "maxFiles", "maxSize", "siblings", "badge"].includes(prop.name)) numberMin = 0;
   if (["rows", "pageCount", "size"].includes(prop.name)) numberMin = 1;
-  if (prop.name === "step") { numberMin = 0.01; numberStep = 0.1; }
-  if (prop.name === "progress" || entry.name === "WlProgress" && prop.name === "value") { numberMin = 0; numberMax = 100; }
-  if (entry.name === "WlSteps" && prop.name === "current") { numberMin = 0; numberMax = 2; }
+  if (prop.name === "step") {
+    numberMin = 0.01;
+    numberStep = 0.1;
+  }
+  if ((prop.name === "progress") || ((entry.name === "WlProgress") && (prop.name === "value"))) {
+    numberMin = 0;
+    numberMax = 100;
+  }
+  if (entry.name === "WlSteps" && prop.name === "current") {
+    numberMin = 0;
+    numberMax = 2;
+  }
   if (entry.name === "WlIcon" && prop.name === "size") numberMax = 128;
   return { ...prop, editor: "number", numberMin, numberMax, numberStep };
 }
 
 /** A primary target is required; complex data, routing and model values stay in the SFC/API. */
 export function createDocumentationControls(entry: WlComponentManifest, source?: string): DocumentationControl[] {
-  if (serviceNames.has(entry.name) || source !== undefined && targetTags(entry, source).length === 0) return [];
+  if (serviceNames.has(entry.name) || ((source !== undefined) && (targetTags(entry, source).length === 0))) return [];
   const models = new Set(namedModelProps[entry.name] ?? []);
   if (source !== undefined) for (const tag of targetTags(entry, source)) {
     for (const match of tag.matchAll(/\bv-model:([\w-]+)/g)) models.add(camelCase(match[1]!));
   }
   return entry.props.flatMap((prop): DocumentationControl[] => {
     if (prop.name === entry.model?.name || models.has(prop.name) || referenceProps.has(prop.name)
-      || entry.name === "WlPagination" && prop.name === "page"
-      || entry.name === "WlMenu" && prop.name === "popup"
-      || entry.name === "WlAutocomplete" && prop.name === "multiple") return [];
+      || ((entry.name === "WlPagination") && (prop.name === "page"))
+      || ((entry.name === "WlMenu") && (prop.name === "popup"))
+      || ((entry.name === "WlAutocomplete") && (prop.name === "multiple"))) return [];
     if (entry.name === "WlPageHeader" && prop.name === "headingLevel") return [{ ...prop, default: 2, values: [1, 2], editor: "select" }];
     if (entry.name === "WlDatePicker" && prop.name === "selectionMode") return [{ ...prop, values: ["single", "range"], editor: "select" }];
     if (entry.name === "WlInput" && prop.name === "type") return [{ ...prop, values: ["text", "email", "search", "tel", "url", "number"], editor: "select" }];
@@ -105,18 +116,20 @@ export function createDocumentationControls(entry: WlComponentManifest, source?:
     if (entry.name === "WlIcon" && prop.name === "size") return [numericControl(entry, {
       ...prop, description: (prop.description ?? "") + t("shell.design_system.documentation_controls.text471")
     })];
-    if (entry.name === "WlBadge" && prop.name === "value" || entry.name === "WlNavItem" && prop.name === "badge") return [numericControl(entry, {
+    if (((entry.name === "WlBadge") && (prop.name === "value")) || ((entry.name === "WlNavItem") && (prop.name === "badge"))) return [numericControl(entry, {
       ...prop, description: (prop.description ?? "") + t("shell.design_system.documentation_controls.text472")
     })];
     if (prop.type === "string") return [{
       ...prop, editor: "text",
-      inputType: ["minDate", "maxDate"].includes(prop.name) ? "date"
+      inputType: ["minDate", "maxDate"].includes(prop.name)
+        ? "date"
         : ["minTime", "maxTime"].includes(prop.name) ? "time" : "text"
     }];
     return [];
   }).sort((a, b) => {
     const rank = (control: DocumentationControl): number =>
-      entry.name === "WlDatePicker" && control.name === "selectionMode" ? -1
+      entry.name === "WlDatePicker" && control.name === "selectionMode"
+        ? -1
         : control.editor === "select" ? 0 : control.editor === "checkbox" ? 2 : 1;
     return rank(a) - rank(b);
   });
@@ -131,12 +144,20 @@ export function documentationComplexProps(entry: WlComponentManifest, controls: 
 export function documentationPresets(entry: WlComponentManifest): DocumentationPreset[] {
   if (entry.name === "WlSelect") return [{
     id: "with-archive", get label() { return t("shell.design_system.documentation_controls.text473"); }, props: { options: [
-      { get label() { return t("shell.design_system.documentation_controls.text474"); }, value: "team" }, { get label() { return t("shell.design_system.documentation_controls.text475"); }, value: "personal" },
+      { get label() {
+        return t("shell.design_system.documentation_controls.text474");
+      }, value: "team" }, { get label() {
+        return t("shell.design_system.documentation_controls.text475");
+      }, value: "personal" },
       { get label() { return t("shell.design_system.documentation_controls.text476"); }, value: "archive", disabled: true }
     ] }
   }, { id: "empty-options", get label() { return t("shell.design_system.documentation_controls.text477"); }, props: { options: [] } }];
-  if (entry.name === "WlTable") return [{ id: "empty-rows", get label() { return t("shell.design_system.documentation_controls.text478"); }, props: { value: [] } }];
-  if (entry.name === "WlColorPicker") return [{ id: "compact-palette", get label() { return t("shell.design_system.documentation_controls.text479"); }, props: { swatches: ["#2563eb", "#2e9e68", "#bf8615"] } }];
+  if (entry.name === "WlTable") return [{ id: "empty-rows", get label() {
+    return t("shell.design_system.documentation_controls.text478");
+  }, props: { value: [] } }];
+  if (entry.name === "WlColorPicker") return [{ id: "compact-palette", get label() {
+    return t("shell.design_system.documentation_controls.text479");
+  }, props: { swatches: ["#2563eb", "#2e9e68", "#bf8615"] } }];
   return [];
 }
 export function documentationControlSamples(control: DocumentationControl): readonly Scalar[] {
@@ -167,5 +188,5 @@ export function acceptsDocumentationValue(control: DocumentationControl, value: 
   }
   if (control.editor === "number") return typeof value === "number" && Number.isFinite(value)
     && value >= (control.numberMin ?? -1e12) && value <= (control.numberMax ?? 1e12);
-  return control.editor === "icon" && value === "" || Boolean(control.values?.some((option) => Object.is(option, value)));
+  return ((control.editor === "icon") && (value === "")) || Boolean(control.values?.some((option) => Object.is(option, value)));
 }

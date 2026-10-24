@@ -1,6 +1,6 @@
-import { russianPlaygroundUrl } from "./playground-url";
 import { expect, test } from "@playwright/test";
 import { expectGaviaFontDownload } from "./font-download-helpers";
+import { playgroundBasePath, playgroundRouteParams, russianPlaygroundUrl } from "./playground-url";
 import { chooseDropdownOption, chooseShowcaseTheme, navigateMainView } from "./select-helpers";
 
 const weights = [100, 300, 400, 500, 600, 700] as const;
@@ -32,20 +32,52 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
     const loaded = [];
     for (const weight of fontWeights) for (const style of ["normal", "italic"]) {
       const fonts = await document.fonts.load(`${style} ${weight} 16px 'Gavia Sans'`, "Гавиа Gavia 0123456789");
-      loaded.push({ weight, style, faces: fonts.length });
+      loaded.push({ weight, style, fonts: fonts.map((font) => ({
+        family: font.family, weight: font.weight, style: font.style, status: font.status, unicodeRange: font.unicodeRange
+      })) });
     }
     return loaded;
   }, weights);
   expect(faces).toHaveLength(12);
   expect(await page.evaluate(async () => (await document.fonts.load("normal 400 16px Gavia", "Гавиа 0123456789")).length)).toBe(1);
-  for (const face of faces) expect(face.faces, `${face.weight} ${face.style} loads a real font face`).toBe(1);
+  for (const face of faces) {
+    expect(face.fonts, `${face.weight} ${face.style} loads the complete face`).toHaveLength(1);
+    expect(new Set(face.fonts.map((font) => font.unicodeRange)).size).toBe(1);
+    for (const font of face.fonts) {
+      expect(font).toMatchObject({ family: "Gavia Sans", weight: "100 700", style: face.style, status: "loaded" });
+    }
+  }
 
   await fontPage.getByRole("textbox", { name: "Свой текст", exact: true }).fill("Гагара / Loon 0123456789");
-  await chooseDropdownOption(page, fontPage.getByRole("combobox", { name: "Вес", exact: true }), "600 — Полужирный");
+  const proof = fontPage.locator(".wl-type-proof-sample");
+  const weight = fontPage.getByRole("slider", { name: "Вес", exact: true });
+  const preset = fontPage.getByRole("combobox", { name: "Готовый вес", exact: true });
+  await expect(weight).toHaveAttribute("min", "100");
+  await expect(weight).toHaveAttribute("max", "700");
+  await expect(weight).toHaveAttribute("step", "1");
+  await weight.focus();
+  await weight.press("Home");
+  await expect(proof).toHaveCSS("font-weight", "100");
+  await weight.press("ArrowRight");
+  await expect(proof).toHaveCSS("font-weight", "101");
+  await expect(preset).toContainText("Промежуточный вес");
+  await weight.press("End");
+  await expect(proof).toHaveCSS("font-weight", "700");
+  await expect(preset).toContainText("700");
+  await weight.evaluate((element: HTMLInputElement) => {
+    element.value = "450";
+    element.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  await expect(proof).toHaveCSS("font-weight", "450");
+  await expect(fontPage.locator('output[for="wl-type-proof-variable-weight"]')).toHaveText("450");
+  for (const alphabet of await fontPage.locator(".wl-type-alphabet-sample").all()) {
+    await expect(alphabet).toHaveCSS("font-weight", "450");
+  }
+  await chooseDropdownOption(page, preset, "600 — Полужирный");
+  await expect(weight).toHaveValue("600");
   const size = fontPage.getByRole("slider", { name: "Размер", exact: true });
   await size.focus();
   await size.press("End");
-  const proof = fontPage.locator(".wl-type-proof-sample");
   await expect(proof).toHaveText("Гагара / Loon 0123456789");
   await expect(proof).toHaveAttribute("data-weight", "600");
   await expect(proof).toHaveAttribute("data-size", "72");
@@ -61,24 +93,26 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
 
   for (const theme of ["Classic", "Classic Dark", "Newspaper", "Gavia Dark", "Gavia"]) {
     await chooseShowcaseTheme(page, theme);
-    expect(new URL(page.url()).searchParams.get("view")).toBe("font");
+    expect(playgroundRouteParams(new URL(page.url())).get("view")).toBe("font");
     const headingFamily = await fontPage.locator(".wl-page-header__title").evaluate((element) => getComputedStyle(element).fontFamily);
     await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", headingFamily);
     await expect(fontPage.locator(".wl-type-display")).toHaveCSS("text-rendering", theme.startsWith("Gavia") ? "geometricprecision" : "optimizelegibility");
-    await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
+    await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Gavia Sans(?: Core)?"?,/);
     await expect(fontPage.locator(".wl-weights-digits").first()).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
     await expect(page.locator("body")).toHaveCSS("text-rendering", theme.startsWith("Gavia") ? "geometricprecision" : "optimizelegibility");
     for (const sample of [".wl-type-number-sample", ".wl-weights-digits"]) {
       await expect(fontPage.locator(sample).first()).toHaveCSS("text-rendering", "geometricprecision");
     }
-    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+    await expect.poll(() => page.evaluate(() =>
+      document.documentElement.scrollWidth - document.documentElement.clientWidth
+    )).toBeLessThanOrEqual(1);
   }
 
   await navigateMainView(page, "Документация");
   await expect(page.getByTestId("docs-page")).toBeVisible();
   await navigateMainView(page, "Шрифт");
   await expect(fontPage).toBeVisible();
-  expect(new URL(page.url()).pathname).toBe(url.pathname);
+  expect(playgroundBasePath(new URL(page.url()))).toBe(url.pathname);
   expect(new URL(page.url()).searchParams.get("theme")).toBe("gavia");
   await page.goBack();
   await expect(page.getByTestId("docs-page")).toBeVisible();
@@ -125,8 +159,11 @@ test("tabular and proportional numbers use different spacing without changing th
           probe.textContent = line.textContent;
           probe.style.cssText = "position:absolute;display:inline-block;inline-size:max-content;white-space:pre";
           line.append(probe);
-          try { return probe.getBoundingClientRect().width; }
-          finally { probe.remove(); }
+          try {
+            return probe.getBoundingClientRect().width;
+          } finally {
+            probe.remove();
+          }
         })
       };
     });
@@ -135,7 +172,7 @@ test("tabular and proportional numbers use different spacing without changing th
   for (const sample of samples) {
     expect(sample.family).toBe("Gavia Sans");
     expect(sample.weight).toBe("400");
-    expect(sample.faces).toEqual([{ family: "Gavia Sans", weight: "400", status: "loaded" }]);
+    expect(sample.faces).toEqual([{ family: "Gavia Sans", weight: "100 700", status: "loaded" }]);
     expect(sample.widths).toHaveLength(2);
   }
   expect(samples[0]!.numeric).toBe("tabular-nums");
@@ -150,7 +187,8 @@ test("tabular and proportional numbers use different spacing without changing th
       const faces = await document.fonts.load(`${fontStyle} ${weight} 38px ${family}`, "0123456789");
       for (const size of [13, 16, 25, 34, 38, 42]) {
         const probe = document.createElement("span");
-        probe.style.cssText = `position:absolute;display:inline-block;inline-size:max-content;white-space:pre;font-weight:${weight};font-style:${fontStyle};font-size:${size}px`;
+        probe.style.cssText = "position:absolute;display:inline-block;inline-size:max-content;white-space:pre;"
+          + `font-weight:${weight};font-style:${fontStyle};font-size:${size}px`;
         card.append(probe);
         try {
           const style = getComputedStyle(probe);
@@ -168,9 +206,9 @@ test("tabular and proportional numbers use different spacing without changing th
   expect(matrix).toHaveLength(72);
   for (const row of matrix) {
     const label = `${row.weight} ${row.fontStyle} ${row.size}px`;
-    expect(row.faces, `${label} uses its actual loaded face`).toEqual([
-      { family: "Gavia Sans", weight: String(row.weight), style: row.fontStyle, status: "loaded" }
-    ]);
+    expect(row.faces, `${label} uses its complete variable face`).toEqual(Array.from({ length: 1 }, () => ({
+      family: "Gavia Sans", weight: "100 700", style: row.fontStyle, status: "loaded"
+    })));
     expect(row.numeric).toBe("tabular-nums");
     expect(row.rendering).toBe("geometricprecision");
     expect(row.widths).toHaveLength(10);
@@ -185,17 +223,23 @@ test("tabular and proportional numbers use different spacing without changing th
     nestedWhite.dataset.wlTheme = "white";
     theme.append(inherited, nestedWhite);
     document.body.append(theme);
-    try { return { gavia: getComputedStyle(inherited).textRendering, white: getComputedStyle(nestedWhite).textRendering }; }
-    finally { theme.remove(); }
+    try {
+      return { gavia: getComputedStyle(inherited).textRendering, white: getComputedStyle(nestedWhite).textRendering };
+    } finally {
+      theme.remove();
+    }
   });
   expect(nestedRendering).toEqual({ gavia: "geometricprecision", white: "optimizelegibility" });
-  await expect(fontPage.getByRole("link", { name: "К документации UI Kit", exact: false })).toHaveAttribute("href", "?view=docs&theme=white&lang=ru");
+  const docsLink = fontPage.getByRole("link", { name: "К документации UI Kit", exact: false });
+  const docsHref = new URL((await docsLink.getAttribute("href"))!, page.url());
+  expect(playgroundRouteParams(docsHref).get("view")).toBe("docs");
+  expect(playgroundRouteParams(docsHref).get("lang")).toBe("ru");
+  expect(docsHref.searchParams.get("theme")).toBe("white");
   await fontPage.getByRole("link", { name: "К документации UI Kit", exact: false }).click();
   await expect(page.getByTestId("docs-page")).toBeVisible();
-  expect(new URL(page.url()).pathname).toBe(url.pathname);
+  expect(playgroundBasePath(new URL(page.url()))).toBe(url.pathname);
   expect(new URL(page.url()).searchParams.get("theme")).toBe("white");
 });
-
 
 test("font download contains the approved family, standalone CSS and OFL licenses", async ({ page, baseURL }) => {
   const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
@@ -205,7 +249,9 @@ test("font download contains the approved family, standalone CSS and OFL license
   await expect(font).toBeVisible();
   await expect(font.locator("[data-wl=segmented]")).toHaveCount(3);
   await expect(font.locator("[data-wl=select]")).toHaveCount(1);
-  await expect(font.locator("[data-wl=slider]")).toHaveCount(1);
+  await expect(font.locator("[data-wl=slider]")).toHaveCount(2);
+  await expect(font.getByRole("slider", { name: "Вес", exact: true })).toBeVisible();
+  await expect(font.getByRole("slider", { name: "Размер", exact: true })).toBeVisible();
   await expect(font.locator("[data-wl=textarea]")).toHaveCount(1);
   await expect(font.locator("[data-wl=input]")).toHaveCount(1);
   await expect(font.locator("kbd")).toHaveCount(0);

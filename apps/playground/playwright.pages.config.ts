@@ -9,7 +9,8 @@ const chromiumChannel = process.env.GAVIA_E2E_CHROMIUM_CHANNEL;
 
 export default defineConfig({
   testDir: "./e2e",
-  testMatch: "pages.pw.ts",
+  testMatch: ["pages.pw.ts", "pages-performance.pw.ts"],
+  outputDir: "./test-results/pages",
   timeout: 60_000,
   retries: process.env.CI ? 1 : 0,
   workers: 1,
@@ -21,11 +22,13 @@ export default defineConfig({
     { name: "pages-desktop", use: { ...devices["Desktop Chrome"], channel: chromiumChannel } },
     { name: "pages-mobile", use: { ...devices["Pixel 7"], channel: chromiumChannel } }
   ],
-  webServer: existingStand ? undefined : {
-    command: "pnpm preview --host 127.0.0.1 --port 4175 --strictPort --base=/gavia-ui/",
-    cwd: dirname(fileURLToPath(import.meta.url)),
-    url: `${previewOrigin}/gavia-ui/`,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000
-  }
+  webServer: existingStand
+    ? undefined
+    : {
+        command: "pnpm preview --host 127.0.0.1 --port 4175 --strictPort --base=/gavia-ui/",
+        cwd: dirname(fileURLToPath(import.meta.url)),
+        url: `${previewOrigin}/gavia-ui/`,
+        reuseExistingServer: !process.env.CI,
+        timeout: 120_000
+      }
 });

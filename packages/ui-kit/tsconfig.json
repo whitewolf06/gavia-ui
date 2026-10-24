@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "types": [
-      "vite/client"
+      "vite/client",
+      "node"
     ],
     "jsx": "preserve",
     "jsxImportSource": "vue"

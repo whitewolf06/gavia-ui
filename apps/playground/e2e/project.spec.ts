@@ -1,10 +1,10 @@
-import { russianPlaygroundUrl } from "./playground-url";
-import { publishedVersion } from "./project-version";
-import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import { expect, test } from "@playwright/test";
-import { chooseShowcaseTheme, navigateMainView, expectMainViewCurrent } from "./select-helpers";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, URL as NodeURL } from "node:url";
+import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
+import { playgroundRouteParams, russianPlaygroundUrl } from "./playground-url";
+import { publishedVersion } from "./project-version";
+import { chooseShowcaseTheme, expectMainViewCurrent, navigateMainView } from "./select-helpers";
 
 const packageMetadata = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../../../packages/ui-kit/package.json", import.meta.url)), "utf8")) as {
   name: string;
@@ -20,22 +20,25 @@ const project = {
   packageUrl: "https://www.npmjs.com/package/gavia-ui",
   npmPublished: true
 };
-import { parseChangelog } from "../src/project/changelog";
-import { localizeChangelogMarkdown } from "../src/project/changelog-localization";
-import { playgroundLocale, setPlaygroundLocale } from "../src/i18n";
 import type { ChangelogInline } from "../src/project/changelog";
+import { parseChangelog } from "../src/project/changelog";
 
-// Legacy RU scenarios assert the displayed Russian overlay over canonical Markdown.
-// Restore the Node-side locale before collecting other specs.
+// Read prose catalogs without importing Vite-only precompiled message modules.
 const history = (() => {
-  const previousLocale = playgroundLocale.value;
-  try {
-    setPlaygroundLocale("ru");
-    const source = readFileSync(fileURLToPath(new NodeURL("../../../CHANGELOG.md", import.meta.url)), "utf8");
-    return parseChangelog(localizeChangelogMarkdown(source), project.documentationBaseUrl);
-  } finally {
-    setPlaygroundLocale(previousLocale);
-  }
+  const readCatalog = (language: string) => JSON.parse(readFileSync(new NodeURL(`../src/i18n/messages/changelog.${language}.json`, import.meta.url), "utf8")) as Record<string, string>;
+  const english = readCatalog("en");
+  const russian = readCatalog("ru");
+  const translations = new Map(Object.entries(english).map(([key, value]) => [value, russian[key] ?? value]));
+  // Match complete Markdown prose blocks; wrapped lines are editorial whitespace.
+  const source = readFileSync(new NodeURL("../../../CHANGELOG.md", import.meta.url), "utf8")
+    .replace(/\r\n?/g, "\n")
+    .replace(/\n(?!\n|#{1,6}\s|[-*]\s)[\t ]*(?=[^\n])/g, " ")
+    .split("\n").map((line) => {
+      const prefix = /^(?:#{1,6}|[-*])\s+/.exec(line)?.[0] ?? "";
+      const prose = line.slice(prefix.length).trim();
+      return prefix + (translations.get(prose) ?? prose);
+    }).join("\n");
+  return parseChangelog(source, project.documentationBaseUrl);
 })();
 const inlineText = (content: ChangelogInline[]): string => content.map((part) => part.kind === "link" ? part.label : part.value).join("");
 
@@ -50,7 +53,7 @@ test("home shows creator, source version, license and truthful package status wh
   const changelog = page.getByTestId("changelog-page");
   await expect(changelog.getByRole("heading", { level: 1 })).toHaveText("Changelog");
   await expectMainViewCurrent(page, "Changelog");
-  await expect(page).toHaveURL((url) => url.searchParams.get("view") === "project" && url.searchParams.get("lang") === "ru" && !url.hash);
+  await expect(page).toHaveURL((url) => playgroundRouteParams(url).get("view") === "changelog" && playgroundRouteParams(url).get("lang") === "ru" && !url.hash);
   await navigateMainView(page, "Главная");
   const main = page.getByTestId("home-page");
   await expect(main.getByRole("heading", { level: 1 })).toHaveText("Gavia UI");
@@ -67,9 +70,13 @@ test("home shows creator, source version, license and truthful package status wh
   const packageStatus = main.getByTestId("project-npm-status");
   await expect(packageStatus).toContainText("доступен в npm");
   await expect(packageStatus.getByRole("link", { name: `${project.packageName}@${publishedVersion}`, exact: true })).toHaveAttribute("href", project.packageUrl);
-  await expect(packageStatus.locator("code")).toHaveText(`pnpm add ${project.packageName}@${publishedVersion}`);
+  await expect(packageStatus.locator("code")).toHaveText(`pnpm add ${project.packageName}`);
   await expect(page.locator(".pg-footer")).toContainText("Автор: Дмитрий Горбач");
-  await expect(main.getByRole("link").filter({ has: page.getByRole("heading", { name: "Changelog", exact: true }) })).toHaveAttribute("href", "?view=changelog&theme=system&lang=ru");
+  const historyLink = main.getByRole("link").filter({ has: page.getByRole("heading", { name: "Changelog", exact: true }) });
+  const historyUrl = new URL((await historyLink.getAttribute("href"))!, page.url());
+  expect(playgroundRouteParams(historyUrl).get("view")).toBe("changelog");
+  expect(playgroundRouteParams(historyUrl).get("lang")).toBe("ru");
+  expect(historyUrl.searchParams.get("theme")).toBe("system");
 });
 
 test("renders the canonical changelog with complete releases, continued bullets and safe documentation links", async ({ page }) => {
@@ -78,16 +85,26 @@ test("renders the canonical changelog with complete releases, continued bullets 
   for (const section of history.sections) {
     const article = changelog.locator(`article[id="${section.id}"]`);
     await expect(article.getByRole("heading", { level: 3 })).toHaveText(section.version ? `Версия ${section.version}` : section.title);
-    if (section.date) await expect(article.locator("time")).toHaveAttribute("datetime", section.date);
-    for (const block of section.blocks) {
-      if (block.kind === "list") {
-        for (const item of block.items) await expect(article.getByRole("listitem").filter({ hasText: inlineText(item) })).toHaveCount(1);
-      } else if (block.kind === "heading") {
-        await expect(article.getByRole("heading", { level: 4, name: inlineText(block.content), exact: true })).toBeVisible();
+    for (const date of [section.date].filter((value): value is string => value !== undefined)) {
+      await expect(article.locator("time")).toHaveAttribute("datetime", date);
+    }
+    const lists = section.blocks.filter((block) => block.kind === "list");
+    const headings = section.blocks.filter((block) => block.kind === "heading");
+    for (const block of lists) {
+      for (const item of block.items) {
+        await expect(article.getByRole("listitem").filter({ hasText: inlineText(item) })).toHaveCount(1);
       }
-      const chunks = block.kind === "list" ? block.items : [block.content];
-      for (const chunk of chunks) for (const part of chunk) {
-        if (part.kind === "link") await expect(article.getByRole("link", { name: part.label, exact: true })).toHaveAttribute("href", part.href);
+    }
+    for (const block of headings) {
+      await expect(article.getByRole("heading", { level: 4, name: inlineText(block.content), exact: true })).toBeVisible();
+    }
+    const chunks = [
+      ...lists.flatMap((block) => block.items),
+      ...section.blocks.filter((block) => block.kind !== "list").map((block) => block.content)
+    ];
+    for (const chunk of chunks) {
+      for (const part of chunk.filter((part) => part.kind === "link")) {
+        await expect(article.getByRole("link", { name: part.label, exact: true })).toHaveAttribute("href", part.href);
       }
     }
   }
@@ -102,10 +119,10 @@ test("navigates from the design system, opens release anchors and restores the p
   await page.goto(russianPlaygroundUrl("/?view=system"));
   await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
   await navigateMainView(page, "Changelog");
-  await expect(page).toHaveURL((url) => url.searchParams.get("view") === "changelog" && url.searchParams.get("lang") === "ru" && !url.hash);
+  await expect(page).toHaveURL((url) => playgroundRouteParams(url).get("view") === "changelog" && playgroundRouteParams(url).get("lang") === "ru" && !url.hash);
   await expect(page.locator(".project-main")).toBeVisible();
   await page.getByRole("link", { name: "История изменений", exact: true }).click();
-  await expect(page).toHaveURL((url) => url.searchParams.get("view") === "changelog" && url.searchParams.get("lang") === "ru" && url.hash === "#project-changelog");
+  await expect(page).toHaveURL((url) => playgroundRouteParams(url).get("view") === "changelog" && playgroundRouteParams(url).get("lang") === "ru" && url.hash === "#project-changelog");
   await expect(page.getByRole("heading", { name: "История изменений", exact: true })).toBeInViewport();
   const release = history.sections.find((section) => section.version)!;
   await page.getByRole("navigation", { name: "Версии в истории изменений" }).getByRole("link", { name: release.title, exact: true }).click();
@@ -116,7 +133,7 @@ test("navigates from the design system, opens release anchors and restores the p
   await navigateMainView(page, "Дизайн-система");
   await expect(page.getByRole("heading", { name: "Дизайн-система", exact: true })).toBeVisible();
   await page.goBack();
-  await expect(page).toHaveURL((url) => url.searchParams.get("view") === "changelog" && url.searchParams.get("lang") === "ru" && url.hash === `#${release.id}`);
+  await expect(page).toHaveURL((url) => playgroundRouteParams(url).get("view") === "changelog" && playgroundRouteParams(url).get("lang") === "ru" && url.hash === `#${release.id}`);
   await expect(page.locator(".project-main")).toBeVisible();
   // Check restored scroll before header-menu interaction intentionally moves focus.
   await expect(page.locator(`#${release.id}-title`)).toBeInViewport();

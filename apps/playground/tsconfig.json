@@ -6,6 +6,9 @@
       "node"
     ],
     "paths": {
+      "gavia-ui": ["../../packages/ui-kit/src/index.ts"],
+      "gavia-ui/utils": ["../../packages/ui-kit/src/utils/index.ts"],
+      "gavia-ui/composables": ["../../packages/ui-kit/src/composables/index.ts"],
       "vue": [
         "./node_modules/vue"
       ],
@@ -21,6 +24,8 @@
     "e2e/**/*.vue",
     "playwright*.config.ts",
     "vite.config.ts",
-    "build/**/*.ts"
+    "build/**/*.ts",
+    "tests/**/*.ts",
+    "vitest.config.ts"
   ]
 }

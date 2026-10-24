@@ -1,3 +1,5 @@
+import { contrastRatio } from "../src/utils/color.shared.mjs";
+export { contrastRatio } from "../src/utils/color.shared.mjs";
 const layers = ["foundation", "semantic", "component"];
 const types = ["color", "dimension", "number", "fontFamily", "duration", "shadow", "string"];
 const tokenPattern = /var\((--wl-[a-z0-9-]+)\)/g;
@@ -8,18 +10,6 @@ export function resolveToken(catalog, name, theme = "white", trail = []) {
   if (!token) throw new Error(`Unknown token: ${name}`);
   const value = token.themes?.[theme] ?? token.value;
   return value.replace(tokenPattern, (_, reference) => resolveToken(catalog, reference, theme, [...trail, name]));
-}
-
-export function contrastRatio(foreground, background) {
-  function luminance(color) {
-    if (!/^#[0-9a-f]{6}$/i.test(color)) throw new Error(`Contrast color must be an opaque hex value: ${color}`);
-    const channels = [1, 3, 5].map((start) => parseInt(color.slice(start, start + 2), 16) / 255)
-      .map((value) => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
-    return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
-  }
-  const a = luminance(foreground);
-  const b = luminance(background);
-  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 }
 
 export function validateCatalog(catalog) {
@@ -53,9 +43,9 @@ export function validateCatalog(catalog) {
     }
     const formats = {
       color: /^(#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})|rgba?\([\d.,%\s]+\)|transparent)$/i,
-      dimension: /^-?(?:\d+\.?\d*|\.\d+)(?:px|rem|em|vh|vw|%|ch)?$/,
-      number: /^-?(?:\d+\.?\d*|\.\d+)$/,
-      duration: /^(?:\d+\.?\d*|\.\d+)(?:ms|s)$/
+      dimension: /^-?(?:\d+(?:\.\d*)?|\.\d+)(?:px|rem|em|vh|vw|%|ch)?$/,
+      number: /^-?(?:\d+(?:\.\d*)?|\.\d+)$/,
+      duration: /^(?:\d+(?:\.\d*)?|\.\d+)(?:ms|s)$/
     };
     for (const theme of themes) {
       const value = resolveToken(catalog, token.name, theme);
@@ -74,7 +64,8 @@ export function validateCatalog(catalog) {
     }
   }
   const breakpointValues = Object.values(catalog.breakpoints);
-  if (breakpointValues.some((value, index) => !Number.isInteger(value) || value <= 0 || (index > 0 && value <= breakpointValues[index - 1]))) {
+  if (breakpointValues.some((value, index) =>
+    !Number.isInteger(value) || value <= 0 || (index > 0 && value <= breakpointValues[index - 1]))) {
     throw new Error("Breakpoints must be increasing positive integers");
   }
   const contrast = [];

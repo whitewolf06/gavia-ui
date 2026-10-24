@@ -1,0 +1,2755 @@
+{
+  "WlAccordion": {
+    "props": {
+      "items": "readonly Item[]",
+      "single": "boolean",
+      "openKeys": "readonly NoInfer<Item[\"key\"]>[]",
+      "defaultOpenKeys": "readonly NoInfer<Item[\"key\"]>[]",
+      "pt": "WlPt<\"accordion\">",
+      "openKeysModifiers": "WlNoModelModifiers"
+    },
+    "slots": {
+      "item": "item?(props: { item: Item; open: boolean }): unknown;",
+      "header": "header?(props: { item: Item; open: boolean }): unknown;",
+      "icon": "icon?(props: { item: Item; open: boolean }): unknown;"
+    },
+    "emits": {
+      "update:openKeys": "[value: Item[\"key\"][]]"
+    },
+    "models": {},
+    "defaults": {
+      "items": [],
+      "single": false
+    },
+    "required": [],
+    "descriptions": {
+      "items": "WlAccordionItem[]: { key, title, content?, disabled? }.",
+      "single": "Only one item is open.",
+      "openKeys": "Open section keys; controlled through v-model:openKeys.",
+      "defaultOpenKeys": "Initially expanded item keys for an uncontrolled accordion.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections.",
+      "openKeysModifiers": "Modifier contract for expanded keys; built-in modifiers are unsupported."
+    },
+    "slotDescriptions": {
+      "item": "Expanded item content with the original descriptor and open state.",
+      "header": "Custom item heading with its current open state.",
+      "icon": "Custom disclosure icon with its current open state."
+    },
+    "eventDescriptions": {
+      "update:openKeys": "New list of open keys."
+    }
+  },
+  "WlAlert": {
+    "props": {
+      "tone": "WlTone",
+      "title": "string",
+      "closable": "boolean",
+      "closeLabel": "string",
+      "live": "\"assertive\" | \"polite\" | \"off\"",
+      "pt": "WlPt<\"alert\">"
+    },
+    "slots": {},
+    "emits": {
+      "close": "[event: MouseEvent]"
+    },
+    "models": {},
+    "defaults": {
+      "tone": "info",
+      "closable": false
+    },
+    "required": [],
+    "descriptions": {
+      "tone": "Semantic notification color.",
+      "title": "Title.",
+      "closable": "Button that closes the surface.",
+      "closeLabel": "Close button aria-label; uses locale.close when omitted or undefined (English: Close).",
+      "live": "Override live announcements; off renders a static message.",
+      "pt": "Attributes for internal DOM sections."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {
+      "close": "Close button click."
+    }
+  },
+  "WlAutocomplete": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "suggestions": "readonly TOption[]",
+      "optionLabel": "WlAutocompleteOptionLabel<NoInfer<TOption>, NoInfer<TMultiple>>",
+      "optionDisabled": "WlOptionDisabled<NoInfer<TOption>>",
+      "optionKey": "WlOptionKeyResolver<NoInfer<TOption>>",
+      "clearable": "boolean",
+      "placeholder": "string",
+      "invalid": "boolean",
+      "disabled": "boolean",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "multiple": "TMultiple & boolean",
+      "dropdown": "boolean",
+      "dropdownLabel": "string",
+      "minLength": "number",
+      "debounce": "number",
+      "loading": "boolean",
+      "motion": "boolean",
+      "pt": "WlPt<\"autocomplete\">"
+    },
+    "slots": {
+      "option": "option?(props: { option: TOption; index: number; selected: boolean; active: boolean }): unknown;",
+      "chip": "chip?(props: { option: TOption; remove: () => void }): unknown;",
+      "empty": "empty?(props: Record<never, never>): unknown;",
+      "loading": "loading?(props: Record<never, never>): unknown;"
+    },
+    "emits": {
+      "complete": "[event: WlAutocompleteCompleteEvent]"
+    },
+    "models": {
+      "modelValue": "WlAutocompleteModel<NoInfer<TOption>, NoInfer<TMultiple>>"
+    },
+    "defaults": {
+      "suggestions": [],
+      "invalid": false,
+      "disabled": false,
+      "size": "md",
+      "density": "default",
+      "dropdown": false,
+      "minLength": 1,
+      "debounce": 300,
+      "loading": false
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "suggestions": "Readonly TOption list; determines the selected suggestion type.",
+      "optionLabel": "Label field name or (option) => string function.",
+      "optionDisabled": "Option field or predicate identifying disabled options.",
+      "optionKey": "Stable option field or key resolver; keeps rendered option state with its data.",
+      "clearable": "Show a named clear button; clears a single model to null.",
+      "placeholder": "Placeholder.",
+      "invalid": "Error state.",
+      "disabled": "Disables the field.",
+      "size": "Field size.",
+      "density": "Density.",
+      "multiple": "Multiple selection (chips).",
+      "dropdown": "List expansion button.",
+      "dropdownLabel": "Accessible list expansion button name.\nDefaults to WlConfig.locale.showOptions (English when unconfigured).",
+      "minLength": "Minimum characters to start a search.",
+      "debounce": "Delay in milliseconds before requesting completion for changed text.",
+      "loading": "Indicate pending work supplied by the application.",
+      "motion": "Suggestion animation; defaults to WlConfig.motion (true).",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {
+      "option": "Option scope: { option, index, selected, active }.",
+      "chip": "Selected chip scope: { option, remove }.",
+      "empty": "Content shown when no options match.",
+      "loading": "Content displayed while consumer-provided work is pending."
+    },
+    "eventDescriptions": {
+      "complete": "Start search: { originalEvent, query } — update suggestions."
+    }
+  },
+  "WlAvatar": {
+    "props": {
+      "label": "string",
+      "name": "string",
+      "image": "string",
+      "size": "WlAvatarSize",
+      "presence": "WlAvatarPresence",
+      "presenceLabel": "string",
+      "shape": "\"circle\" | \"square\"",
+      "pt": "WlPt<\"avatar\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {},
+    "defaults": {
+      "size": 32,
+      "shape": "circle"
+    },
+    "required": [],
+    "descriptions": {
+      "label": "Explicit fallback text, used instead of initials derived from name.",
+      "name": "Person's name, used for image alt text and fallback initials.",
+      "image": "Image URL; a failed image falls back to label or initials.",
+      "size": "Avatar size in pixels.",
+      "presence": "Optional presence indicator.",
+      "presenceLabel": "Accessible presence text; otherwise the current locale supplies it.",
+      "shape": "Avatar outline shape.",
+      "pt": "Attributes for the avatar root, image and fallback label sections."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlBadge": {
+    "props": {
+      "value": "string | number",
+      "tone": "WlTone",
+      "max": "number",
+      "ariaLabel": "string",
+      "dot": "boolean",
+      "pt": "WlPt<\"badge\">"
+    },
+    "slots": {
+      "default": "default?(props: { value: string | number | undefined; displayValue: string | number | undefined }): unknown;"
+    },
+    "emits": {},
+    "models": {},
+    "defaults": {
+      "tone": "accent",
+      "dot": false
+    },
+    "required": [],
+    "descriptions": {
+      "value": "Text or count shown when dot is false.",
+      "tone": "Semantic badge color.",
+      "max": "Display numeric values above this limit as a capped count.",
+      "ariaLabel": "Accessible label; required for a meaningful dot indicator.",
+      "dot": "Show a dot instead of the value; unlabeled dots are decorative.",
+      "pt": "Attributes for the badge root section."
+    },
+    "slotDescriptions": {
+      "default": "Custom badge content with the original and displayed values."
+    },
+    "eventDescriptions": {}
+  },
+  "WlBreadcrumbs": {
+    "props": {
+      "items": "readonly WlBreadcrumbItem[]",
+      "separator": "string",
+      "maxItems": "number",
+      "collapseLabel": "string",
+      "pt": "WlPt<\"breadcrumbs\">"
+    },
+    "slots": {
+      "item": "item?(props: { item: WlBreadcrumbItem; index: number; current: boolean }): unknown;",
+      "separator": "separator?(props: { item: WlBreadcrumbItem; index: number }): unknown;"
+    },
+    "emits": {},
+    "models": {},
+    "defaults": {
+      "items": [],
+      "separator": "/"
+    },
+    "required": [],
+    "descriptions": {
+      "items": "WlBreadcrumbItem[]: { label, to?, href?, icon? }.",
+      "separator": "Text displayed between breadcrumb items.",
+      "maxItems": "Maximum visible breadcrumb items before collapsing the middle items.",
+      "collapseLabel": "Accessible name for the collapsed-items trigger.",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {
+      "item": "Custom breadcrumb item; receives the item, index and navigation state.",
+      "separator": "Custom breadcrumb separator content."
+    },
+    "eventDescriptions": {}
+  },
+  "WlButton": {
+    "props": {
+      "variant": "WlButtonVariant",
+      "tone": "WlTone",
+      "size": "WlSize",
+      "density": "WlDensity",
+      "loading": "boolean",
+      "disabled": "boolean",
+      "block": "boolean",
+      "type": "\"button\" | \"submit\" | \"reset\"",
+      "as": "\"button\" | \"a\"",
+      "href": "string",
+      "to": "unknown",
+      "iconPosition": "\"start\" | \"end\"",
+      "pt": "WlPt<\"button\">"
+    },
+    "slots": {},
+    "emits": {
+      "click": "[event: MouseEvent]"
+    },
+    "models": {},
+    "defaults": {
+      "variant": "secondary",
+      "size": "md",
+      "density": "default",
+      "loading": false,
+      "disabled": false,
+      "block": false,
+      "type": "button"
+    },
+    "required": [],
+    "descriptions": {
+      "variant": "Visual treatment; inherits an enclosing WlButtonGroup when omitted.",
+      "tone": "Semantic color, independent of the visual treatment.",
+      "size": "Control size; inherits an enclosing WlButtonGroup when omitted.",
+      "density": "Spacing density; inherits an enclosing WlButtonGroup when omitted.",
+      "loading": "Display a spinner and prevent activation.",
+      "disabled": "Prevent pointer and keyboard activation.",
+      "block": "Fill the available inline width.",
+      "type": "Native button type; applies when rendering a button.",
+      "as": "Render a link explicitly; href or to also selects link rendering.",
+      "href": "Link destination, forwarded to WlLink.",
+      "to": "Application router destination handled by the configured link adapter.",
+      "iconPosition": "Place the icon before or after the default slot.",
+      "pt": "Attributes for the root, label and loadingIcon pass-through sections."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {
+      "click": "Emitted on activation when neither disabled nor loading."
+    }
+  },
+  "WlButtonGroup": {
+    "props": {
+      "ariaLabel": "string",
+      "size": "WlSize",
+      "variant": "WlButtonVariant",
+      "density": "WlDensity",
+      "attached": "boolean"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {},
+    "defaults": {},
+    "required": [],
+    "descriptions": {
+      "ariaLabel": "Group aria-label.",
+      "size": "Size within the component family's documented scale.",
+      "variant": "Visual treatment within this component family.",
+      "density": "Spacing density for this component family.",
+      "attached": "Join adjacent button borders and corners into one group."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlCalendar": {
+    "props": {
+      "events": "readonly WlCalendarEvent[]",
+      "modelModifiers": "WlNoModelModifiers",
+      "monthModifiers": "WlNoModelModifiers",
+      "multiple": "Multiple & boolean",
+      "disabled": "boolean",
+      "pt": "WlPt<\"calendar\">"
+    },
+    "slots": {
+      "day": "day?(props: WlCalendarDaySlotProps): unknown;"
+    },
+    "emits": {},
+    "models": {
+      "modelValue": "WlCalendarModel<NoInfer<Multiple>>",
+      "month": "string"
+    },
+    "defaults": {
+      "events": [],
+      "disabled": false,
+      "month": ""
+    },
+    "required": [],
+    "descriptions": {
+      "events": "WlCalendarEvent[]: { date (ISO), label, tone?: \"blue\" | \"gray\" }.",
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "monthModifiers": "Modifier contract for the displayed-month model; built-in modifiers are unsupported.",
+      "multiple": "Enable selection of more than one value.",
+      "disabled": "Disable user interaction with this component.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {
+      "day": "Custom calendar day content with its date and selection state."
+    },
+    "eventDescriptions": {}
+  },
+  "WlCard": {
+    "props": {
+      "hoverable": "boolean",
+      "as": "\"section\" | \"article\" | \"div\" | \"a\"",
+      "href": "string",
+      "to": "unknown",
+      "variant": "\"outlined\" | \"elevated\"",
+      "padding": "\"none\" | \"sm\" | \"md\" | \"lg\"",
+      "pt": "WlPt<\"card\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {},
+    "defaults": {
+      "hoverable": false
+    },
+    "required": [],
+    "descriptions": {
+      "hoverable": "Add the theme's hover treatment.",
+      "as": "Root element when no link destination is supplied.",
+      "href": "Link destination; selects WlLink as the root.",
+      "to": "Router destination handled by the configured WlLink adapter.",
+      "variant": "Outline or elevation treatment; omission uses the theme default.",
+      "padding": "Content padding; omission uses the theme default.",
+      "pt": "Attributes for the card root and its content sections."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlCheckbox": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "value": "Value",
+      "size": "WlSwitchSize",
+      "density": "WlDensity",
+      "disabled": "boolean",
+      "indeterminate": "boolean",
+      "invalid": "boolean",
+      "pt": "WlPt<\"checkbox\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {
+      "modelValue": "NoInfer<Value extends undefined ? boolean : Value[]>"
+    },
+    "defaults": {
+      "disabled": false,
+      "size": "md",
+      "density": "default",
+      "indeterminate": false,
+      "invalid": false
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "value": "Value associated with this choice in the group model.",
+      "size": "Size within the component family's documented scale.",
+      "density": "Spacing density for this component family.",
+      "disabled": "Disables the checkbox.",
+      "indeterminate": "Indeterminate state.",
+      "invalid": "Error state.",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlCheckboxGroup": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "options": "readonly TOption[]",
+      "optionLabel": "WlOptionLabel<NoInfer<TOption>>",
+      "optionValue": "TResolver",
+      "optionDisabled": "WlOptionDisabled<NoInfer<TOption>>",
+      "optionKey": "WlOptionKeyResolver<NoInfer<TOption>>",
+      "legend": "string",
+      "name": "string",
+      "orientation": "\"horizontal\" | \"vertical\"",
+      "variant": "\"default\"",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "disabled": "boolean",
+      "invalid": "boolean",
+      "loading": "boolean",
+      "pt": "WlPt<\"checkboxgroup\">"
+    },
+    "slots": {
+      "legend": "legend?(props: Record<never, never>): unknown;",
+      "option": "option?(props: { option: TOption; index: number; checked: boolean; disabled: boolean }): unknown;"
+    },
+    "emits": {},
+    "models": {
+      "modelValue": "WlMultiSelectModel<NoInfer<TOption>, NoInfer<TResolver>>"
+    },
+    "defaults": {
+      "options": [],
+      "orientation": "vertical",
+      "variant": "default",
+      "size": "md",
+      "density": "default",
+      "disabled": false,
+      "invalid": false,
+      "loading": false,
+      "modelValue": []
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "options": "Readonly options from which the user can select.",
+      "optionLabel": "Resolve the visible text of an option.",
+      "optionValue": "Resolve the value stored in the selection model.",
+      "optionDisabled": "Resolve whether an option is disabled.",
+      "optionKey": "Resolve stable option identity; provide keys when options may be reordered.",
+      "legend": "Visible accessible name for the choice group.",
+      "name": "Name used by the component's native form controls.",
+      "orientation": "Layout direction and applicable arrow-key navigation direction.",
+      "variant": "Visual treatment within this component family.",
+      "size": "Size within the component family's documented scale.",
+      "density": "Spacing density for this component family.",
+      "disabled": "Disable user interaction with this component.",
+      "invalid": "Expose a validation error state on the control.",
+      "loading": "Indicate pending work supplied by the application.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {
+      "legend": "Custom accessible group legend.",
+      "option": "Custom option content with its value and interaction state."
+    },
+    "eventDescriptions": {}
+  },
+  "WlChip": {
+    "props": {
+      "count": "number",
+      "disabled": "boolean",
+      "removable": "boolean",
+      "removeLabel": "string",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "pt": "WlPt<\"chip\">"
+    },
+    "slots": {
+      "default": "default?(props: Record<never, never>): unknown;",
+      "count": "count?(props: { count: number }): unknown;",
+      "removeIcon": "removeIcon?(props: Record<never, never>): unknown;"
+    },
+    "emits": {
+      "click": "[event: MouseEvent]",
+      "remove": "[event: MouseEvent]"
+    },
+    "models": {
+      "active": "boolean"
+    },
+    "defaults": {
+      "disabled": false,
+      "removable": false,
+      "size": "md",
+      "density": "default",
+      "active": false
+    },
+    "required": [],
+    "descriptions": {
+      "count": "Trailing count.",
+      "disabled": "Disables the chip.",
+      "removable": "Show a removal action for this chip.",
+      "removeLabel": "Accessible name of the removal action.",
+      "size": "Size within the component family's documented scale.",
+      "density": "Spacing density for this component family.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {
+      "default": "Chip text.",
+      "count": "Custom chip count; receives the numeric count.",
+      "removeIcon": "Custom graphic inside the named removal action."
+    },
+    "eventDescriptions": {
+      "click": "Click (not emitted when disabled).",
+      "remove": "Emitted when the removal action is activated."
+    }
+  },
+  "WlColorPicker": {
+    "props": {
+      "modelValue": "string",
+      "swatches": "readonly string[]",
+      "size": "WlColorPickerSize",
+      "disabled": "boolean",
+      "invalid": "boolean",
+      "alpha": "boolean",
+      "custom": "boolean",
+      "pt": "WlPt<\"colorpicker\">",
+      "paletteLabel": "string",
+      "inputLabel": "string"
+    },
+    "slots": {},
+    "emits": {
+      "update:modelValue": "[value: string]"
+    },
+    "models": {},
+    "defaults": {
+      "modelValue": "",
+      "swatches": [
+        "#2563eb",
+        "#2e9e68",
+        "#bf8615",
+        "#d2494f",
+        "#f7f7f8",
+        "#e7e7ea",
+        "#dcdce1",
+        "#b9bdc6",
+        "#9aa0aa",
+        "#5d626c",
+        "#43474f",
+        "#22252b"
+      ],
+      "size": "md",
+      "disabled": false,
+      "invalid": false,
+      "alpha": false,
+      "custom": false
+    },
+    "required": [],
+    "descriptions": {
+      "modelValue": "Normalized lowercase hex; alpha mode includes the final opacity byte.",
+      "swatches": "Palette HEX colours.",
+      "size": "Colour swatch size.",
+      "disabled": "Disables the palette and input.",
+      "invalid": "External error state.",
+      "alpha": "Enable an alpha channel in the selected color.",
+      "custom": "Allow entering a custom color beyond the swatch palette.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections.",
+      "paletteLabel": "Accessible colour list name.\nDefaults to WlConfig.locale.colorPalette (English when unconfigured).",
+      "inputLabel": "Accessible HEX field name.\nDefaults to WlConfig.locale.colorHex (English when unconfigured)."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {
+      "update:modelValue": "New normalised #rrggbb colour."
+    }
+  },
+  "WlCommandPalette": {
+    "props": {
+      "groups": "readonly (WlCommandPaletteGroup<Item> & Group)[]",
+      "visibleModifiers": "WlNoModelModifiers",
+      "queryModifiers": "WlTextModelModifiers",
+      "placeholder": "string",
+      "emptyText": "string",
+      "loadingText": "string",
+      "ariaLabel": "string",
+      "filter": "boolean",
+      "shortcut": "boolean",
+      "closeOnSelect": "boolean",
+      "loading": "boolean",
+      "disabled": "boolean",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "motion": "boolean",
+      "pt": "WlPt<\"commandpalette\">"
+    },
+    "slots": {
+      "group": "group?(props: { group: Group }): unknown;",
+      "item": "item?(props: { item: Item; group: Group; active: boolean }): unknown;",
+      "item-icon": "\"item-icon\"?(props: { item: Item; group: Group }): unknown;",
+      "empty": "empty?(props: { query: string }): unknown;",
+      "footer": "footer?(props: {}): unknown;"
+    },
+    "emits": {
+      "search": "[query: string]",
+      "select": "[item: Item, group: Group]",
+      "open": "[]",
+      "close": "[]"
+    },
+    "models": {
+      "visible": "boolean",
+      "query": "string"
+    },
+    "defaults": {
+      "groups": [],
+      "filter": true,
+      "shortcut": false,
+      "closeOnSelect": true,
+      "loading": false,
+      "disabled": false,
+      "size": "md",
+      "density": "default",
+      "visible": false,
+      "query": ""
+    },
+    "required": [],
+    "descriptions": {
+      "groups": "WlCommandPaletteGroup[] with quick links and search results. group.filter selects local or external filtering.",
+      "visibleModifiers": "Modifier contract for visibility; built-in modifiers are unsupported.",
+      "queryModifiers": "Modifiers accepted by the query model; trim normalizes surrounding whitespace.",
+      "placeholder": "Input hint; uses locale.searchPlaceholder when omitted or undefined (English: Search or navigate…).",
+      "emptyText": "Empty state; uses locale.noResults when omitted or undefined (English: Nothing found).",
+      "loadingText": "Loading text; uses locale.searching when omitted or undefined (English: Searching…).",
+      "ariaLabel": "Accessible name; uses locale.commandPalette when omitted or undefined (English: Command palette).",
+      "filter": "Filter items locally.",
+      "shortcut": "Open with Ctrl/Cmd+K.",
+      "closeOnSelect": "Close the surface after an enabled item is selected.",
+      "loading": "Indicate pending work supplied by the application.",
+      "disabled": "Disable user interaction with this component.",
+      "size": "Size within the component family's documented scale.",
+      "density": "Spacing density for this component family.",
+      "motion": "Window animation; defaults to WlConfig.motion (true).",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {
+      "group": "Group heading; scope { group }.",
+      "item": "Complete item markup; scope { item, group, active }.",
+      "item-icon": "Item icon; scope { item, group }.",
+      "empty": "Empty state; scope { query }.",
+      "footer": "Panel footer."
+    },
+    "eventDescriptions": {
+      "search": "Search query changed.",
+      "select": "Item selected. The application handles navigation or the action.",
+      "open": "Emitted when the surface opens.",
+      "close": "Emitted when the surface closes."
+    }
+  },
+  "WlConfirmDialog": {
+    "props": {
+      "group": "string",
+      "motion": "boolean",
+      "pt": "WlPt<\"confirmdialog\">"
+    },
+    "slots": {
+      "default": "default?(props: { confirmation: WlConfirmation }): unknown;",
+      "footer": "footer?(props: { confirmation: WlConfirmation; accept: () => void; reject: () => void }): unknown;"
+    },
+    "emits": {},
+    "models": {},
+    "defaults": {},
+    "required": [],
+    "descriptions": {
+      "group": "Dialog group; usually optional.",
+      "motion": "Window animation; defaults to WlConfig.motion (true).",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {
+      "default": "Custom confirmation message; receives the active confirmation request.",
+      "footer": "Custom confirmation actions with accept and reject callbacks."
+    },
+    "eventDescriptions": {}
+  },
+  "WlContextMenu": {
+    "props": {
+      "items": "readonly (Item & WlMenuItem<NoInfer<Item>>)[]",
+      "disabled": "boolean",
+      "placement": "WlPopoverPlacement",
+      "align": "WlPopoverAlign",
+      "ariaLabel": "string",
+      "ariaLabelledby": "string",
+      "motion": "boolean",
+      "pt": "WlPt<\"contextmenu\">",
+      "menuPt": "WlPt<\"menu\">"
+    },
+    "slots": {
+      "default": "default?(props: Record<never, never>): unknown;",
+      "trigger": "trigger?(props: WlMenuTriggerSlotProps): unknown;"
+    },
+    "emits": {
+      "open": "[]",
+      "close": "[]",
+      "check": "[event: WlMenuCheckEvent<Item>]"
+    },
+    "models": {},
+    "defaults": {
+      "items": [],
+      "disabled": false,
+      "placement": "bottom",
+      "align": "start"
+    },
+    "required": [],
+    "descriptions": {
+      "items": "Readonly item descriptors rendered by this component.",
+      "disabled": "Disable user interaction with this component.",
+      "placement": "Preferred overlay side relative to its anchor.",
+      "align": "Alignment of the overlay along its anchor.",
+      "ariaLabel": "Accessible name when an external label is not referenced.",
+      "ariaLabelledby": "ID or space-separated IDs of elements naming this component.",
+      "motion": "Enable motion locally, with application defaults and reduced-motion preferences respected.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections.",
+      "menuPt": "Pass-through attributes for the context menu's menu panel."
+    },
+    "slotDescriptions": {
+      "default": "Content of the default focusable context-menu trigger.",
+      "trigger": "Custom trigger; bind its supplied attributes and use the provided open/close actions."
+    },
+    "eventDescriptions": {
+      "open": "Emitted when the surface opens.",
+      "close": "Emitted when the surface closes.",
+      "check": "Emitted when a menu checkbox or radio item changes its checked state."
+    }
+  },
+  "WlDatePicker": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "placeholder": "string",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "disabled": "boolean",
+      "invalid": "boolean",
+      "showIcon": "boolean",
+      "minDate": "string",
+      "maxDate": "string",
+      "displayFormat": "\"dd.mm.yyyy\" | \"yyyy-mm-dd\" | \"locale\"",
+      "formatOptions": "WlDateFormatOptions",
+      "disabledDates": "WlDisabledDates",
+      "rangePresets": "readonly WlDateRangePreset[]",
+      "selectionMode": "Mode",
+      "startLabel": "string",
+      "endLabel": "string",
+      "motion": "boolean",
+      "pt": "WlPt<\"datepicker\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {
+      "modelValue": "WlDatePickerModel<NoInfer<Mode>>"
+    },
+    "defaults": {
+      "size": "md",
+      "density": "default",
+      "disabled": false,
+      "invalid": false,
+      "showIcon": false,
+      "displayFormat": "dd.mm.yyyy",
+      "modelValue": null
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "placeholder": "Placeholder.\nDefaults to WlConfig.locale.datePlaceholder (English when unconfigured).",
+      "size": "Field size.",
+      "density": "Spacing density for this component family.",
+      "disabled": "Disables the field.",
+      "invalid": "Error state.",
+      "showIcon": "Calendar icon button.",
+      "minDate": "Minimum date in \"YYYY-MM-DD\" format. Empty or invalid values do not restrict selection.",
+      "maxDate": "Maximum date in \"YYYY-MM-DD\" format. Empty or invalid values do not restrict selection.",
+      "displayFormat": "Display and manual input format; the model remains ISO.",
+      "formatOptions": "Intl date-format options used by the localized display mode.",
+      "disabledDates": "Date list or predicate identifying dates that cannot be selected.",
+      "rangePresets": "Consumer-provided predefined date ranges.",
+      "selectionMode": "single: ISO string/null; range: [start, end|null]/null. The first selection sets the start, the second\ncompletes and sorts the range, and the next starts a new one.",
+      "startLabel": "Visible range start label.\nDefaults to WlConfig.locale.dateFrom (English when unconfigured).",
+      "endLabel": "Visible range end label.\nDefaults to WlConfig.locale.dateTo (English when unconfigured).",
+      "motion": "Calendar animation; defaults to WlConfig.motion (true).",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlDialog": {
+    "props": {
+      "header": "string",
+      "visibleModifiers": "WlNoModelModifiers",
+      "modal": "boolean",
+      "closable": "boolean",
+      "dismissible": "boolean",
+      "closeOnEscape": "boolean",
+      "blockScroll": "boolean",
+      "ariaLabel": "string",
+      "ariaLabelledby": "string",
+      "width": "string | number",
+      "size": "WlOverlaySize",
+      "fullscreen": "boolean | \"mobile\"",
+      "initialFocus": "WlOverlayInitialFocus",
+      "motion": "boolean",
+      "pt": "WlPt<\"dialog\">"
+    },
+    "slots": {
+      "default": "default?(props: {}): unknown;",
+      "header": "header?(props: {}): unknown;",
+      "footer": "footer?(props: {}): unknown;"
+    },
+    "emits": {
+      "open": "[]",
+      "close": "[]",
+      "afterLeave": "[]"
+    },
+    "models": {
+      "visible": "boolean"
+    },
+    "defaults": {
+      "modal": true,
+      "closable": true,
+      "dismissible": false,
+      "closeOnEscape": true,
+      "blockScroll": true,
+      "visible": false
+    },
+    "required": [],
+    "descriptions": {
+      "header": "Heading (when no header slot is provided).",
+      "visibleModifiers": "Modifier contract for visibility; built-in modifiers are unsupported.",
+      "modal": "Modal mode with backdrop.",
+      "closable": "Button that closes the surface.",
+      "dismissible": "Close by clicking the backdrop.",
+      "closeOnEscape": "Close with Escape.",
+      "blockScroll": "Locks page scrolling while the dialog is open.",
+      "ariaLabel": "Accessible dialog name without a text heading.",
+      "ariaLabelledby": "ID of the element labelling the dialog.",
+      "width": "Width (CSS), for example \"480px\".",
+      "size": "Size within the component family's documented scale.",
+      "fullscreen": "Expand the dialog to fill the viewport.",
+      "initialFocus": "Initial focus policy or target for the opened modal surface.",
+      "motion": "Opening and closing animation; defaults to WlConfig.motion (true).",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {
+      "default": "Dialog body.",
+      "header": "Custom header.",
+      "footer": "Footer (buttons)."
+    },
+    "eventDescriptions": {
+      "open": "Dialog fully opened.",
+      "close": "Dialog closed.",
+      "afterLeave": "Closing transition completed and dialog DOM removed."
+    }
+  },
+  "WlDivider": {
+    "props": {
+      "pt": "WlPt<\"divider\">",
+      "orientation": "\"horizontal\" | \"vertical\""
+    },
+    "slots": {},
+    "emits": {},
+    "models": {},
+    "defaults": {},
+    "required": [],
+    "descriptions": {
+      "pt": "Attributes of internal Gavia UI elements.",
+      "orientation": "Layout direction and applicable arrow-key navigation direction."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlDrawer": {
+    "props": {
+      "header": "string",
+      "visibleModifiers": "WlNoModelModifiers",
+      "position": "WlDrawerPosition",
+      "modal": "boolean",
+      "dismissible": "boolean",
+      "closable": "boolean",
+      "size": "WlOverlaySize",
+      "width": "string | number",
+      "initialFocus": "WlOverlayInitialFocus",
+      "closeOnEscape": "boolean",
+      "blockScroll": "boolean",
+      "ariaLabel": "string",
+      "ariaLabelledby": "string",
+      "motion": "boolean",
+      "pt": "WlPt<\"drawer\">"
+    },
+    "slots": {
+      "default": "default?(props: {}): unknown;",
+      "header": "header?(props: {}): unknown;",
+      "footer": "footer?(props: {}): unknown;"
+    },
+    "emits": {
+      "open": "[]",
+      "close": "[]",
+      "afterLeave": "[]"
+    },
+    "models": {
+      "visible": "boolean"
+    },
+    "defaults": {
+      "position": "right",
+      "modal": true,
+      "dismissible": true,
+      "closable": true,
+      "closeOnEscape": true,
+      "blockScroll": true,
+      "visible": false
+    },
+    "required": [],
+    "descriptions": {
+      "header": "Heading (when no header slot is provided).",
+      "visibleModifiers": "Modifier contract for visibility; built-in modifiers are unsupported.",
+      "position": "Opening side.",
+      "modal": "Modal mode with backdrop.",
+      "dismissible": "Close by clicking the backdrop.",
+      "closable": "Show the explicit close action.",
+      "size": "Size within the component family's documented scale.",
+      "width": "Explicit surface width as a CSS length or a pixel number.",
+      "initialFocus": "Initial focus policy or target for the opened modal surface.",
+      "closeOnEscape": "Close with Escape.",
+      "blockScroll": "Locks page scrolling while the panel is open.",
+      "ariaLabel": "Accessible panel name without a text heading.",
+      "ariaLabelledby": "ID of the element labelling the panel.",
+      "motion": "Opening and closing animation; defaults to WlConfig.motion (true).",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {
+      "default": "Panel content.",
+      "header": "Custom header.",
+      "footer": "Footer."
+    },
+    "eventDescriptions": {
+      "open": "Panel fully opened.",
+      "close": "Panel closed.",
+      "afterLeave": "Emitted after the closing transition has completed."
+    }
+  },
+  "WlEmpty": {
+    "props": {
+      "icon": "WlIconInput",
+      "title": "string",
+      "description": "string"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {},
+    "defaults": {},
+    "required": [],
+    "descriptions": {
+      "icon": "Icon (when no icon slot is provided).",
+      "title": "Title.",
+      "description": "Description (when no slot is provided)."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlField": {
+    "props": {
+      "label": "string",
+      "required": "boolean",
+      "optional": "boolean",
+      "orientation": "\"vertical\" | \"horizontal\"",
+      "hint": "string",
+      "error": "string",
+      "id": "string",
+      "announceError": "boolean",
+      "pt": "WlPt<\"field\">"
+    },
+    "slots": {
+      "default": "default?(props: WlFieldSlotProps): unknown;",
+      "label": "label?(props: { label: string | undefined; required: boolean }): unknown;"
+    },
+    "emits": {},
+    "models": {},
+    "defaults": {
+      "required": false
+    },
+    "required": [],
+    "descriptions": {
+      "label": "Visible label associated with the control ID.",
+      "required": "Mark the field as required and expose required to the control slot.",
+      "optional": "Show the localized optional marker when required is false.",
+      "orientation": "Arrange the label above or beside the control.",
+      "hint": "Help text, retained in aria-describedby when an error is present.",
+      "error": "Validation message; also marks the control slot as invalid.",
+      "id": "Control ID; otherwise a stable application-scoped ID is generated.",
+      "announceError": "Opt in to live validation announcements through role=alert.",
+      "pt": "Attributes for the root, label, required, hint and error sections."
+    },
+    "slotDescriptions": {
+      "default": "Control content; bind the supplied IDs, descriptions and validation state to the actual control.",
+      "label": "Custom field label; receives the label text and required state."
+    },
+    "eventDescriptions": {}
+  },
+  "WlFilePicker": {
+    "props": {
+      "accept": "string",
+      "multiple": "boolean",
+      "disabled": "boolean",
+      "chooseLabel": "string",
+      "ariaLabel": "string",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "pt": "WlPt<\"filepicker\">"
+    },
+    "slots": {},
+    "emits": {
+      "select": "[files: File[]]",
+      "cancel": "[]"
+    },
+    "models": {},
+    "defaults": {
+      "multiple": false,
+      "disabled": false,
+      "size": "md",
+      "density": "default"
+    },
+    "required": [],
+    "descriptions": {
+      "accept": "Extensions or MIME types for the file picker. The application validates files.",
+      "multiple": "Allows multiple file selection.",
+      "disabled": "Disables the trigger and choose().",
+      "chooseLabel": "Default button label.\nDefaults to WlConfig.locale.chooseFiles (English when unconfigured).",
+      "ariaLabel": "Default button accessible name.",
+      "size": "Button size.",
+      "density": "Button density.",
+      "pt": "Root, trigger and input attributes."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {
+      "select": "Unmodified files from the current selection. The component does not merge them with the previous list.",
+      "cancel": "Selection cancelled. The application's file list stays unchanged."
+    }
+  },
+  "WlFileUpload": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "accept": "string",
+      "multiple": "boolean",
+      "maxFiles": "number",
+      "maxSize": "number",
+      "disabled": "boolean",
+      "preview": "boolean",
+      "fileState": "(file: File) => { progress?: number; status?: \"pending\" | \"uploading\" | \"success\" | \"error\"; message?: string }",
+      "pt": "WlPt<\"fileupload\">"
+    },
+    "slots": {
+      "row": "row?(props: { file: File; index: number; remove: () => void; size: string; previewUrl: string | undefined; state: { progress?: number; status?: \"pending\" | \"uploading\" | \"success\" | \"error\"; message?: string } | undefined; }): unknown;"
+    },
+    "emits": {
+      "reject": "[payload: WlFileReject]"
+    },
+    "models": {
+      "modelValue": "File[]"
+    },
+    "defaults": {
+      "multiple": true,
+      "disabled": false,
+      "modelValue": []
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "accept": "Type filter (comma-separated extensions/MIME types).",
+      "multiple": "Multiple files (otherwise a new file replaces the current one).",
+      "maxFiles": "File count limit.",
+      "maxSize": "Bytes.",
+      "disabled": "Disables file selection and drag-and-drop.",
+      "preview": "Create local image previews while files remain selected.",
+      "fileState": "Consumer-provided upload status, progress and message for each file.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {
+      "row": "Custom selected-file row with removal, preview and status information."
+    },
+    "eventDescriptions": {
+      "reject": "File rejected: { file, reason: \"type\" | \"size\" | \"count\" }."
+    }
+  },
+  "WlFilterBar": {
+    "props": {
+      "activeCount": "number",
+      "openModifiers": "WlNoModelModifiers",
+      "ariaLabel": "string",
+      "toggleLabel": "string",
+      "panelTitle": "string",
+      "clearLabel": "string",
+      "applyLabel": "string",
+      "closeLabel": "string",
+      "showClear": "boolean",
+      "showApply": "boolean",
+      "disabled": "boolean",
+      "density": "WlDensity",
+      "pt": "WlPt<\"filterbar\">"
+    },
+    "slots": {
+      "default": "default?: (props: Pick<WlFilterBarExpose, \"open\" | \"close\" | \"clear\">) => unknown;",
+      "leading": "leading?: (props: {}) => unknown;",
+      "actions": "actions?: (props: Pick<WlFilterBarExpose, \"clear\" | \"close\">) => unknown;",
+      "footer": "footer?: (props: Pick<WlFilterBarExpose, \"apply\" | \"clear\" | \"close\">) => unknown;",
+      "summary": "summary?: (props: Pick<WlFilterBarExpose, \"clear\">) => unknown;"
+    },
+    "emits": {
+      "clear": "[]",
+      "apply": "[]",
+      "open": "[]",
+      "close": "[]"
+    },
+    "models": {
+      "open": "boolean"
+    },
+    "defaults": {
+      "activeCount": 0,
+      "showClear": true,
+      "showApply": true,
+      "disabled": false,
+      "density": "default",
+      "open": false
+    },
+    "required": [],
+    "descriptions": {
+      "activeCount": "Number of active filters.",
+      "openModifiers": "Modifier contract for open state; built-in modifiers are unsupported.",
+      "ariaLabel": "Accessible name; uses locale.filters when omitted or undefined (English: Filters).",
+      "toggleLabel": "Toggle text; uses locale.filters when omitted or undefined (English: Filters).",
+      "panelTitle": "Mobile panel title; uses locale.filters when omitted or undefined (English: Filters).",
+      "clearLabel": "Clear action text; uses locale.reset when omitted or undefined (English: Reset).",
+      "applyLabel": "Apply action text; uses locale.apply when omitted or undefined (English: Apply).",
+      "closeLabel": "Close action text; uses locale.closeFilters when omitted or undefined (English: Close filters).",
+      "showClear": "Show the filter panel's clear action when applicable.",
+      "showApply": "Show the filter panel's apply action.",
+      "disabled": "Disable user interaction with this component.",
+      "density": "Spacing density for this component family.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {
+      "default": "Filter controls with the panel's open, close and clear actions.",
+      "leading": "Content before the filter controls.",
+      "actions": "Custom actions with the clear and close callbacks.",
+      "footer": "Mobile panel footer with apply, clear and close callbacks.",
+      "summary": "Active-filter summary with a clear callback."
+    },
+    "eventDescriptions": {
+      "clear": "Reset filter values in the application.",
+      "apply": "Apply current values in the application.",
+      "open": "Emitted when the surface opens.",
+      "close": "Emitted when the surface closes."
+    }
+  },
+  "WlIcon": {
+    "props": {
+      "name": "WlIconInput",
+      "size": "number | string",
+      "title": "string"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {},
+    "defaults": {
+      "size": 18
+    },
+    "required": [],
+    "descriptions": {
+      "name": "Icon name from the set.",
+      "size": "Size: number (px) or string (CSS), for example \"1em\".",
+      "title": "Accessible title for a meaningful icon."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlIconButton": {
+    "props": {
+      "variant": "WlIconButtonVariant",
+      "tone": "WlTone",
+      "size": "\"md\" | \"sm\"",
+      "icon": "WlIconInput",
+      "active": "boolean",
+      "disabled": "boolean",
+      "loading": "boolean",
+      "href": "string",
+      "to": "unknown",
+      "count": "number",
+      "countLabel": "string",
+      "dot": "boolean",
+      "dotLabel": "string",
+      "ariaLabel": "string",
+      "pt": "WlPt<\"iconButton\">"
+    },
+    "slots": {
+      "default": "default?(props: Record<never, never>): unknown;"
+    },
+    "emits": {
+      "click": "[event: MouseEvent]"
+    },
+    "models": {},
+    "defaults": {
+      "variant": "ghost",
+      "size": "md",
+      "active": false,
+      "disabled": false,
+      "dot": false
+    },
+    "required": [],
+    "descriptions": {
+      "variant": "Visual variant.",
+      "tone": "Semantic color, independent of the visual treatment.",
+      "size": "Button size.",
+      "icon": "Icon (when no slot is provided).",
+      "active": "Highlight as active.",
+      "disabled": "Disables the button.",
+      "loading": "Indicate pending work supplied by the application.",
+      "href": "Native link destination.",
+      "to": "Application router destination handled by the configured link adapter.",
+      "count": "Numeric badge (shown when > 0).",
+      "countLabel": "Badge description; the action still needs its own accessible name.",
+      "dot": "Indicator dot (when count is absent).",
+      "dotLabel": "Accessible description for a meaningful status dot.",
+      "ariaLabel": "Required for the icon prop unless native aria-label, aria-labelledby or a named pt.root is supplied.",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {
+      "default": "Action text, optionally with a custom icon; descriptions alone do not name the action."
+    },
+    "eventDescriptions": {
+      "click": "Click (not emitted when disabled)."
+    }
+  },
+  "WlInput": {
+    "props": {
+      "modelModifiers": "WlTextModelModifiers",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "invalid": "boolean",
+      "disabled": "boolean",
+      "clearable": "boolean",
+      "loading": "boolean",
+      "showCount": "boolean",
+      "placeholder": "string",
+      "type": "string",
+      "pt": "WlPt<\"input\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {
+      "modelValue": "string"
+    },
+    "defaults": {
+      "size": "md",
+      "density": "default",
+      "invalid": false,
+      "disabled": false,
+      "type": "text",
+      "modelValue": ""
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "size": "Field size.",
+      "density": "Compact mode reduces field height.",
+      "invalid": "Error state.",
+      "disabled": "Disables the field.",
+      "clearable": "Show a clear action for the current value.",
+      "loading": "Indicate pending work supplied by the application.",
+      "showCount": "Display the text length counter and connect it to the control description.",
+      "placeholder": "Placeholder.",
+      "type": "Input element type attribute.",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlLink": {
+    "props": {
+      "to": "unknown",
+      "tone": "WlTone",
+      "href": "string",
+      "external": "boolean",
+      "disabled": "boolean",
+      "active": "boolean",
+      "pt": "WlPt<\"link\">"
+    },
+    "slots": {
+      "default": "default?(props: { isActive: boolean; href: string | undefined }): unknown;"
+    },
+    "emits": {
+      "click": "[event: MouseEvent]"
+    },
+    "models": {},
+    "defaults": {
+      "external": false,
+      "disabled": false,
+      "active": false
+    },
+    "required": [],
+    "descriptions": {
+      "to": "Router location passed unchanged to WlConfig.linkComponent.",
+      "tone": "Semantic color role.",
+      "href": "Native URL.",
+      "external": "Opens a new tab with a safe rel and an accessible hint.",
+      "disabled": "Disable user interaction with this component.",
+      "active": "Whether this item represents the current destination.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {
+      "default": "Link content; scope { isActive, href }."
+    },
+    "eventDescriptions": {
+      "click": "Emitted for an enabled activation; receives the native MouseEvent."
+    }
+  },
+  "WlMenu": {
+    "props": {
+      "items": "readonly (Item & WlMenuItem<NoInfer<Item>>)[]",
+      "popup": "boolean",
+      "placement": "WlPopoverPlacement",
+      "align": "WlPopoverAlign",
+      "ariaLabel": "string",
+      "ariaLabelledby": "string",
+      "motion": "boolean",
+      "pt": "WlPt<\"menu\">"
+    },
+    "slots": {
+      "trigger": "trigger?(props: WlMenuTriggerSlotProps): unknown;"
+    },
+    "emits": {
+      "open": "[]",
+      "close": "[]",
+      "check": "[event: WlMenuCheckEvent<Item>]"
+    },
+    "models": {},
+    "defaults": {
+      "items": [],
+      "popup": false,
+      "placement": "auto",
+      "align": "start"
+    },
+    "required": [],
+    "descriptions": {
+      "items": "WlMenuItem[]: { key?, label?, icon?, shortcut?, danger?, disabled?, separator?, header?, command? }.",
+      "popup": "Popup menu; opened through toggle/show.",
+      "placement": "Preferred overlay side relative to its anchor.",
+      "align": "Alignment of the overlay along its anchor.",
+      "ariaLabel": "Accessible menu name.",
+      "ariaLabelledby": "ID of the element labelling the menu.",
+      "motion": "Popup menu animation; defaults to WlConfig.motion (true).",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {
+      "trigger": "Custom trigger; bind its supplied attributes and use the provided open/close actions."
+    },
+    "eventDescriptions": {
+      "open": "Popup menu opened.",
+      "close": "Popup menu closed.",
+      "check": "Emitted when a menu checkbox or radio item changes its checked state."
+    }
+  },
+  "WlMultiSelect": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "options": "readonly TOption[]",
+      "optionLabel": "WlOptionLabel<NoInfer<Option>>",
+      "optionValue": "TResolver",
+      "optionDisabled": "WlOptionDisabled<NoInfer<Option>>",
+      "optionKey": "WlOptionKeyResolver<NoInfer<Option>>",
+      "optionGroupLabel": "WlOptionLabel<NoInfer<TOption>>",
+      "optionGroupChildren": "TGroupChildren",
+      "showSelectAll": "boolean",
+      "loading": "boolean",
+      "placeholder": "string",
+      "invalid": "boolean",
+      "disabled": "boolean",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "filter": "boolean",
+      "display": "WlMultiSelectDisplay",
+      "maxSelectedLabels": "number",
+      "motion": "boolean",
+      "pt": "WlPt<\"multiselect\">"
+    },
+    "slots": {
+      "option": "option?(props: { option: Option; index: number; selected: boolean; active: boolean }): unknown;",
+      "optiongroup": "optiongroup?(props: { group: TOption; label: string }): unknown;",
+      "value": "value?(props: { options: Option[]; placeholder: string | undefined }): unknown;",
+      "chip": "chip?(props: { option: Option; remove: () => void }): unknown;",
+      "loading": "loading?(props: Record<never, never>): unknown;",
+      "selectall": "selectall?(props: { checked: boolean; indeterminate: boolean; toggle: () => void; disabled: boolean }): unknown;",
+      "empty": "empty?(props: Record<never, never>): unknown;",
+      "header": "header?(props: Record<never, never>): unknown;",
+      "footer": "footer?(props: Record<never, never>): unknown;"
+    },
+    "emits": {},
+    "models": {
+      "modelValue": "WlMultiSelectModel<NoInfer<Option>, NoInfer<TResolver>>"
+    },
+    "defaults": {
+      "options": [],
+      "invalid": false,
+      "disabled": false,
+      "size": "md",
+      "density": "default",
+      "filter": false,
+      "loading": false,
+      "showSelectAll": false,
+      "display": "comma",
+      "modelValue": []
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "options": "Readonly TOption list; selected value type is determined by optionValue.",
+      "optionLabel": "Label field name or (option) => string function.",
+      "optionValue": "TOption key or (option: TOption) => TValue function; determines model array type.",
+      "optionDisabled": "Option field or predicate identifying disabled options.",
+      "optionKey": "Stable option field or key resolver; keeps rendered option state with its data.",
+      "optionGroupLabel": "Resolve the visible label of an option group.",
+      "optionGroupChildren": "Resolve the readonly child options of a group descriptor.",
+      "showSelectAll": "Show the action for toggling all eligible filtered options.",
+      "loading": "Indicate pending work supplied by the application.",
+      "placeholder": "Placeholder.",
+      "invalid": "Error state.",
+      "disabled": "Disables the field.",
+      "size": "Field size.",
+      "density": "Density.",
+      "filter": "Filter field inside the list.",
+      "display": "comma — comma-separated labels; chip — individual chips.",
+      "maxSelectedLabels": "Number of labels shown before a count replaces them. Only for display=\"comma\".",
+      "motion": "List animation; defaults to WlConfig.motion (true).",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {
+      "option": "Option scope: { option, index, selected, active }.",
+      "optiongroup": "Custom option-group heading; receives the descriptor and resolved label.",
+      "value": "Selected values scope: { options, placeholder }.",
+      "chip": "Selected chip scope: { option, remove }.",
+      "loading": "Content displayed while consumer-provided work is pending.",
+      "selectall": "Custom select-all content with aggregate selection state and a toggle action.",
+      "empty": "Content shown when no options match.",
+      "header": "Content before the option list.",
+      "footer": "Content after the option list."
+    },
+    "eventDescriptions": {}
+  },
+  "WlNavItem": {
+    "props": {
+      "label": "string",
+      "icon": "WlIconInput",
+      "badge": "number | string",
+      "active": "boolean",
+      "disabled": "boolean",
+      "href": "string",
+      "to": "unknown",
+      "collapsed": "boolean",
+      "ariaLabel": "string",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "pt": "WlPt<\"navitem\">"
+    },
+    "slots": {
+      "default": "default?(props: Record<never, never>): unknown;",
+      "icon": "icon?(props: { icon: WlIconInput | undefined }): unknown;",
+      "badge": "badge?(props: { badge: string | number | undefined; collapsed: boolean }): unknown;"
+    },
+    "emits": {
+      "click": "[event: MouseEvent]"
+    },
+    "models": {},
+    "defaults": {
+      "active": false,
+      "disabled": false,
+      "collapsed": false,
+      "size": "md",
+      "density": "default"
+    },
+    "required": [],
+    "descriptions": {
+      "label": "Item text (when no slot is provided).",
+      "icon": "Leading icon.",
+      "badge": "Trailing badge: number | string.",
+      "active": "Current item (aria-current=page).",
+      "disabled": "Disables the item.",
+      "href": "Uses <a> with href, otherwise <button>.",
+      "to": "Application router destination handled by the configured link adapter.",
+      "collapsed": "Hides the label and badge while preserving the item's accessible name.",
+      "ariaLabel": "Overrides the item's accessible name.",
+      "size": "Size within the component family's documented scale.",
+      "density": "Spacing density for this component family.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {
+      "default": "Custom text instead of label.",
+      "icon": "Custom icon content.",
+      "badge": "Custom navigation badge content."
+    },
+    "eventDescriptions": {
+      "click": "Click (not emitted when disabled)."
+    }
+  },
+  "WlNumberInput": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "min": "number",
+      "max": "number",
+      "step": "number",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "disabled": "boolean",
+      "invalid": "boolean",
+      "ariaLabel": "string",
+      "decrementLabel": "string",
+      "incrementLabel": "string",
+      "format": "boolean",
+      "locale": "string",
+      "precision": "number",
+      "currency": "string",
+      "numberFormat": "Intl.NumberFormatOptions",
+      "prefix": "string",
+      "suffix": "string",
+      "pt": "WlPt<\"numberinput\">"
+    },
+    "slots": {
+      "prefix": "prefix?(props: { value: number }): unknown;",
+      "suffix": "suffix?(props: { value: number }): unknown;"
+    },
+    "emits": {},
+    "models": {
+      "modelValue": "number"
+    },
+    "defaults": {
+      "min": 0,
+      "max": 99,
+      "step": 1,
+      "size": "md",
+      "density": "default",
+      "disabled": false,
+      "invalid": false,
+      "modelValue": 0
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "min": "Minimum.",
+      "max": "Maximum.",
+      "step": "Numeric step.",
+      "size": "Field size.",
+      "density": "Density.",
+      "disabled": "Disables the field.",
+      "invalid": "Error state.",
+      "ariaLabel": "Input aria-label.",
+      "decrementLabel": "Accessible decrement button name.\nDefaults to WlConfig.locale.decrease (English when unconfigured).",
+      "incrementLabel": "Accessible increment button name.\nDefaults to WlConfig.locale.increase (English when unconfigured).",
+      "format": "Enable localized number parsing and display formatting.",
+      "locale": "Locale override for numeric display formatting.",
+      "precision": "Decimal precision used by numeric formatting.",
+      "currency": "ISO currency code used by number formatting.",
+      "numberFormat": "Intl.NumberFormat options for the displayed numeric value.",
+      "prefix": "Text displayed before the numeric value.",
+      "suffix": "Text displayed after the numeric value.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {
+      "prefix": "Content before the numeric input; receives the current value.",
+      "suffix": "Content after the numeric input; receives the current value."
+    },
+    "eventDescriptions": {}
+  },
+  "WlPageHeader": {
+    "props": {
+      "title": "string",
+      "description": "string",
+      "eyebrow": "string",
+      "headingLevel": "1 | 2",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "pt": "WlPt<\"pageheader\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {},
+    "defaults": {
+      "title": "",
+      "description": "",
+      "eyebrow": "",
+      "headingLevel": 1,
+      "size": "lg",
+      "density": "default"
+    },
+    "required": [],
+    "descriptions": {
+      "title": "Main page heading.",
+      "description": "Short page description.",
+      "eyebrow": "Eyebrow or section context.",
+      "headingLevel": "Semantic heading level for the page title.",
+      "size": "Size within the component family's documented scale.",
+      "density": "Spacing density for this component family.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlPagination": {
+    "props": {
+      "page": "number",
+      "pageCount": "number",
+      "pageSize": "number",
+      "pageSizes": "readonly number[]",
+      "total": "number",
+      "siblings": "number",
+      "compact": "boolean",
+      "disabled": "boolean",
+      "pt": "WlPt<\"pagination\">"
+    },
+    "slots": {},
+    "emits": {
+      "update:page": "[value: number]",
+      "update:pageSize": "[value: number]"
+    },
+    "models": {},
+    "defaults": {
+      "page": 1,
+      "siblings": 1,
+      "compact": false,
+      "disabled": false
+    },
+    "required": [],
+    "descriptions": {
+      "page": "Current page number, starting at 1.",
+      "pageCount": "Total pages.",
+      "pageSize": "Number of rows displayed on a page.",
+      "pageSizes": "Available page-size choices.",
+      "total": "Total number of data rows used to calculate pagination.",
+      "siblings": "Number of pages shown around the current page.",
+      "compact": "Compact view with an input.",
+      "disabled": "Disables navigation.",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {
+      "update:page": "New page number, starting at 1.",
+      "update:pageSize": "Requests a new page size selected by the user."
+    }
+  },
+  "WlPasswordInput": {
+    "props": {
+      "modelModifiers": "WlTextModelModifiers",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "invalid": "boolean",
+      "disabled": "boolean",
+      "placeholder": "string",
+      "ariaLabel": "string",
+      "strength": "number",
+      "strengthLabel": "string",
+      "pt": "WlPt<\"password\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {
+      "modelValue": "string"
+    },
+    "defaults": {
+      "size": "md",
+      "density": "default",
+      "invalid": false,
+      "disabled": false,
+      "modelValue": ""
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "size": "Field size.",
+      "density": "Density.",
+      "invalid": "Error state.",
+      "disabled": "Disables the field.",
+      "placeholder": "Placeholder.\nDefaults to WlConfig.locale.password (English when unconfigured).",
+      "ariaLabel": "Input aria-label.",
+      "strength": "Consumer-provided password-strength status.",
+      "strengthLabel": "Readable description of the password-strength status.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlPill": {
+    "props": {
+      "tone": "WlTone",
+      "dot": "boolean",
+      "label": "string",
+      "pt": "WlPt<\"pill\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {},
+    "defaults": {
+      "tone": "neutral",
+      "dot": true
+    },
+    "required": [],
+    "descriptions": {
+      "tone": "Semantic status color.",
+      "dot": "Display a compact status dot.",
+      "label": "Text (when no slot is provided).",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlPopover": {
+    "props": {
+      "dismissible": "boolean",
+      "placement": "WlPopoverPlacement",
+      "align": "WlPopoverAlign",
+      "arrow": "boolean",
+      "trigger": "WlPopoverTrigger",
+      "closeOnEscape": "boolean",
+      "ariaLabel": "string",
+      "ariaLabelledby": "string",
+      "motion": "boolean",
+      "pt": "WlPt<\"popover\">"
+    },
+    "slots": {
+      "default": "default?(props: {}): unknown;",
+      "trigger": "trigger?(props: WlPopoverTriggerSlotProps): unknown;"
+    },
+    "emits": {
+      "open": "[]",
+      "close": "[]",
+      "afterLeave": "[]"
+    },
+    "models": {},
+    "defaults": {
+      "dismissible": true,
+      "closeOnEscape": true,
+      "placement": "auto",
+      "align": "start",
+      "arrow": false,
+      "trigger": "manual"
+    },
+    "required": [],
+    "descriptions": {
+      "dismissible": "Close by clicking outside the popover.",
+      "placement": "Preferred overlay side relative to its anchor.",
+      "align": "Alignment of the overlay along its anchor.",
+      "arrow": "Show an arrow pointing to the overlay anchor.",
+      "trigger": "Interaction that opens the popover; manual mode uses its exposed methods.",
+      "closeOnEscape": "Close with Escape.",
+      "ariaLabel": "Accessible popover name.",
+      "ariaLabelledby": "ID of the element labelling the popover.",
+      "motion": "Opening and closing animation; defaults to WlConfig.motion (true).",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {
+      "default": "Popover content.",
+      "trigger": "Custom trigger; bind its supplied attributes and use the provided open/close actions."
+    },
+    "eventDescriptions": {
+      "open": "Popover opened.",
+      "close": "Popover closed.",
+      "afterLeave": "Emitted after the closing transition has completed."
+    }
+  },
+  "WlProgress": {
+    "props": {
+      "value": "number",
+      "tone": "WlTone",
+      "max": "number",
+      "indeterminate": "boolean",
+      "ariaLabel": "string",
+      "ariaLabelledby": "string",
+      "thin": "boolean",
+      "showValue": "boolean",
+      "pt": "WlPt<\"progress\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {},
+    "defaults": {
+      "value": 0,
+      "tone": "accent",
+      "thin": false,
+      "showValue": false
+    },
+    "required": [],
+    "descriptions": {
+      "value": "Current value, clamped to the range from zero to max.",
+      "tone": "Semantic progress color.",
+      "max": "Positive finite upper bound; invalid values fall back to 100.",
+      "indeterminate": "Show activity without exposing a known current value.",
+      "ariaLabel": "Accessible name when no external label is referenced.",
+      "ariaLabelledby": "ID of the element naming this progress indicator.",
+      "thin": "Use the thin track treatment.",
+      "showValue": "Display the percentage for determinate progress.",
+      "pt": "Attributes for the root, value and label sections."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlRadio": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "value": "NoInfer<Value>",
+      "size": "WlSwitchSize",
+      "density": "WlDensity",
+      "name": "string",
+      "disabled": "boolean",
+      "invalid": "boolean",
+      "pt": "WlPt<\"radio\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {
+      "modelValue": "Value"
+    },
+    "defaults": {
+      "disabled": false,
+      "size": "md",
+      "density": "default",
+      "invalid": false
+    },
+    "required": [
+      "value"
+    ],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "value": "Option value (any type).",
+      "size": "Size within the component family's documented scale.",
+      "density": "Spacing density for this component family.",
+      "name": "Native group name.",
+      "disabled": "Disables the radio button.",
+      "invalid": "Error state.",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlRadioGroup": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "options": "readonly TOption[]",
+      "optionLabel": "WlOptionLabel<NoInfer<TOption>>",
+      "optionValue": "TResolver",
+      "optionDisabled": "WlOptionDisabled<NoInfer<TOption>>",
+      "optionKey": "WlOptionKeyResolver<NoInfer<TOption>>",
+      "legend": "string",
+      "name": "string",
+      "orientation": "\"horizontal\" | \"vertical\"",
+      "variant": "\"default\"",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "disabled": "boolean",
+      "invalid": "boolean",
+      "loading": "boolean",
+      "pt": "WlPt<\"radiogroup\">"
+    },
+    "slots": {
+      "legend": "legend?(props: Record<never, never>): unknown;",
+      "option": "option?(props: { option: TOption; index: number; checked: boolean; disabled: boolean }): unknown;"
+    },
+    "emits": {},
+    "models": {
+      "modelValue": "WlOptionValue<NoInfer<TOption>, NoInfer<TResolver>>"
+    },
+    "defaults": {
+      "options": [],
+      "orientation": "vertical",
+      "variant": "default",
+      "size": "md",
+      "density": "default",
+      "disabled": false,
+      "invalid": false,
+      "loading": false
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "options": "Readonly options from which the user can select.",
+      "optionLabel": "Resolve the visible text of an option.",
+      "optionValue": "Resolve the value stored in the selection model.",
+      "optionDisabled": "Resolve whether an option is disabled.",
+      "optionKey": "Resolve stable option identity; provide keys when options may be reordered.",
+      "legend": "Visible accessible name for the choice group.",
+      "name": "Name used by the component's native form controls.",
+      "orientation": "Layout direction and applicable arrow-key navigation direction.",
+      "variant": "Visual treatment within this component family.",
+      "size": "Size within the component family's documented scale.",
+      "density": "Spacing density for this component family.",
+      "disabled": "Disable user interaction with this component.",
+      "invalid": "Expose a validation error state on the control.",
+      "loading": "Indicate pending work supplied by the application.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {
+      "legend": "Custom accessible group legend.",
+      "option": "Custom option content with its value and interaction state."
+    },
+    "eventDescriptions": {}
+  },
+  "WlSegmented": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "options": "readonly WlSegmentedOption<Value>[]",
+      "disabled": "boolean",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "block": "boolean",
+      "orientation": "\"horizontal\" | \"vertical\"",
+      "pt": "WlPt<\"segmented\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {
+      "modelValue": "NoInfer<Value> | null"
+    },
+    "defaults": {
+      "options": [],
+      "disabled": false,
+      "size": "md",
+      "density": "default",
+      "block": false,
+      "orientation": "horizontal",
+      "modelValue": null
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "options": "WlSegmentedOption[] options: { label, value, icon?, disabled? }.",
+      "disabled": "Disables the entire control.",
+      "size": "Size within the component family's documented scale.",
+      "density": "Spacing density for this component family.",
+      "block": "Fill the available inline width.",
+      "orientation": "Layout direction and applicable arrow-key navigation direction.",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlSelect": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "options": "readonly TOption[]",
+      "optionLabel": "WlOptionLabel<NoInfer<Option>>",
+      "optionValue": "TResolver",
+      "optionDisabled": "WlOptionDisabled<NoInfer<Option>>",
+      "optionKey": "WlOptionKeyResolver<NoInfer<Option>>",
+      "optionGroupLabel": "WlOptionLabel<NoInfer<TOption>>",
+      "optionGroupChildren": "TGroupChildren",
+      "filter": "boolean",
+      "loading": "boolean",
+      "clearable": "boolean",
+      "placeholder": "string",
+      "invalid": "boolean",
+      "disabled": "boolean",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "motion": "boolean",
+      "pt": "WlPt<\"select\">"
+    },
+    "slots": {
+      "option": "option?(props: { option: Option; index: number; selected: boolean; active: boolean }): unknown;",
+      "optiongroup": "optiongroup?(props: { group: TOption; label: string }): unknown;",
+      "value": "value?(props: { option: Option | undefined; placeholder: string | undefined }): unknown;",
+      "loading": "loading?(props: Record<never, never>): unknown;",
+      "empty": "empty?(props: Record<never, never>): unknown;",
+      "header": "header?(props: Record<never, never>): unknown;",
+      "footer": "footer?(props: Record<never, never>): unknown;"
+    },
+    "emits": {},
+    "models": {
+      "modelValue": "WlSelectModel<NoInfer<Option>, NoInfer<TResolver>>"
+    },
+    "defaults": {
+      "options": [],
+      "invalid": false,
+      "disabled": false,
+      "filter": false,
+      "loading": false,
+      "size": "md",
+      "density": "default"
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "options": "Readonly TOption list; the model type is determined by optionValue.",
+      "optionLabel": "Label field name or (option) => string function.",
+      "optionValue": "TOption key or (option: TOption) => TValue function; determines model type.",
+      "optionDisabled": "Option field or predicate identifying disabled options.",
+      "optionKey": "Stable option field or key resolver; keeps rendered option state with its data.",
+      "optionGroupLabel": "Resolve the visible label of an option group.",
+      "optionGroupChildren": "Resolve the readonly child options of a group descriptor.",
+      "filter": "Enable local filtering of available options.",
+      "loading": "Indicate pending work supplied by the application.",
+      "clearable": "Show a named clear button; clears a single model to null.",
+      "placeholder": "Placeholder.",
+      "invalid": "Error state.",
+      "disabled": "Disables the field.",
+      "size": "Field size.",
+      "density": "Density.",
+      "motion": "List animation; defaults to WlConfig.motion (true).",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {
+      "option": "Option scope: { option, index, selected, active }.",
+      "optiongroup": "Custom option-group heading; receives the descriptor and resolved label.",
+      "value": "Selected value scope: { option, placeholder }.",
+      "loading": "Content displayed while consumer-provided work is pending.",
+      "empty": "Content shown when no options match.",
+      "header": "Content before the option list.",
+      "footer": "Content after the option list."
+    },
+    "eventDescriptions": {}
+  },
+  "WlSidebar": {
+    "props": {
+      "groups": "readonly (WlSidebarGroup<Item> & Group)[]",
+      "modelModifiers": "WlNoModelModifiers",
+      "pinnedModifiers": "WlNoModelModifiers",
+      "mobileOpenModifiers": "WlNoModelModifiers",
+      "footerItems": "readonly Item[]",
+      "brand": "string",
+      "brandMark": "string",
+      "ariaLabel": "string",
+      "collapsible": "boolean",
+      "expandOnHover": "boolean",
+      "showPin": "boolean",
+      "pinLabel": "string",
+      "unpinLabel": "string",
+      "density": "WlDensity",
+      "pt": "WlPt<\"sidebar\">"
+    },
+    "slots": {
+      "brand": "brand?(props: {}): unknown;",
+      "brand-mark": "\"brand-mark\"?(props: {}): unknown;",
+      "item": "item?(props: { key: Item[\"key\"]; item: Item; group: Group; active: boolean; expanded: boolean; select: () => void }): unknown;",
+      "footer-item": "\"footer-item\"?(props: { key: Item[\"key\"]; item: Item; active: boolean; expanded: boolean; select: () => void }): unknown;",
+      "footer": "footer?(props: { expanded: boolean }): unknown;"
+    },
+    "emits": {
+      "select": "[item: Item, group?: Group]"
+    },
+    "models": {
+      "modelValue": "NoInfer<Item[\"key\"]>",
+      "pinned": "boolean",
+      "mobileOpen": "boolean"
+    },
+    "defaults": {
+      "groups": [],
+      "footerItems": [],
+      "brand": "",
+      "brandMark": "",
+      "collapsible": true,
+      "expandOnHover": true,
+      "showPin": true,
+      "density": "default",
+      "pinned": false,
+      "mobileOpen": false
+    },
+    "required": [],
+    "descriptions": {
+      "groups": "WlSidebarGroup[]: sections with WlSidebarItem[] and an optional separator.",
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "pinnedModifiers": "Modifier contract for pinned state; built-in modifiers are unsupported.",
+      "mobileOpenModifiers": "Modifier contract for the mobile-open model; built-in modifiers are unsupported.",
+      "footerItems": "WlSidebarItem[] for the pinned bottom region.",
+      "brand": "Product name.",
+      "brandMark": "Short text brand mark.",
+      "ariaLabel": "Accessible name; uses locale.mainNavigation when omitted or undefined (English: Main navigation).",
+      "collapsible": "Allow the sidebar to collapse to its compact state.",
+      "expandOnHover": "Temporarily expand an unpinned sidebar on pointer hover.",
+      "showPin": "Show the sidebar pin/unpin action.",
+      "pinLabel": "Pin action text; uses locale.pinSidebar when omitted or undefined (English: Pin sidebar).",
+      "unpinLabel": "Unpin action text; uses locale.unpinSidebar when omitted or undefined (English: Unpin sidebar).",
+      "density": "Spacing density for this component family.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {
+      "brand": "Custom brand name.",
+      "brand-mark": "Custom brand mark.",
+      "item": "Main group item; scope { item, group, active, expanded, select }.",
+      "footer-item": "Footer item; scope { item, active, expanded, select }.",
+      "footer": "Additional footer; scope { expanded }."
+    },
+    "eventDescriptions": {
+      "select": "Item selected. The application handles navigation."
+    }
+  },
+  "WlSkeleton": {
+    "props": {
+      "width": "string",
+      "height": "string",
+      "borderRadius": "string",
+      "shape": "\"rectangle\" | \"circle\"",
+      "preset": "\"text\" | \"avatar\"",
+      "lines": "number",
+      "pt": "WlPt<\"skeleton\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {},
+    "defaults": {
+      "shape": "rectangle",
+      "lines": 1
+    },
+    "required": [],
+    "descriptions": {
+      "width": "Width (CSS).",
+      "height": "Height (CSS).",
+      "borderRadius": "Radius (CSS).",
+      "shape": "Shape.",
+      "preset": "Apply the text or avatar skeleton presentation.",
+      "lines": "Number of placeholder lines in the text preset.",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlSlider": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "min": "number",
+      "max": "number",
+      "step": "number",
+      "disabled": "boolean",
+      "invalid": "boolean",
+      "range": "boolean",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "ariaLabel": "string",
+      "ariaValueText": "string | ((value: number, index: 0 | 1) => string)",
+      "startLabel": "string",
+      "endLabel": "string",
+      "marks": "readonly (number | { value: number; label?: string })[]",
+      "pt": "WlPt<\"slider\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {
+      "modelValue": "number | [number, number]"
+    },
+    "defaults": {
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "disabled": false,
+      "invalid": false,
+      "range": false,
+      "size": "md",
+      "density": "default",
+      "marks": [],
+      "modelValue": 0
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "min": "Minimum.",
+      "max": "Maximum.",
+      "step": "Step.",
+      "disabled": "Disables the slider.",
+      "invalid": "Expose a validation error state on the control.",
+      "range": "Use two slider handles with a start/end value pair.",
+      "size": "Size within the component family's documented scale.",
+      "density": "Spacing density for this component family.",
+      "ariaLabel": "aria-label.",
+      "ariaValueText": "Human-readable value text for assistive technology.",
+      "startLabel": "Accessible label for the range start control.",
+      "endLabel": "Accessible label for the range end control.",
+      "marks": "Labeled positions displayed along the slider track.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlSpinner": {
+    "props": {
+      "size": "WlSpinnerSize",
+      "light": "boolean",
+      "label": "string"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {},
+    "defaults": {
+      "size": "md",
+      "light": false
+    },
+    "required": [],
+    "descriptions": {
+      "size": "Size.",
+      "light": "Light variant for dark backgrounds.",
+      "label": "aria-label; uses locale.loading when omitted or undefined (English: Loading)."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlStatCard": {
+    "props": {
+      "icon": "WlIconInput",
+      "label": "string",
+      "value": "string | number",
+      "numberFormat": "Intl.NumberFormatOptions",
+      "locale": "string",
+      "delta": "string",
+      "description": "string",
+      "progress": "number",
+      "tone": "WlStatCardTone"
+    },
+    "slots": {
+      "default": "default?(props: {}): unknown;",
+      "footer": "footer?(props: {}): unknown;",
+      "delta": "delta?(props: { delta: string | undefined }): unknown;"
+    },
+    "emits": {},
+    "models": {},
+    "defaults": {
+      "tone": "accent"
+    },
+    "required": [],
+    "descriptions": {
+      "icon": "Label icon.",
+      "label": "Metric label.",
+      "value": "Value (when no slot is provided).",
+      "numberFormat": "Intl.NumberFormat options for the displayed numeric value.",
+      "locale": "Locale override for numeric display formatting.",
+      "delta": "Numeric change displayed beside the primary statistic.",
+      "description": "Description below the value.",
+      "progress": "Progress from 0 to 100. Displays an indicator when set.",
+      "tone": "Accent tone."
+    },
+    "slotDescriptions": {
+      "default": "Custom content instead of value.",
+      "footer": "Card footer.",
+      "delta": "Custom statistic delta content; receives the displayed delta text."
+    },
+    "eventDescriptions": {}
+  },
+  "WlSteps": {
+    "props": {
+      "items": "readonly WlStepItem[]",
+      "current": "number",
+      "clickable": "boolean",
+      "orientation": "\"horizontal\" | \"vertical\""
+    },
+    "slots": {
+      "step": "step?(props: { item: WlStepItem; index: number; current: boolean; completed: boolean }): unknown;"
+    },
+    "emits": {
+      "update:current": "[index: number]"
+    },
+    "models": {},
+    "defaults": {
+      "items": [],
+      "current": 0
+    },
+    "required": [],
+    "descriptions": {
+      "items": "Ordered step descriptors; the application owns their state.",
+      "current": "Zero-based index of the current step.",
+      "clickable": "Enable step buttons and keyboard navigation, skipping disabled items.",
+      "orientation": "Layout and arrow-key direction for interactive steps."
+    },
+    "slotDescriptions": {
+      "step": "Custom step content with its index, current and completed states."
+    },
+    "eventDescriptions": {
+      "update:current": "Requests a new zero-based current step index."
+    }
+  },
+  "WlSwitch": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "size": "WlSwitchSize",
+      "disabled": "boolean",
+      "invalid": "boolean",
+      "loading": "boolean",
+      "labelPosition": "\"start\" | \"end\"",
+      "density": "WlDensity",
+      "pt": "WlPt<\"switch\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {
+      "modelValue": "boolean"
+    },
+    "defaults": {
+      "size": "md",
+      "disabled": false,
+      "invalid": false,
+      "loading": false,
+      "labelPosition": "end",
+      "density": "default",
+      "modelValue": false
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "size": "Size.",
+      "disabled": "Disables the switch.",
+      "invalid": "Error state.",
+      "loading": "Indicate pending work supplied by the application.",
+      "labelPosition": "Place the visible label before or after the switch.",
+      "density": "Spacing density for this component family.",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlTable": {
+    "props": {
+      "value": "readonly Row[]",
+      "columns": "readonly WlTableColumn<NoInfer<Row>>[]",
+      "rowKey": "WlTableRowKey<NoInfer<Row>>",
+      "rowClass": "WlTableRowClass<NoInfer<Row>>",
+      "caption": "string",
+      "ariaLabel": "string",
+      "stickyHeader": "boolean",
+      "sortModifiers": "WlNoModelModifiers",
+      "selectionModifiers": "WlNoModelModifiers",
+      "sortFn": "WlTableSortFn<NoInfer<Row>>",
+      "selectionMode": "WlTableSelectionMode",
+      "loading": "boolean",
+      "emptyMessage": "string",
+      "pt": "WlPt<\"table\">"
+    },
+    "slots": {
+      "default": "default?: (props: {}) => unknown;",
+      "empty": "empty?: (props: {}) => unknown;",
+      "loading": "loading?: (props: {}) => unknown;",
+      "caption": "caption?: (props: {}) => unknown;",
+      "cell-${string}": "[name: `cell-${string}`]: ((props: WlTableCellSlotProps<Row, string>) => unknown) | undefined;",
+      "header-${string}": "[name: `header-${string}`]: ((props: WlTableHeaderSlotProps<Row>) => unknown) | undefined;",
+      "cell-${Key}": "{ /** Cells for known row fields preserve the corresponding field value type. */ [Key in WlTableFieldKey<Row> as `cell-${Key}`]?: (props: WlTableCellSlotProps<Row, Key>) => unknown; }",
+      "header-${Key}": "{ /** Column headings for known row fields preserve their key domain. */ [Key in WlTableFieldKey<Row> as `header-${Key}`]?: (props: WlTableHeaderSlotProps<Row, Key>) => unknown; }"
+    },
+    "emits": {},
+    "models": {
+      "sort": "WlTableSort | null",
+      "selection": "PropertyKey[]"
+    },
+    "defaults": {
+      "value": [],
+      "stickyHeader": false,
+      "loading": false,
+      "sort": null,
+      "selection": []
+    },
+    "required": [],
+    "descriptions": {
+      "value": "Readonly Row extends object list; interfaces without an index signature are supported.",
+      "columns": "readonly WlTableColumn<Row>[] validates row field keys. For a virtual column (actions), explicitly set kind:\n\"virtual\". Without columns, the default slot is used.",
+      "rowKey": "Field or callback resolving stable row identity across sorting and reordering.",
+      "rowClass": "Additional CSS classes, or a resolver returning classes for each row.",
+      "caption": "Visible table caption associated with the table.",
+      "ariaLabel": "Accessible name when an external label is not referenced.",
+      "stickyHeader": "Keep table column headers visible within a scrolling container.",
+      "sortModifiers": "Modifier contract for sort state; built-in modifiers are unsupported.",
+      "selectionModifiers": "Modifier contract for selected keys; built-in modifiers are unsupported.",
+      "sortFn": "Application sorting callback receiving readonly rows and returning their desired order.",
+      "selectionMode": "Enable single or multiple row selection; the selection model stores row keys.",
+      "loading": "Loading state.",
+      "emptyMessage": "Empty-state text.\nDefaults to WlConfig.locale.noData (English when unconfigured).",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {
+      "default": "Additional content rendered by the table's default outlet.",
+      "empty": "Replacement content for a table with no rows.",
+      "loading": "Replacement content while loading is active.",
+      "caption": "Custom accessible table caption.",
+      "cell-${string}": "Virtual cell content; narrow unknown values for non-field column keys.",
+      "header-${string}": "Custom column heading with the column and current sort state.",
+      "cell-${Key}": "Cells for known row fields preserve the corresponding field value type.",
+      "header-${Key}": "Column headings for known row fields preserve their key domain."
+    },
+    "eventDescriptions": {}
+  },
+  "WlTabs": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "items": "readonly Item[]",
+      "orientation": "\"horizontal\" | \"vertical\"",
+      "lazy": "boolean",
+      "keepAlive": "boolean",
+      "pt": "WlPt<\"tabs\">"
+    },
+    "slots": {
+      "panel": "panel?(props: { item: Item }): unknown;"
+    },
+    "emits": {},
+    "models": {
+      "modelValue": "NoInfer<Item[\"key\"]> | \"\""
+    },
+    "defaults": {
+      "items": [],
+      "orientation": "horizontal",
+      "lazy": true,
+      "keepAlive": false,
+      "modelValue": ""
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "items": "WlTabItem[]: { key, label, icon?, count? }.",
+      "orientation": "Layout direction and applicable arrow-key navigation direction.",
+      "lazy": "Defer a tab panel's first render until it becomes active.",
+      "keepAlive": "Keep a previously visited tab panel mounted while it is inactive.",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {
+      "panel": "Panel content; scope: { item }."
+    },
+    "eventDescriptions": {}
+  },
+  "WlTag": {
+    "props": {
+      "color": "string",
+      "tone": "WlTone",
+      "icon": "WlIconInput",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "disabled": "boolean",
+      "removable": "boolean",
+      "removeLabel": "string",
+      "pt": "WlPt<\"tag\">"
+    },
+    "slots": {
+      "default": "default?(props: Record<never, never>): unknown;",
+      "icon": "icon?(props: Record<never, never>): unknown;",
+      "removeIcon": "removeIcon?(props: Record<never, never>): unknown;"
+    },
+    "emits": {
+      "remove": "[event: MouseEvent]"
+    },
+    "models": {},
+    "defaults": {
+      "color": "gray",
+      "removable": false,
+      "size": "md",
+      "density": "default",
+      "disabled": false
+    },
+    "required": [],
+    "descriptions": {
+      "color": "Palette color, independent of semantic tone. Other strings remain native color attributes.",
+      "tone": "Semantic color role.",
+      "icon": "Icon name or supported custom icon descriptor.",
+      "size": "Size within the component family's documented scale.",
+      "density": "Spacing density for this component family.",
+      "disabled": "Disable user interaction with this component.",
+      "removable": "Show the remove button.",
+      "removeLabel": "Remove button aria-label; uses locale.remove when omitted or undefined (English: Remove).",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {
+      "default": "Tag text.",
+      "icon": "Custom icon content.",
+      "removeIcon": "Custom graphic inside the named removal action."
+    },
+    "eventDescriptions": {
+      "remove": "Remove button click."
+    }
+  },
+  "WlTagsInput": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "placeholder": "string",
+      "name": "string",
+      "separators": "readonly string[]",
+      "validator": "(value: string) => boolean",
+      "max": "number",
+      "allowDuplicates": "boolean",
+      "disabled": "boolean",
+      "readonly": "boolean",
+      "invalid": "boolean",
+      "loading": "boolean",
+      "variant": "\"default\"",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "pt": "WlPt<\"tagsinput\">"
+    },
+    "slots": {
+      "tag": "tag?(props: { value: string; index: number; remove: () => void }): unknown;"
+    },
+    "emits": {
+      "add": "[value: string]",
+      "remove": "[value: string, index: number]",
+      "reject": "[value: string, reason: \"invalid\" | \"duplicate\" | \"max\"]"
+    },
+    "models": {
+      "modelValue": "string[]"
+    },
+    "defaults": {
+      "separators": [
+        ","
+      ],
+      "allowDuplicates": false,
+      "disabled": false,
+      "readonly": false,
+      "invalid": false,
+      "loading": false,
+      "variant": "default",
+      "size": "md",
+      "density": "default",
+      "modelValue": []
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "placeholder": "Hint shown when the control has no displayed text.",
+      "name": "Name used by the component's native form controls.",
+      "separators": "Text delimiters splitting pasted or entered text into tag values.",
+      "validator": "Application validation predicate for a proposed tag value.",
+      "max": "Maximum number of tag values accepted in the model.",
+      "allowDuplicates": "Allow repeated tag values in the model.",
+      "disabled": "Disable user interaction with this component.",
+      "readonly": "Keep the current value readable while preventing user edits.",
+      "invalid": "Expose a validation error state on the control.",
+      "loading": "Indicate pending work supplied by the application.",
+      "variant": "Visual treatment within this component family.",
+      "size": "Size within the component family's documented scale.",
+      "density": "Spacing density for this component family.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {
+      "tag": "Custom tag content with its value, index and removal callback."
+    },
+    "eventDescriptions": {
+      "add": "Emitted when a valid tag value is added.",
+      "remove": "Emitted when the removal action is activated.",
+      "reject": "Emitted when a proposed value is rejected, with its reason."
+    }
+  },
+  "WlTextarea": {
+    "props": {
+      "modelModifiers": "WlTextModelModifiers",
+      "invalid": "boolean",
+      "disabled": "boolean",
+      "rows": "number",
+      "autoResize": "boolean",
+      "maxRows": "number",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "showCount": "boolean",
+      "placeholder": "string",
+      "pt": "WlPt<\"textarea\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {
+      "modelValue": "string"
+    },
+    "defaults": {
+      "invalid": false,
+      "disabled": false,
+      "rows": 3,
+      "autoResize": false,
+      "size": "md",
+      "density": "default",
+      "modelValue": ""
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "invalid": "Error state.",
+      "disabled": "Disables the field.",
+      "rows": "Row count.",
+      "autoResize": "Adjust height to content.",
+      "maxRows": "Maximum visible textarea rows when automatic resizing is enabled.",
+      "size": "Size within the component family's documented scale.",
+      "density": "Spacing density for this component family.",
+      "showCount": "Display the text length counter and connect it to the control description.",
+      "placeholder": "Placeholder.",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlTimePicker": {
+    "props": {
+      "modelModifiers": "WlNoModelModifiers",
+      "minTime": "string",
+      "maxTime": "string",
+      "step": "number | string",
+      "hourFormat": "WlTimePickerHourFormat",
+      "allowedIntervals": "readonly WlTimeInterval[]",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "disabled": "boolean",
+      "invalid": "boolean",
+      "pt": "WlPt<\"timepicker\">"
+    },
+    "slots": {},
+    "emits": {},
+    "models": {
+      "modelValue": "string | null"
+    },
+    "defaults": {
+      "size": "md",
+      "density": "default",
+      "disabled": false,
+      "invalid": false,
+      "step": 60,
+      "hourFormat": "auto",
+      "modelValue": null
+    },
+    "required": [],
+    "descriptions": {
+      "modelModifiers": "Modifier flags accepted by the component's typed model contract.",
+      "minTime": "Lower HH:mm boundary; minTime > maxTime defines an overnight range.",
+      "maxTime": "Upper HH:mm boundary.",
+      "step": "Increment in seconds, or any for unrestricted step precision.",
+      "hourFormat": "Choose native, twelve-hour or twenty-four-hour time presentation.",
+      "allowedIntervals": "Allowed time intervals; values outside them cannot be selected.",
+      "size": "Field size.",
+      "density": "Density.",
+      "disabled": "Disables selection.",
+      "invalid": "External error state.",
+      "pt": "Root and input attributes."
+    },
+    "slotDescriptions": {},
+    "eventDescriptions": {}
+  },
+  "WlToast": {
+    "props": {
+      "group": "string",
+      "motion": "boolean",
+      "position": "WlToastPosition",
+      "max": "number",
+      "pt": "WlPt<\"toast\">"
+    },
+    "slots": {
+      "message": "message?(props: { message: WlToastMessage; dismiss: () => void }): unknown;",
+      "action": "action?(props: { message: WlToastMessage; dismiss: () => void }): unknown;"
+    },
+    "emits": {},
+    "models": {},
+    "defaults": {
+      "position": "bottom-center",
+      "max": 5
+    },
+    "required": [],
+    "descriptions": {
+      "group": "Notification group.",
+      "motion": "Message animation; defaults to WlConfig.motion (true).",
+      "position": "Screen position of the toast group.",
+      "max": "Maximum retained messages in this toast group; older messages are removed.",
+      "pt": "Attributes of internal Gavia UI elements."
+    },
+    "slotDescriptions": {
+      "message": "Custom toast message content with a dismiss callback.",
+      "action": "Custom toast action; receives the message and a dismiss callback."
+    },
+    "eventDescriptions": {}
+  },
+  "WlToolbar": {
+    "props": {
+      "orientation": "\"horizontal\" | \"vertical\"",
+      "loop": "boolean",
+      "variant": "\"default\"",
+      "size": "WlSizeSm",
+      "density": "WlDensity",
+      "disabled": "boolean",
+      "pt": "WlPt<\"toolbar\">"
+    },
+    "slots": {
+      "default": "default?(props: Record<never, never>): unknown;"
+    },
+    "emits": {},
+    "models": {},
+    "defaults": {
+      "orientation": "horizontal",
+      "loop": true,
+      "variant": "default",
+      "size": "md",
+      "density": "default",
+      "disabled": false
+    },
+    "required": [],
+    "descriptions": {
+      "orientation": "Layout direction and applicable arrow-key navigation direction.",
+      "loop": "Wrap arrow-key focus navigation at the first and last items.",
+      "variant": "Visual treatment within this component family.",
+      "size": "Size within the component family's documented scale.",
+      "density": "Spacing density for this component family.",
+      "disabled": "Disable user interaction with this component.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {
+      "default": "Toolbar controls participating in the shared arrow-key focus navigation."
+    },
+    "eventDescriptions": {}
+  },
+  "WlTooltip": {
+    "props": {
+      "content": "string",
+      "placement": "WlPopoverPlacement",
+      "showDelay": "number",
+      "hideDelay": "number",
+      "disabled": "boolean",
+      "motion": "boolean",
+      "pt": "WlPt<\"tooltip\">"
+    },
+    "slots": {
+      "default": "default?(props: { visible: boolean; show: () => void; hide: () => void }): unknown;",
+      "content": "content?(props: Record<never, never>): unknown;"
+    },
+    "emits": {},
+    "models": {
+      "visible": "boolean"
+    },
+    "defaults": {
+      "placement": "top",
+      "showDelay": 0,
+      "hideDelay": 100,
+      "disabled": false,
+      "visible": false
+    },
+    "required": [],
+    "descriptions": {
+      "content": "Tooltip text when the content slot is not supplied.",
+      "placement": "Preferred overlay side relative to its anchor.",
+      "showDelay": "Delay in milliseconds before showing the tooltip.",
+      "hideDelay": "Delay in milliseconds before hiding the tooltip.",
+      "disabled": "Disable user interaction with this component.",
+      "motion": "Enable motion locally, with application defaults and reduced-motion preferences respected.",
+      "pt": "Attributes and callbacks for the component's documented pass-through sections."
+    },
+    "slotDescriptions": {
+      "default": "Tooltip trigger content with visibility and explicit show/hide actions.",
+      "content": "Formatted descriptive tooltip content; interactive controls belong in a popover."
+    },
+    "eventDescriptions": {}
+  }
+}

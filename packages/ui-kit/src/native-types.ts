@@ -28,5 +28,11 @@ export type WlDateInputAttributes = Omit<WlPasswordInputAttributes, "min" | "max
 export type WlButtonAttributes = ButtonHTMLAttributes & WlDataAttributes;
 export type WlLinkAttributes = AnchorHTMLAttributes & WlDataAttributes;
 
+/** Icon-only actions need their own name; badge and tooltip descriptions do not name an action. */
+export type WlActionAccessibleName
+  = | { ariaLabel: string }
+    | { "aria-label": string }
+    | { "aria-labelledby": string };
+
 /** A proxy combobox exposes DOM attrs and its existing name serialization, not native text validation. */
 export type WlComboboxAttributes = WlElementAttributes & { name?: string };

@@ -1,0 +1,31 @@
+name: Cached Playwright browser
+description: Cache browser binaries while installing required system packages
+inputs:
+  browser:
+    description: Browser engine to install
+    required: true
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+      with:
+        path: |
+          ~/.cache/ms-playwright
+          ~/AppData/Local/ms-playwright
+        key: playwright-${{ runner.os }}-${{ inputs.browser }}-${{ hashFiles('pnpm-lock.yaml') }}
+    - name: Prefer signed Ubuntu archive
+      if: runner.os == 'Linux'
+      shell: bash
+      run: bash .github/scripts/prepare-browser-dependencies.sh
+    - name: Install browser and system dependencies
+      if: runner.os == 'Linux'
+      shell: bash
+      env:
+        PLAYWRIGHT_ENGINE: ${{ inputs.browser }}
+      run: pnpm exec playwright install --with-deps "$PLAYWRIGHT_ENGINE"
+    - name: Install browser on Windows
+      if: runner.os != 'Linux'
+      shell: bash
+      env:
+        PLAYWRIGHT_ENGINE: ${{ inputs.browser }}
+      run: pnpm exec playwright install "$PLAYWRIGHT_ENGINE"

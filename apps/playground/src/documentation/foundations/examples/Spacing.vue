@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { wlSpacing } from "../../../../../../packages/ui-kit/src";
+import { wlSpacing } from "gavia-ui";
 </script>
 
 <template>
   <dl class="spacing-example wl-stack" data-space="md">
     <div v-for="(token, name) in wlSpacing" :key="name" class="spacing-example-row">
       <dt><code class="wl-text-code">{{ name }}</code></dt>
-      <dd class="spacing-example-bar" :style="{ width: 'var(' + token + ')' }" aria-hidden="true" />
+      <dd class="spacing-example-bar" :style="{ width: 'var(' + token + ')' }" aria-hidden="true"></dd>
       <dd class="spacing-example-token"><code class="wl-text-code">{{ token }}</code></dd>
     </div>
   </dl>

@@ -1,4 +1,4 @@
-// jsdom does not implement ResizeObserver; PrimeVue TabList needs it.
+// jsdom has no ResizeObserver; anchored overlays observe panel size changes.
 if (typeof globalThis.ResizeObserver === "undefined") {
   globalThis.ResizeObserver = class ResizeObserver {
     observe(): void {}
@@ -7,7 +7,7 @@ if (typeof globalThis.ResizeObserver === "undefined") {
   };
 }
 
-// jsdom does not implement matchMedia; PrimeVue DatePicker overlay needs it.
+// jsdom has no matchMedia; overlay motion observes reduced-motion preferences.
 if (typeof globalThis.matchMedia === "undefined") {
   globalThis.matchMedia = ((query: string) => ({
     matches: false,

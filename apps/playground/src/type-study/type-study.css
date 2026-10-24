@@ -93,8 +93,8 @@
   .wl-type-proof-header { max-width: 760px; margin-bottom: 25px; }
   .wl-type-proof-title { margin: 0 0 15px; font-size: 36px; font-weight: 500; line-height: 1.2; letter-spacing: -0.035em; }
   .wl-type-proof-description { margin: 0; color: var(--wl-type-muted); font-size: 15px; line-height: 1.7; }
-  .wl-type-proof-controls { display: grid; grid-template-columns: minmax(170px, 250px) minmax(180px, 1fr); gap: 20px; align-items: end; margin-bottom: 18px; font-style: normal; }
-  .wl-type-proof-control, .wl-type-proof-size-control, .wl-type-proof-text-control { display: grid; gap: 8px; min-width: 0; font-style: normal; }
+  .wl-type-proof-controls { display: grid; grid-template-columns: minmax(180px, 1fr) minmax(170px, 220px) minmax(180px, 1fr); gap: 20px; align-items: end; margin-bottom: 18px; font-style: normal; }
+  .wl-type-proof-control, .wl-type-proof-weight-control, .wl-type-proof-size-control, .wl-type-proof-text-control { display: grid; gap: 8px; min-width: 0; font-style: normal; }
   .wl-type-proof-label { display: flex; justify-content: space-between; gap: 10px; color: var(--wl-type-muted); font-size: 11px; font-weight: 400; line-height: 1.5; }
   .wl-type-proof-select { width: 100%; min-width: 0; }
   .wl-type-proof-range { width: 100%; max-width: none; height: 44px; margin: 0; background-size: 100% var(--wl-slider-height); background-position: center; background-repeat: no-repeat; }

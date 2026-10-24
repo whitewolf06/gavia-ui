@@ -15,7 +15,12 @@ Gavia Sans is the primary family for Gavia and Gavia Dark; code examples keep `-
 
 The top controls select Russian/English and upright/italic styles.
 Language and style apply to the specimens; custom text is preserved.
-The interactive sample supports weight, a size of 12–72 px and custom text.
+The interactive sample has a live 100–700 weight slider with a step of 1 and a
+numeric readout, six weight presets, a size of 12–72 px and custom text. Weight
+changes apply immediately to the sample and both alphabets, in upright and
+italic styles. Between authored presets the selector shows "Intermediate weight";
+choosing a preset synchronizes the slider. Arrow keys change weight by 1;
+Home/End select 100/700.
 A separate example shows tabular `tnum` and proportional `pnum` numerals.
 
 | Weight | Name | Upright | Italic |
@@ -28,7 +33,8 @@ A separate example shows tabular `tnum` and proportional `pnum` numerals.
 | 700 | Bold | Gavia-Bold.woff2 | Gavia-BoldItalic.woff2 |
 
 The main `src/main.ts` explicitly imports `gavia-ui/styles/fonts/gavia.css`.
-That CSS registers 12 faces from package files.
+That CSS enables the variable Core/full faces and keeps the 12 static faces
+and legacy family alias as a conditional fallback.
 `GaviaTypeStudy.vue` loads asynchronously with its page styles;
 the main application provides the shared header and navigation.
 

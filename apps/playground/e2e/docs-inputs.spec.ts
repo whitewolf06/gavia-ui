@@ -1,5 +1,5 @@
+import { expect, type Page, test } from "@playwright/test";
 import { russianPlaygroundUrl } from "./playground-url";
-import { expect, test, type Page } from "@playwright/test";
 
 function docsUrl(baseURL: string | undefined, component: string): string {
   const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
@@ -8,12 +8,16 @@ function docsUrl(baseURL: string | undefined, component: string): string {
   return url.href;
 }
 const errors = new WeakMap<Page, string[]>();
+
 test.beforeEach(async ({ page }) => {
   const messages: string[] = [];
   errors.set(page, messages);
   page.on("pageerror", (error) => messages.push(error.message));
 });
-test.afterEach(async ({ page }) => { expect(errors.get(page), "Input documentation has no runtime errors").toEqual([]); });
+
+test.afterEach(async ({ page }) => {
+  expect(errors.get(page), "Input documentation has no runtime errors").toEqual([]);
+});
 
 test("checkbox documentation demonstrates a real mixed group, labels, validation and disabled state", async ({ page, baseURL }) => {
   await page.goto(russianPlaygroundUrl(docsUrl(baseURL, "WlCheckbox")), { waitUntil: "domcontentloaded" });
@@ -40,7 +44,7 @@ test("checkbox documentation demonstrates a real mixed group, labels, validation
   await example.getByRole("button", { name: "Снять доступные флажки", exact: true }).click();
   await expect(parent).not.toBeChecked();
   await expect(mandatory).toBeChecked();
-  await expect(example.getByRole("status")).toContainText("Выбрано уведомлений: 0 из 2");
+  await expect(example.getByRole("status").filter({ hasText: "Выбрано уведомлений:" })).toContainText("Выбрано уведомлений: 0 из 2");
 });
 
 test("multiselect documentation filters and selects with the keyboard, removes chips and clears its model", async ({ page, baseURL }) => {
@@ -50,7 +54,7 @@ test("multiselect documentation filters and selects with the keyboard, removes c
   const control = example.getByRole("combobox", { name: "Направления с фильтром", exact: true });
   await control.press("ArrowDown");
   await expect(control).toHaveAttribute("aria-expanded", "true");
-  const filter = page.getByRole("searchbox", { name: "Фильтр", exact: true });
+  const filter = page.getByRole("combobox", { name: "Фильтр", exact: true });
   await filter.fill("Документация");
   await expect(page.getByRole("listbox").getByRole("option")).toHaveCount(1);
   await filter.press("Home");
@@ -115,6 +119,7 @@ test("file documentation preserves cancelled batches and enforces local upload r
   await expect(upload.getByRole("alert")).toHaveCount(0);
   await expect(upload.getByRole("status")).toHaveText("Документов: 0. Изображений: 0.");
 });
+
 test("autocomplete object examples preserve typed text, update complete suggestions and select objects", async ({ page, baseURL }) => {
   await page.goto(russianPlaygroundUrl(docsUrl(baseURL, "WlAutocomplete")), { waitUntil: "domcontentloaded" });
   const example = page.locator('[data-input-example="WlAutocomplete"]');

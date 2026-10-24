@@ -1,0 +1,10 @@
+import { WlConfig, wlLocaleEn } from "gavia-ui";
+import { createApp } from "vue";
+import "gavia-ui/styles/reset.css";
+import "gavia-ui/styles/base.css";
+import "gavia-ui/styles/primitives.css";
+import "gavia-ui/themes/gavia.css";
+import "gavia-ui/styles/fonts/gavia.css";
+import App from "./App.vue";
+document.documentElement.dataset.wlTheme = "gavia";
+createApp(App).use(WlConfig, { locale: wlLocaleEn }).mount("#app");

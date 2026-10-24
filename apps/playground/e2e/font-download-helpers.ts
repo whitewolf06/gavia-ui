@@ -1,7 +1,7 @@
+import { expect, type Locator, type Page } from "@playwright/test";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { inflateRawSync } from "node:zlib";
-import { expect, type Locator, type Page } from "@playwright/test";
 
 const fontRoot = new URL("../../../packages/ui-kit/fonts/gavia/", import.meta.url);
 
@@ -23,7 +23,7 @@ function unzip(bytes: Buffer): Map<string, Buffer> {
     expect(bytes.readUInt32LE(local)).toBe(0x04034b50);
     const start = local + 30 + bytes.readUInt16LE(local + 26) + bytes.readUInt16LE(local + 28);
     const file = inflateRawSync(bytes.subarray(start, start + compressedLength));
-    expect(file.length, name).toBe(rawLength);
+    expect(file, name).toHaveLength(rawLength);
     files.set(name, file);
     offset += 46 + nameLength + bytes.readUInt16LE(offset + 30) + bytes.readUInt16LE(offset + 32);
   }
@@ -42,18 +42,32 @@ export async function expectGaviaFontDownload(page: Page, link: Locator): Promis
   const manifest = JSON.parse(readFileSync(new URL("manifest.json", fontRoot), "utf8")) as {
     faces: { ttf: { file: string; sha256: string }; woff2: { file: string; sha256: string } }[];
   };
-  expect(files.size).toBe(29);
+  const variableBytes = readFileSync(new URL("variable-manifest.json", fontRoot));
+  const variable = JSON.parse(variableBytes.toString("utf8")) as {
+    files: { file: string; bytes: number; sha256: string; subset: string }[];
+  };
+  expect(files.size).toBe(35);
+  expect(files.get(prefix + "variable-manifest.json")?.equals(variableBytes)).toBe(true);
+  expect(variable.files).toHaveLength(4);
+  for (const file of variable.files) {
+    const bytes = files.get(prefix + file.file);
+    expect(bytes, file.file).toHaveLength(file.bytes);
+    expect(createHash("sha256").update(bytes!).digest("hex"), file.file).toBe(file.sha256);
+    if (file.subset === "core") expect(file.bytes).toBeLessThanOrEqual(80_000);
+  }
   for (const face of manifest.faces) for (const format of [face.ttf, face.woff2]) {
     const bytes = files.get(prefix + format.file);
     expect(bytes, format.file).toBeDefined();
     expect(createHash("sha256").update(bytes!).digest("hex"), format.file).toBe(format.sha256);
   }
-  for (const name of ["OFL.txt", "Onest-OFL.txt", "FONTLOG.txt"]) {
+  for (const name of ["OFL.txt", "Onest-OFL.txt", "FONTLOG.txt", "VARIABLE-FONTLOG.txt"]) {
     expect(files.get(prefix + name)?.equals(readFileSync(new URL(name, fontRoot))), name).toBe(true);
   }
   const css = files.get(prefix + "gavia.css")!.toString("utf8");
-  expect(css.match(/@font-face/g)).toHaveLength(24);
-  for (const family of ["Gavia Sans", "Gavia"]) expect(Array.from(css.matchAll(/font-family:\s*"([^"]+)"\s*;/g)).filter((match) => match[1] === family)).toHaveLength(12);
+  expect(css.match(/@font-face/g)).toHaveLength(34);
+  const families = Array.from(css.matchAll(/font-family:\s*"([^"]+)"\s*;/g));
+  for (const family of ["Gavia Sans", "Gavia"]) expect(families.filter((match) => match[1] === family)).toHaveLength(14);
+  for (const family of ["Gavia Sans Core", "Gavia Core"]) expect(families.filter((match) => match[1] === family)).toHaveLength(2);
   for (const match of css.matchAll(/url\("([^"]+)"\)/g)) expect(files.has(prefix + match[1]!.replace("./", ""))).toBe(true);
   expect(files.get(prefix + "README.txt")!.toString("utf8")).toContain("SIL Open Font License 1.1");
 }

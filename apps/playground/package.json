@@ -8,18 +8,24 @@
     "build": "vite build",
     "typecheck": "vue-tsc --noEmit -p tsconfig.json",
     "preview": "vite preview",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test": "vitest run --config vitest.config.ts"
   },
   "dependencies": {
     "gavia-ui": "workspace:*",
     "vue": "^3.5.13",
-    "vue-i18n": "11.3.0"
+    "vue-i18n": "11.3.0",
+    "vue-router": "4.6.4"
   },
   "devDependencies": {
+    "@intlify/unplugin-vue-i18n": "11.2.6",
     "@types/node": "^22.15.0",
-    "@vitejs/plugin-vue": "^5.2.4",
-    "typescript": "~5.8.3",
-    "vite": "^6.3.5",
-    "vue-tsc": "^2.2.10"
+    "@vitejs/plugin-vue": "6.0.10",
+    "@vue/test-utils": "2.4.6",
+    "jsdom": "26.1.0",
+    "typescript": "6.0.3",
+    "vite": "8.3.4",
+    "vitest": "5.0.5",
+    "vue-tsc": "3.3.13"
   }
 }

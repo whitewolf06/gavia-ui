@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { wlTypography } from "../../../../../../packages/ui-kit/src";
+import { wlTypography } from "gavia-ui";
 const roleText = {
   display: { label: t("examples.typography.display.label"), description: t("examples.typography.display.description") },
   title: { label: t("examples.typography.title.label"), description: t("examples.typography.title.description") },
@@ -28,7 +28,14 @@ const roleText = {
 
 <style scoped>
 .typography-example { margin: 0; }
-.typography-example-role { display: grid; grid-template-columns: minmax(0, 180px) minmax(0, 1fr); gap: var(--wl-space-lg); padding-bottom: var(--wl-space-lg); border-bottom: 1px solid var(--wl-border); overflow-wrap: anywhere; }
+.typography-example-role {
+  display: grid;
+  grid-template-columns: minmax(0, 180px) minmax(0, 1fr);
+  gap: var(--wl-space-lg);
+  padding-bottom: var(--wl-space-lg);
+  border-bottom: 1px solid var(--wl-border);
+  overflow-wrap: anywhere;
+}
 .typography-example-role:last-child { padding-bottom: 0; border-bottom: 0; }
 .typography-example-role dd { min-width: 0; margin: 0; }
 @media (max-width: 640px) { .typography-example-role { grid-template-columns: minmax(0, 1fr); gap: var(--wl-space-sm); } }

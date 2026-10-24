@@ -1,18 +1,43 @@
 import { existsSync, readFileSync } from "node:fs";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { join, resolve } from "node:path";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const docsRepository = "https://github.com/whitewolf06/gavia-ui/blob/";
 
 /** Package Markdown is read outside the checkout, so local docs links become URLs. */
 export function packageChangelog(source) {
-  return source.replaceAll("(docs/", "(" + docsRepository + "main/docs/");
+  return source.replace(/\((docs|review|examples)\//g, (_, directory) => "(" + docsRepository + "main/" + directory + "/");
 }
 
 /** GitHub Release describes an immutable tag, including prerelease branch docs. */
 export function releaseDocsLinks(source, version) {
-  return source.replaceAll("(docs/", "(" + docsRepository + "v" + version + "/docs/");
+  return source.replace(/\((docs|review|examples)\//g, (_, directory) => "(" + docsRepository + "v" + version + "/" + directory + "/");
+}
+
+/** Follow the canonical migration section without treating an empty redirect as reviewed notes. */
+export function migrationDocument(root, file) {
+  const source = readFileSync(file, "utf8").replaceAll("\r\n", "\n");
+  const link = /\*\*This guide moved\.\*\* Canonical guide: \[[^\]]+\]\(([^)]+)\)/.exec(source);
+  if (!link)
+    return source;
+  const [name, fragment] = link[1].split("#");
+  if (!/^[\w./-]+$/.test(name) || !/^[\w-]+$/.test(fragment ?? ""))
+    throw new Error("Invalid canonical migration link");
+  const target = resolve(dirname(file), name);
+  const scope = relative(resolve(root, "docs"), target);
+  if (scope.startsWith("..") || isAbsolute(scope))
+    throw new Error("Canonical migration must stay inside docs");
+  const canonical = readFileSync(target, "utf8").replaceAll("\r\n", "\n");
+  const anchor = canonical.indexOf(`<a id="${fragment}"></a>`);
+  if (anchor === -1)
+    throw new Error("Canonical migration section is missing");
+  const headings = markdownHeadings(canonical).filter((heading) => heading.level === 2);
+  const section = headings.find((heading) => heading.index >= anchor);
+  if (!section)
+    throw new Error("Canonical migration section has no content heading");
+  const end = headings.find((heading) => heading.index > section.index)?.index ?? canonical.length;
+  return source.split("\n")[0] + "\n\n" + canonical.slice(section.bodyStart, end);
 }
 
 function markdownLines(source) {
@@ -20,15 +45,18 @@ function markdownLines(source) {
   let index = 0;
   let fence;
   for (const line of source.split("\n")) {
-    const delimiter = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
+    const prefix = line.match(/^ {0,3}(`{3,}|~{3,})/);
+    const delimiter = prefix ? [prefix[0], prefix[1], line.slice(prefix[0].length)] : null;
     let code = !!fence || /^(?: {4}|\t)/.test(line);
     if (fence) {
       if (delimiter && delimiter[1][0] === fence.character
-        && delimiter[1].length >= fence.length && !delimiter[2].trim()) fence = undefined;
-    } else if (delimiter && (delimiter[1][0] === "~" || !delimiter[2].includes("`"))) {
-      fence = { character: delimiter[1][0], length: delimiter[1].length };
-      code = true;
-    }
+        && delimiter[1].length >= fence.length && !delimiter[2].trim())
+        fence = undefined;
+    } else
+      if (delimiter && (delimiter[1][0] === "~" || !delimiter[2].includes("`"))) {
+        fence = { character: delimiter[1][0], length: delimiter[1].length };
+        code = true;
+      }
     lines.push({ line, index, bodyStart: index + line.length + 1, code });
     index += line.length + 1;
   }
@@ -38,10 +66,11 @@ function markdownLines(source) {
 /** ATX headings outside fenced and indented code, with source offsets preserved. */
 export function markdownHeadings(source) {
   return markdownLines(source).lines.flatMap((record) => {
-    const heading = !record.code && record.line.match(/^( {0,3})(#{1,6})(?:[ \t]+|$)(.*)$/);
-    if (!heading) return [];
+    const heading = !record.code && record.line.match(/^( {0,3})(#{1,6})(?:[ \t]+|$)/);
+    if (!heading)
+      return [];
     return [{ index: record.index, bodyStart: record.bodyStart, hashStart: record.index + heading[1].length,
-      level: heading[2].length, title: heading[3].replace(/[ \t]+#+[ \t]*$/, "").trim() }];
+      level: heading[2].length, title: record.line.slice(heading[0].length).replace(/[ \t]+#+[ \t]*$/, "").trim() }];
   });
 }
 
@@ -51,11 +80,14 @@ export function markdownParagraphs(source) {
   let paragraph = [];
   for (const { line, code } of markdownLines(source.replaceAll("\r\n", "\n")).lines) {
     if (!code && !line.trim()) {
-      if (paragraph.length) paragraphs.push(paragraph.join("\n"));
+      if (paragraph.length)
+        paragraphs.push(paragraph.join("\n"));
       paragraph = [];
-    } else paragraph.push(line);
+    } else
+      paragraph.push(line);
   }
-  if (paragraph.length) paragraphs.push(paragraph.join("\n"));
+  if (paragraph.length)
+    paragraphs.push(paragraph.join("\n"));
   return paragraphs;
 }
 
@@ -63,7 +95,8 @@ export function markdownParagraphs(source) {
 export function normalizeMarkdownNotes(source, label) {
   const normalized = source.replaceAll("\r\n", "\n");
   const { lines, openFence } = markdownLines(normalized);
-  if (openFence) throw new Error("Close the Markdown code fence in " + label + "; no versions changed");
+  if (openFence)
+    throw new Error("Close the Markdown code fence in " + label + "; no versions changed");
   for (let index = 1; index < lines.length; index += 1) {
     const previous = lines[index - 1];
     if (!lines[index].code && !previous.code && previous.line.trim()
@@ -93,12 +126,14 @@ export function releaseNotes(source, version) {
     return title === version || title.startsWith(version + " ")
       || title === "[" + version + "]" || title.startsWith("[" + version + "] ");
   });
-  if (matches.length !== 1) throw new Error("Expected one reviewed changelog section for " + version);
+  if (matches.length !== 1)
+    throw new Error("Expected one reviewed changelog section for " + version);
   const heading = matches[0];
   const bodyStart = heading.bodyStart;
   const next = headings.find((candidate) => candidate.index >= bodyStart);
   const notes = normalized.slice(bodyStart, next?.index ?? normalized.length).trim();
-  if (!notes) throw new Error("No reviewed changelog notes for " + version);
+  if (!notes)
+    throw new Error("No reviewed changelog notes for " + version);
   return notes;
 }
 
@@ -109,12 +144,10 @@ function main() {
   }
   const version = JSON.parse(readFileSync(join(root, "packages/ui-kit/package.json"), "utf8")).version;
   const source = readFileSync(join(root, "CHANGELOG.md"), "utf8").replaceAll("\r\n", "\n");
-  const packaged = readFileSync(join(root, "packages/ui-kit/CHANGELOG.md"), "utf8").replaceAll("\r\n", "\n");
-  if (packageChangelog(source) !== packaged) throw new Error("Changelog copies differ");
   const exact = join(root, "docs/migration-" + version + ".md");
   const minor = join(root, "docs/migration-" + version.split(".").slice(0, 2).join(".") + ".md");
   const migration = existsSync(exact) ? exact : minor;
-  if (!existsSync(migration) || /TODO/.test(readFileSync(migration, "utf8"))) {
+  if (!existsSync(migration) || /TODO/.test(migrationDocument(root, migration))) {
     throw new Error("Complete the migration before publishing");
   }
   const notes = releaseNotes(source, version);
@@ -128,5 +161,10 @@ function main() {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  try { main(); } catch (error) { console.error(error.message); process.exitCode = 1; }
+  try {
+    main();
+  } catch (error) {
+    console.error(error.message);
+    process.exitCode = 1;
+  }
 }

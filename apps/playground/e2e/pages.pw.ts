@@ -1,15 +1,14 @@
+import { expect, type Page, test } from "@playwright/test";
+import { readFileSync } from "node:fs";
+import { fileURLToPath, URL as NodeURL } from "node:url";
+import { resolveWlToken, wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
+import { expectGaviaFontDownload } from "./font-download-helpers";
 import { russianPlaygroundUrl } from "./playground-url";
 import { publishedVersion } from "./project-version";
-import { resolveWlToken, wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
-import { expect, test, type Page } from "@playwright/test";
-import { chooseDropdownOption, copyCodePanel, chooseShowcaseTheme, navigateDocumentationComponent, expectMainViewCurrent, navigateMainView, openDocumentationMenu } from "./select-helpers";
-import { readFileSync } from "node:fs";
-import { expectGaviaFontDownload } from "./font-download-helpers";
-import { fileURLToPath, URL as NodeURL } from "node:url";
+import { chooseDropdownOption, chooseShowcaseTheme, copyCodePanel, expectMainViewCurrent, navigateDocumentationComponent, navigateMainView, openDocumentationMenu } from "./select-helpers";
 
 const packageMetadata = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../../../packages/ui-kit/package.json", import.meta.url)), "utf8")) as { name: string; version: string };
 const packageUrl = "https://www.npmjs.com/package/gavia-ui";
-
 
 const pagesPath = "/gavia-ui/";
 const projectTitle = "Changelog";
@@ -29,11 +28,12 @@ async function expectNoPageOverflow(page: Page): Promise<void> {
   )).toBeLessThanOrEqual(1);
 }
 
-function expectPagesLocation(page: Page, view?: string, component?: string): void {
+function expectPagesLocation(page: Page, view?: string, component?: string, section?: string): void {
   const url = new URL(page.url());
-  expect(url.pathname).toBe(pagesPath);
-  expect(url.searchParams.get("view")).toBe(view ?? null);
-  expect(url.searchParams.get("component")).toBe(component ?? null);
+  const destination = view === "project" ? "changelog" : view;
+  const detail = destination === "docs" ? component ? `components/${component}/` : section ? `${section}/` : "" : "";
+  expect(url.pathname).toBe(pagesPath + "ru/" + (destination ? destination + "/" : "") + detail);
+  for (const key of ["view", "component", "section", "lang"]) expect(url.searchParams.has(key)).toBe(false);
 }
 
 test.beforeEach(async ({ page, baseURL }) => {
@@ -61,6 +61,59 @@ test.afterEach(async ({ page }) => {
   expect(resources.get(page)!.failures, "Production assets and scripts must load without errors").toEqual([]);
 });
 
+test("prerendered component content stays visible before JavaScript runs", async ({ browser, baseURL }, testInfo) => {
+  const mobile = testInfo.project.name.includes("mobile");
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    viewport: mobile ? { width: 390, height: 844 } : { width: 1440, height: 900 }
+  });
+  try {
+    const page = await context.newPage();
+    const response = await page.goto(new URL("docs/components/WlSelect/", baseURL!).href);
+    expect(response?.ok()).toBe(true);
+    expect(await response!.text()).not.toMatch(/<link\b[^>]+href=["'][^"']*\/HomePage-/u);
+    await expect(page.locator("html")).toHaveAttribute("data-playground-prerendered", "");
+    await expect(page.locator("html")).not.toHaveAttribute("data-wl-boot");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("WlSelect");
+    await expect(page.locator('[data-docs-component="WlSelect"]')).toBeVisible();
+  } finally {
+    await context.close();
+  }
+});
+
+test("canonical EN/RU pages retain their language, public links and static documentation HTML", async ({ page }) => {
+  for (const language of ["en", "ru"]) {
+    const prefixes: Record<string, string> = { en: "", ru: "ru/" };
+    const path = pagesPath + prefixes[language] + "docs/theming/";
+    const response = await page.goto(path);
+    expect(response?.ok()).toBe(true);
+    const html = await response!.text();
+    expect(html).toContain("<main");
+    expect(html).toContain('data-guide="theming"');
+    expect(html).not.toContain("127.0.0.1:4177");
+    await expect(page.locator("html")).toHaveAttribute("lang", language);
+    await expect(page.locator('[data-guide="theming"]')).toBeVisible();
+    expect(new URL(page.url()).pathname).toBe(path);
+    const canonical = page.locator('link[rel="canonical"]');
+    await expect(canonical).toHaveAttribute("href", "https://whitewolf06.github.io" + path);
+    await page.reload();
+    await expect(page.locator("html")).toHaveAttribute("lang", language);
+    expect(new URL(page.url()).pathname).toBe(path);
+  }
+});
+
+test("the former gallery component query redirects to its canonical Russian page and retains its anchor", async ({ page }) => {
+  await page.goto(russianPlaygroundUrl(pagesPath + "?view=components&component=WlTabs#docs-wltabs-props"));
+  await expect(page.locator('[data-docs-component="WlTabs"]')).toBeVisible();
+  expectPagesLocation(page, "docs", "WlTabs");
+  expect(new URL(page.url()).hash).toBe("#docs-wltabs-props");
+  await expect(page.locator("#docs-wltabs-props")).toBeInViewport();
+  await page.reload();
+  await expect(page.locator('[data-docs-component="WlTabs"]')).toBeVisible();
+  expectPagesLocation(page, "docs", "WlTabs");
+  await expect(page.locator("#docs-wltabs-props")).toBeInViewport();
+});
+
 test("Home metadata and the old project query survive refresh with production assets under the Pages prefix", async ({ page }) => {
   await page.goto(russianPlaygroundUrl(pagesPath));
   await expect(page.getByTestId("home-page").getByRole("heading", { level: 1 })).toHaveText("Gavia UI");
@@ -83,12 +136,12 @@ test("Home metadata and the old project query survive refresh with production as
   const packageStatus = page.getByTestId("project-npm-status");
   await expect(packageStatus).toContainText("доступен в npm");
   await expect(packageStatus.getByRole("link", { name: `${packageMetadata.name}@${publishedVersion}`, exact: true })).toHaveAttribute("href", packageUrl);
-  await expect(packageStatus.locator("code")).toHaveText(`pnpm add ${packageMetadata.name}@${publishedVersion}`);
+  await expect(packageStatus.locator("code")).toHaveText(`pnpm add ${packageMetadata.name}`);
 
   const logo = page.locator(".pg-logo");
   await expect(logo).toBeVisible();
   await expect(logo).toHaveClass(/pg-logo-mask/);
-  await expect(logo).toHaveCSS("mask-image", /\/gavia-ui\/assets\/.*\.png/);
+  await expect(logo).toHaveCSS("mask-image", /\/gavia-ui\/assets\/.*\.svg/);
   const imagePath = await logo.evaluate((element) => {
     const match = /url\(["']?(.*?)["']?\)/.exec(getComputedStyle(element).maskImage);
     return match ? new URL(match[1]!, window.location.href).pathname : "";
@@ -214,7 +267,7 @@ test("production lazy examples, recipes and copied source work beneath the Pages
   await form.getByRole("textbox", { name: "Имя участника", exact: true }).fill("Участник Gavia");
   await form.getByRole("textbox", { name: "Email участника", exact: true }).fill("example@example.com");
   await form.getByRole("button", { name: "Сохранить профиль", exact: true }).click();
-  await expect(form.getByRole("alert")).toContainText("Профиль сохранён");
+  await expect(form.getByRole("status")).toContainText("Профиль сохранён");
   await expectNoPageOverflow(page);
   expectPagesLocation(page, "system");
 });
@@ -228,8 +281,12 @@ test("picker documentation examples work beneath the Pages prefix", async ({ pag
   await expect(docs.getByRole("heading", { level: 1, name: "WlTimePicker", exact: true })).toBeInViewport();
   const timeCard = timeWorkspace.getByTestId("ds-explorer").getByTestId("ds-example-preview");
   const timeInput = timeCard.getByLabel("Время встречи", { exact: true });
-  await expect(timeInput).toHaveValue("09:30");
-  await timeInput.fill("10:45");
+  const formattedTimes = await page.evaluate(() => {
+    const format = new Intl.DateTimeFormat("ru-RU", { hour: "2-digit", minute: "2-digit", hourCycle: "h12" });
+    return [format.format(new Date(2026, 0, 1, 9, 30)), format.format(new Date(2026, 0, 1, 10, 45))];
+  });
+  await expect(timeInput).toHaveValue(formattedTimes[0]!);
+  await timeInput.fill(formattedTimes[1]!);
   await timeInput.press("Enter");
   await expect(timeCard.getByRole("status")).toHaveText("Выбрано: 10:45");
   await timeInput.fill("");
@@ -258,9 +315,11 @@ test("Theme builder scopes live colors, restores its draft and exports a working
   await expect(headerSearch).toHaveAttribute("title", "Поиск");
   await expect(page.locator(".pg-logo")).toHaveCSS("width", page.viewportSize()!.width <= 400 ? "28px" : page.viewportSize()!.width <= 700 ? "32px" : "36px");
   await navigateMainView(page, "Подбор темы");
+  await expect(page).toHaveURL((url) => url.pathname === pagesPath + "ru/theme-builder/");
   expectPagesLocation(page, "theme-builder");
   const builder = page.getByTestId("theme-builder-page");
   const preview = page.getByTestId("theme-builder-preview");
+  const actionStatus = preview.getByRole("article").getByRole("status");
   await expect(builder.getByRole("heading", { name: "Подбор темы", exact: true })).toBeVisible();
   const createAction = preview.getByRole("button", { name: "Создать проект", exact: true });
   await expect(createAction).toHaveCSS("background-color", "rgb(60, 116, 144)");
@@ -271,7 +330,7 @@ test("Theme builder scopes live colors, restores its draft and exports a working
   await page.keyboard.down("Space");
   await expect(createAction).toHaveCSS("background-color", "rgb(50, 97, 121)");
   await page.keyboard.up("Space");
-  await expect(preview.getByRole("status")).toHaveText("Нажатий: 1");
+  await expect(actionStatus).toHaveText("Нажатий: 1");
   const bg = builder.getByRole("textbox", { name: "Основной фон", exact: true });
   await bg.fill("#f0");
   await expect(bg).toHaveAttribute("aria-invalid", "true");
@@ -291,7 +350,7 @@ test("Theme builder scopes live colors, restores its draft and exports a working
   await overlay.getByRole("option", { name: "Высокий", exact: true }).click();
   await expect(priority).toHaveText("Высокий");
   await preview.getByRole("button", { name: "Создать проект", exact: true }).click();
-  await expect(preview.getByRole("status")).toHaveText("Нажатий: 2");
+  await expect(actionStatus).toHaveText("Нажатий: 2");
   await builder.getByRole("checkbox", { name: "Disabled", exact: true }).check();
   await expect(preview.getByRole("button", { name: "Создать проект", exact: true })).toBeDisabled();
   await page.reload();
@@ -304,15 +363,15 @@ test("Theme builder scopes live colors, restores its draft and exports a working
   await formats.getByRole("button", { name: "JSON", exact: true }).click();
   await builder.getByRole("button", { name: "Копировать JSON", exact: true }).click();
   await expect(builder.getByRole("status").last()).toHaveText("Код скопирован.");
-  const spec = JSON.parse(await page.evaluate(() => navigator.clipboard.readText())) as {name:string; palette:Record<string,string>};
+  const spec = JSON.parse(await page.evaluate(() => navigator.clipboard.readText())) as { name: string; palette: Record<string, string> };
   expect(spec.name).toBe("my-gavia");
   expect(spec.palette).toMatchObject({ background: "#eef5ff", primary: "#0b6a53", link: "#0b6a53" });
   await formats.getByRole("button", { name: "CSS", exact: true }).click();
   await builder.getByRole("button", { name: "Копировать CSS", exact: true }).click();
   await expect(builder.getByRole("status").last()).toHaveText("Код скопирован.");
   const css = await page.evaluate(() => navigator.clipboard.readText());
-  expect(css).toContain('@layer wl.tokens');
-  expect(css).toContain('prefers-reduced-motion: reduce');
+  expect(css).toContain("@layer wl.tokens");
+  expect(css).toContain("prefers-reduced-motion: reduce");
   await page.addStyleTag({ content: css });
   const exportedPreview = await preview.evaluate((element, themeName) => {
     const clone = element.cloneNode(true) as HTMLElement;
@@ -321,7 +380,10 @@ test("Theme builder scopes live colors, restores its draft and exports a working
     clone.dataset.testid = "exported-theme-proof";
     document.body.append(clone);
     const primary = clone.querySelector<HTMLElement>('[data-variant="primary"]')!;
-    const colors = { bg: getComputedStyle(clone).backgroundColor, action: getComputedStyle(primary).backgroundColor, text: getComputedStyle(primary).color };
+    const colors = {
+      bg: getComputedStyle(clone).backgroundColor,
+      action: getComputedStyle(primary).backgroundColor, text: getComputedStyle(primary).color
+    };
     clone.remove();
     return colors;
   }, spec.name);
@@ -350,9 +412,14 @@ test("font presentation preserves theme, faces and anchors under the Pages subpa
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "graphite");
   const headingFamily = await fontPage.locator(".wl-page-header__title").evaluate((element) => getComputedStyle(element).fontFamily);
   await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", headingFamily);
-  await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
-  const loaded = await page.evaluate(async () => (await document.fonts.load("italic 600 16px 'Gavia Sans'", "Гавиа Gavia 0123456789")).length);
-  expect(loaded).toBe(1);
+  await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Gavia Sans(?: Core)?"?,/);
+  const loaded = await page.evaluate(async () => {
+    const faces = await document.fonts.load("italic 600 16px 'Gavia Sans'", "Гавиа Gavia 0123456789");
+    return faces.map((face) => ({ family: face.family, weight: face.weight, style: face.style, status: face.status }));
+  });
+  expect(loaded).toEqual(Array.from({ length: 1 }, () => ({
+    family: "Gavia Sans", weight: "100 700", style: "italic", status: "loaded"
+  })));
   expectPagesLocation(page, "font");
   await expectNoPageOverflow(page);
   await navigateMainView(page, "Документация");
@@ -370,7 +437,6 @@ test("font presentation preserves theme, faces and anchors under the Pages subpa
   expect(new URL(page.url()).searchParams.get("theme")).toBe("gavia");
   await expectNoPageOverflow(page);
 });
-
 
 test("standalone font ZIP downloads from the Pages subpath and footer", async ({ page }) => {
   await page.goto(russianPlaygroundUrl(pagesPath + "?view=font&theme=gavia"));
@@ -392,13 +458,12 @@ test("quality documentation keeps bookmarked anchors and theme links under the P
   await expect(environment).toBeInViewport();
   await expect.poll(() => environment.evaluate((element) => element.getBoundingClientRect().top - document.querySelector(".pg-top")!.getBoundingClientRect().bottom)).toBeGreaterThanOrEqual(0);
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "graphite");
-  expectPagesLocation(page, "docs");
-  expect(new URL(page.url()).searchParams.get("section")).toBe("quality");
+  expectPagesLocation(page, "docs", undefined, "quality");
   const footer = page.locator(".pg-footer").getByRole("link", { name: "Качество и совместимость", exact: true });
   const footerUrl = new URL((await footer.getAttribute("href"))!, page.url());
-  expect(footerUrl.pathname).toBe(pagesPath);
+  expect(footerUrl.pathname).toBe(pagesPath + "ru/docs/quality/");
   expect(footerUrl.searchParams.get("theme")).toBe("graphite");
-  expect(footerUrl.searchParams.get("section")).toBe("quality");
+  expect(footerUrl.searchParams.get("section")).toBeNull();
   await page.reload();
   await expect(environment).toBeInViewport();
   await expectNoPageOverflow(page);
@@ -406,7 +471,7 @@ test("quality documentation keeps bookmarked anchors and theme links under the P
   const summary = page.getByTestId("home-quality");
   const homeLink = summary.getByRole("link", { name: "Результаты проверок", exact: true });
   const homeUrl = new URL((await homeLink.getAttribute("href"))!, page.url());
-  expect(homeUrl.pathname).toBe(pagesPath);
+  expect(homeUrl.pathname).toBe(pagesPath + "ru/docs/quality/");
   expect(homeUrl.searchParams.get("theme")).toBe("graphite");
   await homeLink.click();
   await expect(quality).toBeVisible();
@@ -423,7 +488,6 @@ test("quality documentation keeps bookmarked anchors and theme links under the P
   await search.press("Enter");
   await expect(page.locator(".wl-command-palette")).toHaveCount(0);
   await expect(quality).toBeVisible();
-  expectPagesLocation(page, "docs");
-  expect(new URL(page.url()).searchParams.get("section")).toBe("quality");
+  expectPagesLocation(page, "docs", undefined, "quality");
   await expectNoPageOverflow(page);
 });

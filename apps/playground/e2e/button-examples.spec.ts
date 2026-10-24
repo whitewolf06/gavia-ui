@@ -1,10 +1,10 @@
-import { russianPlaygroundUrl } from "./playground-url";
-import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, URL as NodeURL } from "node:url";
+import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import { consumerSource } from "../../../scripts/example-source.mjs";
+import { russianPlaygroundUrl } from "./playground-url";
 import { chooseShowcaseTheme, copyCodePanel } from "./select-helpers";
 
 const russianExamples = JSON.parse(readFileSync(new URL("../src/i18n/messages/examples.ru.json", import.meta.url), "utf8")) as Record<string, string>;
@@ -46,6 +46,7 @@ test.beforeEach(async ({ page }) => {
   errors.set(page, messages);
   page.on("pageerror", (error) => messages.push(error.message));
 });
+
 test.afterEach(async ({ page }) => {
   expect(errors.get(page), "WlButton examples must not introduce runtime errors").toEqual([]);
 });
@@ -53,10 +54,14 @@ test.afterEach(async ({ page }) => {
 test("button comparisons cover manifest variants and sizes, and every copied example is its canonical SFC", async ({ page, baseURL }) => {
   await openDocumentation(page, baseURL);
   const variants = preview(page, "variants");
-  const variantButtons = variants.locator('button[data-wl="button"]');
+  const variantButtons = variants.locator('button[data-wl="button"]:not([data-tone="danger"])');
   await expect(variantButtons).toHaveCount(buttonManifest.props.find((prop) => prop.name === "variant")!.values!.length);
   expect(await variantButtons.evaluateAll((buttons) => buttons.map((button) => button.getAttribute("data-variant"))))
     .toEqual(buttonManifest.props.find((prop) => prop.name === "variant")!.values);
+  const dangerButtons = variants.locator('button[data-wl="button"][data-tone="danger"]');
+  await expect(dangerButtons).toHaveCount(3);
+  expect(await dangerButtons.evaluateAll((buttons) => buttons.map((button) => button.getAttribute("data-variant"))))
+    .toEqual(["primary", "ghost", "soft"]);
   await variants.getByRole("button", { name: "Создать", exact: true }).click();
   await expect(variants.getByRole("status")).toHaveText("Последнее действие: Создать");
 
@@ -172,7 +177,9 @@ test("all button comparisons fit 320px and inherit each shipped theme", async ({
   await openDocumentation(page, baseURL);
   for (const theme of wlDesignThemes.map((theme) => theme.label)) {
     await chooseShowcaseTheme(page, theme);
-    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+    await expect.poll(() => page.evaluate(() =>
+      document.documentElement.scrollWidth - document.documentElement.clientWidth
+    )).toBeLessThanOrEqual(1);
     for (const name of Object.keys(sourceFiles) as ExampleName[]) {
       const live = preview(page, name);
       await expect(live).toBeVisible();

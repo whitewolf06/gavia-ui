@@ -1,0 +1,10 @@
+import { createApp } from "vue";
+import "gavia-ui/styles/reset.css";
+import "gavia-ui/styles/base.css";
+import "gavia-ui/styles/fonts/gavia.css";
+import "gavia-ui/themes/gavia.css";
+import "./theme.css";
+import App from "./App.vue";
+document.documentElement.dataset.wlTheme = "gavia";
+document.documentElement.dataset.wlBrand = "my-brand";
+createApp(App).mount("#app");
