@@ -27,9 +27,7 @@ describe("localized public changelog", () => {
     expect(russian.sections.map(identity)).toEqual(english.sections.map(identity));
     expect(russian.sections[0]!.title).toBe("Не выпущено");
     expect(prose(russian).length).toBe(prose(english).length);
-    for (const value of prose(russian)) {
-      expect(value, "Missing Russian changelog translation: " + value).toMatch(/\p{Script=Cyrillic}/u);
-    }
+    expect(prose(russian).filter((value) => !/\p{Script=Cyrillic}/u.test(value)), "Missing Russian changelog translations").toEqual([]);
     const stable = russian.sections.find((section) => section.version === "1.0.0")!;
     expect(prose({ introduction: [], sections: [stable] }).join(" ")).toContain("вся история обновлений в Playground теперь переведена на русский");
   });
