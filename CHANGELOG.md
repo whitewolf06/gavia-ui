@@ -7,18 +7,9 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 ## Unreleased
 
-### Changed
+## 1.0.0-rc.1 — 2026-10-24
 
-- Keep prerendered Playground pages visible before startup and simplify displayed API types and component badges.
-- Keep home-only preloads out of prerendered documentation and size artwork for high-density mobile screens.
-- Use SVG decorations to avoid an unnecessary Full-font download on the Playground home page.
-- Separate optional Core font families from complete Gavia fallback; use the complete face in Firefox to preserve combining clusters.
-- Exclude variable-font audit data from npm and use neutral names for shared library chunks.
-- Keep rendered documentation visible while the next Playground page and its translations load.
-
-## 1.0.0-rc.1 — prepared
-
-An opt-in candidate for npm `next`; publication date is pending.
+An opt-in release candidate for npm `next`; stable `latest` remains unchanged.
 Follow the [1.0 upgrade guide](docs/migration.md#migration-1-0-rc-1).
 
 ### Breaking changes
@@ -45,6 +36,12 @@ Follow the [1.0 upgrade guide](docs/migration.md#migration-1-0-rc-1).
 - Use one copyable SFC source for examples and source-derived public API metadata.
 - Ship WOFF2 web fonts in npm and provide licensed TTF desktop downloads separately.
 - Preserve Vue 3.4+, TypeScript 5.4+, five themes and explicit CSS imports.
+- Keep prerendered Playground pages visible before startup and simplify displayed API types and component badges.
+- Keep home-only preloads out of prerendered documentation and size artwork for high-density mobile screens.
+- Use SVG decorations to avoid an unnecessary Full-font download on the Playground home page.
+- Separate optional Core font families from complete Gavia fallback; use the complete face in Firefox to preserve combining clusters.
+- Exclude variable-font audit data from npm and use neutral names for shared library chunks.
+- Keep rendered documentation visible while the next Playground page and its translations load.
 
 ### Fixed
 

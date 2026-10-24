@@ -1,7 +1,10 @@
 # Preparing Gavia UI 1.0.0-rc.1
 
-The candidate targets npm **`next`**. It has not been published; publication and
-the two-to-four-week feedback period require separate owner approval.
+The candidate targets npm **`next`**. The owner authorized G2 on 2026-10-24:
+date the release, commit/push, create `v1.0.0-rc.1` and run Release on GitHub.
+Registry publication is not claimed by this source-preparation record; confirm
+it from the workflow and npm before starting the two-to-four-week feedback period.
+The pre-release registry baseline is **`latest = 0.12.1`**; preserve that tag.
 The [1.0 migration](../migration.md#migration-1-0-rc-1) describes consumer changes.
 The [release procedure](releases.md) governs delivery.
 
@@ -13,7 +16,11 @@ The owner accepted an RC transition instead of a separate 0.x warning release.
 The owner visually accepted the Gavia font on 2026-10-22.
 On 2026-10-24 the owner accepted this RC with unverified manual accessibility
 as a known limitation and authorized G1: merge PR #2, then verify CI and public
-Pages on GitHub. Release tags and npm publication remain unauthorized.
+Pages on GitHub. G1 completed at main `435d6b4522156c1803f2e31384bbb1259f3f662a`:
+[CI passed all ten jobs](https://github.com/whitewolf06/gavia-ui/actions/runs/40093335008),
+[Pages deployed the same SHA](https://github.com/whitewolf06/gavia-ui/actions/runs/40093940860),
+and public canonical/query URLs plus the 156-route prerender manifest were read back.
+The subsequent G2 authorization covers this RC only, with all heavy checks on GitHub.
 
 Candidate snapshot `06c726437806d43371f25e933ffffb82ca8158d4` passed
 [all ten CI jobs](https://github.com/whitewolf06/gavia-ui/actions/runs/40041135927):
@@ -38,10 +45,10 @@ Do not commit execution journals or links to ignored local files.
 | Installed consumers | pnpm/Vue 3.4, npm/Vue 3.4.0/TS 5.4 and Bun/Vue 3.5; SSR/hydration | Passed; consumer reports identify the same archive |
 | Browsers | Production keyboard/ARIA, overlays and desktop/mobile interaction projects | Passed in Chromium, Firefox, WebKit and mobile Chromium |
 | Visuals | Five themes on Windows/Chromium; separate supplemental Linux comparison | Passed; 12 intentional changes reviewed as expected/actual/diff before adoption |
-| Pages | Production subpath, prerender, canonical/legacy links and direct routes | Preflight passed; G1 deployment authorized on 2026-10-24; main delivery pending |
+| Pages | Production subpath, prerender, canonical/legacy links and direct routes | G1 completed on 2026-10-24; same-main-SHA CI, deployment and public URL read-back passed |
 | Performance | LCP, CLS, total transfer and fonts on home plus three docs pages, desktop/mobile and five themes | All budgets passed; measured table in quality.md |
 | Manual accessibility | Ten key controls: NVDA/Firefox, macOS VoiceOver/Safari and iOS VoiceOver | Unverified; owner accepted the RC limitation on 2026-10-24; no manual pass claimed |
-| Owner acceptance | Candidate scope, known limitations and exact delivery actions | RC accepted and G1 authorized on 2026-10-24; G2 remains unauthorized |
+| Owner acceptance | Candidate scope, known limitations and exact delivery actions | RC accepted, G1 completed and G2 authorized on 2026-10-24; registry read-back pending |
 
 Performance targets: CLS <0.1, home transfer ≤600 KB, documentation ≤650 KB,
 home font transfer ≤90 KB. Record measured values in
