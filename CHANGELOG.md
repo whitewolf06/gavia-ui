@@ -51,6 +51,7 @@ Follow the [1.0 upgrade guide](docs/migration.md#migration-1-0-rc-1).
 - Correct Alert/Field/Steps semantics and avoid duplicate Toast announcements.
 - Reset settled Toast lifetimes and consistently cancel replaced confirmation requests.
 - Support native Node16/NodeNext ESM declarations and independent installed-package consumers.
+- Recognize dated alpha, beta and RC changelog entries while preserving the separate published stable version.
 
 ### Deprecated / removed
 

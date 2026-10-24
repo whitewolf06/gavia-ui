@@ -18,7 +18,7 @@ describe("public changelog rendering", () => {
     // New releases precede the immutable historical tail; publishing must not drop it.
     expect(versions.slice(versions.indexOf("0.9.1"))).toEqual(["0.9.1", "0.8.1", "0.7.1", "0.7.0", "0.6.0", "0.3.0", "0.2.1", "0.2.0", "0.1.0"]);
     expect(new Set(versions).size).toBe(versions.length);
-    expect(document.sections.find((section) => section.version)).toMatchObject({
+    expect(document.sections.find((section) => section.version === gaviaProjectInfo.publishedVersion)).toMatchObject({
       version: gaviaProjectInfo.publishedVersion,
       date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
       id: "project-release-" + gaviaProjectInfo.publishedVersion.replace(/\./g, "-"),
@@ -65,26 +65,27 @@ describe("public changelog rendering", () => {
   });
 
   it("distinguishes the prepared source version from dated published releases", () => {
-    const source = readFileSync(fileURLToPath(new NodeURL("../../../CHANGELOG.md", import.meta.url)), "utf8");
+    const source = "# Changelog\n\n## Unreleased\n\n## 1.0.0-rc.1 — prepared\n\n### Changed\n\n- Candidate notes.\n\n## 0.12.1 — 2026-10-12\n\n- Published stable notes.";
     const document = parseChangelog(source, docsBase);
-    const manifest = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../../../packages/ui-kit/package.json", import.meta.url)), "utf8")) as { version: string };
-    expect(gaviaProjectInfo.version).toBe(manifest.version);
-    const preparedTitle = `${manifest.version} — prepared`;
-    const prepared = document.sections.filter((section) => section.title === preparedTitle);
-    const isPrepared = manifest.version !== gaviaProjectInfo.publishedVersion;
-    const preparedState = prepared.map((section) => ({
-      position: document.sections.indexOf(section),
-      version: section.version,
-      date: section.date,
-      hasBlocks: section.blocks.length > 0
-    }));
-    expect(preparedState).toEqual(isPrepared ? [{ position: 1, version: undefined, date: undefined, hasBlocks: true }] : []);
-    expect(document.sections.some((section) => section.version === manifest.version)).toBe(!isPrepared);
-    const releasedState = isPrepared ? [] : [document.sections.find((section) => section.version)];
-    const publishedRelease = expect.objectContaining({
-      version: manifest.version, date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/)
+    expect(document.sections[1]).toMatchObject({
+      title: "1.0.0-rc.1 — prepared", unreleased: false
     });
-    expect(releasedState).toEqual(isPrepared ? [] : [publishedRelease]);
+    expect(document.sections[1]!.version).toBeUndefined();
+    expect(document.sections[1]!.date).toBeUndefined();
+    expect(document.sections[1]!.blocks).not.toHaveLength(0);
+    expect(document.sections[2]).toMatchObject({ version: "0.12.1", date: "2026-10-12" });
+  });
+
+  it.each(["1.0.0-alpha.1", "1.0.0-beta.1", "1.0.0-rc.1"])("renders a dated %s independently of the stable npm version", (version) => {
+    const document = parseChangelog(`# Changelog\n\n## Unreleased\n\n## ${version} — 2026-10-24\n\n- Prerelease notes.\n\n## 0.12.1 — 2026-10-12\n\n- Stable notes.`, docsBase);
+    expect(document.sections[1]).toMatchObject({
+      version, date: "2026-10-24", unreleased: false,
+      id: `project-release-${version.replace(/\./g, "-")}`,
+      blocks: [{ kind: "list", items: [[{ kind: "text", value: "Prerelease notes." }]] }]
+    });
+    expect(document.sections[2]).toMatchObject({
+      version: "0.12.1", date: "2026-10-12", id: "project-release-0-12-1"
+    });
   });
 
   it("keeps exact inline text and code while resolving documentation links canonically", () => {
