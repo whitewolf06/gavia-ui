@@ -12,7 +12,7 @@ const { t } = usePlaygroundI18n();
 import type { AsyncComponentLoader, Component } from "vue";
 import { WlButton, WlIcon, WlIconButton, WlInput, WlSegmented, type WlThemeName } from "gavia-ui";
 import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { getLocalizedManifest } from "./documentation/manifest";
+import { getLocalizedManifest, isComponentNewInRelease } from "./documentation/manifest";
 const wlManifest = getLocalizedManifest();
 import CodePanel from "./design-system/CodePanel.vue";
 import PlaygroundPageLoading from "./PlaygroundPageLoading.vue";
@@ -350,14 +350,14 @@ onBeforeUnmount(() => {
                         type="button"
                         class="docs-component-link"
                         :aria-label="item.name"
-                        :aria-describedby="item.introducedIn === gaviaProjectInfo.version
+                        :aria-describedby="isComponentNewInRelease(item.introducedIn, gaviaProjectInfo.version)
                           ? 'docs-catalog-version-' + item.name : undefined"
                         :aria-current="component === item.name ? 'page' : undefined"
                         @click="navigateComponent(item.name)"
                       >
                         <span class="docs-component-name">{{ item.name }}</span>
                         <span
-                          v-if="item.introducedIn === gaviaProjectInfo.version"
+                          v-if="isComponentNewInRelease(item.introducedIn, gaviaProjectInfo.version)"
                           :id="'docs-catalog-version-' + item.name"
                           class="docs-component-version"
                           :title="t('documentation.strings.s0841') + item.introducedIn"

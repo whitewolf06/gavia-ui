@@ -46,6 +46,7 @@ Follow the [1.0 upgrade guide](docs/migration.md#migration-1-0).
 ### Fixed
 
 - Translate the complete Playground changelog into Russian, including new releases, and check translation coverage.
+- Keep New component badges when promoting the same numeric release from a prerelease to stable.
 - Correct listbox keyboard navigation, active-option scrolling and duplicate click selection.
 - Give Tabs unique tab/panel relationships and support disabled, vertical and retained/lazy panels.
 - Restore anchored-panel positioning and focus after rendering, rebinding and reopening.

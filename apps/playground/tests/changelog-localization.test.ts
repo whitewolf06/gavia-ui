@@ -1,7 +1,7 @@
 import { afterAll, describe, expect, it } from "vitest";
+import type { ChangelogDocument, ChangelogInline } from "../src/project/changelog";
 import source from "../../../CHANGELOG.md?raw";
 import { ensurePlaygroundMessages, setPlaygroundLocale } from "../src/i18n";
-import type { ChangelogDocument, ChangelogInline } from "../src/project/changelog";
 import { parseChangelog } from "../src/project/changelog";
 import { localizeChangelogMarkdown } from "../src/project/changelog-localization";
 
@@ -28,7 +28,7 @@ describe("localized public changelog", () => {
     expect(russian.sections[0]!.title).toBe("Не выпущено");
     expect(prose(russian).length).toBe(prose(english).length);
     for (const value of prose(russian)) {
-      expect(value, "Missing Russian changelog translation: " + value).toMatch(/[А-Яа-яЁё]/);
+      expect(value, "Missing Russian changelog translation: " + value).toMatch(/\p{Script=Cyrillic}/u);
     }
     const stable = russian.sections.find((section) => section.version === "1.0.0")!;
     expect(prose({ introduction: [], sections: [stable] }).join(" ")).toContain("вся история обновлений в Playground теперь переведена на русский");

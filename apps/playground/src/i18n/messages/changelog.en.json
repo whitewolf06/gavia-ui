@@ -211,5 +211,6 @@
   "changelog.release10.text37": "Manual NVDA/Firefox, macOS VoiceOver/Safari and iOS VoiceOver checks remain unperformed. On 2026-10-25 the owner accepted this known limitation for stable 1.0 and chose immediate publication without the planned RC feedback period; automated checks do not establish manual accessibility acceptance ([protocol](docs/maintainers/manual-accessibility.md)).",
   "changelog.release10.text38": "An opt-in release candidate for npm `next`; stable `latest` remains unchanged. Follow the [1.0 upgrade guide](docs/migration.md#migration-1-0-rc-1).",
   "changelog.release10.text39": "Remove the 0.x PT/status/dismissal aliases in the major candidate; use the [canonical-name migration](docs/migration.md#migration-1-0-public-api).",
-  "changelog.release10.text40": "Manual NVDA/Firefox, macOS VoiceOver/Safari and iOS VoiceOver checks remain unperformed. The owner accepted this gap for the RC on 2026-10-24; automated browser and Axe checks do not establish manual accessibility acceptance ([protocol](docs/maintainers/manual-accessibility.md))."
+  "changelog.release10.text40": "Manual NVDA/Firefox, macOS VoiceOver/Safari and iOS VoiceOver checks remain unperformed. The owner accepted this gap for the RC on 2026-10-24; automated browser and Axe checks do not establish manual accessibility acceptance ([protocol](docs/maintainers/manual-accessibility.md)).",
+  "changelog.release10.releaseBadges": "Keep New component badges when promoting the same numeric release from a prerelease to stable."
 }

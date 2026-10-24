@@ -1,6 +1,11 @@
 import { type WlComponentManifest, wlManifest } from "gavia-ui";
 import { translateDocumentationText } from "./localize";
 
+/** RC features remain new when the same numeric release becomes stable. */
+export function isComponentNewInRelease(introducedIn: string, currentVersion: string): boolean {
+  return introducedIn.split(/[+-]/, 1)[0] === currentVersion.split(/[+-]/, 1)[0];
+}
+
 const entries = new WeakMap<object, object>();
 function localizedEntry<T extends object>(entry: T): T {
   const cached = entries.get(entry);
