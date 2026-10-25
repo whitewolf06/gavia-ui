@@ -16,6 +16,8 @@ stable limitation. See the [dated RFC decision](../rfc/0001-public-api-1.0.md#ea
 Root/library source versions are now 1.0.0. This RC record is historical;
 stable gates and the published stable archive require their own CI/registry
 evidence and must not reuse RC hashes as stable results.
+Stable 1.0.0 publication and its verified archive are now recorded in the
+[release ledger](release-history.md#release-100).
 
 ## Historical RC preparation
 

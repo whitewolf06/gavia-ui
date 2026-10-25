@@ -14,6 +14,36 @@ Creator and maintainer: [Dmitry Gorbach](https://github.com/whitewolf06).
 [GitHub Pages playground](https://whitewolf06.github.io/gavia-ui/) ·
 [npm package](https://www.npmjs.com/package/gavia-ui). First npm release: 0.7.0.
 
+## Release 1.0.0
+
+[gavia-ui@1.0.0](https://www.npmjs.com/package/gavia-ui/v/1.0.0) was published
+to npm **`latest`** on 2026-10-25 from tag `v1.0.0`, source
+`898efe63ef1472176a64c566902c6f9434a95c98`.
+[Release passed all twelve jobs](https://github.com/whitewolf06/gavia-ui/actions/runs/40144779800):
+the ten CI gates, exact-archive browser consumer/publication and versioned
+Playground attachments. The same source passed
+[main CI](https://github.com/whitewolf06/gavia-ui/actions/runs/40144217290) and
+[Pages deployment](https://github.com/whitewolf06/gavia-ui/actions/runs/40144746676).
+
+Registry read-back confirmed `latest = 1.0.0`, `next = 1.0.0-rc.1`, 191 files,
+1,189,009 packed bytes and 2,683,134 unpacked bytes. The downloaded archive's
+SHA-512 matches both npm metadata and the exact archive checked by Release.
+SHA-256: `ca79468b61aeb98ae913c462fec7a24a9a8708f7e011ee679a56dd3d898c2cd9`.
+The [npm SLSA attestation](https://registry.npmjs.org/-/npm/v1/attestations/gavia-ui@1.0.0)
+matches that archive, source SHA, tag, trusted workflow and Release run.
+Vue `^3.4.0` remains the only peer, with no required runtime dependencies.
+
+The [GitHub Release](https://github.com/whitewolf06/gavia-ui/releases/tag/v1.0.0)
+is stable and includes the portable Playground, its SHA-256 file and licensed
+desktop TTF archive. Public Russian changelog HTML was read back with translated
+1.0 notes and headings. The library public API is unchanged from rc.1; 0.x
+consumers must follow the [1.0 migration](../migration.md#migration-1-0).
+
+The owner accepted immediate stable delivery and unperformed manual NVDA/VoiceOver
+checks as a known limitation on 2026-10-25. No manual accessibility pass is claimed;
+the [protocol](manual-accessibility.md) remains Pending. This dated decision ends
+the planned RC feedback period early. The published RC tag remains unchanged.
+
 ## Release 0.12.0
 
 [gavia-ui@0.12.0](https://www.npmjs.com/package/gavia-ui/v/0.12.0) was published
