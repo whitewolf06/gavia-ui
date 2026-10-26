@@ -1,0 +1,7 @@
+[project]
+id = "bed96d40-129f-4960-af2c-88ead5ec80be"
+key = "GAVIAUI"
+name = "Gavia-ui"
+
+[bootstrap]
+format_version = 1
