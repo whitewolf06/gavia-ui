@@ -18,16 +18,16 @@ tokens or route identifiers. The Playground reads the English root changelog
 and applies a Russian prose overlay when RU is selected; release versions,
 dates, links and code remain shared.
 
-The 1.0 library source uses English fallback text. Russian applications explicitly
+Gavia UI 1.0 uses English fallback text. Russian applications explicitly
 configure `wlLocaleRu` through `WlConfig`. The Playground's language selection
 continues to configure either preset as well as site copy; copying an SFC does
-not copy that host configuration. Source version 0.12.1 remains unchanged until
-a separate release; the 0.x Russian default is historical release behavior.
+not copy that host configuration. The 0.x Russian default is historical behavior;
+the published 1.0 migration requires explicit Russian configuration.
 See [localization](../guide/localization.md) for preset availability and consumer setup.
 
 ## Quality and compatibility
 
-The `?view=docs&section=quality` section shows unit coverage, supported
+The `/docs/quality/` section shows unit coverage, supported
 environments, SSR and version rules. It uses the shared documentation heading,
 breadcrumbs and menu. The home page summarises the same measurement; footer
 links and search lead to the detailed report.
@@ -38,10 +38,11 @@ a 0–100% scale, a text value and an accessible label. Colours and radii come
 from the theme; bar entrance motion respects `prefers-reduced-motion`.
 
 The data source is `apps/playground/src/project/quality-report.generated.json`.
-Run `pnpm test:coverage`, then `pnpm quality:update`: counts and percentages
-come from Vitest/V8 JSON reports, and the date comes from the test start time.
-The README SVG badge uses the same data. Metrics describe unit coverage of
-source code; browser, visual and Axe checks are listed separately. A local
+Counts and percentages come from Vitest/V8 JSON reports through the existing
+quality generator; the date is the test start time. Commands and thresholds are
+maintained in [quality maintenance](quality.md#coverage-and-size). The README SVG
+badge uses the same data. Metrics describe unit coverage of source code;
+browser, visual and Axe checks are listed separately. A local
 report from a modified checkout is labelled as a working build rather than a
 published release.
 
@@ -52,18 +53,20 @@ repeated just to display the report.
 
 ## Pages and routes
 
-Home (`/`) contains the installation command, current version, sections and
-author information. Docs (`?view=docs`) combines foundations, appearance and
-guides for every public component. The design system (`?view=system`) contains
-tokens, contracts and composite scenarios. Changelog (`?view=changelog`) reads
-the root CHANGELOG.md; the previous `?view=project` route remains compatible.
+Hosted Pages uses canonical paths below its configured base (`/gavia-ui/`):
+home `/`, docs `/docs/`, design system `/system/`, changelog `/changelog/`,
+theme builder `/theme-builder/` and font `/font/`. Russian routes add `/ru/`.
+Home owns installation/version metadata; docs combines foundations and public
+component guides; system shows tokens/contracts/composite examples; changelog
+reads the root CHANGELOG.md. Portable builds retain query navigation.
 
-Theme builder (`?view=theme-builder`) lets you create a palette and check it on
+Theme builder lets you create a palette and check it on
 live components. The draft stays in the current browser. Choosing a base resets
 colours; changing the header theme changes page appearance while preserving
 the example palette. See [theme builder](../guide/theme-builder.md).
 
-Docs sections:
+Docs accepts `/docs/<section>/` and `/docs/components/<WlName>/`. Legacy query
+selectors map to the same guides:
 
 - `section=typography` — text roles, hierarchy and structure;
 - `section=layout` — containers, columns, spacing, adaptation and layers;
@@ -72,14 +75,19 @@ Docs sections:
 - `section=icons` — full SVG catalogue, sizes and accessibility;
 - `section=colors` — semantic colours, themes and alpha;
 - `section=quality` — coverage, supported environments and compatibility;
+- `section=why`, `theming`, `recipes`, `accessibility`, `how-it-is-built` —
+  adoption, configuration, application examples, accessibility and architecture;
 - `component=WlButton` and other manifest names — component guides.
 
-The separate Components page was removed after all 53 guides moved to Docs.
-The old `?view=components` route opens Docs; `#component-WlTimePicker` and other
+The separate Components page was merged into Docs. Old `?view=docs`,
+`?view=system`, `?view=changelog`, `?view=project`, `?view=theme-builder`,
+`?view=font` and `?view=components` links remain compatible. On the old Components
+route, `#component-WlTimePicker` and other
 component names open their respective guide. `#pg-colors` and `#pg-icons` map
-to the appearance sections. Query routes preserve the GitHub Pages subpath
-`/gavia-ui/` and require no Vue Router. The public component directory in
-`packages/ui-kit` remains part of the library.
+to the appearance sections. `router.ts` uses Vue Router history only for an
+absolute hosted base; portable `--base=./` archives keep query links without
+installing that router. `navigation.ts` owns path/query normalization in both
+modes. Vue Router belongs only to the Playground, never the library runtime.
 
 ## Playground theme
 
@@ -89,7 +97,7 @@ Dark and Newspaper. Its list and labels come from the public `wlDesignThemes`
 catalogue.
 
 The `theme` parameter preserves direct links. For example,
-`/gavia-ui/?view=docs&section=colors&theme=white` loads Classic;
+`/gavia-ui/docs/colors/?theme=white` loads Classic;
 `theme=graphite` loads Classic Dark, and `theme=gavia-dark` loads Gavia Dark.
 The displayed Classic / Classic Dark names do not rename legacy query or CSS
 identifiers. Selecting a theme updates this parameter while preserving the
@@ -111,9 +119,10 @@ Sans. See the [theme guide](../guide/theming.md). The Docs installation example 
 Classic (`white`) and the confirmed npm version. Gavia Dark is included in
 0.10.0; see [catalogue compatibility](../migration.md#migration-themes).
 
-Home uses two preloaded images of the same lake panorama with a loon: daytime
+Home uses two responsive versions of the same lake panorama with a loon: daytime
 for Gavia, Classic and Newspaper; nighttime for Gavia Dark and Classic Dark.
-Both layers remain in the DOM. When the View Transitions API is available,
+The night layer is mounted on the first dark-theme visit and stays cached
+afterward. When the View Transitions API is available,
 theme switching creates one transition for the whole page. Otherwise colour
 tokens apply immediately and the hero image crossfades. The night layer appears
 after its image loads. `prefers-reduced-motion: reduce` disables the page
@@ -171,7 +180,11 @@ stay compact while retaining visible focus and a touch hit area.
 ## Module boundaries
 
 - `HomePage.vue` — home and installation from package metadata.
-- `App.vue` — History API, theme, language, search, shared header and service containers.
+- `App.vue` — guarded navigation, theme, language, search, shared header and service containers.
+- `router.ts` / `navigation.ts` — hosted history router, canonical paths and
+  compatible portable/legacy query navigation.
+- `page-loaders.ts` / `PlaygroundPageLoading.vue` — shared route imports,
+  loading feedback and retry states; see [loading maintenance](playground-performance.md).
 - `DocsPage.vue` — right sidebar, categories, guide selection and anchors. The
   component catalogue remains a plain list without search or a count.
 - `documentation/catalog.ts` — manifest groups and foundation metadata.
@@ -179,11 +192,11 @@ stay compact while retaining visible focus and a touch hit area.
   `DocumentationTabs.vue` — accessible tabs; `DocumentationContract.vue` — API.
 - `documentation/components/registry.ts` — lazy live SFCs and their raw sources;
   `inputs.ts`/`showcase.ts` — titles, descriptions and accessibility rules.
-- `documentation/components/inputs` and `showcase` — 52 extended SFCs;
+- `documentation/components/inputs` and `showcase` — extended live SFCs;
   `documentation/button` — five detailed WlButton scenarios.
 - `documentation/components/pt-sections.ts` — actual pt sections. Update the
   relevant entry and documentation when DOM/`useWlPt` changes.
-- `design-system/examples` — 53 canonical controlled examples. Explorer and
+- `design-system/examples` — canonical controlled examples. Explorer and
   Docs share them; library implementations are not copied.
 - `documentation/foundations` — foundation pages and 18 working SFCs. Layout
   explains containers, proportions, nesting and stacking contexts. See the
@@ -324,4 +337,4 @@ initial HTML fallback; a portable archive keeps query links. Check the exact
 production output and public URL separately before recording either operation
 or deployment as successful.
 
-See [Playground architecture](../maintainers/playground.md) and [hosting](../maintainers/hosting.md).
+See [loading maintenance](playground-performance.md) and [hosting](hosting.md).

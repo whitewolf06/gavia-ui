@@ -29,7 +29,7 @@ included below; historical upgrade sections remain available at their anchors.
 <a id="migration-1-0"></a>
 ## Upgrading from 0.12.1 or the RC to 1.0.0
 
-Stable 1.0 targets npm **`latest`**. After registry publication, install the
+Gavia UI **1.0.0** was published to npm **`latest`** on 2026-10-25. Install the
 exact version with:
 
 ```sh
@@ -37,11 +37,25 @@ pnpm add gavia-ui@1.0.0 vue
 ```
 
 From **1.0.0-rc.1**, the library public API is unchanged. The Playground also
-includes complete Russian changelog translations. From **0.12.1**, apply the
-[upgrade checklist below](#migration-1-0-rc-1), especially English fallback,
-canonical PT and `tone` names, `dismissible`, Tooltip exports and accessible
-names for icon actions. Add a stable Table `rowKey` where rows hold state or
-selection, and configure the application router adapter for object link targets.
+includes complete Russian changelog translations. From **0.12.1**, upgrade
+application code together:
+
+1. Configure `WlConfig` with `wlLocaleRu` if the app relies on Russian built-in
+   text. Follow [English fallback and text overrides](#migration-1-0-localization).
+2. Replace legacy PT component/section names, status variants and `dismissable`;
+   move shared IconButton overrides to `pt.iconButton`. Follow the complete
+   [canonical-name mapping](#migration-1-0-public-api).
+3. Import the component as `WlTooltip` and register `WlTooltipDirective` as the
+   directive. Supply accessible names for icon-prop actions.
+4. Keep CSS imports, `Wl*`, `wl-*`, `--wl-*` and the five theme identifiers.
+   The existing font CSS enables the 100–700 variable Gavia Sans files;
+   accepted static files remain the conditional fallback.
+5. Add `rowKey` for stateful or selectable Table rows; install a `RouterLink`
+   adapter with `WlConfig.linkComponent` when `WlLink.to` uses location objects.
+6. Review the [component and service migrations](#component-and-service-migrations)
+   and public utility/composable imports. Keep requests and business state in
+   the application.
+
 Vue `^3.4.0`, TypeScript 5.4+, CSS paths and public namespaces are preserved.
 
 The owner chose immediate stable delivery on 2026-10-25, ending the planned RC
@@ -54,46 +68,23 @@ customizations, keyboard/focus behavior and SSR hydration where used.
 <a id="migration-1-0-rc-1"></a>
 ## Upgrading from 0.12.1 to 1.0.0-rc.1
 
-This major candidate changes locale defaults and several public names.
-It is intended for npm **`next`** after publication. Stable consumers keep the
-ordinary package name. The original two-to-four-week feedback policy was
+Historical candidate: published to npm **`next`** on 2026-10-24. It introduced
+the same locale and public-name changes listed in the [stable checklist](#migration-1-0).
+The original two-to-four-week feedback policy was
 superseded by the [2026-10-25 stable decision](rfc/0001-public-api-1.0.md#early-stable-acceptance--2026-10-25).
 
-After publication, opt into this exact candidate in a consumer application:
+Use this exact version only when reproducing an RC issue:
 
 ```sh
 pnpm add gavia-ui@1.0.0-rc.1 vue
 ```
 
-`gavia-ui@next` follows the candidate channel after publication. Keep the exact
-version above when reproducing an RC issue. Consumers staying on stable continue
-using the ordinary package name. Vue `^3.4.0` and TypeScript 5.4+ remain supported.
-
-Upgrade application code together:
-
-1. Configure `WlConfig` with `wlLocaleRu` if the app relies on Russian built-in
-   text. Follow [English fallback and text overrides](#migration-1-0-localization).
-2. Replace legacy PT component/section names, status variants and `dismissable`;
-   move shared IconButton overrides to `pt.iconButton`. Follow the complete
-   [canonical-name mapping](#migration-1-0-public-api).
-3. Import the component as `WlTooltip` and register `WlTooltipDirective` as the
-   directive. Supply accessible names for icon-prop actions.
-4. Keep CSS imports, `Wl*`, `wl-*`, `--wl-*` and the five theme identifiers.
-   The existing font CSS now enables the 100–700 variable Gavia Sans files;
-   accepted static files remain the conditional fallback.
-5. Add `rowKey` for stateful or selectable Table rows; install a `RouterLink`
-   adapter with `WlConfig.linkComponent` when `WlLink.to` uses location objects.
-6. Review the [component and service migrations](#component-and-service-migrations)
-   and public utility/composable imports. Keep requests and business state in
-   the application.
-
-Before adopting a candidate, check your application's strict types, translated
-labels, PT customizations, keyboard/focus behavior and SSR hydration where used.
+`gavia-ui@next` follows the candidate channel and does not select stable 1.0.0.
+Use the stable installation above for a new application or regular upgrade.
+Vue `^3.4.0` and TypeScript 5.4+ remain supported on both versions.
 
 <a id="migration-1-0-localization"></a>
 ## 1.0 localization: English fallback
-
-Without explicit locale configuration, the 1.0 line uses English built-in text.
 
 Without `WlConfig`, or with an omitted locale, built-in control labels and calendar
 names now use `wlLocaleEn`. Existing applications that rely on implicit Russian

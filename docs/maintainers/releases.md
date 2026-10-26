@@ -1,10 +1,13 @@
 # Release procedure
 
 Release history is in [GitHub Releases](https://github.com/whitewolf06/gavia-ui/releases)
-and the preserved [release evidence ledger](release-history.md). Historical
+and the preserved [release evidence ledger](../archive/release-history.md). Historical
 counts, hashes and deployment statements are not current verification.
 
-For 1.0 preparation, use the [RC checklist](release-candidate.md),
+Stable 1.0.0 was published on 2026-10-25. Its
+[release record](../archive/release-history.md#release-100) and
+[RC record](../archive/release-candidate-1.0.0-rc.1.md) are historical evidence.
+For future delivery, use the procedure below, the
 [manual accessibility protocol](manual-accessibility.md) and
 [unsent communication drafts](release-announcements.md).
 
@@ -20,20 +23,15 @@ For 1.0 preparation, use the [RC checklist](release-candidate.md),
    `prepack` during `pnpm run pack`.
 
 For a new prerelease cycle, use `pnpm changeset pre enter rc` on the agreed branch
-before preparing versions. The current **1.0.0** source has already exited RC
-mode and consumed its changesets; do not re-enter RC or run version preparation
-merely to build/pack this release.
+before preparing versions. Version preparation is for the approved next release;
+do not re-enter RC or consume changesets merely to rebuild an existing version.
 Alpha/beta/rc.N archives use npm `next`; stable releases use
 `latest`. Exit prerelease mode with `pnpm changeset pre exit` and prepare/check
 the stable version separately. Do not use `changeset publish`.
 
-The owner-approved [1.0 RC transition](../rfc/0001-public-api-1.0.md#accepted-rc-transition--2026-10-22)
-replaces the originally planned separate 0.x warning release. The RC was
-published on 2026-10-24. The owner approved
-[early stable delivery on 2026-10-25](../rfc/0001-public-api-1.0.md#early-stable-acceptance--2026-10-25),
-superseding the feedback window and accepting unperformed manual accessibility
-as a known limitation. Stable delivery is authorized through the existing
-GitHub workflow; all heavy checks stay on GitHub.
+The [1.0 RFC](../rfc/0001-public-api-1.0.md) records the specific RC transition,
+early stable decision and accepted manual-accessibility limitation. These dated
+decisions do not authorize a future release or provide missing manual results.
 
 ## Verify and authorize delivery
 
@@ -64,6 +62,10 @@ records SHA256/provenance and attaches it to the GitHub Release. It also prepare
 a verified TTF font ZIP with font notices. Those attachments do not deploy Pages.
 Local preparation uses `pnpm release:preview` and
 `node scripts/archive-fonts.mjs --output <explicit-path.zip>` only when authorized.
+
+Record the new stable compatibility snapshot from the verified published archive
+as a separate, reviewed follow-up; see [quality maintenance](quality.md#versions-and-public-contract).
+Never overwrite an older fixture to make a new release pass.
 
 Pages has its own [same-revision deployment policy](ci.md#pages-provenance).
 Confirm the public URL separately. npm notes link to immutable tag documentation;

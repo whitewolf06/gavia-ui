@@ -12,7 +12,8 @@ did not supply manual results or stable-release acceptance. On 2026-10-25, after
 reviewing the remaining stable requirements, the owner chose immediate stable
 delivery and accepted this continuing gap for 1.0.0 as a known limitation.
 All execution cells remain Pending. Successful automated CI does not fill these result cells.
-The owner's separate font appearance acceptance is retained in the RC record.
+The owner's separate font appearance acceptance is retained in the
+[font acceptance record](../archive/font-variation-acceptance-1.0.md).
 
 Use this protocol against the exact release candidate and its production
 Playground or installed consumer. Record the source SHA, installed archive hash

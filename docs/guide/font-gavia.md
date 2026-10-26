@@ -35,7 +35,8 @@ Download the ZIP from the font page for standalone use.
 
 ## Examples and standalone use
 
-The playground Font section (`?view=font`) includes headings, paragraphs,
+The playground [Font page](https://whitewolf06.github.io/gavia-ui/font/)
+(`?view=font` remains compatible) includes headings, paragraphs,
 numerals, every weight, Russian/English specimens and custom text. Its weight
 slider adjusts 100–700 in steps of 1, updating the sample and alphabets as you
 drag. The number beside it shows the current weight. Six presets remain
@@ -137,4 +138,6 @@ body {
 That face aligns line-box metrics; its 100% size adjustment does not promise
 matching local-font x-height or advance widths. The owner's visual acceptance
 does not establish measured CLS or new platform-specific loading/transfer results.
-See the [maintainer implementation record](../maintainers/font-variation-audit.md).
+See [font maintenance](../maintainers/fonts.md) for the Firefox complete-family
+workaround and browser acceptance procedure; dated observations remain in the
+[acceptance archive](../archive/font-variation-acceptance-1.0.md).

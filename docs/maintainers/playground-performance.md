@@ -1,8 +1,25 @@
 # Playground loading and asset maintenance
 
 The current source separates site text, copyable SFC source and artwork from the
-initial shell. Bundle and transfer budgets need a separately authorized
-production build and browser measurement; review figures are not current results.
+initial shell. Procedures and budgets are in [quality maintenance](quality.md#performance);
+the [2026-10-24 snapshot](../archive/quality-through-1.0.md#measured-rc-cleanup-snapshot)
+records the measured RC cleanup. New changes need their own authorized production
+measurement; earlier review figures are not current results.
+
+## Page loading
+
+`page-loaders.ts` shares an in-flight/successful import between preloading and
+Vue async components. Failed imports are removed from the cache so a retry can
+start a new request. Startup begins only the requested page and locale alongside bootstrap;
+the static startup shell remains until the selected view is ready.
+
+Navigation prepares route code and locale together while retaining the previous
+complete view. A status indicator appears after 150 ms, so cached navigation
+does not flash a loader. Revision guards ignore obsolete results after another
+navigation or unmount. Nested lazy documentation uses `PlaygroundPageLoading.vue`
+for consistent pending/error content and an explicit retry/reload action.
+Keep feedback named, honor reduced motion and retain anchor restoration after
+the actual page becomes ready.
 
 ## Locale resources
 
@@ -69,9 +86,14 @@ sizes, not measured loading or visual improvements.
 
 Existing manifest paths record the original `docs/brand` source locations;
 the checker maps those exact names to the archive without relaxing hash checks.
-This relocation has not been checked or regenerated in the no-runs iteration.
+The dated [relocation report](../archive/brand-source-separation.md) preserves
+the preparation state. Later 1.0 CI/publication evidence is in the
+[release record](../archive/release-history.md#release-100); no regeneration is
+needed merely to edit these instructions.
 
 Inspect Windows expected/actual/diff before accepting screenshot changes.
 Production locale/preferences/navigation, five-theme desktop/mobile rendering,
-chunk sizes and the 80 KB gzip / 400 KB transfer targets remain pending until
-the explicit production/browser checks run.
+chunk sizes and cold-loading budgets need evidence for the exact revision under
+review. The old 80 KB gzip / 400 KB transfer proposals are not the measured
+release budgets; use the current [coverage/size](quality.md#coverage-and-size)
+and [page-transfer](quality.md#performance) definitions.

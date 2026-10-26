@@ -11,7 +11,7 @@ and cutouts in the mark. Prompts, authored PNGs and historical variants are
 preserved in the version-controlled [source archive](../../archives/brand/README.md).
 
 This directory contains final SVG/WebP assets and their documentation.
-The [archive procedure](../maintainers/brand-archive.md) records the relocation,
+The [relocation record](../archive/brand-source-separation.md) records the move,
 original hashes and source recovery. Original artwork has not been re-encoded.
 
 When changing the mark, preserve the G silhouette, bill and transparent eye.

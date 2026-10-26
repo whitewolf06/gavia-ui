@@ -95,7 +95,7 @@ Input/PasswordInput/Textarea support string `.trim`; CommandPalette query also s
 
 `WlLocaleInput` accepts a partial locale with readonly names. Known labels are string; application extensions remain unknown. `normalizeWlLocale()` ignores undefined and invalid known values, checks seven weekday names, twelve months and firstDayOfWeek 0–6. `WlResolvedLocale` retains the previous required calendar fields so existing custom locale types remain valid; runtime normalization supplies every built-in control label.
 
-The 1.0 source uses English for omitted configuration and missing locale fields.
+Gavia UI 1.0 uses English for omitted configuration and missing locale fields.
 Install `WlConfig` with `locale: wlLocaleRu` to retain Russian; spread the preset
 before custom overrides. `localeCode` alone does not translate missing labels.
 Text props are optional `string` inputs: omitted/`undefined` reads the current
@@ -103,8 +103,7 @@ locale, an explicit string (including `""`) overrides it. Components no longer
 declare Russian strings as prop defaults, so an omitted prop read through a ref
 can be `undefined`. Use the locale/configuration contract for defaults rather
 than reading a rendered label from a component prop. See the
-[1.0 locale migration](../migration.md#migration-1-0-localization). This change is
-prepared in `1.0.0-rc.1`; candidate versioning does not establish publication.
+[1.0 locale migration](../migration.md#migration-1-0-localization).
 
 `useWlToast({ group: "editor" })` targets the matching WlToast; clear() clears only that group. Confirm accepts group in options; closeGroup(group) closes only its request. Existing close() remains global. Drawer/Popover/Menu/Toast consumer class/style/data/ARIA are explicitly forwarded to their existing DOM root inside Teleport. FilterBar uses the shared SSR-compatible id generator.
 
@@ -116,7 +115,11 @@ Pagination normalizes page numbers/count to integers; siblings is capped at 100.
 
 ## Compatibility and migration
 
-Narrowing unknown models, callback labels handling free strings, explicit virtual columns, key domains, modifiers and callable generics change the TypeScript contract. They require a separate minor release in 0.x and a Breaking changes note; they cannot be included in a patch as “types only”.
+Narrowing models, changing callback domains or virtual columns, and changing key,
+modifier or generic-call signatures can break the TypeScript contract. After
+1.0, incompatible changes require a major version and migration; they cannot be
+included in a patch as “types only”. Historical 0.x breaking changes required a
+minor release and a Breaking changes notice.
 
 Declarations use built-in `NoInfer` and require TypeScript 5.4 or newer
 ([official release notes](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-4.html#the-noinfer-utility-type)).
