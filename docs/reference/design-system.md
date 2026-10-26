@@ -1,11 +1,11 @@
 # Gavia UI design system
 
-Gavia UI includes 53 Vue components, SVG icons, design tokens and five themes.
+Gavia UI includes Vue components, SVG icons, design tokens and five themes.
 This guide describes shared interface rules. The current version appears
-in the playground header. Docs (`?view=docs`) covers typography, layout and grid,
+in the playground header. [Docs](https://whitewolf06.github.io/gavia-ui/docs/) covers typography, layout and grid,
 responsiveness, content and states, component catalog, icons, colors and API.
-Design-system examples are available at `?view=system`.
-Previous `?view=components` opens documentation.
+Design-system examples are available at `/system/`. Previous `?view=docs`,
+`?view=system` and `?view=components` links remain compatible.
 
 ## Principles
 
@@ -204,7 +204,7 @@ manifest prop. Do not add artificial states to decorative components.
 
 `pt` merges in defaults → WlConfig → local prop order. Slots,
 props, CSS tokens and `pt` preserve the SOLID boundaries in [architecture.md](../maintainers/architecture.md).
-The playground manifest shows the exact contract for each of 53 components.
+The playground's generated manifest shows the exact contract for each public component.
 
 ## Patterns
 

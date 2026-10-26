@@ -46,10 +46,10 @@ The public source types and manifest define each component's supported generic
 modes, attributes, slots and events. Archive declarations are checked separately
 with Node16/NodeNext resolution and strict consumer compilation.
 
-Type changes that narrow the consumer contract require a migration and the
-appropriate release version. The [consolidated migration guide](../migration.md)
-records historical 0.11 decisions; its documented compatibility allowance is
-scoped to that baseline and version. New changes do not inherit that allowance.
+Type changes that narrow the consumer contract require a migration and, after
+1.0, a major release. The [consolidated migration guide](../migration.md) records
+the historical 0.11 and 1.0 transitions. Compatibility allowances apply only to
+their reviewed baseline and version; later changes do not inherit them.
 
 ### Vue compiler internals and upgrades
 
@@ -61,19 +61,16 @@ without a corresponding runtime breaking change. The type-only overloads and
 `CallbackInference` parameters also preserve consumer inference; do not remove
 them as unused code without checking their template and TSX behavior.
 
-The prepared toolchain pins both projects to `vue-tsc`/`@vue/language-core`
-3.3.13 and TypeScript 6.0.3. The preceding checked compiler was 2.2.12 with
-TypeScript 5.8.3; those results do not validate the new pins. Source and lockfile
-are updated; dependencies have not been installed and checks are deferred.
-The upstream 3.3.13 code generator still emits `__ctx` with slots/emit/expose.
-Consumer compilation must nevertheless confirm the exact declarations.
+The released 1.0 toolchain and its installed-archive consumers were verified by
+the [Release workflow](../archive/release-history.md#release-100). Exact tooling
+pins belong in the workspace package manifests and `pnpm-lock.yaml`, rather than
+a second version list here. The consumer minimum remains TypeScript 5.4;
+development supports Node 22.13+ on the 22 line and Node 24.
 
-TypeScript 7.0 has no stable programmatic API, which this generator, Vue tools,
-ESLint and API extraction need. Keep the compatible JavaScript compiler on 6.x
-instead of adding a second compiler or weakening types. The consumer minimum
-remains TypeScript 5.4. See [Microsoft's transition guidance](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/).
-Keep package specifiers and lockfile importers in sync. Treat future compiler
-upgrades as a separate change from component behavior or formatting:
+Keep compiler packages, required peers and lockfile importers in sync. An
+upstream code generator still emitting `__ctx` does not prove our declaration
+inference is preserved. Treat future compiler upgrades as a separate change
+from component behavior or formatting:
 
 1. Review Vue language-tools release notes and compare the generated generic SFC
    signatures, especially `__ctx`, slots, emits, expose and optional arguments.
@@ -88,14 +85,10 @@ upgrades as a separate change from component behavior or formatting:
    accepting the pin. Revisit this internal-field dependency when Vue exposes a
    supported generic-component contract that preserves the same inference.
 
-The other prepared groups are Vite 8.3.4/plugin-vue 6.0.10/Vitest and V8 coverage
-5.0.5/vite-plugin-dts 5.1.2, jsdom 29.1.1 and Changesets 3.0.3. Declaration
-generation explicitly selects the Vue processor and installs its language-core
-peer. Vite uses Rolldown options and the existing shared-runtime chunk policy;
-the size probe uses Oxc. Vitest retains the preceding mock lifecycle explicitly.
-jsdom 30 requires a newer Node minimum, so 29 remains the selected line under
-Node 22.13+/24. Registry engine/peer resolution and lockfile authoring are not
-test/build/consumer acceptance; all named checks remain pending.
+Declaration generation explicitly selects the Vue processor and installs its
+language-core peer. Bundling keeps Vue external and follows the shared-runtime
+chunk policy. Tool upgrades must preserve the supported Node and consumer
+matrix; dependency resolution alone is not type, build or consumer acceptance.
 
 ## Themes and public DOM
 
@@ -116,9 +109,10 @@ migration notes.
 `pt` configures attributes of specific DOM sections. Each section follows
 `createWlPt()` → `WlConfig.pt` → instance `pt`. `class` and `style`
 merge; other attributes at the last level replace previous values.
-Section callbacks receive `{ context }` with element state. Existing
-`pc*` names remain for compatibility with previous `pt` configuration,
-although Gavia UI now creates those elements.
+Section callbacks receive `{ context }` with element state. Since 1.0 only the
+canonical section and component keys are resolved, including the separate
+`iconButton` configuration. Legacy `pc*` and other 0.x aliases require the
+[PT migration](../migration.md#migration-1-0-public-api).
 
 Overlay transitions use Vue `Transition`/`TransitionGroup` and
 `--wl-dur-*` tokens. `WlConfig.motion` sets the Vue app default;
@@ -129,36 +123,28 @@ leaves the DOM; with `prefers-reduced-motion: reduce`, duration is nearly zero.
 `utils/bodyScrollLock.ts` maintains a shared modal lock count and reserves
 existing scrollbar space; closing the last overlay restores
 the original inline page styles.
+Configuration and service queues are app-scoped. Overlay ordering, background
+`inert` and scroll locking coordinate the shared document, so separately mounted
+applications must still coexist in one physical DOM. For SSR, create a fresh
+Vue application per request and follow the [ID and Teleport contract](../guide/ssr.md).
 
 Current section names and default attributes are defined in
 [`src/theme.ts`](../../packages/ui-kit/src/theme.ts) and
 [`src/pt-types.ts`](../../packages/ui-kit/src/pt-types.ts). Component guides expose the applicable
 sections from shared documentation metadata. A section applies only when its
 DOM exists, such as a dialog footer supplied through a slot. Keep compatibility
-migrations explicit when normalizing section names. The 1.0 source resolves only
-canonical PT keys; historical 0.x aliases are documented in the migration guide.
+migrations explicit when changing those sections.
 
 ## Checking a change
 
-`@playwright/test` is pinned to `1.58.2`: Vitest checks contracts and logic;
-browser scenarios check focus, overlay positioning, mobile
-width, five themes and the complete icon set. Playground `vue-tsc` checks
-consumer templates during development.
+Vitest checks contracts and logic. Browser scenarios check focus, positioning,
+native interactions and mobile layout; dedicated accessibility and visual
+checks cover all five themes. Playground `vue-tsc` checks consumer templates.
+The maintained matrix, budgets and commands are in [quality maintenance](quality.md).
 
 In jsdom tests, get `node:fs` paths through `fileURLToPath` and `URL`
 from `node:url`. This environment’s global `URL` belongs to jsdom and is not
 accepted by Node file APIs; pass a string path.
-
-`pnpm build`, `pnpm typecheck`, `pnpm test`, `pnpm build:playground`,
-`pnpm run pack`, `pnpm verify:package`, `pnpm verify:dependencies`,
-`pnpm icons:check`, `pnpm test:e2e`.
-Additionally, `pnpm tokens:check` checks five themes and generated output.
-`verify:package` installs the archive into an isolated consumer with one Vue,
-checks types and builds, including every copyable SFC example and recipe.
-These share the copy source rather than keeping separate markup.
-Browser tests cover Chromium, Firefox, WebKit,
-mobile Chromium and theme snapshots. A passing static build does not replace
-interaction checks.
 
 The Playground imports public package names through exact source aliases during
 development and typechecking. A build is required for production browser checks
@@ -180,4 +166,7 @@ selects recipes; each recipe owns its draft and demo
 data; CodePanel only displays/copies code. Recipe requests and
 business rules are excluded from library runtime.
 
-Additional contract, archive, SSR, coverage and size checks are described in [quality.md](quality.md).
+Use targeted checks for affected behavior. Full suites, builds, packing and
+browser checks require explicit authorization under [AGENTS.md](../../AGENTS.md).
+The complete release checklist is maintained there and in the
+[release procedure](releases.md), rather than duplicated in architecture notes.

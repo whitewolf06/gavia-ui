@@ -2,11 +2,11 @@
 
 ## Library locale for 1.0
 
-The 1.0 source uses English built-in text when `WlConfig` is absent or its locale
-is omitted. This is a breaking change from the Russian fallback in released 0.x
-versions. The source package version remains 0.12.1 until a separate release;
-these notes do not announce a published 1.0 package. The optional English preset
-was introduced in 0.12.0. To keep Russian labels, configure the consuming application:
+Gavia UI 1.0 uses English built-in text when `WlConfig` is absent or its locale
+is omitted. This changes the Russian fallback in 0.x; see the
+[1.0 migration](../migration.md#migration-1-0-localization). The optional English
+preset was introduced in 0.12.0. To keep Russian labels, configure the consuming
+application:
 
 ```ts
 import { createApp } from "vue";
@@ -83,8 +83,8 @@ canonical path's language, the saved preference and the first supported browser
 language. English is the final fallback. Switching language preserves `view`, `section`,
 `component`, `theme` and the hash. For example:
 
-- [English component guide](https://whitewolf06.github.io/gavia-ui/?view=docs&component=WlButton&lang=en)
-- [Russian component guide](https://whitewolf06.github.io/gavia-ui/?view=docs&component=WlButton&lang=ru)
+- [English component guide](https://whitewolf06.github.io/gavia-ui/docs/components/WlButton/)
+- [Russian component guide](https://whitewolf06.github.io/gavia-ui/ru/docs/components/WlButton/)
 
 Language catalogs provide copy and search metadata. SFCs, component implementations,
 manifest/API contracts, examples and recipes stay shared. Copied example text follows the selected Playground language. Built-in control

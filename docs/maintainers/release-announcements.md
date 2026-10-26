@@ -1,9 +1,10 @@
 # Release communication drafts
 
-Status: **drafts only; no announcement, discussion or release issue posted**. Fill the version,
-links, measured results and remaining limitations after
-[candidate acceptance](release-candidate.md). Remove every placeholder before
-requesting approval to send a specific draft to its named destination.
+Status: **drafts only; not sent by this document**. Gavia UI 1.0.0 was published
+on 2026-10-25. These materials describe that stable release; external posts,
+issues and repository settings still need their own authorization. The
+[superseded RC drafts](../archive/release-announcements-rc1.md) preserve the old
+placeholders and feedback-window proposal.
 
 ## Repository metadata proposal
 
@@ -14,138 +15,92 @@ Website: `https://whitewolf06.github.io/gavia-ui/`
 Proposed topics: `vue`, `vue3`, `component-library`, `design-system`,
 `typescript`, `accessibility`, `design-tokens`, `ui-kit`.
 
-Prepared social preview:
-[1280 x 640 PNG](../../apps/playground/public/gavia-social.png), from the
-[self-contained SVG](../brand/gavia-social.svg). Local image inspection covered
-the existing mark, outlined Gavia lettering and safe margins; browser/social
-provider checks remain deferred. The original square mark is preserved in the
-[source archive](../../archives/brand/README.md), along with provenance and
-license links. Uploading in GitHub settings remains a separate owner action.
-These local materials do not establish
-that GitHub topics, website, description or social preview are configured.
+The [brand source guide](../brand/README.md#social-preview) owns social-card
+sources, dimensions, licensing and inspection notes. A prepared asset or this
+proposal does not establish that GitHub metadata/social preview is configured.
 
-## GitHub RC release body and feedback discussion
+<a id="github-rc-release-body-and-feedback-discussion"></a>
 
-Discussion title: **Gavia UI 1.0.0-rc.1 — feedback welcome**.
-Use the changelog's candidate entry as the release body. The text below is the
-shorter feedback discussion, to post only after registry and site verification.
+## Stable release and feedback draft
+
+Suggested title: **Gavia UI 1.0: Vue 3 components with typed models and token themes**.
+The GitHub Release is already published; use the shared short draft below for a
+separately approved feedback post rather than opening another RC announcement.
 
 ```text
-Gavia UI 1.0.0-rc.1 is available for feedback.
+Gavia UI 1.0.0 is available for Vue 3 and TypeScript.
 
-The candidate includes typed component models and list slots, five CSS-token
-themes, keyboard interactions and a Vue 3.4/3.5 compatibility contract.
-It adds grouped selection controls, Tooltip, ContextMenu, Toolbar and TagsInput.
-Gavia Sans supports a continuous 100–700 axis, upright and italic.
-Vue remains the required peer; routing and application data stay in your app.
+It includes typed component models and list slots, five CSS-token themes,
+keyboard interactions, grouped selection controls, Tooltip, ContextMenu,
+Toolbar and TagsInput. Gavia Sans has continuous 100–700 upright and italic
+weights. Styles are explicit imports; routing and application data stay in
+consumer apps. Vue ^3.4.0 is the only required peer.
 
-Upgrade guide: https://github.com/whitewolf06/gavia-ui/blob/v1.0.0-rc.1/docs/migration.md#migration-1-0-rc-1
-Documentation: [VERIFIED_SITE_URL]
-Verification and known limitations: [CANDIDATE_EVIDENCE_URL]
+Install this release: pnpm add gavia-ui@1.0.0 vue
+Release: https://github.com/whitewolf06/gavia-ui/releases/tag/v1.0.0
+Guides and examples: https://whitewolf06.github.io/gavia-ui/docs/
+Upgrade: https://github.com/whitewolf06/gavia-ui/blob/v1.0.0/docs/migration.md#migration-1-0
+Release checks: https://github.com/whitewolf06/gavia-ui/actions/runs/40144779800
 
-Upgrade notes cover English fallback and wlLocaleRu, semantic tone, canonical
-PT sections, dismissible, WlTooltipDirective and accessible icon-action names.
+When upgrading from 0.x, check English fallback and wlLocaleRu, semantic tone,
+canonical PT sections, dismissible, WlTooltipDirective and icon-action names.
 
-Please report reproducible issues with the exact Gavia/Vue/browser versions,
-theme and a small example by [FEEDBACK_END_DATE]. We especially welcome
-keyboard, screen-reader and SSR integration feedback.
+Known limitation: manual NVDA/Firefox, macOS VoiceOver/Safari and iOS VoiceOver
+acceptance remains unperformed. Automated browser and Axe checks do not replace
+that work; no full accessibility-conformance claim is made.
 
-Install the candidate: pnpm add gavia-ui@next vue
-
-This is a prerelease. Stable 1.0 timing depends on feedback and acceptance.
+Please report issues with a small reproduction, exact Gavia/Vue/browser
+versions, theme and expected result. Keyboard, screen-reader and SSR feedback
+is welcome.
 ```
 
-Manual NVDA/VoiceOver results remain pending. The owner accepted this gap as an
-RC limitation on 2026-10-24; retain this limitation in the actual release body:
-“Manual NVDA/Firefox, macOS VoiceOver/Safari and iOS VoiceOver acceptance is
-pending. Automated browser and Axe checks do not replace those checks.”
-Do not present the prepared protocol as a pass or omit a known manual gap.
+The source, archive integrity, provenance and owner decision are retained in the
+[1.0 release record](../archive/release-history.md#release-100). Avoid changing
+those dated results into claims about an unverified later revision.
 
-## Release tracker issue draft
+<a id="release-tracker-issue-draft"></a>
 
-Title: **Gavia UI 1.0 — RC feedback and stable acceptance**.
-Create and pin only after the RC is confirmed in npm. Record its publication
-date and choose an end date two to four weeks later; preparation dates do not
-start that period.
+## Release follow-up
 
-- Record the verified RC version, archive integrity and source revision.
-- Link migration, documentation and the accepted automated/manual evidence.
-- Triage reproducible issues weekly; retain environment and minimal examples.
-- Keep `release-blocker` defects open until fixed and retested.
-- Summarize changes after rc.1 under Unreleased; substantial changes need rc.2.
-- Obtain manual acceptance or an explicit owner disposition of its limitations.
-- Review Renovate changes, recording deliberate deferrals.
-- Repeat the full exact-archive gates before separately approving stable 1.0.
+The owner ended the proposed two-to-four-week RC period early on 2026-10-25;
+there is no future RC end date to fill in for 1.0.0. Track remaining work through
+the [roadmap](../../ROADMAP.md#release-follow-up), not a duplicate RC tracker.
+The [manual protocol](manual-accessibility.md) retains its unexecuted cells.
 
 ## dev.to article draft
 
 Working title: **Checking a Vue component library as an installed package**.
 
-Opening draft: “Gavia UI is a Vue 3 and TypeScript component library. For the
-1.0 release, I wanted checks that describe what consumers receive: an installed
-archive, inferred model types, explicit CSS and a reproducible upgrade path.
-This article walks through the contracts and the tests behind that decision.”
+Opening: “Gavia UI is a Vue 3 and TypeScript component library. For the 1.0
+release, I wanted checks that describe what consumers receive: an installed
+archive, inferred model types, explicit CSS and a reproducible upgrade path.”
 
-Article outline: the public model/slot contract; source versus archive checks;
-Vue 3.4/3.5 and SSR IDs; token themes and authored fonts; accessibility checks
-and their manual limits; one failure caught in a real consumer; measured
-tradeoffs; links to release evidence and migration. Include only verified
-results, with their dates and environments. Do not claim full WCAG conformance
-or describe intended budgets as measured outcomes.
+Develop the public model/slot contract, source versus archive checks, Vue 3.4/3.5
+and SSR IDs, token themes, authored fonts and manual accessibility limits. Use
+only a retained consumer failure and dated measurements as examples; link the
+release record and migration. The outline is not a completed or published article.
 
 ## Reddit r/vuejs and Vue Land drafts
 
-RC feedback draft: “I've prepared the first Gavia UI 1.0 release candidate:
-[CANDIDATE_URL]. It is a Vue 3/TypeScript library with five token-based themes
-and typed selection models. I'm looking for feedback on the upgrade guide,
-keyboard interactions and SSR integration. Verified environments and remaining
-limitations are listed here: [EVIDENCE_URL]. A small example is here:
-[VERIFIED_STARTER_URL].”
-
-Stable draft: “Gavia UI 1.0 is available: [VERIFIED_RELEASE_URL]. The release
-includes [THREE_VERIFIED_CHANGES]. Documentation and examples:
-[VERIFIED_SITE_URL]. The release record covers the installed archive,
-Vue 3.4/3.5 consumers and accessibility checks, with manual limitations stated:
-[VERIFIED_EVIDENCE_URL]. Feedback and contributions are welcome.”
-
-Check each community's current posting rules when publication is authorized.
-No account messages, posts or external requests are part of this preparation.
+Use the shared stable draft above, shortened to the destination's format while
+retaining the migration link and manual-accessibility limitation. Read the
+community's current posting rules when sending is authorized. Do not keep a
+separate RC template or an invented feedback deadline here.
 
 ## Habr draft
 
-Working title: **Gavia UI 1.0 RC: компоненты Vue 3 и проверка установленного пакета**.
-
-```text
-У Gavia UI появился кандидат 1.0.0-rc.1. Это библиотека компонентов для Vue 3
-и TypeScript: пять тем на CSS-токенах, типизированные модели и слоты списков,
-клавиатурная навигация. Стили подключаются явно, роутер и запросы остаются
-в приложении. У шрифта Gavia Sans — плавный вес от 100 до 700 и курсив.
-
-В 1.0 меняются несколько контрактов: встроенный текст по умолчанию английский,
-для русского нужен wlLocaleRu; статусы задаются через tone, у pt и dismissible
-закреплены единые имена. Для обновления подготовлено руководство с примерами.
-
-Поставить RC: pnpm add gavia-ui@next vue
-Миграция: https://github.com/whitewolf06/gavia-ui/blob/v1.0.0-rc.1/docs/migration.md
-Документация: [VERIFIED_SITE_URL]
-Результаты проверок и ограничения: [CANDIDATE_EVIDENCE_URL]
-
-Перед стабильной версией собираем обратную связь в течение двух–четырёх недель.
-Если найдёте ошибку, приложите небольшой пример, версии Gavia и Vue, браузер
-и тему. Особенно полезны случаи с клавиатурой, скринридерами и SSR.
-```
-
-This is a post-publication draft. Include the accepted manual limitations,
-actual feedback dates and verified links before requesting permission to post.
+Working topic: the 1.0 release, consumer type contracts, explicit CSS and checks
+of the installed package. Use the same verified facts, links and limitation as
+the stable draft. The former Russian RC copy is preserved in the
+[historical draft](../archive/release-announcements-rc1.md#habr-draft);
+a future Russian article needs a fresh stable version before approval to post.
 
 ## awesome-vue submission draft
-
-Proposed awesome-vue entry, after stable release and maintainer criteria review:
 
 ```text
 [Gavia UI](https://github.com/whitewolf06/gavia-ui) — Vue 3 and TypeScript UI
 components with token-based themes, typed models and explicit CSS imports.
 ```
 
-The eventual submission requires separate authorization, the destination's
-current contribution rules and a link to the confirmed stable release.
+Submission remains optional. Review the destination's current contribution
+criteria and obtain authorization for that exact external change.

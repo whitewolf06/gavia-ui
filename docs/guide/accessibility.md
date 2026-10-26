@@ -21,7 +21,7 @@ Run automated accessibility checks and perform a separate screen-reader review
 for forms, errors, live updates and overlays. An axe result does not establish
 screen-reader usability or accessibility of every application composition.
 
-[Component guides](https://whitewolf06.github.io/gavia-ui/?view=docs) document
+[Component guides](https://whitewolf06.github.io/gavia-ui/docs/) document
 the actual API and interactions. The
 [design-system reference](../reference/design-system.md) describes shared
 patterns; [maintainer checks](../maintainers/quality.md) describe verification.
