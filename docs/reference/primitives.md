@@ -59,6 +59,25 @@ on the component or an ancestor. A closer override wins over the inherited
 fluid group. Keep `max-width: none` scoped to layout groups that need it;
 theme roots establish their own token values.
 
+## Semantic component text
+
+`wl-type-scale` maps the text roles of Card, Accordion, Alert and Segmented
+to semantic typography. It is optional: omitting it retains the existing
+component sizes. Set semantic values on the same group, or set an individual
+component alias on a closer element. Nested theme roots establish a fresh token
+context; add the class there again when needed.
+
+```html
+<section class="wl-stack wl-type-scale"
+  style="--wl-type-body-size: 18px; --wl-type-body-line-height: 28px">
+  <!-- Card, Accordion, Alert and Segmented use their mapped roles here. -->
+</section>
+```
+
+The [component role table](design-system.md#component-typography-in-1x)
+documents size, line height, weight and family ownership. This class also lets
+Segmented items grow with text; it does not change component props or models.
+
 ## Stack, inline and grid
 
 - `wl-stack` — a vertical group.

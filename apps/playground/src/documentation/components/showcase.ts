@@ -62,6 +62,7 @@ export const showcaseDocumentationAccessibility: Record<string, readonly string[
     "documentation.strings.s0574"
   ],
   WlSegmented: [
+    "documentation.strings.componentTypography",
     "documentation.strings.s0575",
     "documentation.strings.s0576",
     "documentation.strings.s0577"
@@ -97,12 +98,14 @@ export const showcaseDocumentationAccessibility: Record<string, readonly string[
     "documentation.strings.s0595"
   ],
   WlCard: [
+    "documentation.strings.componentTypography",
     "documentation.strings.cardPadding",
     "documentation.strings.s0596",
     "documentation.strings.s0597",
     "documentation.strings.s0598"
   ],
   WlAccordion: [
+    "documentation.strings.componentTypography",
     "documentation.strings.s0599",
     "documentation.strings.s0600",
     "documentation.strings.s0601"
@@ -143,6 +146,7 @@ export const showcaseDocumentationAccessibility: Record<string, readonly string[
     "documentation.strings.s0622"
   ],
   WlAlert: [
+    "documentation.strings.componentTypography",
     "documentation.strings.s0623",
     "documentation.strings.s0624",
     "documentation.strings.s0625"

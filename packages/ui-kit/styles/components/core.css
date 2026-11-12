@@ -1082,21 +1082,27 @@
     padding: var(--wl-card-padding-block-start) var(--wl-card-padding-inline) 0;
   }
   .wl-card__title {
-    font-family: var(--wl-font-heading);
-    font-size: 14px;
-    font-weight: 600;
+    font-family: var(--wl-card-title-font-family);
+    font-size: var(--wl-card-title-font-size);
+    font-weight: var(--wl-card-title-font-weight);
+    line-height: var(--wl-card-title-line-height, revert-layer);
     color: var(--wl-text);
   }
   .wl-card__subtitle {
-    font-size: 12.5px;
+    font-family: var(--wl-card-subtitle-font-family, revert-layer);
+    font-size: var(--wl-card-subtitle-font-size);
+    font-weight: var(--wl-card-subtitle-font-weight, revert-layer);
+    line-height: var(--wl-card-subtitle-line-height, revert-layer);
     color: var(--wl-text-3);
-    margin-top: 2px;
+    margin-top: var(--wl-space-2);
   }
   .wl-card__content {
     padding: var(--wl-card-padding-block-start) var(--wl-card-padding-inline) var(--wl-card-padding-block-end);
-    font-size: 13.5px;
+    font-family: var(--wl-card-content-font-family, revert-layer);
+    font-size: var(--wl-card-content-font-size);
+    font-weight: var(--wl-card-content-font-weight, revert-layer);
     color: var(--wl-text-2);
-    line-height: 1.55;
+    line-height: var(--wl-card-content-line-height);
   }
   .wl-card__content--captioned {
     padding-block-start: var(--wl-card-content-gap);
@@ -1104,7 +1110,7 @@
   .wl-card__footer {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--wl-space-sm);
     padding: var(--wl-card-footer-padding-block) var(--wl-card-padding-inline);
     border-top: 1px solid var(--wl-border);
   }
@@ -1170,11 +1176,13 @@
     display: flex;
     flex-wrap: wrap;
     gap: 11px;
-    padding: 12px 14px;
+    padding: var(--wl-alert-padding-block) var(--wl-alert-padding-inline);
     border-radius: var(--wl-radius);
     border: 1px solid var(--wl-border);
-    font-size: 13px;
-    line-height: 1.45;
+    font-family: var(--wl-alert-font-family, revert-layer);
+    font-size: var(--wl-alert-font-size);
+    font-weight: var(--wl-alert-font-weight, revert-layer);
+    line-height: var(--wl-alert-line-height);
   }
   .wl-alert__icon {
     flex: none;
@@ -1185,7 +1193,10 @@
     min-width: 0;
   }
   .wl-alert__title {
-    font-weight: 600;
+    font-family: var(--wl-alert-title-font-family, revert-layer);
+    font-size: var(--wl-alert-title-font-size, revert-layer);
+    font-weight: var(--wl-alert-title-font-weight);
+    line-height: var(--wl-alert-title-line-height, revert-layer);
   }
   .wl-alert--info {
     background: var(--wl-accent-soft);
@@ -1674,19 +1685,22 @@
   .wl-segmented {
     display: inline-flex;
     gap: 2px;
-    padding: 3px;
+    padding: var(--wl-segmented-padding);
     background: var(--wl-bg-soft);
     border-radius: var(--wl-radius-lg);
   }
   .wl-segmented__item {
-    height: 30px;
-    padding: 0 12px;
+    height: var(--wl-segmented-item-height);
+    min-height: var(--wl-segmented-item-min-height, revert-layer);
+    padding: var(--wl-segmented-padding-block) var(--wl-segmented-padding-inline);
     border: none;
     border-radius: var(--wl-radius);
     background: transparent;
     color: var(--wl-text-2);
-    font-size: 13px;
-    font-weight: 500;
+    font-family: var(--wl-segmented-font-family, revert-layer);
+    font-size: var(--wl-segmented-font-size);
+    font-weight: var(--wl-segmented-font-weight);
+    line-height: var(--wl-segmented-line-height, revert-layer);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -2278,9 +2292,11 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 12px 14px;
-    font-size: 13.5px;
-    font-weight: 500;
+    padding: var(--wl-accordion-title-padding-block) var(--wl-accordion-padding-inline);
+    font-family: var(--wl-accordion-title-font-family, revert-layer);
+    font-size: var(--wl-accordion-title-font-size);
+    font-weight: var(--wl-accordion-title-font-weight);
+    line-height: var(--wl-accordion-title-line-height, revert-layer);
     color: var(--wl-text);
     cursor: pointer;
     list-style: none;
@@ -2308,10 +2324,12 @@
     transform: rotate(180deg);
   }
   .wl-acc__body {
-    padding: 0 14px 14px;
-    font-size: 13px;
+    padding: 0 var(--wl-accordion-padding-inline) var(--wl-accordion-body-padding-block-end);
+    font-family: var(--wl-accordion-body-font-family, revert-layer);
+    font-size: var(--wl-accordion-body-font-size);
+    font-weight: var(--wl-accordion-body-font-weight, revert-layer);
     color: var(--wl-text-2);
-    line-height: 1.55;
+    line-height: var(--wl-accordion-body-line-height);
   }
 
   /* ---------- Steps ---------- */

@@ -4308,6 +4308,526 @@
       "category": "layout",
       "description": "Maximum width of slider; set to none to fill its containing layout.",
       "value": "var(--wl-layout-slider-max-width)"
+    },
+    {
+      "name": "--wl-font-component-inherit",
+      "layer": "foundation",
+      "type": "string",
+      "category": "typography",
+      "description": "Compatibility value for font-component-inherit.",
+      "value": "inherit"
+    },
+    {
+      "name": "--wl-font-component-subtitle-size",
+      "layer": "foundation",
+      "type": "dimension",
+      "category": "typography",
+      "description": "Compatibility value for font-component-subtitle-size.",
+      "value": "12.5px"
+    },
+    {
+      "name": "--wl-font-component-content-line-height",
+      "layer": "foundation",
+      "type": "number",
+      "category": "typography",
+      "description": "Compatibility value for font-component-content-line-height.",
+      "value": "1.55"
+    },
+    {
+      "name": "--wl-font-component-alert-line-height",
+      "layer": "foundation",
+      "type": "number",
+      "category": "typography",
+      "description": "Compatibility value for font-component-alert-line-height.",
+      "value": "1.45"
+    },
+    {
+      "name": "--wl-dimension-segmented-padding",
+      "layer": "foundation",
+      "type": "dimension",
+      "category": "typography",
+      "description": "Compatibility value for dimension-segmented-padding.",
+      "value": "3px"
+    },
+    {
+      "name": "--wl-dimension-segmented-item-height",
+      "layer": "foundation",
+      "type": "dimension",
+      "category": "typography",
+      "description": "Compatibility value for dimension-segmented-item-height.",
+      "value": "30px"
+    },
+    {
+      "name": "--wl-dimension-content-height",
+      "layer": "foundation",
+      "type": "string",
+      "category": "typography",
+      "description": "Compatibility value for dimension-content-height.",
+      "value": "auto"
+    },
+    {
+      "name": "--wl-type-component-inherit",
+      "layer": "semantic",
+      "type": "string",
+      "category": "typography",
+      "description": "Compatibility role for type-component-inherit.",
+      "value": "var(--wl-font-component-inherit)"
+    },
+    {
+      "name": "--wl-metric-component-title-size",
+      "layer": "semantic",
+      "type": "dimension",
+      "category": "typography",
+      "description": "Compatibility role for metric-component-title-size.",
+      "value": "var(--wl-font-body-size)"
+    },
+    {
+      "name": "--wl-metric-component-subtitle-size",
+      "layer": "semantic",
+      "type": "dimension",
+      "category": "typography",
+      "description": "Compatibility role for metric-component-subtitle-size.",
+      "value": "var(--wl-font-component-subtitle-size)"
+    },
+    {
+      "name": "--wl-metric-component-content-size",
+      "layer": "semantic",
+      "type": "dimension",
+      "category": "typography",
+      "description": "Compatibility role for metric-component-content-size.",
+      "value": "var(--wl-dimension-btn-font-size)"
+    },
+    {
+      "name": "--wl-metric-component-small-size",
+      "layer": "semantic",
+      "type": "dimension",
+      "category": "typography",
+      "description": "Compatibility role for metric-component-small-size.",
+      "value": "var(--wl-font-label-size)"
+    },
+    {
+      "name": "--wl-metric-component-content-line-height",
+      "layer": "semantic",
+      "type": "number",
+      "category": "typography",
+      "description": "Compatibility role for metric-component-content-line-height.",
+      "value": "var(--wl-font-component-content-line-height)"
+    },
+    {
+      "name": "--wl-metric-component-alert-line-height",
+      "layer": "semantic",
+      "type": "number",
+      "category": "typography",
+      "description": "Compatibility role for metric-component-alert-line-height.",
+      "value": "var(--wl-font-component-alert-line-height)"
+    },
+    {
+      "name": "--wl-metric-component-semibold-weight",
+      "layer": "semantic",
+      "type": "number",
+      "category": "typography",
+      "description": "Compatibility role for metric-component-semibold-weight.",
+      "value": "var(--wl-font-subheading-weight)"
+    },
+    {
+      "name": "--wl-metric-component-medium-weight",
+      "layer": "semantic",
+      "type": "number",
+      "category": "typography",
+      "description": "Compatibility role for metric-component-medium-weight.",
+      "value": "var(--wl-font-label-weight)"
+    },
+    {
+      "name": "--wl-metric-component-heading-family",
+      "layer": "semantic",
+      "type": "fontFamily",
+      "category": "typography",
+      "description": "Compatibility role for metric-component-heading-family.",
+      "value": "var(--wl-font-heading)"
+    },
+    {
+      "name": "--wl-inset-component-content",
+      "layer": "semantic",
+      "type": "dimension",
+      "category": "typography",
+      "description": "Compatibility role for inset-component-content.",
+      "value": "var(--wl-dimension-card-inset-start)"
+    },
+    {
+      "name": "--wl-inset-segmented",
+      "layer": "semantic",
+      "type": "dimension",
+      "category": "typography",
+      "description": "Compatibility role for inset-segmented.",
+      "value": "var(--wl-dimension-segmented-padding)"
+    },
+    {
+      "name": "--wl-metric-segmented-item-height",
+      "layer": "semantic",
+      "type": "dimension",
+      "category": "typography",
+      "description": "Compatibility role for metric-segmented-item-height.",
+      "value": "var(--wl-dimension-segmented-item-height)"
+    },
+    {
+      "name": "--wl-layout-content-height",
+      "layer": "semantic",
+      "type": "string",
+      "category": "typography",
+      "description": "Compatibility role for layout-content-height.",
+      "value": "var(--wl-dimension-content-height)"
+    },
+    {
+      "name": "--wl-card-title-font-size",
+      "layer": "component",
+      "type": "dimension",
+      "category": "typography",
+      "description": "font-size for card-title; the default preserves 1.0 typography.",
+      "value": "var(--wl-metric-component-title-size)"
+    },
+    {
+      "name": "--wl-card-title-line-height",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "line-height for card-title; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-card-title-font-weight",
+      "layer": "component",
+      "type": "number",
+      "category": "typography",
+      "description": "font-weight for card-title; the default preserves 1.0 typography.",
+      "value": "var(--wl-metric-component-semibold-weight)"
+    },
+    {
+      "name": "--wl-card-title-font-family",
+      "layer": "component",
+      "type": "fontFamily",
+      "category": "typography",
+      "description": "font-family for card-title; the default preserves 1.0 typography.",
+      "value": "var(--wl-metric-component-heading-family)"
+    },
+    {
+      "name": "--wl-card-subtitle-font-size",
+      "layer": "component",
+      "type": "dimension",
+      "category": "typography",
+      "description": "font-size for card-subtitle; the default preserves 1.0 typography.",
+      "value": "var(--wl-metric-component-subtitle-size)"
+    },
+    {
+      "name": "--wl-card-subtitle-line-height",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "line-height for card-subtitle; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-card-subtitle-font-weight",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "font-weight for card-subtitle; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-card-subtitle-font-family",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "font-family for card-subtitle; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-card-content-font-size",
+      "layer": "component",
+      "type": "dimension",
+      "category": "typography",
+      "description": "font-size for card-content; the default preserves 1.0 typography.",
+      "value": "var(--wl-metric-component-content-size)"
+    },
+    {
+      "name": "--wl-card-content-line-height",
+      "layer": "component",
+      "type": "number",
+      "category": "typography",
+      "description": "line-height for card-content; the default preserves 1.0 typography.",
+      "value": "var(--wl-metric-component-content-line-height)"
+    },
+    {
+      "name": "--wl-card-content-font-weight",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "font-weight for card-content; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-card-content-font-family",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "font-family for card-content; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-accordion-title-font-size",
+      "layer": "component",
+      "type": "dimension",
+      "category": "typography",
+      "description": "font-size for accordion-title; the default preserves 1.0 typography.",
+      "value": "var(--wl-metric-component-content-size)"
+    },
+    {
+      "name": "--wl-accordion-title-line-height",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "line-height for accordion-title; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-accordion-title-font-weight",
+      "layer": "component",
+      "type": "number",
+      "category": "typography",
+      "description": "font-weight for accordion-title; the default preserves 1.0 typography.",
+      "value": "var(--wl-metric-component-medium-weight)"
+    },
+    {
+      "name": "--wl-accordion-title-font-family",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "font-family for accordion-title; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-accordion-body-font-size",
+      "layer": "component",
+      "type": "dimension",
+      "category": "typography",
+      "description": "font-size for accordion-body; the default preserves 1.0 typography.",
+      "value": "var(--wl-metric-component-small-size)"
+    },
+    {
+      "name": "--wl-accordion-body-line-height",
+      "layer": "component",
+      "type": "number",
+      "category": "typography",
+      "description": "line-height for accordion-body; the default preserves 1.0 typography.",
+      "value": "var(--wl-metric-component-content-line-height)"
+    },
+    {
+      "name": "--wl-accordion-body-font-weight",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "font-weight for accordion-body; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-accordion-body-font-family",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "font-family for accordion-body; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-alert-font-size",
+      "layer": "component",
+      "type": "dimension",
+      "category": "typography",
+      "description": "font-size for alert; the default preserves 1.0 typography.",
+      "value": "var(--wl-metric-component-small-size)"
+    },
+    {
+      "name": "--wl-alert-line-height",
+      "layer": "component",
+      "type": "number",
+      "category": "typography",
+      "description": "line-height for alert; the default preserves 1.0 typography.",
+      "value": "var(--wl-metric-component-alert-line-height)"
+    },
+    {
+      "name": "--wl-alert-font-weight",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "font-weight for alert; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-alert-font-family",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "font-family for alert; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-alert-title-font-size",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "font-size for alert-title; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-alert-title-line-height",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "line-height for alert-title; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-alert-title-font-weight",
+      "layer": "component",
+      "type": "number",
+      "category": "typography",
+      "description": "font-weight for alert-title; the default preserves 1.0 typography.",
+      "value": "var(--wl-metric-component-semibold-weight)"
+    },
+    {
+      "name": "--wl-alert-title-font-family",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "font-family for alert-title; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-segmented-font-size",
+      "layer": "component",
+      "type": "dimension",
+      "category": "typography",
+      "description": "font-size for segmented; the default preserves 1.0 typography.",
+      "value": "var(--wl-metric-component-small-size)"
+    },
+    {
+      "name": "--wl-segmented-line-height",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "line-height for segmented; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-segmented-font-weight",
+      "layer": "component",
+      "type": "number",
+      "category": "typography",
+      "description": "font-weight for segmented; the default preserves 1.0 typography.",
+      "value": "var(--wl-metric-component-medium-weight)"
+    },
+    {
+      "name": "--wl-segmented-font-family",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "font-family for segmented; the default preserves 1.0 typography.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-segmented-sm-font-size",
+      "layer": "component",
+      "type": "dimension",
+      "category": "typography",
+      "description": "Font size for small Segmented items.",
+      "value": "var(--wl-type-small-size)"
+    },
+    {
+      "name": "--wl-segmented-sm-line-height",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "Line height for small Segmented items.",
+      "value": "var(--wl-type-component-inherit)"
+    },
+    {
+      "name": "--wl-segmented-item-height",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "Item height; the semantic type scale opts into intrinsic height.",
+      "value": "var(--wl-metric-segmented-item-height)"
+    },
+    {
+      "name": "--wl-segmented-padding",
+      "layer": "component",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Segmented container inset.",
+      "value": "var(--wl-inset-segmented)"
+    },
+    {
+      "name": "--wl-segmented-padding-block",
+      "layer": "component",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Default vertical inset of a Segmented item.",
+      "value": "var(--wl-space-none)"
+    },
+    {
+      "name": "--wl-segmented-padding-inline",
+      "layer": "component",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Default horizontal inset of a Segmented item.",
+      "value": "var(--wl-space-md)"
+    },
+    {
+      "name": "--wl-alert-padding-block",
+      "layer": "component",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Vertical inset of an Alert.",
+      "value": "var(--wl-space-md)"
+    },
+    {
+      "name": "--wl-alert-padding-inline",
+      "layer": "component",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Horizontal inset of an Alert.",
+      "value": "var(--wl-inset-component-content)"
+    },
+    {
+      "name": "--wl-accordion-title-padding-block",
+      "layer": "component",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Vertical inset of an Accordion summary.",
+      "value": "var(--wl-space-md)"
+    },
+    {
+      "name": "--wl-accordion-padding-inline",
+      "layer": "component",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Horizontal inset of Accordion summary and content.",
+      "value": "var(--wl-inset-component-content)"
+    },
+    {
+      "name": "--wl-accordion-body-padding-block-end",
+      "layer": "component",
+      "type": "dimension",
+      "category": "spacing",
+      "description": "Bottom inset of Accordion content.",
+      "value": "var(--wl-inset-component-content)"
+    },
+    {
+      "name": "--wl-segmented-item-min-height",
+      "layer": "component",
+      "type": "string",
+      "category": "typography",
+      "description": "Minimum item height in the semantic scale; retain the previous cascade by default.",
+      "value": "var(--wl-type-component-inherit)"
     }
   ],
   "spacing": {
@@ -4573,5 +5093,43 @@
     "--wl-autocomplete-max-width",
     "--wl-accordion-max-width",
     "--wl-slider-max-width"
-  ]
+  ],
+  "componentTypography": {
+    "--wl-card-title-font-size": "--wl-type-subheading-size",
+    "--wl-card-title-line-height": "--wl-type-subheading-line-height",
+    "--wl-card-title-font-weight": "--wl-type-subheading-weight",
+    "--wl-card-title-font-family": "--wl-type-subheading-family",
+    "--wl-card-subtitle-font-size": "--wl-type-small-size",
+    "--wl-card-subtitle-line-height": "--wl-type-small-line-height",
+    "--wl-card-subtitle-font-weight": "--wl-type-small-weight",
+    "--wl-card-subtitle-font-family": "--wl-type-small-family",
+    "--wl-card-content-font-size": "--wl-type-body-size",
+    "--wl-card-content-line-height": "--wl-type-body-line-height",
+    "--wl-card-content-font-weight": "--wl-type-body-weight",
+    "--wl-card-content-font-family": "--wl-type-body-family",
+    "--wl-accordion-title-font-size": "--wl-type-control-size",
+    "--wl-accordion-title-line-height": "--wl-type-label-line-height",
+    "--wl-accordion-title-font-weight": "--wl-type-label-weight",
+    "--wl-accordion-title-font-family": "--wl-type-label-family",
+    "--wl-accordion-body-font-size": "--wl-type-body-size",
+    "--wl-accordion-body-line-height": "--wl-type-body-line-height",
+    "--wl-accordion-body-font-weight": "--wl-type-body-weight",
+    "--wl-accordion-body-font-family": "--wl-type-body-family",
+    "--wl-alert-font-size": "--wl-type-body-size",
+    "--wl-alert-line-height": "--wl-type-body-line-height",
+    "--wl-alert-font-weight": "--wl-type-body-weight",
+    "--wl-alert-font-family": "--wl-type-body-family",
+    "--wl-alert-title-font-size": "--wl-type-subheading-size",
+    "--wl-alert-title-line-height": "--wl-type-subheading-line-height",
+    "--wl-alert-title-font-weight": "--wl-type-subheading-weight",
+    "--wl-alert-title-font-family": "--wl-type-subheading-family",
+    "--wl-segmented-font-size": "--wl-type-control-size",
+    "--wl-segmented-line-height": "--wl-type-label-line-height",
+    "--wl-segmented-font-weight": "--wl-type-label-weight",
+    "--wl-segmented-font-family": "--wl-type-label-family",
+    "--wl-segmented-sm-font-size": "--wl-type-small-size",
+    "--wl-segmented-sm-line-height": "--wl-type-small-line-height",
+    "--wl-segmented-item-height": "--wl-layout-content-height",
+    "--wl-segmented-item-min-height": "--wl-metric-segmented-item-height"
+  }
 }

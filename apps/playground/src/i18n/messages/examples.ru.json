@@ -1071,5 +1071,10 @@
   "examples.cardNestedPadding": "У вложенной карточки свои отступы.",
   "examples.fluidControls": "Растянуть поля на ширину формы (wl-fluid)",
   "examples.calendarAvailability": "Запретить выбор 16 и 18 октября",
-  "examples.calendarActivation": "Последний выбор и число действий:"
+  "examples.calendarActivation": "Последний выбор и число действий:",
+  "examples.semanticComponentScale": "Подключить семантическую типографику (wl-type-scale)",
+  "examples.semanticComponentScaleGuide": "У группы уже заданы увеличенные семантические размеры. Включи wl-type-scale, чтобы компоненты их использовали. Без класса остаются размеры 1.0; маленький Segmented уже связан с ролью small. Для control размер берётся из control, а межстрочный интервал, насыщенность и семейство — из label. Отдельную роль можно настроить компонентным токеном.",
+  "examples.componentTypeMapping": "Текстовые роли компонентов",
+  "examples.componentTypePrefix": "Префикс токена",
+  "examples.componentTypeDefault": "Размер без профиля"
 }

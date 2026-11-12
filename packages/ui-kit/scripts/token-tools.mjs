@@ -61,6 +61,13 @@ export function validateCatalog(catalog) {
       || !catalog.tokens.some((token) => token.name === name && token.layer === "component")))) {
     throw new Error("Invalid fluid sizing token contract");
   }
+  if (catalog.componentTypography !== undefined && (typeof catalog.componentTypography !== "object"
+    || catalog.componentTypography === null || Array.isArray(catalog.componentTypography)
+    || Object.entries(catalog.componentTypography).some(([name, role]) =>
+      !catalog.tokens.some((token) => token.name === name && token.layer === "component")
+      || !catalog.tokens.some((token) => token.name === role && token.layer === "semantic")))) {
+    throw new Error("Invalid component typography token contract");
+  }
   const roleNames = new Set();
   for (const role of catalog.typography) {
     if (!/^[a-z][a-z-]*$/.test(role.name) || roleNames.has(role.name) || !role.label || !role.description) throw new Error("Invalid typography role");
@@ -141,6 +148,9 @@ export function renderPrimitiveCss(catalog) {
   ];
   if (catalog.fluidSizing?.length) {
     lines.push(`  .wl-fluid { ${catalog.fluidSizing.map((name) => `${name}: none;`).join(" ")} }`);
+  }
+  if (catalog.componentTypography) {
+    lines.push(`  .wl-type-scale { ${Object.entries(catalog.componentTypography).map(([name, role]) => `${name}: var(${role});`).join(" ")} }`);
   }
   for (const [space, token] of Object.entries(catalog.spacing)) {
     lines.push(`  :where(.wl-stack, .wl-inline, .wl-grid)[data-space="${space}"] { gap: var(${token}); }`);
