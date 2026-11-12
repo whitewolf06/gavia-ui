@@ -533,7 +533,7 @@
     --wl-segmented-line-height: var(--wl-type-component-inherit);
     --wl-segmented-font-weight: var(--wl-metric-component-medium-weight);
     --wl-segmented-font-family: var(--wl-type-component-inherit);
-    --wl-segmented-sm-font-size: var(--wl-type-small-size);
+    --wl-segmented-sm-font-size: var(--wl-type-component-inherit);
     --wl-segmented-sm-line-height: var(--wl-type-component-inherit);
     --wl-segmented-item-height: var(--wl-metric-segmented-item-height);
     --wl-segmented-padding: var(--wl-inset-segmented);

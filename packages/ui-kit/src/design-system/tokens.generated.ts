@@ -4705,10 +4705,10 @@ export const wlDesignTokens = [
   {
     "name": "--wl-segmented-sm-font-size",
     "layer": "component",
-    "type": "dimension",
+    "type": "string",
     "category": "typography",
-    "description": "Font size for small Segmented items.",
-    "value": "var(--wl-type-small-size)"
+    "description": "Font size for small Segmented items; by default resolve the small semantic role at the item.",
+    "value": "var(--wl-type-component-inherit)"
   },
   {
     "name": "--wl-segmented-sm-line-height",

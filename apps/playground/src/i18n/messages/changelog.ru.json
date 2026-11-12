@@ -218,5 +218,6 @@
   "changelog.fluidControls1": "Дорожка и метки Slider теперь имеют ту же ширину, что и сами поля.",
   "changelog.calendarAvailability": "В WlCalendar добавлены disabledDates и типизированное событие select, которое приходит и при повторной активации выбранной даты. Модели выбора сохранены, клавиатура пропускает недоступные дни ([#6](https://github.com/whitewolf06/gavia-ui/issues/6)).",
   "changelog.semanticComponentType": "Типографика и отступы Card, Accordion, Alert и Segmented настраиваются компонентными токенами. Класс wl-type-scale из CSS-примитивов подключает семантические текстовые роли; без него сохраняется вид 1.0 ([#5](https://github.com/whitewolf06/gavia-ui/issues/5)).",
-  "changelog.calendarMultipleMetadata": "В Playground появился boolean-переключатель multiple для WlCalendar. Пример и переключатель теперь начинают с выбора одной даты, как сам компонент ([#6](https://github.com/whitewolf06/gavia-ui/issues/6))."
+  "changelog.calendarMultipleMetadata": "В Playground появился boolean-переключатель multiple для WlCalendar. Пример и переключатель теперь начинают с выбора одной даты, как сам компонент ([#6](https://github.com/whitewolf06/gavia-ui/issues/6)).",
+  "changelog.segmentedLocalSmallType": "Малый Segmented сохраняет локальные настройки `--wl-type-small-size`, когда семантическая шкала компонентов выключена ([#5](https://github.com/whitewolf06/gavia-ui/issues/5))."
 }

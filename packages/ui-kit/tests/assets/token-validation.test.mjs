@@ -10,7 +10,7 @@ describe("design token source validation", () => {
     const expected = {
       "--wl-card-title-font-size": "14px", "--wl-card-subtitle-font-size": "12.5px", "--wl-card-content-font-size": "13.5px",
       "--wl-accordion-title-font-size": "13.5px", "--wl-accordion-body-font-size": "13px", "--wl-alert-font-size": "13px",
-      "--wl-segmented-font-size": "13px", "--wl-segmented-sm-font-size": "12px", "--wl-segmented-item-height": "30px",
+      "--wl-segmented-font-size": "13px", "--wl-segmented-sm-font-size": "inherit", "--wl-segmented-item-height": "30px",
       "--wl-card-title-font-weight": "600", "--wl-accordion-title-font-weight": "500", "--wl-segmented-font-weight": "500",
       "--wl-card-content-line-height": "1.55", "--wl-alert-line-height": "1.45"
     };

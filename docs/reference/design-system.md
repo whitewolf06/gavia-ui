@@ -138,7 +138,9 @@ override takes precedence. Reapply the class at a nested theme/scale boundary.
 | `--wl-segmented-*` | 13 px | control size; label line height, weight and family |
 
 Small Segmented keeps its existing small-size role and exposes
-`--wl-segmented-sm-font-size` / `--wl-segmented-sm-line-height`. The opt-in scale
+`--wl-segmented-sm-font-size` / `--wl-segmented-sm-line-height`. Without an explicit
+component size, it resolves `--wl-type-small-size` at the item so local semantic
+overrides continue to work. The opt-in scale
 uses intrinsic item height with a 30 px minimum so enlarged text fits in sm/md/lg.
 Without the class, item height remains 30 px and the previous minimum-height
 cascade is retained. Slot content with its own `wl-text-*` class continues to own
