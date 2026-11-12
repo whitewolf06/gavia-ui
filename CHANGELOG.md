@@ -17,6 +17,8 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 ### Fixed
 
+- Align WlSlider range thumbs with the track, keep endpoint mark labels inside the control and reserve layout space for marks.
+
 - Preserve local `--wl-type-small-size` overrides for small Segmented items when the semantic component scale is disabled ([#5](https://github.com/whitewolf06/gavia-ui/issues/5)).
 
 - Expose WlCalendar `multiple` as a boolean control in the Playground and align its live example with the component's single-selection default ([#6](https://github.com/whitewolf06/gavia-ui/issues/6)).

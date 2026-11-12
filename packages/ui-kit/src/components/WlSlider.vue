@@ -149,7 +149,7 @@ function onInput(event: Event, index?: 0 | 1): void {
         :key="index"
         v-bind="rangeAttrs(index)"
         type="range"
-        class="wl-slider wl-slider__thumb"
+        class="wl-slider wl-slider__input wl-slider__thumb"
         :class="{ 'is-disabled': disabled, 'is-invalid': invalid }"
         :style="{ '--wl-slider-pct': `${toPercent(currentRange[index], minimum, maximum)}%` }"
         :min="minimum"
@@ -169,7 +169,7 @@ function onInput(event: Event, index?: 0 | 1): void {
       v-else
       v-bind="mergeWlAttrs(attrGroups.inputAttrs, section('input'))"
       type="range"
-      class="wl-slider"
+      class="wl-slider wl-slider__input"
       :class="{ 'is-disabled': disabled, 'is-invalid': invalid }"
       :style="{ '--wl-slider-pct': `${pct}%` }"
       :min="minimum"
@@ -193,6 +193,7 @@ function onInput(event: Event, index?: 0 | 1): void {
         :key="`${mark.value}-${index}`"
         v-bind="section('mark')"
         class="wl-slider__mark"
+        :data-edge="mark.value === minimum ? 'start' : mark.value === maximum ? 'end' : undefined"
         :style="{ left: `${toPercent(mark.value, minimum, maximum)}%` }"
       ><span v-bind="section('label')">{{ mark.label }}</span></span>
     </div>

@@ -1076,5 +1076,9 @@
   "examples.semanticComponentScaleGuide": "У группы уже заданы увеличенные семантические размеры. Включи wl-type-scale, чтобы компоненты их использовали. Без класса остаются размеры 1.0; маленький Segmented уже связан с ролью small. Для control размер берётся из control, а межстрочный интервал, насыщенность и семейство — из label. Отдельную роль можно настроить компонентным токеном.",
   "examples.componentTypeMapping": "Текстовые роли компонентов",
   "examples.componentTypePrefix": "Префикс токена",
-  "examples.componentTypeDefault": "Размер без профиля"
+  "examples.componentTypeDefault": "Размер без профиля",
+  "examples.sliderMarked": "Слайдер с разметкой",
+  "examples.sliderMarkedValue": "Значение:",
+  "examples.sliderRange": "Диапазон с разметкой",
+  "examples.sliderRangeValue": "Диапазон:"
 }

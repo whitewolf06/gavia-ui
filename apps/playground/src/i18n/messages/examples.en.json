@@ -1076,5 +1076,9 @@
   "examples.semanticComponentScaleGuide": "The group already has larger semantic text values. Enable wl-type-scale to apply them to the components. Without it, the 1.0 component sizes stay in place; small Segmented already follows the small-size role. Control uses the control size and label line height, weight and family. Local component tokens can override an individual role.",
   "examples.componentTypeMapping": "Component text roles",
   "examples.componentTypePrefix": "Token prefix",
-  "examples.componentTypeDefault": "Default font size"
+  "examples.componentTypeDefault": "Default font size",
+  "examples.sliderMarked": "Slider with marks",
+  "examples.sliderMarkedValue": "Value:",
+  "examples.sliderRange": "Range with marks",
+  "examples.sliderRangeValue": "Range:"
 }
