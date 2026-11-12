@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { compileScript, compileTemplate, parse } from "vue/compiler-sfc";
 import { consumerSource } from "../../../scripts/example-source.mjs";
 import { acceptsDocumentationValue, documentationControlSamples, documentationDefaults, documentationPresets } from "../src/design-system/documentation-controls";
-import { documentationControls, stateCases } from "../src/design-system/states";
+import { documentationControls, stateCases, stateControls } from "../src/design-system/states";
 import { playgroundI18n } from "../src/i18n";
 
 let previousLocale = playgroundI18n.global.locale.value;
@@ -62,6 +62,14 @@ describe("copyable examples are public package consumers", () => {
     expect(documentationControls(autocomplete).map((prop) => prop.name)).not.toContain("multiple");
     const files = wlManifest.find((entry) => entry.name === "WlFilePicker")!;
     expect(documentationControls(files).find((prop) => prop.name === "multiple")?.type).toBe("boolean");
+  });
+  it("exposes WlCalendar multiple selection as a boolean with a single-selection default", () => {
+    const entry = wlManifest.find((item) => item.name === "WlCalendar")!;
+    const raw = readFileSync(join(examples, "WlCalendar.vue"), "utf8");
+    for (const controls of [stateControls(entry), documentationControls(entry, raw)]) {
+      expect(controls.find((control) => control.name === "multiple")).toMatchObject({ type: "boolean", default: false });
+    }
+    expect(documentationDefaults(entry, raw)).toMatchObject({ multiple: false });
   });
   it("uses numeric PageHeader heading levels in documentation and copied consumer props", () => {
     const entry = wlManifest.find((item) => item.name === "WlPageHeader")!;

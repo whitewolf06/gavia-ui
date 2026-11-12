@@ -217,5 +217,6 @@
   "changelog.fluidControls0": "Configure Field, input-family, Accordion and Slider width limits through component tokens, or opt into `wl-fluid` with the optional primitives stylesheet to fill the containing layout ([#7](https://github.com/whitewolf06/gavia-ui/issues/7)).",
   "changelog.fluidControls1": "Keep Slider range tracks and marks within the same width as their inputs.",
   "changelog.calendarAvailability": "Add WlCalendar `disabledDates` and a typed `select` activation event, including repeated activation of the selected date; preserve selection models and skip unavailable dates during keyboard navigation ([#6](https://github.com/whitewolf06/gavia-ui/issues/6)).",
-  "changelog.semanticComponentType": "Customize Card, Accordion, Alert and Segmented typography and insets with component tokens. Opt into `wl-type-scale` from the primitives stylesheet to follow semantic text roles while retaining the 1.0 appearance by default ([#5](https://github.com/whitewolf06/gavia-ui/issues/5))."
+  "changelog.semanticComponentType": "Customize Card, Accordion, Alert and Segmented typography and insets with component tokens. Opt into `wl-type-scale` from the primitives stylesheet to follow semantic text roles while retaining the 1.0 appearance by default ([#5](https://github.com/whitewolf06/gavia-ui/issues/5)).",
+  "changelog.calendarMultipleMetadata": "Expose WlCalendar `multiple` as a boolean control in the Playground and align its live example with the component's single-selection default ([#6](https://github.com/whitewolf06/gavia-ui/issues/6))."
 }

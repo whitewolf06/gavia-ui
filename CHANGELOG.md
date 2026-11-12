@@ -17,6 +17,8 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 ### Fixed
 
+- Expose WlCalendar `multiple` as a boolean control in the Playground and align its live example with the component's single-selection default ([#6](https://github.com/whitewolf06/gavia-ui/issues/6)).
+
 - Keep Slider range tracks and marks within the same width as their inputs.
 
 - Apply WlCard `padding="none|sm|md|lg"` to its own caption, content and footer once, without adding body padding or affecting nested cards. Cards without the prop keep their existing insets ([#4](https://github.com/whitewolf06/gavia-ui/issues/4)).

@@ -15,7 +15,7 @@ function activate(iso: string): void {
   activated.value = iso;
   activationCount.value += 1;
 }
-const multiple = computed(() => props.preview?.multiple !== false);
+const multiple = computed(() => props.preview?.multiple === true);
 const forwardedPreview = computed(() => {
   const attributes = { ...props.preview };
   delete attributes.multiple;
