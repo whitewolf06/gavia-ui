@@ -450,6 +450,13 @@
   --wl-corner-button-sm: var(--wl-dimension-btn-radius-sm);
   --wl-corner-button-lg: var(--wl-dimension-btn-radius-lg);
   --wl-btn-radius-lg: var(--wl-corner-button-lg);
+  --wl-dimension-card-inset-start: 14px;
+  --wl-metric-card-inset-start: var(--wl-dimension-card-inset-start);
+  --wl-card-padding-block-start: var(--wl-metric-card-inset-start);
+  --wl-card-padding-inline: var(--wl-space-lg);
+  --wl-card-padding-block-end: var(--wl-space-lg);
+  --wl-card-footer-padding-block: var(--wl-space-md);
+  --wl-card-content-gap: var(--wl-space-sm);
 }
 @media (prefers-reduced-motion: reduce) {
 [data-wl-theme="gavia-dark"] {

@@ -4,6 +4,23 @@ Choose the section for the version or contract you are changing. Historical
 sections describe that release; they do not report current validation or a new
 publication. Stable public namespaces remain `Wl*`, `wl-*` and `--wl-*`.
 
+## Unreleased corrections
+
+### Card padding
+
+WlCard now applies explicit `padding="none|sm|md|lg"` to its own caption,
+content and footer, without adding another inset on the body. The sizes are
+0/8/12/16 px. The caption has no bottom inset, so the gap before content is
+applied once. The header stays full bleed. Cards without `padding` retain
+their existing section insets; nested cards keep their own settings.
+
+Remove workarounds that cancel the old extra body padding or force section
+padding through CSS/PT, then check the intended inset. Public DOM, classes,
+slots and PT section names are unchanged. Default insets can be customized with
+`--wl-card-padding-inline`, `--wl-card-padding-block-start`,
+`--wl-card-padding-block-end`, `--wl-card-footer-padding-block` and
+`--wl-card-content-gap`.
+
 Start with the 1.0 checklist. Detailed component and service changes are
 included below; historical upgrade sections remain available at their anchors.
 

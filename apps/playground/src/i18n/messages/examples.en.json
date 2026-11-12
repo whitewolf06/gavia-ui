@@ -1066,5 +1066,7 @@
   "examples.reviewUploadRemove": "Remove",
   "examples.reviewUploadAdvance": "Advance demo progress",
   "examples.utilityAvatarName": "Anna Mikhailova",
-  "examples.utilityAvatarColor": "The outline color follows the name. The same name and palette keep the same color on the server and client."
+  "examples.utilityAvatarColor": "The outline color follows the name. The same name and palette keep the same color on the server and client.",
+  "examples.cardPaddingGuide": "Set padding to none, sm (8 px), md (12 px) or lg (16 px). Each section uses one inset; the caption has no bottom inset. Omit the prop to keep the theme defaults.",
+  "examples.cardNestedPadding": "This nested card keeps its own padding."
 }

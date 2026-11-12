@@ -217,6 +217,7 @@
     --wl-dimension-btn-radius: var(--wl-radius);
     --wl-dimension-btn-radius-sm: var(--wl-radius-sm);
     --wl-dimension-btn-radius-lg: var(--wl-radius-lg);
+    --wl-dimension-card-inset-start: 14px;
     /* semantic */
     --wl-type-text-rendering: var(--wl-font-text-rendering);
     --wl-bg: var(--wl-palette-bg);
@@ -389,6 +390,7 @@
     --wl-corner-button: var(--wl-dimension-btn-radius);
     --wl-corner-button-sm: var(--wl-dimension-btn-radius-sm);
     --wl-corner-button-lg: var(--wl-dimension-btn-radius-lg);
+    --wl-metric-card-inset-start: var(--wl-dimension-card-inset-start);
     /* component */
     --wl-btn-height: var(--wl-control-height-md);
     --wl-btn-height-sm: var(--wl-control-height-sm);
@@ -459,6 +461,11 @@
     --wl-upload-drop-pad-y: var(--wl-metric-upload-drop-pad-y);
     --wl-upload-drop-pad-x: var(--wl-metric-upload-drop-pad-x);
     --wl-btn-radius-lg: var(--wl-corner-button-lg);
+    --wl-card-padding-block-start: var(--wl-metric-card-inset-start);
+    --wl-card-padding-inline: var(--wl-space-lg);
+    --wl-card-padding-block-end: var(--wl-space-lg);
+    --wl-card-footer-padding-block: var(--wl-space-md);
+    --wl-card-content-gap: var(--wl-space-sm);
   }
 }
 /* @wl-tokens:end */

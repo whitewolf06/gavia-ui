@@ -1066,5 +1066,7 @@
   "examples.reviewUploadRemove": "Удалить",
   "examples.reviewUploadAdvance": "Увеличить прогресс в примере",
   "examples.utilityAvatarName": "Анна Михайлова",
-  "examples.utilityAvatarColor": "Цвет обводки выбран по имени. Для одного имени и одной палитры он совпадает на сервере и в браузере."
+  "examples.utilityAvatarColor": "Цвет обводки выбран по имени. Для одного имени и одной палитры он совпадает на сервере и в браузере.",
+  "examples.cardPaddingGuide": "Задай padding: none уберёт отступы, sm даст 8 px, md — 12 px, lg — 16 px. Каждая секция получает один отступ; снизу у заголовка отступа нет. Без prop остаются настройки темы.",
+  "examples.cardNestedPadding": "У вложенной карточки свои отступы."
 }

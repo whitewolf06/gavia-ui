@@ -494,5 +494,12 @@
   "tokens.contrast.accent-text-raised.label": "Accent text on a raised surface",
   "tokens.contrast.accent-text-soft.label": "Accent text on a secondary surface",
   "tokens.contrast.accent-text-selected.label": "Accent text on a selected surface",
-  "tokens.contrast.accent-text-hover.label": "Accent text on a soft surface: hover"
+  "tokens.contrast.accent-text-hover.label": "Accent text on a soft surface: hover",
+  "tokens.token.--wl-dimension-card-inset-start.description": "Original card caption and content top inset.",
+  "tokens.token.--wl-metric-card-inset-start.description": "Default top inset for card content regions.",
+  "tokens.token.--wl-card-padding-block-start.description": "Default caption and uncaptioned content top inset.",
+  "tokens.token.--wl-card-padding-inline.description": "Default horizontal inset for card caption, content and footer.",
+  "tokens.token.--wl-card-padding-block-end.description": "Default bottom inset of card content.",
+  "tokens.token.--wl-card-footer-padding-block.description": "Default vertical inset of the card footer.",
+  "tokens.token.--wl-card-content-gap.description": "Gap from the card caption to its content."
 }

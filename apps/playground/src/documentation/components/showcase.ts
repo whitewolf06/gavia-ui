@@ -97,6 +97,7 @@ export const showcaseDocumentationAccessibility: Record<string, readonly string[
     "documentation.strings.s0595"
   ],
   WlCard: [
+    "documentation.strings.cardPadding",
     "documentation.strings.s0596",
     "documentation.strings.s0597",
     "documentation.strings.s0598"

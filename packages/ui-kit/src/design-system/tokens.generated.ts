@@ -4109,6 +4109,62 @@ export const wlDesignTokens = [
     "type": "dimension",
     "category": "shape",
     "description": "Локальная настройка скругления большой кнопки."
+  },
+  {
+    "name": "--wl-dimension-card-inset-start",
+    "layer": "foundation",
+    "type": "dimension",
+    "category": "spacing",
+    "description": "Original card caption and content top inset.",
+    "value": "14px"
+  },
+  {
+    "name": "--wl-metric-card-inset-start",
+    "layer": "semantic",
+    "type": "dimension",
+    "category": "spacing",
+    "description": "Default top inset for card content regions.",
+    "value": "var(--wl-dimension-card-inset-start)"
+  },
+  {
+    "name": "--wl-card-padding-block-start",
+    "layer": "component",
+    "type": "dimension",
+    "category": "spacing",
+    "description": "Default caption and uncaptioned content top inset.",
+    "value": "var(--wl-metric-card-inset-start)"
+  },
+  {
+    "name": "--wl-card-padding-inline",
+    "layer": "component",
+    "type": "dimension",
+    "category": "spacing",
+    "description": "Default horizontal inset for card caption, content and footer.",
+    "value": "var(--wl-space-lg)"
+  },
+  {
+    "name": "--wl-card-padding-block-end",
+    "layer": "component",
+    "type": "dimension",
+    "category": "spacing",
+    "description": "Default bottom inset of card content.",
+    "value": "var(--wl-space-lg)"
+  },
+  {
+    "name": "--wl-card-footer-padding-block",
+    "layer": "component",
+    "type": "dimension",
+    "category": "spacing",
+    "description": "Default vertical inset of the card footer.",
+    "value": "var(--wl-space-md)"
+  },
+  {
+    "name": "--wl-card-content-gap",
+    "layer": "component",
+    "type": "dimension",
+    "category": "spacing",
+    "description": "Gap from the card caption to its content.",
+    "value": "var(--wl-space-sm)"
   }
 ] as const satisfies readonly WlDesignTokenDefinition[];
 export type WlDesignTokenName = (typeof wlDesignTokens)[number]["name"];

@@ -1816,7 +1816,8 @@
     "v1Api067": "Visible range start label; falls back to WlConfig.locale.dateFrom (From in English).",
     "v1Api068": "Visible range start label.\nDefaults to WlConfig.locale.dateFrom (English when unconfigured).",
     "v1Api069": "Whether the surface is open.",
-    "v1Api070": "WlStepItem[]: { label }."
+    "v1Api070": "WlStepItem[]: { label }.",
+    "cardPadding": "padding controls caption, content and footer once. none removes their insets; sm/md/lg use 8/12/16 px. The header stays full bleed, and nested cards keep their own settings. Without the prop, the existing section insets are preserved."
   },
   "componentSearch": {
     "label": "Search components",

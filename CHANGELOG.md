@@ -7,6 +7,10 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 ## Unreleased
 
+### Fixed
+
+- Apply WlCard `padding="none|sm|md|lg"` to its own caption, content and footer once, without adding body padding or affecting nested cards. Cards without the prop keep their existing insets ([#4](https://github.com/whitewolf06/gavia-ui/issues/4)).
+
 ## 1.0.0 — 2026-10-25
 
 Stable 1.0 promotes the RC public API to npm `latest`. The library API is unchanged from 1.0.0-rc.1; the Playground now translates all changelog prose into Russian.

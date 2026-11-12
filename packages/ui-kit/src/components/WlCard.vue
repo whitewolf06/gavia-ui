@@ -57,12 +57,27 @@ const section = useWlPt("card", computed(() => props.pt));
   >
     <div v-if="slots.header" v-bind="section('header')" class="wl-card__header"><slot name="header"></slot></div>
     <div v-bind="section('body')" class="wl-card__body">
-      <div v-if="slots.title || slots.subtitle" v-bind="section('caption')" class="wl-card__caption">
+      <div
+        v-if="slots.title || slots.subtitle"
+        v-bind="section('caption')"
+        class="wl-card__caption"
+        :data-padding="padding"
+      >
         <div v-if="slots.title" v-bind="section('title')" class="wl-card__title"><slot name="title"></slot></div>
         <div v-if="slots.subtitle" v-bind="section('subtitle')" class="wl-card__subtitle"><slot name="subtitle"></slot></div>
       </div>
-      <div v-bind="section('content')" class="wl-card__content"><slot></slot></div>
-      <div v-if="slots.footer" v-bind="section('footer')" class="wl-card__footer"><slot name="footer"></slot></div>
+      <div
+        v-bind="section('content')"
+        class="wl-card__content"
+        :class="{ 'wl-card__content--captioned': slots.title || slots.subtitle }"
+        :data-padding="padding"
+      ><slot></slot></div>
+      <div
+        v-if="slots.footer"
+        v-bind="section('footer')"
+        class="wl-card__footer"
+        :data-padding="padding"
+      ><slot name="footer"></slot></div>
     </div>
   </component>
 </template>

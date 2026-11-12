@@ -494,5 +494,12 @@
   "tokens.contrast.accent-text-raised.label": "Акцентный текст на поднятой поверхности",
   "tokens.contrast.accent-text-soft.label": "Акцентный текст на вторичной поверхности",
   "tokens.contrast.accent-text-selected.label": "Акцентный текст на выбранной поверхности",
-  "tokens.contrast.accent-text-hover.label": "Акцентный текст на мягкой поверхности при наведении"
+  "tokens.contrast.accent-text-hover.label": "Акцентный текст на мягкой поверхности при наведении",
+  "tokens.token.--wl-dimension-card-inset-start.description": "Исходный верхний отступ заголовка и содержимого карточки.",
+  "tokens.token.--wl-metric-card-inset-start.description": "Верхний отступ секций карточки по умолчанию.",
+  "tokens.token.--wl-card-padding-block-start.description": "Верхний отступ заголовка и содержимого без заголовка.",
+  "tokens.token.--wl-card-padding-inline.description": "Горизонтальный отступ заголовка, содержимого и подвала карточки.",
+  "tokens.token.--wl-card-padding-block-end.description": "Нижний отступ содержимого карточки.",
+  "tokens.token.--wl-card-footer-padding-block.description": "Вертикальный отступ подвала карточки.",
+  "tokens.token.--wl-card-content-gap.description": "Промежуток между заголовком и содержимым карточки."
 }

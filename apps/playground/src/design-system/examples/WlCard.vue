@@ -18,5 +18,19 @@ const saved = ref(false);
         <WlButton size="sm" @click="saved = !saved">{{ saved ? t("examples.saved_0025") : t("examples.save_0026") }}</WlButton>
       </template>
     </WlCard>
+    <p class="wl-text-small">{{ t("examples.cardPaddingGuide") }}</p>
+    <WlCard
+      v-for="padding in (['none', 'sm', 'md', 'lg'] as const)"
+      :key="padding"
+      :padding="padding"
+      :data-padding-example="padding"
+    >
+      <template #title>padding="{{ padding }}"</template>
+      {{ t("examples.team_structure_roles_and_agreements_0024") }}
+      <template #footer>{{ t("examples.updated_october_1_0023") }}</template>
+      <WlCard v-if="padding === 'lg'" padding="none" data-padding-example="nested">
+        {{ t("examples.cardNestedPadding") }}
+      </WlCard>
+    </WlCard>
   </div>
 </template>
