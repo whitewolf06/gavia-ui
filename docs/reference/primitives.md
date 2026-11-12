@@ -38,6 +38,27 @@ to align the header and page. Avoid nesting identical side padding unnecessarily
 Tokens: `--wl-layout-page-max`, `--wl-layout-page-gutter`,
 `--wl-layout-reading-max`. The narrow container is constrained by its parent width.
 
+## Fluid controls
+
+Add `wl-fluid` to a form or layout group to remove inherited maximum widths
+from Field, input wrappers, Select, Textarea, MultiSelect, Autocomplete,
+Accordion and Slider. This applies to the containing Field and its control;
+NumberInput keeps its intrinsic width. Component defaults are unchanged when
+the class is absent. The class requires this optional primitives stylesheet.
+
+```vue
+<form class="wl-stack wl-fluid">
+  <WlField v-slot="field" label="Name">
+    <WlInput :id="field.id" />
+  </WlField>
+</form>
+```
+
+For an individual limit, set the relevant `--wl-*-max-width` component token
+on the component or an ancestor. A closer override wins over the inherited
+fluid group. Keep `max-width: none` scoped to layout groups that need it;
+theme roots establish their own token values.
+
 ## Stack, inline and grid
 
 - `wl-stack` — a vertical group.

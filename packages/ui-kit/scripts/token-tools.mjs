@@ -55,6 +55,12 @@ export function validateCatalog(catalog) {
   for (const token of Object.values(catalog.spacing)) {
     if (!names.has(token)) throw new Error(`Unknown spacing token: ${token}`);
   }
+  if (catalog.fluidSizing !== undefined && (!Array.isArray(catalog.fluidSizing)
+    || new Set(catalog.fluidSizing).size !== catalog.fluidSizing.length
+    || catalog.fluidSizing.some((name) => typeof name !== "string" || !name.endsWith("-max-width")
+      || !catalog.tokens.some((token) => token.name === name && token.layer === "component")))) {
+    throw new Error("Invalid fluid sizing token contract");
+  }
   const roleNames = new Set();
   for (const role of catalog.typography) {
     if (!/^[a-z][a-z-]*$/.test(role.name) || roleNames.has(role.name) || !role.label || !role.description) throw new Error("Invalid typography role");
@@ -133,6 +139,9 @@ export function renderPrimitiveCss(catalog) {
     "  .wl-text-muted { color: var(--wl-text-muted); }",
     "  .wl-visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }"
   ];
+  if (catalog.fluidSizing?.length) {
+    lines.push(`  .wl-fluid { ${catalog.fluidSizing.map((name) => `${name}: none;`).join(" ")} }`);
+  }
   for (const [space, token] of Object.entries(catalog.spacing)) {
     lines.push(`  :where(.wl-stack, .wl-inline, .wl-grid)[data-space="${space}"] { gap: var(${token}); }`);
   }

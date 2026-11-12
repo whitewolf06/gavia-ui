@@ -218,6 +218,9 @@
     --wl-dimension-btn-radius-sm: var(--wl-radius-sm);
     --wl-dimension-btn-radius-lg: var(--wl-radius-lg);
     --wl-dimension-card-inset-start: 14px;
+    --wl-dimension-control-max-width: 340px;
+    --wl-dimension-accordion-max-width: 520px;
+    --wl-dimension-slider-max-width: 320px;
     /* semantic */
     --wl-type-text-rendering: var(--wl-font-text-rendering);
     --wl-bg: var(--wl-palette-bg);
@@ -391,6 +394,9 @@
     --wl-corner-button-sm: var(--wl-dimension-btn-radius-sm);
     --wl-corner-button-lg: var(--wl-dimension-btn-radius-lg);
     --wl-metric-card-inset-start: var(--wl-dimension-card-inset-start);
+    --wl-layout-control-max-width: var(--wl-dimension-control-max-width);
+    --wl-layout-accordion-max-width: var(--wl-dimension-accordion-max-width);
+    --wl-layout-slider-max-width: var(--wl-dimension-slider-max-width);
     /* component */
     --wl-btn-height: var(--wl-control-height-md);
     --wl-btn-height-sm: var(--wl-control-height-sm);
@@ -466,6 +472,14 @@
     --wl-card-padding-block-end: var(--wl-space-lg);
     --wl-card-footer-padding-block: var(--wl-space-md);
     --wl-card-content-gap: var(--wl-space-sm);
+    --wl-field-max-width: var(--wl-layout-control-max-width);
+    --wl-input-max-width: var(--wl-layout-control-max-width);
+    --wl-select-max-width: var(--wl-layout-control-max-width);
+    --wl-textarea-max-width: var(--wl-layout-control-max-width);
+    --wl-multiselect-max-width: var(--wl-layout-control-max-width);
+    --wl-autocomplete-max-width: var(--wl-layout-control-max-width);
+    --wl-accordion-max-width: var(--wl-layout-accordion-max-width);
+    --wl-slider-max-width: var(--wl-layout-slider-max-width);
   }
 }
 /* @wl-tokens:end */

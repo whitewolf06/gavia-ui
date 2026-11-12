@@ -1817,7 +1817,8 @@
     "v1Api068": "Visible range start label.\nDefaults to WlConfig.locale.dateFrom (English when unconfigured).",
     "v1Api069": "Whether the surface is open.",
     "v1Api070": "WlStepItem[]: { label }.",
-    "cardPadding": "padding controls caption, content and footer once. none removes their insets; sm/md/lg use 8/12/16 px. The header stays full bleed, and nested cards keep their own settings. Without the prop, the existing section insets are preserved."
+    "cardPadding": "padding controls caption, content and footer once. none removes their insets; sm/md/lg use 8/12/16 px. The header stays full bleed, and nested cards keep their own settings. Without the prop, the existing section insets are preserved.",
+    "fluidControls": "Import styles/primitives.css and add wl-fluid to a form to remove inherited width limits from Field and its controls. Component max-width tokens also allow individual limits; the defaults stay unchanged."
   },
   "componentSearch": {
     "label": "Search components",

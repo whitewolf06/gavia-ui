@@ -1,11 +1,23 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
-import { contrastRatio, renderThemeCss, resolveToken, validateCatalog } from "../../scripts/token-tools.mjs";
+import { contrastRatio, renderPrimitiveCss, renderThemeCss, resolveToken, validateCatalog } from "../../scripts/token-tools.mjs";
 import source from "../../tokens/source.json";
 
 const token = (catalog, name) => catalog.tokens.find((item) => item.name === name);
 
 describe("design token source validation", () => {
+  it("keeps width defaults and makes fluid sizing available only in optional primitives", () => {
+    for (const theme of source.themes) {
+      expect(resolveToken(source, "--wl-field-max-width", theme.name)).toBe("340px");
+      expect(resolveToken(source, "--wl-accordion-max-width", theme.name)).toBe("520px");
+      expect(resolveToken(source, "--wl-slider-max-width", theme.name)).toBe("320px");
+    }
+    const css = renderPrimitiveCss(source);
+    for (const name of source.fluidSizing) expect(css).toContain(`${name}: none;`);
+    const invalid = structuredClone(source);
+    invalid.fluidSizing.push("--wl-missing-max-width");
+    expect(() => validateCatalog(invalid)).toThrow("Invalid fluid sizing token contract");
+  });
   it("checks every theme and all approved contrast pairs", () => {
     expect(validateCatalog(source)).toHaveLength(source.themes.length * source.contrast.length);
   });

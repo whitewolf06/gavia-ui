@@ -218,6 +218,7 @@ export const showcaseDocumentationAccessibility: Record<string, readonly string[
     "documentation.strings.s0667"
   ],
   WlField: [
+    "documentation.strings.fluidControls",
     "documentation.strings.s0668",
     "documentation.strings.s0669",
     "documentation.strings.s0670"

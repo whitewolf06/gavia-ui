@@ -159,6 +159,12 @@ import "gavia-ui/themes/white.css";
   `wl-container--narrow` — reading width up to 72ch; `--fluid` — full width with padding;
   `--full` — full width without padding. Add modifiers to `wl-container`.
 - `wl-surface`: background, border, radius and 24 px padding.
+- `wl-fluid`: remove the width caps of Field, input-family controls, Accordion
+  and Slider inside the group. Import `styles/primitives.css` explicitly. The
+  class sets inherited component max-width tokens to `none`, including both a
+  Field and its control. A closer component token override can restore a cap.
+  NumberInput keeps its intrinsic sizing. A nested theme root resets its own
+  tokens; apply `wl-fluid` on that root too when needed.
 - `wl-rule`: divider on native `hr`.
 - `wl-scroll-area`: local scrolling for wide content; provide an accessible
   name and `tabindex="0"` for keyboard operation.
@@ -168,6 +174,15 @@ import "gavia-ui/themes/white.css";
 
 The detailed contract, container variants and z-index rules are
 in [primitives.md](primitives.md). Live examples are in Docs → Layout and grid.
+
+Default control caps remain 340 px for `--wl-field-max-width`,
+`--wl-input-max-width`, `--wl-select-max-width`, `--wl-textarea-max-width`,
+`--wl-multiselect-max-width` and `--wl-autocomplete-max-width`; Accordion uses
+`--wl-accordion-max-width` (520 px), Slider `--wl-slider-max-width` (320 px).
+Set a component token directly for an individual cap. Override semantic
+`--wl-layout-control-max-width` on the theme root alongside its token aliases
+to customize the default form scale. On a local form, use `wl-fluid` or the
+component tokens directly so inherited aliases resolve predictably.
 
 Typed `wlBreakpoints` provides media-query values: sm 640, md 900, lg 1200 px.
 CSS custom properties cannot be substituted into ordinary media-query conditions;

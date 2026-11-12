@@ -457,6 +457,20 @@
   --wl-card-padding-block-end: var(--wl-space-lg);
   --wl-card-footer-padding-block: var(--wl-space-md);
   --wl-card-content-gap: var(--wl-space-sm);
+  --wl-dimension-control-max-width: 340px;
+  --wl-layout-control-max-width: var(--wl-dimension-control-max-width);
+  --wl-dimension-accordion-max-width: 520px;
+  --wl-layout-accordion-max-width: var(--wl-dimension-accordion-max-width);
+  --wl-dimension-slider-max-width: 320px;
+  --wl-layout-slider-max-width: var(--wl-dimension-slider-max-width);
+  --wl-field-max-width: var(--wl-layout-control-max-width);
+  --wl-input-max-width: var(--wl-layout-control-max-width);
+  --wl-select-max-width: var(--wl-layout-control-max-width);
+  --wl-textarea-max-width: var(--wl-layout-control-max-width);
+  --wl-multiselect-max-width: var(--wl-layout-control-max-width);
+  --wl-autocomplete-max-width: var(--wl-layout-control-max-width);
+  --wl-accordion-max-width: var(--wl-layout-accordion-max-width);
+  --wl-slider-max-width: var(--wl-layout-slider-max-width);
 }
 @media (prefers-reduced-motion: reduce) {
 [data-wl-theme="gavia-dark"] {

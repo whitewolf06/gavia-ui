@@ -501,5 +501,19 @@
   "tokens.token.--wl-card-padding-inline.description": "Default horizontal inset for card caption, content and footer.",
   "tokens.token.--wl-card-padding-block-end.description": "Default bottom inset of card content.",
   "tokens.token.--wl-card-footer-padding-block.description": "Default vertical inset of the card footer.",
-  "tokens.token.--wl-card-content-gap.description": "Gap from the card caption to its content."
+  "tokens.token.--wl-card-content-gap.description": "Gap from the card caption to its content.",
+  "tokens.token.--wl-dimension-control-max-width.description": "Original form control width limit.",
+  "tokens.token.--wl-layout-control-max-width.description": "Default width limit for form control layouts.",
+  "tokens.token.--wl-dimension-accordion-max-width.description": "Original accordion width limit.",
+  "tokens.token.--wl-layout-accordion-max-width.description": "Default width limit for accordion layouts.",
+  "tokens.token.--wl-dimension-slider-max-width.description": "Original slider width limit.",
+  "tokens.token.--wl-layout-slider-max-width.description": "Default width limit for slider layouts.",
+  "tokens.token.--wl-field-max-width.description": "Maximum width of field; set to none to fill its containing layout.",
+  "tokens.token.--wl-input-max-width.description": "Maximum width of input; set to none to fill its containing layout.",
+  "tokens.token.--wl-select-max-width.description": "Maximum width of select; set to none to fill its containing layout.",
+  "tokens.token.--wl-textarea-max-width.description": "Maximum width of textarea; set to none to fill its containing layout.",
+  "tokens.token.--wl-multiselect-max-width.description": "Maximum width of multiselect; set to none to fill its containing layout.",
+  "tokens.token.--wl-autocomplete-max-width.description": "Maximum width of autocomplete; set to none to fill its containing layout.",
+  "tokens.token.--wl-accordion-max-width.description": "Maximum width of accordion; set to none to fill its containing layout.",
+  "tokens.token.--wl-slider-max-width.description": "Maximum width of slider; set to none to fill its containing layout."
 }

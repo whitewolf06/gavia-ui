@@ -501,5 +501,19 @@
   "tokens.token.--wl-card-padding-inline.description": "Горизонтальный отступ заголовка, содержимого и подвала карточки.",
   "tokens.token.--wl-card-padding-block-end.description": "Нижний отступ содержимого карточки.",
   "tokens.token.--wl-card-footer-padding-block.description": "Вертикальный отступ подвала карточки.",
-  "tokens.token.--wl-card-content-gap.description": "Промежуток между заголовком и содержимым карточки."
+  "tokens.token.--wl-card-content-gap.description": "Промежуток между заголовком и содержимым карточки.",
+  "tokens.token.--wl-dimension-control-max-width.description": "Исходное ограничение ширины компонента.",
+  "tokens.token.--wl-layout-control-max-width.description": "Ограничение ширины семейства компонентов по умолчанию.",
+  "tokens.token.--wl-dimension-accordion-max-width.description": "Исходное ограничение ширины компонента.",
+  "tokens.token.--wl-layout-accordion-max-width.description": "Ограничение ширины семейства компонентов по умолчанию.",
+  "tokens.token.--wl-dimension-slider-max-width.description": "Исходное ограничение ширины компонента.",
+  "tokens.token.--wl-layout-slider-max-width.description": "Ограничение ширины семейства компонентов по умолчанию.",
+  "tokens.token.--wl-field-max-width.description": "Максимальная ширина field; none растянет компонент по контейнеру.",
+  "tokens.token.--wl-input-max-width.description": "Максимальная ширина input; none растянет компонент по контейнеру.",
+  "tokens.token.--wl-select-max-width.description": "Максимальная ширина select; none растянет компонент по контейнеру.",
+  "tokens.token.--wl-textarea-max-width.description": "Максимальная ширина textarea; none растянет компонент по контейнеру.",
+  "tokens.token.--wl-multiselect-max-width.description": "Максимальная ширина multiselect; none растянет компонент по контейнеру.",
+  "tokens.token.--wl-autocomplete-max-width.description": "Максимальная ширина autocomplete; none растянет компонент по контейнеру.",
+  "tokens.token.--wl-accordion-max-width.description": "Максимальная ширина accordion; none растянет компонент по контейнеру.",
+  "tokens.token.--wl-slider-max-width.description": "Максимальная ширина slider; none растянет компонент по контейнеру."
 }

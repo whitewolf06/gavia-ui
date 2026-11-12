@@ -4,10 +4,12 @@ import {
   WlDialog, WlDrawer, WlField, WlMenu, type WlMenuExpose, WlMultiSelect, WlPopover,
   type WlPopoverExpose, WlSelect, WlTable, WlTimePicker, WlToast } from "gavia-ui";
 import { computed, ref } from "vue";
+import ControlWidthFixture from "./ControlWidthFixture.vue";
 
 const choices = [{ label: "Альфа", value: "a" }, { label: "Бета", value: "b" }];
 const select = ref<string | null>(null);
 const reviewListbox = new URLSearchParams(window.location.search).has("review-listbox");
+const reviewControlWidth = new URLSearchParams(window.location.search).has("review-control-width");
 const reviewTimePicker = new URLSearchParams(window.location.search).has("review-time-picker");
 const nativeTime = ref<string | null>("09:30");
 const nativeTimeDisabled = ref(false);
@@ -54,6 +56,7 @@ function ask(): void {
 </script>
 
 <template>
+  <ControlWidthFixture v-if="reviewControlWidth" />
   <main class="fixture">
     <h1>Gavia UI regression</h1>
     <section v-if="reviewTimePicker" class="fixture-card" data-testid="native-time-explorer">

@@ -213,5 +213,7 @@
   "changelog.release10.text39": "Remove the 0.x PT/status/dismissal aliases in the major candidate; use the [canonical-name migration](docs/migration.md#migration-1-0-public-api).",
   "changelog.release10.text40": "Manual NVDA/Firefox, macOS VoiceOver/Safari and iOS VoiceOver checks remain unperformed. The owner accepted this gap for the RC on 2026-10-24; automated browser and Axe checks do not establish manual accessibility acceptance ([protocol](docs/maintainers/manual-accessibility.md)).",
   "changelog.release10.releaseBadges": "Keep New component badges when promoting the same numeric release from a prerelease to stable.",
-  "changelog.cardPadding": "Apply WlCard `padding=\"none|sm|md|lg\"` to its own caption, content and footer once, without adding body padding or affecting nested cards. Cards without the prop keep their existing insets ([#4](https://github.com/whitewolf06/gavia-ui/issues/4))."
+  "changelog.cardPadding": "Apply WlCard `padding=\"none|sm|md|lg\"` to its own caption, content and footer once, without adding body padding or affecting nested cards. Cards without the prop keep their existing insets ([#4](https://github.com/whitewolf06/gavia-ui/issues/4)).",
+  "changelog.fluidControls0": "Configure Field, input-family, Accordion and Slider width limits through component tokens, or opt into `wl-fluid` with the optional primitives stylesheet to fill the containing layout ([#7](https://github.com/whitewolf06/gavia-ui/issues/7)).",
+  "changelog.fluidControls1": "Keep Slider range tracks and marks within the same width as their inputs."
 }

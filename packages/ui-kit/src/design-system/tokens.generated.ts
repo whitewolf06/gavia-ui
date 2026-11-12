@@ -4165,6 +4165,118 @@ export const wlDesignTokens = [
     "category": "spacing",
     "description": "Gap from the card caption to its content.",
     "value": "var(--wl-space-sm)"
+  },
+  {
+    "name": "--wl-dimension-control-max-width",
+    "layer": "foundation",
+    "type": "dimension",
+    "category": "layout",
+    "description": "Original form control width limit.",
+    "value": "340px"
+  },
+  {
+    "name": "--wl-layout-control-max-width",
+    "layer": "semantic",
+    "type": "dimension",
+    "category": "layout",
+    "description": "Default width limit for form control layouts.",
+    "value": "var(--wl-dimension-control-max-width)"
+  },
+  {
+    "name": "--wl-dimension-accordion-max-width",
+    "layer": "foundation",
+    "type": "dimension",
+    "category": "layout",
+    "description": "Original accordion width limit.",
+    "value": "520px"
+  },
+  {
+    "name": "--wl-layout-accordion-max-width",
+    "layer": "semantic",
+    "type": "dimension",
+    "category": "layout",
+    "description": "Default width limit for accordion layouts.",
+    "value": "var(--wl-dimension-accordion-max-width)"
+  },
+  {
+    "name": "--wl-dimension-slider-max-width",
+    "layer": "foundation",
+    "type": "dimension",
+    "category": "layout",
+    "description": "Original slider width limit.",
+    "value": "320px"
+  },
+  {
+    "name": "--wl-layout-slider-max-width",
+    "layer": "semantic",
+    "type": "dimension",
+    "category": "layout",
+    "description": "Default width limit for slider layouts.",
+    "value": "var(--wl-dimension-slider-max-width)"
+  },
+  {
+    "name": "--wl-field-max-width",
+    "layer": "component",
+    "type": "dimension",
+    "category": "layout",
+    "description": "Maximum width of field; set to none to fill its containing layout.",
+    "value": "var(--wl-layout-control-max-width)"
+  },
+  {
+    "name": "--wl-input-max-width",
+    "layer": "component",
+    "type": "dimension",
+    "category": "layout",
+    "description": "Maximum width of input; set to none to fill its containing layout.",
+    "value": "var(--wl-layout-control-max-width)"
+  },
+  {
+    "name": "--wl-select-max-width",
+    "layer": "component",
+    "type": "dimension",
+    "category": "layout",
+    "description": "Maximum width of select; set to none to fill its containing layout.",
+    "value": "var(--wl-layout-control-max-width)"
+  },
+  {
+    "name": "--wl-textarea-max-width",
+    "layer": "component",
+    "type": "dimension",
+    "category": "layout",
+    "description": "Maximum width of textarea; set to none to fill its containing layout.",
+    "value": "var(--wl-layout-control-max-width)"
+  },
+  {
+    "name": "--wl-multiselect-max-width",
+    "layer": "component",
+    "type": "dimension",
+    "category": "layout",
+    "description": "Maximum width of multiselect; set to none to fill its containing layout.",
+    "value": "var(--wl-layout-control-max-width)"
+  },
+  {
+    "name": "--wl-autocomplete-max-width",
+    "layer": "component",
+    "type": "dimension",
+    "category": "layout",
+    "description": "Maximum width of autocomplete; set to none to fill its containing layout.",
+    "value": "var(--wl-layout-control-max-width)"
+  },
+  {
+    "name": "--wl-accordion-max-width",
+    "layer": "component",
+    "type": "dimension",
+    "category": "layout",
+    "description": "Maximum width of accordion; set to none to fill its containing layout.",
+    "value": "var(--wl-layout-accordion-max-width)"
+  },
+  {
+    "name": "--wl-slider-max-width",
+    "layer": "component",
+    "type": "dimension",
+    "category": "layout",
+    "description": "Maximum width of slider; set to none to fill its containing layout.",
+    "value": "var(--wl-layout-slider-max-width)"
   }
 ] as const satisfies readonly WlDesignTokenDefinition[];
 export type WlDesignTokenName = (typeof wlDesignTokens)[number]["name"];
