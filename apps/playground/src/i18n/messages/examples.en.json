@@ -1069,5 +1069,7 @@
   "examples.utilityAvatarColor": "The outline color follows the name. The same name and palette keep the same color on the server and client.",
   "examples.cardPaddingGuide": "Set padding to none, sm (8 px), md (12 px) or lg (16 px). Each section uses one inset; the caption has no bottom inset. Omit the prop to keep the theme defaults.",
   "examples.cardNestedPadding": "This nested card keeps its own padding.",
-  "examples.fluidControls": "Fill the form width (wl-fluid)"
+  "examples.fluidControls": "Fill the form width (wl-fluid)",
+  "examples.calendarAvailability": "Disable October 16 and 18",
+  "examples.calendarActivation": "Last activation and count:"
 }

@@ -390,10 +390,11 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
         type: "array",
         default: [],
         description: "WlCalendarEvent[]: { date (ISO), label, tone?: \"blue\" | \"gray\" }."
-      }
+      },
+      { name: "disabledDates", type: "union", description: "ISO date list or predicate identifying dates that cannot be activated." }
     ],
     slots: [],
-    emits: [],
+    emits: [{ name: "select", payload: "string", description: "An enabled date was activated by pointer or keyboard, even when already selected." }],
     model: { name: "modelValue", type: "string", description: "Выбранная дата ISO \"YYYY-MM-DD\" (default \"\")." }
   },
   {

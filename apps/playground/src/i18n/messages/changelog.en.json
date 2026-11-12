@@ -215,5 +215,6 @@
   "changelog.release10.releaseBadges": "Keep New component badges when promoting the same numeric release from a prerelease to stable.",
   "changelog.cardPadding": "Apply WlCard `padding=\"none|sm|md|lg\"` to its own caption, content and footer once, without adding body padding or affecting nested cards. Cards without the prop keep their existing insets ([#4](https://github.com/whitewolf06/gavia-ui/issues/4)).",
   "changelog.fluidControls0": "Configure Field, input-family, Accordion and Slider width limits through component tokens, or opt into `wl-fluid` with the optional primitives stylesheet to fill the containing layout ([#7](https://github.com/whitewolf06/gavia-ui/issues/7)).",
-  "changelog.fluidControls1": "Keep Slider range tracks and marks within the same width as their inputs."
+  "changelog.fluidControls1": "Keep Slider range tracks and marks within the same width as their inputs.",
+  "changelog.calendarAvailability": "Add WlCalendar `disabledDates` and a typed `select` activation event, including repeated activation of the selected date; preserve selection models and skip unavailable dates during keyboard navigation ([#6](https://github.com/whitewolf06/gavia-ui/issues/6))."
 }

@@ -325,12 +325,15 @@
       "monthModifiers": "WlNoModelModifiers",
       "multiple": "Multiple & boolean",
       "disabled": "boolean",
+      "disabledDates": "WlDisabledDates",
       "pt": "WlPt<\"calendar\">"
     },
     "slots": {
       "day": "day?(props: WlCalendarDaySlotProps): unknown;"
     },
-    "emits": {},
+    "emits": {
+      "select": "[iso: string]"
+    },
     "models": {
       "modelValue": "WlCalendarModel<NoInfer<Multiple>>",
       "month": "string"
@@ -347,12 +350,15 @@
       "monthModifiers": "Modifier contract for the displayed-month model; built-in modifiers are unsupported.",
       "multiple": "Enable selection of more than one value.",
       "disabled": "Disable user interaction with this component.",
+      "disabledDates": "ISO date list or predicate identifying dates that cannot be activated.",
       "pt": "Attributes and callbacks for the component's documented pass-through sections."
     },
     "slotDescriptions": {
       "day": "Custom calendar day content with its date and selection state."
     },
-    "eventDescriptions": {}
+    "eventDescriptions": {
+      "select": "An enabled date was activated by pointer or keyboard, even when already selected."
+    }
   },
   "WlCard": {
     "props": {

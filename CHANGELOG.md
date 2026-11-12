@@ -9,6 +9,8 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 ### Added
 
+- Add WlCalendar `disabledDates` and a typed `select` activation event, including repeated activation of the selected date; preserve selection models and skip unavailable dates during keyboard navigation ([#6](https://github.com/whitewolf06/gavia-ui/issues/6)).
+
 - Configure Field, input-family, Accordion and Slider width limits through component tokens, or opt into `wl-fluid` with the optional primitives stylesheet to fill the containing layout ([#7](https://github.com/whitewolf06/gavia-ui/issues/7)).
 
 ### Fixed

@@ -9,7 +9,7 @@ const time = ref<string | null>(null);
 </script>
 
 <template>
-  <WlCalendar v-model="single" />
+  <WlCalendar v-model="single" :disabled-dates="['2026-07-15']" @select="(iso) => single = iso.toUpperCase()" />
   <WlCalendar v-model="selected" multiple><template #day="{ iso, events }">{{ iso.toUpperCase() }}: {{ events.length }}</template></WlCalendar>
   <WlCalendar v-model="dynamic" :multiple="mode" />
   <WlTimePicker v-model="time" :hour-format="12" step="900" />

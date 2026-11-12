@@ -1818,7 +1818,10 @@
     "v1Api069": "Whether the surface is open.",
     "v1Api070": "WlStepItem[]: { label }.",
     "cardPadding": "padding controls caption, content and footer once. none removes their insets; sm/md/lg use 8/12/16 px. The header stays full bleed, and nested cards keep their own settings. Without the prop, the existing section insets are preserved.",
-    "fluidControls": "Import styles/primitives.css and add wl-fluid to a form to remove inherited width limits from Field and its controls. Component max-width tokens also allow individual limits; the defaults stay unchanged."
+    "fluidControls": "Import styles/primitives.css and add wl-fluid to a form to remove inherited width limits from Field and its controls. Component max-width tokens also allow individual limits; the defaults stay unchanged.",
+    "calendarAvailability": "disabledDates accepts an ISO array or predicate. Disabled dates stay visible and are skipped by keyboard navigation. select emits the activated ISO date, including the current selection; v-model remains state. In multiple mode activation can remove a date. The day slot and PT receive disabled. Searches are bounded; use month buttons if no enabled target is found.",
+    "calendarDisabledDatesDescription": "ISO date list or predicate identifying dates that cannot be activated.",
+    "calendarSelectDescription": "An enabled date was activated by pointer or keyboard, even when already selected."
   },
   "componentSearch": {
     "label": "Search components",

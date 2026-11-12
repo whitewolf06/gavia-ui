@@ -5,7 +5,7 @@
  */
 import { computed, nextTick, ref, useAttrs, watch } from "vue";
 import type { WlNoModelModifiers } from "../model-types";
-import type { WlCalendarDaySlotProps, WlCalendarModel } from "../picker-types";
+import type { WlCalendarDaySlotProps, WlCalendarModel, WlDisabledDates } from "../picker-types";
 import type { WlPt } from "../pt-types";
 import type { WlCalendarEvent } from "../types";
 import { mergeWlAttrs, useWlLocale, useWlPt } from "../config";
@@ -30,6 +30,8 @@ const props = withDefaults(
      * @default false
      */
     disabled?: boolean;
+    /** ISO date list or predicate identifying dates that cannot be activated. */
+    disabledDates?: WlDisabledDates;
     /** Attributes and callbacks for the component's documented pass-through sections. */
     pt?: WlPt<"calendar">;
   }>(),
@@ -37,6 +39,11 @@ const props = withDefaults(
     events: () => [], multiple: () => false as Multiple, disabled: false
   }
 );
+
+const emit = defineEmits<{
+  /** An enabled date was activated by pointer or keyboard, even when already selected. */
+  select: [iso: string];
+}>();
 
 /**
  * v-model — selected ISO "YYYY-MM-DD" date, or ISO date array in multiple mode.
@@ -58,6 +65,11 @@ const attrs = useAttrs();
 const section = useWlPt("calendar", computed(() => props.pt));
 const selection = computed<string[]>(() => props.multiple ? Array.isArray(selected.value) ? selected.value : [] : typeof selected.value === "string" && selected.value ? [selected.value] : []);
 const dateLabel = computed(() => new Intl.DateTimeFormat(locale.value.localeCode, { dateStyle: "long" }));
+const disabledSet = computed(() => new Set(Array.isArray(props.disabledDates) ? props.disabledDates : []));
+
+function dateDisabled(iso: string): boolean {
+  return props.disabled || (typeof props.disabledDates === "function" ? props.disabledDates(iso) : disabledSet.value.has(iso));
+}
 
 const weekdays = computed(() => Array.from(
   { length: 7 },
@@ -103,6 +115,7 @@ interface CalCell {
   inMonth: boolean;
   today: boolean;
   selected: boolean;
+  disabled: boolean;
   events: WlCalendarEvent[];
 }
 
@@ -145,6 +158,7 @@ const cells = computed<CalCell[]>(() => {
       inMonth,
       today: iso === todayIso,
       selected: selection.value.includes(iso),
+      disabled: dateDisabled(iso),
       events: eventsByDate.value.get(iso) ?? []
     });
   }
@@ -160,20 +174,29 @@ const weeks = computed(() => {
 });
 
 const gridRef = ref<HTMLElement | null>(null);
+const previousButton = ref<HTMLButtonElement | null>(null);
 const focusedIso = ref("");
 
 watch(
   [cells, selected],
-  ([nextCells]) => {
-    if (!props.multiple && selection.value[0] && nextCells.some((cell) => cell.iso === selection.value[0])) {
-      focusedIso.value = selection.value[0];
-    } else if (!nextCells.some((cell) => cell.iso === focusedIso.value)) {
-      focusedIso.value
-        = selection.value.find((iso) => nextCells.some((cell) => cell.iso === iso))
-          ?? nextCells.find((cell) => cell.today)?.iso
-          ?? nextCells.find((cell) => cell.inMonth)?.iso
-          ?? nextCells[0]?.iso
-          ?? "";
+  ([nextCells, nextSelection], previous) => {
+    const available = nextCells.filter((cell) => !cell.disabled);
+    const selectedCell = available.find((cell) => selection.value.includes(cell.iso));
+    const active = gridRef.value?.ownerDocument.activeElement;
+    const hadFocus = !!active && !!gridRef.value?.contains(active);
+    const current = available.find((cell) => cell.iso === focusedIso.value);
+    const selectionChanged = nextSelection !== previous?.[1];
+    focusedIso.value = (!props.multiple && selectionChanged ? selectedCell : current)?.iso
+      ?? selectedCell?.iso
+      ?? available.find((cell) => cell.today)?.iso
+      ?? available.find((cell) => cell.inMonth)?.iso
+      ?? available[0]?.iso
+      ?? "";
+    if (hadFocus && !current) {
+      void nextTick(() => {
+        if (focusedIso.value) gridRef.value?.querySelector<HTMLElement>(`[data-date="${focusedIso.value}"]`)?.focus();
+        else if (!props.disabled) previousButton.value?.focus();
+      });
     }
   },
   { immediate: true }
@@ -187,7 +210,7 @@ function shift(delta: number): void {
 }
 
 function pick(cell: CalCell): void {
-  if (props.disabled) return;
+  if (dateDisabled(cell.iso)) return;
   focusedIso.value = cell.iso;
   selected.value = (props.multiple
     ? selection.value.includes(cell.iso) ? selection.value.filter((iso) => iso !== cell.iso) : [...selection.value, cell.iso]
@@ -195,6 +218,7 @@ function pick(cell: CalCell): void {
   if (!cell.inMonth) {
     viewMonth.value = cell.iso.slice(0, 7);
   }
+  emit("select", cell.iso);
 }
 
 function dateFromIso(iso: string): Date {
@@ -213,10 +237,35 @@ function cellLabel(cell: CalCell): string {
 }
 
 async function focusDate(iso: string, revealMonth = false): Promise<void> {
+  if (dateDisabled(iso)) return;
   focusedIso.value = iso;
   if (revealMonth) viewMonth.value = iso.slice(0, 7);
   await nextTick();
   gridRef.value?.querySelector<HTMLElement>(`[data-date="${iso}"]`)?.focus();
+}
+
+/** A predicate may disable every date: keep directional searches finite. */
+function nextAvailable(iso: string, direction: number, stride: number): string | undefined {
+  const date = dateFromIso(iso);
+  for (let distance = 0; distance < 366; distance += stride) {
+    const candidate = toIso(date.getFullYear(), date.getMonth(), date.getDate());
+    if (!dateDisabled(candidate)) return candidate;
+    date.setDate(date.getDate() + direction * stride);
+  }
+  return undefined;
+}
+
+function availableInMonth(iso: string, direction: number): string | undefined {
+  const date = dateFromIso(iso);
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  const days = new Date(year, month + 1, 0).getDate();
+  const dates = Array.from({ length: days }, (_, index) => index + 1);
+  const ordered = direction > 0
+    ? [...dates.filter((value) => value >= day), ...dates.filter((value) => value < day).reverse()]
+    : [...dates.filter((value) => value <= day).reverse(), ...dates.filter((value) => value > day)];
+  return ordered.map((value) => toIso(year, month, value)).find((value) => !dateDisabled(value));
 }
 
 function shiftedIso(iso: string, months: number): string {
@@ -230,7 +279,7 @@ function shiftedIso(iso: string, months: number): string {
 }
 
 function onDayKeydown(event: KeyboardEvent, cell: CalCell): void {
-  if (props.disabled) return;
+  if (dateDisabled(cell.iso)) return;
   const index = cells.value.findIndex((entry) => entry.iso === cell.iso);
   let targetIndex = index;
 
@@ -238,11 +287,19 @@ function onDayKeydown(event: KeyboardEvent, cell: CalCell): void {
   else if (event.key === "ArrowRight") targetIndex += 1;
   else if (event.key === "ArrowUp") targetIndex -= 7;
   else if (event.key === "ArrowDown") targetIndex += 7;
-  else if (event.key === "Home") targetIndex -= index % 7;
-  else if (event.key === "End") targetIndex += 6 - (index % 7);
-  else if (event.key === "PageUp" || event.key === "PageDown") {
+  else if (event.key === "Home" || event.key === "End") {
     event.preventDefault();
-    void focusDate(shiftedIso(cell.iso, event.key === "PageUp" ? -1 : 1), true);
+    const week = cells.value.slice(index - index % 7, index - index % 7 + 7);
+    const target = (event.key === "Home" ? week : week.reverse()).find((entry) => !entry.disabled);
+    if (target) void focusDate(target.iso);
+    return;
+  } else if (event.key === "PageUp" || event.key === "PageDown") {
+    event.preventDefault();
+    const direction = event.key === "PageUp" ? -1 : 1;
+    const monthTarget = shiftedIso(cell.iso, direction);
+    const target = availableInMonth(monthTarget, direction);
+    if (target) void focusDate(target, true);
+    else viewMonth.value = monthTarget.slice(0, 7);
     return;
   } else if (event.key === "Enter" || event.key === " ") {
     event.preventDefault();
@@ -253,15 +310,14 @@ function onDayKeydown(event: KeyboardEvent, cell: CalCell): void {
   }
 
   event.preventDefault();
-  const target = cells.value[targetIndex];
-  if (target) {
-    void focusDate(target.iso);
-    return;
-  }
-
   const date = dateFromIso(cell.iso);
   date.setDate(date.getDate() + (targetIndex - index));
-  void focusDate(toIso(date.getFullYear(), date.getMonth(), date.getDate()), true);
+  const target = nextAvailable(
+    toIso(date.getFullYear(), date.getMonth(), date.getDate()),
+    targetIndex < index ? -1 : 1,
+    Math.abs(targetIndex - index)
+  );
+  if (target) void focusDate(target, !cells.value.some((entry) => entry.iso === target));
 }
 </script>
 
@@ -274,6 +330,7 @@ function onDayKeydown(event: KeyboardEvent, cell: CalCell): void {
   >
     <div v-bind="section('header')" class="wl-cal__head">
       <button
+        ref="previousButton"
         type="button"
         v-bind="section('prevButton')"
         class="wl-cal__nav"
@@ -329,21 +386,23 @@ function onDayKeydown(event: KeyboardEvent, cell: CalCell): void {
           <button
             v-for="cell in week"
             :key="cell.iso"
-            v-bind="section('day', { selected: cell.selected, today: cell.today, otherMonth: !cell.inMonth, disabled: props.disabled })"
+            v-bind="section('day', { selected: cell.selected, today: cell.today, otherMonth: !cell.inMonth, disabled: cell.disabled })"
             type="button"
             class="wl-cal__day"
             :class="{
               'is-muted': !cell.inMonth,
               'is-today': cell.today,
-              'is-selected': cell.selected
+              'is-selected': cell.selected,
+              'is-disabled': cell.disabled
             }"
             role="gridcell"
             :data-date="cell.iso"
-            :tabindex="cell.iso === focusedIso ? 0 : -1"
+            :tabindex="!cell.disabled && cell.iso === focusedIso ? 0 : -1"
             :aria-label="cellLabel(cell)"
             :aria-selected="cell.selected"
+            :aria-disabled="cell.disabled || undefined"
             :aria-current="cell.today ? 'date' : undefined"
-            :disabled="props.disabled"
+            :disabled="cell.disabled"
             @focus="focusedIso = cell.iso"
             @click="pick(cell)"
             @keydown="onDayKeydown($event, cell)"

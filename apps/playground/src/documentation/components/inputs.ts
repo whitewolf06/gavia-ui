@@ -119,6 +119,7 @@ export const inputDocumentationAccessibility: Record<string, readonly string[]> 
     "documentation.strings.s0309"
   ],
   WlCalendar: [
+    "documentation.strings.calendarAvailability",
     "documentation.strings.s0310",
     "documentation.strings.s0311",
     "documentation.strings.s0312",

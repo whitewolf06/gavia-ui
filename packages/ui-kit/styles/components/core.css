@@ -2660,9 +2660,10 @@
       background var(--wl-dur-1) var(--wl-ease),
       border-color var(--wl-dur-1) var(--wl-ease);
   }
-  .wl-cal__day:hover {
+  .wl-cal__day:hover:where(:not(:disabled)) {
     background: var(--wl-bg-soft);
   }
+  .wl-cal__day:where(:disabled) { opacity: .5; cursor: not-allowed; }
   .wl-cal__dnum {
     align-self: flex-start;
     font-size: 12px;
