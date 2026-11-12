@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 import { chooseDropdownOption } from "./select-helpers";
 
 for (const theme of ["gavia", "gavia-dark", "white", "graphite", "newspaper"]) {
-  test(`${theme}: card section padding is applied once and nested cards are isolated`, async ({ page }) => {
-    await page.goto(`/?view=system&theme=${theme}`);
+  test(`${theme}: card section padding is applied once and nested cards are isolated @cross-browser`, async ({ page }) => {
+    await page.goto(`/?view=system&theme=${theme}&lang=en`);
     await chooseDropdownOption(page, page.getByRole("combobox", { name: "Component", exact: true }), "WlCard");
     const preview = page.getByTestId("ds-example-preview");
     for (const [padding, pixels] of [["none", 0], ["sm", 8], ["md", 12], ["lg", 16]] as const) {

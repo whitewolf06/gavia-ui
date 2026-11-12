@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 for (const theme of ["gavia", "gavia-dark", "white", "graphite", "newspaper"]) {
-  test(`${theme}: full-width controls retain default caps and stretch together with wl-fluid`, async ({ page }) => {
+  test(`${theme}: full-width controls retain default caps and stretch together with wl-fluid @cross-browser`, async ({ page }) => {
     await page.goto("/e2e.html?review-control-width");
     await page.locator("html").evaluate((element, value) => {
       element.setAttribute("data-wl-theme", value);
