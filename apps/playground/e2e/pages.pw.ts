@@ -207,7 +207,7 @@ test("navigation, Back and Forward preserve the repository subpath", async ({ pa
   await expectNoPageOverflow(page);
 });
 
-test("Changelog history links point to repository documents and all themes fit the viewport", async ({ page }) => {
+test("Changelog retains repository documents and issue links, and all themes fit the viewport", async ({ page }) => {
   await page.goto(russianPlaygroundUrl(`${pagesPath}?view=changelog`));
   await expect(page.getByRole("heading", { name: projectTitle, exact: true })).toBeVisible();
   const historyHeading = page.getByRole("heading", { name: "История изменений", exact: true });
@@ -216,7 +216,10 @@ test("Changelog history links point to repository documents and all themes fit t
   const links = await history.locator("a[href]").evaluateAll((anchors) =>
     anchors.map((anchor) => anchor.getAttribute("href")!)
   );
-  const documents = links.filter((href) => !href.startsWith("#"));
+  const issues = links.filter((href) => href.startsWith("https://github.com/whitewolf06/gavia-ui/issues/"));
+  for (const href of issues) expect(href).toMatch(/^https:\/\/github\.com\/whitewolf06\/gavia-ui\/issues\/[1-9]\d*$/);
+  expect(issues).toEqual(expect.arrayContaining([4, 5, 6, 7].map((issue) => `https://github.com/whitewolf06/gavia-ui/issues/${issue}`)));
+  const documents = links.filter((href) => !href.startsWith("#") && !issues.includes(href));
   expect(documents.length).toBeGreaterThan(0);
   for (const href of documents) expect(href).toMatch(/^https:\/\/github\.com\/whitewolf06\/gavia-ui\/blob\/main\//);
   expect(documents).toContain(`${repositoryDocs}docs/migration-gavia.md`);
