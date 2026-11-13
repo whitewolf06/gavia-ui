@@ -332,7 +332,7 @@
       "day": "day?(props: WlCalendarDaySlotProps): unknown;"
     },
     "emits": {
-      "select": "[iso: string]"
+      "dateSelect": "[iso: string]"
     },
     "models": {
       "modelValue": "WlCalendarModel<NoInfer<Multiple>>",
@@ -357,7 +357,7 @@
       "day": "Custom calendar day content with its date and selection state."
     },
     "eventDescriptions": {
-      "select": "An enabled date was activated by pointer or keyboard, even when already selected."
+      "dateSelect": "An enabled date was activated by pointer or keyboard, even when already selected."
     }
   },
   "WlCard": {

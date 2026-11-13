@@ -42,7 +42,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   /** An enabled date was activated by pointer or keyboard, even when already selected. */
-  select: [iso: string];
+  dateSelect: [iso: string];
 }>();
 
 /**
@@ -218,7 +218,7 @@ function pick(cell: CalCell): void {
   if (!cell.inMonth) {
     viewMonth.value = cell.iso.slice(0, 7);
   }
-  emit("select", cell.iso);
+  emit("dateSelect", cell.iso);
 }
 
 function dateFromIso(iso: string): Date {

@@ -14,11 +14,11 @@ days remain visible, are exposed to the `day` slot and PT, and cannot be
 activated. An externally selected date is retained when it becomes unavailable;
 the roving focus moves to an enabled day, or month navigation if none remain.
 
-Use `@select="openDay"` for each pointer/Enter/Space activation, including the
+Use `@date-select="openDay"` for each pointer/Enter/Space activation, including the
 already selected day. `v-model` remains selection state. In multiple mode,
-`select` also fires for activation that removes a date. External model updates
+`dateSelect` also fires for activation that removes a date. External model updates
 and month navigation do not fire it. The component event supplies an ISO string,
-not the native DOM select Event.
+not the native DOM select Event. Native `@select` handlers retain their DOM event.
 
 Arrow navigation skips unavailable days and preserves the weekday for up/down.
 Searches stop after a bounded year of date positions; if no target is found,

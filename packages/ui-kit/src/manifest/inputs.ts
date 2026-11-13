@@ -395,7 +395,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "multiple", type: "boolean", default: false, description: "Enable selection of more than one value." }
     ],
     slots: [],
-    emits: [{ name: "select", payload: "string", description: "An enabled date was activated by pointer or keyboard, even when already selected." }],
+    emits: [{ name: "dateSelect", payload: "string", description: "An enabled date was activated by pointer or keyboard, even when already selected." }],
     model: { name: "modelValue", type: "string", description: "Выбранная дата ISO \"YYYY-MM-DD\" (default \"\")." }
   },
   {

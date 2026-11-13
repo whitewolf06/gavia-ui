@@ -7,16 +7,27 @@ import { WlCalendar } from "../../src";
 enableAutoUnmount(afterEach);
 
 describe("Calendar availability and activation", () => {
+  it("preserves native select handlers alongside date activation", async () => {
+    const onSelect = vi.fn();
+    const wrapper = mount(WlCalendar, { props: { month: "2026-07", onSelect } });
+    await wrapper.get('[data-date="2026-07-15"]').trigger("click");
+    expect(onSelect).not.toHaveBeenCalled();
+    const event = new Event("select", { bubbles: true });
+    wrapper.element.dispatchEvent(event);
+    expect(onSelect).toHaveBeenCalledExactlyOnceWith(event);
+    expect(wrapper.emitted("dateSelect")).toEqual([["2026-07-15"]]);
+  });
+
   it("activates a selected date with pointer, Enter and Space without inventing model changes", async () => {
     const wrapper = mount(WlCalendar, { props: { month: "2026-07", modelValue: "2026-07-15" } });
     const day = wrapper.get('[data-date="2026-07-15"]');
     await day.trigger("click");
     await day.trigger("keydown", { key: "Enter" });
     await day.trigger("keydown", { key: " " });
-    expect(wrapper.emitted("select")).toEqual(Array.from({ length: 3 }, () => ["2026-07-15"]));
+    expect(wrapper.emitted("dateSelect")).toEqual(Array.from({ length: 3 }, () => ["2026-07-15"]));
     expect(wrapper.emitted("update:modelValue")).toBeUndefined();
     await wrapper.setProps({ modelValue: "2026-07-16" });
-    expect(wrapper.emitted("select")).toHaveLength(3);
+    expect(wrapper.emitted("dateSelect")).toHaveLength(3);
   });
 
   const disabled: WlDisabledDates[] = [["2026-07-15"], (iso) => iso === "2026-07-15"];
@@ -36,7 +47,7 @@ describe("Calendar availability and activation", () => {
     expect(day.get("span").attributes("data-slot-disabled")).toBe("true");
     await day.trigger("click");
     await day.trigger("keydown", { key: "Enter" });
-    expect(wrapper.emitted("select")).toBeUndefined();
+    expect(wrapper.emitted("dateSelect")).toBeUndefined();
     expect(wrapper.emitted("update:modelValue")).toBeUndefined();
   });
 
@@ -50,7 +61,7 @@ describe("Calendar availability and activation", () => {
     await current.trigger("keydown", { key: "ArrowRight" });
     expect(document.activeElement).toBe(wrapper.get('[data-date="2026-08-03"]').element);
     expect(wrapper.emitted("update:month")).toEqual([["2026-08"]]);
-    expect(wrapper.emitted("select")).toBeUndefined();
+    expect(wrapper.emitted("dateSelect")).toBeUndefined();
     expect(wrapper.emitted("update:modelValue")).toBeUndefined();
   });
 
@@ -80,7 +91,7 @@ describe("Calendar availability and activation", () => {
     expect(document.activeElement).toBe(end.element);
     await end.trigger("keydown", { key: "PageDown" });
     expect(document.activeElement).toBe(wrapper.get('[data-date="2026-08-19"]').element);
-    expect(wrapper.emitted("select")).toBeUndefined();
+    expect(wrapper.emitted("dateSelect")).toBeUndefined();
   });
 
   it("rehomes focus when availability changes without clearing the selected model", async () => {
@@ -98,7 +109,7 @@ describe("Calendar availability and activation", () => {
     await wrapper.get('[aria-label="Next month"]').trigger("click");
     expect(wrapper.emitted("update:month")).toEqual([["2026-08"]]);
     expect(wrapper.emitted("update:modelValue")).toBeUndefined();
-    expect(wrapper.emitted("select")).toBeUndefined();
+    expect(wrapper.emitted("dateSelect")).toBeUndefined();
   });
 
   it("bounds searches when no other day can ever be focused", async () => {
@@ -117,9 +128,9 @@ describe("Calendar availability and activation", () => {
     const wrapper = mount(WlCalendar<true>, { props: { month: "2026-07", multiple: true, modelValue: ["2026-07-15"] } });
     await wrapper.get('[data-date="2026-07-15"]').trigger("click");
     expect(wrapper.emitted("update:modelValue")).toEqual([[[]]]);
-    expect(wrapper.emitted("select")).toEqual([["2026-07-15"]]);
+    expect(wrapper.emitted("dateSelect")).toEqual([["2026-07-15"]]);
     await wrapper.setProps({ disabled: true });
     await wrapper.get('[data-date="2026-07-16"]').trigger("keydown", { key: "Enter" });
-    expect(wrapper.emitted("select")).toHaveLength(1);
+    expect(wrapper.emitted("dateSelect")).toHaveLength(1);
   });
 });

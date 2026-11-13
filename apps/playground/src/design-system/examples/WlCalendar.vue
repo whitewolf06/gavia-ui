@@ -34,7 +34,7 @@ const forwardedPreview = computed(() => {
       :disabled-dates="disabledDates"
       :events="[{ date: '2026-10-15', label: t('examples.overview_0000'), tone: 'blue' }]"
       v-bind="forwardedPreview"
-      @select="activate"
+      @date-select="activate"
     >
       <template #day="{ day, events, disabled }">
         <span>{{ day }}</span><span v-if="events.length && !disabled" aria-hidden="true"> · {{ events.length }}</span>
@@ -47,7 +47,7 @@ const forwardedPreview = computed(() => {
       :disabled-dates="disabledDates"
       :events="[{ date: '2026-10-15', label: t('examples.overview_0000'), tone: 'blue' }]"
       v-bind="forwardedPreview"
-      @select="activate"
+      @date-select="activate"
     />
     <p class="wl-text-small" role="status">{{ t("examples.selected_0022") }} {{ multiple ? selected.join(', ') : value }}</p>
     <p class="wl-text-small" data-testid="calendar-activation">
