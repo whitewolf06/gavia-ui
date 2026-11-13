@@ -112,7 +112,7 @@ jobs:
   browser:
     timeout-minutes: 20
     name: Browser regression tests (${{ matrix.project }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -196,7 +196,7 @@ jobs:
   consumer:
     timeout-minutes: 15
     name: Packed consumer (${{ matrix.manager }}, Vue ${{ matrix.vue }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
