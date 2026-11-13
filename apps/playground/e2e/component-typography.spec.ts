@@ -1,28 +1,34 @@
 import { expect, test } from "@playwright/test";
 
+const sizes = [
+  [".wl-card__title", 14, 22], [".wl-card__subtitle", 12.5, 14], [".wl-card__content", 13.5, 18],
+  [".wl-acc__summary", 13.5, 18], [".wl-acc__body", 13, 18], [".wl-alert__text", 13, 18], [".wl-alert__title", 13, 22],
+  ['.wl-segmented[data-size="md"] .wl-segmented__item', 13, 18]
+] as const;
+
 for (const theme of ["gavia", "gavia-dark", "white", "graphite", "newspaper"]) {
   test(`${theme}: semantic component typography is opt-in and enlarged text fits @cross-browser`, async ({ page }) => {
-    await page.goto("/e2e.html?review-typography");
-    await page.locator("html").evaluate((element, value) => {
-      element.setAttribute("data-wl-theme", value);
-    }, theme);
-    const fixture = page.getByTestId("component-typography-fixture");
-    for (const [selector, oldSize, scaledSize] of [
-      [".wl-card__title", 14, 22], [".wl-card__subtitle", 12.5, 14], [".wl-card__content", 13.5, 18],
-      [".wl-acc__summary", 13.5, 18], [".wl-acc__body", 13, 18], [".wl-alert__text", 13, 18], [".wl-alert__title", 13, 22],
-      ['.wl-segmented[data-size="md"] .wl-segmented__item', 13, 18]
-    ] as const) {
-      await expect(fixture.locator(`[data-semantic="false"] ${selector}`).first()).toHaveCSS("font-size", `${oldSize}px`);
-      await expect(fixture.locator(`[data-semantic="true"] ${selector}`).first()).toHaveCSS("font-size", `${scaledSize}px`);
+    await page.goto(`/?view=docs&section=typography&theme=${theme}&lang=en`, { waitUntil: "domcontentloaded" });
+    const example = page.getByTestId("semantic-component-example");
+    await expect(example).toBeVisible();
+    for (const [selector, oldSize] of sizes) {
+      await expect(example.locator(selector).first()).toHaveCSS("font-size", `${oldSize}px`);
     }
     // Small Segmented already followed --wl-type-small-size before this feature.
-    await expect(fixture.locator('[data-semantic="false"] .wl-segmented[data-size="sm"] button').first()).toHaveCSS("font-size", "14px");
-    const small = fixture.locator('[data-semantic="false"] .wl-segmented[data-size="sm"]');
+    const small = example.locator('.wl-segmented[data-size="sm"]');
+    await expect(small.locator("button").first()).toHaveCSS("font-size", "14px");
     await small.evaluate((element) => {
       (element as HTMLElement).style.setProperty("--wl-segmented-sm-font-size", "15px");
     });
     await expect(small.locator("button").first()).toHaveCSS("font-size", "15px");
-    for (const button of await fixture.locator('[data-semantic="true"] .wl-segmented__item').all()) {
+    await small.evaluate((element) => {
+      (element as HTMLElement).style.removeProperty("--wl-segmented-sm-font-size");
+    });
+    await page.getByRole("checkbox", { name: "Use semantic component typography (wl-type-scale)", exact: true }).check();
+    for (const [selector, , scaledSize] of sizes) {
+      await expect(example.locator(selector).first()).toHaveCSS("font-size", `${scaledSize}px`);
+    }
+    for (const button of await example.locator(".wl-segmented__item").all()) {
       const fits = await button.evaluate((element) => {
         const css = getComputedStyle(element);
         return element.getBoundingClientRect().height + 1 >= Number.parseFloat(css.lineHeight)
@@ -30,7 +36,7 @@ for (const theme of ["gavia", "gavia-dark", "white", "graphite", "newspaper"]) {
       });
       expect(fits).toBe(true);
     }
-    const content = fixture.locator('[data-semantic="true"] .wl-card__content');
+    const content = example.locator(".wl-card__content");
     await content.evaluate((element) => {
       (element as HTMLElement).style.setProperty("--wl-card-content-font-size", "21px");
     });

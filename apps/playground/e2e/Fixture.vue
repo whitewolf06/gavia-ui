@@ -4,7 +4,6 @@ import {
   WlDialog, WlDrawer, WlField, WlMenu, type WlMenuExpose, WlMultiSelect, WlPopover,
   type WlPopoverExpose, WlSelect, WlTable, WlTimePicker, WlToast } from "gavia-ui";
 import { computed, ref } from "vue";
-import ComponentTypographyFixture from "./ComponentTypographyFixture.vue";
 import ControlWidthFixture from "./ControlWidthFixture.vue";
 import SliderGeometryFixture from "./SliderGeometryFixture.vue";
 
@@ -12,7 +11,6 @@ const choices = [{ label: "Альфа", value: "a" }, { label: "Бета", value
 const select = ref<string | null>(null);
 const reviewListbox = new URLSearchParams(window.location.search).has("review-listbox");
 const reviewControlWidth = new URLSearchParams(window.location.search).has("review-control-width");
-const reviewTypography = new URLSearchParams(window.location.search).has("review-typography");
 const reviewSliderGeometry = new URLSearchParams(window.location.search).has("review-slider-geometry");
 const reviewTimePicker = new URLSearchParams(window.location.search).has("review-time-picker");
 const nativeTime = ref<string | null>("09:30");
@@ -61,7 +59,6 @@ function ask(): void {
 
 <template>
   <ControlWidthFixture v-if="reviewControlWidth" />
-  <ComponentTypographyFixture v-if="reviewTypography" />
   <SliderGeometryFixture v-if="reviewSliderGeometry" />
   <main class="fixture">
     <h1>Gavia UI regression</h1>

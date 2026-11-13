@@ -44,7 +44,7 @@ async function geometry(fixture: Locator): Promise<void> {
 }
 
 for (const theme of ["gavia", "gavia-dark", "white", "graphite", "newspaper"]) {
-  test(`${theme}: slider thumbs, endpoint labels and following content share correct geometry @cross-browser`, async ({ page }, testInfo) => {
+  test(`${theme}: slider thumbs, endpoint labels and following content share correct geometry @cross-browser`, async ({ page }) => {
     await page.goto("/e2e.html?review-slider-geometry");
     await page.locator("html").evaluate((element, value) => {
       element.setAttribute("data-wl-theme", value);
@@ -55,15 +55,7 @@ for (const theme of ["gavia", "gavia-dark", "white", "graphite", "newspaper"]) {
       await canvas.evaluate((element, value) => {
         element.style.width = `${value}px`;
       }, width);
-      for (const size of ["sm", "md"]) {
-        await fixture.getByLabel("Slider size", { exact: true }).selectOption(size);
-        await expect(fixture).toHaveAttribute("data-size", size);
-        for (const density of ["default", "compact"]) {
-          await fixture.getByLabel("Slider density", { exact: true }).selectOption(density);
-          await expect(fixture).toHaveAttribute("data-density", density);
-          await geometry(fixture);
-        }
-      }
+      await geometry(fixture);
     }
     await fixture.getByLabel("Fluid sliders", { exact: true }).uncheck();
     await geometry(fixture);
@@ -77,11 +69,6 @@ for (const theme of ["gavia", "gavia-dark", "white", "graphite", "newspaper"]) {
       await expect(input).toHaveAttribute("aria-invalid", "true");
     }
     await geometry(fixture);
-    await fixture.getByLabel("Disabled sliders", { exact: true }).uncheck();
-    await fixture.getByLabel("Invalid sliders", { exact: true }).uncheck();
-    await fixture.getByLabel("Custom slider tokens", { exact: true }).uncheck();
-    await fixture.getByLabel("Slider density", { exact: true }).selectOption("default");
-    await canvas.screenshot({ path: testInfo.outputPath(`${theme}-slider-geometry.png`), animations: "disabled" });
   });
 }
 

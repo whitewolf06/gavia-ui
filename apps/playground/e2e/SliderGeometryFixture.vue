@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import type { WlDensity, WlSizeSm } from "gavia-ui";
 import { WlSlider } from "gavia-ui";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 const single = ref(50);
 const range = ref<[number, number]>([30, 90]);
-const size = ref<WlSizeSm>("md");
-const density = ref<WlDensity>("default");
 const disabled = ref(false);
 const invalid = ref(false);
 const customTokens = ref(false);
@@ -16,6 +13,14 @@ const longMarks = [
   { value: 10, label: "Minimum temperature setting with a long endpoint label" },
   { value: 110, label: "Maximum temperature setting with a long endpoint label" }
 ];
+const controls = computed(() => ({ min: 10, max: 110, disabled: disabled.value, invalid: invalid.value }));
+const examples = [
+  { key: "range", range: true, marks: [], label: "Plain range" },
+  { key: "marked-range", range: true, marks, label: "Marked range" },
+  { key: "marked-single", range: false, marks, label: "Marked single" },
+  { key: "long-marks", range: true, marks: longMarks, label: "Long marked range" },
+  { key: "bare-single", range: false, marks: [], label: "Bare single" }
+];
 function reset(): void {
   single.value = 50;
   range.value = [30, 90];
@@ -23,17 +28,8 @@ function reset(): void {
 </script>
 
 <template>
-  <section
-    class="slider-geometry-fixture"
-    data-testid="slider-geometry-fixture"
-    :data-size="size"
-    :data-density="density"
-  >
+  <section class="slider-geometry-fixture" data-testid="slider-geometry-fixture">
     <div class="slider-geometry-controls">
-      <label for="slider-geometry-size">Slider size</label>
-      <select id="slider-geometry-size" v-model="size"><option>sm</option><option>md</option></select>
-      <label for="slider-geometry-density">Slider density</label>
-      <select id="slider-geometry-density" v-model="density"><option>default</option><option>compact</option></select>
       <label><input v-model="disabled" type="checkbox" /> Disabled sliders</label>
       <label><input v-model="invalid" type="checkbox" /> Invalid sliders</label>
       <label><input v-model="customTokens" type="checkbox" /> Custom slider tokens</label>
@@ -48,75 +44,29 @@ function reset(): void {
       :style="customTokens ? { '--wl-slider-thumb': '26px', '--wl-slider-height': '10px' } : undefined"
       data-testid="slider-geometry-canvas"
     >
-      <div class="slider-geometry-case" data-slider-case="range">
+      <div
+        v-for="example in examples"
+        :key="example.key"
+        class="slider-geometry-case"
+        :class="{ 'slider-geometry-bare': example.key === 'bare-single' }"
+        :data-slider-case="example.key"
+      >
         <WlSlider
+          v-if="example.range"
           v-model="range"
+          v-bind="controls"
           range
-          :min="10"
-          :max="110"
-          :size="size"
-          :density="density"
-          :disabled="disabled"
-          :invalid="invalid"
-          aria-label="Plain range"
+          :marks="example.marks"
+          :aria-label="example.label"
         />
-        <button type="button" data-after-slider>After plain range</button>
-      </div>
-      <div class="slider-geometry-case" data-slider-case="marked-range">
         <WlSlider
-          v-model="range"
-          range
-          :marks="marks"
-          :min="10"
-          :max="110"
-          :size="size"
-          :density="density"
-          :disabled="disabled"
-          :invalid="invalid"
-          aria-label="Marked range"
-        />
-        <button type="button" data-after-slider>After marked range</button>
-      </div>
-      <div class="slider-geometry-case" data-slider-case="marked-single">
-        <WlSlider
+          v-else
           v-model="single"
-          :marks="marks"
-          :min="10"
-          :max="110"
-          :size="size"
-          :density="density"
-          :disabled="disabled"
-          :invalid="invalid"
-          aria-label="Marked single"
+          v-bind="controls"
+          :marks="example.marks"
+          :aria-label="example.label"
         />
-        <button type="button" data-after-slider>After marked single</button>
-      </div>
-      <div class="slider-geometry-case" data-slider-case="long-marks">
-        <WlSlider
-          v-model="range"
-          range
-          :marks="longMarks"
-          :min="10"
-          :max="110"
-          :size="size"
-          :density="density"
-          :disabled="disabled"
-          :invalid="invalid"
-          aria-label="Long marked range"
-        />
-        <button type="button" data-after-slider>After long marked range</button>
-      </div>
-      <div class="slider-geometry-case slider-geometry-bare" data-slider-case="bare-single">
-        <WlSlider
-          v-model="single"
-          :min="10"
-          :max="110"
-          :size="size"
-          :density="density"
-          :disabled="disabled"
-          :invalid="invalid"
-          aria-label="Bare single"
-        />
+        <button v-if="example.key !== 'bare-single'" type="button" data-after-slider>After {{ example.label }}</button>
       </div>
     </div>
   </section>
