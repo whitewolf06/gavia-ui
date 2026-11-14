@@ -1,8 +1,12 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
+import { readFileSync } from "node:fs";
 import { playgroundRouteParams, russianPlaygroundUrl } from "./playground-url";
 import { chooseDropdownOption, copyCodePanel, expectMainViewCurrent, navigateDocumentationComponent, navigateMainView, openDocumentationMenu } from "./select-helpers";
 
 const pickerNames = ["WlTimePicker", "WlFilePicker"] as const;
+const { version: sourceVersion } = JSON.parse(
+  readFileSync(new URL("../../../packages/ui-kit/package.json", import.meta.url), "utf8")
+) as { version: string };
 type PickerName = (typeof pickerNames)[number];
 const pageErrors = new WeakMap<Page, string[]>();
 
@@ -90,15 +94,17 @@ test("legacy component input resolves to a canonical hosted route without losing
   await expect(page.locator("#docs-wltabs-props")).toBeInViewport();
 });
 
-test("Docs catalog marks new components and opens the real button example", async ({ page }) => {
+test("Docs catalog keeps release badges current and opens the real button example", async ({ page }) => {
   const docs = await openDocumentationMenu(page);
   const catalog = docs.getByRole("navigation", { name: "Каталог компонентов", exact: true });
   const item = catalog.getByRole("button", { name: "WlButton", exact: true });
   await expect(item.locator(".docs-component-version")).toHaveCount(0);
   await expect(item).not.toHaveAttribute("aria-describedby");
-  const newItem = catalog.getByRole("button", { name: "WlLink", exact: true });
-  await expect(newItem.locator(".docs-component-version")).toHaveText("Новое");
-  await expect(newItem).toHaveAccessibleDescription("Новое");
+  const linkItem = catalog.getByRole("button", { name: "WlLink", exact: true });
+  // WlLink was introduced in 1.0.0-rc.1; later numeric releases retire its badge.
+  const linkIsNew = sourceVersion.split(/[+-]/, 1)[0] === "1.0.0";
+  await expect(linkItem.locator(".docs-component-version")).toHaveText(linkIsNew ? ["Новое"] : []);
+  await expect(linkItem).toHaveAccessibleDescription(linkIsNew ? "Новое" : "");
 
   // Header controls also use WlButton; catalog navigation must reach its actual example.
   const buttonWorkspace = await navigateDocumentationComponent(page, "WlButton");

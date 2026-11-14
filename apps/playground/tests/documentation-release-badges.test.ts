@@ -7,6 +7,8 @@ describe("new component release badges", () => {
     ["1.0.0-rc.1", "1.0.0-rc.2", true],
     ["1.0.0", "1.0.0+build.1", true],
     ["1.0.0-rc.1", "1.0.1", false],
+    ["1.0.0-rc.1", "1.1.0", false],
+    ["1.1.0-rc.1", "1.1.0", true],
     ["0.1.0", "1.0.0", false]
   ] as const)("compares introduction %s with release %s", (introducedIn, currentVersion, expected) => {
     expect(isComponentNewInRelease(introducedIn, currentVersion)).toBe(expected);
