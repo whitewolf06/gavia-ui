@@ -220,5 +220,8 @@
   "changelog.semanticComponentType": "Типографика и отступы Card, Accordion, Alert и Segmented настраиваются компонентными токенами. Класс wl-type-scale из CSS-примитивов подключает семантические текстовые роли; без него сохраняется вид 1.0 ([#5](https://github.com/whitewolf06/gavia-ui/issues/5)).",
   "changelog.calendarMultipleMetadata": "В Playground появился boolean-переключатель multiple для WlCalendar. Пример и переключатель теперь начинают с выбора одной даты, как сам компонент ([#6](https://github.com/whitewolf06/gavia-ui/issues/6)).",
   "changelog.segmentedLocalSmallType": "Малый Segmented сохраняет локальные настройки `--wl-type-small-size`, когда семантическая шкала компонентов выключена ([#5](https://github.com/whitewolf06/gavia-ui/issues/5)).",
-  "changelog.sliderGeometry": "Бегунки диапазона WlSlider выровнены по дорожке. Крайние подписи остаются в границах компонента, а под разметку выделено место по высоте."
+  "changelog.sliderGeometry": "Бегунки диапазона WlSlider выровнены по дорожке. Крайние подписи остаются в границах компонента, а под разметку выделено место по высоте.",
+  "changelog.release11.heading": "1.1.0 — 2026-11-14",
+  "changelog.release11.summary": "Выпуск добавляет новые возможности и исправляет ошибки с сохранением совместимости с 1.0. Перед обновлением загляни в [инструкцию перехода на 1.1](docs/migration-1.1.0.md), особенно если обходил проблему с отступами Card.",
+  "changelog.release11.manual": "Ручные проверки со скринридерами пока не выполнены. Успешный CI не заменяет проверку доступности человеком ([протокол](docs/maintainers/manual-accessibility.md))."
 }

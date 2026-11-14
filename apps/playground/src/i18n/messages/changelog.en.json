@@ -220,5 +220,8 @@
   "changelog.semanticComponentType": "Customize Card, Accordion, Alert and Segmented typography and insets with component tokens. Opt into `wl-type-scale` from the primitives stylesheet to follow semantic text roles while retaining the 1.0 appearance by default ([#5](https://github.com/whitewolf06/gavia-ui/issues/5)).",
   "changelog.calendarMultipleMetadata": "Expose WlCalendar `multiple` as a boolean control in the Playground and align its live example with the component's single-selection default ([#6](https://github.com/whitewolf06/gavia-ui/issues/6)).",
   "changelog.segmentedLocalSmallType": "Preserve local `--wl-type-small-size` overrides for small Segmented items when the semantic component scale is disabled ([#5](https://github.com/whitewolf06/gavia-ui/issues/5)).",
-  "changelog.sliderGeometry": "Align WlSlider range thumbs with the track, keep endpoint mark labels inside the control and reserve layout space for marks."
+  "changelog.sliderGeometry": "Align WlSlider range thumbs with the track, keep endpoint mark labels inside the control and reserve layout space for marks.",
+  "changelog.release11.heading": "1.1.0 — 2026-11-14",
+  "changelog.release11.summary": "Compatible additions and bug fixes for 1.0 consumers. Review the [1.1 upgrade guide](docs/migration-1.1.0.md), especially if you added workarounds for Card padding.",
+  "changelog.release11.manual": "Manual screen-reader checks remain unverified; automated CI does not establish manual accessibility acceptance ([protocol](docs/maintainers/manual-accessibility.md))."
 }

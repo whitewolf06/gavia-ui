@@ -7,6 +7,10 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 ## Unreleased
 
+## 1.1.0 — 2026-11-14
+
+Compatible additions and bug fixes for 1.0 consumers. Review the [1.1 upgrade guide](docs/migration-1.1.0.md), especially if you added workarounds for Card padding.
+
 ### Added
 
 - Customize Card, Accordion, Alert and Segmented typography and insets with component tokens. Opt into `wl-type-scale` from the primitives stylesheet to follow semantic text roles while retaining the 1.0 appearance by default ([#5](https://github.com/whitewolf06/gavia-ui/issues/5)).
@@ -26,6 +30,10 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 - Keep Slider range tracks and marks within the same width as their inputs.
 
 - Apply WlCard `padding="none|sm|md|lg"` to its own caption, content and footer once, without adding body padding or affecting nested cards. Cards without the prop keep their existing insets ([#4](https://github.com/whitewolf06/gavia-ui/issues/4)).
+
+### Known limitations
+
+Manual screen-reader checks remain unverified; automated CI does not establish manual accessibility acceptance ([protocol](docs/maintainers/manual-accessibility.md)).
 
 ## 1.0.0 — 2026-10-25
 

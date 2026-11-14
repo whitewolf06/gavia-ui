@@ -4,7 +4,12 @@ Choose the section for the version or contract you are changing. Historical
 sections describe that release; they do not report current validation or a new
 publication. Stable public namespaces remain `Wl*`, `wl-*` and `--wl-*`.
 
-## Unreleased corrections
+<a id="unreleased-corrections"></a>
+<a id="migration-1-1"></a>
+## Upgrading from 1.0 to 1.1
+
+The [1.1 upgrade guide](migration-1.1.0.md) covers optional Calendar activation,
+date availability, width and typography controls, plus the corrections below.
 
 ### Calendar availability and activation
 
