@@ -16,11 +16,11 @@ breaking changes required a minor and a Breaking changes notice.
 The contract includes props and requiredness, event payloads, slots, v-model,
 exposed methods, imports/exports, CSS classes, data attributes, tokens and PT
 sections. After a build, `pnpm verify:compatibility` compares declarations with
-the immutable 0.11.1 snapshot. Earlier snapshots also remain preserved.
+the immutable 1.0.0 snapshot. Earlier snapshots also remain preserved.
 Additions are allowed; removal or narrowing blocks CI unless an exact,
 version-scoped migration policy permits the reviewed transition.
 
-The released 1.0 transition uses `scripts/migrations/public-api-1.0.json`.
+The historical 1.0 transition uses `scripts/migrations/public-api-1.0.json`.
 The checker reports original inventory, semantic and consumer differences before
 applying the fixed canonical PT, status, dismissal, Tooltip and icon-action
 projections. Toast/Confirm PT context additions preserve prior fields, callback
@@ -29,12 +29,12 @@ package paths remain strict. CI checks policy/consumer hashes and negative cases
 Later changes must not inherit a compatibility exception automatically; a
 migration note alone does not disable the gate.
 
-An immutable 1.0.0 API/consumer snapshot is still a recorded
-[release follow-up](../../ROADMAP.md#release-follow-up). Prepare it separately
-from the verified published archive; `node scripts/check-compatibility.mjs --help`
-describes snapshot generation. Preserve existing fixtures and review the result
-rather than updating a baseline just to pass. This follow-up does not mean the
-published archive skipped its migration-policy checks.
+The immutable [1.0.0 API/consumer snapshot](../../packages/ui-kit/tests/fixtures/compatibility-1.0.0/README.md)
+was captured separately from the integrity-verified published archive at its
+exact release tag. Later versions use it without the historical 1.0 migration
+exception. `node scripts/check-compatibility.mjs --help` describes snapshot
+generation. Preserve existing fixtures and review the result rather than
+updating a baseline just to pass.
 
 ### Checking new public contracts
 
