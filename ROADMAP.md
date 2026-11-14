@@ -26,6 +26,8 @@ proposals, not remaining prerequisites for the already published 1.0.0.
 - The immutable [1.0.0 API/consumer compatibility snapshot](packages/ui-kit/tests/fixtures/compatibility-1.0.0/README.md)
   is recorded from the verified published archive. Historical fixtures and the
   reviewed 1.0 migration policy remain preserved.
+- Capture the published 1.1.0 API/consumer snapshot as a separate reviewed
+  follow-up before the next release, preserving all earlier fixtures.
 - Complete the [manual accessibility protocol](docs/maintainers/manual-accessibility.md)
   when the required devices and screen readers are available. The accepted gap
   remains visible until there is dated evidence.

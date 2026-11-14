@@ -4,6 +4,14 @@ Release history is in [GitHub Releases](https://github.com/whitewolf06/gavia-ui/
 and the preserved [release evidence ledger](../archive/release-history.md). Historical
 counts, hashes and deployment statements are not current verification.
 
+Stable 1.1.0 was published on 2026-11-14 to npm `latest`.
+The [Release workflow](https://github.com/whitewolf06/gavia-ui/actions/runs/43599244847)
+completed all checks and published the exact checked archive. Registry version,
+channel and downloaded archive SHA512 were verified after publication.
+The [GitHub Release](https://github.com/whitewolf06/gavia-ui/releases/tag/v1.1.0)
+includes the versioned Playground and standalone Gavia Sans TTF archive.
+Manual screen-reader results remain unverified.
+
 Stable 1.0.0 was published on 2026-10-25. Its
 [release record](../archive/release-history.md#release-100) and
 [RC record](../archive/release-candidate-1.0.0-rc.1.md) are historical evidence.
