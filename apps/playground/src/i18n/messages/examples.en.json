@@ -1066,5 +1066,19 @@
   "examples.reviewUploadRemove": "Remove",
   "examples.reviewUploadAdvance": "Advance demo progress",
   "examples.utilityAvatarName": "Anna Mikhailova",
-  "examples.utilityAvatarColor": "The outline color follows the name. The same name and palette keep the same color on the server and client."
+  "examples.utilityAvatarColor": "The outline color follows the name. The same name and palette keep the same color on the server and client.",
+  "examples.cardPaddingGuide": "Set padding to none, sm (8 px), md (12 px) or lg (16 px). Each section uses one inset; the caption has no bottom inset. Omit the prop to keep the theme defaults.",
+  "examples.cardNestedPadding": "This nested card keeps its own padding.",
+  "examples.fluidControls": "Fill the form width (wl-fluid)",
+  "examples.calendarAvailability": "Disable October 16 and 18",
+  "examples.calendarActivation": "Last activation and count:",
+  "examples.semanticComponentScale": "Use semantic component typography (wl-type-scale)",
+  "examples.semanticComponentScaleGuide": "The group already has larger semantic text values. Enable wl-type-scale to apply them to the components. Without it, the 1.0 component sizes stay in place; small Segmented already follows the small-size role. Control uses the control size and label line height, weight and family. Local component tokens can override an individual role.",
+  "examples.componentTypeMapping": "Component text roles",
+  "examples.componentTypePrefix": "Token prefix",
+  "examples.componentTypeDefault": "Default font size",
+  "examples.sliderMarked": "Slider with marks",
+  "examples.sliderMarkedValue": "Value:",
+  "examples.sliderRange": "Range with marks",
+  "examples.sliderRangeValue": "Range:"
 }

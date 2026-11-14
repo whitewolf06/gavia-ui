@@ -2,11 +2,12 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlButton, WlField, WlInput, WlSelect } from "gavia-ui";
+import { WlButton, WlCheckbox, WlField, WlInput, WlSelect } from "gavia-ui";
 import { computed, ref } from "vue";
 const value = ref("");
 const status = ref<string | null>(null);
 const error = ref("");
+const fluid = ref(false);
 const options = computed(() => [
   { label: t("examples.draft_0291"), value: "draft" },
   { label: t("examples.published_0165"), value: "published" }
@@ -19,10 +20,12 @@ function validate(): void {
 <template>
   <form
     class="wl-stack"
+    :class="{ 'wl-fluid': fluid }"
     data-space="lg"
     novalidate
     @submit.prevent="validate"
   >
+    <WlCheckbox v-model="fluid">{{ t("examples.fluidControls") }}</WlCheckbox>
     <WlField
       v-slot="field"
       :label="t('examples.material_title_0056')"

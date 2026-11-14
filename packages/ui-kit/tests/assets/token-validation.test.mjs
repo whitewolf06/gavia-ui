@@ -1,11 +1,41 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
-import { contrastRatio, renderThemeCss, resolveToken, validateCatalog } from "../../scripts/token-tools.mjs";
+import { contrastRatio, renderPrimitiveCss, renderThemeCss, resolveToken, validateCatalog } from "../../scripts/token-tools.mjs";
 import source from "../../tokens/source.json";
 
 const token = (catalog, name) => catalog.tokens.find((item) => item.name === name);
 
 describe("design token source validation", () => {
+  it("preserves component type defaults in every theme and exposes an opt-in semantic mapping", () => {
+    const expected = {
+      "--wl-card-title-font-size": "14px", "--wl-card-subtitle-font-size": "12.5px", "--wl-card-content-font-size": "13.5px",
+      "--wl-accordion-title-font-size": "13.5px", "--wl-accordion-body-font-size": "13px", "--wl-alert-font-size": "13px",
+      "--wl-segmented-font-size": "13px", "--wl-segmented-sm-font-size": "inherit", "--wl-segmented-item-height": "30px",
+      "--wl-card-title-font-weight": "600", "--wl-accordion-title-font-weight": "500", "--wl-segmented-font-weight": "500",
+      "--wl-card-content-line-height": "1.55", "--wl-alert-line-height": "1.45"
+    };
+    for (const theme of source.themes) for (const [name, value] of Object.entries(expected)) {
+      expect(resolveToken(source, name, theme.name), `${theme.name}: ${name}`).toBe(value);
+    }
+    expect(source.componentTypography["--wl-card-title-font-size"]).toBe("--wl-type-subheading-size");
+    expect(source.componentTypography["--wl-card-content-font-size"]).toBe("--wl-type-body-size");
+    expect(renderPrimitiveCss(source)).toContain(".wl-type-scale");
+    const invalid = structuredClone(source);
+    invalid.componentTypography["--wl-card-title-font-size"] = "--wl-font-body-size";
+    expect(() => validateCatalog(invalid)).toThrow("Invalid component typography token contract");
+  });
+  it("keeps width defaults and makes fluid sizing available only in optional primitives", () => {
+    for (const theme of source.themes) {
+      expect(resolveToken(source, "--wl-field-max-width", theme.name)).toBe("340px");
+      expect(resolveToken(source, "--wl-accordion-max-width", theme.name)).toBe("520px");
+      expect(resolveToken(source, "--wl-slider-max-width", theme.name)).toBe("320px");
+    }
+    const css = renderPrimitiveCss(source);
+    for (const name of source.fluidSizing) expect(css).toContain(`${name}: none;`);
+    const invalid = structuredClone(source);
+    invalid.fluidSizing.push("--wl-missing-max-width");
+    expect(() => validateCatalog(invalid)).toThrow("Invalid fluid sizing token contract");
+  });
   it("checks every theme and all approved contrast pairs", () => {
     expect(validateCatalog(source)).toHaveLength(source.themes.length * source.contrast.length);
   });

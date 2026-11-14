@@ -7,6 +7,26 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 ## Unreleased
 
+### Added
+
+- Customize Card, Accordion, Alert and Segmented typography and insets with component tokens. Opt into `wl-type-scale` from the primitives stylesheet to follow semantic text roles while retaining the 1.0 appearance by default ([#5](https://github.com/whitewolf06/gavia-ui/issues/5)).
+
+- Add WlCalendar `disabledDates` and a typed `dateSelect` activation event, including repeated activation of the selected date; preserve selection models and skip unavailable dates during keyboard navigation ([#6](https://github.com/whitewolf06/gavia-ui/issues/6)).
+
+- Configure Field, input-family, Accordion and Slider width limits through component tokens, or opt into `wl-fluid` with the optional primitives stylesheet to fill the containing layout ([#7](https://github.com/whitewolf06/gavia-ui/issues/7)).
+
+### Fixed
+
+- Align WlSlider range thumbs with the track, keep endpoint mark labels inside the control and reserve layout space for marks.
+
+- Preserve local `--wl-type-small-size` overrides for small Segmented items when the semantic component scale is disabled ([#5](https://github.com/whitewolf06/gavia-ui/issues/5)).
+
+- Expose WlCalendar `multiple` as a boolean control in the Playground and align its live example with the component's single-selection default ([#6](https://github.com/whitewolf06/gavia-ui/issues/6)).
+
+- Keep Slider range tracks and marks within the same width as their inputs.
+
+- Apply WlCard `padding="none|sm|md|lg"` to its own caption, content and footer once, without adding body padding or affecting nested cards. Cards without the prop keep their existing insets ([#4](https://github.com/whitewolf06/gavia-ui/issues/4)).
+
 ## 1.0.0 — 2026-10-25
 
 Stable 1.0 promotes the RC public API to npm `latest`. The library API is unchanged from 1.0.0-rc.1; the Playground now translates all changelog prose into Russian.

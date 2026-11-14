@@ -3,7 +3,10 @@ import { translate as t } from "../i18n";
 import { createDocumentationControls, type DocumentationControl } from "./documentation-controls";
 export interface StateCase { id: string; label: string; props: Record<string, unknown> }
 const axes = new Set(["variant", "size", "density", "presence", "display", "position", "tone", "shape", "displayFormat"]);
-const flags = new Set(["disabled", "loading", "invalid", "active", "indeterminate", "removable", "hoverable", "thin", "dot", "closable", "compact", "light", "motion"]);
+const flags = new Set([
+  "disabled", "loading", "invalid", "active", "indeterminate", "removable", "hoverable",
+  "thin", "dot", "closable", "compact", "light", "motion", "multiple"
+]);
 /** Only real public props are exposed; unsupported states are never passed to components. */
 export function stateControls(entry: WlComponentManifest): WlPropManifest[] {
   // These containers belong to App.vue. Their props are configured on that single instance.

@@ -8,7 +8,7 @@
   .wl-segmented:where([data-block="true"]) { display: flex; width: 100%; }
   .wl-segmented:where([data-block="true"]) :where(.wl-segmented__item) { flex: 1; justify-content: center; }
   .wl-segmented:where([data-orientation="vertical"]) { flex-direction: column; }
-  .wl-segmented:where([data-size="sm"]) :where(.wl-segmented__item) { padding: var(--wl-space-xs) var(--wl-space-sm); font-size: var(--wl-type-small-size); }
+  .wl-segmented:where([data-size="sm"]) :where(.wl-segmented__item) { padding: var(--wl-space-xs) var(--wl-space-sm); font-size: var(--wl-segmented-sm-font-size, var(--wl-type-small-size)); line-height: var(--wl-segmented-sm-line-height, revert-layer); }
   .wl-segmented:where([data-size="lg"]) :where(.wl-segmented__item) { padding: var(--wl-space-sm) var(--wl-space-md); }
   .wl-segmented:where([data-density="compact"]) { padding: var(--wl-space-2); }
   .wl-chip__action { display: inline-flex; align-items: center; gap: inherit; }

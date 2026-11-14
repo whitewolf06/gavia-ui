@@ -102,10 +102,12 @@ test("renders the canonical changelog with complete releases, continued bullets 
       ...lists.flatMap((block) => block.items),
       ...section.blocks.filter((block) => block.kind !== "list").map((block) => block.content)
     ];
-    for (const chunk of chunks) {
-      for (const part of chunk.filter((part) => part.kind === "link")) {
-        await expect(article.getByRole("link", { name: part.label, exact: true })).toHaveAttribute("href", part.href);
-      }
+    const links = chunks.flatMap((chunk) => chunk.filter((part) => part.kind === "link"));
+    for (const label of new Set(links.map((part) => part.label))) {
+      const expectedHrefs = links.filter((part) => part.label === label).map((part) => part.href).sort();
+      const rendered = article.getByRole("link", { name: label, exact: true });
+      await expect(rendered).toHaveCount(expectedHrefs.length);
+      expect(await rendered.evaluateAll((elements) => elements.map((element) => element.getAttribute("href")).sort())).toEqual(expectedHrefs);
     }
   }
   await expect(changelog.locator("code").filter({ hasText: /^Wl\*$/ })).toHaveCount(1);

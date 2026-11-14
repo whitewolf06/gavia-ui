@@ -24,5 +24,7 @@ export interface WlCalendarDaySlotProps {
   inMonth: boolean;
   today: boolean;
   selected: boolean;
+  /** Whether this day can be activated; supplied by Calendar, optional for older manually constructed slot props. */
+  disabled?: boolean;
   events: readonly WlCalendarEvent[];
 }

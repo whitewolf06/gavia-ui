@@ -1066,5 +1066,19 @@
   "examples.reviewUploadRemove": "Удалить",
   "examples.reviewUploadAdvance": "Увеличить прогресс в примере",
   "examples.utilityAvatarName": "Анна Михайлова",
-  "examples.utilityAvatarColor": "Цвет обводки выбран по имени. Для одного имени и одной палитры он совпадает на сервере и в браузере."
+  "examples.utilityAvatarColor": "Цвет обводки выбран по имени. Для одного имени и одной палитры он совпадает на сервере и в браузере.",
+  "examples.cardPaddingGuide": "Задай padding: none уберёт отступы, sm даст 8 px, md — 12 px, lg — 16 px. Каждая секция получает один отступ; снизу у заголовка отступа нет. Без prop остаются настройки темы.",
+  "examples.cardNestedPadding": "У вложенной карточки свои отступы.",
+  "examples.fluidControls": "Растянуть поля на ширину формы (wl-fluid)",
+  "examples.calendarAvailability": "Запретить выбор 16 и 18 октября",
+  "examples.calendarActivation": "Последний выбор и число действий:",
+  "examples.semanticComponentScale": "Подключить семантическую типографику (wl-type-scale)",
+  "examples.semanticComponentScaleGuide": "У группы уже заданы увеличенные семантические размеры. Включи wl-type-scale, чтобы компоненты их использовали. Без класса остаются размеры 1.0; маленький Segmented уже связан с ролью small. Для control размер берётся из control, а межстрочный интервал, насыщенность и семейство — из label. Отдельную роль можно настроить компонентным токеном.",
+  "examples.componentTypeMapping": "Текстовые роли компонентов",
+  "examples.componentTypePrefix": "Префикс токена",
+  "examples.componentTypeDefault": "Размер без профиля",
+  "examples.sliderMarked": "Слайдер с разметкой",
+  "examples.sliderMarkedValue": "Значение:",
+  "examples.sliderRange": "Диапазон с разметкой",
+  "examples.sliderRangeValue": "Диапазон:"
 }

@@ -117,6 +117,43 @@ to obtain a size. Limit long text to roughly 60–75 characters
 per line. On mobile, display can become title. Font families
 come from the theme; third-party fonts are not loaded automatically.
 
+### Component typography in 1.x
+
+Card, Accordion, Alert and Segmented expose component aliases ending in
+`font-size`, `line-height`, `font-weight` and `font-family`. Their defaults keep
+the existing 1.0 typography, including inherited properties. To use the semantic
+scale, import `styles/primitives.css` and add `wl-type-scale` to the group.
+Apply local semantic overrides on that same group. A closer component alias
+override takes precedence. Reapply the class at a nested theme/scale boundary.
+
+| Component token prefix | Default font size | Role with `wl-type-scale` |
+| --- | --- | --- |
+| `--wl-card-title-*` | 14 px | subheading |
+| `--wl-card-subtitle-*` | 12.5 px | small |
+| `--wl-card-content-*` | 13.5 px | body |
+| `--wl-accordion-title-*` | 13.5 px | control size; label line height, weight and family |
+| `--wl-accordion-body-*` | 13 px | body |
+| `--wl-alert-*` | 13 px | body |
+| `--wl-alert-title-*` | inherited | subheading |
+| `--wl-segmented-*` | 13 px | control size; label line height, weight and family |
+
+Small Segmented keeps its existing small-size role and exposes
+`--wl-segmented-sm-font-size` / `--wl-segmented-sm-line-height`. Without an explicit
+component size, it resolves `--wl-type-small-size` at the item so local semantic
+overrides continue to work. The opt-in scale
+uses intrinsic item height with a 30 px minimum so enlarged text fits in sm/md/lg.
+Without the class, item height remains 30 px and the previous minimum-height
+cascade is retained. Slot content with its own `wl-text-*` class continues to own
+its typography explicitly.
+
+Insets use `--wl-card-padding-*`, `--wl-card-footer-padding-block`,
+`--wl-card-content-gap`, `--wl-accordion-title-padding-block`,
+`--wl-accordion-padding-inline`, `--wl-accordion-body-padding-block-end`,
+`--wl-alert-padding-block`, `--wl-alert-padding-inline`,
+`--wl-segmented-padding`, `--wl-segmented-padding-block` and
+`--wl-segmented-padding-inline`. Explicit Card padding variants retain their
+own spacing-scale contract.
+
 `wl-text-muted` / `--wl-text-muted` is for readable explanations.
 `--wl-text-3` remains for decorative details and should not carry essential
 instructions. Actual contrast depends on the surface behind the text.
@@ -159,6 +196,12 @@ import "gavia-ui/themes/white.css";
   `wl-container--narrow` — reading width up to 72ch; `--fluid` — full width with padding;
   `--full` — full width without padding. Add modifiers to `wl-container`.
 - `wl-surface`: background, border, radius and 24 px padding.
+- `wl-fluid`: remove the width caps of Field, input-family controls, Accordion
+  and Slider inside the group. Import `styles/primitives.css` explicitly. The
+  class sets inherited component max-width tokens to `none`, including both a
+  Field and its control. A closer component token override can restore a cap.
+  NumberInput keeps its intrinsic sizing. A nested theme root resets its own
+  tokens; apply `wl-fluid` on that root too when needed.
 - `wl-rule`: divider on native `hr`.
 - `wl-scroll-area`: local scrolling for wide content; provide an accessible
   name and `tabindex="0"` for keyboard operation.
@@ -168,6 +211,15 @@ import "gavia-ui/themes/white.css";
 
 The detailed contract, container variants and z-index rules are
 in [primitives.md](primitives.md). Live examples are in Docs → Layout and grid.
+
+Default control caps remain 340 px for `--wl-field-max-width`,
+`--wl-input-max-width`, `--wl-select-max-width`, `--wl-textarea-max-width`,
+`--wl-multiselect-max-width` and `--wl-autocomplete-max-width`; Accordion uses
+`--wl-accordion-max-width` (520 px), Slider `--wl-slider-max-width` (320 px).
+Set a component token directly for an individual cap. Override semantic
+`--wl-layout-control-max-width` on the theme root alongside its token aliases
+to customize the default form scale. On a local form, use `wl-fluid` or the
+component tokens directly so inherited aliases resolve predictably.
 
 Typed `wlBreakpoints` provides media-query values: sm 640, md 900, lg 1200 px.
 CSS custom properties cannot be substituted into ordinary media-query conditions;

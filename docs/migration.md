@@ -4,6 +4,43 @@ Choose the section for the version or contract you are changing. Historical
 sections describe that release; they do not report current validation or a new
 publication. Stable public namespaces remain `Wl*`, `wl-*` and `--wl-*`.
 
+## Unreleased corrections
+
+### Calendar availability and activation
+
+`WlCalendar` accepts the same `WlDisabledDates` type as DatePicker: a readonly
+ISO date array or a predicate returning true for unavailable days. Disabled
+days remain visible, are exposed to the `day` slot and PT, and cannot be
+activated. An externally selected date is retained when it becomes unavailable;
+the roving focus moves to an enabled day, or month navigation if none remain.
+
+Use `@date-select="openDay"` for each pointer/Enter/Space activation, including the
+already selected day. `v-model` remains selection state. In multiple mode,
+`dateSelect` also fires for activation that removes a date. External model updates
+and month navigation do not fire it. The component event supplies an ISO string,
+not the native DOM select Event. Native `@select` handlers retain their DOM event.
+
+Arrow navigation skips unavailable days and preserves the weekday for up/down.
+Searches stop after a bounded year of date positions; if no target is found,
+focus stays in place and the month buttons remain available. Home/End search
+within their week; PageUp/PageDown choose an enabled date in the target month.
+Data availability and archive requests remain application concerns.
+
+### Card padding
+
+WlCard now applies explicit `padding="none|sm|md|lg"` to its own caption,
+content and footer, without adding another inset on the body. The sizes are
+0/8/12/16 px. The caption has no bottom inset, so the gap before content is
+applied once. The header stays full bleed. Cards without `padding` retain
+their existing section insets; nested cards keep their own settings.
+
+Remove workarounds that cancel the old extra body padding or force section
+padding through CSS/PT, then check the intended inset. Public DOM, classes,
+slots and PT section names are unchanged. Default insets can be customized with
+`--wl-card-padding-inline`, `--wl-card-padding-block-start`,
+`--wl-card-padding-block-end`, `--wl-card-footer-padding-block` and
+`--wl-card-content-gap`.
+
 Start with the 1.0 checklist. Detailed component and service changes are
 included below; historical upgrade sections remain available at their anchors.
 
