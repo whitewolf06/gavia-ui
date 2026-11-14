@@ -1078,6 +1078,9 @@
     overflow: hidden;
     border-radius: var(--wl-card-radius) var(--wl-card-radius) 0 0;
   }
+  .wl-card__body {
+    padding: 0;
+  }
   .wl-card__caption {
     padding: var(--wl-card-padding-block-start) var(--wl-card-padding-inline) 0;
   }
