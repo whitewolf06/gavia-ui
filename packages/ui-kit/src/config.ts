@@ -1,4 +1,4 @@
-import { type App, type Component, computed, type ComputedRef, type DirectiveBinding, getCurrentInstance, inject, isReactive, normalizeClass, shallowReactive } from "vue";
+import { type App, type Component, computed, type ComputedRef, type DirectiveBinding, effectScope, getCurrentInstance, inject, isReactive, normalizeClass, shallowReactive } from "vue";
 import type { WlPtCallbackOptions, WlPtComponent, WlPtConfig } from "./pt-types";
 import { mergeWlAttrs } from "./utils/attrs";
 export { mergeWlAttrs } from "./utils/attrs";
@@ -29,6 +29,7 @@ export interface WlConfigApi {
 const configKey = Symbol("wl-config");
 const defaults = /* @__PURE__ */ createWlPt();
 const appConfigs = new WeakMap<App, WlConfigOptions>();
+// App-shared computed refs must outlive their first consumer's Vue 3.4 scope.
 const locales = new WeakMap<WlConfigOptions, ComputedRef<ReturnType<typeof normalizeWlLocale>>>();
 const iconRegistries = new WeakMap<WlConfigOptions, ComputedRef<Readonly<Record<string, Component>>>>();
 const emptyIcons: Readonly<Record<string, Component>> = Object.freeze({});
@@ -143,7 +144,7 @@ export function useWlLocale(): ComputedRef<ReturnType<typeof normalizeWlLocale>>
   const config = injectedConfig();
   let locale = locales.get(config);
   if (!locale) {
-    locale = computed(() => normalizeWlLocale(config.locale));
+    locale = effectScope(true).run(() => computed(() => normalizeWlLocale(config.locale)))!;
     locales.set(config, locale);
   }
   return locale;
@@ -165,7 +166,7 @@ export function useWlIcons(): ComputedRef<Readonly<Record<string, Component>>> {
   const config = injectedConfig();
   let icons = iconRegistries.get(config);
   if (!icons) {
-    icons = computed(() => config.icons ?? emptyIcons);
+    icons = effectScope(true).run(() => computed(() => config.icons ?? emptyIcons))!;
     iconRegistries.set(config, icons);
   }
   return icons;

@@ -1,6 +1,7 @@
 import { mount, type VueWrapper } from "@vue/test-utils";
 import { afterEach, describe, expect, it } from "vitest";
 import { computed, defineComponent, h, nextTick, reactive, ref } from "vue";
+import WlIcon from "../src/components/WlIcon.vue";
 import { useWlConfig, useWlLocale, useWlMotion, useWlPt, WlConfig, type WlConfigApi, type WlConfigOptions } from "../src/config";
 import { wlLocaleEn, wlLocaleRu } from "../src/locale";
 
@@ -76,6 +77,71 @@ describe("reactive application configuration", () => {
     api.setLocale({ close: "Setter" });
     expect(options.locale.close).toBe("Setter");
   });
+
+  it.each(["plain plugin", "reactive plugin", "implicit configuration"])(
+    "keeps locale and icons reactive after the first consumer unmounts (%s)",
+    async (configuration) => {
+      const InitialIcon = defineComponent({ setup: () => () => h("svg", { "data-test-icon": "initial" }) });
+      const ChangedIcon = defineComponent({ setup: () => () => h("svg", { "data-test-icon": "changed" }) });
+      const firstVisible = ref(true);
+      const thirdVisible = ref(false);
+      let api!: WlConfigApi;
+      const Consumer = defineComponent({
+        props: { name: { type: String, required: true } },
+        setup(props) {
+          const locale = useWlLocale();
+          return () => h("div", { "data-consumer": props.name }, [
+            locale.value.close,
+            h(WlIcon, { name: "lifecycle" })
+          ]);
+        }
+      });
+      const Harness = defineComponent({
+        setup() {
+          api = useWlConfig();
+          api.setLocale({ close: "Initial" });
+          api.setIcons({ lifecycle: InitialIcon });
+          return () => h("div", [
+            firstVisible.value ? h(Consumer, { key: "first", name: "first" }) : null,
+            h(Consumer, { key: "second", name: "second" }),
+            thirdVisible.value ? h(Consumer, { key: "third", name: "third" }) : null
+          ]);
+        }
+      });
+      const options = configuration === "reactive plugin" ? reactive({}) : {};
+      const wrapper = mount(Harness, configuration === "implicit configuration"
+        ? {}
+        : { global: { plugins: [[WlConfig, options]] } });
+      const isolated = mount(Consumer, {
+        props: { name: "isolated" },
+        global: { plugins: [[WlConfig, { locale: { close: "Isolated" }, icons: { lifecycle: InitialIcon } }]] }
+      });
+      wrappers.push(wrapper, isolated);
+      expect(wrapper.text()).toBe("InitialInitial");
+      expect(wrapper.findAll("svg").map((icon) => icon.attributes("data-test-icon"))).toEqual(["initial", "initial"]);
+
+      firstVisible.value = false;
+      await nextTick();
+      expect(wrapper.find('[data-consumer="first"]').exists()).toBe(false);
+      api.setLocale({ close: "Changed" });
+      api.setIcons({ lifecycle: ChangedIcon });
+      await nextTick();
+      thirdVisible.value = true;
+      await nextTick();
+
+      const second = wrapper.get('[data-consumer="second"]');
+      const third = wrapper.get('[data-consumer="third"]');
+      expect({
+        secondLocale: second.text(), secondIcon: second.get("svg").attributes("data-test-icon"),
+        thirdLocale: third.text(), thirdIcon: third.get("svg").attributes("data-test-icon")
+      }).toEqual({
+        secondLocale: "Changed", secondIcon: "changed",
+        thirdLocale: "Changed", thirdIcon: "changed"
+      });
+      expect(isolated.text()).toBe("Isolated");
+      expect(isolated.get("svg").attributes("data-test-icon")).toBe("initial");
+    }
+  );
 
   it("returns to English after clearing one app's locale without changing a Russian app", async () => {
     const implicit = harness(undefined, false);
