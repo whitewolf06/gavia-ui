@@ -92,7 +92,7 @@ defineSlots<{
 const locale = useWlLocale();
 
 const dialog = ref<HTMLElement | null>(null);
-const titleId = useWlId();
+const titleId = `wl-dialog-title-${useWlId()}`;
 const attrs = useAttrs();
 const section = useWlPt("dialog", computed(() => props.pt));
 const motion = useWlMotion(computed(() => props.motion));

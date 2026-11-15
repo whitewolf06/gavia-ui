@@ -96,7 +96,7 @@ defineSlots<{
 const locale = useWlLocale();
 
 const drawer = ref<HTMLElement | null>(null);
-const titleId = useWlId();
+const titleId = `wl-drawer-title-${useWlId()}`;
 const attrs = useAttrs();
 const section = useWlPt("drawer", computed(() => props.pt));
 const motion = useWlMotion(computed(() => props.motion));
