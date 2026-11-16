@@ -56,6 +56,12 @@ Tokens use the stable `--wl-*` namespace. Props, slots and pass-through sections
 let applications extend components; optional `WlConfig` supplies shared locale,
 pt and motion settings. Services are isolated per Vue application.
 
+`gavia-ui/theme` exports the pure `createWlTheme` generator and
+`parseWlThemeConfig` JSON reader. The optional `gavia-theme` command generates
+CSS or checks it in CI with `--check`; it requires Node 22.13+.
+See the [customization guide](https://github.com/whitewolf06/gavia-ui/blob/main/docs/guide/theming.md#generate-css-from-a-versioned-config)
+for v2 configs, full/delta output and scoped contrast reports.
+
 ## Locale migration for 1.0
 
 The 1.0 line uses English built-in text when locale configuration is omitted;

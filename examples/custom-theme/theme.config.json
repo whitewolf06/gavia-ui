@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "name": "my-brand",
+  "baseTheme": "gavia",
+  "mode": "delta",
+  "overrides": {
+    "--wl-palette-accent": "#245bd1",
+    "--wl-palette-accent-hover": "#1d49ab",
+    "--wl-palette-text-accent": "#1b4299",
+    "--wl-palette-accent-soft": "#e8effd",
+    "--wl-palette-accent-soft-hover": "#dce7fb",
+    "--wl-palette-accent-border": "#5d7fc7",
+    "--wl-palette-accent-border-hover": "#416bbd",
+    "--wl-palette-on-accent": "#ffffff",
+    "--wl-palette-action-primary-bg": "#245bd1",
+    "--wl-palette-action-primary-hover": "#1d49ab",
+    "--wl-palette-action-primary-active": "#173b8c",
+    "--wl-palette-action-primary-text": "#ffffff"
+  },
+  "contrastPairs": [
+    { "name": "primary", "foreground": "--wl-action-primary-text", "background": "--wl-action-primary-bg", "minimum": 4.5 },
+    { "name": "primary hover", "foreground": "--wl-action-primary-text", "background": "--wl-action-primary-hover", "minimum": 4.5 },
+    { "name": "primary active", "foreground": "--wl-action-primary-text", "background": "--wl-action-primary-active", "minimum": 4.5 },
+    { "name": "link on page", "foreground": "--wl-text-accent", "background": "--wl-bg", "minimum": 4.5 },
+    { "name": "link on raised", "foreground": "--wl-text-accent", "background": "--wl-bg-raised", "minimum": 4.5 },
+    { "name": "link on selected", "foreground": "--wl-text-accent", "background": "--wl-accent-soft", "minimum": 4.5 },
+    { "name": "link on selected hover", "foreground": "--wl-text-accent", "background": "--wl-accent-soft-hover", "minimum": 4.5 },
+    { "name": "hover link on selected hover", "foreground": "--wl-accent-hover", "background": "--wl-accent-soft-hover", "minimum": 4.5 },
+    { "name": "focus on page", "foreground": "--wl-focus-color", "background": "--wl-bg", "minimum": 3 },
+    { "name": "focus on raised", "foreground": "--wl-focus-color", "background": "--wl-bg-raised", "minimum": 3 },
+    { "name": "focus on secondary", "foreground": "--wl-focus-color", "background": "--wl-bg-soft", "minimum": 3 },
+    { "name": "focus on selected", "foreground": "--wl-focus-color", "background": "--wl-accent-soft", "minimum": 3 },
+    { "name": "focus on selected hover", "foreground": "--wl-focus-color", "background": "--wl-accent-soft-hover", "minimum": 3 },
+    { "name": "selected border", "foreground": "--wl-accent-border", "background": "--wl-accent-soft", "minimum": 3 },
+    { "name": "selected hover border", "foreground": "--wl-accent-border-hover", "background": "--wl-accent-soft-hover", "minimum": 3 },
+    { "name": "checked mark", "foreground": "--wl-on-accent", "background": "--wl-accent", "minimum": 4.5 },
+    { "name": "checked hover mark", "foreground": "--wl-on-accent", "background": "--wl-accent-hover", "minimum": 4.5 }
+  ]
+}

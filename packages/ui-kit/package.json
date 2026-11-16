@@ -49,8 +49,10 @@
   },
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "bin": { "gavia-theme": "./bin/gavia-theme.mjs" },
   "files": [
     "dist",
+    "bin",
     "styles",
     "fonts/gavia/*.woff2",
     "fonts/gavia/*.txt",

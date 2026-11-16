@@ -39,16 +39,32 @@ settings remain in memory until the page is closed.
 ## Export
 
 - **For an agent** — a ready task with a JSON specification and steps for creating
-  a theme through canonical `packages/ui-kit/tokens/source.json`.
-- **JSON** — `schemaVersion`, `name`, `baseTheme`, `colorScheme`, `palette`,
-  foundation `overrides` and separate `semanticBindings` for the primary action.
-  This playground format is not loaded automatically by the public library.
+  CSS through the public generator or CLI.
+- **JSON** — a v2 input config: `schemaVersion`, `name`, `baseTheme`, `palette`
+  and `mode`, with optional manual `overrides` and `contrastPairs`. Derived
+  bindings and `colorScheme` are not user settings. It is not loaded
+  automatically by mounted components; pass it to `createWlTheme` or the CLI.
 - **CSS** — a complete base snapshot with changes, the `wl.tokens` layer, a safe
   selector for the new name and `prefers-reduced-motion`. The full snapshot lets
   aliases in every layer resolve at the theme root, including component portals.
 
-Choose a format and click Copy. If clipboard access is unavailable,
-a field appears for manual copying. Import the CSS after library styles
+Choose a format and click Copy, or use **Download config** to save the same JSON
+as `<name>.theme.json`. If clipboard access is unavailable, a field appears for
+manual copying. Generate or check the downloaded config directly:
+
+```sh
+pnpm exec gavia-theme --config my-gavia.theme.json --output my-gavia.css
+pnpm exec gavia-theme --config my-gavia.theme.json --output my-gavia.css --check
+```
+
+The CLI and preview use the same generation logic. For the full/delta contract,
+manual overrides, exit codes and scoped contrast checks, see the
+[customization guide](theming.md#generate-css-from-a-versioned-config).
+Older v1 exports remain palette-only snapshots when read; their derived fields
+do not become manual overrides. Browser draft storage and the applied snapshot
+keep their separate v1 formats.
+
+Import full CSS after library styles
 and set the new theme name on `html`:
 
 ```ts
@@ -57,9 +73,8 @@ import './my-gavia.css';
 document.documentElement.dataset.wlTheme = 'my-gavia';
 ```
 
-For a permanent repository theme, the agent first copies each token value from
-`themes[baseTheme] ?? value` into a new snapshot, then applies foundation overrides
-and the specified semantic bindings. After registering the theme name and metadata,
-run `pnpm tokens:sync` / `pnpm tokens:check` and check contrast and components.
-The new theme extends the existing system; previous themes and public names remain.
+For a new built-in repository theme, follow the separate
+[maintainer token procedure](../maintainers/tokens.md): edit the canonical source,
+register the name and metadata, synchronize generated files and verify the theme.
+Consumer v2 configs do not register a new built-in theme or change existing names.
 The editor does not publish packages or change repository files from the browser.

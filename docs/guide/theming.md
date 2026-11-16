@@ -38,6 +38,8 @@ The starter's [`theme.css`](../../examples/custom-theme/src/theme.css) declares
 the palette under `[data-wl-theme="gavia"][data-wl-brand="my-brand"]` in
 `@layer wl.tokens`. Import it after the shipped theme. Components keep their
 public classes, tokens and behavior.
+The starter generates this file from `theme.config.json`; edit the config and
+regenerate, or keep a separate hand-authored brand stylesheet.
 
 ### 2. Recolor the complete interaction palette
 
@@ -126,6 +128,80 @@ passing color pairs is not a complete accessibility assessment.
 For token lookup and targeted overrides, see [design tokens](tokens.md). To change
 the library's shipped themes, use the separate
 [maintainer token procedure](../maintainers/tokens.md).
+
+## Generate CSS from a versioned config
+
+The 1.2 additions provide a pure entry point, `gavia-ui/theme`, and a Node CLI.
+They are optional; existing CSS imports and component APIs stay the same.
+The entry does not import Vue, the DOM or Node modules.
+
+```ts
+import { createWlTheme } from 'gavia-ui/theme';
+
+const result = createWlTheme({
+  schemaVersion: 2,
+  name: 'my-brand',
+  baseTheme: 'gavia',
+  palette: { primary: '#245bd1' },
+  overrides: { '--wl-card-padding-inline': '1.25rem' },
+  mode: 'delta'
+});
+// result.css, result.overrides, result.contrast
+```
+
+`palette` accepts any subset of `background`, `surface`, `softSurface`, `text`,
+`mutedText`, `border`, `primary` and `link`. Omitted roles use the base palette;
+colors are opaque `#rgb` or `#rrggbb`. The generator applies the base, palette
+changes and then manual `overrides`, without changing your input object.
+Overrides use existing `--wl-*` token names. Unknown references, cycles and
+declaration/selector injection are rejected. Values cannot contain `!important`;
+the generated reduced-motion rules retain priority over duration overrides.
+References use `var(--wl-token)` without a CSS fallback.
+
+| Mode | CSS selector | Application setup |
+| --- | --- | --- |
+| `full` (default) | `[data-wl-theme="my-brand"]` | Select the new name; the CSS contains a complete base snapshot |
+| `delta` | `[data-wl-theme="gavia"][data-wl-brand="my-brand"]` | Import the complete base theme and keep both attributes on the same element |
+
+Both modes retain a reduced-motion block. Delta follows the local-theme and
+Teleport rules above. Full CSS freezes the token snapshot at generation time;
+regenerate it when updating Gavia UI. Keep the config as the source of truth.
+
+The result's `overrides` are the **computed** delta, including derived values.
+They are not a replacement for the config's manual `overrides`. The contrast
+report includes resolved foreground/background colors, ratio, threshold and
+`passes`. Optional `contrastPairs` selects token pairs and thresholds; otherwise
+the existing builder pairs are checked. These pairs must resolve to opaque HEX
+colors. A failed pair is reported without replacing your selected colors; this
+report does not certify all component states or application accessibility.
+
+### Generate and check from the command line
+
+Save the input object as JSON. The Playground's **Download config** button exports
+this same v2 format, so no format conversion is needed:
+
+```sh
+pnpm exec gavia-theme --config my-brand.theme.json --output src/theme.css
+pnpm exec gavia-theme --config my-brand.theme.json --output src/theme.css --check
+```
+
+The CLI requires Node 22.13+; it does not add a Node runtime requirement to browser
+components. It calls the same public generator. `--check` compares the exact CSS
+and checks the selected contrast pairs without writing files or directories.
+Exit codes are `0` for success, `1` for arguments/configuration/IO errors, `2` for
+stale or missing CSS and `3` for failed contrast. When both checks fail, contrast
+takes priority and both failures are reported.
+
+`parseWlThemeConfig(value)` validates and normalizes JSON input for build scripts.
+New configs use `schemaVersion: 2` and contain only user settings. Older v1 exports
+are still read as name, base theme and all eight palette colors. Their derived
+`colorScheme`, `overrides` and `semanticBindings` are ignored, as before; the CLI
+prints a migration warning. To make a former derived value a manual override,
+move it deliberately into a v2 config rather than changing the version alone.
+
+The [starter](../../examples/custom-theme/README.md) uses one config for its build
+script and CLI checks. For repository changes to shipped themes, continue using
+the maintainer token procedure rather than adding generated CSS by hand.
 
 ## Reactive theme preferences
 

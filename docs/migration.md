@@ -4,6 +4,26 @@ Choose the section for the version or contract you are changing. Historical
 sections describe that release; they do not report current validation or a new
 publication. Stable public namespaces remain `Wl*`, `wl-*` and `--wl-*`.
 
+<a id="migration-1-2"></a>
+## Upgrading from 1.1 to 1.2 (Unreleased)
+
+The optional `gavia-ui/theme` entry adds `createWlTheme` and
+`parseWlThemeConfig`; existing exports, explicit CSS imports and Vue peer support
+are unchanged. The `gavia-theme` Node CLI uses that same generator. Its Node
+22.13+ requirement applies to the command, not to browser component execution.
+
+New Theme Builder downloads use an input-only `schemaVersion: 2` config.
+Existing v1 exports remain readable as name, base theme and a complete palette;
+their computed `overrides`, `semanticBindings` and `colorScheme` retain their
+previous non-input meaning and are ignored on import. The CLI warns when reading
+v1. Copy any deliberate manual token changes into a new v2 config explicitly.
+Browser draft storage and the applied Playground palette keep separate v1 keys.
+
+`full` output uses the custom theme name. `delta` output requires the base theme
+and brand on the same element; it must not replace a complete base theme.
+See the [customization guide](guide/theming.md#generate-css-from-a-versioned-config)
+for the public input/output contract and contrast limitations.
+
 <a id="unreleased-corrections"></a>
 <a id="migration-1-1"></a>
 ## Upgrading from 1.0 to 1.1

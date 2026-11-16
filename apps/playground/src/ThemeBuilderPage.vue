@@ -21,6 +21,7 @@ const overrides = computed(() => createThemeOverrides(palette.value, baseTheme.v
 const contrast = computed(() => getThemeContrast(palette.value, baseTheme.value));
 const failedContrast = computed(() => contrast.value.filter((pair) => !pair.passes).length);
 const themeExport = computed(() => createThemeExport(nameInvalid.value ? "my-theme" : name.value, baseTheme.value, palette.value));
+const configDownloadUrl = computed(() => "data:application/json;charset=utf-8," + encodeURIComponent(themeExport.value.json));
 const exportPanel = ref<InstanceType<typeof CodePanel> | null>(null);
 const exportMode = ref<"prompt" | "json" | "css">("prompt");
 const exportOptions = [{ value: "prompt", label: t("shell.ThemeBuilderPage.text302") }, { value: "json", label: "JSON" }, { value: "css", label: "CSS" }] as const;
@@ -293,11 +294,22 @@ const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.
           <h2 id="tb-export-title" class="wl-text-heading">{{ t('shell.ThemeBuilderPage.text348') }}</h2>
           <p class="wl-text-body wl-text-muted">{{ t('shell.ThemeBuilderPage.text349') }}</p>
         </div>
-        <WlButton variant="primary" :disabled="nameInvalid || hexInvalid" @click="exportPanel?.copy()">
-          <template #icon><WlIcon name="copy" :size="16" /></template>
-          {{ exportMode === 'prompt' ? t('shell.ThemeBuilderPage.text350')
-            : t('shell.ThemeBuilderPage.text351') + exportMode.toUpperCase() }}
-        </WlButton>
+        <div class="wl-inline" data-space="sm">
+          <WlButton
+            v-if="!nameInvalid && !hexInvalid"
+            :href="configDownloadUrl"
+            :download="name + '.theme.json'"
+            data-testid="theme-builder-download"
+          >
+            <template #icon><WlIcon name="download" :size="16" /></template>
+            {{ t('shell.themeBuilder.downloadConfig') }}
+          </WlButton>
+          <WlButton variant="primary" :disabled="nameInvalid || hexInvalid" @click="exportPanel?.copy()">
+            <template #icon><WlIcon name="copy" :size="16" /></template>
+            {{ exportMode === 'prompt' ? t('shell.ThemeBuilderPage.text350')
+              : t('shell.ThemeBuilderPage.text351') + exportMode.toUpperCase() }}
+          </WlButton>
+        </div>
       </div>
       <div
         class="wl-inline"

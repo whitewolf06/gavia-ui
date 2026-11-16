@@ -3,12 +3,44 @@
 Run `pnpm install`, then `pnpm dev`. Production output: `pnpm build`.
 
 This application imports the complete Gavia theme and then applies a blue brand
-palette in [src/theme.css](src/theme.css). Both `data-wl-theme="gavia"` and
+palette generated in [src/theme.css](src/theme.css). Both `data-wl-theme="gavia"` and
 `data-wl-brand="my-brand"` are set on `html` in [src/main.ts](src/main.ts).
 The brand selector changes 12 palette roles: compact accents, readable links,
 soft selected surfaces and borders, and primary action background/hover/active/text.
 Primary buttons have their own roles; changing only `--wl-accent` does not
 recolor every action.
+
+## Generate and check the CSS
+
+The source is [theme.config.json](theme.config.json), a version 2 input-only
+configuration. Change its palette or manual overrides, then run
+`pnpm theme:generate`. Do not edit `src/theme.css` by hand. The
+[build script](scripts/generate-theme.mjs) calls `createWlTheme` from
+`gavia-ui/theme`, checks the configured contrast pairs and writes the CSS before
+the Vite production build. These tools require the 1.2 release or its candidate;
+the previously published 1.1 package does not have this entry point.
+
+The installed CLI uses the same configuration and generator:
+
+```sh
+pnpm exec gavia-theme --config theme.config.json --output src/theme.css
+pnpm theme:check
+```
+
+`npm run theme:generate` / `npm run theme:check` and the corresponding
+`bun run` commands work too. The CLI requires Node 22.13 or later; its Node
+requirement does not change the browser library's Vue peer requirement.
+
+`--check` never writes output or creates directories. Exit codes are `0` for
+current CSS and passing configured pairs, `1` for invalid arguments/configuration
+or file errors, `2` for missing/stale CSS, and `3` for failed contrast. When both
+CSS and contrast fail, both are reported and the exit code is `3`. Normal
+generation also leaves output untouched when contrast fails.
+
+The old version 1 export keeps its palette-only meaning: its generated
+`overrides`, `semanticBindings` and `colorScheme` are ignored with a CLI warning.
+To supply manual overrides, use a version 2 configuration. The JSON downloaded
+from the updated constructor can be passed to this command without format edits.
 
 The page shows primary, soft and link buttons, a checked checkbox and selected
 tabs. Card slots supply its title/footer; `pt.content.class` adds application
@@ -45,11 +77,12 @@ need at least 3:1 against their adjacent surface.
 | Selected border / selected surface; hover border / selected hover | 3.42 / 4.15:1 |
 
 White checkbox marks share the primary/hover contrast pairs. Recheck your own
-palette, backgrounds and all states after edits. These measurements cover the
+palette, backgrounds and all states after edits. The configuration lists these
+17 directed checks explicitly. These measurements cover the
 listed pairs; they do not establish full application accessibility, disabled-state
 readability, focus geometry or screen-reader acceptance.
 
 See the [customization guide](../../docs/guide/theming.md#customize-a-theme)
 for tokens, component props, slots, `pt` and application CSS. The existing
 [Playground theme builder](../../docs/guide/theme-builder.md) can export CSS;
-no public theme-generation function or CLI is required for this example.
+the public function and CLI generate the same CSS from the shared configuration.

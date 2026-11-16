@@ -99,7 +99,10 @@ try {
     type: "module",
     scripts: {
       build: "node tool-build.mjs",
-      typecheck: "node tool-typecheck.mjs"
+      typecheck: "node tool-typecheck.mjs",
+      "theme:typecheck": "node node_modules/typescript/bin/tsc --noEmit -p tsconfig.theme.json",
+      "theme:generate": "gavia-theme --config theme.config.json --output generated-theme.css",
+      "theme:check": "gavia-theme --config theme.config.json --output generated-theme.css --check"
     },
     dependencies: {
       "gavia-ui": `file:${archivePath.replaceAll("\\", "/")}`,
@@ -116,6 +119,14 @@ try {
   };
 
   write("package.json", `${JSON.stringify(consumerPackage, null, 2)}\n`);
+  write("theme.config.json", readFileSync(join(repoRoot, "examples/custom-theme/theme.config.json"), "utf8"));
+  write("tsconfig.theme.json", `${JSON.stringify({
+    compilerOptions: {
+      target: "ES2020", module: "ESNext", moduleResolution: "Bundler", lib: ["ES2020"],
+      types: [], strict: true, skipLibCheck: false, noEmit: true
+    },
+    include: ["src/contracts/types/theme-generation.types.ts"]
+  }, null, 2)}\n`);
   write("tool-build.mjs", 'import { build } from "vite";\nawait build();\n');
   // The pinned vue-tsc runner receives the consumer compiler path explicitly; linked tooling must not select the workspace TypeScript.
   write("tool-typecheck.mjs", 'import { run } from "vue-tsc";\nimport { resolve } from "node:path";\nimport { realpathSync } from "node:fs";\nprocess.argv.push("--noEmit", "-p", "tsconfig.json");\nrun(realpathSync(resolve("node_modules/typescript/lib/tsc.js")));\n');
@@ -198,10 +209,12 @@ createApp(App).use(WlConfig, { pt: createWlPt(), locale: wlLocaleRu })
     "types/collection-contract.types.ts", "fixtures/collection-contract-consumer.vue",
     "types/input-model-modifiers.types.ts", "fixtures/input-model-modifiers-consumer.vue",
     "types/overlay-locale-contract.types.ts", "fixtures/overlay-model-modifiers-consumer.vue", "types/pt-tooltip-contract.types.ts",
-    "types/native-contract.types.ts", "types/native-contract.tsx", "types/field-slot-contract.types.ts", "fixtures/public-components-consumer.vue"
+    "types/native-contract.types.ts", "types/native-contract.tsx", "types/field-slot-contract.types.ts", "fixtures/public-components-consumer.vue",
+    "types/theme-generation.types.ts"
   ];
   for (const relativePath of apiContractFiles) {
     const source = readFileSync(join(uiKitDir, "tests", relativePath), "utf8")
+      .replace(/from (["'])(?:\.\.\/)+src\/theme\/index\1/g, 'from "gavia-ui/theme"')
       .replace(/from (["'])(?:\.\.\/)+src\1/g, 'from "gavia-ui"');
     write(`src/contracts/${relativePath}`, source);
   }
@@ -238,6 +251,12 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     else consumerTool.run(["run", name], consumerDir);
   }
   runConsumerScript("typecheck");
+  runConsumerScript("theme:typecheck");
+  // Each selected package manager resolves and invokes its actual installed bin shim.
+  runConsumerScript("theme:generate");
+  runConsumerScript("theme:check");
+  execFileSync(process.execPath, ["theme-smoke.mjs"], { cwd: consumerDir, stdio: "inherit", timeout: 30_000 });
+  const themeEvidence = JSON.parse(readFileSync(join(consumerDir, "theme-evidence.json"), "utf8"));
   const nativeAndSSR = checkPackedNode(consumerDir);
   runConsumerScript("build");
   const buttonBundle = checkPackedButtonBundle(consumerDir);
@@ -251,6 +270,10 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     "dist/index.d.ts",
     "dist/manifest.json",
     "dist/design-tokens.json",
+    "dist/theme-generator.js",
+    "dist/theme/index.d.ts",
+    "bin/gavia-theme.mjs",
+    "bin/theme-cli.mjs",
     "styles/reset.css",
     "styles/base.css",
     "styles/primitives.css",
@@ -279,6 +302,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   }
   const installedManifest = JSON.parse(readFileSync(join(installedPackageDir, "package.json"), "utf8"));
   assertPureUtilityEntry(installedPackageDir);
+  const themeRuntimeGraph = assertPureUtilityEntry(installedPackageDir, "dist/theme-generator.js");
   if (installedManifest.name !== packageJson.name || installedManifest.version !== packageJson.version) {
     throw new Error(`Packed package must be ${packageJson.name}@${packageJson.version}, received ${installedManifest.name}@${installedManifest.version}`);
   }
@@ -494,6 +518,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     manager: selectedManager, managerVersion: consumerTool?.version ?? process.env.npm_config_user_agent?.split(" ")[0], vueVersion: installedVue.version,
     archiveSha256: createHash("sha256").update(readFileSync(archivePath)).digest("hex"),
     copiedExamples: copiedExamples.length, apiContractFiles, nativeAndSSR, buttonBundle,
+    theme: { ...themeEvidence, esOnlyTypes: true, managerBinShim: true, runtimeGraph: themeRuntimeGraph },
     browser: browser ?? { skipped: true, command: "pnpm verify:package:browser" }
   }, null, 2) + "\n");
   console.log("Package verification evidence: " + evidencePath);

@@ -10,6 +10,7 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 ### Added
 
 - Generate full or delta theme CSS, manual token overrides and scoped contrast reports through the pure `gavia-ui/theme` entry.
+- Generate or check theme CSS from versioned JSON with the `gavia-theme` Node CLI; download matching v2 configs from Theme Builder.
 
 ### Fixed
 

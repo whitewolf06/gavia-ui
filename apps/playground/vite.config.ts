@@ -14,7 +14,7 @@ const source = (path: string) => fileURLToPath(new URL(`../../packages/ui-kit/sr
 // entries become available when implemented, without exposing arbitrary internals.
 export const playgroundSourceAliases = [
   { find: /^gavia-ui$/, replacement: source("index.ts") },
-  ...["utils", "composables"].flatMap((entry) => existsSync(source(`${entry}/index.ts`))
+  ...["utils", "composables", "theme"].flatMap((entry) => existsSync(source(`${entry}/index.ts`))
     ? [{ find: new RegExp(`^gavia-ui/${entry}$`), replacement: source(`${entry}/index.ts`) }]
     : [])
 ];

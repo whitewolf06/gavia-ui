@@ -1,5 +1,10 @@
+import type { Plugin } from "vue";
+import { flushPromises, mount } from "@vue/test-utils";
+import { createWlTheme, parseWlThemeConfig } from "gavia-ui/theme";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { playgroundI18n } from "../src/i18n";
 import { playgroundLocale } from "../src/i18n/locale";
+import ThemeBuilderPage from "../src/ThemeBuilderPage.vue";
 import { createPlaygroundThemeUrl, isPlaygroundTheme, parsePlaygroundTheme, playgroundThemeOptions, withPlaygroundTheme } from "../src/themes";
 
 let previousLocale = playgroundLocale.value;
@@ -12,6 +17,41 @@ afterEach(() => {
 });
 
 describe("playground theme routes", () => {
+  it("downloads editable v2 config whose generated CSS matches the live export", async () => {
+    const storageKey = "gavia-ui.theme-builder.v1";
+    const previousDraft = localStorage.getItem(storageKey);
+    localStorage.removeItem(storageKey);
+    const wrapper = mount(ThemeBuilderPage, {
+      props: { theme: "gavia" }, global: { plugins: [playgroundI18n as unknown as Plugin] }
+    });
+    try {
+      await flushPromises();
+      await wrapper.get("#tb-name").setValue("download-brand");
+      await wrapper.get("#tb-hex-primary").setValue("#0b6a53");
+      const download = wrapper.get('[data-testid="theme-builder-download"]');
+      expect(download.attributes("download")).toBe("download-brand.theme.json");
+      const href = download.attributes("href")!;
+      expect(href).toMatch(/^data:application\/json;charset=utf-8,/);
+      const input = JSON.parse(decodeURIComponent(href.slice(href.indexOf(",") + 1)));
+      const config = parseWlThemeConfig(input);
+      expect(config.name).toBe("download-brand");
+      expect(config.palette?.primary).toBe("#0b6a53");
+      expect(input.schemaVersion).toBe(2);
+      expect(input).not.toHaveProperty("semanticBindings");
+      expect(input).not.toHaveProperty("colorScheme");
+      const generated = createWlTheme(config);
+      await wrapper.findAll("button").find((button) => button.text() === "CSS")!.trigger("click");
+      await flushPromises();
+      expect(wrapper.get('[data-testid="theme-builder-export"] pre').text()).toBe(generated.css.trim());
+      await wrapper.get("#tb-hex-primary").setValue("#");
+      expect(wrapper.find('[data-testid="theme-builder-download"]').exists()).toBe(false);
+    } finally {
+      wrapper.unmount();
+      if (previousDraft === null) localStorage.removeItem(storageKey);
+      else localStorage.setItem(storageKey, previousDraft);
+    }
+  });
+
   it("uses Gavia for a new visitor and invalid links", () => {
     expect(parsePlaygroundTheme("")).toBe("gavia");
     expect(parsePlaygroundTheme("?theme=unknown&view=docs")).toBe("gavia");

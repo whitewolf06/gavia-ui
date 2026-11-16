@@ -12,7 +12,7 @@ export function preparePackedRuntimeFixtures(write) {
   for (const [file, destination] of [
     ["fixture.mjs", "src/packed-fixture.mjs"], ["node-smoke.mjs", "node-smoke.mjs"],
     ["hydrate.mjs", "src/hydrate.mjs"], ["button-entry.mjs", "src/button-entry.mjs"],
-    ["bundle-probe.mjs", "bundle-probe.mjs"]
+    ["bundle-probe.mjs", "bundle-probe.mjs"], ["theme-smoke.mjs", "theme-smoke.mjs"]
   ])
     write(destination, readFileSync(join(fixturesDir, file), "utf8"));
   write("button.html", '<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="icon" href="data:,"><title>Button bundle probe</title></head><body><div id="app"></div><script type="module" src="/src/button-entry.mjs"></script></body></html>\n');
