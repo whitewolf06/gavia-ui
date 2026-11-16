@@ -1,7 +1,11 @@
+import type { Plugin } from "vue";
+import { mount } from "@vue/test-utils";
 import { wlManifest } from "gavia-ui";
 import { expect, it } from "vitest";
 import apiMetadata from "../../../packages/ui-kit/src/manifest/api.generated.json";
+import DocumentationContract from "../src/documentation/DocumentationContract.vue";
 import { translateDocumentationText } from "../src/documentation/localize";
+import { getLocalizedManifest } from "../src/documentation/manifest";
 import { ensurePlaygroundMessages, playgroundI18n, playgroundTranslationKey, setPlaygroundLocale } from "../src/i18n";
 import { flattenCatalog } from "../src/i18n/catalog";
 import english from "../src/i18n/messages/documentation.en.json";
@@ -39,6 +43,47 @@ it("translates all source API prose and new component manifest prose through pai
       }
     }
   } finally {
+    await setPlaygroundLocale(previousLocale);
+  }
+});
+
+it.each([
+  { name: "WlSelect", model: "modelValue", literal: "options", value: "[]", optional: "optionValue" },
+  { name: "WlDialog", model: "visible", literal: "dismissible", value: "false", optional: "ariaLabel" },
+  { name: "WlRadio", model: "modelValue", literal: "disabled", value: "false", optional: "name" }
+])("renders model events and distinct default semantics in EN/RU for $name", async (scenario) => {
+  const previousLocale = playgroundI18n.global.locale.value;
+  const entry = getLocalizedManifest().find((component) => component.name === scenario.name)!;
+  const wrapper = mount(DocumentationContract, {
+    props: { entry },
+    global: { plugins: [playgroundI18n as unknown as Plugin] }
+  });
+  const defaultCell = (name: string) => wrapper.get(`[data-prop="${name}"]`).findAll("td")[1]!.text();
+  try {
+    for (const locale of ["en", "ru"] as const) {
+      await setPlaygroundLocale(locale);
+      const defaults = [
+        [scenario.literal, scenario.value],
+        [scenario.optional, locale === "en" ? "Not set" : "Не задано"],
+        scenario.name === "WlRadio"
+          ? ["value", locale === "en" ? "Required" : "Обязательный"]
+          : ["motion", locale === "en" ? "Inherits WlConfig.motion" : "Наследует WlConfig.motion"]
+      ];
+      for (const [name, value] of defaults) expect(defaultCell(name!)).toBe(value);
+      expect(entry.props.find((prop) => prop.name === "motion")?.default).toBeUndefined();
+      const events = [
+        [`update:${scenario.model}`, locale === "en"
+          ? "Emitted when the component requests a model change; the payload is the next value."
+          : "Компонент запрашивает изменение модели; в событии приходит новое значение."],
+        ...(scenario.name === "WlDialog" ? [["open", locale === "en" ? "Dialog fully opened." : "Диалог полностью открылся."]] : [])
+      ];
+      for (const [name, description] of events) {
+        const event = wrapper.findAll("tbody tr").find((row) => row.find("th code").text() === name)!;
+        expect(event.findAll("td")[1]!.text()).toBe(description);
+      }
+    }
+  } finally {
+    wrapper.unmount();
     await setPlaygroundLocale(previousLocale);
   }
 });

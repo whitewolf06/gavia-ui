@@ -1,5 +1,6 @@
 import type { WlManifestCategory, WlPropManifest } from "gavia-ui";
 import type { DocumentationFoundationSection } from "../navigation";
+import { translate } from "../i18n";
 import { documentationMetadataSource, localizeDocumentation } from "./localize";
 
 export const documentationCategories: readonly { key: WlManifestCategory; label: string }[] = localizeDocumentation([
@@ -18,7 +19,9 @@ export function propType(prop: WlPropManifest): string {
 }
 
 export function propDefault(prop: WlPropManifest): string {
-  return prop.default === undefined ? "—" : JSON.stringify(prop.default) ?? "—";
+  if (prop.default !== undefined) return JSON.stringify(prop.default) ?? "—";
+  if (prop.name === "motion") return translate("documentation.strings.apiInheritedMotion");
+  return translate(prop.required ? "documentation.strings.apiRequired" : "documentation.strings.apiNotSet");
 }
 
 export interface DocumentationPtSection {

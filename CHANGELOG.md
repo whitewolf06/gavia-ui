@@ -11,6 +11,7 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 - Keep shared locale and icon configuration reactive on Vue 3.4 after the first consuming component unmounts.
 - Prevent Dialog and Drawer heading IDs from colliding with Vue 3.5 `useId()`, including applications with a custom `idPrefix`.
+- Describe synthesized model-update events in the manifest and distinguish inherited settings from literal defaults in documentation API tables.
 
 ### Documentation
 

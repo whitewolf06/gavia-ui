@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { WlManifestCategory } from "../../src/manifest";
 import * as components from "../../src/components";
 import { wlManifest } from "../../src/manifest";
+import apiMetadata from "../../src/manifest/api.generated.json";
 
 const CATEGORIES: readonly WlManifestCategory[] = [
   "actions",
@@ -76,6 +77,20 @@ describe("wlManifest", () => {
       expect(new Set(slots).size, `${entry.name}: duplicate slot`).toBe(slots.length);
       expect(new Set(emits).size, `${entry.name}: duplicate emit`).toBe(emits.length);
     }
+  });
+
+  it("describes every generated model event and preserves its payload and authored prose", () => {
+    for (const [name, api] of Object.entries(apiMetadata)) {
+      const entry = wlManifest.find((component) => component.name === name)!;
+      for (const [model, payload] of Object.entries(api.models)) {
+        const event = entry.emits.find((item) => item.name === `update:${model}`)!;
+        expect(event.description?.trim(), `${name}.update:${model}: missing emission description`).toBeTruthy();
+        expect(event.typescriptType).toBe(payload);
+      }
+    }
+    const color = wlManifest.find((entry) => entry.name === "WlColorPicker")!;
+    expect(color.emits.find((event) => event.name === "update:modelValue")?.description)
+      .toBe("Новый нормализованный цвет #rrggbb.");
   });
 
   it("keeps enum defaults inside their documented values", () => {

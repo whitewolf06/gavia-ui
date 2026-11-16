@@ -673,7 +673,7 @@
     "s0671": "Built-in SVG has aria-hidden=true; give a meaningful label to the button or an outer role=img.",
     "s0672": "Name selects from the validated registry; the default slot is used without name. Numeric size is in px; a string may use 1em.",
     "s0673": "Custom slot SVG must be a safe static image that inherits currentColor; the full catalogue and compatible names are available separately.",
-    "s0674": "Types, accepted values and defaults come from the public manifest. “—” means the prop is not set.",
+    "s0674": "Types, accepted values and literal defaults come from the public manifest. Inherited settings name their source; “Not set” means no default is declared.",
     "s0675": "Type / values",
     "s0676": "Default",
     "s0677": "Purpose",
@@ -1823,7 +1823,11 @@
     "calendarDisabledDatesDescription": "ISO date list or predicate identifying dates that cannot be activated.",
     "calendarSelectDescription": "An enabled date was activated by pointer or keyboard, even when already selected.",
     "componentTypography": "Text roles expose component font-size, line-height, font-weight and font-family tokens. Defaults retain 1.0 typography. Import styles/primitives.css and add wl-type-scale to opt into semantic roles; the mapping table and live toggle are in Typography → Scale. Set local scale values on the same group, or override a component token on a closer element.",
-    "calendarMultipleDescription": "Enable selection of more than one value."
+    "calendarMultipleDescription": "Enable selection of more than one value.",
+    "apiInheritedMotion": "Inherits WlConfig.motion",
+    "apiRequired": "Required",
+    "apiNotSet": "Not set",
+    "apiModelUpdate": "Emitted when the component requests a model change; the payload is the next value."
   },
   "componentSearch": {
     "label": "Search components",
