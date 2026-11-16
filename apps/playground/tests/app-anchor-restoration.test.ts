@@ -4,8 +4,12 @@ import { flushPromises, mount, type VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import App from "../src/App.vue";
+import HomePage from "../src/HomePage.vue";
 import { playgroundI18n, playgroundLocale, setPlaygroundLocale } from "../src/i18n";
 import { createPlaygroundRouter } from "../src/router";
+import { appliedThemeStorageKey, applyThemeToRoot, clearAppliedTheme } from "../src/theme-builder/application";
+import { createThemeOverrides, createThemePalette } from "../src/theme-builder/palette";
+import ThemeBuilderPage from "../src/ThemeBuilderPage.vue";
 import { playgroundThemePreference } from "../src/themes";
 
 // The real DocsPage's metadata/TOC loads normally. Only its async Assets module
@@ -177,6 +181,88 @@ const initialPages = [
 ];
 
 describe("App-owned page anchor restoration", () => {
+  it("keeps an applied palette through navigation and preserves the Newspaper quick-toggle pair", async () => {
+    const stored = ["gavia-ui.theme", appliedThemeStorageKey].map((key) => [key, localStorage.getItem(key)] as const);
+    const previousStyle = document.documentElement.getAttribute("style");
+    try {
+      clearAppliedTheme();
+      const app = await mountedApp("/theme-builder/?theme=gavia&lang=en");
+      await paint();
+      const palette = { ...createThemePalette("newspaper"), background: "#eef5ff" };
+      const draft = { name: "blue-paper", baseTheme: "newspaper" as const, overrides: createThemeOverrides(palette, "newspaper") };
+      app.wrapper.getComponent(ThemeBuilderPage).vm.$emit("apply-theme", draft);
+      await paint();
+      expect(document.documentElement.dataset.wlTheme).toBe("newspaper");
+      expect(document.documentElement.style.getPropertyValue("--wl-palette-bg")).toBe("#eef5ff");
+      await app.router.push("/?theme=newspaper&lang=en");
+      await paint();
+      expect(app.wrapper.get('[data-testid="playground-theme-undo"]').text()).toBe("Undo");
+      app.wrapper.getComponent(HomePage).vm.$emit("toggle-theme");
+      await paint();
+      expect(document.documentElement.dataset.wlTheme).toBe("graphite");
+      expect(document.documentElement.style.getPropertyValue("--wl-palette-bg")).toBe("");
+      app.wrapper.getComponent(HomePage).vm.$emit("toggle-theme");
+      await paint();
+      expect(document.documentElement.dataset.wlTheme).toBe("newspaper");
+      await app.router.push("/theme-builder/?theme=newspaper&lang=en");
+      await paint();
+      app.wrapper.getComponent(ThemeBuilderPage).vm.$emit("apply-theme", draft);
+      await paint();
+      // Explicitly choosing the same base is still a request to leave the palette.
+      app.wrapper.getComponent({ name: "PlaygroundHeader" }).vm.$emit("theme", "newspaper");
+      await paint();
+      expect(app.wrapper.find('[data-testid="playground-theme-draft"]').exists()).toBe(false);
+      expect(localStorage.getItem(appliedThemeStorageKey)).toBeNull();
+      expect(document.documentElement.style.getPropertyValue("--wl-palette-bg")).toBe("");
+    } finally {
+      clearAppliedTheme();
+      applyThemeToRoot("gavia");
+      if (previousStyle === null) document.documentElement.removeAttribute("style");
+      else document.documentElement.setAttribute("style", previousStyle);
+      for (const [key, value] of stored) {
+        if (value === null) localStorage.removeItem(key);
+        else localStorage.setItem(key, value);
+      }
+    }
+  });
+
+  it("keeps the applied base on query-free Back despite a changed saved preference, while an explicit theme wins", async () => {
+    const stored = ["gavia-ui.theme", appliedThemeStorageKey].map((key) => [key, localStorage.getItem(key)] as const);
+    try {
+      clearAppliedTheme();
+      const app = await mountedApp("/docs/?theme=gavia");
+      await app.router.push("/docs/");
+      await paint();
+      await app.router.push("/theme-builder/?theme=gavia");
+      await paint();
+      const palette = { ...createThemePalette("newspaper"), background: "#eef5ff" };
+      app.wrapper.getComponent(ThemeBuilderPage).vm.$emit("apply-theme", {
+        name: "blue-paper", baseTheme: "newspaper", overrides: createThemeOverrides(palette, "newspaper")
+      });
+      await paint();
+      // Another tab can save a different built-in preference while this palette is active.
+      localStorage.setItem("gavia-ui.theme", "white");
+      await historyMove(app.router, () => app.router.back());
+      await paint();
+      expect(new URL(window.location.href).searchParams.has("theme")).toBe(false);
+      expect(document.documentElement.dataset.wlTheme).toBe("newspaper");
+      expect(document.documentElement.dataset.wlPlaygroundDraft).toBe("blue-paper");
+      expect(app.wrapper.find('[data-testid="playground-theme-undo"]').exists()).toBe(true);
+      await app.router.push("/docs/?theme=white");
+      await paint();
+      expect(document.documentElement.dataset.wlTheme).toBe("white");
+      expect(document.documentElement.dataset.wlPlaygroundDraft).toBeUndefined();
+      expect(document.documentElement.style.getPropertyValue("--wl-palette-bg")).toBe("");
+    } finally {
+      clearAppliedTheme();
+      applyThemeToRoot("gavia");
+      for (const [key, value] of stored) {
+        if (value === null) localStorage.removeItem(key);
+        else localStorage.setItem(key, value);
+      }
+    }
+  });
+
   it.each(initialPages)("preserves initial $name anchor through a late preference replace without lang/theme", async (page) => {
     const app = await mountedApp(page.url, true);
     expect(app.wrapper.find(page.selector).exists()).toBe(true);

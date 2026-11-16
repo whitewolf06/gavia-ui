@@ -25,10 +25,29 @@ are chosen automatically for contrast. Link color is configured separately.
 Soft states and stronger borders are derived from the palette;
 status colors, dimensions, typography and motion come from the base.
 
-The preview is isolated with `data-wl-theme` and local token overrides.
+By default the preview is isolated with `data-wl-theme` and local token overrides.
 The teleported Select panel receives the same attribute and styles through
 `pt.overlay`. Editing the palette does not change the header or other pages.
 Changing the header theme preserves the preview settings.
+
+### Apply the palette to the Playground
+
+Click **Apply to Playground** to use the current valid palette across the site.
+The base theme and generated token overrides are applied to `html`, so the header,
+other pages and overlays teleported to `body` use the same colors. Editing the
+preview afterwards does not update the global palette until you apply it again.
+
+The header shows the applied palette name and an **Undo** button on every page.
+Undo removes the temporary root overrides and restores the previous theme
+preference, including system mode. Choosing any built-in theme also cancels the
+applied palette, even when choosing its current base again. A direct URL selecting
+a different built-in theme takes priority over the saved palette.
+
+The applied snapshot is stored separately as `gavia-ui.applied-theme.v1` and
+restored before the first paint after a reload. It does not change the editable
+draft's schema or the CSS/JSON export format. Browser storage can be unavailable;
+in that case application and Undo still work in the current tab. Applying the
+palette is opt-in: ordinary visits and prerendered pages keep the standard themes.
 
 A draft with valid values is saved only in this browser:
 name, base and colors are stored in `localStorage` under `gavia-ui.theme-builder.v1`.

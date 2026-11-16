@@ -9,17 +9,34 @@
         const themes = ["system", "gavia", "gavia-dark", "white", "graphite", "newspaper"];
         let savedTheme = null;
         let savedLocale = null;
+        let appliedTheme = null;
         try {
           savedTheme = localStorage.getItem("gavia-ui.theme");
           savedLocale = localStorage.getItem("gavia-ui.locale");
+          appliedTheme = JSON.parse(localStorage.getItem("gavia-ui.applied-theme.v1") || "null");
         } catch { /* Preferences still work without storage. */ }
         const requestedTheme = query.get("theme");
         const preference = themes.includes(requestedTheme) ? requestedTheme
           : themes.includes(savedTheme) ? savedTheme : "system";
-        const theme = preference === "system"
+        let theme = preference === "system"
           ? typeof matchMedia === "function" && matchMedia("(prefers-color-scheme: dark)").matches ? "gavia-dark" : "gavia"
           : preference;
         const root = document.documentElement;
+        // Restore only the narrow, generated delta; the editable palette uses a separate schema.
+        const draft = appliedTheme;
+        if (draft && draft.schemaVersion === 1 && typeof draft.name === "string" && /^[a-z][a-z0-9-]{0,31}$/.test(draft.name)
+          && themes.includes(draft.baseTheme) && draft.baseTheme !== "system" && themes.includes(draft.previousTheme)
+          && draft.overrides && typeof draft.overrides === "object" && !Array.isArray(draft.overrides)) {
+          const entries = Object.entries(draft.overrides);
+          if (themes.includes(requestedTheme) && requestedTheme !== draft.baseTheme) {
+            try { localStorage.removeItem("gavia-ui.applied-theme.v1"); } catch { /* The direct URL still wins. */ }
+          } else if (entries.length <= 64 && entries.every(([name, value]) => /^--wl-[a-z0-9-]+$/.test(name)
+            && typeof value === "string" && /^(#[\da-f]{6}|var\(--wl-[a-z0-9-]+\))$/i.test(value))) {
+            theme = draft.baseTheme;
+            root.dataset.wlPlaygroundDraft = draft.name;
+            for (const [name, value] of entries) root.style.setProperty(name, value);
+          }
+        }
         if (!root.hasAttribute("data-playground-prerendered")) root.dataset.wlBoot = "loading";
         root.dataset.wlTheme = theme;
         root.style.colorScheme = theme === "gavia-dark" || theme === "graphite" ? "dark" : "light";

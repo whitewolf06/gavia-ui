@@ -21,6 +21,7 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 ### Documentation
 
 - Expand the customization guide and custom-theme starter with primary action states, links, focus, selection and scoped brand layers.
+- Apply a draft palette across the Playground, restore it after reload and undo it from any page.
 
 ## 1.1.0 — 2026-11-14
 

@@ -1,4 +1,8 @@
 {
+  "shell.themeDraft.apply": "Применить ко всей витрине",
+  "shell.themeDraft.help": "Примените палитру ко всем страницам. Кнопка «Отменить» будет в шапке; выбор готовой темы тоже отменит применение.",
+  "shell.themeDraft.active": "Своя палитра: {name}",
+  "shell.themeDraft.undo": "Отменить",
   "shell.themeBuilder.downloadConfig": "Скачать конфиг",
   "shell.theme.system": "Системная",
   "shell.App.text1": "Быстрые переходы",

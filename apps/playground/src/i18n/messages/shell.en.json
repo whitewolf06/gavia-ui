@@ -1,4 +1,8 @@
 {
+  "shell.themeDraft.apply": "Apply to Playground",
+  "shell.themeDraft.help": "Apply this palette to every page. Undo is available in the header; choosing a built-in theme also cancels it.",
+  "shell.themeDraft.active": "Custom palette: {name}",
+  "shell.themeDraft.undo": "Undo",
   "shell.themeBuilder.downloadConfig": "Download config",
   "shell.theme.system": "System",
   "shell.App.text1": "Quick navigation",

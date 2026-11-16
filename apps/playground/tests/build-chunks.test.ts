@@ -10,7 +10,7 @@ const chunk = (fileName: string, overrides: Partial<Parameters<typeof assertPlay
 const entry = () => chunk("assets/index.js", { isEntry: true, facadeModuleId: appModule("index.html") });
 
 describe("Playground shared runtime chunks", () => {
-  it.each(["src/themes.ts", "src/preferences.ts", "src/i18n/locale.ts", "src/i18n/preload.ts", "src/navigation.ts", "src/page-loaders.ts"])("extracts the exact shared module %s", (path) => {
+  it.each(["src/themes.ts", "src/theme-builder/application.ts", "src/preferences.ts", "src/i18n/locale.ts", "src/i18n/preload.ts", "src/navigation.ts", "src/page-loaders.ts"])("extracts the exact shared module %s", (path) => {
     expect(playgroundManualChunks(appModule(path))).toBe("playground-runtime");
   });
 

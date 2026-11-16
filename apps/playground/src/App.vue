@@ -17,6 +17,7 @@ import PlaygroundHeader from "./PlaygroundHeader.vue";
 import { savePlaygroundPreference } from "./preferences";
 import FontDownloadLink from "./project/FontDownloadLink.vue";
 import { gaviaProjectInfo as project } from "./project/project-info";
+import { appliedTheme, applyThemeToRoot, clearAppliedTheme, setAppliedTheme, type ThemeApplication } from "./theme-builder/application";
 import { createPlaygroundThemeTransition } from "./theme-transition";
 import { createPlaygroundThemeUrl, getPlaygroundThemeToggleTarget, isPlaygroundTheme, isPlaygroundThemePreference, parsePlaygroundThemePreference, playgroundThemeOptions, playgroundThemePair, playgroundThemePreference, type PlaygroundThemePreference, resolvePlaygroundTheme } from "./themes";
 import { createPageAnchorRestorer, pageAnchorRestorerKey } from "./usePageAnchor";
@@ -107,7 +108,11 @@ async function readView(): Promise<void> {
     endPageLoad(revision);
   }
   activeRoute.value = routeFromLocation();
-  themePreference.value = parsePlaygroundThemePreference(window.location.search);
+  const explicitTheme = new URLSearchParams(window.location.search).get("theme");
+  themePreference.value = appliedTheme.value && !isPlaygroundThemePreference(explicitTheme)
+    ? appliedTheme.value.baseTheme
+    : parsePlaygroundThemePreference(window.location.search);
+  if (appliedTheme.value && themePreference.value !== appliedTheme.value.baseTheme) clearAppliedTheme();
   const locationTheme = currentResolvedTheme();
   classicLightTheme = rememberClassicLightTheme(locationTheme, theme.value, classicLightTheme);
   requestedTheme = locationTheme;
@@ -400,6 +405,7 @@ async function onCommandPaletteSelect(item: WlCommandPaletteItem): Promise<void>
   else if (data?.view) await showView(data.view);
 }
 const themePreference = playgroundThemePreference;
+if (appliedTheme.value) themePreference.value = appliedTheme.value.baseTheme;
 const themeController = useWlTheme({
   themes: () => playgroundThemePair(themePreference.value),
   preference: "system",
@@ -445,7 +451,7 @@ function updateThemeUrl(value: PlaygroundThemePreference): void {
 function chooseTheme(value: unknown): void {
   if (!isPlaygroundThemePreference(value)) return;
   const resolvedTheme = resolvePlaygroundTheme(value, themeController.resolved.value === "dark");
-  if (requestedTheme === resolvedTheme && requestedThemePreference === value) {
+  if (!appliedTheme.value && requestedTheme === resolvedTheme && requestedThemePreference === value) {
     // Do not write a pending theme into the URL before its guarded DOM update.
     if (theme.value === resolvedTheme && themePreference.value === value) {
       updateThemeUrl(value);
@@ -458,6 +464,7 @@ function chooseTheme(value: unknown): void {
   requestedThemePreference = value;
   const nextClassicLightTheme = requestedClassicLightTheme;
   themeTransition.run(async () => {
+    clearAppliedTheme();
     classicLightTheme = nextClassicLightTheme;
     themePreference.value = value;
     // Re-read the OS preference if it changed while the snapshot was captured.
@@ -469,10 +476,27 @@ function chooseTheme(value: unknown): void {
     await nextTick();
   });
 }
-watch(theme, (value) => {
+function applyDraftTheme(draft: ThemeApplication): void {
+  const previous = themePreference.value;
+  themeTransition.run(async () => {
+    classicLightTheme = rememberClassicLightTheme(draft.baseTheme, theme.value, classicLightTheme);
+    requestedClassicLightTheme = classicLightTheme;
+    setAppliedTheme(draft, previous);
+    themePreference.value = draft.baseTheme;
+    theme.value = draft.baseTheme;
+    requestedTheme = draft.baseTheme;
+    requestedThemePreference = draft.baseTheme;
+    updateThemeUrl(draft.baseTheme);
+    savePlaygroundPreference("theme", draft.baseTheme);
+    await nextTick();
+  });
+}
+function undoDraftTheme(): void {
+  if (appliedTheme.value) chooseTheme(appliedTheme.value.previousTheme);
+}
+watch([theme, appliedTheme], ([value]) => {
   if (typeof document === "undefined") return;
-  document.documentElement.dataset.wlTheme = value;
-  document.documentElement.style.colorScheme = value === "gavia-dark" || value === "graphite" ? "dark" : "light";
+  applyThemeToRoot(value);
 }, { immediate: true, flush: "sync" });
 </script>
 
@@ -483,6 +507,7 @@ watch(theme, (value) => {
       :route="activeRoute"
       :theme="theme"
       :theme-preference="themePreference"
+      :applied-theme-name="appliedTheme?.name"
       :theme-options="themeOptions"
       :version="project.version"
       :logo="gaviaMarkUrl"
@@ -491,6 +516,21 @@ watch(theme, (value) => {
       @theme="chooseTheme"
       @search="setCommandPaletteVisible(true)"
     />
+    <div
+      v-if="appliedTheme"
+      class="pg-theme-draft wl-container wl-inline"
+      data-space="sm"
+      role="status"
+      data-testid="playground-theme-draft"
+    >
+      <span>{{ t('shell.themeDraft.active', { name: appliedTheme.name }) }}</span>
+      <WlButton
+        size="sm"
+        variant="secondary"
+        data-testid="playground-theme-undo"
+        @click="undoDraftTheme"
+      >{{ t('shell.themeDraft.undo') }}</WlButton>
+    </div>
     <div v-if="pageLoading" class="pg-page-loading" role="status">
       <span class="pg-page-loading-track" aria-hidden="true"></span>
       <span class="pg-page-loading-label">{{ t('shell.page.loading') }}</span>
@@ -550,7 +590,12 @@ watch(theme, (value) => {
     :theme="theme"
     @component="openDocs"
   />
-  <ThemeBuilderPage v-else-if="activeView === 'theme-builder'" :key="locale" :theme="theme" />
+  <ThemeBuilderPage
+    v-else-if="activeView === 'theme-builder'"
+    :key="locale"
+    :theme="theme"
+    @apply-theme="applyDraftTheme"
+  />
   <ProjectInfo v-else-if="activeView === 'project'" :key="locale" />
   <footer class="pg-footer">
     <span>Gavia UI · v{{ project.version }} · <a :href="project.licenseUrl">MIT</a></span>
@@ -565,6 +610,7 @@ watch(theme, (value) => {
 
 <style>
 .pg-top { border-bottom: 1px solid var(--wl-border); position: sticky; top: 0; background: var(--wl-bg); z-index: var(--wl-layer-sticky); }
+.pg-theme-draft { padding-block: var(--wl-space-sm); }
 .pg-page-loading {
   position: absolute;
   inset: auto 0 -2px;

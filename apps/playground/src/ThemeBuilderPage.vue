@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "./i18n";
 const props = defineProps<{ theme: WlThemeName }>();
+const emit = defineEmits<{ "apply-theme": [draft: { name: string; baseTheme: WlThemeName; overrides: Record<string, string> }] }>();
 const { t } = usePlaygroundI18n();
 import type { WlThemeName } from "gavia-ui";
 import { WlAlert, WlButton, WlCheckbox, WlIcon, WlInput, WlSelect, WlSwitch, WlTag } from "gavia-ui";
@@ -164,6 +165,12 @@ const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.
           {{ storageUnavailable ? t('shell.ThemeBuilderPage.text318')
             : savedLocally ? t('shell.ThemeBuilderPage.text319') : t('shell.ThemeBuilderPage.text320') }}
         </p>
+        <WlButton
+          :disabled="nameInvalid || hexInvalid"
+          data-testid="theme-builder-apply"
+          @click="emit('apply-theme', { name, baseTheme, overrides })"
+        >{{ t('shell.themeDraft.apply') }}</WlButton>
+        <p class="wl-text-small wl-text-muted">{{ t('shell.themeDraft.help') }}</p>
       </section>
 
       <div class="tb-preview-column wl-stack" data-space="lg">

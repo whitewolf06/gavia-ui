@@ -17,6 +17,7 @@ const props = defineProps<{
   route?: PlaygroundRoute;
   theme: WlThemeName;
   themePreference: PlaygroundThemePreference;
+  appliedThemeName?: string;
   themeOptions: Array<{ label: string; value: string }>;
   version: string;
   logo: string;
@@ -28,6 +29,8 @@ const emit = defineEmits<{
   locale: [locale: PlaygroundLocale];
 }>();
 const { t, locale } = usePlaygroundI18n();
+const currentThemeLabel = computed(() => props.appliedThemeName
+  || (props.themePreference === "system" ? t("shell.theme.system") : props.theme));
 const sections = computed(() => [
   { view: "home", label: t("shell.PlaygroundHeader.text122"), icon: "home" },
   { view: "docs", label: t("shell.PlaygroundHeader.text123"), icon: "book" },
@@ -176,7 +179,7 @@ watch(() => props.activeView, () => {
   menuVisible.value = false;
   closeOverflow();
 });
-watch(() => [props.theme, props.themePreference, locale.value], () => {
+watch(() => [props.theme, props.themePreference, props.appliedThemeName, locale.value], () => {
   void nextTick(scheduleMeasurement);
 });
 onMounted(() => {
@@ -263,12 +266,13 @@ onBeforeUnmount(() => {
           <WlSelect
             class="pg-theme"
             size="sm"
-            :model-value="themePreference"
+            :model-value="appliedThemeName ? null : themePreference"
+            :placeholder="appliedThemeName ? t('shell.themeDraft.active', { name: appliedThemeName }) : undefined"
             :options="themeOptions"
             option-label="label"
             option-value="value"
             :aria-label="t('shell.PlaygroundHeader.text133')"
-            :title="t('shell.PlaygroundHeader.text134') + (themePreference === 'system' ? t('shell.theme.system') : theme)"
+            :title="t('shell.PlaygroundHeader.text134') + currentThemeLabel"
             data-testid="pg-theme-selector"
             @update:model-value="selectTheme"
           />

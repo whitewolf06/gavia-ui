@@ -4,6 +4,7 @@ import { createWlTheme, parseWlThemeConfig } from "gavia-ui/theme";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { playgroundI18n } from "../src/i18n";
 import { playgroundLocale } from "../src/i18n/locale";
+import PlaygroundHeader from "../src/PlaygroundHeader.vue";
 import ThemeBuilderPage from "../src/ThemeBuilderPage.vue";
 import { createPlaygroundThemeUrl, isPlaygroundTheme, parsePlaygroundTheme, playgroundThemeOptions, withPlaygroundTheme } from "../src/themes";
 
@@ -49,6 +50,36 @@ describe("playground theme routes", () => {
       wrapper.unmount();
       if (previousDraft === null) localStorage.removeItem(storageKey);
       else localStorage.setItem(storageKey, previousDraft);
+    }
+  });
+
+  it("shows the applied palette separately and emits when its built-in base is selected", async () => {
+    const fonts = Object.getOwnPropertyDescriptor(document, "fonts");
+    Object.defineProperty(document, "fonts", { configurable: true, value: { ready: Promise.resolve() } });
+    const wrapper = mount(PlaygroundHeader, {
+      attachTo: document.body,
+      props: {
+        activeView: "theme-builder", theme: "gavia", themePreference: "gavia",
+        appliedThemeName: "my-palette", themeOptions: playgroundThemeOptions, version: "1.1.0", logo: "gavia.svg"
+      },
+      global: { plugins: [playgroundI18n as unknown as Plugin] }
+    });
+    try {
+      const selector = wrapper.get('[data-testid="pg-theme-selector"]');
+      expect(selector.text()).toContain("Custom palette: my-palette");
+      await selector.trigger("click");
+      await flushPromises();
+      const option = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((element) => element.textContent === "Gavia")!;
+      expect(option).toBeTruthy();
+      option.click();
+      await flushPromises();
+      expect(wrapper.emitted("theme")).toEqual([["gavia"]]);
+      await wrapper.setProps({ appliedThemeName: undefined });
+      expect(selector.text()).toBe("Gavia");
+    } finally {
+      wrapper.unmount();
+      if (fonts) Object.defineProperty(document, "fonts", fonts);
+      else Reflect.deleteProperty(document, "fonts");
     }
   });
 

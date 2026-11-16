@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 const normalize = (id: string): string => id.replace(/\\/g, "/").replace(/\?.*$/, "");
 const sharedRuntime = new Set([
   "../src/themes.ts",
+  "../src/theme-builder/application.ts",
   "../src/preferences.ts",
   "../src/i18n/locale.ts",
   "../src/i18n/preload.ts",

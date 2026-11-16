@@ -13,10 +13,11 @@ import { parsePlaygroundLocale } from "./i18n/locale";
 import { preloadPlaygroundCatalogs } from "./i18n/preload";
 import { parsePlaygroundRoute } from "./navigation";
 import { preloadPlaygroundPage } from "./page-loaders";
+import { applyThemeToRoot } from "./theme-builder/application";
 import { parsePlaygroundTheme } from "./themes";
 
 // Resolve URL/saved/system preferences before the asynchronous application mounts.
-document.documentElement.dataset.wlTheme = parsePlaygroundTheme(window.location.search);
+applyThemeToRoot(parsePlaygroundTheme(window.location.search));
 
 // Fetch this route alongside startup, before locale preparation can delay it.
 // Bootstrap awaits the same request and owns its retry notice if loading fails.
