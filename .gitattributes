@@ -3,3 +3,10 @@ scripts/fonts/draw_gavia.py -text
 
 # Immutable approved non-name font table fingerprints.
 scripts/fonts/accepted-0600-tables.json -text
+
+# Generated catalogs, registries and declaration snapshots.
+*.generated.* linguist-generated=true
+
+# Complete CSS outputs of tokens:sync; base.css also contains authored content.
+packages/ui-kit/themes/*.css linguist-generated=true
+packages/ui-kit/styles/primitives.css linguist-generated=true
