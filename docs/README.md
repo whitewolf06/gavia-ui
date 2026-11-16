@@ -7,7 +7,7 @@ Live guides and copyable examples are in the [Playground](https://whitewolf06.gi
 
 ## Use the library
 
-- [Themes](guide/theming.md), [theme builder](guide/theme-builder.md) and [tokens](guide/tokens.md)
+- [Themes and customization](guide/theming.md), [theme builder](guide/theme-builder.md) and [tokens](guide/tokens.md)
 - [Localization](guide/localization.md) and [Gavia Sans](guide/font-gavia.md)
 - [Pure utilities](guide/utilities.md): stable palette colors and binary file-size formatting
 - [TypeScript contracts](guide/typescript.md), [SSR](guide/ssr.md) and [compatibility](guide/compatibility.md)

@@ -1,8 +1,17 @@
-/* Inherit the complete Gavia theme; scope only the changed roles. */
+/* Apply the complete Gavia theme and this brand layer to the same element. */
 @layer wl.tokens {
   [data-wl-theme="gavia"][data-wl-brand="my-brand"] {
-    --wl-accent: #245bd1;
-    --wl-text-accent: #245bd1;
-    --wl-focus-color: #245bd1;
+    --wl-palette-accent: #245bd1;
+    --wl-palette-accent-hover: #1d49ab;
+    --wl-palette-text-accent: #1b4299;
+    --wl-palette-accent-soft: #e8effd;
+    --wl-palette-accent-soft-hover: #dce7fb;
+    --wl-palette-accent-border: #5d7fc7;
+    --wl-palette-accent-border-hover: #416bbd;
+    --wl-palette-on-accent: #ffffff;
+    --wl-palette-action-primary-bg: #245bd1;
+    --wl-palette-action-primary-hover: #1d49ab;
+    --wl-palette-action-primary-active: #173b8c;
+    --wl-palette-action-primary-text: #ffffff;
   }
 }

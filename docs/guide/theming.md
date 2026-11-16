@@ -1,4 +1,4 @@
-# Gavia and Gavia Dark themes
+# Themes and customization
 
 Gavia is a light theme with a lake blue-gray primary action,
 blue-gray selected states and warm decorative shades.
@@ -7,6 +7,125 @@ and a turquoise accent. Both use Gavia Sans.
 Classic, Classic Dark and Newspaper are also available.
 Classic / Classic Dark identifiers are `white` / `graphite`.
 [Names and catalog compatibility](../migration.md#migration-themes).
+
+## Customize a theme
+
+Start with a shipped theme, add your brand palette, then use component props,
+slots and `pt` for individual details. The complete
+[custom-theme starter](../../examples/custom-theme/README.md) uses this CSS-only
+path; it does not require a theme generator, build plugin or global configuration.
+
+### 1. Load a base theme and the brand layer
+
+Import the files once in your application entry point. The reset is optional;
+Gavia's font file is needed for Gavia Sans.
+
+```ts
+import 'gavia-ui/styles/reset.css';
+import 'gavia-ui/styles/base.css';
+import 'gavia-ui/styles/fonts/gavia.css';
+import 'gavia-ui/themes/gavia.css';
+import './theme.css';
+```
+
+Select both the base and the brand on the **same element**:
+
+```html
+<html lang="en" data-wl-theme="gavia" data-wl-brand="my-brand">
+```
+
+The starter's [`theme.css`](../../examples/custom-theme/src/theme.css) declares
+the palette under `[data-wl-theme="gavia"][data-wl-brand="my-brand"]` in
+`@layer wl.tokens`. Import it after the shipped theme. Components keep their
+public classes, tokens and behavior.
+
+### 2. Recolor the complete interaction palette
+
+The starter changes these existing foundation roles. Their semantic and
+component aliases are already declared by the complete Gavia theme.
+
+| Roles in the starter | Purpose |
+| --- | --- |
+| `--wl-palette-accent`, `--wl-palette-accent-hover` | Checked controls, active indicators and focus |
+| `--wl-palette-text-accent` | Readable accent text and links |
+| `--wl-palette-accent-soft`, `--wl-palette-accent-soft-hover` | Soft actions and selected backgrounds |
+| `--wl-palette-accent-border`, `--wl-palette-accent-border-hover` | Borders on soft accent surfaces |
+| `--wl-palette-on-accent` | Marks/text on compact accent fills |
+| `--wl-palette-action-primary-bg`, `--wl-palette-action-primary-hover`, `--wl-palette-action-primary-active`, `--wl-palette-action-primary-text` | Primary button background, hover, press and text |
+
+Primary actions have their own palette roles in Gavia and Gavia Dark. Changing
+only `--wl-accent` leaves those action colors unchanged. Set the full action
+family and check its text contrast in all three states. Keep links, selection
+and focus readable on the surfaces where the application uses them. Status
+colors such as success, warning and danger can retain the base theme's meaning.
+
+This example is a light Gavia palette. A dark brand needs its own values and
+contrast checks; reusing the light values for Gavia Dark is not a dark theme.
+
+### 3. Keep aliases in the correct scope
+
+Every shipped theme declares the complete foundation → semantic → component
+chain. A CSS `var()` reference resolves where its custom property is declared;
+descendants inherit that computed value. Therefore put the base theme and its
+brand on the same element, including for a locally branded section:
+
+```html
+<section data-wl-theme="gavia" data-wl-brand="my-brand">
+  <!-- Branded components -->
+  <section data-wl-theme="gavia">
+    <!-- Ordinary Gavia; the complete base theme restores its aliases -->
+  </section>
+</section>
+```
+
+Putting only `data-wl-brand` on a descendant can leave semantic/component aliases
+resolved against the parent's palette. Do not invent a new `data-wl-theme` value
+for a layer containing only differences: import a complete shipped theme and
+combine both selectors as above. New tokens added to that theme remain available
+without freezing an exported full CSS snapshot.
+
+Overlays teleported to `body` inherit the document theme, not a local section's
+attributes. Apply the brand to `html` when overlays must share it. The
+[theme-builder guide](theme-builder.md) describes its existing CSS export and
+JSON format; the JSON is not loaded by the component library at runtime.
+
+### 4. Customize a component without copying it
+
+Choose the smallest applicable extension point:
+
+| Need | Extension |
+| --- | --- |
+| Supported layout, size or behavior | Documented props, such as `WlCard.padding` |
+| Content, an icon or an item renderer | Named/scoped slots in the component API |
+| An existing visual role | Local semantic/component CSS custom properties |
+| Attributes or a class on an internal section | The documented `pt` section |
+| Application layout or additional elements | Your own class/CSS and markup |
+
+For example, the starter uses Card's title/footer slots and
+`:pt="{ content: { class: 'brand-content' } }"`. Its `.brand-content` class owns
+the grid and gap; component CSS continues to own Card itself. An ordinary
+application stylesheet outside the library layers can override styles without
+`!important` or selector chains.
+
+Optional `WlConfig.pt` shares defaults across one Vue application; an instance's
+`pt` can refine them. Classes and styles merge in the order
+`createWlPt()` defaults → `WlConfig.pt` → instance `pt`. Section callbacks receive
+documented context, not arbitrary component props or private state. Use the API
+table for the component's available sections, slots and tokens.
+
+### 5. Verify the surfaces and states you use
+
+Check primary default/hover/active text, links on page/raised/selected surfaces,
+compact checked marks, soft selected text/borders and keyboard focus. The
+starter [records its measured pairs](../../examples/custom-theme/README.md#color-pair-checks):
+normal text is checked at 4.5:1 and focus/state boundaries at 3:1. Recalculate
+after changing colors, opacity or backgrounds. Inspect disabled/invalid states,
+keyboard use, local-theme resets and teleported overlays separately; a list of
+passing color pairs is not a complete accessibility assessment.
+
+For token lookup and targeted overrides, see [design tokens](tokens.md). To change
+the library's shipped themes, use the separate
+[maintainer token procedure](../maintainers/tokens.md).
 
 ## Reactive theme preferences
 
@@ -218,7 +337,8 @@ It is shared by input, textarea, select and composite fields. Override
 
 ## Editing the theme
 
-For application overrides, use the [token guide](tokens.md). To change shipped
+For application overrides, start with [Customize a theme](#customize-a-theme)
+and the [token guide](tokens.md). To change shipped
 theme values or add token roles to the library, follow the
 [maintainer token procedure](../maintainers/tokens.md).
 
