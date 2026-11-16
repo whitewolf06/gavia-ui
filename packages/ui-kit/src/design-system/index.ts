@@ -1,5 +1,4 @@
-import type { WlThemeName } from "../types";
-import type { WlDesignTokenDefinition } from "./types";
+import type { WlDesignTokenDefinition, WlThemeName } from "./types";
 import { wlDesignThemes, type WlDesignTokenName, wlDesignTokens } from "./tokens.generated";
 
 export * from "./types";

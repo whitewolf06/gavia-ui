@@ -47,7 +47,7 @@ site and interaction test bench. Business logic belongs in consumer applications
 - Build ESM with declarations. Preserve every subpath in the package's `exports`:
   `.`, `styles/base.css`, `styles/reset.css`, `styles/primitives.css`,
   `styles/fonts/gavia.css`, `themes/*.css`, `fonts/gavia/*`, `manifest.json`,
-  `design-tokens.json`, `utils`, `composables` and `package.json`. Update this list with added subpaths;
+  `design-tokens.json`, `utils`, `composables`, `theme` and `package.json`. Update this list with added subpaths;
   exports changes require compatibility and migration review.
 
 ## 3. Tokens, themes and public contracts

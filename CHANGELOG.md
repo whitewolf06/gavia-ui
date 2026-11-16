@@ -7,6 +7,10 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 ## Unreleased
 
+### Added
+
+- Generate full or delta theme CSS, manual token overrides and scoped contrast reports through the pure `gavia-ui/theme` entry.
+
 ### Fixed
 
 - Keep shared locale and icon configuration reactive on Vue 3.4 after the first consuming component unmounts.

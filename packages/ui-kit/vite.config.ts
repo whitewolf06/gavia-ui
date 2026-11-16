@@ -49,7 +49,7 @@ export default defineConfig({
   build: {
     target: "es2020",
     lib: {
-      entry: { index: "src/index.ts", utils: "src/utils/index.ts", composables: "src/composables/index.ts" },
+      entry: { index: "src/index.ts", utils: "src/utils/index.ts", composables: "src/composables/index.ts", "theme-generator": "src/theme/index.ts" },
       formats: ["es"],
       fileName: (_format, entryName) => `${entryName}.js`
     },
