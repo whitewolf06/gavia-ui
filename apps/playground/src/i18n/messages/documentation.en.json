@@ -846,7 +846,7 @@
     "s0844": "” not found. Select a component from the catalogue.",
     "s0845": "Documentation sections",
     "s0846": "01 / Getting started",
-    "s0847": "Vue 3 is the only required peer dependency. Install the package, import styles and select a theme. Use WlConfig for shared pt, locale and animation settings. The 1.0 source uses English built-in text by default; configure locale: wlLocaleRu explicitly for Russian. This breaking source migration is not a published 0.12.1 patch.",
+    "s0847": "Vue 3 is the only required peer dependency. Install the package, import styles and select a theme. Use WlConfig for shared pt, locale and animation settings. Built-in labels are English by default; configure locale: wlLocaleRu for Russian.",
     "s0848": "Package manager for installation",
     "s0849": "main.ts · application setup",
     "s0850": "The example imports Classic. For Classic Dark, Newspaper, Gavia or Gavia Dark, import the matching CSS from",
