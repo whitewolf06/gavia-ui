@@ -76,8 +76,8 @@ current locale; explicit strings, including `""`, keep priority. See the
 and [1.0 migration](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration.md#migration-1-0-localization).
 
 See the [architecture and public contracts](https://github.com/whitewolf06/gavia-ui/blob/main/docs/maintainers/architecture.md),
-[design system](https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md)
-and [compatibility checks](https://github.com/whitewolf06/gavia-ui/blob/main/docs/quality.md).
+[design system](https://github.com/whitewolf06/gavia-ui/blob/main/docs/reference/design-system.md)
+and [compatibility checks](https://github.com/whitewolf06/gavia-ui/blob/main/docs/maintainers/quality.md).
 The package also exports `manifest.json` and `design-tokens.json` for tooling.
 
 ## Gavia Sans
