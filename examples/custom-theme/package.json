@@ -1,12 +1,12 @@
 {
-  "name": "gavia-custom-theme", "private": true, "type": "module", "packageManager": "pnpm@10.34.5",
+  "name": "legato-custom-theme", "private": true, "type": "module", "packageManager": "pnpm@10.34.5",
   "engines": { "node": "^22.13.0 || ^24.0.0" },
   "scripts": {
     "dev": "vite",
     "theme:generate": "node scripts/generate-theme.mjs",
-    "theme:check": "gavia-theme --config theme.config.json --output src/theme.css --check",
+    "theme:check": "legato-theme --config theme.config.json --output src/theme.css --check",
     "build": "node scripts/generate-theme.mjs && vite build"
   },
-  "dependencies": { "gavia-ui": "latest", "vue": "^3.4.0" },
+  "dependencies": { "legato-ui": "latest", "vue": "^3.4.0" },
   "devDependencies": { "@vitejs/plugin-vue": "^5.2.4", "typescript": "~5.8.3", "vite": "^6.3.5" }
 }

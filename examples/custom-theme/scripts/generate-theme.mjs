@@ -1,4 +1,4 @@
-import { createWlTheme, parseWlThemeConfig } from "gavia-ui/theme";
+import { createWlTheme, parseWlThemeConfig } from "legato-ui/theme";
 import { readFileSync, writeFileSync } from "node:fs";
 
 const config = parseWlThemeConfig(JSON.parse(readFileSync(new URL("../theme.config.json", import.meta.url), "utf8")));

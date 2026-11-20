@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WlButton, WlCard, WlCheckbox, WlTabs } from "gavia-ui";
+import { WlButton, WlCard, WlCheckbox, WlTabs } from "legato-ui";
 import { ref } from "vue";
 
 const enabled = ref(true);
@@ -16,7 +16,7 @@ const tabs = [{ key: "overview", label: "Overview" }, { key: "details", label: "
       <div class="brand-actions">
         <WlButton variant="primary">Primary action</WlButton>
         <WlButton variant="soft">Soft action</WlButton>
-        <WlButton variant="link" href="https://whitewolf06.github.io/gavia-ui/docs/">Documentation</WlButton>
+        <WlButton variant="link" href="https://whitewolf06.github.io/legato-ui/docs/">Documentation</WlButton>
       </div>
       <WlCheckbox v-model="enabled">Enable notifications</WlCheckbox>
       <WlTabs v-model="tab" :items="tabs">

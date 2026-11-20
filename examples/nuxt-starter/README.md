@@ -9,7 +9,7 @@ Before release, verify this installed consumer's SSR HTML and hydration separate
 
 The plugin explicitly selects `wlLocaleEn`. The 1.0 source uses English when
 locale is omitted; released 0.x packages used Russian. To retain Russian across
-that migration, change `app/plugins/gavia.ts` to import `wlLocaleRu` and install:
+that migration, change `app/plugins/legato.ts` to import `wlLocaleRu` and install:
 
 ```ts
 nuxtApp.vueApp.use(WlConfig, { locale: wlLocaleRu });

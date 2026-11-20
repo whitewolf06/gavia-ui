@@ -16,14 +16,14 @@ The source is [theme.config.json](theme.config.json), a version 2 input-only
 configuration. Change its palette or manual overrides, then run
 `pnpm theme:generate`. Do not edit `src/theme.css` by hand. The
 [build script](scripts/generate-theme.mjs) calls `createWlTheme` from
-`gavia-ui/theme`, checks the configured contrast pairs and writes the CSS before
+`legato-ui/theme`, checks the configured contrast pairs and writes the CSS before
 the Vite production build. These tools require the 1.2 release or its candidate;
 the previously published 1.1 package does not have this entry point.
 
 The installed CLI uses the same configuration and generator:
 
 ```sh
-pnpm exec gavia-theme --config theme.config.json --output src/theme.css
+pnpm exec legato-theme --config theme.config.json --output src/theme.css
 pnpm theme:check
 ```
 
