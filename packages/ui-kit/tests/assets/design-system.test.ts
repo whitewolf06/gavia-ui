@@ -44,7 +44,12 @@ describe("design system public contract", () => {
     for (const pair of wlContrastReport) expect(pair.ratio).toBeGreaterThanOrEqual(pair.minimum);
   });
   it("exposes Gavia without changing the default White snapshot", () => {
-    expect(wlDesignThemes.map((theme) => theme.name)).toEqual(["gavia", "white", "graphite", "newspaper", "gavia-dark"]);
+    expect(wlDesignThemes.map((theme) => theme.name)).toEqual(["gavia", "white", "graphite", "newspaper", "gavia-dark", "legato", "legato-dark"]);
+    expect(resolveWlToken("--wl-accent", "legato")).toBe("#343289");
+    expect(resolveWlToken("--wl-font", "legato")).toContain('"Legato Sans Core", "Legato Sans"');
+    expect(getWlThemeTokens("legato-dark")).toMatchObject({
+      "--wl-accent": "#b9b4ff", "--wl-font": resolveWlToken("--wl-font", "legato")
+    });
     expect(resolveWlToken("--wl-bg")).toBe("#ffffff");
     expect(resolveWlToken("--wl-bg", "gavia")).toBe("#faf9f6");
     expect(resolveWlToken("--wl-bg-raised", "gavia")).toBe("#fefdfb");
@@ -104,7 +109,7 @@ describe("design system public contract", () => {
   it("adds Gavia Dark while preserving old theme IDs, positions and geometry", () => {
     expect(wlDesignThemes.map(({ name, label }) => [name, label])).toEqual([
       ["gavia", "Gavia"], ["white", "Classic"], ["graphite", "Classic Dark"],
-      ["newspaper", "Newspaper"], ["gavia-dark", "Gavia Dark"]
+      ["newspaper", "Newspaper"], ["gavia-dark", "Gavia Dark"], ["legato", "Legato"], ["legato-dark", "Legato Dark"]
     ]);
     expect(wlDesignThemes.find((theme) => theme.name === "gavia-dark")?.colorScheme).toBe("dark");
     const light = getWlThemeTokens("gavia");
@@ -119,8 +124,8 @@ describe("design system public contract", () => {
     expect(wlContrastReport.filter((pair) => pair.theme === "gavia-dark")).toHaveLength(wlContrastPairs.length);
   });
   it("rejects unknown runtime names and themes", () => {
-    expect(() => resolveWlToken("--wl-missing" as WlDesignTokenName)).toThrow("Unknown Gavia UI token");
+    expect(() => resolveWlToken("--wl-missing" as WlDesignTokenName)).toThrow("Unknown Legato UI token");
     // JavaScript consumers also receive an explicit error.
-    expect(() => getWlThemeTokens("missing" as "white")).toThrow("Unknown Gavia UI theme");
+    expect(() => getWlThemeTokens("missing" as "white")).toThrow("Unknown Legato UI theme");
   });
 });

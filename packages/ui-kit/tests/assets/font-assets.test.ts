@@ -77,6 +77,15 @@ function windowsName(font: Buffer, id: number): string {
 }
 
 describe("Gavia Sans font distribution", () => {
+  it("loads the same files and font descriptors under Legato Sans and the established CSS families", () => {
+    const legacy = readFileSync(cssPath, "utf8");
+    const legato = readFileSync(resolve(dirname(cssPath), "legato.css"), "utf8");
+    const faces = (css: string, name: string) => [...css.matchAll(/@font-face\s*\{([^}]+)\}/g)]
+      .map((match) => match[1]!.trim()).filter((face) => face.includes('font-family: "' + name))
+      .map((face) => face.replace(name, "family").replace(/\s+/g, " "));
+    expect(legato).toContain('@import "./gavia.css"');
+    expect(faces(legato, "Legato Sans")).toEqual(faces(legacy, "Gavia Sans"));
+  });
   it("keeps complete cluster fallback in a separate family from compact Core", () => {
     const css = readFileSync(cssPath, "utf8");
     const faces = [...css.matchAll(/@font-face\s*\{([^}]+)\}/g)].map((match) => match[1]!);

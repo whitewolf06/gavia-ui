@@ -496,7 +496,8 @@ export const wlDesignTokens = [
     "description": "Базовое значение ink-a06.",
     "value": "rgba(20, 22, 28, 0.06)",
     "themes": {
-      "gavia-dark": "rgba(240, 239, 234, 0.06)"
+      "gavia-dark": "rgba(240, 239, 234, 0.06)",
+      "legato-dark": "rgba(246, 242, 255, 0.06)"
     }
   },
   {
@@ -507,7 +508,8 @@ export const wlDesignTokens = [
     "description": "Базовое значение ink-a08.",
     "value": "rgba(20, 22, 28, 0.08)",
     "themes": {
-      "gavia-dark": "rgba(240, 239, 234, 0.08)"
+      "gavia-dark": "rgba(240, 239, 234, 0.08)",
+      "legato-dark": "rgba(246, 242, 255, 0.08)"
     }
   },
   {
@@ -596,7 +598,8 @@ export const wlDesignTokens = [
       "graphite": "0 1px 2px rgba(0, 0, 0, 0.25)",
       "newspaper": "none",
       "gavia": "0 1px 3px rgba(15, 26, 35, 0.05)",
-      "gavia-dark": "0 1px 3px rgba(9, 8, 6, 0.24)"
+      "gavia-dark": "0 1px 3px rgba(9, 8, 6, 0.24)",
+      "legato-dark": "0 1px 2px rgba(0, 0, 0, 0.25)"
     }
   },
   {
@@ -611,7 +614,8 @@ export const wlDesignTokens = [
       "graphite": "0 4px 14px rgba(0, 0, 0, 0.35), 0 16px 44px rgba(0, 0, 0, 0.45)",
       "newspaper": "0 14px 36px rgba(48, 41, 32, 0.13)",
       "gavia": "0 4px 14px rgba(15, 26, 35, 0.08), 0 16px 44px rgba(15, 26, 35, 0.12)",
-      "gavia-dark": "0 4px 14px rgba(9, 8, 6, 0.32), 0 16px 44px rgba(9, 8, 6, 0.46)"
+      "gavia-dark": "0 4px 14px rgba(9, 8, 6, 0.32), 0 16px 44px rgba(9, 8, 6, 0.46)",
+      "legato-dark": "0 4px 14px rgba(0, 0, 0, 0.35), 0 16px 44px rgba(0, 0, 0, 0.45)"
     }
   },
   {
@@ -626,7 +630,8 @@ export const wlDesignTokens = [
       "graphite": "0 1px 3px rgba(0, 0, 0, 0.5)",
       "newspaper": "0 1px 2px rgba(48, 41, 32, 0.22)",
       "gavia": "0 1px 3px rgba(15, 26, 35, 0.2)",
-      "gavia-dark": "0 1px 3px rgba(9, 8, 6, 0.4)"
+      "gavia-dark": "0 1px 3px rgba(9, 8, 6, 0.4)",
+      "legato-dark": "0 1px 3px rgba(0, 0, 0, 0.5)"
     }
   },
   {
@@ -687,7 +692,9 @@ export const wlDesignTokens = [
     "themes": {
       "newspaper": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif",
       "gavia": "\"Gavia Sans Core\", \"Gavia Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif",
-      "gavia-dark": "\"Gavia Sans Core\", \"Gavia Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif"
+      "gavia-dark": "\"Gavia Sans Core\", \"Gavia Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif",
+      "legato": "\"Legato Sans Core\", \"Legato Sans\", \"Gavia Sans Core\", \"Gavia Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif",
+      "legato-dark": "\"Legato Sans Core\", \"Legato Sans\", \"Gavia Sans Core\", \"Gavia Sans\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", sans-serif"
     }
   },
   {
@@ -699,7 +706,9 @@ export const wlDesignTokens = [
     "value": "optimizeLegibility",
     "themes": {
       "gavia": "geometricPrecision",
-      "gavia-dark": "geometricPrecision"
+      "gavia-dark": "geometricPrecision",
+      "legato": "geometricPrecision",
+      "legato-dark": "geometricPrecision"
     }
   },
   {
@@ -1592,7 +1601,9 @@ export const wlDesignTokens = [
       "graphite": "#17181c",
       "newspaper": "var(--wl-gray-0)",
       "gavia": "#faf9f6",
-      "gavia-dark": "#18191b"
+      "gavia-dark": "#18191b",
+      "legato": "#ffffff",
+      "legato-dark": "#14141c"
     }
   },
   {
@@ -1604,7 +1615,9 @@ export const wlDesignTokens = [
     "description": "Поднятая поверхность для карточек и локальных панелей.",
     "themes": {
       "gavia": "#fefdfb",
-      "gavia-dark": "#222325"
+      "gavia-dark": "#222325",
+      "legato": "#ffffff",
+      "legato-dark": "#1c1c26"
     }
   },
   {
@@ -1619,7 +1632,9 @@ export const wlDesignTokens = [
       "graphite": "#1e2025",
       "newspaper": "var(--wl-gray-50)",
       "gavia": "#eef2f3",
-      "gavia-dark": "#2c2d30"
+      "gavia-dark": "#2c2d30",
+      "legato": "#f0efff",
+      "legato-dark": "#22222e"
     }
   },
   {
@@ -1634,7 +1649,9 @@ export const wlDesignTokens = [
       "graphite": "#26292f",
       "newspaper": "var(--wl-gray-100)",
       "gavia": "#e5ecef",
-      "gavia-dark": "#3c3d41"
+      "gavia-dark": "#3c3d41",
+      "legato": "#d4d3ed",
+      "legato-dark": "#2b2b38"
     }
   },
   {
@@ -1649,7 +1666,9 @@ export const wlDesignTokens = [
       "graphite": "#2e3138",
       "newspaper": "var(--wl-gray-200)",
       "gavia": "#d5dfe3",
-      "gavia-dark": "#4b4a46"
+      "gavia-dark": "#4b4a46",
+      "legato": "#dce0e4",
+      "legato-dark": "#3e3d4c"
     }
   },
   {
@@ -1664,7 +1683,9 @@ export const wlDesignTokens = [
       "graphite": "#3a3e46",
       "newspaper": "var(--wl-gray-300)",
       "gavia": "#b8c7ce",
-      "gavia-dark": "#686761"
+      "gavia-dark": "#686761",
+      "legato": "#79838d",
+      "legato-dark": "#7c798d"
     }
   },
   {
@@ -1679,7 +1700,9 @@ export const wlDesignTokens = [
       "graphite": "#e8eaee",
       "newspaper": "var(--wl-gray-950)",
       "gavia": "#0f1a23",
-      "gavia-dark": "#eceee8"
+      "gavia-dark": "#eceee8",
+      "legato": "#201e33",
+      "legato-dark": "#ebe9ef"
     }
   },
   {
@@ -1694,7 +1717,9 @@ export const wlDesignTokens = [
       "graphite": "#a8adb8",
       "newspaper": "var(--wl-gray-600)",
       "gavia": "#5b6470",
-      "gavia-dark": "#b7bfc1"
+      "gavia-dark": "#b7bfc1",
+      "legato": "#4e5765",
+      "legato-dark": "#bfbdca"
     }
   },
   {
@@ -1709,7 +1734,9 @@ export const wlDesignTokens = [
       "graphite": "#6f7580",
       "newspaper": "var(--wl-gray-500)",
       "gavia": "#75818c",
-      "gavia-dark": "#8b979d"
+      "gavia-dark": "#8b979d",
+      "legato": "#4e5765",
+      "legato-dark": "#a5a2b3"
     }
   },
   {
@@ -1724,7 +1751,9 @@ export const wlDesignTokens = [
       "graphite": "var(--wl-blue-400)",
       "newspaper": "#25211d",
       "gavia": "#3c7490",
-      "gavia-dark": "#67bbbc"
+      "gavia-dark": "#67bbbc",
+      "legato": "#343289",
+      "legato-dark": "#b9b4ff"
     }
   },
   {
@@ -1752,7 +1781,9 @@ export const wlDesignTokens = [
       "graphite": "#729df2",
       "newspaper": "#3a342e",
       "gavia": "#326179",
-      "gavia-dark": "#7acdcd"
+      "gavia-dark": "#7acdcd",
+      "legato": "#2b2970",
+      "legato-dark": "#cfcaff"
     }
   },
   {
@@ -1767,7 +1798,9 @@ export const wlDesignTokens = [
       "graphite": "#202c46",
       "newspaper": "#f4f3f1",
       "gavia": "#dfe8eb",
-      "gavia-dark": "#293c3f"
+      "gavia-dark": "#293c3f",
+      "legato": "#f0efff",
+      "legato-dark": "#26243e"
     }
   },
   {
@@ -1782,7 +1815,9 @@ export const wlDesignTokens = [
       "graphite": "#2c3d63",
       "newspaper": "#dedbd5",
       "gavia": "#b8cbd3",
-      "gavia-dark": "#528787"
+      "gavia-dark": "#528787",
+      "legato": "#b0afd7",
+      "legato-dark": "#736d9d"
     }
   },
   {
@@ -1797,7 +1832,9 @@ export const wlDesignTokens = [
       "graphite": "#263757",
       "newspaper": "#eceae6",
       "gavia": "#d3dfe4",
-      "gavia-dark": "#33484c"
+      "gavia-dark": "#33484c",
+      "legato": "#d8d6f0",
+      "legato-dark": "#312d4c"
     }
   },
   {
@@ -1812,7 +1849,9 @@ export const wlDesignTokens = [
       "graphite": "#3a4f7d",
       "newspaper": "#cec9c0",
       "gavia": "#9eb7c2",
-      "gavia-dark": "#63a4a4"
+      "gavia-dark": "#63a4a4",
+      "legato": "#343289",
+      "legato-dark": "#aaa3e6"
     }
   },
   {
@@ -1827,7 +1866,8 @@ export const wlDesignTokens = [
       "graphite": "#ffffff",
       "newspaper": "#ffffff",
       "gavia": "#ffffff",
-      "gavia-dark": "#102027"
+      "gavia-dark": "#102027",
+      "legato-dark": "#211e40"
     }
   },
   {
@@ -1877,7 +1917,8 @@ export const wlDesignTokens = [
       "white": "var(--wl-green-500)",
       "graphite": "var(--wl-green-400)",
       "newspaper": "#31704c",
-      "gavia-dark": "var(--wl-green-400)"
+      "gavia-dark": "var(--wl-green-400)",
+      "legato-dark": "#8bd3af"
     }
   },
   {
@@ -1891,7 +1932,8 @@ export const wlDesignTokens = [
       "white": "var(--wl-green-50)",
       "graphite": "#17291f",
       "newspaper": "#edf4ed",
-      "gavia-dark": "#1c342d"
+      "gavia-dark": "#1c342d",
+      "legato-dark": "#1a2b25"
     }
   },
   {
@@ -1905,7 +1947,8 @@ export const wlDesignTokens = [
       "white": "var(--wl-green-100)",
       "graphite": "#234634",
       "newspaper": "#cddfce",
-      "gavia-dark": "#3c6452"
+      "gavia-dark": "#3c6452",
+      "legato-dark": "#4b7963"
     }
   },
   {
@@ -1919,7 +1962,8 @@ export const wlDesignTokens = [
       "white": "var(--wl-amber-500)",
       "graphite": "var(--wl-amber-400)",
       "newspaper": "#9b6b26",
-      "gavia-dark": "var(--wl-amber-400)"
+      "gavia-dark": "var(--wl-amber-400)",
+      "legato-dark": "#ffd465"
     }
   },
   {
@@ -1933,7 +1977,9 @@ export const wlDesignTokens = [
       "white": "var(--wl-amber-50)",
       "graphite": "#2b2413",
       "newspaper": "#f8f0df",
-      "gavia-dark": "#3a3224"
+      "gavia-dark": "#3a3224",
+      "legato": "#fff3cf",
+      "legato-dark": "#2f281b"
     }
   },
   {
@@ -1947,7 +1993,9 @@ export const wlDesignTokens = [
       "white": "var(--wl-amber-100)",
       "graphite": "#4a3d1c",
       "newspaper": "#ead9b7",
-      "gavia-dark": "#725f41"
+      "gavia-dark": "#725f41",
+      "legato": "#ffd465",
+      "legato-dark": "#8c7138"
     }
   },
   {
@@ -1962,7 +2010,8 @@ export const wlDesignTokens = [
       "graphite": "var(--wl-red-400)",
       "newspaper": "#b33a35",
       "gavia": "#ab4448",
-      "gavia-dark": "var(--wl-red-400)"
+      "gavia-dark": "var(--wl-red-400)",
+      "legato-dark": "#ff969c"
     }
   },
   {
@@ -1977,7 +2026,8 @@ export const wlDesignTokens = [
       "graphite": "#ef7c81",
       "newspaper": "#942e2a",
       "gavia": "#963c3f",
-      "gavia-dark": "#e6a0a2"
+      "gavia-dark": "#e6a0a2",
+      "legato-dark": "#ffb0b3"
     }
   },
   {
@@ -1992,7 +2042,8 @@ export const wlDesignTokens = [
       "graphite": "#311d1f",
       "newspaper": "#f9e9e5",
       "gavia": "#f7eeed",
-      "gavia-dark": "#3b262e"
+      "gavia-dark": "#3b262e",
+      "legato-dark": "#331f26"
     }
   },
   {
@@ -2007,7 +2058,8 @@ export const wlDesignTokens = [
       "graphite": "#3a2225",
       "newspaper": "#f3ded9",
       "gavia": "#f3e5e4",
-      "gavia-dark": "#483039"
+      "gavia-dark": "#483039",
+      "legato-dark": "#40262e"
     }
   },
   {
@@ -2022,7 +2074,8 @@ export const wlDesignTokens = [
       "graphite": "#4e2a2d",
       "newspaper": "#e7c5bd",
       "gavia": "#e5c6c5",
-      "gavia-dark": "#81515b"
+      "gavia-dark": "#81515b",
+      "legato-dark": "#995865"
     }
   },
   {
@@ -2036,7 +2089,9 @@ export const wlDesignTokens = [
       "white": "var(--wl-blue-700)",
       "graphite": "#a9c6f8",
       "newspaper": "#385d7a",
-      "gavia-dark": "#c0d0e1"
+      "gavia-dark": "#c0d0e1",
+      "legato": "#343289",
+      "legato-dark": "#d3cfff"
     }
   },
   {
@@ -2050,7 +2105,9 @@ export const wlDesignTokens = [
       "white": "var(--wl-green-700)",
       "graphite": "#7fd6a4",
       "newspaper": "#275e3e",
-      "gavia-dark": "#afd9bc"
+      "gavia-dark": "#afd9bc",
+      "legato": "#216044",
+      "legato-dark": "#a2e4be"
     }
   },
   {
@@ -2064,7 +2121,8 @@ export const wlDesignTokens = [
       "white": "var(--wl-amber-700)",
       "graphite": "#f2c14e",
       "newspaper": "#76501b",
-      "gavia-dark": "#e1c598"
+      "gavia-dark": "#e1c598",
+      "legato-dark": "var(--wl-palette-warn)"
     }
   },
   {
@@ -2079,7 +2137,9 @@ export const wlDesignTokens = [
       "graphite": "#f08a8f",
       "newspaper": "#8b2d29",
       "gavia": "#ab4448",
-      "gavia-dark": "#f0b5b3"
+      "gavia-dark": "#f0b5b3",
+      "legato": "#b12929",
+      "legato-dark": "#ffb3b7"
     }
   },
   {
@@ -2094,7 +2154,8 @@ export const wlDesignTokens = [
       "graphite": "rgba(8, 9, 12, 0.5)",
       "newspaper": "rgba(32, 29, 26, 0.32)",
       "gavia": "rgba(15, 26, 35, 0.28)",
-      "gavia-dark": "rgba(10, 9, 7, 0.62)"
+      "gavia-dark": "rgba(10, 9, 7, 0.62)",
+      "legato-dark": "rgba(10, 9, 18, 0.66)"
     }
   },
   {
@@ -2108,7 +2169,8 @@ export const wlDesignTokens = [
       "white": "var(--wl-gray-800)",
       "graphite": "#3a3e46",
       "newspaper": "var(--wl-gray-800)",
-      "gavia-dark": "var(--wl-palette-accent)"
+      "gavia-dark": "var(--wl-palette-accent)",
+      "legato-dark": "var(--wl-palette-accent)"
     }
   },
   {
@@ -2123,7 +2185,9 @@ export const wlDesignTokens = [
       "graphite": "#e8eaee",
       "newspaper": "var(--wl-gray-950)",
       "gavia": "var(--wl-gray-900)",
-      "gavia-dark": "#e7e6e2"
+      "gavia-dark": "#e7e6e2",
+      "legato": "#201e33",
+      "legato-dark": "var(--wl-palette-text)"
     }
   },
   {
@@ -2137,7 +2201,8 @@ export const wlDesignTokens = [
       "white": "#ffffff",
       "graphite": "#17181c",
       "newspaper": "var(--wl-gray-0)",
-      "gavia-dark": "#252420"
+      "gavia-dark": "#252420",
+      "legato-dark": "var(--wl-palette-bg)"
     }
   },
   {
@@ -2719,7 +2784,10 @@ export const wlDesignTokens = [
     "layer": "semantic",
     "type": "color",
     "category": "component",
-    "description": "Роль toast-icon-info."
+    "description": "Роль toast-icon-info.",
+    "themes": {
+      "legato-dark": "var(--wl-palette-accent)"
+    }
   },
   {
     "name": "--wl-status-success-icon",
@@ -2727,7 +2795,10 @@ export const wlDesignTokens = [
     "layer": "semantic",
     "type": "color",
     "category": "component",
-    "description": "Роль toast-icon-ok."
+    "description": "Роль toast-icon-ok.",
+    "themes": {
+      "legato-dark": "var(--wl-palette-success)"
+    }
   },
   {
     "name": "--wl-status-warning-icon",
@@ -2735,7 +2806,10 @@ export const wlDesignTokens = [
     "layer": "semantic",
     "type": "color",
     "category": "component",
-    "description": "Роль toast-icon-warn."
+    "description": "Роль toast-icon-warn.",
+    "themes": {
+      "legato-dark": "var(--wl-palette-warn)"
+    }
   },
   {
     "name": "--wl-status-danger-icon",
@@ -2746,7 +2820,8 @@ export const wlDesignTokens = [
     "description": "Роль toast-icon-err.",
     "themes": {
       "gavia": "var(--wl-palette-danger)",
-      "gavia-dark": "var(--wl-palette-danger)"
+      "gavia-dark": "var(--wl-palette-danger)",
+      "legato-dark": "var(--wl-palette-danger)"
     }
   },
   {
@@ -3805,7 +3880,8 @@ export const wlDesignTokens = [
       "graphite": "var(--wl-danger)",
       "newspaper": "var(--wl-danger)",
       "gavia": "var(--wl-palette-danger)",
-      "gavia-dark": "var(--wl-red-500)"
+      "gavia-dark": "var(--wl-red-500)",
+      "legato-dark": "var(--wl-danger)"
     }
   },
   {
@@ -3819,7 +3895,8 @@ export const wlDesignTokens = [
       "graphite": "var(--wl-danger-hover)",
       "newspaper": "var(--wl-danger-hover)",
       "gavia": "var(--wl-palette-danger-hover)",
-      "gavia-dark": "var(--wl-red-600)"
+      "gavia-dark": "var(--wl-red-600)",
+      "legato-dark": "var(--wl-danger-hover)"
     }
   },
   {
@@ -3831,7 +3908,8 @@ export const wlDesignTokens = [
     "description": "Читаемый текст опасного действия.",
     "themes": {
       "graphite": "var(--wl-gray-950)",
-      "gavia-dark": "var(--wl-gray-0)"
+      "gavia-dark": "var(--wl-gray-0)",
+      "legato-dark": "var(--wl-on-accent)"
     }
   },
   {
@@ -3987,7 +4065,9 @@ export const wlDesignTokens = [
     "description": "Базовая поверхность основного действия при нажатии.",
     "themes": {
       "gavia": "#326179",
-      "gavia-dark": "#4d9798"
+      "gavia-dark": "#4d9798",
+      "legato": "#211f61",
+      "legato-dark": "#a29ce9"
     }
   },
   {
@@ -3999,7 +4079,9 @@ export const wlDesignTokens = [
     "description": "Дополнительный тёплый цвет декоративных деталей; не цвет основного действия.",
     "themes": {
       "gavia": "#948775",
-      "gavia-dark": "#c1af93"
+      "gavia-dark": "#c1af93",
+      "legato": "#941747",
+      "legato-dark": "#f09bb7"
     }
   },
   {
@@ -4011,7 +4093,9 @@ export const wlDesignTokens = [
     "description": "Мягкая поверхность тёплых декоративных деталей.",
     "themes": {
       "gavia": "#efebe3",
-      "gavia-dark": "#343432"
+      "gavia-dark": "#343432",
+      "legato": "#faedf2",
+      "legato-dark": "#35212d"
     }
   },
   {
@@ -4023,7 +4107,9 @@ export const wlDesignTokens = [
     "description": "Поверхность основного действия при нажатии.",
     "themes": {
       "gavia": "var(--wl-palette-action-primary-active)",
-      "gavia-dark": "var(--wl-palette-action-primary-active)"
+      "gavia-dark": "var(--wl-palette-action-primary-active)",
+      "legato": "var(--wl-palette-action-primary-active)",
+      "legato-dark": "var(--wl-palette-action-primary-active)"
     }
   },
   {
@@ -4830,6 +4916,18 @@ export const wlDesignThemes = [
     "name": "gavia-dark",
     "label": "Gavia Dark",
     "description": "Тёмная тема с бирюзовым акцентом и шрифтом Gavia Sans.",
+    "colorScheme": "dark"
+  },
+  {
+    "name": "legato",
+    "label": "Legato",
+    "description": "Светлая тема с индиго, бордовым и шафрановым акцентами. Использует шрифт Legato Sans.",
+    "colorScheme": "light"
+  },
+  {
+    "name": "legato-dark",
+    "label": "Legato Dark",
+    "description": "Тёмная тема с чернильным фоном, светлым индиго и акцентами розы и шафрана. Использует шрифт Legato Sans.",
     "colorScheme": "dark"
   }
 ] as const satisfies readonly WlDesignTheme[];
@@ -6124,5 +6222,419 @@ export const wlContrastReport = [
     "minimum": 4.5,
     "theme": "gavia-dark",
     "ratio": 5.27
+  },
+  {
+    "name": "text",
+    "label": "Основной текст",
+    "foreground": "--wl-text",
+    "background": "--wl-bg",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 16.22
+  },
+  {
+    "name": "muted",
+    "label": "Вспомогательный текст",
+    "foreground": "--wl-text-muted",
+    "background": "--wl-bg",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 7.3
+  },
+  {
+    "name": "text-soft",
+    "label": "Текст на вторичной поверхности",
+    "foreground": "--wl-text",
+    "background": "--wl-bg-soft",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 14.28
+  },
+  {
+    "name": "primary",
+    "label": "Основное действие",
+    "foreground": "--wl-action-primary-text",
+    "background": "--wl-action-primary-bg",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 10.7
+  },
+  {
+    "name": "primary-hover",
+    "label": "Основное действие: hover",
+    "foreground": "--wl-action-primary-text",
+    "background": "--wl-action-primary-hover",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 12.7
+  },
+  {
+    "name": "primary-active",
+    "label": "Основное действие: active",
+    "foreground": "--wl-action-primary-text",
+    "background": "--wl-action-primary-active",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 14.65
+  },
+  {
+    "name": "danger",
+    "label": "Опасное действие",
+    "foreground": "--wl-action-danger-text",
+    "background": "--wl-action-danger-bg",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 5.36
+  },
+  {
+    "name": "danger-hover",
+    "label": "Опасное действие: hover",
+    "foreground": "--wl-action-danger-text",
+    "background": "--wl-action-danger-hover",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 8
+  },
+  {
+    "name": "tooltip",
+    "label": "Подсказка",
+    "foreground": "--wl-tooltip-text",
+    "background": "--wl-tooltip-bg",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 16.22
+  },
+  {
+    "name": "info",
+    "label": "Информационное сообщение",
+    "foreground": "--wl-info-text",
+    "background": "--wl-accent-soft",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 9.42
+  },
+  {
+    "name": "success",
+    "label": "Успешное сообщение",
+    "foreground": "--wl-ok-text",
+    "background": "--wl-success-soft",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 6.71
+  },
+  {
+    "name": "warning",
+    "label": "Предупреждение",
+    "foreground": "--wl-warn-text",
+    "background": "--wl-warn-soft",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 5.68
+  },
+  {
+    "name": "error",
+    "label": "Сообщение об ошибке",
+    "foreground": "--wl-err-text",
+    "background": "--wl-danger-soft",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 5.79
+  },
+  {
+    "name": "focus",
+    "label": "Фокус на странице",
+    "foreground": "--wl-focus-color",
+    "background": "--wl-bg",
+    "minimum": 3,
+    "theme": "legato",
+    "ratio": 10.7
+  },
+  {
+    "name": "link",
+    "label": "Ссылка на странице",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 10.7
+  },
+  {
+    "name": "focus-soft",
+    "label": "Фокус на вторичной поверхности",
+    "foreground": "--wl-focus-color",
+    "background": "--wl-bg-soft",
+    "minimum": 3,
+    "theme": "legato",
+    "ratio": 9.42
+  },
+  {
+    "name": "text-raised",
+    "label": "Текст на поднятой поверхности",
+    "foreground": "--wl-text",
+    "background": "--wl-bg-raised",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 16.22
+  },
+  {
+    "name": "muted-raised",
+    "label": "Вспомогательный текст на поднятой поверхности",
+    "foreground": "--wl-text-muted",
+    "background": "--wl-bg-raised",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 7.3
+  },
+  {
+    "name": "focus-raised",
+    "label": "Фокус на поднятой поверхности",
+    "foreground": "--wl-focus-color",
+    "background": "--wl-bg-raised",
+    "minimum": 3,
+    "theme": "legato",
+    "ratio": 10.7
+  },
+  {
+    "name": "accent-text-raised",
+    "label": "Акцентный текст на поднятой поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg-raised",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 10.7
+  },
+  {
+    "name": "accent-text-soft",
+    "label": "Акцентный текст на вторичной поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg-soft",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 9.42
+  },
+  {
+    "name": "accent-text-selected",
+    "label": "Акцентный текст на выбранной поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-accent-soft",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 9.42
+  },
+  {
+    "name": "accent-text-hover",
+    "label": "Акцентный текст на мягкой поверхности при наведении",
+    "foreground": "--wl-text-accent-hover",
+    "background": "--wl-accent-soft-hover",
+    "minimum": 4.5,
+    "theme": "legato",
+    "ratio": 8.95
+  },
+  {
+    "name": "text",
+    "label": "Основной текст",
+    "foreground": "--wl-text",
+    "background": "--wl-bg",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 15.21
+  },
+  {
+    "name": "muted",
+    "label": "Вспомогательный текст",
+    "foreground": "--wl-text-muted",
+    "background": "--wl-bg",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 9.9
+  },
+  {
+    "name": "text-soft",
+    "label": "Текст на вторичной поверхности",
+    "foreground": "--wl-text",
+    "background": "--wl-bg-soft",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 13.05
+  },
+  {
+    "name": "primary",
+    "label": "Основное действие",
+    "foreground": "--wl-action-primary-text",
+    "background": "--wl-action-primary-bg",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 8.33
+  },
+  {
+    "name": "primary-hover",
+    "label": "Основное действие: hover",
+    "foreground": "--wl-action-primary-text",
+    "background": "--wl-action-primary-hover",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 10.23
+  },
+  {
+    "name": "primary-active",
+    "label": "Основное действие: active",
+    "foreground": "--wl-action-primary-text",
+    "background": "--wl-action-primary-active",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 6.39
+  },
+  {
+    "name": "danger",
+    "label": "Опасное действие",
+    "foreground": "--wl-action-danger-text",
+    "background": "--wl-action-danger-bg",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 7.62
+  },
+  {
+    "name": "danger-hover",
+    "label": "Опасное действие: hover",
+    "foreground": "--wl-action-danger-text",
+    "background": "--wl-action-danger-hover",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 9.15
+  },
+  {
+    "name": "tooltip",
+    "label": "Подсказка",
+    "foreground": "--wl-tooltip-text",
+    "background": "--wl-tooltip-bg",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 15.21
+  },
+  {
+    "name": "info",
+    "label": "Информационное сообщение",
+    "foreground": "--wl-info-text",
+    "background": "--wl-accent-soft",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 10.07
+  },
+  {
+    "name": "success",
+    "label": "Успешное сообщение",
+    "foreground": "--wl-ok-text",
+    "background": "--wl-success-soft",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 10.15
+  },
+  {
+    "name": "warning",
+    "label": "Предупреждение",
+    "foreground": "--wl-warn-text",
+    "background": "--wl-warn-soft",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 10.32
+  },
+  {
+    "name": "error",
+    "label": "Сообщение об ошибке",
+    "foreground": "--wl-err-text",
+    "background": "--wl-danger-soft",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 9.07
+  },
+  {
+    "name": "focus",
+    "label": "Фокус на странице",
+    "foreground": "--wl-focus-color",
+    "background": "--wl-bg",
+    "minimum": 3,
+    "theme": "legato-dark",
+    "ratio": 9.62
+  },
+  {
+    "name": "link",
+    "label": "Ссылка на странице",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 9.62
+  },
+  {
+    "name": "focus-soft",
+    "label": "Фокус на вторичной поверхности",
+    "foreground": "--wl-focus-color",
+    "background": "--wl-bg-soft",
+    "minimum": 3,
+    "theme": "legato-dark",
+    "ratio": 8.26
+  },
+  {
+    "name": "text-raised",
+    "label": "Текст на поднятой поверхности",
+    "foreground": "--wl-text",
+    "background": "--wl-bg-raised",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 14.02
+  },
+  {
+    "name": "muted-raised",
+    "label": "Вспомогательный текст на поднятой поверхности",
+    "foreground": "--wl-text-muted",
+    "background": "--wl-bg-raised",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 9.13
+  },
+  {
+    "name": "focus-raised",
+    "label": "Фокус на поднятой поверхности",
+    "foreground": "--wl-focus-color",
+    "background": "--wl-bg-raised",
+    "minimum": 3,
+    "theme": "legato-dark",
+    "ratio": 8.87
+  },
+  {
+    "name": "accent-text-raised",
+    "label": "Акцентный текст на поднятой поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg-raised",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 8.87
+  },
+  {
+    "name": "accent-text-soft",
+    "label": "Акцентный текст на вторичной поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-bg-soft",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 8.26
+  },
+  {
+    "name": "accent-text-selected",
+    "label": "Акцентный текст на выбранной поверхности",
+    "foreground": "--wl-text-accent",
+    "background": "--wl-accent-soft",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 7.86
+  },
+  {
+    "name": "accent-text-hover",
+    "label": "Акцентный текст на мягкой поверхности при наведении",
+    "foreground": "--wl-text-accent-hover",
+    "background": "--wl-accent-soft-hover",
+    "minimum": 4.5,
+    "theme": "legato-dark",
+    "ratio": 8.41
   }
 ] as const;

@@ -46,7 +46,7 @@ const registryVueVersion = requestedVue ?? (selectedManager === "bun" ? workspac
 const minimumCompiler = requestedTypescript?.startsWith("5.4.") === true;
 const temporaryBase = join(repoRoot, ".tmp");
 mkdirSync(temporaryBase, { recursive: true });
-const temporaryRoot = mkdtempSync(join(temporaryBase, "gavia-ui-consumer-"));
+const temporaryRoot = mkdtempSync(join(temporaryBase, "legato-ui-consumer-"));
 // Validate the immutable cleanup target before work starts, preserving the original
 // failure if a consumer check later throws. Cleanup never computes another path.
 if (dirname(temporaryRoot) !== temporaryBase) throw new Error("Consumer must stay inside the task temporary directory");
@@ -94,14 +94,14 @@ try {
     archivePath = join(packDir, archives[0]);
   }
   const consumerPackage = {
-    name: "gavia-ui-package-consumer-smoke",
+    name: "legato-ui-package-consumer-smoke",
     private: true,
     type: "module",
     scripts: {
       build: "node tool-build.mjs",
       typecheck: "node tool-typecheck.mjs",
       "theme:typecheck": "node node_modules/typescript/bin/tsc --noEmit -p tsconfig.theme.json",
-      "theme:generate": "gavia-theme --config theme.config.json --output generated-theme.css",
+      "theme:generate": "legato-theme --config theme.config.json --output generated-theme.css",
       "theme:check": "gavia-theme --config theme.config.json --output generated-theme.css --check"
     },
     dependencies: {
@@ -169,12 +169,14 @@ import designCatalog from "legato-ui/design-tokens.json";
 import "legato-ui/styles/reset.css";
 import "legato-ui/styles/base.css";
 import "legato-ui/styles/primitives.css";
-import "legato-ui/styles/fonts/gavia.css";
 import "legato-ui/themes/white.css";
 import "legato-ui/themes/graphite.css";
 import "legato-ui/themes/newspaper.css";
 import "legato-ui/themes/gavia.css";
 import "legato-ui/themes/gavia-dark.css";
+import "legato-ui/themes/legato.css";
+import "legato-ui/themes/legato-dark.css";
+import "legato-ui/styles/fonts/legato.css";
 import regularFontUrl from "legato-ui/fonts/gavia/Gavia-Regular.woff2?url";
 import App from "./App.vue";
 
@@ -282,6 +284,9 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     "themes/newspaper.css",
     "themes/gavia.css",
     "themes/gavia-dark.css",
+    "themes/legato.css",
+    "themes/legato-dark.css",
+    "styles/fonts/legato.css",
     "styles/fonts/gavia.css",
     "fonts/gavia/manifest.json",
     "fonts/gavia/OFL.txt",
@@ -312,7 +317,9 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   if (installedManifest.license !== "MIT") {
     throw new Error("Published manifest must declare MIT");
   }
-  if (installedManifest.exports?.["./styles/fonts/gavia.css"] !== "./styles/fonts/gavia.css"
+  if (installedManifest.exports?.["./styles/fonts/legato.css"] !== "./styles/fonts/legato.css"
+    || installedManifest.exports?.["./fonts/legato/Legato-*.woff2"] !== "./fonts/gavia/Gavia-*.woff2"
+    || installedManifest.exports?.["./styles/fonts/gavia.css"] !== "./styles/fonts/gavia.css"
     || installedManifest.exports?.["./fonts/gavia/*"] !== "./fonts/gavia/*") {
     throw new Error("Published manifest is missing the public font exports");
   }
@@ -476,15 +483,27 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   }
   const builtCss = readdirSync(builtAssets).filter((file) => file.endsWith(".css"))
     .map((file) => readFileSync(join(builtAssets, file), "utf8")).join("\n");
-  const builtFontFaces = [...builtCss.matchAll(/@font-face\s*\{([^}]+)\}/g)]
-    .filter(([, block]) => /font-family:["']?Gavia(?: Sans)?(?: Core)?["';]/.test(block));
-  if (builtFontFaces.length !== 24 + variableFaces.length) throw new Error("Consumer CSS did not preserve Gavia faces, subsets and legacy aliases");
-  for (const [, block] of builtFontFaces) {
-    const fontUrl = block.match(/url\(["']?([^"')]+)["']?\)/)?.[1];
-    const emittedPath = fontUrl?.startsWith("/") ? join(consumerDir, "dist", fontUrl.slice(1)) : resolve(builtAssets, fontUrl ?? "");
-    if (!fontUrl || !existsSync(emittedPath)) throw new Error("Consumer font CSS has an unresolved emitted URL: " + fontUrl);
+  // Each entry point can include shared faces in a separate CSS chunk.
+  // Compare the actual face and its font bytes once across all emitted chunks.
+  function faceSignatures(css, resolveFont) {
+    const signatures = new Set();
+    for (const [, block] of css.matchAll(/@font-face\s*\{([^}]+)\}/g)) {
+      const family = block.match(/font-family:\s*["']?((?:Gavia(?: Sans)?|Legato Sans)(?: Core)?)["']?\s*;/)?.[1];
+      if (!family) continue;
+      const url = block.match(/url\(["']?([^"')]+)["']?\)/)?.[1];
+      if (!url) throw new Error("Missing web font URL for " + family);
+      const weight = block.match(/font-weight:\s*([\d ]+)/)?.[1].trim();
+      const style = block.match(/font-style:\s*(normal|italic)/)?.[1];
+      const hash = createHash("sha256").update(readFileSync(resolveFont(url))).digest("hex");
+      signatures.add([family, weight, style, hash].join("/"));
+    }
+    return [...signatures].sort();
   }
-  console.log("Packed font smoke passed: 12 accepted WOFF2 files, OFL notices, 12 canonical CSS faces plus legacy aliases");
+  const legatoStylesheet = readFileSync(join(dirname(fontStylesheetPath), "legato.css"), "utf8");
+  const expectedFaces = faceSignatures(fontStylesheet + "\n" + legatoStylesheet, (url) => resolve(dirname(fontStylesheetPath), url));
+  const builtFaces = faceSignatures(builtCss, (url) => url.startsWith("/") ? join(consumerDir, "dist", url.slice(1)) : resolve(builtAssets, url));
+  if (JSON.stringify(builtFaces) !== JSON.stringify(expectedFaces)) throw new Error("Consumer CSS changed a packaged font face or its WOFF2 file");
+  console.log("Packed font smoke passed: " + builtFaces.length + " Legato and Gavia web faces and aliases");
 
   // Git checkouts may use CRLF on Windows and LF on the publishing runner.
   const packedLicense = readFileSync(join(installedPackageDir, "LICENSE"), "utf8").replaceAll("\r\n", "\n");

@@ -46,6 +46,8 @@
     "./design-tokens.json": "./dist/design-tokens.json",
     "./package.json": "./package.json",
     "./styles/fonts/gavia.css": "./styles/fonts/gavia.css",
+    "./styles/fonts/legato.css": "./styles/fonts/legato.css",
+    "./fonts/legato/Legato-*.woff2": "./fonts/gavia/Gavia-*.woff2",
     "./fonts/gavia/*": "./fonts/gavia/*"
   },
   "module": "./dist/index.js",

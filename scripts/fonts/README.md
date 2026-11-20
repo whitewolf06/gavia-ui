@@ -1,6 +1,8 @@
-# Gavia Sans 0.6 font sources and build
+# Legato Sans 0.6 font sources and build
 
-Gavia Sans 0.6 is an experimental OFL derivative of Onest with independently authored numerals. The current family contains six weights (100, 300, 400, 500, 600, 700), each with an upright and italic file, and preserves the base's coverage of 780 mapped characters. The repository and public specimen keep only the accepted current Gavia Sans family; earlier development editions are available through Git history.
+<a id="gavia-sans-06-font-sources-and-build"></a>
+
+Legato Sans uses the accepted Gavia Sans 0.6 drawings, an OFL derivative of Onest with independently authored numerals and 780 mapped characters. Six upright and italic presets (100, 300, 400, 500, 600, 700) supply the variable family. The frozen sources and verification hashes use their original Gavia names.
 
 ## Drawing and provenance
 
@@ -26,6 +28,7 @@ Use Python 3.12 and install the pinned tooling locally from the repository root:
 python -m pip install --target .tools/font-build -r scripts/fonts/requirements.txt
 python scripts/fonts/build_font.py
 python scripts/fonts/verify_fonts.py
+python scripts/fonts/build_legato.py --check
 ```
 
 The current workstation can use the Python binary returned by Codex `load_workspace_dependencies` when Python is absent from PATH. `.tools/` remains ignored. These dependencies are build/verification tools, not UI-kit runtime dependencies:
@@ -51,25 +54,25 @@ Exact source SHA256 values are recorded in the family manifest. Original source 
 
 ## Use and review
 
-Gavia Sans is the default proportional typeface of the Gavia and Gavia Dark themes. The canonical
-`packages/ui-kit/tokens/source.json` defines the `--wl-font` override for `gavia` and `gavia-dark`;
-`pnpm tokens:sync` generates the theme stylesheet, catalog and TypeScript values.
+Legato and Legato Dark select Legato Sans. Gavia and Gavia Dark select the original Gavia Sans family name.
+`packages/ui-kit/tokens/source.json` defines their `--wl-font` overrides.
+`pnpm tokens:sync` generates the theme stylesheets, catalog and TypeScript values.
 Headings inherit `--wl-font-heading`. Classic, Classic Dark and Newspaper retain their
 existing stacks, and `--wl-mono` remains monospace for code.
 
-Consumers explicitly import `gavia-ui/styles/fonts/gavia.css` alongside reset,
-base and `themes/gavia.css` or `themes/gavia-dark.css`. The playground already registers the faces.
-The library never imports CSS from JavaScript. Without the font stylesheet,
-the Gavia themes use their system fallback. See [font documentation](../../docs/font-gavia.md).
+Consumers import `legato-ui/styles/fonts/legato.css` alongside reset, base and the chosen theme.
+This registers Legato Sans and the Gavia aliases against the same web assets.
+`legato-ui/styles/fonts/gavia.css` still provides the original families on its own.
+The Playground registers the faces at startup. See the [consumer font guide](../../docs/guide/font-legato.md).
 
 The WOFF2/TTF files remain usable independently of Vue and components: register WOFF2 with ordinary `@font-face` on any site, or install TTF manually for native applications. The build does not install fonts into Windows.
 
-The live specimen is the integrated playground page `?view=font` and presents
-only accepted Gavia Sans 0.6: Russian and English text, upright/oblique samples,
+The Playground font page (`?view=font`) presents Legato Sans 0.6 with
+Russian and English text, upright/oblique samples,
 six weights and editable text. Its menu and theme selector are shared with the
 current playground; `?theme=...` survives navigation on local and Pages URLs.
 The hero heading uses the selected theme's display font; the letterforms,
-reading samples, numerals, weights and editable text retain Gavia Sans.
+reading samples, numerals, weights and editable text use Legato Sans.
 Font software and notices are shipped in `packages/ui-kit/fonts/gavia/`.
 Source fonts and their OFL notices stay in `sources/`, outside the npm archive.
 The font development history is retained on `codex/gavia-type-final` at `32ec879`;

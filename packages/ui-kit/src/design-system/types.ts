@@ -1,4 +1,4 @@
-export type WlThemeName = "gavia" | "white" | "graphite" | "newspaper" | "gavia-dark";
+export type WlThemeName = "gavia" | "white" | "graphite" | "newspaper" | "gavia-dark" | "legato" | "legato-dark";
 
 export type WlTokenLayer = "foundation" | "semantic" | "component";
 export type WlTokenType = "color" | "dimension" | "number" | "fontFamily" | "duration" | "shadow" | "string";
