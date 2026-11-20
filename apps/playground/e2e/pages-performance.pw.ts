@@ -1,5 +1,6 @@
 import { devices, expect, test } from "@playwright/test";
 import { writeFileSync } from "node:fs";
+import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
 
 interface LoadingMetrics {
   lcpMs: number;
@@ -26,13 +27,13 @@ function transferLimit(route: string): number {
   return route === "home" ? 600_000 : 650_000;
 }
 
-test("cold production loading budgets across five themes", async ({ browser, baseURL }, testInfo) => {
+test("cold production loading budgets across the shipped themes", async ({ browser, baseURL }, testInfo) => {
   test.setTimeout(240_000);
   const profile = loadingProfiles[testInfo.project.name as keyof typeof loadingProfiles];
   const { viewport, deviceScaleFactor } = profile;
   const measurements: Measurement[] = [];
   const routes = ["", "docs/components/WlButton/", "docs/components/WlSelect/", "docs/components/WlDialog/"];
-  for (const theme of ["gavia", "gavia-dark", "white", "graphite", "newspaper"]) {
+  for (const { name: theme } of wlDesignThemes) {
     for (const route of routes) {
       const context = await browser.newContext({ ...profile, locale: "en-US" });
       try {
@@ -100,7 +101,7 @@ test("cold production loading budgets across five themes", async ({ browser, bas
   const evidence = testInfo.outputPath("cold-loading-measurements.json");
   writeFileSync(evidence, JSON.stringify({ viewport, deviceScaleFactor, measurements }, null, 2));
   await testInfo.attach("cold-loading-measurements", { path: evidence, contentType: "application/json" });
-  expect(measurements).toHaveLength(20);
+  expect(measurements).toHaveLength(wlDesignThemes.length * routes.length);
   for (const row of measurements) {
     const label = `${row.theme} ${row.route} ${viewport.width}px`;
     expect.soft(row.lcpMs, `${label}: observed LCP`).toBeGreaterThan(0);

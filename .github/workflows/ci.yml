@@ -73,14 +73,14 @@ jobs:
         if: matrix.node-version == 24
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: gavia-ui-quality
+          name: legato-ui-quality
           path: apps/playground/src/project/quality-report.generated.json
           if-no-files-found: error
       - name: Save coverage report
         if: always() && matrix.node-version == 24
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: gavia-ui-coverage
+          name: legato-ui-coverage
           path: packages/ui-kit/coverage/
           if-no-files-found: ignore
       - name: Build playground
@@ -89,7 +89,7 @@ jobs:
         id: package
         run: |
           pnpm run pack
-          node -e "const p=require('./packages/ui-kit/package.json'); console.log('archive=gavia-ui-'+p.version+'.tgz')" >> "$GITHUB_OUTPUT"
+          node -e "const p=require('./packages/ui-kit/package.json'); console.log('archive=legato-ui-'+p.version+'.tgz')" >> "$GITHUB_OUTPUT"
       - name: Verify package contents
         run: |
           if tar -tf "packages/ui-kit/${{ steps.package.outputs.archive }}" | grep -E '(^|/)(node_modules|vue|primevue|primeicons)(/|$)'; then
@@ -106,7 +106,7 @@ jobs:
         if: matrix.node-version == '24'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: gavia-ui-candidate-package
+          name: legato-ui-candidate-package
           path: packages/ui-kit/${{ steps.package.outputs.archive }}
           if-no-files-found: error
   browser:
@@ -156,7 +156,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: gavia-ui-browser-results-${{ matrix.project }}
+          name: legato-ui-browser-results-${{ matrix.project }}
           path: |
             apps/playground/test-results/
             .tmp/package-verification/pnpm-vue-3.4.38-browser.json
@@ -187,7 +187,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: gavia-ui-visual-results
+          name: legato-ui-visual-results
           path: apps/playground/test-results/
           if-no-files-found: ignore
   visual-linux:
@@ -230,7 +230,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: gavia-ui-consumer-${{ matrix.manager }}
+          name: legato-ui-consumer-${{ matrix.manager }}
           path: .tmp/package-verification/
           include-hidden-files: true
           if-no-files-found: ignore

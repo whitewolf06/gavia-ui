@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 20
     needs:
       - checks
-    if: github.ref_type == 'tag' && github.repository == 'whitewolf06/gavia-ui' && github.ref_name != 'v0.7.0'
+    if: github.ref_type == 'tag' && github.repository_owner == 'whitewolf06' && github.repository_id == '1305645644' && github.ref_name != 'v0.7.0'
     permissions:
       contents: read
       id-token: write
@@ -40,7 +40,7 @@ jobs:
         id: package
         run: |
           pnpm run pack
-          node -e "const fs=require('node:fs'), crypto=require('node:crypto'); const p=require('./packages/ui-kit/package.json'); const archive='gavia-ui-'+p.version+'.tgz'; const bytes=fs.readFileSync('packages/ui-kit/'+archive); console.log('archive='+archive); console.log('version='+p.version); console.log('integrity=sha512-'+crypto.createHash('sha512').update(bytes).digest('base64'));" >> "$GITHUB_OUTPUT"
+          node -e "const fs=require('node:fs'), crypto=require('node:crypto'); const p=require('./packages/ui-kit/package.json'); const archive=p.name+'-'+p.version+'.tgz'; const bytes=fs.readFileSync('packages/ui-kit/'+archive); console.log('archive='+archive); console.log('version='+p.version); console.log('integrity=sha512-'+crypto.createHash('sha512').update(bytes).digest('base64'));" >> "$GITHUB_OUTPUT"
       - name: Set up cached browser
         uses: ./.github/actions/playwright
         with:
@@ -51,7 +51,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: gavia-ui-release-consumer
+          name: legato-ui-release-consumer
           path: .tmp/package-verification/pnpm-vue-3.4.38-browser.json
           include-hidden-files: true
           if-no-files-found: ignore
@@ -60,7 +60,7 @@ jobs:
       - name: Save checked release archive
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: gavia-ui-release-${{ steps.package.outputs.version }}
+          name: legato-ui-release-${{ steps.package.outputs.version }}
           path: packages/ui-kit/${{ steps.package.outputs.archive }}
           if-no-files-found: error
           retention-days: 30
@@ -72,7 +72,7 @@ jobs:
     name: Archive versioned playground
     needs:
       - publish
-    if: github.ref_type == 'tag' && github.repository == 'whitewolf06/gavia-ui' && github.ref_name != 'v0.7.0'
+    if: github.ref_type == 'tag' && github.repository_owner == 'whitewolf06' && github.repository_id == '1305645644' && github.ref_name != 'v0.7.0'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -86,7 +86,7 @@ jobs:
       - name: Download quality metrics measured in this workflow
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          name: gavia-ui-quality
+          name: legato-ui-quality
           path: .tmp/quality-report
       - name: Restore validated quality metrics for this revision
         run: pnpm quality:restore .tmp/quality-report
@@ -95,9 +95,11 @@ jobs:
       - run: pnpm release:preview
       - name: Prepare verified desktop font attachment
         run: node scripts/archive-fonts.mjs --output .tmp/release-previews/Gavia-Sans-TTF.zip
+      - name: Include the standalone Legato Sans download
+        run: cp apps/playground/public/downloads/Legato-Sans-*.zip .tmp/release-previews/
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: gavia-ui-playground-${{ github.ref_name }}
+          name: legato-ui-playground-${{ github.ref_name }}
           path: .tmp/release-previews/
           include-hidden-files: true
           if-no-files-found: error
@@ -113,6 +115,6 @@ jobs:
           prerelease=()
           if [ "$channel" = "next" ]; then prerelease=(--prerelease); fi
           if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
-            gh release create "$RELEASE_TAG" --verify-tag --title "Gavia UI $RELEASE_TAG" --notes-file .tmp/release-notes.md "${prerelease[@]}"
+            gh release create "$RELEASE_TAG" --verify-tag --title "Legato UI $RELEASE_TAG" --notes-file .tmp/release-notes.md "${prerelease[@]}"
           fi
           gh release upload "$RELEASE_TAG" .tmp/release-previews/* --clobber

@@ -24,7 +24,7 @@ builds omit the synthetic fixture. Local development may still use `pnpm dev`.
 `pages.yml` listens for completed **CI** runs. Only a successful canonical main
 push is eligible. It checks out the triggering `head_sha`, downloads quality data
 from that exact `run_id`, validates the report against that revision, builds and
-tests `/gavia-ui/`, and checks current main again immediately before deployment.
+tests `/legato-ui/`, and checks current main again immediately before deployment.
 PRs, forks, tags, failed runs and stale revisions cannot deploy.
 
 The Pages deployment job needs `pages: write` and `id-token: write`; the npm

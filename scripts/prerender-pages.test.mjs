@@ -4,7 +4,7 @@ import { test } from "node:test";
 import { prerenderServerReady, prerenderTargets, serializePrerenderHtml } from "./prerender-pages.mjs";
 
 test("recognizes its owned preview origin when terminal colors split the port", () => {
-  const output = "Local: \u001b[36mhttp://127.0.0.1:\u001b[1m4177\u001b[22m/gavia-ui/\u001b[39m";
+  const output = "Local: \u001b[36mhttp://127.0.0.1:\u001b[1m4177\u001b[22m/legato-ui/\u001b[39m";
   assert.equal(prerenderServerReady(output, "http://127.0.0.1:4177"), true);
   assert.equal(prerenderServerReady(output, "http://127.0.0.1:4178"), false);
 });
@@ -23,12 +23,12 @@ test("rejects traversal, query and encoded filesystem paths before writing", () 
 test("serialized HTML rewrites only owned-origin DOM URLs and retains public/external/fragment attributes", () => {
   const origin = "http://127.0.0.1:4177";
   const attributes = [
-    { href: origin + "/gavia-ui/ru/docs/theming/?theme=white#palette" },
-    { src: "//127.0.0.1:4177/gavia-ui/assets/hero.webp" },
-    { href: "https://whitewolf06.github.io/gavia-ui/ru/docs/theming/" },
+    { href: origin + "/legato-ui/ru/docs/theming/?theme=white#palette" },
+    { src: "//127.0.0.1:4177/legato-ui/assets/hero.webp" },
+    { href: "https://whitewolf06.github.io/legato-ui/ru/docs/theming/" },
     { action: "https://stackblitz.com/run?file=src%2FApp.vue" },
-    { href: "#api" }, { src: "/gavia-ui/assets/icon.svg" }, { href: "mailto:hello@example.test" },
-    { poster: origin + "/gavia-ui/assets/poster.png", formaction: origin + "/gavia-ui/action/" }
+    { href: "#api" }, { src: "/legato-ui/assets/icon.svg" }, { href: "mailto:hello@example.test" },
+    { poster: origin + "/legato-ui/assets/poster.png", formaction: origin + "/legato-ui/action/" }
   ];
   let mounted = true;
   let portalRemoved = false;
@@ -52,15 +52,15 @@ test("serialized HTML rewrites only owned-origin DOM URLs and retains public/ext
     assert.equal(deep, true);
     return clone;
   } } });
-  assert.equal(attributes[0].href, "/gavia-ui/ru/docs/theming/?theme=white#palette");
-  assert.equal(attributes[1].src, "/gavia-ui/assets/hero.webp");
-  assert.equal(attributes[2].href, "https://whitewolf06.github.io/gavia-ui/ru/docs/theming/");
+  assert.equal(attributes[0].href, "/legato-ui/ru/docs/theming/?theme=white#palette");
+  assert.equal(attributes[1].src, "/legato-ui/assets/hero.webp");
+  assert.equal(attributes[2].href, "https://whitewolf06.github.io/legato-ui/ru/docs/theming/");
   assert.equal(attributes[3].action, "https://stackblitz.com/run?file=src%2FApp.vue");
   assert.equal(attributes[4].href, "#api");
-  assert.equal(attributes[5].src, "/gavia-ui/assets/icon.svg");
+  assert.equal(attributes[5].src, "/legato-ui/assets/icon.svg");
   assert.equal(attributes[6].href, "mailto:hello@example.test");
-  assert.equal(attributes[7].poster, "/gavia-ui/assets/poster.png");
-  assert.equal(attributes[7].formaction, "/gavia-ui/action/");
+  assert.equal(attributes[7].poster, "/legato-ui/assets/poster.png");
+  assert.equal(attributes[7].formaction, "/legato-ui/action/");
   assert.equal(portalRemoved, true);
   assert.equal(html.startsWith("<!doctype html>\n"), true);
   assert.equal(html.includes(origin), false);

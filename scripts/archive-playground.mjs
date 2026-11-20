@@ -41,7 +41,7 @@ function main() {
     dirty: status.stdout.trim().length > 0,
     instructions: "Extract and serve over HTTP; open index.html. Query links select pages and themes."
   }, null, 2) + "\n");
-  const name = "gavia-ui-playground-" + pkg.version + ".tgz";
+  const name = "legato-ui-playground-" + pkg.version + ".tgz";
   const archive = join(out, name);
   const result = spawnSync("tar", ["-czf", archive, "-C", dist, "."], { stdio: "inherit" });
   if (result.error)

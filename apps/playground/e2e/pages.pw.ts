@@ -2,17 +2,18 @@ import { expect, type Page, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, URL as NodeURL } from "node:url";
 import { resolveWlToken, wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
-import { expectGaviaFontDownload } from "./font-download-helpers";
+import { normalizeWlHex } from "../../../packages/ui-kit/src/utils/color";
+import { expectLegatoFontDownload } from "./font-download-helpers";
 import { russianPlaygroundUrl } from "./playground-url";
-import { publishedVersion } from "./project-version";
+import { publishedName, publishedVersion } from "./project-version";
 import { chooseDropdownOption, chooseShowcaseTheme, copyCodePanel, expectMainViewCurrent, navigateDocumentationComponent, navigateMainView, openDocumentationMenu } from "./select-helpers";
 
 const packageMetadata = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../../../packages/ui-kit/package.json", import.meta.url)), "utf8")) as { name: string; version: string };
-const packageUrl = "https://www.npmjs.com/package/gavia-ui";
+const packageUrl = "https://www.npmjs.com/package/" + publishedName;
 
-const pagesPath = "/gavia-ui/";
+const pagesPath = "/legato-ui/";
 const projectTitle = "Changelog";
-const repositoryDocs = "https://github.com/whitewolf06/gavia-ui/blob/main/";
+const repositoryDocs = "https://github.com/whitewolf06/legato-ui/blob/main/";
 
 interface PageResources {
   failures: string[];
@@ -116,43 +117,43 @@ test("the former gallery component query redirects to its canonical Russian page
 
 test("Home metadata and the old project query survive refresh with production assets under the Pages prefix", async ({ page }) => {
   await page.goto(russianPlaygroundUrl(pagesPath));
-  await expect(page.getByTestId("home-page").getByRole("heading", { level: 1 })).toHaveText("Gavia UI");
+  await expect(page.getByTestId("home-page").getByRole("heading", { level: 1 })).toHaveText("Legato UI");
   expectPagesLocation(page);
   // Detect a named theme overridden by a later :root fallback stylesheet.
-  await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "gavia");
-  await expect.poll(() => page.evaluate(() => {
-    const style = getComputedStyle(document.documentElement);
-    return {
-      accent: style.getPropertyValue("--wl-accent").trim(),
-      background: style.getPropertyValue("--wl-bg").trim()
-    };
-  })).toEqual({ accent: resolveWlToken("--wl-accent", "gavia"), background: resolveWlToken("--wl-bg", "gavia") });
+  await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "legato");
+  await expect.poll(async () => {
+    const colors = await page.evaluate(() => {
+      const style = getComputedStyle(document.documentElement);
+      return ["--wl-accent", "--wl-bg"].map((token) => style.getPropertyValue(token).trim());
+    });
+    return colors.map(normalizeWlHex);
+  }).toEqual([resolveWlToken("--wl-accent", "legato"), resolveWlToken("--wl-bg", "legato")].map(normalizeWlHex));
   const heroArt = page.locator(".home-hero-art");
   await expect(heroArt).toHaveAttribute("alt", "");
   await expect.poll(() => heroArt.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
-  await expect(heroArt).toHaveAttribute("src", /^\/gavia-ui\/assets\/gavia-lake-hero/);
+  await expect(heroArt).toHaveAttribute("src", /^\/legato-ui\/assets\/duetto-arch/);
   await expect(page.getByTestId("project-version")).toHaveText(packageMetadata.version);
   await expect(page.locator(".pg-kit-version")).toHaveText(`v${packageMetadata.version}`);
   const packageStatus = page.getByTestId("project-npm-status");
   await expect(packageStatus).toContainText("доступен в npm");
-  await expect(packageStatus.getByRole("link", { name: `${packageMetadata.name}@${publishedVersion}`, exact: true })).toHaveAttribute("href", packageUrl);
-  await expect(packageStatus.locator("code")).toHaveText(`pnpm add ${packageMetadata.name}`);
+  await expect(packageStatus.getByRole("link", { name: `${publishedName}@${publishedVersion}`, exact: true })).toHaveAttribute("href", packageUrl);
+  await expect(packageStatus.locator("code")).toHaveText(`pnpm add ${publishedName}`);
 
   const logo = page.locator(".pg-logo");
   await expect(logo).toBeVisible();
-  await expect(logo).toHaveClass(/pg-logo-mask/);
-  await expect(logo).toHaveCSS("mask-image", /\/gavia-ui\/assets\/.*\.svg/);
+  await expect(logo).toHaveClass(/legato-wordmark/);
+  await expect(logo).toHaveCSS("mask-image", /\/legato-ui\/assets\/.*\.svg/);
   const imagePath = await logo.evaluate((element) => {
     const match = /url\(["']?(.*?)["']?\)/.exec(getComputedStyle(element).maskImage);
     return match ? new URL(match[1]!, window.location.href).pathname : "";
   });
-  expect(imagePath).toMatch(/^\/gavia-ui\/assets\//);
+  expect(imagePath).toMatch(/^\/legato-ui\/assets\//);
 
   const observed = resources.get(page)!;
   expect(observed.scripts.size).toBeGreaterThan(0);
   expect(observed.styles.size).toBeGreaterThan(0);
   for (const path of [...observed.scripts, ...observed.styles]) {
-    expect(path).toMatch(/^\/gavia-ui\/assets\//);
+    expect(path).toMatch(/^\/legato-ui\/assets\//);
   }
 
   // Keep the historical query as a tested alias; new navigation uses changelog.
@@ -216,24 +217,25 @@ test("Changelog retains repository documents and issue links, and all themes fit
   const links = await history.locator("a[href]").evaluateAll((anchors) =>
     anchors.map((anchor) => anchor.getAttribute("href")!)
   );
-  const issues = links.filter((href) => href.startsWith("https://github.com/whitewolf06/gavia-ui/issues/"));
-  for (const href of issues) expect(href).toMatch(/^https:\/\/github\.com\/whitewolf06\/gavia-ui\/issues\/[1-9]\d*$/);
-  expect(issues).toEqual(expect.arrayContaining([4, 5, 6, 7].map((issue) => `https://github.com/whitewolf06/gavia-ui/issues/${issue}`)));
+  const issues = links.filter((href) => href.startsWith("https://github.com/whitewolf06/legato-ui/issues/"));
+  for (const href of issues) expect(href).toMatch(/^https:\/\/github\.com\/whitewolf06\/legato-ui\/issues\/[1-9]\d*$/);
+  expect(issues).toEqual(expect.arrayContaining([4, 5, 6, 7].map((issue) => `https://github.com/whitewolf06/legato-ui/issues/${issue}`)));
   const documents = links.filter((href) => !href.startsWith("#") && !issues.includes(href));
   expect(documents.length).toBeGreaterThan(0);
-  for (const href of documents) expect(href).toMatch(/^https:\/\/github\.com\/whitewolf06\/gavia-ui\/blob\/main\//);
+  for (const href of documents) expect(href).toMatch(/^https:\/\/github\.com\/whitewolf06\/legato-ui\/blob\/main\//);
   expect(documents).toContain(`${repositoryDocs}docs/migration-gavia.md`);
 
-  const backgroundColors: string[] = [];
+  const palettes: string[] = [];
   for (const { label, name: theme } of wlDesignThemes) {
     await chooseShowcaseTheme(page, label);
     await expect(page.locator("html")).toHaveAttribute("data-wl-theme", theme);
-    backgroundColors.push(await page.evaluate(() =>
-      getComputedStyle(document.documentElement).getPropertyValue("--wl-bg").trim()
-    ));
+    palettes.push(await page.evaluate(() => {
+      const style = getComputedStyle(document.documentElement);
+      return ["--wl-bg", "--wl-accent"].map((token) => style.getPropertyValue(token).trim()).join("/");
+    }));
     await expectNoPageOverflow(page);
   }
-  expect(new Set(backgroundColors).size).toBe(wlDesignThemes.length);
+  expect(new Set(palettes).size).toBe(wlDesignThemes.length);
   expectPagesLocation(page, "changelog");
 });
 
@@ -316,7 +318,7 @@ test("Theme builder scopes live colors, restores its draft and exports a working
   const headerSearch = page.locator(".pg-search");
   await expect(headerSearch).toHaveText("Поиск");
   await expect(headerSearch).toHaveAttribute("title", "Поиск");
-  await expect(page.locator(".pg-logo")).toHaveCSS("width", page.viewportSize()!.width <= 400 ? "28px" : page.viewportSize()!.width <= 700 ? "32px" : "36px");
+  await expect(page.locator(".pg-logo")).toHaveCSS("width", page.viewportSize()!.width <= 360 ? "28px" : page.viewportSize()!.width <= 760 ? "88px" : "104px");
   await navigateMainView(page, "Подбор темы");
   await expect(page).toHaveURL((url) => url.pathname === pagesPath + "ru/theme-builder/");
   expectPagesLocation(page, "theme-builder");
@@ -415,13 +417,13 @@ test("font presentation preserves theme, faces and anchors under the Pages subpa
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "graphite");
   const headingFamily = await fontPage.locator(".wl-page-header__title").evaluate((element) => getComputedStyle(element).fontFamily);
   await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", headingFamily);
-  await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Gavia Sans(?: Core)?"?,/);
+  await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Legato Sans(?: Core)?"?,/);
   const loaded = await page.evaluate(async () => {
-    const faces = await document.fonts.load("italic 600 16px 'Gavia Sans'", "Гавиа Gavia 0123456789");
+    const faces = await document.fonts.load("italic 600 16px 'Legato Sans'", "Гавиа Gavia 0123456789");
     return faces.map((face) => ({ family: face.family, weight: face.weight, style: face.style, status: face.status }));
   });
   expect(loaded).toEqual(Array.from({ length: 1 }, () => ({
-    family: "Gavia Sans", weight: "100 700", style: "italic", status: "loaded"
+    family: "Legato Sans", weight: "100 700", style: "italic", status: "loaded"
   })));
   expectPagesLocation(page, "font");
   await expectNoPageOverflow(page);
@@ -445,11 +447,11 @@ test("standalone font ZIP downloads from the Pages subpath and footer", async ({
   await page.goto(russianPlaygroundUrl(pagesPath + "?view=font&theme=gavia"));
   const font = page.getByTestId("font-page");
   await expect(font).toBeVisible();
-  const link = font.getByRole("link", { name: "Скачать Gavia Sans 0.6", exact: true }).first();
-  await expect(link).toHaveAttribute("href", pagesPath + "downloads/Gavia-Sans-0.6.zip");
-  await expectGaviaFontDownload(page, link);
-  const footer = page.locator(".pg-footer").getByRole("link", { name: "Скачать шрифт Gavia Sans", exact: true });
-  await expect(footer).toHaveAttribute("href", pagesPath + "downloads/Gavia-Sans-0.6.zip");
+  const link = font.getByRole("link", { name: "Скачать Legato Sans 0.6", exact: true }).first();
+  await expect(link).toHaveAttribute("href", pagesPath + "downloads/Legato-Sans-0.6.zip");
+  await expectLegatoFontDownload(page, link);
+  const footer = page.locator(".pg-footer").getByRole("link", { name: "Скачать шрифт Legato Sans", exact: true });
+  await expect(footer).toHaveAttribute("href", pagesPath + "downloads/Legato-Sans-0.6.zip");
 });
 
 test("quality documentation keeps bookmarked anchors and theme links under the Pages prefix", async ({ page }) => {

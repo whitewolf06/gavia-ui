@@ -16,7 +16,7 @@ export function dockerVisualPlan(root, args = []) {
   }
   const version = JSON.parse(readFileSync(join(root, "package.json"), "utf8")).devDependencies["@playwright/test"];
   if (!/^\d+\.\d+\.\d+$/.test(version)) throw new Error("Pin @playwright/test exactly before running its Docker image");
-  const image = `gavia-ui-visual:playwright-${version}`;
+  const image = `legato-ui-visual:playwright-${version}`;
   const baselines = join(root, "apps/playground/e2e/visual-baselines-linux");
   const results = join(root, ".tmp/visual-linux");
   return {

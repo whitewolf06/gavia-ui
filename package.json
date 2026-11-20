@@ -25,7 +25,7 @@
     "icons:check": "pnpm --filter legato-ui icons:check",
     "tokens:sync": "pnpm --filter legato-ui tokens:sync",
     "tokens:check": "pnpm --filter legato-ui tokens:check",
-    "build:pages": "pnpm --filter legato-ui-playground build --base=/gavia-ui/",
+    "build:pages": "pnpm --filter legato-ui-playground build --base=/legato-ui/",
     "pages:prerender": "node scripts/prerender-pages.mjs",
     "test:pages": "pnpm exec playwright test -c apps/playground/playwright.pages.config.ts",
     "verify:compatibility": "node scripts/check-compatibility.mjs",
