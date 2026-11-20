@@ -9,11 +9,11 @@ for 1.x will be documented when that line is released.
 
 ## Report a vulnerability privately
 
-Use GitHub's [Report a vulnerability](https://github.com/whitewolf06/gavia-ui/security/advisories/new)
+Use GitHub's [Report a vulnerability](https://github.com/whitewolf06/legato-ui/security/advisories/new)
 form when private vulnerability reporting is enabled for the repository. If the
 form is unavailable, email the maintainer at
 [gorbach.d@outlook.com](mailto:gorbach.d@outlook.com) with a subject beginning
-`Gavia UI security`. The presence of this policy does not imply that a GitHub
+`Legato UI security`. The presence of this policy does not imply that a GitHub
 repository setting has already been enabled.
 
 Include the affected package version, a minimal reproduction, the security
@@ -27,4 +27,4 @@ does not promise a response-time SLA. If you need to follow up, use the same
 private channel rather than posting details publicly.
 
 General bugs and feature requests belong in
-[GitHub Issues](https://github.com/whitewolf06/gavia-ui/issues).
+[GitHub Issues](https://github.com/whitewolf06/legato-ui/issues).

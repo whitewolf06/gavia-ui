@@ -35,8 +35,8 @@ screen reader using the [NVDA user guide](https://download.nvaccess.org/document
 [VoiceOver Mac guide](https://support.apple.com/guide/voiceover/welcome/mac) or
 [VoiceOver iPhone guide](https://support.apple.com/guide/iphone/turn-on-and-practice-voiceover-iph3e2e415f/ios).
 
-For each setup, review English and Russian labels. Exercise all five themes:
-Gavia, Gavia Dark, Classic, Classic Dark and Newspaper. Record each theme in the
+For each setup, review English and Russian labels in all seven themes, including
+Legato, Legato Dark, Gavia, Gavia Dark, Classic, Classic Dark and Newspaper. Record each theme in the
 result; a theme-independent spoken outcome may refer to one retained transcript,
 but focus visibility, zoom and contrast need their own theme observations.
 Check desktop at normal and 200% zoom, and mobile in portrait and landscape.

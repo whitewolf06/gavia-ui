@@ -1,4 +1,4 @@
-# Gavia UI migration guide
+# Legato UI migration guide
 
 Choose the section for the version or contract you are changing. Historical
 sections describe that release; they do not report current validation or a new
@@ -7,9 +7,28 @@ publication. Stable public namespaces remain `Wl*`, `wl-*` and `--wl-*`.
 <a id="migration-1-2"></a>
 ## Upgrading from 1.1 to 1.2 (Unreleased)
 
-The optional `gavia-ui/theme` entry adds `createWlTheme` and
+Starting with 1.2.0, new releases use the npm name `legato-ui`. The published
+`gavia-ui@1.1.0` remains installable. After 1.2.0 is published, choose one dependency
+for your application:
+
+- Install `legato-ui@^1.2.0` and change the package prefix in JavaScript, TypeScript and CSS imports from `gavia-ui` to `legato-ui`.
+- To keep the existing imports, use `"gavia-ui": "npm:legato-ui@^1.2.0"` in `dependencies` and refresh the lockfile. The alias resolves the same package, including CSS, fonts and subpaths.
+
+The Playground is now called Legato UI. System mode selects Legato or Legato Dark.
+Saved choices and direct theme links still take precedence. Both names are
+appended to the public theme catalog. Add `legato` and `legato-dark` to exhaustive
+theme maps. Import `legato-ui/styles/fonts/legato.css`, load the matching CSS from
+`legato-ui/themes/` and set `data-wl-theme` to the chosen identifier.
+
+Legato Sans is the new web and desktop family name. Its stylesheet also registers
+`Gavia Sans`, `Gavia` and their existing Core faces against the same WOFF2 URLs.
+The old font stylesheet, Gavia themes and Gavia Sans ZIP remain available.
+Install the TTFs from the Legato Sans ZIP to select the new name in desktop apps.
+Existing documents can continue using an installed copy of Gavia Sans.
+
+The optional `legato-ui/theme` entry adds `createWlTheme` and
 `parseWlThemeConfig`; existing exports, explicit CSS imports and Vue peer support
-are unchanged. The `gavia-theme` Node CLI uses that same generator. Its Node
+are unchanged. The `legato-theme` Node CLI uses that same generator. Its Node
 22.13+ requirement applies to the command, not to browser component execution.
 
 New Theme Builder downloads use an input-only `schemaVersion: 2` config.
@@ -308,7 +327,7 @@ Applications importing `gavia-ui/styles/fonts/gavia.css` need no change. If you
 previously imported a TTF or QA report through `gavia-ui/fonts/gavia/*`, obtain
 it from the repository or the full font download instead. The font page still
 builds its archive from repository sources and includes both TTF and WOFF2:
-[Gavia Sans download](https://whitewolf06.github.io/gavia-ui/?view=font).
+[Gavia Sans download](https://whitewolf06.github.io/legato-ui/?view=font).
 Versioned font attachments are listed with the corresponding GitHub Release.
 
 The Gavia themes now prefer the optional `Gavia Sans Core` family and fall back
@@ -1004,8 +1023,8 @@ is preserved; input updates the model after composition ends.
 
 [gavia-ui@0.7.0](https://www.npmjs.com/package/gavia-ui) was published
 on 2026-10-05 (Moscow) as the first release under the new name on public npm.
-The [GitHub Pages playground](https://whitewolf06.github.io/gavia-ui/) is published.
-Source is in the [personal public repository](https://github.com/whitewolf06/gavia-ui).
+The [GitHub Pages playground](https://whitewolf06.github.io/legato-ui/) is published.
+Source is in the [personal public repository](https://github.com/whitewolf06/legato-ui).
 Creator and maintainer: [Dmitry Gorbach](https://github.com/whitewolf06).
 
 <a id="migration-0-7-required-package-path-change"></a>
@@ -1073,7 +1092,7 @@ replace PrimeVue `<Column>` with `columns` and `cell-*` slots.
 
 The playground includes “About the project” with author, license and the changelog
 from the root source. The published playground is available on
-[GitHub Pages](https://whitewolf06.github.io/gavia-ui/?view=project);
+[GitHub Pages](https://whitewolf06.github.io/legato-ui/?view=project);
 the [hosting guide](maintainers/hosting.md) explains its build and updates.
 
 The local browser check variable is `GAVIA_E2E_BASE_URL`.
@@ -1318,11 +1337,11 @@ use `columns` and `cell-*` (see `migration-0.5.md`).
 ## Migration to Gavia UI
 
 Gavia UI is a component library and design system for Vue 3.
-Repository: `https://github.com/whitewolf06/gavia-ui`.
+Repository: `https://github.com/whitewolf06/legato-ui`.
 The first package, [gavia-ui@0.7.0](https://www.npmjs.com/package/gavia-ui), was published
 to public npm on 2026-10-05 (Moscow).
 The new-name upgrade is described in the [0.7 migration](migration.md#migration-0-7);
-documentation is available on [GitHub Pages](https://whitewolf06.github.io/gavia-ui/).
+documentation is available on [GitHub Pages](https://whitewolf06.github.io/legato-ui/).
 
 <a id="migration-gavia-updating-the-npm-dependency"></a>
 ### Updating the npm dependency

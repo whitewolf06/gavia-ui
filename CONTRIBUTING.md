@@ -1,7 +1,7 @@
-# Contributing to Gavia UI
+# Contributing to Legato UI
 
 Start with the [repository contract](AGENTS.md), [architecture](docs/maintainers/architecture.md)
-and [design system](docs/reference/design-system.md). Gavia UI uses Vue 3, strict TypeScript,
+and [design system](docs/reference/design-system.md). Legato UI uses Vue 3, strict TypeScript,
 plain CSS and pnpm. Read the [Code of Conduct](CODE_OF_CONDUCT.md); report
 vulnerabilities through [the security policy](SECURITY.md).
 
@@ -24,7 +24,7 @@ select it as the user config for the current shell session. Do not change a
 contributor's global npm configuration as part of setup.
 
 Create a branch from current `main` (`codex/` is the default prefix for agents).
-Preserve unrelated edits. The Playground resolves public `gavia-ui` imports to
+Preserve unrelated edits. The Playground resolves public `legato-ui` imports to
 library source for HMR and typechecking, so it can start without a library build:
 
 ```sh
@@ -78,8 +78,8 @@ generated CSS, token catalogs or icon maps by hand.
 Use focused checks while iterating:
 
 ```sh
-pnpm --filter gavia-ui exec vitest run tests/<affected>.test.ts
-pnpm --filter gavia-ui typecheck
+pnpm --filter legato-ui exec vitest run tests/<affected>.test.ts
+pnpm --filter legato-ui typecheck
 pnpm exec eslint path/to/changed-file.vue
 ```
 
@@ -109,8 +109,9 @@ separate explicit instruction. The complete release checklist is in
 [quality.md](docs/maintainers/quality.md). Use `pnpm run pack` for the library; plain root
 `pnpm pack` packages the workspace root.
 
-Visual checks cover desktop/mobile in Gavia, Gavia Dark, Classic, Classic Dark and
-Newspaper. Windows/Chromium is the primary visual baseline; both Gavia themes use
+The accessibility and Pages suites exercise all seven themes. Desktop/mobile PNG
+comparisons cover Gavia, Gavia Dark, Classic, Classic Dark and Newspaper.
+Windows/Chromium is the primary visual baseline; both Gavia themes use
 real Gavia Sans. Docker/Linux checks are supplemental and need separate baselines.
 Never replace Windows PNGs with Linux screenshots. Before updating any baseline,
 inspect expected/actual/diff and follow the
@@ -127,7 +128,7 @@ Use Conventional Commits (`feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore
 one logical change per commit. Agents show the result before asking for explicit
 commit approval unless automatic commits were authorized for this session.
 
-For a package change, run `pnpm changeset`, select `gavia-ui`, choose patch or
+For a package change, run `pnpm changeset`, select `legato-ui`, choose patch or
 minor and describe the resulting user behavior. Patch preserves the public
 contract; a 0.x minor may include a documented breaking change and migration.
 After 1.0, incompatibilities need a major. Do not bump versions merely to prepare
@@ -152,14 +153,14 @@ git config blame.ignoreRevsFile .git-blame-ignore-revs
 ## Community and releases
 
 Bug reports and feature requests use the English
-[issue forms](https://github.com/whitewolf06/gavia-ui/issues/new/choose). Include
-a minimal reproduction and the installed Gavia UI/Vue versions. Questions and
-RFCs may use [Discussions](https://github.com/whitewolf06/gavia-ui/discussions)
+[issue forms](https://github.com/whitewolf06/legato-ui/issues/new/choose). Include
+a minimal reproduction and the installed Legato UI/Vue versions. Questions and
+RFCs may use [Discussions](https://github.com/whitewolf06/legato-ui/discussions)
 when enabled; the issue forms remain available otherwise. Labels and starter
 issue drafts are prepared in [.github/COMMUNITY_SETUP.md](.github/COMMUNITY_SETUP.md).
 Their presence does not enable repository settings or create issues.
 
 Release, push, package publication and external announcements require separate
-authorization. Pages is built from the existing Playground at `/gavia-ui/` and
+authorization. Pages is built from the existing Playground at `/legato-ui/` and
 deploys from `main` only after gates for the same commit. A successful local
 build, push or tag is not proof of package publication, live Pages or manual UAT.

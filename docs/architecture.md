@@ -1,11 +1,11 @@
-# Gavia UI architecture
+# Legato UI architecture
 
-**This guide moved.** Canonical guide: [Gavia UI architecture](maintainers/architecture.md).
+**This guide moved.** Canonical guide: [Legato UI architecture](maintainers/architecture.md).
 
 This compatibility page preserves old URLs and fragment links. Use the canonical
 guide for current instructions.
 
-<a id="gavia-ui-architecture"></a>
+<a id="legato-ui-architecture"></a>
 <a id="package-boundaries"></a>
 <a id="responsibility-boundaries-and-solid"></a>
 <a id="data-type-contracts"></a>

@@ -1,64 +1,66 @@
 <p align="center">
-  <img src="docs/brand/gavia-ui-mark-lake.svg" alt="A loon — the Gavia UI mark" width="80" height="80">
+  <img src="apps/playground/src/assets/brand/duetto/legato-favicon.svg" alt="Legato UI" width="80" height="80">
 </p>
 
-# Gavia UI
+# Legato UI
 
-A Vue 3 + TypeScript component library with five themes and explicit CSS imports.
+A Vue 3 + TypeScript component library with seven themes and explicit CSS imports.
 
-[![npm version](https://img.shields.io/npm/v/gavia-ui)](https://www.npmjs.com/package/gavia-ui)
-[![CI](https://github.com/whitewolf06/gavia-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/whitewolf06/gavia-ui/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/whitewolf06/legato-ui)](https://github.com/whitewolf06/legato-ui/releases/latest)
+[![CI](https://github.com/whitewolf06/legato-ui/actions/workflows/ci.yml/badge.svg)](https://github.com/whitewolf06/legato-ui/actions/workflows/ci.yml)
 [![Unit line coverage — saved snapshot](docs/quality-coverage.svg)](docs/maintainers/quality.md)
 [![MIT license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-Install the current stable release from npm `latest`; the npm badge above shows
-its version. See the [latest release](https://github.com/whitewolf06/gavia-ui/releases/latest)
-and [migration guide](docs/migration.md) for release notes and upgrade steps.
+Starting with 1.2.0, the npm package is `legato-ui`. The previous release remains
+available as [gavia-ui@1.1.0](https://www.npmjs.com/package/gavia-ui/v/1.1.0).
+The [migration guide](docs/migration.md#migration-1-2) includes an alias for existing imports.
 When upgrading from 0.x, start with the [1.0 migration](docs/migration.md#migration-1-0).
 
-[![Real Gavia UI fields, inputs, switch and button in Gavia and Gavia Dark](docs/brand/readme-preview.webp)](https://whitewolf06.github.io/gavia-ui/)
+[![Real Legato UI fields, inputs, switch and button in Gavia and Gavia Dark](docs/brand/readme-preview.webp)](https://whitewolf06.github.io/legato-ui/)
 
-[Documentation](https://whitewolf06.github.io/gavia-ui/docs/) ·
-[Playground](https://whitewolf06.github.io/gavia-ui/) ·
-[Theme builder](https://whitewolf06.github.io/gavia-ui/?view=theme-builder) ·
-[Русский](https://whitewolf06.github.io/gavia-ui/ru/docs/)
+[Documentation](https://whitewolf06.github.io/legato-ui/docs/) ·
+[Playground](https://whitewolf06.github.io/legato-ui/) ·
+[Theme builder](https://whitewolf06.github.io/legato-ui/?view=theme-builder) ·
+[Русский](https://whitewolf06.github.io/legato-ui/ru/docs/)
 
 - Vue is the only required peer; the library has no runtime dependencies.
 - Native Vue components, typed models, slots and application-owned routing/data.
-- Five themes share CSS tokens and component code; reset and styles stay opt-in.
+- Seven themes share CSS tokens and component code; reset and styles stay opt-in.
 - App-scoped configuration, overlays, confirmation and notification services.
 - Working SFC examples and recipes use the same source as the copyable code.
 - Contract tests cover keyboard, SSR/hydration, types and installed-package consumers.
 
 ## Quick start
 
+For Legato UI 1.2.0 and later, install the package and its Vue peer.
+
 ```sh
-pnpm add gavia-ui vue
+pnpm add legato-ui vue
 # or
-npm install gavia-ui vue
+npm install legato-ui vue
 # or
-bun add gavia-ui vue
+bun add legato-ui vue
 ```
 
-Import styles once in your application's entry point, then select Gavia:
+Import styles once in your application's entry point, then select Legato.
 
 ```ts
 // main.ts
 import { createApp } from "vue";
-import "gavia-ui/styles/reset.css"; // optional browser reset
-import "gavia-ui/styles/base.css";
-import "gavia-ui/styles/primitives.css"; // optional layout and typography classes
-import "gavia-ui/styles/fonts/gavia.css";
-import "gavia-ui/themes/gavia.css";
+import "legato-ui/styles/reset.css"; // optional browser reset
+import "legato-ui/styles/base.css";
+import "legato-ui/styles/primitives.css"; // optional layout and typography classes
+import "legato-ui/styles/fonts/legato.css";
+import "legato-ui/themes/legato.css";
 import App from "./App.vue";
 
-document.documentElement.dataset.wlTheme = "gavia";
+document.documentElement.dataset.wlTheme = "legato";
 createApp(App).mount("#app");
 ```
 
 ```vue
 <script setup lang="ts">
-import { WlButton } from "gavia-ui";
+import { WlButton } from "legato-ui";
 </script>
 
 <template>
@@ -66,17 +68,17 @@ import { WlButton } from "gavia-ui";
 </template>
 ```
 
-Instead of setting `dataset.wlTheme`, add `<html data-wl-theme="gavia">`
+Instead of setting `dataset.wlTheme`, add `<html data-wl-theme="legato">`
 to `index.html`. `WlConfig` is not required for basic setup.
 The reset and primitives imports are optional; keep the reset before base styles.
 [Installation and fonts](docs/guide/getting-started.md) · [Migration guide](docs/migration.md).
 
-**Gavia Sans** supplies Cyrillic and Latin, variable weights 100–700 and upright/italic faces.
-Gavia themes use `"Gavia Sans Core", "Gavia Sans", ...` for compact ordinary
+**Legato Sans** supplies Cyrillic and Latin, variable weights 100–700 and upright/italic faces.
+Legato uses `"Legato Sans Core", "Legato Sans", ...` for compact ordinary
 text and complete fallback for combining clusters. Firefox uses the complete face
 to preserve mark placement. Both original family names remain available.
 WOFF2 web fonts ship in npm; TTF desktop files are available through the
-[font download](https://whitewolf06.github.io/gavia-ui/font/).
+[font download](https://whitewolf06.github.io/legato-ui/font/).
 Classic, Classic Dark and Newspaper retain their own typography.
 
 [Public TypeScript contracts and upgrading](docs/migration.md).
@@ -86,13 +88,16 @@ Measurement dates and scope are documented in [quality and compatibility](docs/m
 
 ### Primary themes
 
+The Playground follows the system appearance with **Legato** and **Legato Dark**. The dark theme pairs ink-colored surfaces with pale indigo, rose and saffron.
 **Gavia** and **Gavia Dark** are light and dark themes with a lake-inspired palette,
 shared component dimensions and **Gavia Sans**.
 
 | Theme | Mode | `data-wl-theme` | Package CSS |
 | --- | --- | --- | --- |
-| **Gavia** | Light | `gavia` | `gavia-ui/themes/gavia.css` |
-| **Gavia Dark** | Dark | `gavia-dark` | `gavia-ui/themes/gavia-dark.css` |
+| **Legato** | Light | `legato` | `legato-ui/themes/legato.css` |
+| **Legato Dark** | Dark | `legato-dark` | `legato-ui/themes/legato-dark.css` |
+| **Gavia** | Light | `gavia` | `legato-ui/themes/gavia.css` |
+| **Gavia Dark** | Dark | `gavia-dark` | `legato-ui/themes/gavia-dark.css` |
 
 Gavia Dark was added in 0.10.0.
 
@@ -104,22 +109,22 @@ All themes share the same components.
 
 | Theme | Appearance | `data-wl-theme` | Package CSS |
 | --- | --- | --- | --- |
-| **Classic** | Light, neutral | `white` | `gavia-ui/themes/white.css` |
-| **Classic Dark** | Dark, neutral | `graphite` | `gavia-ui/themes/graphite.css` |
-| **Newspaper** | Light, with serif headings | `newspaper` | `gavia-ui/themes/newspaper.css` |
+| **Classic** | Light, neutral | `white` | `legato-ui/themes/white.css` |
+| **Classic Dark** | Dark, neutral | `graphite` | `legato-ui/themes/graphite.css` |
+| **Newspaper** | Light, with serif headings | `newspaper` | `legato-ui/themes/newspaper.css` |
 
-Choose the theme CSS and identifier from the table. Both primary themes also
-use `gavia-ui/styles/fonts/gavia.css`; without it, they use a system font.
+Import `legato-ui/styles/fonts/legato.css` for Legato Sans and the Gavia web aliases.
+Existing imports of `legato-ui/styles/fonts/gavia.css` still work.
 Without an explicit theme, the library uses Classic (`white`).
 [Theme names and compatibility](docs/migration.md#migration-themes).
-[Detailed setup, API and accessibility](https://whitewolf06.github.io/gavia-ui/docs/).
+[Detailed setup, API and accessibility](https://whitewolf06.github.io/legato-ui/docs/).
 
 ## Documentation and contributing
 
-- [Component guides](https://whitewolf06.github.io/gavia-ui/docs/) — examples, controls, API and keyboard states.
+- [Component guides](https://whitewolf06.github.io/legato-ui/docs/) — examples, controls, API and keyboard states.
 - [Design system](docs/reference/design-system.md) — tokens, typography, states and complete interface flows.
 - [CSS primitives](docs/reference/primitives.md) and [responsiveness](docs/reference/responsiveness.md) — layout and sizing rules.
-- [Gavia / Gavia Dark themes](docs/guide/theming.md) and [Gavia Sans](docs/guide/font-gavia.md) — palette, setup, specimens and licenses.
+- [Theme setup](docs/guide/theming.md) and [Legato Sans](docs/guide/font-legato.md) — palette, setup, specimens and licenses.
 - [Changelog](CHANGELOG.md), [migration guide](docs/migration.md) and [archived release evidence](docs/archive/release-history.md) — release history and application upgrades.
 - [Localization](docs/guide/localization.md) — explicit library locale and shared EN/RU Playground.
 - [Playground architecture](docs/maintainers/playground.md) and [Pages publication](docs/maintainers/hosting.md).
@@ -130,13 +135,13 @@ Hi! I'm [Dmitry Gorbach](https://github.com/whitewolf06). I've been working in c
 
 I'd wanted to build my own UI kit for pet projects for a long time. There are plenty of existing libraries, but I wanted to decide which components I need, how they behave and where the project goes. And choose dependencies to suit those needs.
 
-That's how Gavia UI started. At first, it was a small set of components for personal projects. As it grew, I decided to try turning it into a full open-source library. Perhaps some of my approaches and solutions will be useful to others.
+That's how Legato UI started. At first, it was a small set of components for personal projects. As it grew, I decided to try turning it into a full open-source library. Perhaps some of my approaches and solutions will be useful to others.
 
 I enjoy building my own tools, experimenting with technology and turning ideas into working products. I'm also exploring AI assistants and agent-based development, combining them with my engineering experience.
 
 You can contact me through my [personal website](https://gorbach-dev.ru/).
 
-Report bugs and suggestions in [GitHub Issues](https://github.com/whitewolf06/gavia-ui/issues).
+Report bugs and suggestions in [GitHub Issues](https://github.com/whitewolf06/legato-ui/issues).
 Before changing code, read the [contributing guide](CONTRIBUTING.md).
 
 **UI kit code is MIT-licensed.** You may use, modify and distribute the library,

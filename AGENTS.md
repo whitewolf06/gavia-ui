@@ -1,4 +1,4 @@
-# AGENTS.md — Gavia UI
+# AGENTS.md — Legato UI
 
 This is the shared contract for anyone changing this repository. Read
 `AGENTS.local.md` too when it exists; it describes the local workstation and is
@@ -6,7 +6,7 @@ not committed. Explicit user instructions for the current task take priority.
 
 ## 1. Project and repository map
 
-Gavia UI is an independent Vue 3 component library and design system.
+Legato UI is an independent Vue 3 component library and design system.
 `packages/ui-kit` is the published package; `apps/playground` is its documentation
 site and interaction test bench. Business logic belongs in consumer applications.
 
@@ -16,7 +16,7 @@ site and interaction test bench. Business logic belongs in consumer applications
 | `packages/ui-kit/src/manifest/` | Public props, slots, events, model and introduction-version metadata |
 | `packages/ui-kit/src/composables/`, `src/utils/`, `src/services/` | Reusable behavior, utilities and app-scoped state |
 | `packages/ui-kit/src/pt-types.ts` | Pass-through section contracts |
-| `packages/ui-kit/styles/`, `themes/` | Explicitly imported CSS and five theme files |
+| `packages/ui-kit/styles/`, `themes/` | Explicitly imported CSS and seven theme files |
 | `packages/ui-kit/tokens/source.json` | Canonical token source for generated CSS, JSON and TypeScript |
 | `packages/ui-kit/icons/` | Canonical SVG icon sources |
 | `packages/ui-kit/tests/` | Unit, contract and compile-only consumer tests; immutable compatibility fixtures |
@@ -46,7 +46,8 @@ site and interaction test bench. Business logic belongs in consumer applications
   DOM or `window` during module import; use lifecycle hooks.
 - Build ESM with declarations. Preserve every subpath in the package's `exports`:
   `.`, `styles/base.css`, `styles/reset.css`, `styles/primitives.css`,
-  `styles/fonts/gavia.css`, `themes/*.css`, `fonts/gavia/*`, `manifest.json`,
+  `styles/fonts/gavia.css`, `styles/fonts/legato.css`, `themes/*.css`, `fonts/gavia/*`,
+  `fonts/legato/Legato-*.woff2`, `manifest.json`,
   `design-tokens.json`, `utils`, `composables`, `theme` and `package.json`. Update this list with added subpaths;
   exports changes require compatibility and migration review.
 
@@ -62,7 +63,7 @@ site and interaction test bench. Business logic belongs in consumer applications
   pairs need contrast checks. Preserve `tests/fixtures/tokens-0.5.json`; changing
   historical values requires a migration. See `docs/reference/design-system.md`.
 - Themes are token overrides in separate CSS files, selected with `data-wl-theme`
-  or explicit imports. Ship Gavia (`gavia`), Gavia Dark (`gavia-dark`), Classic
+  or explicit imports. Ship Legato (`legato`), Legato Dark (`legato-dark`), Gavia (`gavia`), Gavia Dark (`gavia-dark`), Classic
   (`white`), Classic Dark (`graphite`) and Newspaper (`newspaper`). Keep `white`,
   `graphite` and CSS paths stable. Do not fork component code for a theme.
 - Consumers import reset and styles explicitly; never import CSS from JS/TS.
@@ -95,8 +96,8 @@ affected behavior; do not create tests that merely repeat implementation or for
 trivial documentation edits.
 
 ```sh
-pnpm --filter gavia-ui exec vitest run tests/<affected>.test.ts
-pnpm --filter gavia-ui typecheck
+pnpm --filter legato-ui exec vitest run tests/<affected>.test.ts
+pnpm --filter legato-ui typecheck
 pnpm exec eslint path/to/changed-file.vue
 pnpm tokens:check
 pnpm icons:check
@@ -183,7 +184,7 @@ Also follow `docs/maintainers/quality.md`: `pnpm verify:compatibility`, `pnpm te
 applicable. Inspect the tar contents: Vue must not be bundled. Use `pnpm run pack`
 for the library; plain root `pnpm pack` invokes pnpm's workspace-root packaging.
 
-Verify interactions on desktop/mobile in all five themes. Primary visual
+Verify interactions on desktop/mobile in all seven themes. Primary visual
 baselines are Windows/Chromium (CI: windows-2022), using real Gavia Sans for both
 Gavia themes. Linux browser interaction coverage is separate. Docker/Linux visual
 checks are supplemental and use separate baselines; never replace Windows PNGs
@@ -191,7 +192,7 @@ with Linux output. NVDA/VoiceOver and owner acceptance need separate evidence.
 
 Pages is a static build of the existing Playground, with no additional framework
 or library runtime dependencies. On explicit authorization for public-showcase
-preflight, also run `pnpm build:pages` and `pnpm test:pages`: `/gavia-ui/`,
+preflight, also run `pnpm build:pages` and `pnpm test:pages`: `/legato-ui/`,
 desktop/mobile and direct query links. The UI reads the root changelog and links
 to canonical repository docs. Pages deploys from `main` only after verify,
 browser and visual gates for the same commit; PRs and tags do not deploy it.

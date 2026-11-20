@@ -22,15 +22,15 @@ After editing the source, run from the repository root:
 ```sh
 pnpm tokens:sync
 pnpm tokens:check
-pnpm --filter gavia-ui exec vitest run tests/assets/design-system.test.ts tests/assets/token-validation.test.mjs
+pnpm --filter legato-ui exec vitest run tests/assets/design-system.test.ts tests/assets/token-validation.test.mjs
 ```
 
 Synchronization updates generated CSS, the typed catalog and the contrast
 report. Inspect the generated diff. The frozen
 `packages/ui-kit/tests/fixtures/tokens-0.5.json` protects earlier values in
 Classic, Classic Dark and Newspaper; do not rewrite the fixture to silence a
-compatibility failure. Theme CSS is covered by `gavia-ui/themes/*.css`.
+compatibility failure. Theme CSS is covered by `legato-ui/themes/*.css`.
 
-Preview affected states in all five themes. Browser and visual checks require
+Preview affected states in all seven themes. Browser and visual checks require
 separate authorization, and PNG changes require inspection of their diffs.
 Consumer overrides are described in [the theming guide](../guide/theming.md).

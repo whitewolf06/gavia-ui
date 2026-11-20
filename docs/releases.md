@@ -1,11 +1,11 @@
-# Gavia UI releases
+# Legato UI releases
 
 **This guide moved.** Canonical guide: [Release procedure](maintainers/releases.md).
 
 This compatibility page preserves old URLs and fragment links. Use the canonical
 guide for current instructions.
 
-<a id="gavia-ui-releases"></a>
+<a id="legato-ui-releases"></a>
 <a id="release-0120"></a>
 <a id="release-0111"></a>
 <a id="release-0110"></a>

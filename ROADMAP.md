@@ -1,4 +1,9 @@
-# Gavia UI roadmap
+# Legato UI roadmap
+
+The latest published release is [Gavia UI 1.1.0](docs/maintainers/releases.md).
+Work for Legato UI 1.2.0 is tracked in the [changelog](CHANGELOG.md#unreleased).
+
+## Release history
 
 Gavia UI **1.0.0** was published to npm `latest` on **2026-10-25**.
 The [release record](docs/archive/release-history.md#release-100) preserves its
@@ -78,4 +83,4 @@ The [documentation index](docs/README.md) separates user guides and maintainer
 procedures. The [documentation archive](docs/archive/README.md) preserves earlier
 milestones, preparation reports and dated measurements.
 The complete original findings and post-1.0 acceptance criteria remain in the
-[archived review](https://github.com/whitewolf06/gavia-ui/tree/archive/review-2026-10/review).
+[archived review](https://github.com/whitewolf06/legato-ui/tree/archive/review-2026-10/review).

@@ -1,11 +1,11 @@
-# Gavia UI design system
+# Legato UI design system
 
-**This guide moved.** Canonical guide: [Gavia UI design system](reference/design-system.md).
+**This guide moved.** Canonical guide: [Legato UI design system](reference/design-system.md).
 
 This compatibility page preserves old URLs and fragment links. Use the canonical
 guide for current instructions.
 
-<a id="gavia-ui-design-system"></a>
+<a id="legato-ui-design-system"></a>
 <a id="principles"></a>
 <a id="token-source-and-generation"></a>
 <a id="layers"></a>

@@ -1,6 +1,6 @@
 # TypeScript contracts
 
-Use the public `gavia-ui` exports with TypeScript 5.4 or later and strict template
+Use the public `legato-ui` exports with TypeScript 5.4 or later and strict template
 checking. Generic selection, row/column and navigation types follow the supplied
 models; inspect each component guide for its actual props and slots. Source
 checks and installed-archive declarations are verified separately.
@@ -18,7 +18,7 @@ from widening option types. Readonly lists are accepted and never mutated.
 
 ```ts
 import { ref } from "vue";
-import type { WlAutocompleteModel, WlSelectModel } from "gavia-ui";
+import type { WlAutocompleteModel, WlSelectModel } from "legato-ui";
 interface Material { id: number; label: string; }
 const options: readonly Material[] = [{ id: 1, label: "Wood" }];
 const selected = ref<WlSelectModel<Material, "id">>(null);
@@ -41,7 +41,7 @@ and `value: Row[field]`. Virtual-column values remain `unknown`:
 narrow them or use known `row` fields.
 
 ```ts
-import type { WlTableColumn } from "gavia-ui";
+import type { WlTableColumn } from "legato-ui";
 interface Material { id: number; label: string; }
 const columns = [
   { key: "label", label: "Name" },
@@ -56,7 +56,7 @@ WlTableColumn<Row> is a row field or an explicitly marked virtual column. The se
 `WlPt<"select">` and equivalent component types suggest known sections while allowing dynamic extensions. Use `WlPtStrict` / `WlPtConfigStrict` through `satisfies` to check section names and nested nodes for typos.
 
 ```ts
-import type { WlPtStrict } from "gavia-ui";
+import type { WlPtStrict } from "legato-ui";
 const selectPt = {
   root: { "aria-describedby": "material-help" },
   option: ({ context }) => ({ class: { selected: context.selected } })
@@ -95,7 +95,7 @@ Input/PasswordInput/Textarea support string `.trim`; CommandPalette query also s
 
 `WlLocaleInput` accepts a partial locale with readonly names. Known labels are string; application extensions remain unknown. `normalizeWlLocale()` ignores undefined and invalid known values, checks seven weekday names, twelve months and firstDayOfWeek 0–6. `WlResolvedLocale` retains the previous required calendar fields so existing custom locale types remain valid; runtime normalization supplies every built-in control label.
 
-Gavia UI 1.0 uses English for omitted configuration and missing locale fields.
+Version 1.0 of `legato-ui` uses English for omitted configuration and missing locale fields.
 Install `WlConfig` with `locale: wlLocaleRu` to retain Russian; spread the preset
 before custom overrides. `localeCode` alone does not translate missing labels.
 Text props are optional `string` inputs: omitted/`undefined` reads the current

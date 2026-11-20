@@ -1,7 +1,7 @@
-# Gavia UI playground
+# Legato UI playground
 
-The playground shows Gavia UI components, their sizes and states,
-five themes, design tokens, working SFC examples and six interface flows.
+The playground shows Legato UI components, their sizes and states,
+seven themes, design tokens, working SFC examples and six interface flows.
 
 ```bash
 pnpm install
@@ -12,13 +12,14 @@ pnpm build:playground
 
 In a clean checkout, build the library first: public types are in dist.
 During development, the playground loads examples from source. Copyable code
-uses public `gavia-ui` imports.
+uses public `legato-ui` imports.
 `verify:package` installs the archive separately and checks that code without
 access to workspace source.
 
 `src/bootstrap.ts` installs `WlConfig`, `WlToastService` and
 `WlConfirmationService`. CSS is imported explicitly in `src/main.ts`.
-There are five themes: Gavia, Gavia Dark, Classic, Classic Dark and Newspaper.
+The Playground follows the system appearance with Legato and Legato Dark.
+Gavia, Gavia Dark, Classic, Classic Dark and Newspaper are also available.
 Search supports keyboard navigation, the design system is available at
 `?view=system`, and the package version appears beside the logo.
 

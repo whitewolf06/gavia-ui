@@ -26,7 +26,7 @@ narrow on a large screen. Use CSS for positioning; use JavaScript for behavior c
 | `md` | 900 px |
 | `lg` | 1200 px |
 
-This numeric catalog is exported from `gavia-ui`.
+This numeric catalog is exported from `legato-ui`.
 Its source is `packages/ui-kit/tokens/source.json → breakpoints`;
 the derived file is `src/design-system/tokens.generated.ts`.
 The catalog does not rewrite existing CSS. The viewport example uses

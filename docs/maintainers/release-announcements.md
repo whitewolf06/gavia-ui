@@ -10,7 +10,7 @@ placeholders and feedback-window proposal.
 
 Description: `A Vue 3 and TypeScript component library with five token-based themes, typed models and explicit CSS imports.`
 
-Website: `https://whitewolf06.github.io/gavia-ui/`
+Website: `https://whitewolf06.github.io/legato-ui/`
 
 Proposed topics: `vue`, `vue3`, `component-library`, `design-system`,
 `typescript`, `accessibility`, `design-tokens`, `ui-kit`.
@@ -37,10 +37,10 @@ weights. Styles are explicit imports; routing and application data stay in
 consumer apps. Vue ^3.4.0 is the only required peer.
 
 Install this release: pnpm add gavia-ui@1.0.0 vue
-Release: https://github.com/whitewolf06/gavia-ui/releases/tag/v1.0.0
-Guides and examples: https://whitewolf06.github.io/gavia-ui/docs/
-Upgrade: https://github.com/whitewolf06/gavia-ui/blob/v1.0.0/docs/migration.md#migration-1-0
-Release checks: https://github.com/whitewolf06/gavia-ui/actions/runs/40144779800
+Release: https://github.com/whitewolf06/legato-ui/releases/tag/v1.0.0
+Guides and examples: https://whitewolf06.github.io/legato-ui/docs/
+Upgrade: https://github.com/whitewolf06/legato-ui/blob/v1.0.0/docs/migration.md#migration-1-0
+Release checks: https://github.com/whitewolf06/legato-ui/actions/runs/40144779800
 
 When upgrading from 0.x, check English fallback and wlLocaleRu, semantic tone,
 canonical PT sections, dismissible, WlTooltipDirective and icon-action names.
@@ -98,7 +98,7 @@ a future Russian article needs a fresh stable version before approval to post.
 ## awesome-vue submission draft
 
 ```text
-[Gavia UI](https://github.com/whitewolf06/gavia-ui) — Vue 3 and TypeScript UI
+[Gavia UI](https://github.com/whitewolf06/legato-ui) — Vue 3 and TypeScript UI
 components with token-based themes, typed models and explicit CSS imports.
 ```
 

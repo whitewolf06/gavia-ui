@@ -1,15 +1,15 @@
 # Theme builder
 
 Open Theme Builder from the menu, search or a home-page link.
-Its direct URL is `?view=theme-builder`. GitHub Pages keeps the `/gavia-ui/` subpath.
+Its direct URL is `?view=theme-builder`. GitHub Pages keeps the `/legato-ui/` subpath.
 
 ## Editing the palette
 
-1. Choose Gavia, Gavia Dark, Classic, Classic Dark or Newspaper as a base.
+1. Choose Legato, Legato Dark, Gavia, Gavia Dark, Classic, Classic Dark or Newspaper as a base.
    Changing the base resets colors; Reset colors restores the current base palette and keeps the name.
 2. Enter a new name: 1–32 characters, beginning with a lowercase Latin letter,
-   followed by lowercase letters, digits or hyphens. The five shipped identifiers
-   (`gavia`, `gavia-dark`, `white`, `graphite`, `newspaper`) are reserved.
+   followed by lowercase letters, digits or hyphens. The shipped identifiers
+   (`legato`, `legato-dark`, `gavia`, `gavia-dark`, `white`, `graphite`, `newspaper`) are reserved.
 3. Set eight roles: page background, cards, soft surface, primary and muted text,
    borders, primary action, and links/focus. Native color pickers and HEX inputs
    support `#rgb` / `#rrggbb`.
@@ -43,14 +43,14 @@ preference, including system mode. Choosing any built-in theme also cancels the
 applied palette, even when choosing its current base again. A direct URL selecting
 a different built-in theme takes priority over the saved palette.
 
-The applied snapshot is stored separately as `gavia-ui.applied-theme.v1` and
+The applied snapshot is stored separately as `legato-ui.applied-theme.v1` and
 restored before the first paint after a reload. It does not change the editable
 draft's schema or the CSS/JSON export format. Browser storage can be unavailable;
 in that case application and Undo still work in the current tab. Applying the
 palette is opt-in: ordinary visits and prerendered pages keep the standard themes.
 
 A draft with valid values is saved only in this browser:
-name, base and colors are stored in `localStorage` under `gavia-ui.theme-builder.v1`.
+name, base and colors are stored in `localStorage` under `legato-ui.theme-builder.v1`.
 Restoration validates the schema version, name, base and each HEX value.
 Invalid data is skipped. If browser storage is unavailable,
 settings remain in memory until the page is closed.
@@ -72,8 +72,8 @@ as `<name>.theme.json`. If clipboard access is unavailable, a field appears for
 manual copying. Generate or check the downloaded config directly:
 
 ```sh
-pnpm exec gavia-theme --config my-gavia.theme.json --output my-gavia.css
-pnpm exec gavia-theme --config my-gavia.theme.json --output my-gavia.css --check
+pnpm exec legato-theme --config my-gavia.theme.json --output my-gavia.css
+pnpm exec legato-theme --config my-gavia.theme.json --output my-gavia.css --check
 ```
 
 The CLI and preview use the same generation logic. For the full/delta contract,
@@ -87,7 +87,7 @@ Import full CSS after library styles
 and set the new theme name on `html`:
 
 ```ts
-import 'gavia-ui/styles/base.css';
+import 'legato-ui/styles/base.css';
 import './my-gavia.css';
 document.documentElement.dataset.wlTheme = 'my-gavia';
 ```

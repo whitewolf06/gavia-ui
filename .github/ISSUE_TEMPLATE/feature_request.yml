@@ -1,5 +1,5 @@
 name: Feature request
-description: Propose an improvement to Gavia UI
+description: Propose an improvement to Legato UI
 title: "[Feature]: "
 body:
   - type: textarea

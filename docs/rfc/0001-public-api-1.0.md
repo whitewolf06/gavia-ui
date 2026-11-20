@@ -93,7 +93,7 @@ acceptance, Vue/TypeScript minimums and immutable compatibility fixtures remain.
 
 See [the candidate migration](../migration.md#migration-1-0-rc-1) and
 [preparation record](../archive/release-candidate-1.0.0-rc.1.md). Public version history:
-[npm registry](https://registry.npmjs.org/gavia-ui). Candidate acceptance
+[npm registry](https://registry.npmjs.org/legato-ui). Candidate acceptance
 is preserved in [the release gates](../archive/release-candidate-1.0.0-rc.1.md).
 
 ## Early stable acceptance — 2026-10-25

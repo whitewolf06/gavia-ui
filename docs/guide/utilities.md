@@ -1,6 +1,6 @@
 # Pure utilities
 
-Import pure helpers from `gavia-ui/utils`. They do not access Vue, the DOM,
+Import pure helpers from `legato-ui/utils`. They do not access Vue, the DOM,
 storage or browser globals and can be used during SSR.
 
 ## Stable colors from names
@@ -14,7 +14,7 @@ palette produce the same result on the server and client.
 import {
   getWlColorFromString, WL_STRING_COLOR_PALETTE,
   type WlColorPalette
-} from "gavia-ui/utils";
+} from "legato-ui/utils";
 
 const outline = getWlColorFromString("Anna Mikhailova");
 const brandColors: WlColorPalette<"coral" | "indigo"> = ["coral", "indigo"];
@@ -38,7 +38,7 @@ steps of 1024, automatic units up to terabytes and Intl short unit labels and
 number punctuation. Invalid, infinite and negative input becomes zero.
 
 ```ts
-import { formatWlBytes, type WlByteFormatOptions } from "gavia-ui/utils";
+import { formatWlBytes, type WlByteFormatOptions } from "legato-ui/utils";
 
 const automatic = formatWlBytes("en", 1536);
 const options: WlByteFormatOptions = {

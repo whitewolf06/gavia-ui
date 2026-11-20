@@ -1,5 +1,14 @@
 # Themes and customization
 
+Legato is the default light theme in the Playground. It uses indigo for actions,
+burgundy and saffron accents, and Legato Sans. To opt in, import
+`legato-ui/styles/fonts/legato.css` and `legato-ui/themes/legato.css`, then set
+`data-wl-theme="legato"`. The Playground pairs it with Legato Dark in system mode.
+Import `legato-ui/themes/legato-dark.css` and select `data-wl-theme="legato-dark"`
+for the dark version. Both use the same font stylesheet. To follow the system
+in an application, import both theme files and pass
+`{ themes: { light: "legato", dark: "legato-dark" } }` to `useWlTheme`.
+
 Gavia is a light theme with a lake blue-gray primary action,
 blue-gray selected states and warm decorative shades.
 Gavia Dark uses cool-gray surfaces with a slight blue undertone
@@ -21,10 +30,10 @@ Import the files once in your application entry point. The reset is optional;
 Gavia's font file is needed for Gavia Sans.
 
 ```ts
-import 'gavia-ui/styles/reset.css';
-import 'gavia-ui/styles/base.css';
-import 'gavia-ui/styles/fonts/gavia.css';
-import 'gavia-ui/themes/gavia.css';
+import 'legato-ui/styles/reset.css';
+import 'legato-ui/styles/base.css';
+import 'legato-ui/styles/fonts/gavia.css';
+import 'legato-ui/themes/gavia.css';
 import './theme.css';
 ```
 
@@ -131,12 +140,12 @@ the library's shipped themes, use the separate
 
 ## Generate CSS from a versioned config
 
-The 1.2 additions provide a pure entry point, `gavia-ui/theme`, and a Node CLI.
+The 1.2 additions provide a pure entry point, `legato-ui/theme`, and a Node CLI.
 They are optional; existing CSS imports and component APIs stay the same.
 The entry does not import Vue, the DOM or Node modules.
 
 ```ts
-import { createWlTheme } from 'gavia-ui/theme';
+import { createWlTheme } from 'legato-ui/theme';
 
 const result = createWlTheme({
   schemaVersion: 2,
@@ -165,7 +174,7 @@ References use `var(--wl-token)` without a CSS fallback.
 
 Both modes retain a reduced-motion block. Delta follows the local-theme and
 Teleport rules above. Full CSS freezes the token snapshot at generation time;
-regenerate it when updating Gavia UI. Keep the config as the source of truth.
+regenerate it when updating the library. Keep the config as the source of truth.
 
 The result's `overrides` are the **computed** delta, including derived values.
 They are not a replacement for the config's manual `overrides`. The contrast
@@ -181,8 +190,8 @@ Save the input object as JSON. The Playground's **Download config** button expor
 this same v2 format, so no format conversion is needed:
 
 ```sh
-pnpm exec gavia-theme --config my-brand.theme.json --output src/theme.css
-pnpm exec gavia-theme --config my-brand.theme.json --output src/theme.css --check
+pnpm exec legato-theme --config my-brand.theme.json --output src/theme.css
+pnpm exec legato-theme --config my-brand.theme.json --output src/theme.css --check
 ```
 
 The CLI requires Node 22.13+; it does not add a Node runtime requirement to browser
@@ -205,7 +214,7 @@ the maintainer token procedure rather than adding generated CSS by hand.
 
 ## Reactive theme preferences
 
-`useWlTheme` from `gavia-ui/composables` resolves light, dark and system
+`useWlTheme` from `legato-ui/composables` resolves light, dark and system
 preferences after mount. Its `themes` option accepts a static `{ light, dark }`
 pair or a reactive getter returning that pair. To keep an explicitly selected
 theme independent of OS changes, map both entries to the selected name.
@@ -275,7 +284,7 @@ Page background `#faf9f6` has a slight warm undertone.
 ## Gavia Dark
 
 Choose Gavia Dark with `data-wl-theme="gavia-dark"` and the separate CSS file
-`gavia-ui/themes/gavia-dark.css`. It defines dark surfaces and readable
+`legato-ui/themes/gavia-dark.css`. It defines dark surfaces and readable
 text, action and status roles through the same token source. The light palette
 above belongs to `gavia`; dark theme values are available through
 `getWlThemeTokens("gavia-dark")`. Components and their DOM contract are shared.
@@ -314,25 +323,25 @@ Import the separate `@font-face` CSS so the browser loads WOFF2.
 Without it, the browser uses a system font. Code retains monospaced `--wl-mono`.
 
 There are six weights (100, 300, 400, 500, 600, 700), each with upright and
-oblique faces. [Specimens, setup and license](font-gavia.md).
+oblique faces. [Specimens, setup and license](font-legato.md).
 The playground shows the typeface on the “Font” page (`?view=font`).
 
 ## Setup
 
-Light Gavia and the typeface have been included in Gavia UI since 0.9.1:
+The original `gavia-ui` package has included the light Gavia theme and its typeface since 0.9.1.
 
 ```ts
-import 'gavia-ui/styles/reset.css';
-import 'gavia-ui/styles/fonts/gavia.css';
-import 'gavia-ui/styles/base.css';
-import 'gavia-ui/themes/gavia.css';
+import 'legato-ui/styles/reset.css';
+import 'legato-ui/styles/fonts/gavia.css';
+import 'legato-ui/styles/base.css';
+import 'legato-ui/themes/gavia.css';
 ```
 
 ```html
 <html lang="en" data-wl-theme="gavia">
 ```
 
-For Gavia Dark, change the theme import to `gavia-ui/themes/gavia-dark.css` and
+For Gavia Dark, change the theme import to `legato-ui/themes/gavia-dark.css` and
 the attribute to `data-wl-theme="gavia-dark"`. Both use `styles/fonts/gavia.css`.
 
 Both CSS files use `wl.tokens` and apply through their `data-wl-theme`.
@@ -346,7 +355,7 @@ Within the library, `base.css` and default
 Specify Gavia or Gavia Dark explicitly.
 
 ```ts
-import { getWlThemeTokens, resolveWlToken } from 'gavia-ui';
+import { getWlThemeTokens, resolveWlToken } from 'legato-ui';
 
 const page = resolveWlToken('--wl-bg', 'gavia');
 const snapshot = getWlThemeTokens('gavia');
@@ -383,7 +392,7 @@ and [non-text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-con
 | Main text / soft warm accent | 14.81:1 |
 
 Table values are rounded for reading. The validator compares raw ratios
-with thresholds before rounding. Approved pairs are checked in all five
+with thresholds before rounding. Approved pairs are checked in all seven
 themes; separate tests protect Gavia links and text on decorative
 surfaces. Recalculate contrast after changing colors, text opacity or soft
 surfaces.
