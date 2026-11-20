@@ -5,10 +5,10 @@ sections describe that release; they do not report current validation or a new
 publication. Stable public namespaces remain `Wl*`, `wl-*` and `--wl-*`.
 
 <a id="migration-1-2"></a>
-## Upgrading from 1.1 to 1.2 (Unreleased)
+## Upgrading from 1.1 to 1.2
 
 Starting with 1.2.0, new releases use the npm name `legato-ui`. The published
-`gavia-ui@1.1.0` remains installable. After 1.2.0 is published, choose one dependency
+`gavia-ui@1.1.0` remains installable. To upgrade, choose one dependency
 for your application:
 
 - Install `legato-ui@^1.2.0` and change the package prefix in JavaScript, TypeScript and CSS imports from `gavia-ui` to `legato-ui`.

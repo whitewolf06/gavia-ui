@@ -7,6 +7,8 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 
 ## Unreleased
 
+## 1.2.0 — prepared
+
 ### Added
 
 - Starting with 1.2.0, install `legato-ui`. The previous package remains available as `gavia-ui@1.1.0`. See the [migration guide](docs/migration.md#migration-1-2) to retain existing imports with an npm alias.
