@@ -13,6 +13,11 @@ export function createPlaygroundPageLoader<Page>(load: () => Promise<Page>): () 
 }
 
 const docs = createPlaygroundPageLoader(() => import("./DocsPage.vue"));
+export const componentGuideLoaders = {
+  button: createPlaygroundPageLoader(() => import("./documentation/ButtonDocumentation.vue")),
+  standard: createPlaygroundPageLoader(() => import("./documentation/ComponentDocumentation.vue"))
+};
+
 export const playgroundPageLoaders = {
   home: createPlaygroundPageLoader(() => import("./HomePage.vue")),
   docs,

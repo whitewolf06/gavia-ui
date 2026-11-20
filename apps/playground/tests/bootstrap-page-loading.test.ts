@@ -12,6 +12,7 @@ const startup = vi.hoisted(() => {
     app,
     createApp: vi.fn(() => app),
     preload: vi.fn<(view: string) => Promise<unknown>>(),
+    guide: vi.fn<() => Promise<unknown>>(),
     messages: vi.fn<(view: string) => Promise<boolean>>(),
     router: { isReady: vi.fn(async () => {}) }
   };
@@ -22,7 +23,10 @@ vi.mock("legato-ui", () => ({
   WlConfig: {}, WlConfirmationService: {}, WlToastService: {}, wlLocaleEn: {}, wlLocaleRu: {}
 }));
 vi.mock("../src/App.vue", () => ({ default: {} }));
-vi.mock("../src/page-loaders", () => ({ preloadPlaygroundPage: startup.preload }));
+vi.mock("../src/page-loaders", () => ({
+  preloadPlaygroundPage: startup.preload,
+  componentGuideLoaders: { standard: startup.guide }
+}));
 vi.mock("../src/i18n", () => ({ playgroundI18n: {}, playgroundLocale: { value: "ru" }, preparePlaygroundPage: startup.messages, ensurePlaygroundMessages: async () => {} }));
 vi.mock("../src/router", () => ({ createPlaygroundRouter: () => startup.router }));
 
@@ -40,6 +44,7 @@ beforeEach(() => {
   vi.resetModules();
   vi.clearAllMocks();
   startup.preload.mockReset();
+  startup.guide.mockReset();
   startup.messages.mockReset();
   document.body.innerHTML = '<div id="app"><p>Static fallback</p></div>';
   window.history.replaceState(null, "", "/ru/docs/components/WlSelect/?theme=white");
@@ -55,6 +60,8 @@ describe("initial page preparation", () => {
   it("keeps prerendered route content outside the startup screen until mounting", async () => {
     const page = deferred<unknown>();
     const messages = deferred<boolean>();
+    const guide = deferred<unknown>();
+    startup.guide.mockReturnValue(guide.promise);
     startup.preload.mockReturnValue(page.promise);
     startup.messages.mockReturnValue(messages.promise);
     document.documentElement.setAttribute("data-playground-prerendered", "");
@@ -65,6 +72,9 @@ describe("initial page preparation", () => {
     expect(startup.app.mount).not.toHaveBeenCalled();
     page.resolve({ default: {} });
     messages.resolve(true);
+    await flushPromises();
+    expect(startup.app.mount).not.toHaveBeenCalled();
+    guide.resolve({ default: {} });
     await flushPromises();
     expect(startup.app.mount).toHaveBeenCalledExactlyOnceWith("#app");
     expect(document.documentElement.hasAttribute("data-playground-prerendered")).toBe(false);

@@ -74,6 +74,9 @@ test("cold production loading budgets across the shipped themes", async ({ brows
           await document.fonts.ready;
           await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
         });
+        await page.waitForFunction(() =>
+          ((window as Window & { gaviaLoadingMetrics?: LoadingMetrics }).gaviaLoadingMetrics?.lcpMs ?? 0) > 0
+        );
         const row = await page.evaluate(() => {
           const entries = [
             ...performance.getEntriesByType("navigation"),

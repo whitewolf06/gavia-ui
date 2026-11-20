@@ -36,10 +36,15 @@ test("serialized HTML rewrites only owned-origin DOM URLs and retains public/ext
   const clone = {
     removeAttribute: (name) => rootAttributes.delete(name),
     setAttribute: (name, value) => rootAttributes.set(name, value),
-    querySelector: () => ({ removeAttribute: (name) => {
-      assert.equal(name, "data-v-app");
-      mounted = false;
-    } }),
+    querySelector(selector) {
+      if (selector !== "#app") return null;
+      return {
+        removeAttribute(name) {
+          assert.equal(name, "data-v-app");
+          mounted = false;
+        }
+      };
+    },
     querySelectorAll: (selector) => selector.startsWith("body")
       ? [{ remove: () => { portalRemoved = true; } }]
       : attributes.map((attrs) => ({

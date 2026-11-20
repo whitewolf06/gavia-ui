@@ -3,13 +3,17 @@ import { createApp, effectScope, watch } from "vue";
 import App from "./App.vue";
 import { playgroundI18n, playgroundLocale, preparePlaygroundPage } from "./i18n";
 import { parsePlaygroundRoute } from "./navigation";
-import { preloadPlaygroundPage } from "./page-loaders";
+import { componentGuideLoaders, preloadPlaygroundPage } from "./page-loaders";
 import { createPlaygroundRouter } from "./router";
 
 async function mount(): Promise<void> {
   const router = createPlaygroundRouter(import.meta.env.BASE_URL);
-  const view = parsePlaygroundRoute(window.location.search, window.location.hash, window.location.pathname).view;
-  await Promise.all([preloadPlaygroundPage(view), preparePlaygroundPage(view)]);
+  const route = parsePlaygroundRoute(window.location.search, window.location.hash, window.location.pathname);
+  // Keep an already rendered component guide on screen until its interactive replacement is ready.
+  const guide = route.view === "docs" && route.component && document.documentElement.hasAttribute("data-playground-prerendered")
+    ? componentGuideLoaders[route.component === "WlButton" ? "button" : "standard"]()
+    : undefined;
+  await Promise.all([preloadPlaygroundPage(route.view), preparePlaygroundPage(route.view), guide]);
   const app = createApp(App);
   app.use(playgroundI18n);
   if (router) {

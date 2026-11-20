@@ -19,15 +19,16 @@ import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, r
 import { getLocalizedManifest, isComponentNewInRelease } from "./documentation/manifest";
 const wlManifest = getLocalizedManifest();
 import CodePanel from "./design-system/CodePanel.vue";
+import { componentGuideLoaders } from "./page-loaders";
 import PlaygroundPageLoading from "./PlaygroundPageLoading.vue";
 const asyncContent = <Page extends Component>(loader: AsyncComponentLoader<Page>) => defineAsyncComponent({
   loader, loadingComponent: PlaygroundPageLoading, errorComponent: PlaygroundPageLoading, delay: 0
 });
 import { documentationAssetPages, documentationAssets } from "./documentation/assets/assets";
 const DocumentationAssetsPage = asyncContent(() => import("./documentation/assets/DocumentationAssetsPage.vue"));
-const ButtonDocumentation = asyncContent(() => import("./documentation/ButtonDocumentation.vue"));
+const ButtonDocumentation = asyncContent(componentGuideLoaders.button);
 import { documentationCategories, documentationFoundationPages, documentationFoundations, type DocumentationHeading, documentationOverviewHeadings, foundationHeadings, installationSource } from "./documentation/catalog";
-const ComponentDocumentation = asyncContent(() => import("./documentation/ComponentDocumentation.vue"));
+const ComponentDocumentation = asyncContent(componentGuideLoaders.standard);
 const FoundationPage = asyncContent(() => import("./documentation/foundations/FoundationPage.vue"));
 const DocumentationQualityPage = asyncContent(() => import("./documentation/quality/DocumentationQualityPage.vue"));
 const GuidePage = asyncContent(() => import("./documentation/GuidePage.vue"));

@@ -35,6 +35,13 @@ export function serializePrerenderHtml({ origin, root = document.documentElement
   clone.removeAttribute("data-wl-boot");
   clone.setAttribute("data-playground-prerendered", "");
   clone.querySelector("#app")?.removeAttribute("data-v-app");
+  const menuSummary = clone.querySelector(".docs-menu[open] > summary");
+  if (menuSummary) {
+    // The snapshot is desktop-sized. Set the native disclosure before its contents are painted on mobile.
+    const script = menuSummary.ownerDocument.createElement("script");
+    script.textContent = 'if (matchMedia("(max-width: 760px)").matches) document.currentScript.parentElement.open = false;';
+    menuSummary.after(script);
+  }
   for (const node of clone.querySelectorAll("body > :not(#app):not(script):not(noscript)")) node.remove();
   for (const element of clone.querySelectorAll("[href], [src], [action], [formaction], [poster]")) {
     for (const attribute of ["href", "src", "action", "formaction", "poster"]) {
