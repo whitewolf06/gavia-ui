@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton } from "gavia-ui";
+import { WlButton } from "legato-ui";
 import { ref } from "vue";
 const projects = [t("examples.research_0979"), t("examples.design_0980"), t("examples.review_0129")];
 const selected = ref("");

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { useWlToast, WlButton } from "gavia-ui";
+import { useWlToast, WlButton } from "legato-ui";
 import { ref } from "vue";
 // Install WlToastService and mount one WlToast in the application root.
 const toast = useWlToast();

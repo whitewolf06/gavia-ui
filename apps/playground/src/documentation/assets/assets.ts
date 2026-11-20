@@ -1,4 +1,4 @@
-import type { wlDesignTokens } from "gavia-ui";
+import type { wlDesignTokens } from "legato-ui";
 import type { DocumentationAssetSection } from "../../navigation";
 
 import { documentationMetadataSource, localizeDocumentation } from "../localize";

@@ -10,8 +10,8 @@ const props = withDefaults(defineProps<{
 });
 const emit = defineEmits<{ "update:fontStyle": [style: GaviaFontStyle] }>();
 const { t, locale } = usePlaygroundI18n();
-import { WlInput } from "gavia-ui";
-import { WlSegmented } from "gavia-ui";
+import { WlInput } from "legato-ui";
+import { WlSegmented } from "legato-ui";
 import { computed, ref } from "vue";
 import type { GaviaFontStyle } from "./font";
 import type { SpecimenLanguage } from "./samples";

@@ -7,7 +7,7 @@ declare module "*.json?compiled" {
 }
 
 declare module "virtual:gavia-catalog-summary" {
-  import type { WlThemeName } from "gavia-ui";
+  import type { WlThemeName } from "legato-ui";
   const summary: {
     tokenCount: number;
     themeCount: number;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
 const { t } = usePlaygroundI18n();
-import { WL_ICON_NAMES, WlButton, WlIcon, type WlIconName, WlInput } from "gavia-ui";
+import { WL_ICON_NAMES, WlButton, WlIcon, type WlIconName, WlInput } from "legato-ui";
 import { computed, ref } from "vue";
 import { consumerSource } from "../../design-system/code";
 import CodePanel from "../../design-system/CodePanel.vue";

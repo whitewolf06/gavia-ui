@@ -3,7 +3,7 @@ import { usePlaygroundI18n } from "../i18n";
 defineProps<{ href: string }>();
 const emit = defineEmits<{ navigate: [] }>();
 const { t, locale } = usePlaygroundI18n();
-import { WlIcon, WlStatCard } from "gavia-ui";
+import { WlIcon, WlStatCard } from "legato-ui";
 import report from "./quality-report.generated.json";
 import QualityMeter from "./QualityMeter.vue";
 

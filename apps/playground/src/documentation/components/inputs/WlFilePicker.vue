@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlFilePicker, type WlFilePickerExpose, WlIcon } from "gavia-ui";
+import { WlButton, WlFilePicker, type WlFilePickerExpose, WlIcon } from "legato-ui";
 import { ref } from "vue";
 const picker = ref<WlFilePickerExpose | null>(null);
 const files = ref<File[]>([]);

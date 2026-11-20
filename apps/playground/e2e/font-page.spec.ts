@@ -23,7 +23,7 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "gavia");
   await expect(fontPage.locator(".wl-weights-row")).toHaveCount(6);
   await expect(fontPage.locator(".wl-type-footer-note")).toContainText("Gavia Sans 0.6");
-  await expect(fontPage.getByText('import "gavia-ui/styles/fonts/gavia.css";', { exact: true })).toHaveCount(1);
+  await expect(fontPage.getByText('import "legato-ui/styles/fonts/gavia.css";', { exact: true })).toHaveCount(1);
   await expect(fontPage.locator(".pg-site-header")).toHaveCount(0);
   for (const weight of weights) {
     await expect(fontPage.locator(`.wl-weights-row[data-weight="${weight}"]`)).toBeVisible();

@@ -27,7 +27,7 @@ export const miscManifest = /* @__PURE__ */ defineComponentManifest([
   {
     name: "WlIcon",
     category: "misc",
-    description: "SVG-иконка из набора Gavia UI. Без name показывает свою иконку из слота.",
+    description: "SVG-иконка из набора Legato UI. Без name показывает свою иконку из слота.",
     props: [
       { name: "name", type: "icon", values: WL_ICON_NAMES, description: "Имя иконки из набора." },
       {

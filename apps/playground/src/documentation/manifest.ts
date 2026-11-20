@@ -1,4 +1,4 @@
-import { type WlComponentManifest, wlManifest } from "gavia-ui";
+import { type WlComponentManifest, wlManifest } from "legato-ui";
 import { translateDocumentationText } from "./localize";
 
 /** RC features remain new when the same numeric release becomes stable. */

@@ -93,7 +93,7 @@ export interface WlOverlayLifecycleOptions {
   onClose?: () => void;
 }
 
-/** Shared lifecycle for modal surfaces owned by Gavia UI. */
+/** Shared lifecycle for modal surfaces owned by Legato UI. */
 export function useOverlayLifecycle(options: WlOverlayLifecycleOptions): {
   requestClose: () => void;
 } {

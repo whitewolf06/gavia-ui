@@ -1,5 +1,5 @@
 // @ts-check
-/** Gavia UI: Vue/TypeScript, accessibility, tests and formatting in one flat config. */
+/** Legato UI: Vue/TypeScript, accessibility, tests and formatting in one flat config. */
 import js from "@eslint/js";
 import stylistic from "@stylistic/eslint-plugin";
 import vitest from "@vitest/eslint-plugin";
@@ -221,7 +221,7 @@ export default tseslint.config(
       files: PLAYGROUND,
       rules: {
         "no-restricted-imports": ["error", {
-          patterns: [{ group: ["**/packages/ui-kit/src/**"], message: "Импортируйте библиотеку как \"gavia-ui\" (alias на src в vite.config)." }]
+          patterns: [{ group: ["**/packages/ui-kit/src/**"], message: "Импортируйте библиотеку как \"legato-ui\" (alias на src в vite.config)." }]
         }]
       }
     },

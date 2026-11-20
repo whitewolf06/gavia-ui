@@ -2,8 +2,8 @@
 import { usePlaygroundI18n } from "../i18n";
 const props = withDefaults(defineProps<{ entry: WlComponentManifest; layout?: "compact" | "documentation"; headingPrefix?: string }>(), { layout: "compact" });
 const { t } = usePlaygroundI18n();
-import type { WlComponentManifest } from "gavia-ui";
-import { WlButton, WlCheckbox, WlInput, WlNumberInput, WlSelect } from "gavia-ui";
+import type { WlComponentManifest } from "legato-ui";
+import { WlButton, WlCheckbox, WlInput, WlNumberInput, WlSelect } from "legato-ui";
 import { type Component, computed, defineAsyncComponent, nextTick, ref, watch } from "vue";
 import PlaygroundPageLoading from "../PlaygroundPageLoading.vue";
 import { consumerSource } from "./code";

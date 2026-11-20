@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 const props = defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlDatePicker, type WlDatePickerSelectionMode, type WlDateRange } from "gavia-ui";
+import { WlDatePicker, type WlDatePickerSelectionMode, type WlDateRange } from "legato-ui";
 import { computed, ref } from "vue";
 const selectionMode = computed<WlDatePickerSelectionMode>(() => props.preview?.selectionMode === "range" ? "range" : "single");
 const forwardedPreview = computed(() => {

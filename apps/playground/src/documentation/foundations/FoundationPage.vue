@@ -6,7 +6,7 @@ const emit = defineEmits<{
   navigate: [view: "system" | "project" | "components"];
 }>();
 const { t } = usePlaygroundI18n();
-import { resolveWlToken, wlBreakpoints, WlButton } from "gavia-ui";
+import { resolveWlToken, wlBreakpoints, WlButton } from "legato-ui";
 import { type Component, computed } from "vue";
 import type { DocumentationFoundationSection } from "../../navigation";
 import { documentationFoundationPages } from "../catalog";

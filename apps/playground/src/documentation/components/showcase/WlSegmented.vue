@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlSegmented, type WlSegmentedOption } from "gavia-ui";
+import { WlSegmented, type WlSegmentedOption } from "legato-ui";
 import { ref } from "vue";
 const period = ref<string | null>("week");
 const view = ref<string | null>("list");

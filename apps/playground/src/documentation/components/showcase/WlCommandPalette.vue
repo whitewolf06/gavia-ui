@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlCheckbox, WlCommandPalette, type WlCommandPaletteGroup } from "gavia-ui";
+import { WlButton, WlCheckbox, WlCommandPalette, type WlCommandPaletteGroup } from "legato-ui";
 import { ref } from "vue";
 const visible = ref(false);
 const query = ref("");

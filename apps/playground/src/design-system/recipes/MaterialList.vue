@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
 const { t } = usePlaygroundI18n();
-import { useWlConfirm, useWlToast, WlButton, WlDrawer, WlEmpty, WlField, WlFilterBar, WlInput, WlPageHeader, WlPagination, WlPill, WlSelect, WlTable, type WlTableColumn, WlTag } from "gavia-ui";
+import { useWlConfirm, useWlToast, WlButton, WlDrawer, WlEmpty, WlField, WlFilterBar, WlInput, WlPageHeader, WlPagination, WlPill, WlSelect, WlTable, type WlTableColumn, WlTag } from "legato-ui";
 import { computed, nextTick, ref, watch } from "vue";
 type Material = { id: number; title: string; status: string };
 const materials = ref<Material[]>(Array.from({ length: 12 }, (_, index) => ({

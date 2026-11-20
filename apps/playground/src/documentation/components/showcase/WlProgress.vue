@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlProgress } from "gavia-ui";
+import { WlButton, WlProgress } from "legato-ui";
 import { ref } from "vue";
 const value = ref(40);
 </script>

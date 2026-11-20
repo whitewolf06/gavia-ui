@@ -6,7 +6,7 @@ const { t } = usePlaygroundI18n();
 import {
   resolveWlToken, wlBreakpoints,
   type WlDesignTokenDefinition, type WlDesignTokenName, wlSpacing
-} from "gavia-ui";
+} from "legato-ui";
 import { computed, defineAsyncComponent, nextTick, ref, watch } from "vue";
 import { getLocalizedContrastReport, getLocalizedDesignThemes, getLocalizedDesignTokens, getLocalizedTypography } from "./design-system/localized-tokens";
 const wlDesignTokens = getLocalizedDesignTokens();
@@ -15,9 +15,9 @@ const wlTypography = getLocalizedTypography();
 const wlContrastReport = getLocalizedContrastReport();
 import { getLocalizedManifest } from "./documentation/manifest";
 const wlManifest = getLocalizedManifest();
-import type { WlComponentManifest } from "gavia-ui";
-import type { WlTableColumn, WlThemeName } from "gavia-ui";
-import { WL_ICON_NAMES } from "gavia-ui";
+import type { WlComponentManifest } from "legato-ui";
+import type { WlTableColumn, WlThemeName } from "legato-ui";
+import { WL_ICON_NAMES } from "legato-ui";
 import CodePanel from "./design-system/CodePanel.vue";
 import ComponentExplorer from "./design-system/ComponentExplorer.vue";
 import ContentStress from "./design-system/ContentStress.vue";
@@ -25,17 +25,17 @@ import RecipeGallery from "./design-system/RecipeGallery.vue";
 import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
 import { usePageAnchor } from "./usePageAnchor";
 
-const WlButton = defineAsyncComponent(() => import("gavia-ui").then((module) => module.WlButton));
-const WlInput = defineAsyncComponent(() => import("gavia-ui").then((module) => module.WlInput));
-const WlField = defineAsyncComponent(() => import("gavia-ui").then((module) => module.WlField));
-const WlSelect = defineAsyncComponent(() => import("gavia-ui").then((module) => module.WlSelect));
-const WlSwitch = defineAsyncComponent(() => import("gavia-ui").then((module) => module.WlSwitch));
-const WlAlert = defineAsyncComponent(() => import("gavia-ui").then((module) => module.WlAlert));
-const WlEmpty = defineAsyncComponent(() => import("gavia-ui").then((module) => module.WlEmpty));
-const WlSkeleton = defineAsyncComponent(() => import("gavia-ui").then((module) => module.WlSkeleton));
-const WlSegmented = defineAsyncComponent(() => import("gavia-ui").then((module) => module.WlSegmented));
-const WlTable = defineAsyncComponent(() => import("gavia-ui").then((module) => module.WlTable));
-const WlDrawer = defineAsyncComponent(() => import("gavia-ui").then((module) => module.WlDrawer));
+const WlButton = defineAsyncComponent(() => import("legato-ui").then((module) => module.WlButton));
+const WlInput = defineAsyncComponent(() => import("legato-ui").then((module) => module.WlInput));
+const WlField = defineAsyncComponent(() => import("legato-ui").then((module) => module.WlField));
+const WlSelect = defineAsyncComponent(() => import("legato-ui").then((module) => module.WlSelect));
+const WlSwitch = defineAsyncComponent(() => import("legato-ui").then((module) => module.WlSwitch));
+const WlAlert = defineAsyncComponent(() => import("legato-ui").then((module) => module.WlAlert));
+const WlEmpty = defineAsyncComponent(() => import("legato-ui").then((module) => module.WlEmpty));
+const WlSkeleton = defineAsyncComponent(() => import("legato-ui").then((module) => module.WlSkeleton));
+const WlSegmented = defineAsyncComponent(() => import("legato-ui").then((module) => module.WlSegmented));
+const WlTable = defineAsyncComponent(() => import("legato-ui").then((module) => module.WlTable));
+const WlDrawer = defineAsyncComponent(() => import("legato-ui").then((module) => module.WlDrawer));
 
 const pageElement = ref<HTMLElement | null>(null);
 usePageAnchor(pageElement);

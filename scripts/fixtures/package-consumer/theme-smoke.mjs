@@ -3,10 +3,10 @@ import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
-import { createWlTheme, parseWlThemeConfig } from "gavia-ui/theme";
+import { createWlTheme, parseWlThemeConfig } from "legato-ui/theme";
 
 const require = createRequire(import.meta.url);
-const manifestPath = require.resolve("gavia-ui/package.json");
+const manifestPath = require.resolve("legato-ui/package.json");
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 assert.equal(manifest.bin?.["gavia-theme"], "./bin/gavia-theme.mjs");
 const bin = join(dirname(manifestPath), manifest.bin["gavia-theme"]);

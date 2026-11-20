@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlChip } from "gavia-ui";
+import { WlButton, WlChip } from "legato-ui";
 import { computed, ref } from "vue";
 const design = ref(true);
 const development = ref(false);

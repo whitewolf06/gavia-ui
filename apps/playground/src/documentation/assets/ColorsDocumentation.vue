@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 const props = defineProps<{ theme: WlThemeName }>();
 const { t } = usePlaygroundI18n();
-import { resolveWlToken, WlButton, wlDesignThemes, wlDesignTokens, type WlThemeName } from "gavia-ui";
+import { resolveWlToken, WlButton, wlDesignThemes, wlDesignTokens, type WlThemeName } from "legato-ui";
 import { computed, ref } from "vue";
 import CodePanel from "../../design-system/CodePanel.vue";
 import { translateDocumentationText } from "../localize";
@@ -27,11 +27,11 @@ const groups = computed(() => documentationColorGroups.map((group) => ({
 const tokenCount = computed(() => groups.value.reduce((count, group) => count + group.tokens.length, 0));
 const setupCode = computed(() => [
   'import { createApp } from "vue";',
-  'import "gavia-ui/styles/reset.css";',
-  'import "gavia-ui/styles/base.css";',
-  'import "gavia-ui/styles/primitives.css";',
-  ...((props.theme === "gavia" || props.theme === "gavia-dark") ? ['import "gavia-ui/styles/fonts/gavia.css";'] : []),
-  'import "gavia-ui/themes/' + props.theme + '.css";',
+  'import "legato-ui/styles/reset.css";',
+  'import "legato-ui/styles/base.css";',
+  'import "legato-ui/styles/primitives.css";',
+  ...((props.theme === "gavia" || props.theme === "gavia-dark") ? ['import "legato-ui/styles/fonts/gavia.css";'] : []),
+  'import "legato-ui/themes/' + props.theme + '.css";',
   'import App from "./App.vue";',
   "",
   'document.documentElement.dataset.wlTheme = "' + props.theme + '";',

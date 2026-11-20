@@ -1,4 +1,4 @@
-import { wlManifest } from "gavia-ui";
+import { wlManifest } from "legato-ui";
 // @vitest-environment node
 import { expect, it } from "vitest";
 import { documentationRoutes, gaviaSeoAssets } from "../build/seo-assets";
@@ -26,15 +26,15 @@ it("finds API details and full guide prose in search rather than just component 
 });
 
 it("builds an editable public consumer from the exact copied SFC", () => {
-  const source = '<script setup lang="ts">import { WlButton } from "gavia-ui";</script><template><WlButton>Save</WlButton></template>';
+  const source = '<script setup lang="ts">import { WlButton } from "legato-ui";</script><template><WlButton>Save</WlButton></template>';
   const fields = stackBlitzFields(source, "0.99.0");
   expect(fields["project[template]"]).toBe("node");
   expect(fields["project[files][src/App.vue]"]).toBe(source);
   const manifest = JSON.parse(fields["project[files][package.json]"]!);
-  expect(manifest.dependencies).toEqual({ "gavia-ui": "0.99.0", vue: "^3.4.0" });
-  expect(fields["project[files][src/main.ts]"]).toContain('import "gavia-ui/styles/base.css"');
-  expect(fields["project[files][src/main.ts]"]).toContain('import "gavia-ui/styles/primitives.css"');
-  expect(fields["project[files][src/main.ts]"]).toContain('import "gavia-ui/styles/fonts/gavia.css"');
+  expect(manifest.dependencies).toEqual({ "legato-ui": "0.99.0", vue: "^3.4.0" });
+  expect(fields["project[files][src/main.ts]"]).toContain('import "legato-ui/styles/base.css"');
+  expect(fields["project[files][src/main.ts]"]).toContain('import "legato-ui/styles/primitives.css"');
+  expect(fields["project[files][src/main.ts]"]).toContain('import "legato-ui/styles/fonts/gavia.css"');
 });
 
 it("emits canonical multilingual sitemap, prerender input and complete machine-readable API prose", () => {

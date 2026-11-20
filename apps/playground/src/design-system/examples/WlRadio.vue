@@ -2,8 +2,8 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlRadio } from "gavia-ui";
-import { useWlId } from "gavia-ui/composables";
+import { WlRadio } from "legato-ui";
+import { useWlId } from "legato-ui/composables";
 import { ref } from "vue";
 const value = ref<string>("team");
 const name = `example-access-${useWlId()}`;

@@ -1,4 +1,4 @@
-import type { WlTableColumn, WlTableRow } from "gavia-ui";
+import type { WlTableColumn, WlTableRow } from "legato-ui";
 import type { DocumentationHeading } from "../catalog";
 import { localizeDocumentation } from "../localize";
 

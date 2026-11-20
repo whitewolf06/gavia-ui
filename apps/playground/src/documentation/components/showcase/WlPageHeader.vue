@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlBreadcrumbs, WlButton, WlCheckbox, WlPageHeader, WlPill, WlSegmented, type WlSizeSm } from "gavia-ui";
+import { WlBreadcrumbs, WlButton, WlCheckbox, WlPageHeader, WlPill, WlSegmented, type WlSizeSm } from "legato-ui";
 import { ref } from "vue";
 const size = ref<WlSizeSm>("lg");
 const compact = ref(false);

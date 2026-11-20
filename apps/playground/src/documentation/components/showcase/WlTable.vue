@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlPill, WlTable, type WlTableColumn, type WlTableSort, type WlTableSortFn } from "gavia-ui";
+import { WlButton, WlPill, WlTable, type WlTableColumn, type WlTableSort, type WlTableSortFn } from "legato-ui";
 import { computed, ref } from "vue";
 interface MaterialRow { id: number; title: string; status: string; hours: number }
 const state = ref<"ready" | "empty" | "loading">("ready");

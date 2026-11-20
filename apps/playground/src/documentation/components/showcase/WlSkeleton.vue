@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlAvatar, WlButton, WlSkeleton } from "gavia-ui";
+import { WlAvatar, WlButton, WlSkeleton } from "legato-ui";
 import { ref } from "vue";
 const loading = ref(true);
 </script>

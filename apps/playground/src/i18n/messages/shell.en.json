@@ -71,7 +71,7 @@
   "shell.HomePage.text64": "Colors, spacing and typography",
   "shell.HomePage.text65": "Themes",
   "shell.HomePage.text66": "Light and dark themes",
-  "shell.HomePage.text67": "import { createApp } from \"vue\";\nimport App from \"./App.vue\";\n\n// Import styles explicitly: reset → base → primitives → theme.\nimport \"gavia-ui/styles/reset.css\";\nimport \"gavia-ui/styles/base.css\";\nimport \"gavia-ui/styles/primitives.css\";\nimport \"gavia-ui/themes/white.css\";\n\ndocument.documentElement.dataset.wlTheme = \"white\";\ncreateApp(App).mount(\"#app\");",
+  "shell.HomePage.text67": "import { createApp } from \"vue\";\nimport App from \"./App.vue\";\n\n// Import styles explicitly: reset → base → primitives → theme.\nimport \"legato-ui/styles/reset.css\";\nimport \"legato-ui/styles/base.css\";\nimport \"legato-ui/styles/primitives.css\";\nimport \"legato-ui/themes/white.css\";\n\ndocument.documentElement.dataset.wlTheme = \"white\";\ncreateApp(App).mount(\"#app\");",
   "shell.HomePage.text68": "Source version",
   "shell.HomePage.text69": "A component library for Vue 3.",
   "shell.HomePage.text70": "Buttons, inputs, tables and icons. Shared tokens, five themes and examples with code.",

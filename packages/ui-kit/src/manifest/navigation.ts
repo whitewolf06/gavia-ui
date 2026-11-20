@@ -28,7 +28,7 @@ export const navigationManifest = /* @__PURE__ */ defineComponentManifest([
         default: [],
         description: "WlBreadcrumbItem[]: { label, to?, href?, icon? }."
       },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [],
     emits: []

@@ -64,7 +64,7 @@ const props = withDefaults(defineProps<{
   ariaLabelledby?: string;
   /** Opening and closing animation; defaults to WlConfig.motion (true). */
   motion?: boolean;
-  /** Attributes of internal Gavia UI elements. */
+  /** Attributes of internal Legato UI elements. */
   pt?: WlPt<"drawer">;
 }>(), {
   position: "right", modal: true, dismissible: true, closable: true, closeOnEscape: true, blockScroll: true,

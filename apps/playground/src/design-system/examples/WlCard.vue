@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: PreviewProps }>();
 const { t } = usePlaygroundI18n();
-import { WlButton, WlCard } from "gavia-ui";
+import { WlButton, WlCard } from "legato-ui";
 import { ref } from "vue";
 type PreviewProps = Partial<InstanceType<typeof WlCard>["$props"]>;
 const saved = ref(false);

@@ -60,7 +60,7 @@ const props = withDefaults(defineProps<{
   initialFocus?: WlOverlayInitialFocus;
   /** Opening and closing animation; defaults to WlConfig.motion (true). */
   motion?: boolean;
-  /** Attributes of internal Gavia UI elements. */
+  /** Attributes of internal Legato UI elements. */
   pt?: WlPt<"dialog">;
 }>(), {
   modal: true, closable: true, dismissible: false, closeOnEscape: true, blockScroll: true,

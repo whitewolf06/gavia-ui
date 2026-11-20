@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlAlert, WlButton, WlEmpty, WlSegmented, WlSkeleton } from "gavia-ui";
+import { WlAlert, WlButton, WlEmpty, WlSegmented, WlSkeleton } from "legato-ui";
 import { ref } from "vue";
 const state = ref<string | null>("ready");
 const options = [

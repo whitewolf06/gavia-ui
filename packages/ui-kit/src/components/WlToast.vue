@@ -28,7 +28,7 @@ const props = withDefaults(defineProps<{
    * @default 5
    */
   max?: number;
-  /** Attributes of internal Gavia UI elements. */
+  /** Attributes of internal Legato UI elements. */
   pt?: WlPt<"toast">;
 }>(), { motion: undefined, position: "bottom-center", max: 5 });
 

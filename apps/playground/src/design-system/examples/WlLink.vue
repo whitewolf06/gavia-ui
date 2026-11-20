@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WlLink } from "gavia-ui";
+import { WlLink } from "legato-ui";
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();

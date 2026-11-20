@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlField, WlTextarea } from "gavia-ui";
+import { WlButton, WlField, WlTextarea } from "legato-ui";
 import { ref } from "vue";
 const text = ref(t("examples.briefly_describe_the_task_add_the_next_step_0858"));
 const comment = ref("");

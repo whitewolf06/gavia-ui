@@ -100,7 +100,7 @@ const props = withDefaults(defineProps<{
   maxSelectedLabels?: number;
   /** List animation; defaults to WlConfig.motion (true). */
   motion?: boolean;
-  /** Attributes of internal Gavia UI elements. */
+  /** Attributes of internal Legato UI elements. */
   pt?: WlPt<"multiselect">;
 }>(), {
   options: () => [], invalid: false, disabled: false, size: "md", density: "default",

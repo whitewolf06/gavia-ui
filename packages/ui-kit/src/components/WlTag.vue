@@ -47,7 +47,7 @@ const props = withDefaults(
      * @default undefined
      */
     removeLabel?: string;
-    /** Attributes of internal Gavia UI elements. */
+    /** Attributes of internal Legato UI elements. */
     pt?: WlPt<"tag">;
   }>(),
   {

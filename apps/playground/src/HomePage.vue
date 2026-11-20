@@ -10,10 +10,10 @@ const emit = defineEmits<{
   "toggle-theme": [];
 }>();
 const { t } = usePlaygroundI18n();
-import type { WlThemeName } from "gavia-ui";
-import { WlButton, WlIcon, WlIconButton, WlSegmented } from "gavia-ui";
-import { WL_ICON_NAMES } from "gavia-ui";
-import { wlManifest } from "gavia-ui";
+import type { WlThemeName } from "legato-ui";
+import { WlButton, WlIcon, WlIconButton, WlSegmented } from "legato-ui";
+import { WL_ICON_NAMES } from "legato-ui";
+import { wlManifest } from "legato-ui";
 import catalogSummary from "virtual:gavia-catalog-summary";
 import { computed, ref, watch } from "vue";
 import gaviaForestUrl from "../../../docs/brand/gavia-forest-card-v1.webp";

@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlAccordion } from "gavia-ui";
+import { WlAccordion } from "legato-ui";
 import { ref } from "vue";
 const open = ref<string[]>(["overview"]);
 </script>

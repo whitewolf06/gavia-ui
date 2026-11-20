@@ -220,7 +220,7 @@ export async function checkPackedBrowser(consumerDir, artifactLabel = "consumer"
 
 async function exercise(page, expect) {
   const fixture = page.locator("#packed-fixture");
-  await expect(fixture.getByRole("heading", { name: "Packed Gavia UI consumer" })).toBeVisible();
+  await expect(fixture.getByRole("heading", { name: "Packed Legato UI consumer" })).toBeVisible();
   await expect(fixture.getByLabel("Имя", { exact: true })).toHaveValue("Gavia");
   await fixture.getByLabel("Имя", { exact: true }).fill("Новый проект");
   await expect(fixture.getByTestId("name-value")).toHaveText("Новый проект");

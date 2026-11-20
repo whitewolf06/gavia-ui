@@ -240,7 +240,7 @@ test("home opens WlButton documentation and controls update the live button, con
   const consumerCode = await source.locator("pre code").textContent();
   expect(consumerCode).not.toBeNull();
   expect(consumerCode!.length).toBeGreaterThan(0);
-  expect(consumerCode).toContain('from "gavia-ui"');
+  expect(consumerCode).toContain('from "legato-ui"');
   expect(consumerCode).not.toContain("packages/ui-kit");
   // Capture the exact clipboard boundary, as in the existing recipe tests.
   // This checks copy wiring independently of operating-system permissions.
@@ -394,7 +394,7 @@ function expectFoundationSource(consumerCode: string | null, name: string): void
     "typography-scale", "responsive-grid", "gap-alignment", "page-composition",
     "spacing", "stacking-layers", "content-writing", "content-states"
   ].includes(name)) {
-    expect(consumerCode).toContain('from "gavia-ui"');
+    expect(consumerCode).toContain('from "legato-ui"');
   } else {
     expect(consumerCode).toContain("<template>");
     expect(consumerCode).toContain("wl-");
@@ -787,7 +787,7 @@ test("generic documentation keeps controls beside live code, preserves tab state
   for (const value of ['"size":"lg"', '"density":"compact"', '"invalid":true', '"disabled":true']) {
     await expect(code).toContainText(value);
   }
-  await expect(code).toContainText('from "gavia-ui"');
+  await expect(code).toContainText('from "legato-ui"');
   expect(await code.textContent()).not.toContain("packages/ui-kit");
 
   await tabs.getByRole("tab", { name: "API", exact: true }).click();
@@ -824,7 +824,7 @@ test("generic documentation keeps controls beside live code, preserves tab state
   await expect(code).not.toContainText('"invalid":true');
   const extra = workspace.locator('[data-docs-component-extra="WlInput"]');
   await expect(extra.getByTestId("docs-component-extra-preview").getByRole("textbox", { name: "Название, sm", exact: true })).toHaveValue("План команды");
-  await expect(extra.getByTestId("docs-component-extra-source").locator("pre code")).toContainText('from "gavia-ui"');
+  await expect(extra.getByTestId("docs-component-extra-source").locator("pre code")).toContainText('from "legato-ui"');
 
   await page.setViewportSize({ width: 320, height: 740 });
   await expect.poll(async () => {

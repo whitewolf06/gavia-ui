@@ -6,10 +6,10 @@
       "node"
     ],
     "paths": {
-      "gavia-ui": ["../../packages/ui-kit/src/index.ts"],
-      "gavia-ui/utils": ["../../packages/ui-kit/src/utils/index.ts"],
-      "gavia-ui/composables": ["../../packages/ui-kit/src/composables/index.ts"],
-      "gavia-ui/theme": ["../../packages/ui-kit/src/theme/index.ts"],
+      "legato-ui": ["../../packages/ui-kit/src/index.ts"],
+      "legato-ui/utils": ["../../packages/ui-kit/src/utils/index.ts"],
+      "legato-ui/composables": ["../../packages/ui-kit/src/composables/index.ts"],
+      "legato-ui/theme": ["../../packages/ui-kit/src/theme/index.ts"],
       "vue": [
         "./node_modules/vue"
       ],

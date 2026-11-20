@@ -39,7 +39,7 @@ describe("copyable foundation examples", () => {
       ? compileScript(parsed.descriptor, { id: name })
       : undefined;
     for (const imported of Object.values(script?.imports ?? {})) {
-      expect(["gavia-ui", "vue"]).toContain(imported.source);
+      expect(["legato-ui", "vue"]).toContain(imported.source);
     }
     const template = compileTemplate({
       filename, id: name, source: parsed.descriptor.template!.content,

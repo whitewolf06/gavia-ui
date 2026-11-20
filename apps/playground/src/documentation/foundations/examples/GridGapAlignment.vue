@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlSelect } from "gavia-ui";
+import { WlSelect } from "legato-ui";
 import { ref } from "vue";
 const space = ref("lg");
 const alignment = ref("stretch");

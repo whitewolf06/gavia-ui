@@ -95,7 +95,7 @@ test("button comparisons cover manifest variants and sizes, and every copied exa
     const expectedSource = canonicalSource(name);
     expect(await code.textContent(), name + " rendered source").toBe(expectedSource);
     expect((await code.locator(".ds-code-token").allTextContents()).join(""), name + " highlighted source").toBe(expectedSource);
-    expect(expectedSource).toContain('from "gavia-ui"');
+    expect(expectedSource).toContain('from "legato-ui"');
     expect(expectedSource).not.toContain("packages/ui-kit");
     await copyCodePanel(panel);
     await expect(panel.getByRole("status")).toHaveText("Код скопирован.");

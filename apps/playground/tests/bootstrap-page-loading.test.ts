@@ -17,7 +17,7 @@ const startup = vi.hoisted(() => {
   };
 });
 vi.mock("vue", async (original) => ({ ...await original<typeof Vue>(), createApp: startup.createApp, watch: vi.fn() }));
-vi.mock("gavia-ui", () => ({
+vi.mock("legato-ui", () => ({
   createWlPt: () => ({}), useWlConfig: () => ({ setLocale: vi.fn() }),
   WlConfig: {}, WlConfirmationService: {}, WlToastService: {}, wlLocaleEn: {}, wlLocaleRu: {}
 }));

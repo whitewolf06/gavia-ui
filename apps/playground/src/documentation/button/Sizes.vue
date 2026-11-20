@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlCheckbox, type WlDensity, type WlSize } from "gavia-ui";
+import { WlButton, WlCheckbox, type WlDensity, type WlSize } from "legato-ui";
 import { computed, ref } from "vue";
 const labels = { xs: "XS", sm: "SM", md: "MD", lg: "LG" } satisfies Record<WlSize, string>;
 const sizes = Object.keys(labels) as WlSize[];

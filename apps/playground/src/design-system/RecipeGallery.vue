@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton } from "gavia-ui";
+import { WlButton } from "legato-ui";
 import { type Component, computed, defineAsyncComponent, ref } from "vue";
 import { consumerSource } from "./code";
 import CodePanel from "./CodePanel.vue";

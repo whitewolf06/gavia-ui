@@ -1,4 +1,4 @@
-import { wlContrastReport, wlDesignThemes, wlDesignTokens, wlTypography } from "gavia-ui";
+import { wlContrastReport, wlDesignThemes, wlDesignTokens, wlTypography } from "legato-ui";
 import { translateDocumentationText } from "../documentation/localize";
 import { hasPlaygroundMessage, translate } from "../i18n";
 

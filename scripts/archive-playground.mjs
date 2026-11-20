@@ -11,7 +11,7 @@ export function assertPortableHtml(source) {
   const assets = [...source.matchAll(/\b(?:src|href)[ \t]*=[ \t]*["']([^"']+)["']/gi)];
   for (const [, url] of assets) {
     if (url.startsWith("/") && !url.startsWith("//")) {
-      throw new Error("Preview must use relative paths: pnpm --filter gavia-ui-playground build --base=./");
+      throw new Error("Preview must use relative paths: pnpm --filter legato-ui-playground build --base=./");
     }
   }
 }

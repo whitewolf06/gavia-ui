@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { resolveWlIconName, WlIcon } from "gavia-ui";
+import { resolveWlIconName, WlIcon } from "legato-ui";
 const legacyName = "pi pi-pencil";
 const missingName = "my-missing-icon";
 </script>

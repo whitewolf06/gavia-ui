@@ -8,7 +8,7 @@ import type { WlPt } from "../pt-types";
 import { useWlPt } from "../config";
 
 const props = defineProps<{
-  /** Attributes of internal Gavia UI elements. */
+  /** Attributes of internal Legato UI elements. */
   pt?: WlPt<"divider">;
   /** Layout direction and applicable arrow-key navigation direction. */
   orientation?: "horizontal" | "vertical";

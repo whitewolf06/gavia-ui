@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlMultiSelect } from "gavia-ui";
+import { WlMultiSelect } from "legato-ui";
 import { computed, ref } from "vue";
 const value = ref(["design", "code"]);
 const options = computed(() => [{

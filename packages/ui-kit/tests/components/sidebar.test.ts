@@ -28,7 +28,7 @@ const footerItems: WlSidebarItem[] = [
 describe("WlSidebar", () => {
   it("composes navigation from WlNavItem primitives", () => {
     const wrapper = mount(WlSidebar, {
-      props: { groups, footerItems, brand: "Gavia UI", brandMark: "G" }
+      props: { groups, footerItems, brand: "Legato UI", brandMark: "G" }
     });
 
     expect(wrapper.findAllComponents(WlNavItem)).toHaveLength(6);
@@ -41,7 +41,7 @@ describe("WlSidebar", () => {
 
   it("expands on hover and keeps active state controlled by v-model", async () => {
     const wrapper = mount(WlSidebar, {
-      props: { groups, modelValue: "today", brand: "Gavia UI" }
+      props: { groups, modelValue: "today", brand: "Legato UI" }
     });
     const root = wrapper.find('[data-wl="sidebar"]');
 

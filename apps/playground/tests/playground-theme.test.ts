@@ -1,6 +1,6 @@
 import type { Plugin } from "vue";
 import { flushPromises, mount } from "@vue/test-utils";
-import { createWlTheme, parseWlThemeConfig } from "gavia-ui/theme";
+import { createWlTheme, parseWlThemeConfig } from "legato-ui/theme";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { playgroundI18n } from "../src/i18n";
 import { playgroundLocale } from "../src/i18n/locale";

@@ -105,7 +105,7 @@ try {
       "theme:check": "gavia-theme --config theme.config.json --output generated-theme.css --check"
     },
     dependencies: {
-      "gavia-ui": `file:${archivePath.replaceAll("\\", "/")}`,
+      "legato-ui": `file:${archivePath.replaceAll("\\", "/")}`,
       vue: registryVueVersion ?? localPackage("vue")
     },
     devDependencies: selectedManager === "bun"
@@ -163,19 +163,19 @@ try {
   write(
     "src/main.ts",
     `import { createApp } from "vue";
-import { WlConfig, WlToastService, WlConfirmationService, createWlPt, wlLocaleRu, wlManifest, wlDesignTokens, resolveWlToken, getWlThemeTokens, type WlDesignTokenName, type WlSpace } from "gavia-ui";
-import packageManifest from "gavia-ui/manifest.json";
-import designCatalog from "gavia-ui/design-tokens.json";
-import "gavia-ui/styles/reset.css";
-import "gavia-ui/styles/base.css";
-import "gavia-ui/styles/primitives.css";
-import "gavia-ui/styles/fonts/gavia.css";
-import "gavia-ui/themes/white.css";
-import "gavia-ui/themes/graphite.css";
-import "gavia-ui/themes/newspaper.css";
-import "gavia-ui/themes/gavia.css";
-import "gavia-ui/themes/gavia-dark.css";
-import regularFontUrl from "gavia-ui/fonts/gavia/Gavia-Regular.woff2?url";
+import { WlConfig, WlToastService, WlConfirmationService, createWlPt, wlLocaleRu, wlManifest, wlDesignTokens, resolveWlToken, getWlThemeTokens, type WlDesignTokenName, type WlSpace } from "legato-ui";
+import packageManifest from "legato-ui/manifest.json";
+import designCatalog from "legato-ui/design-tokens.json";
+import "legato-ui/styles/reset.css";
+import "legato-ui/styles/base.css";
+import "legato-ui/styles/primitives.css";
+import "legato-ui/styles/fonts/gavia.css";
+import "legato-ui/themes/white.css";
+import "legato-ui/themes/graphite.css";
+import "legato-ui/themes/newspaper.css";
+import "legato-ui/themes/gavia.css";
+import "legato-ui/themes/gavia-dark.css";
+import regularFontUrl from "legato-ui/fonts/gavia/Gavia-Regular.woff2?url";
 import App from "./App.vue";
 
 if (!regularFontUrl) throw new Error("Font asset export did not resolve");
@@ -214,14 +214,14 @@ createApp(App).use(WlConfig, { pt: createWlPt(), locale: wlLocaleRu })
   ];
   for (const relativePath of apiContractFiles) {
     const source = readFileSync(join(uiKitDir, "tests", relativePath), "utf8")
-      .replace(/from (["'])(?:\.\.\/)+src\/theme\/index\1/g, 'from "gavia-ui/theme"')
-      .replace(/from (["'])(?:\.\.\/)+src\1/g, 'from "gavia-ui"');
+      .replace(/from (["'])(?:\.\.\/)+src\/theme\/index\1/g, 'from "legato-ui/theme"')
+      .replace(/from (["'])(?:\.\.\/)+src\1/g, 'from "legato-ui"');
     write(`src/contracts/${relativePath}`, source);
   }
   const exampleImports = copiedExamples.map((path, index) => `import Example${index} from "${path}";`).join("\n");
   write("src/App.vue", `<script setup lang="ts">
 ${exampleImports}
-import { WlToast, WlConfirmDialog } from "gavia-ui";
+import { WlToast, WlConfirmDialog } from "legato-ui";
 import PackedSmoke from "./PackedSmoke.vue";
 const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", ")}];
 </script>

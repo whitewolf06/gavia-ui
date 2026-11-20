@@ -71,7 +71,7 @@
   "shell.HomePage.text64": "Цвета, отступы, типографика",
   "shell.HomePage.text65": "Темы",
   "shell.HomePage.text66": "Светлые и тёмные темы",
-  "shell.HomePage.text67": "import { createApp } from \"vue\";\nimport App from \"./App.vue\";\n\n// Стили подключаются явно: reset → base → примитивы → тема.\nimport \"gavia-ui/styles/reset.css\";\nimport \"gavia-ui/styles/base.css\";\nimport \"gavia-ui/styles/primitives.css\";\nimport \"gavia-ui/themes/white.css\";\n\ndocument.documentElement.dataset.wlTheme = \"white\";\ncreateApp(App).mount(\"#app\");",
+  "shell.HomePage.text67": "import { createApp } from \"vue\";\nimport App from \"./App.vue\";\n\n// Стили подключаются явно: reset → base → примитивы → тема.\nimport \"legato-ui/styles/reset.css\";\nimport \"legato-ui/styles/base.css\";\nimport \"legato-ui/styles/primitives.css\";\nimport \"legato-ui/themes/white.css\";\n\ndocument.documentElement.dataset.wlTheme = \"white\";\ncreateApp(App).mount(\"#app\");",
   "shell.HomePage.text68": "Версия исходников",
   "shell.HomePage.text69": "Библиотека компонентов для Vue 3.",
   "shell.HomePage.text70": "Кнопки, поля, таблицы и иконки. Общие токены, пять тем оформления и примеры с кодом.",

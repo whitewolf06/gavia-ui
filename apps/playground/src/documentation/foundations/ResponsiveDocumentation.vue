@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 const emit = defineEmits<{ component: [name: string | undefined]; navigate: [view: "system" | "project" | "components"] }>();
 const { t } = usePlaygroundI18n();
-import { wlBreakpoints, WlButton } from "gavia-ui";
+import { wlBreakpoints, WlButton } from "legato-ui";
 import CodePanel from "../../design-system/CodePanel.vue";
 import { documentationFoundationPages } from "../catalog";
 import ContainerCard from "./examples/ContainerCard.vue";

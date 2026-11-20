@@ -8,7 +8,7 @@
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": [
-    "gavia-ui-playground"
+    "legato-ui-playground"
   ],
   "privatePackages": {
     "version": false,

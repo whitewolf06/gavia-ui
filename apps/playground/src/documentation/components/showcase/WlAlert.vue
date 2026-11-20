@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlAlert, WlButton } from "gavia-ui";
+import { WlAlert, WlButton } from "legato-ui";
 import { nextTick, ref } from "vue";
 const error = ref(true);
 const attempts = ref(0);

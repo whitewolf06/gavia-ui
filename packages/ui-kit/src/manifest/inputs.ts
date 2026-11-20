@@ -86,7 +86,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "disabled", type: "boolean", default: false, description: "Отключает поле." },
       { name: "placeholder", type: "string", description: "Плейсхолдер." },
       { name: "type", type: "string", default: "text", description: "Атрибут type элемента input." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [
       { name: "prefix", description: "Содержимое слева внутри поля." },
@@ -149,7 +149,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "rows", type: "number", default: 3, description: "Число строк." },
       { name: "autoResize", type: "boolean", default: false, description: "Подстраивает высоту под содержимое." },
       { name: "placeholder", type: "string", description: "Плейсхолдер." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [],
     emits: [],
@@ -177,7 +177,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "size", type: "enum", default: "md", values: WL_SIZES_SM, description: "Размер поля." },
       { name: "density", type: "enum", default: "default", values: WL_DENSITIES, description: "Плотность." },
       { name: "motion", type: "boolean", description: "Анимация списка; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." },
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." },
       { name: "optionDisabled", type: "union", description: "Поле опции или функция: true запрещает выбор." },
       { name: "optionKey", type: "union", description: "Поле или функция для устойчивого ключа опции." },
       { name: "clearable", type: "boolean", description: "Кнопка очистки выбранного значения. После очистки модель равна null.", default: false }
@@ -228,7 +228,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
         description: "Сколько подписей показывать до замены счётчиком. Только для display=\"comma\"."
       },
       { name: "motion", type: "boolean", description: "Анимация списка; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." },
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." },
       { name: "optionDisabled", type: "union", description: "Поле опции или функция: true запрещает выбор." },
       { name: "optionKey", type: "union", description: "Поле или функция для устойчивого ключа опции." }
     ],
@@ -274,7 +274,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
         description: "Минимум символов для запуска поиска."
       },
       { name: "motion", type: "boolean", description: "Анимация подсказок; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." },
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." },
       { name: "optionDisabled", type: "union", description: "Поле опции или функция: true запрещает выбор." },
       { name: "optionKey", type: "union", description: "Поле или функция для устойчивого ключа опции." },
       { name: "clearable", type: "boolean", description: "Кнопка очистки выбранного значения. После очистки модель равна null.", default: false }
@@ -305,7 +305,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "disabled", type: "boolean", default: false, description: "Отключает чекбокс." },
       { name: "indeterminate", type: "boolean", default: false, description: "Промежуточное состояние." },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [{ name: "default", description: "Подпись рядом с чекбоксом." }],
     emits: [],
@@ -320,7 +320,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "name", type: "string", description: "Нативный name группы." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает радиокнопку." },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [{ name: "default", description: "Подпись рядом с радиокнопкой." }],
     emits: [],
@@ -334,7 +334,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "size", type: "enum", default: "md", values: WL_SWITCH_SIZES, description: "Размер." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает переключатель." },
       { name: "invalid", type: "boolean", default: false, description: "Состояние ошибки." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [{ name: "default", description: "Подпись рядом с переключателем." }],
     emits: [],
@@ -373,7 +373,7 @@ export const inputsManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "maxDate", type: "string", description: "Максимальная дата в формате \"YYYY-MM-DD\". Пустое или неверное значение не ограничивает выбор." },
       { name: "displayFormat", type: "enum", default: "dd.mm.yyyy", values: ["dd.mm.yyyy", "yyyy-mm-dd"], description: "Формат отображения и ручного ввода; модель остаётся ISO." },
       { name: "motion", type: "boolean", description: "Анимация календаря; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [],
     emits: [],

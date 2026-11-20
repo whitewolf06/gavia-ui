@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, type WlButtonVariant } from "gavia-ui";
+import { WlButton, type WlButtonVariant } from "legato-ui";
 import { ref } from "vue";
 // The public union makes a missing or unsupported variant a type error.
 const labels = {

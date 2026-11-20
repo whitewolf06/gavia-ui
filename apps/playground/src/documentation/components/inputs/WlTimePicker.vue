@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlField, WlTimePicker } from "gavia-ui";
+import { WlButton, WlField, WlTimePicker } from "legato-ui";
 import { ref } from "vue";
 const appointment = ref<string | null>("09:30");
 const night = ref<string | null>("23:30");

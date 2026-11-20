@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlBreadcrumbs } from "gavia-ui";
+import { WlBreadcrumbs } from "legato-ui";
 import { computed } from "vue";
 const items = computed(() => [
   { key: "home", label: "Gavia UI", href: "#ds-components" },

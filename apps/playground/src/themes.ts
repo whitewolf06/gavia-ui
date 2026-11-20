@@ -1,5 +1,5 @@
-import type { WlThemeName } from "gavia-ui";
-import { resolveWlTheme, type WlThemePair } from "gavia-ui/composables";
+import type { WlThemeName } from "legato-ui";
+import { resolveWlTheme, type WlThemePair } from "legato-ui/composables";
 import catalogSummary from "virtual:gavia-catalog-summary";
 import { ref } from "vue";
 import { playgroundLocale } from "./i18n/locale";

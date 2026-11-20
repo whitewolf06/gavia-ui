@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlCalendar, type WlCalendarEvent } from "gavia-ui";
+import { WlButton, WlCalendar, type WlCalendarEvent } from "legato-ui";
 import { computed, ref } from "vue";
 const date = ref("2026-10-15");
 const month = ref("2026-10");

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WlProgress } from "gavia-ui";
+import { WlProgress } from "legato-ui";
 import { computed } from "vue";
 
 const props = defineProps<{ value: number; label: string }>();

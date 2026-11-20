@@ -48,7 +48,7 @@ export const feedbackManifest = /* @__PURE__ */ defineComponentManifest([
     props: [
       { name: "group", type: "string", description: "Группа уведомлений." },
       { name: "motion", type: "boolean", description: "Анимация сообщений; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [],
     emits: []
@@ -61,7 +61,7 @@ export const feedbackManifest = /* @__PURE__ */ defineComponentManifest([
     props: [
       { name: "group", type: "string", description: "Группа диалога; обычно можно не задавать." },
       { name: "motion", type: "boolean", description: "Анимация окна; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [],
     emits: []

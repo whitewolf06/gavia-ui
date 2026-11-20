@@ -51,7 +51,7 @@ jobs:
         run: node --test scripts/new-component.test.mjs scripts/package-docs.test.mjs scripts/normalize-declarations.test.mjs scripts/archive-fonts.test.mjs scripts/size-budget.test.mjs scripts/check-package-types.test.mjs scripts/sync-api.test.mjs scripts/utility-boundary.test.mjs scripts/prerender-pages.test.mjs .github/scripts/pages-provenance.test.mjs
       - name: Test Playground on coverage runtime
         if: matrix.node-version == '24'
-        run: pnpm --filter gavia-ui-playground test
+        run: pnpm --filter legato-ui-playground test
       - name: Verify dependency boundary
         run: pnpm verify:dependencies
       - name: Verify icon registry

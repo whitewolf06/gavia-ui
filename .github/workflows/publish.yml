@@ -91,7 +91,7 @@ jobs:
       - name: Restore validated quality metrics for this revision
         run: pnpm quality:restore .tmp/quality-report
       - name: Build portable release playground
-        run: pnpm --filter gavia-ui-playground build --base=./
+        run: pnpm --filter legato-ui-playground build --base=./
       - run: pnpm release:preview
       - name: Prepare verified desktop font attachment
         run: node scripts/archive-fonts.mjs --output .tmp/release-previews/Gavia-Sans-TTF.zip

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { WlAccordion, WlAutocomplete, WlField, WlInput, WlMultiSelect, WlNumberInput, WlSelect, WlSlider, WlTextarea } from "gavia-ui";
-import "gavia-ui/styles/primitives.css";
+import { WlAccordion, WlAutocomplete, WlField, WlInput, WlMultiSelect, WlNumberInput, WlSelect, WlSlider, WlTextarea } from "legato-ui";
+import "legato-ui/styles/primitives.css";
 
 const options = ["Alpha", "Beta"];
 const marks = [{ value: 0, label: "0" }, { value: 100, label: "100" }];

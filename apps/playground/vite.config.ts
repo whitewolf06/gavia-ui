@@ -13,9 +13,9 @@ const source = (path: string) => fileURLToPath(new URL(`../../packages/ui-kit/sr
 // Exact matches preserve CSS/font/JSON package exports. Optional public utility
 // entries become available when implemented, without exposing arbitrary internals.
 export const playgroundSourceAliases = [
-  { find: /^gavia-ui$/, replacement: source("index.ts") },
+  { find: /^legato-ui$/, replacement: source("index.ts") },
   ...["utils", "composables", "theme"].flatMap((entry) => existsSync(source(`${entry}/index.ts`))
-    ? [{ find: new RegExp(`^gavia-ui/${entry}$`), replacement: source(`${entry}/index.ts`) }]
+    ? [{ find: new RegExp(`^legato-ui/${entry}$`), replacement: source(`${entry}/index.ts`) }]
     : [])
 ];
 

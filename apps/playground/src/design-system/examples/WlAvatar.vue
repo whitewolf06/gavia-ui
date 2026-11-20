@@ -2,8 +2,8 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlAvatar } from "gavia-ui";
-import { getWlColorFromString } from "gavia-ui/utils";
+import { WlAvatar } from "legato-ui";
+import { getWlColorFromString } from "legato-ui/utils";
 import { computed } from "vue";
 const namedAvatarPt = computed(() => ({
   root: {

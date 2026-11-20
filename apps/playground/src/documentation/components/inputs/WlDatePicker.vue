@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlDatePicker, type WlDateRange, WlField } from "gavia-ui";
+import { WlButton, WlDatePicker, type WlDateRange, WlField } from "legato-ui";
 import { ref } from "vue";
 const date = ref<string | null>("2026-10-15");
 const period = ref<WlDateRange | null>(["2026-10-15", "2026-10-20"]);

@@ -1,7 +1,7 @@
-import type { WlThemeName } from "gavia-ui";
-import { wlContrastPairs } from "gavia-ui";
-import { createWlTheme, parseWlThemeConfig, type WlThemeConfig, type WlThemeOverrides, type WlThemePalette } from "gavia-ui/theme";
-import { getWlContrastRatio, normalizeWlHex } from "gavia-ui/utils";
+import type { WlThemeName } from "legato-ui";
+import { wlContrastPairs } from "legato-ui";
+import { createWlTheme, parseWlThemeConfig, type WlThemeConfig, type WlThemeOverrides, type WlThemePalette } from "legato-ui/theme";
+import { getWlContrastRatio, normalizeWlHex } from "legato-ui/utils";
 import { localizeContrastLabel } from "../design-system/localized-tokens";
 import { translate as t } from "../i18n";
 

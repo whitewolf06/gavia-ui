@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlIcon, type WlIconName } from "gavia-ui";
+import { WlIcon, type WlIconName } from "legato-ui";
 const names = ["plus", "search", "check", "trash", "folder", "bell"] as const satisfies readonly WlIconName[];
 </script>
 

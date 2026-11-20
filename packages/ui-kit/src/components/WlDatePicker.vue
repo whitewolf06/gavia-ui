@@ -87,7 +87,7 @@ const props = withDefaults(defineProps<{
   endLabel?: string;
   /** Calendar animation; defaults to WlConfig.motion (true). */
   motion?: boolean;
-  /** Attributes of internal Gavia UI elements. */
+  /** Attributes of internal Legato UI elements. */
   pt?: WlPt<"datepicker">;
 }>(), {
   size: "md", density: "default", disabled: false, invalid: false, showIcon: false,

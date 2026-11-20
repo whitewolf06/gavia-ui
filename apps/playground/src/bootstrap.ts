@@ -1,4 +1,4 @@
-import { createWlPt, useWlConfig, WlConfig, WlConfirmationService, wlLocaleEn, wlLocaleRu, WlToastService } from "gavia-ui";
+import { createWlPt, useWlConfig, WlConfig, WlConfirmationService, wlLocaleEn, wlLocaleRu, WlToastService } from "legato-ui";
 import { createApp, effectScope, watch } from "vue";
 import App from "./App.vue";
 import { playgroundI18n, playgroundLocale, preparePlaygroundPage } from "./i18n";

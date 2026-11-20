@@ -31,7 +31,7 @@ describe("setup-aware consumer source", () => {
     const source = consumerSource(setupExample, options);
     expect(source).toContain("const props = { preview: " + JSON.stringify(options) + " as Record<string, unknown> };");
     expect(source).toContain("v-bind=" + String.fromCharCode(39) + JSON.stringify(options) + String.fromCharCode(39));
-    expect(source).toContain('from "gavia-ui"');
+    expect(source).toContain('from "legato-ui"');
     expect(source).not.toContain("defineProps");
     expect(source).not.toContain('v-bind="preview"');
     compile(source);
@@ -60,7 +60,7 @@ describe("setup-aware consumer source", () => {
       : { "data-label": "A & B's <Details>" };
     for (const options of [{}, changed]) {
       const source = consumerSource(raw, options);
-      expect(source).toContain('from "gavia-ui"');
+      expect(source).toContain('from "legato-ui"');
       expect(source).not.toContain("defineProps");
       expect(source).not.toContain("PreviewProps");
       expect(source).not.toContain('v-bind="preview"');
@@ -124,7 +124,7 @@ describe("localised standalone consumer source", () => {
     const source = consumerSource(raw, {}, messages);
     expect(source).toContain(JSON.stringify(label));
     expect(source).toContain(JSON.stringify(counter));
-    expect(source).toContain('from "gavia-ui"');
+    expect(source).toContain('from "legato-ui"');
     expect(source).not.toMatch(/usePlaygroundI18n|from ["'](?:\.\.\/)+i18n|\bt\(["']examples\./);
     compile(source);
   });

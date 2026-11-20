@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlIcon, WlInput } from "gavia-ui";
+import { WlIcon, WlInput } from "legato-ui";
 import { ref } from "vue";
 const value = ref(t("examples.team_material_0071"));
 </script>

@@ -1,4 +1,4 @@
-import type { WlComponentManifest, WlPropManifest } from "gavia-ui";
+import type { WlComponentManifest, WlPropManifest } from "legato-ui";
 import { translate as t } from "../i18n";
 import { createDocumentationControls, type DocumentationControl } from "./documentation-controls";
 export interface StateCase { id: string; label: string; props: Record<string, unknown> }

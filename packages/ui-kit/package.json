@@ -1,21 +1,21 @@
 {
-  "name": "gavia-ui",
+  "name": "legato-ui",
   "version": "1.1.0",
-  "description": "Gavia UI — a free, open source Vue 3 and TypeScript component library and design system",
+  "description": "Legato UI — a free, open source Vue 3 and TypeScript component library and design system",
   "type": "module",
   "license": "MIT",
   "author": {
     "name": "Gorbach Dmitry",
     "url": "https://github.com/whitewolf06"
   },
-  "homepage": "https://github.com/whitewolf06/gavia-ui#readme",
+  "homepage": "https://github.com/whitewolf06/legato-ui#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/whitewolf06/gavia-ui.git",
+    "url": "git+https://github.com/whitewolf06/legato-ui.git",
     "directory": "packages/ui-kit"
   },
   "bugs": {
-    "url": "https://github.com/whitewolf06/gavia-ui/issues"
+    "url": "https://github.com/whitewolf06/legato-ui/issues"
   },
   "keywords": [
     "vue",
@@ -24,6 +24,7 @@
     "ui",
     "design-system",
     "typescript",
+    "legato",
     "gavia"
   ],
   "sideEffects": [
@@ -49,7 +50,7 @@
   },
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "bin": { "gavia-theme": "./bin/gavia-theme.mjs" },
+  "bin": { "legato-theme": "./bin/gavia-theme.mjs", "gavia-theme": "./bin/gavia-theme.mjs" },
   "files": [
     "dist",
     "bin",

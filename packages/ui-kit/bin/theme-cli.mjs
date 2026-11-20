@@ -2,7 +2,7 @@
 import { existsSync, mkdirSync, readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
-const usage = "Usage: gavia-theme --config <theme.json> --output <theme.css> [--check]\n";
+const usage = "Usage: legato-theme --config <theme.json> --output <theme.css> [--check]\n";
 
 function argumentsFor(argv) {
   const options = { check: false };
@@ -69,7 +69,7 @@ export function runThemeCli(argv, engine, {
     stdout(`Wrote ${options.output}\n`);
     return 0;
   } catch (error) {
-    stderr(`gavia-theme: ${error instanceof Error ? error.message : String(error)}\n`);
+    stderr(`legato-theme: ${error instanceof Error ? error.message : String(error)}\n`);
     return 1;
   }
 }

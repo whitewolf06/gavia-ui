@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlPasswordInput } from "gavia-ui";
+import { WlPasswordInput } from "legato-ui";
 import { ref } from "vue";
 const value = ref("Example123!");
 </script>

@@ -93,7 +93,7 @@ describe("lossless documentation highlighting", () => {
       css: '.card { --wl-size: 12px; color: #fff; content: "<script>"; /* note */ }',
       html: '<input name="message" value="a > b" disabled>\n<p>one &amp; two</p>',
       shell: '# install\npnpm --filter gavia-ui add "file name"\necho $VERSION # keep version\n',
-      json: '{\n  "name": "gavia-ui", "version": 0.8, "ready": true, "value": null\n}'
+      json: '{\n  "name": "legato-ui", "version": 0.8, "ready": true, "value": null\n}'
     } as const;
     for (const language of Object.keys(samples) as (keyof typeof samples)[]) {
       expect(text(samples[language], language)).toBe(samples[language]);
@@ -120,7 +120,7 @@ describe("lossless documentation highlighting", () => {
     expect(detectCodeLanguage(".card { padding: 8px; }")).toBe("css");
     expect(detectCodeLanguage("button { color: red; }")).toBe("css");
     expect(detectCodeLanguage('{"ready":true}')).toBe("json");
-    expect(detectCodeLanguage('import { WlButton } from "gavia-ui";')).toBe("ts");
+    expect(detectCodeLanguage('import { WlButton } from "legato-ui";')).toBe("ts");
     expect(highlightCode("<script>bad()</script>", "text")).toEqual([{ kind: "plain", text: "<script>bad()</script>" }]);
   });
 

@@ -26,7 +26,7 @@ const props = withDefaults(
     maxItems?: number;
     /** Accessible name for the collapsed-items trigger. */
     collapseLabel?: string;
-    /** Attributes of internal Gavia UI elements. */
+    /** Attributes of internal Legato UI elements. */
     pt?: WlPt<"breadcrumbs">;
   }>(),
   {

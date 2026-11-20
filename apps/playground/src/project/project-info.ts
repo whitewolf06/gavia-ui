@@ -1,20 +1,24 @@
 import packageMetadata from "../../../../packages/ui-kit/package.json" with { type: "json" };
+import published from "./published-package.json" with { type: "json" };
 const { author, version } = packageMetadata;
+const repositoryUrl = packageMetadata.repository.url.replace(/^git\+/, "").replace(/\.git$/, "");
+const documentationBaseUrl = repositoryUrl + "/blob/main/";
 
 /** Public project metadata shared by the showcase and its navigation. */
 export const gaviaProjectInfo = {
-  name: "Gavia UI",
+  name: "Legato UI",
   version,
   author,
-  repositoryUrl: "https://github.com/whitewolf06/gavia-ui",
-  documentationBaseUrl: "https://github.com/whitewolf06/gavia-ui/blob/main/",
+  repositoryUrl,
+  documentationBaseUrl,
   license: "MIT",
-  licenseUrl: "https://github.com/whitewolf06/gavia-ui/blob/main/LICENSE",
-  instructionsUrl: "https://github.com/whitewolf06/gavia-ui/blob/main/README.md",
-  contributingUrl: "https://github.com/whitewolf06/gavia-ui/blob/main/CONTRIBUTING.md",
-  changelogUrl: "https://github.com/whitewolf06/gavia-ui/blob/main/CHANGELOG.md",
-  packageName: "gavia-ui",
-  packageUrl: "https://www.npmjs.com/package/gavia-ui",
-  publishedVersion: "1.1.0",
+  licenseUrl: documentationBaseUrl + "LICENSE",
+  instructionsUrl: documentationBaseUrl + "README.md",
+  contributingUrl: documentationBaseUrl + "CONTRIBUTING.md",
+  changelogUrl: documentationBaseUrl + "CHANGELOG.md",
+  packageName: packageMetadata.name,
+  publishedName: published.name,
+  packageUrl: "https://www.npmjs.com/package/" + published.name,
+  publishedVersion: published.version,
   npmPublished: true
 } as const;

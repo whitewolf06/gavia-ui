@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlAlert, WlButton, WlField, WlPageHeader, WlRadio, WlSelect, WlSwitch } from "gavia-ui";
+import { WlAlert, WlButton, WlField, WlPageHeader, WlRadio, WlSelect, WlSwitch } from "legato-ui";
 import { computed, ref } from "vue";
 type Preferences = { frequency: string | null; email: boolean; push: boolean; access: unknown };
 const saved = ref<Preferences>({ frequency: "daily", email: true, push: false, access: "team" });

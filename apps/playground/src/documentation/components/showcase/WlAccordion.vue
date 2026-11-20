@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlAccordion, type WlAccordionItem, WlButton, WlCheckbox } from "gavia-ui";
+import { WlAccordion, type WlAccordionItem, WlButton, WlCheckbox } from "legato-ui";
 import { ref, watch } from "vue";
 const single = ref(false);
 const open = ref(["guide"]);

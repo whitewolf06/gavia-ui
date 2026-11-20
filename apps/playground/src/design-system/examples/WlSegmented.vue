@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlSegmented } from "gavia-ui";
+import { WlSegmented } from "legato-ui";
 import { computed, ref } from "vue";
 const selected = ref<"list" | "grid" | "archive" | null>("list");
 const options = computed(() => [

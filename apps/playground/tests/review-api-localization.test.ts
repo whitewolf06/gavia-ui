@@ -1,6 +1,6 @@
 import type { Plugin } from "vue";
 import { mount } from "@vue/test-utils";
-import { wlManifest } from "gavia-ui";
+import { wlManifest } from "legato-ui";
 import { expect, it } from "vitest";
 import apiMetadata from "../../../packages/ui-kit/src/manifest/api.generated.json";
 import DocumentationContract from "../src/documentation/DocumentationContract.vue";

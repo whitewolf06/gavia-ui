@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../i18n";
 withDefaults(defineProps<{ variant?: "primary" | "secondary" }>(), { variant: "primary" });
 const { t } = usePlaygroundI18n();
-import { WlIcon } from "gavia-ui";
+import { WlIcon } from "legato-ui";
 import { gaviaFontDownloadName, gaviaFontDownloadUrl } from "./font-download";
 
 </script>

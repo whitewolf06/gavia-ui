@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlDatePicker, WlDialog, WlDrawer, WlField, WlInput, WlMultiSelect, WlPageHeader, WlTable, WlTag } from "gavia-ui";
+import { WlButton, WlDatePicker, WlDialog, WlDrawer, WlField, WlInput, WlMultiSelect, WlPageHeader, WlTable, WlTag } from "legato-ui";
 import { computed, ref } from "vue";
 const long = ref(true);
 const title = computed(() => long.value ? t("shell.design_system.ContentStress.text422") : t("shell.design_system.ContentStress.text423"));

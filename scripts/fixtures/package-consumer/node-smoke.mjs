@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { writeFileSync } from "node:fs";
 import { renderToString } from "vue/server-renderer";
-import * as kit from "gavia-ui";
+import * as kit from "legato-ui";
 import { createPackedSSRApp } from "./src/packed-fixture.mjs";
 
 assert.equal(typeof window, "undefined");

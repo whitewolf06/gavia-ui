@@ -3,12 +3,12 @@ import { usePlaygroundI18n } from "../i18n";
 defineProps<{ theme: WlThemeName }>();
 const emit = defineEmits<{ navigate: [view: PlaygroundView] }>();
 const { t, locale } = usePlaygroundI18n();
-import type { WlThemeName } from "gavia-ui";
-import { WlButton } from "gavia-ui";
-import { WlSegmented } from "gavia-ui";
-import { WlSelect } from "gavia-ui";
-import { WlSlider } from "gavia-ui";
-import { WlTextarea } from "gavia-ui";
+import type { WlThemeName } from "legato-ui";
+import { WlButton } from "legato-ui";
+import { WlSegmented } from "legato-ui";
+import { WlSelect } from "legato-ui";
+import { WlSlider } from "legato-ui";
+import { WlTextarea } from "legato-ui";
 import { computed, ref } from "vue";
 import type { PlaygroundView } from "../navigation";
 import type { GaviaFontStyle, GaviaFontWeight } from "./font";
@@ -130,7 +130,7 @@ const proofSample = computed(() => proofText.value.trim() ? proofText.value : co
 const exampleBalance = computed(() => language.value === "ru" ? "12 480 ₽" : "€128.40");
 const playgroundUrl = computed(() => withPlaygroundTheme("?view=docs", playgroundThemePreference.value));
 const numeralRows = computed(() => language.value === "ru" ? ["11 111,00", "88 888,00", "10 240,50"] : ["11,111.00", "88,888.00", "10,240.50"]);
-const fontImportCode = 'import "gavia-ui/styles/fonts/gavia.css";';
+const fontImportCode = 'import "legato-ui/styles/fonts/gavia.css";';
 const fontFamilyCode = ".app {\n  font-family: \"Gavia Sans Core\", \"Gavia Sans\", \"Segoe UI\", sans-serif;\n  text-rendering: geometricPrecision;\n}";
 
 function saveProject(): void {

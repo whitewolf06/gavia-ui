@@ -252,7 +252,7 @@ test("production lazy examples, recipes and copied source work beneath the Pages
 
   await explorer.getByText("Показать Vue-код", { exact: true }).click();
   const source = await explorer.locator("pre code").innerText();
-  expect(source).toContain('from "gavia-ui"');
+  expect(source).toContain('from "legato-ui"');
   expect(source).not.toContain("packages/ui-kit");
   await copyCodePanel(explorer);
   await expect(explorer.getByRole("status").last()).toHaveText("Код скопирован.");

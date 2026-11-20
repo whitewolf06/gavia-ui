@@ -2,7 +2,7 @@
 import {
   useWlConfirm, useWlToast, WlAutocomplete, WlButton, WlCheckbox, WlCommandPalette, WlConfirmDialog, WlDatePicker,
   WlDialog, WlDrawer, WlField, WlMenu, type WlMenuExpose, WlMultiSelect, WlPopover,
-  type WlPopoverExpose, WlSelect, WlTable, WlTimePicker, WlToast } from "gavia-ui";
+  type WlPopoverExpose, WlSelect, WlTable, WlTimePicker, WlToast } from "legato-ui";
 import { computed, ref } from "vue";
 import ControlWidthFixture from "./ControlWidthFixture.vue";
 import SliderGeometryFixture from "./SliderGeometryFixture.vue";

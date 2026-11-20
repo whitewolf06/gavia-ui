@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlAlert, WlButton, WlField, WlInput, WlPageHeader, WlSwitch, WlTextarea } from "gavia-ui";
+import { WlAlert, WlButton, WlField, WlInput, WlPageHeader, WlSwitch, WlTextarea } from "legato-ui";
 import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
 const name = ref("");
 const email = ref("");

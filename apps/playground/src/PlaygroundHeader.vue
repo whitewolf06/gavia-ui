@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { WlIconName } from "gavia-ui";
-import type { WlMenuExpose, WlMenuItem } from "gavia-ui";
-import type { WlThemeName } from "gavia-ui";
-import { WlButton } from "gavia-ui";
-import { WlDrawer } from "gavia-ui";
-import { WlIcon } from "gavia-ui";
-import { WlMenu } from "gavia-ui";
-import { WlSelect } from "gavia-ui";
+import type { WlIconName } from "legato-ui";
+import type { WlMenuExpose, WlMenuItem } from "legato-ui";
+import type { WlThemeName } from "legato-ui";
+import { WlButton } from "legato-ui";
+import { WlDrawer } from "legato-ui";
+import { WlIcon } from "legato-ui";
+import { WlMenu } from "legato-ui";
+import { WlSelect } from "legato-ui";
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import type { PlaygroundRoute, PlaygroundView } from "./navigation";
 import { type PlaygroundLocale, usePlaygroundI18n } from "./i18n";

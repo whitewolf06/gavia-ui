@@ -1,4 +1,4 @@
-import type { WlManifestCategory, WlPropManifest } from "gavia-ui";
+import type { WlManifestCategory, WlPropManifest } from "legato-ui";
 import type { DocumentationFoundationSection } from "../navigation";
 import { translate } from "../i18n";
 import { documentationMetadataSource, localizeDocumentation } from "./localize";
@@ -39,10 +39,10 @@ export const buttonPtSections: readonly DocumentationPtSection[] = localizeDocum
 
 export const installationSource = [
   'import { createApp } from "vue";',
-  'import "gavia-ui/styles/reset.css";',
-  'import "gavia-ui/styles/base.css";',
-  'import "gavia-ui/styles/primitives.css";',
-  'import "gavia-ui/themes/white.css";',
+  'import "legato-ui/styles/reset.css";',
+  'import "legato-ui/styles/base.css";',
+  'import "legato-ui/styles/primitives.css";',
+  'import "legato-ui/themes/white.css";',
   'import App from "./App.vue";',
   "",
   'document.documentElement.dataset.wlTheme = "white";',

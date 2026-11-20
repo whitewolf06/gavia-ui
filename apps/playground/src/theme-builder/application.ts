@@ -1,4 +1,4 @@
-import type { WlThemeName } from "gavia-ui";
+import type { WlThemeName } from "legato-ui";
 import { shallowRef } from "vue";
 import { isPlaygroundTheme, isPlaygroundThemePreference, type PlaygroundThemePreference } from "../themes";
 

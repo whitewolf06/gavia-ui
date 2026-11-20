@@ -18,7 +18,7 @@ function changesetNotes() {
     .flatMap((file) => {
       const source = read(file);
       const frontmatter = source.match(/^---[ \t]*\n([\s\S]*?)\n---[ \t]*(?:\n|$)/);
-      if (!frontmatter || !/^[ \t]*["']?gavia-ui["']?[ \t]*:[ \t]*(?:patch|minor|major)[ \t]*$/m.test(frontmatter[1]))
+      if (!frontmatter || !/^[ \t]*["']?legato-ui["']?[ \t]*:[ \t]*(?:patch|minor|major)[ \t]*$/m.test(frontmatter[1]))
         return [];
       const notes = source.slice(frontmatter[0].length).trim();
       if (!notes)
@@ -68,7 +68,7 @@ function main() {
     throw new Error("Usage: pnpm release:version");
   const notes = changesetNotes();
   if (!notes.length)
-    throw new Error("No gavia-ui changeset; nothing to version");
+    throw new Error("No legato-ui changeset; nothing to version");
   const before = JSON.parse(read("packages/ui-kit/package.json")).version;
   const rootManifest = JSON.parse(read("package.json"));
   if (before !== rootManifest.version)
@@ -96,7 +96,7 @@ function main() {
   mkdirSync(join(root, "docs"), { recursive: true });
   const migration = join(root, "docs/migration-" + version + ".md");
   if (!existsSync(migration)) {
-    writeFileSync(migration, "# Upgrading to Gavia UI " + version
+    writeFileSync(migration, "# Upgrading to Legato UI " + version
     + "\n\nTODO: describe changes, compatibility and consumer migration steps.\n");
   }
   console.log("Prepared " + version + ". Review changelog/migration before creating a release tag. No publication performed.");

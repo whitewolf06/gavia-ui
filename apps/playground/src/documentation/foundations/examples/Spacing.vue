@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { wlSpacing } from "gavia-ui";
+import { wlSpacing } from "legato-ui";
 </script>
 
 <template>

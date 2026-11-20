@@ -6,7 +6,7 @@ export type { WlLocale, WlLocaleInput, WlResolvedLocale } from "./locale-types";
 type WlNormalizedLocale = WlResolvedLocale & Required<WlControlLocale>;
 
 /**
- * Russian locale for Gavia UI controls. Select it explicitly for each application:
+ * Russian locale for Legato UI controls. Select it explicitly for each application:
  *   app.use(WlConfig, { locale: wlLocaleRu })
  */
 export const wlLocaleRu: WlNormalizedLocale = {
@@ -147,7 +147,7 @@ export const wlLocaleRu: WlNormalizedLocale = {
   opensInNewTab: "Откроется в новой вкладке"
 };
 
-/** Default English fallback for Gavia UI controls; WlConfig.locale overrides it per app. */
+/** Default English fallback for Legato UI controls; WlConfig.locale overrides it per app. */
 export const wlLocaleEn: WlNormalizedLocale = {
   showBreadcrumbs: "Show full path",
   dateRangePresets: "Date range presets",

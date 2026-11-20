@@ -89,7 +89,7 @@ export const WlToastService = {
     function warnLegacySeverity(): void {
       if (warnedSeverity || !isWlDevelopment()) return;
       warnedSeverity = true;
-      console.warn("[Gavia UI] Toast severity is deprecated; use tone instead.");
+      console.warn("[Legato UI] Toast severity is deprecated; use tone instead.");
     }
     function stop(timer: ToastTimer): void {
       if (timer.timer !== undefined) clearTimeout(timer.timer);

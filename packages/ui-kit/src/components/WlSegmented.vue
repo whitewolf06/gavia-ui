@@ -44,7 +44,7 @@ const props = withDefaults(
      * @default "horizontal"
      */
     orientation?: "horizontal" | "vertical";
-    /** Attributes of internal Gavia UI elements. */
+    /** Attributes of internal Legato UI elements. */
     pt?: WlPt<"segmented">;
   }>(),
   {

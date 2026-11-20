@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlIcon, WlIconButton } from "gavia-ui";
+import { WlButton, WlIcon, WlIconButton } from "legato-ui";
 import { ref } from "vue";
 const count = ref(0);
 const message = ref(t("examples.notifications_have_not_been_opened_yet_1022"));

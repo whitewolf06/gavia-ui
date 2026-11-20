@@ -1,6 +1,6 @@
-import type { WlThemeName } from "gavia-ui";
-import { resolveWlToken, wlDesignThemes, type WlDesignTokenDefinition, type WlDesignTokenName, wlDesignTokens } from "gavia-ui";
-import { createWlTheme, parseWlThemeConfig } from "gavia-ui/theme";
+import type { WlThemeName } from "legato-ui";
+import { resolveWlToken, wlDesignThemes, type WlDesignTokenDefinition, type WlDesignTokenName, wlDesignTokens } from "legato-ui";
+import { createWlTheme, parseWlThemeConfig } from "legato-ui/theme";
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
 import {

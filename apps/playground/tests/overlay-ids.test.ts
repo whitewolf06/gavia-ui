@@ -1,4 +1,4 @@
-import { WlDialog, WlDrawer } from "gavia-ui";
+import { WlDialog, WlDrawer } from "legato-ui";
 import { describe, expect, it, vi } from "vitest";
 import { createSSRApp, defineComponent, h, nextTick, useId } from "vue";
 import { renderToString, type SSRContext } from "vue/server-renderer";

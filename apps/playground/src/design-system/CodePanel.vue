@@ -10,8 +10,8 @@ const props = defineProps<{
 }>();
 defineEmits<{ retry: [] }>();
 const { t } = usePlaygroundI18n();
-import { WlButton, WlIcon } from "gavia-ui";
-import { useWlClipboard } from "gavia-ui/composables";
+import { WlButton, WlIcon } from "legato-ui";
+import { useWlClipboard } from "legato-ui/composables";
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 import type { CodeLanguage } from "./highlighting/tokenizer";
 import { gaviaProjectInfo } from "../project/project-info";
@@ -24,8 +24,10 @@ const pending = ref(false);
 const manual = ref(false);
 let copyRevision = 0;
 let disposed = false;
-const runnable = computed(() => /<template[\s>]/.test(props.source) && /from ["']gavia-ui["']/.test(props.source));
-const sandboxFields = computed(() => runnable.value ? stackBlitzFields(props.source, gaviaProjectInfo.version) : {});
+const runnable = computed(() => /<template[\s>]/.test(props.source) && /from ["']legato-ui["']/.test(props.source));
+const sandboxFields = computed(() => runnable.value
+  ? stackBlitzFields(props.source, gaviaProjectInfo.publishedVersion, gaviaProjectInfo.publishedName)
+  : {});
 watch(() => props.source, () => {
   copyRevision++;
   copiedSource.value = undefined;

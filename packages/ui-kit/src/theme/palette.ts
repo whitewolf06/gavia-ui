@@ -22,7 +22,7 @@ const primaryBindings: WlThemeOverrides = {
 
 export function baseTheme(name: WlThemeName) {
   const theme = wlDesignThemes.find((item) => item.name === name);
-  if (!theme) throw new TypeError(`Unknown Gavia UI base theme: ${name}`);
+  if (!theme) throw new TypeError(`Unknown Legato UI base theme: ${name}`);
   return theme;
 }
 

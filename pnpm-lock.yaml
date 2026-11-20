@@ -85,7 +85,7 @@ importers:
 
   apps/playground:
     dependencies:
-      gavia-ui:
+      legato-ui:
         specifier: workspace:*
         version: link:../../packages/ui-kit
       vue:

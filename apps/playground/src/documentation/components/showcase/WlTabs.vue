@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, type WlTabItem, WlTabs } from "gavia-ui";
+import { WlButton, type WlTabItem, WlTabs } from "legato-ui";
 import { computed, ref } from "vue";
 const active = ref("showcase-overview");
 const count = ref(3);

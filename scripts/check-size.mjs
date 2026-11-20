@@ -24,10 +24,10 @@ export async function measureBundles(record = false) {
   const requireKit = createRequire(join(kit, "package.json"));
   const { build } = await import(pathToFileURL(requireKit.resolve("vite")).href);
   const fixtures = {
-    button: 'import { WlButton } from "gavia-ui"; createApp({render:()=>h(WlButton)}).mount("#app");',
-    select: 'import { WlSelect } from "gavia-ui"; createApp({render:()=>h(WlSelect,{options:["One"]})}).mount("#app");',
-    form: 'import { WlInput,WlSelect,WlDatePicker,WlField,WlButton } from "gavia-ui"; createApp({render:()=>h("form",[h(WlInput),h(WlSelect),h(WlDatePicker),h(WlField),h(WlButton)])}).mount("#app");',
-    all: 'import * as kit from "gavia-ui"; console.log(kit); createApp({render:()=>h("div")}).mount("#app");'
+    button: 'import { WlButton } from "legato-ui"; createApp({render:()=>h(WlButton)}).mount("#app");',
+    select: 'import { WlSelect } from "legato-ui"; createApp({render:()=>h(WlSelect,{options:["One"]})}).mount("#app");',
+    form: 'import { WlInput,WlSelect,WlDatePicker,WlField,WlButton } from "legato-ui"; createApp({render:()=>h("form",[h(WlInput),h(WlSelect),h(WlDatePicker),h(WlField),h(WlButton)])}).mount("#app");',
+    all: 'import * as kit from "legato-ui"; console.log(kit); createApp({render:()=>h("div")}).mount("#app");'
   };
   const measurements = [];
   for (const [line, manifest] of [["vue34", join(kit, "package.json")], ["vue35", join(root, "apps/playground/package.json")]]) {
@@ -41,7 +41,7 @@ export async function measureBundles(record = false) {
         configFile: false,
         logLevel: "error",
         define: { __VUE_OPTIONS_API__: "false", __VUE_PROD_DEVTOOLS__: "false", __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: "false", "process.env.NODE_ENV": '"production"' },
-        resolve: { alias: [{ find: /^gavia-ui$/, replacement: entry }, { find: /^vue$/, replacement: runtime }], dedupe: ["vue"] },
+        resolve: { alias: [{ find: /^legato-ui$/, replacement: entry }, { find: /^vue$/, replacement: runtime }], dedupe: ["vue"] },
         build: { write: false, minify: "oxc", target: "es2020", rolldownOptions: { input } }
       });
       const output = (Array.isArray(result) ? result : [result]).flatMap((value) => value.output);

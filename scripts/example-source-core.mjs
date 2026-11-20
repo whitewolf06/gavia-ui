@@ -8,7 +8,7 @@ export function consumerSource(source, preview = {}, messages = {}) {
   // Escape '<' in a script literal so input such as '</script>' cannot end the SFC.
   const scriptOptions = JSON.stringify(preview).replace(/</g, "\\u003c")
     .replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
-  let result = source.replace(/from "(?:\.\.\/)+packages\/ui-kit\/src"/g, 'from "gavia-ui"');
+  let result = source.replace(/from "(?:\.\.\/)+packages\/ui-kit\/src"/g, 'from "legato-ui"');
 
   // Resolve only the documented literal translation pattern, leaving a standalone SFC.
   const translation = /\bt\((["'])((?:examples|documentation)\.[\w.-]+)\1\)/g;

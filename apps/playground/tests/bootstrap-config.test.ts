@@ -1,4 +1,4 @@
-import type * as UiModule from "gavia-ui";
+import type * as UiModule from "legato-ui";
 import type * as VueModule from "vue";
 import type { App, Ref } from "vue";
 import { flushPromises } from "@vue/test-utils";
@@ -34,7 +34,7 @@ vi.mock("vue", async (original) => {
     }
   };
 });
-vi.mock("gavia-ui", async (original) => {
+vi.mock("legato-ui", async (original) => {
   const ui = await original<typeof UiModule>();
   return {
     ...ui,
@@ -52,7 +52,7 @@ vi.mock("gavia-ui", async (original) => {
 });
 vi.mock("../src/App.vue", async () => {
   const { h } = await import("vue");
-  const { WlSpinner } = await import("gavia-ui");
+  const { WlSpinner } = await import("legato-ui");
   return { default: { render: () => h(WlSpinner) } };
 });
 vi.mock("../src/page-loaders", () => ({ preloadPlaygroundPage: async () => ({}) }));
@@ -90,7 +90,7 @@ describe("bootstrap configuration integration", () => {
     await import("../src/bootstrap");
     await flushPromises();
     const { createApp, h, nextTick } = await import("vue");
-    const { WlConfig, wlLocaleEn, wlLocaleRu, WlSpinner } = await import("gavia-ui");
+    const { WlConfig, wlLocaleEn, wlLocaleRu, WlSpinner } = await import("legato-ui");
     const app = startup.apps[0]!;
     const other = createApp({ render: () => h(WlSpinner) });
     other.use(WlConfig, { locale: wlLocaleEn });
