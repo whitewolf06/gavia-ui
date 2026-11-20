@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WlSlider } from "gavia-ui";
+import { WlSlider } from "legato-ui";
 import { computed, ref } from "vue";
 
 const single = ref(50);
@@ -73,7 +73,7 @@ function reset(): void {
 </template>
 
 <style>
-@import "gavia-ui/styles/primitives.css";
+@import "legato-ui/styles/primitives.css";
 </style>
 
 <style scoped>

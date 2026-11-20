@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WlButton, WlField, WlInput } from "gavia-ui";
+import { WlButton, WlField, WlInput } from "legato-ui";
 import { ref } from "vue";
 const name = ref("");
 const saved = ref(false);
@@ -7,7 +7,7 @@ const saved = ref(false);
 
 <template>
   <main class="wl-container wl-stack" data-space="lg">
-    <h1>Gavia UI starter</h1>
+    <h1>Legato UI starter</h1>
     <form class="wl-stack" data-space="md" @submit.prevent="saved = true">
       <WlField
         v-slot="field"

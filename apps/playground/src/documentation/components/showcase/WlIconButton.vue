@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlIcon, WlIconButton, type WlIconButtonVariant } from "gavia-ui";
+import { WlIcon, WlIconButton, type WlIconButtonVariant } from "legato-ui";
 import { ref } from "vue";
 const variants = ["ghost", "secondary", "soft"] as const satisfies readonly WlIconButtonVariant[];
 const active = ref(false);

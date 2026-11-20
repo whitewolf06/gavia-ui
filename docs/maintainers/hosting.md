@@ -1,28 +1,29 @@
-# Gavia UI public documentation
+# Legato UI public documentation
 
 ## Published content
 
 The documentation build contains home, Docs with guides for every public component,
-113 SVG icons, five themes, the design system, working examples with code
+113 SVG icons, seven themes, the design system, working examples with code
 and six interface flows. The home page names the author, MIT license and
 contributor links. Changelog reads history from the root CHANGELOG.md.
 Vue Router belongs to the Playground; the library keeps Vue as its only required peer.
 Hosted documentation has canonical English/Russian paths and a separate prerender step.
 
-The showcase is published on GitHub Pages:
-[Gavia UI](https://whitewolf06.github.io/gavia-ui/).
+The target for the renamed showcase is
+[Legato UI](https://whitewolf06.github.io/legato-ui/).
 The canonical repository uses **Source: GitHub Actions**. Confirm the public URL
 and production assets on desktop and mobile after each deployment; local builds
 and browser results do not establish publication.
-The library is available on [public npm](https://www.npmjs.com/package/gavia-ui).
-The first release, 0.7.0, was published on 2026-10-05 (Moscow);
-the confirmed published version is tracked in [project metadata](../../apps/playground/src/project/project-info.ts).
-Install with `pnpm add gavia-ui`; the release label and installation command have separate roles.
+The last Gavia release is [gavia-ui@1.1.0](https://www.npmjs.com/package/gavia-ui/v/1.1.0).
+Legato releases start at 1.2.0 under the npm name `legato-ui`.
+The first release, 0.7.0, was published on 2026-10-05 (Moscow).
+The home installation command reads the [published package record](../../apps/playground/src/project/published-package.json).
+After the 1.2.0 publication is confirmed, that command becomes `pnpm add legato-ui`.
 [Publication and validation history](releases.md).
 
 ## Publication setup
 
-In `whitewolf06/gavia-ui`, open **Settings → Pages → Build and deployment**
+In `whitewolf06/legato-ui`, open **Settings → Pages → Build and deployment**
 and select **Source: GitHub Actions**. This is already configured in the
 canonical repository. The repository owner or an agent authorized to publish
 the site performs this action. No domain or DNS configuration is required.
@@ -31,7 +32,7 @@ The `pages` job in `.github/workflows/pages.yml` follows a successful `CI` run
 from a main push in the canonical repository. Verify, browser, Windows visual and
 installed-consumer checks must pass on that same commit. It checks out the
 triggering SHA and downloads quality data from that exact run, then builds the library and playground
-with `base=/gavia-ui/`, checks the production site in desktop/mobile Chromium
+with `base=/legato-ui/`, checks the production site in desktop/mobile Chromium
 and uploads only `apps/playground/dist` through official Pages actions.
 
 Before deployment, the SHA is checked against current main; rerunning an old
@@ -39,6 +40,24 @@ build must not replace newer documentation. Pages has its own concurrency group;
 CI checks and releases use separate groups.
 PRs, forks and release tags do not publish the site. npm setup and publication
 remain a separate process described in [releases.md](releases.md).
+
+## GitHub rename and the old Playground address
+
+Before tagging 1.2.0, build and check Pages under `/legato-ui/`. Run
+`node scripts/legacy-pages.mjs` after `pnpm build:pages`. It prepares
+`.tmp/legacy-pages/gavia-ui/` with redirects for the English and Russian paths
+in the build manifest and copies the font ZIPs for direct downloads.
+
+Stage that directory under `gavia-ui/` in the publication source of the
+owner site `whitewolf06/whitewolf06.github.io`. Coordinate its deployment with the
+rename and the first successful Pages deployment on the renamed repository.
+GitHub redirects repository, issue and pull request links automatically. Project
+Pages needs the old path to be served separately. Creating a new repository
+under the old name would also take over GitHub's repository redirects.
+[GitHub repository rename behavior](https://docs.github.com/en/repositories/creating-and-managing-repositories/renaming-a-repository).
+
+Verify both public addresses, a Russian component link with its anchor, a legacy
+query link and a font download. Then tag the reviewed commit for the release.
 
 ## Local production checks
 
@@ -52,28 +71,28 @@ pnpm test:pages
 The test starts its own Vite preview on port 4175. For manual inspection:
 
 ```sh
-pnpm --filter gavia-ui-playground exec vite preview --base=/gavia-ui/ --host 127.0.0.1 --port 4175 --strictPort
+pnpm --filter legato-ui-playground exec vite preview --base=/legato-ui/ --host 127.0.0.1 --port 4175 --strictPort
 ```
 
-Open `http://127.0.0.1:4175/gavia-ui/`. An existing preview can be supplied through
+Open `http://127.0.0.1:4175/legato-ui/`. An existing preview can be supplied through
 `GAVIA_PAGES_BASE_URL`. If Windows cannot run Playwright headless shell,
 `GAVIA_E2E_CHROMIUM_CHANNEL=chromium` selects full pinned Chromium.
 Ordinary `pnpm dev` keeps the root URL and requires no subpath.
 
 ## Navigation and history
 
-- Home: `/gavia-ui/`.
-- Docs: `/gavia-ui/docs/`.
-- Foundations: `/gavia-ui/docs/typography/`, `/gavia-ui/docs/layout/`, `/gavia-ui/docs/content/`.
-- Components: `/gavia-ui/docs/components/WlButton/`.
-- Component catalog: `/gavia-ui/docs/`; legacy `?view=components` opens Docs.
-- Design system: `/gavia-ui/system/`.
-- Changelog: `/gavia-ui/changelog/`.
-- Direct history: `/gavia-ui/changelog/#project-changelog`.
-- Legacy `/gavia-ui/?view=project` remains a compatible history URL.
+- Home: `/legato-ui/`.
+- Docs: `/legato-ui/docs/`.
+- Foundations: `/legato-ui/docs/typography/`, `/legato-ui/docs/layout/`, `/legato-ui/docs/content/`.
+- Components: `/legato-ui/docs/components/WlButton/`.
+- Component catalog: `/legato-ui/docs/`; legacy `?view=components` opens Docs.
+- Design system: `/legato-ui/system/`.
+- Changelog: `/legato-ui/changelog/`.
+- Direct history: `/legato-ui/changelog/#project-changelog`.
+- Legacy `/legato-ui/?view=project` remains a compatible history URL.
 
 Russian paths add `/ru/` after the deployment prefix, for example
-`/gavia-ui/ru/docs/theming/`. Legacy query links still resolve to the corresponding
+`/legato-ui/ru/docs/theming/`. Legacy query links still resolve to the corresponding
 hosted path while preserving theme, extra parameters and real heading anchors.
 Prerendering writes known English/Russian routes into standalone HTML; a host
 serving only the SPA build must provide its own fallback for direct deep links.

@@ -1,5 +1,4 @@
-import type { WlThemeName } from "../types";
-import type { WlDesignTokenDefinition } from "./types";
+import type { WlDesignTokenDefinition, WlThemeName } from "./types";
 import { wlDesignThemes, type WlDesignTokenName, wlDesignTokens } from "./tokens.generated";
 
 export * from "./types";
@@ -14,11 +13,11 @@ function tokenDefinitions(): Map<string, WlDesignTokenDefinition> {
 
 /** Resolves the shipped theme snapshot without reading DOM or consumer overrides. */
 export function resolveWlToken(name: WlDesignTokenName, theme: WlThemeName = "white"): string {
-  if (!wlDesignThemes.some((item) => item.name === theme)) throw new Error(`Unknown Gavia UI theme: ${theme}`);
+  if (!wlDesignThemes.some((item) => item.name === theme)) throw new Error(`Unknown Legato UI theme: ${theme}`);
   function resolve(reference: string, trail: string[]): string {
-    if (trail.includes(reference)) throw new Error(`Circular Gavia UI token: ${reference}`);
+    if (trail.includes(reference)) throw new Error(`Circular Legato UI token: ${reference}`);
     const token = tokenDefinitions().get(reference);
-    if (!token) throw new Error(`Unknown Gavia UI token: ${reference}`);
+    if (!token) throw new Error(`Unknown Legato UI token: ${reference}`);
     return (token.themes?.[theme] ?? token.value).replace(
       /var\((--wl-[a-z0-9-]+)\)/g,
       (_, dependency: string) => resolve(dependency, [...trail, reference])

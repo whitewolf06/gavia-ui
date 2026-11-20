@@ -7,9 +7,9 @@ const props = defineProps<{
   breadcrumbs: Array<{ label: string; route?: PlaygroundRoute }>;
 }>();
 const { t } = usePlaygroundI18n();
-import type { WlBreadcrumbItem } from "gavia-ui";
-import { WlBreadcrumbs } from "gavia-ui";
-import { WlPageHeader } from "gavia-ui";
+import type { WlBreadcrumbItem } from "legato-ui";
+import { WlBreadcrumbs } from "legato-ui";
+import { WlPageHeader } from "legato-ui";
 import { computed, inject } from "vue";
 import { createPlaygroundNavigationUrl as createPlaygroundUrl, parsePlaygroundRoute, type PlaygroundRoute } from "./navigation";
 import { playgroundNavigationKey } from "./playground-navigation";

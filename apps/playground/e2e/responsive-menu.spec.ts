@@ -26,7 +26,9 @@ async function headerGeometry(header: Locator) {
     };
     const control = (selector: string) => box(element.querySelector(selector)!);
     const style = getComputedStyle(element);
+    const content = document.querySelector(".home-onboarding, .docs-layout, main.wl-container > .pg-page-header");
     return {
+      content: content ? box(content) : null,
       header: box(element), brand: control(".pg-brand"), search: control(".pg-search"),
       theme: control(".pg-theme"), language: control(".pg-language"), menu: control(".pg-menu-trigger"),
       navigation: control(".pg-views"),
@@ -34,7 +36,6 @@ async function headerGeometry(header: Locator) {
       menuIcon: control('.pg-menu-trigger svg[data-icon="bars"]'),
       themeIcon: control('.pg-theme-mobile-icon[data-icon="sliders-h"]'),
       minHeight: Number.parseFloat(style.minHeight),
-      paddingLeft: Number.parseFloat(style.paddingLeft), paddingRight: Number.parseFloat(style.paddingRight),
       paddingTop: Number.parseFloat(style.paddingTop), paddingBottom: Number.parseFloat(style.paddingBottom)
     };
   });
@@ -54,9 +55,10 @@ async function expectHeaderLayout(page: Page, header: Locator, mobile: boolean):
     if (!visible.every((box) => box.width > 0 && box.height > 0 && box.x >= boxes.header.x - 1
       && right(box) <= right(boxes.header) + 1 && box.y >= boxes.header.y - 1
       && bottom(box) <= bottom(boxes.header) + 1)) return false;
-    if (!near(boxes.search.width, boxes.theme.width) || !near(boxes.search.height, boxes.theme.height)
+    if (!boxes.content || !near(boxes.brand.x, boxes.content.x)
+      || !near(right(mobile ? boxes.menu : boxes.language), right(boxes.content))
+      || !near(boxes.search.width, boxes.theme.width) || !near(boxes.search.height, boxes.theme.height)
       || !near(boxes.language.width, 68)
-      || !near(right(mobile ? boxes.menu : boxes.language), right(boxes.header) - boxes.paddingRight)
       || right(boxes.search) > boxes.theme.x) return false;
     if (!mobile) {
       const centers = visible.map(center);
@@ -75,7 +77,6 @@ async function expectHeaderLayout(page: Page, header: Locator, mobile: boolean):
       && right(boxes.theme) <= boxes.language.x
       && [[boxes.searchIcon, boxes.search], [boxes.menuIcon, boxes.menu], [boxes.themeIcon, boxes.theme]]
         .every(([icon, control]) => near(centerX(icon!), centerX(control!)) && near(center(icon!), center(control!)))
-        && near(boxes.paddingLeft, 8) && near(boxes.paddingRight, 8)
         && near(boxes.header.height, Math.max(boxes.minHeight,
           44 + boxes.paddingTop + boxes.paddingBottom));
   }, "Header keeps equal utility controls and one mobile row with centered icons and its menu on the right").toBe(true);
@@ -92,7 +93,7 @@ async function expectDesktopOverflowMenu(
     await expect(overflow.locator(".wl-btn__label")).toHaveText("Ещё");
     await overflow.click();
     await expect(overflow).toHaveAttribute("aria-expanded", "true");
-    await expect(popup.getByRole("menu", { name: "Разделы Gavia UI", exact: true })).toBeVisible();
+    await expect(popup.getByRole("menu", { name: "Разделы Legato UI", exact: true })).toBeVisible();
     await expect(popup.getByRole("menuitem")).toHaveText(sectionNames.slice(count));
     await expect(popup.getByRole("menuitem").first()).toBeFocused();
     await page.keyboard.press("Escape");
@@ -119,8 +120,8 @@ test("responsive header preserves ordered desktop overflow, a compact mobile row
   const overflow = desktopNavigation.locator(".pg-overflow-trigger");
   const popup = page.locator(".pg-overflow-menu");
   const trigger = header.locator(".pg-menu-trigger");
-  const menu = page.getByRole("dialog", { name: "Разделы Gavia UI", exact: true });
-  const menuNavigation = menu.getByRole("navigation", { name: "Разделы Gavia UI", exact: true });
+  const menu = page.getByRole("dialog", { name: "Разделы Legato UI", exact: true });
+  const menuNavigation = menu.getByRole("navigation", { name: "Разделы Legato UI", exact: true });
   const measuredCounts = new Map<number, number>();
   let previousCount: number = sectionNames.length;
   for (const width of [1600, 1280, 1117, 900, 800]) {
@@ -161,10 +162,12 @@ test("responsive header preserves ordered desktop overflow, a compact mobile row
   await expect(popup).toHaveCount(0);
   await expect(overflow).toBeFocused();
   await overflow.press("ArrowDown");
-  await popup.getByRole("menuitem", { name: "Changelog", exact: true }).press("Enter");
-  await expect(page.getByTestId("changelog-page")).toBeVisible();
+  // Follow a section that actually moves between the menu and the aligned header.
+  expect(measuredCounts.get(1600)!).toBeGreaterThan(measuredCounts.get(900)!);
+  const movingLabel = sectionNames[measuredCounts.get(1600)! - 1]!;
+  await popup.getByRole("menuitem", { name: movingLabel, exact: true }).press("Enter");
   await expect(overflow).toHaveAttribute("aria-current", "page");
-  await expectMainViewCurrent(page, "Changelog");
+  await expectMainViewCurrent(page, movingLabel);
   // Focus follows the current hidden section across desktop and mobile navigation.
   await overflow.focus();
   await page.setViewportSize({ width: 760, height: 800 });
@@ -174,12 +177,11 @@ test("responsive header preserves ordered desktop overflow, a compact mobile row
   await expect(overflow).toHaveAttribute("aria-current", "page");
   await expect(overflow).toBeFocused();
   await page.setViewportSize({ width: 1600, height: 800 });
-  const changelog = desktopNavigation.getByRole("button", { name: "Changelog", exact: true });
-  await expect(overflow).toHaveCount(0);
-  await expect(changelog).toHaveAttribute("aria-current", "page");
-  await expect(changelog).toBeFocused();
+  const currentSection = desktopNavigation.getByRole("button", { name: movingLabel, exact: true });
+  await expect(currentSection).toHaveAttribute("aria-current", "page");
+  await expect(currentSection).toBeFocused();
   await page.setViewportSize({ width: 900, height: 800 });
-  await expect(changelog).toHaveCount(0);
+  await expect(currentSection).toHaveCount(0);
   await expect(overflow).toHaveAttribute("aria-current", "page");
   await expect(overflow).toBeFocused();
   await overflow.press("ArrowDown");
@@ -235,7 +237,7 @@ test("responsive header preserves ordered desktop overflow, a compact mobile row
     await expect(desktopNavigation).toBeHidden();
     for (const control of [brand, search, theme, trigger, language]) await expect(control).toBeVisible();
     await expect(header.locator(".pg-kit-version"), "The compact brand hides its version at " + width + "px").toBeHidden();
-    await expect(brand.locator(".pg-title")).toBeVisible({ visible: width > 360 });
+    await expect(brand).toHaveAccessibleName("Legato UI — главная");
     await expect(brand.locator(".pg-logo")).toBeVisible();
     await expect(search.locator(".wl-btn__label")).toBeHidden();
     await expect(search.locator('svg[data-icon="search"]')).toBeVisible();
@@ -251,7 +253,10 @@ test("responsive header preserves ordered desktop overflow, a compact mobile row
   await expect(palette).toHaveCount(0);
   await expect(search).toBeFocused();
 
-  const themeLabels: Record<string, string> = { system: "Системная", gavia: "Gavia", "gavia-dark": "Gavia Dark", white: "Classic", graphite: "Classic Dark", newspaper: "Newspaper" };
+  const themeLabels: Record<string, string> = {
+    system: "Системная", legato: "Legato", "legato-dark": "Legato Dark", gavia: "Gavia", "gavia-dark": "Gavia Dark",
+    white: "Classic", graphite: "Classic Dark", newspaper: "Newspaper"
+  };
   const initialTheme = await page.locator("html").getAttribute("data-wl-theme");
   const initialPreference = new URL(page.url()).searchParams.get("theme") ?? "system";
   expect(Object.keys(themeLabels)).toContain(initialTheme);
@@ -305,7 +310,7 @@ test("responsive header preserves ordered desktop overflow, a compact mobile row
 test("System is the initial theme mode and explicit theme links survive refresh and navigation", async ({ page, baseURL }) => {
   const url = new URL(baseURL ?? "http://127.0.0.1:4173/");
   await page.goto(russianPlaygroundUrl(url.href));
-  await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "gavia");
+  await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "legato");
   const selector = page.getByTestId("pg-theme-selector");
   await expect(selector).toContainText("Системная");
 

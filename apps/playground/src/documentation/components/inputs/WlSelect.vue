@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlField, WlSelect } from "gavia-ui";
+import { WlButton, WlField, WlSelect } from "legato-ui";
 import { ref } from "vue";
 const area = ref<string | null>("team");
 const options = [{ id: "personal", label: t("examples.personal_space_0819") }, { id: "team", label: t("examples.team_0086") }, { id: "public", label: t("examples.public_materials_0820") }];

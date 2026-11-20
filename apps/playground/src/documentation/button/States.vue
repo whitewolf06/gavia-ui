@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlCheckbox, WlIcon } from "gavia-ui";
+import { WlButton, WlCheckbox, WlIcon } from "legato-ui";
 import { ref } from "vue";
 const noAccess = ref(false);
 const loading = ref(false);

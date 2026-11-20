@@ -2,15 +2,15 @@
 import { usePlaygroundI18n } from "../i18n";
 withDefaults(defineProps<{ variant?: "primary" | "secondary" }>(), { variant: "primary" });
 const { t } = usePlaygroundI18n();
-import { WlIcon } from "gavia-ui";
-import { gaviaFontDownloadName, gaviaFontDownloadUrl } from "./font-download";
+import { WlIcon } from "legato-ui";
+import { legatoFontDownloadName, legatoFontDownloadUrl } from "./font-download";
 
 </script>
 
 <template>
   <a
-    :href="gaviaFontDownloadUrl"
-    :download="gaviaFontDownloadName"
+    :href="legatoFontDownloadUrl"
+    :download="legatoFontDownloadName"
     class="wl-btn wl-btn--md pg-font-download"
     :class="'wl-btn--' + variant"
     data-wl="font-download"

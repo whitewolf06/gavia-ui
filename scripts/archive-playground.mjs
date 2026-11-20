@@ -11,7 +11,7 @@ export function assertPortableHtml(source) {
   const assets = [...source.matchAll(/\b(?:src|href)[ \t]*=[ \t]*["']([^"']+)["']/gi)];
   for (const [, url] of assets) {
     if (url.startsWith("/") && !url.startsWith("//")) {
-      throw new Error("Preview must use relative paths: pnpm --filter gavia-ui-playground build --base=./");
+      throw new Error("Preview must use relative paths: pnpm --filter legato-ui-playground build --base=./");
     }
   }
 }
@@ -41,7 +41,7 @@ function main() {
     dirty: status.stdout.trim().length > 0,
     instructions: "Extract and serve over HTTP; open index.html. Query links select pages and themes."
   }, null, 2) + "\n");
-  const name = "gavia-ui-playground-" + pkg.version + ".tgz";
+  const name = "legato-ui-playground-" + pkg.version + ".tgz";
   const archive = join(out, name);
   const result = spawnSync("tar", ["-czf", archive, "-C", dist, "."], { stdio: "inherit" });
   if (result.error)

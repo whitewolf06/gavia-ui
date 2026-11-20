@@ -39,16 +39,16 @@ function mountHome() {
 
 describe("Home navigation URLs", () => {
   it("renders canonical Pages destinations from the Russian home", () => {
-    vi.stubEnv("BASE_URL", "/gavia-ui/");
-    window.history.replaceState(null, "", "/gavia-ui/ru/?theme=graphite");
+    vi.stubEnv("BASE_URL", "/legato-ui/");
+    window.history.replaceState(null, "", "/legato-ui/ru/?theme=graphite");
     const wrapper = mountHome();
 
     expect(wrapper.get('[data-testid="home-quality"] a').attributes("href"))
-      .toBe("/gavia-ui/ru/docs/quality/?theme=graphite");
+      .toBe("/legato-ui/ru/docs/quality/?theme=graphite");
     expect(wrapper.get(".home-sections + p a").attributes("href"))
-      .toBe("/gavia-ui/ru/theme-builder/?theme=graphite");
+      .toBe("/legato-ui/ru/theme-builder/?theme=graphite");
     expect(wrapper.findAll(".home-action")[1]!.attributes("href"))
-      .toBe("/gavia-ui/ru/docs/?theme=graphite#docs-components");
+      .toBe("/legato-ui/ru/docs/?theme=graphite#docs-components");
   });
 
   it("keeps portable destinations on the archive entry with the current language, theme and anchor", () => {

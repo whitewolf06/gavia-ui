@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WlBadge } from "gavia-ui";
+import { WlBadge } from "legato-ui";
 defineProps<{ preview?: Record<string, unknown> }>();
 
 </script>

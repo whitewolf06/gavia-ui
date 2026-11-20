@@ -6,7 +6,7 @@ import type { ChangelogInline } from "../src/project/changelog";
 import { parseChangelog, parseChangelogInline, resolveChangelogLink } from "../src/project/changelog";
 import { gaviaProjectInfo } from "../src/project/project-info";
 
-const docsBase = "https://github.com/whitewolf06/gavia-ui/blob/main/";
+const docsBase = "https://github.com/whitewolf06/legato-ui/blob/main/";
 const text = (content: ChangelogInline[]): string => content.map((part) => part.kind === "link" ? part.label : part.value).join("");
 
 describe("public changelog rendering", () => {
@@ -59,7 +59,7 @@ describe("public changelog rendering", () => {
     expect(current.blocks.filter((block) => block.kind === "heading").map((block) => text(block.content)))
       .toEqual(["Added", "Changed", "Fixed"]);
     const bullets = firstPublic.blocks.flatMap((block) => block.kind === "list" ? block.items.map(text) : []);
-    expect(bullets).toContain("The local preview variable is GAVIA_E2E_BASE_URL; catalog error messages use Gavia UI. The migration lists these changes.");
+    expect(bullets).toContain("The local preview variable became GAVIA_E2E_BASE_URL. Catalog errors began including the library name. The migration lists these changes.");
     expect(bullets).toContain("Public Wl* names, props, events, models, slots, icon names, wl-* classes and --wl-* tokens are preserved.");
     expect(document.sections.some((section) => section.title === "Maintenance rules")).toBe(true);
   });

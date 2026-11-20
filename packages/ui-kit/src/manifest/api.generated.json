@@ -136,7 +136,7 @@
       "debounce": "Delay in milliseconds before requesting completion for changed text.",
       "loading": "Indicate pending work supplied by the application.",
       "motion": "Suggestion animation; defaults to WlConfig.motion (true).",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {
       "option": "Option scope: { option, index, selected, active }.",
@@ -236,7 +236,7 @@
       "separator": "Text displayed between breadcrumb items.",
       "maxItems": "Maximum visible breadcrumb items before collapsing the middle items.",
       "collapseLabel": "Accessible name for the collapsed-items trigger.",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {
       "item": "Custom breadcrumb item; receives the item, index and navigation state.",
@@ -421,7 +421,7 @@
       "disabled": "Disables the checkbox.",
       "indeterminate": "Indeterminate state.",
       "invalid": "Error state.",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {},
     "eventDescriptions": {}
@@ -694,7 +694,7 @@
     "descriptions": {
       "group": "Dialog group; usually optional.",
       "motion": "Window animation; defaults to WlConfig.motion (true).",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {
       "default": "Custom confirmation message; receives the active confirmation request.",
@@ -806,7 +806,7 @@
       "startLabel": "Visible range start label.\nDefaults to WlConfig.locale.dateFrom (English when unconfigured).",
       "endLabel": "Visible range end label.\nDefaults to WlConfig.locale.dateTo (English when unconfigured).",
       "motion": "Calendar animation; defaults to WlConfig.motion (true).",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {},
     "eventDescriptions": {}
@@ -866,7 +866,7 @@
       "fullscreen": "Expand the dialog to fill the viewport.",
       "initialFocus": "Initial focus policy or target for the opened modal surface.",
       "motion": "Opening and closing animation; defaults to WlConfig.motion (true).",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {
       "default": "Dialog body.",
@@ -890,7 +890,7 @@
     "defaults": {},
     "required": [],
     "descriptions": {
-      "pt": "Attributes of internal Gavia UI elements.",
+      "pt": "Attributes of internal Legato UI elements.",
       "orientation": "Layout direction and applicable arrow-key navigation direction."
     },
     "slotDescriptions": {},
@@ -952,7 +952,7 @@
       "ariaLabel": "Accessible panel name without a text heading.",
       "ariaLabelledby": "ID of the element labelling the panel.",
       "motion": "Opening and closing animation; defaults to WlConfig.motion (true).",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {
       "default": "Panel content.",
@@ -1247,7 +1247,7 @@
       "dot": "Indicator dot (when count is absent).",
       "dotLabel": "Accessible description for a meaningful status dot.",
       "ariaLabel": "Required for the icon prop unless native aria-label, aria-labelledby or a named pt.root is supplied.",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {
       "default": "Action text, optionally with a custom icon; descriptions alone do not name the action."
@@ -1295,7 +1295,7 @@
       "showCount": "Display the text length counter and connect it to the control description.",
       "placeholder": "Placeholder.",
       "type": "Input element type attribute.",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {},
     "eventDescriptions": {}
@@ -1374,7 +1374,7 @@
       "ariaLabel": "Accessible menu name.",
       "ariaLabelledby": "ID of the element labelling the menu.",
       "motion": "Popup menu animation; defaults to WlConfig.motion (true).",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {
       "trigger": "Custom trigger; bind its supplied attributes and use the provided open/close actions."
@@ -1456,7 +1456,7 @@
       "display": "comma — comma-separated labels; chip — individual chips.",
       "maxSelectedLabels": "Number of labels shown before a count replaces them. Only for display=\"comma\".",
       "motion": "List animation; defaults to WlConfig.motion (true).",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {
       "option": "Option scope: { option, index, selected, active }.",
@@ -1662,7 +1662,7 @@
       "siblings": "Number of pages shown around the current page.",
       "compact": "Compact view with an input.",
       "disabled": "Disables navigation.",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {},
     "eventDescriptions": {
@@ -1777,7 +1777,7 @@
       "ariaLabel": "Accessible popover name.",
       "ariaLabelledby": "ID of the element labelling the popover.",
       "motion": "Opening and closing animation; defaults to WlConfig.motion (true).",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {
       "default": "Popover content.",
@@ -1858,7 +1858,7 @@
       "name": "Native group name.",
       "disabled": "Disables the radio button.",
       "invalid": "Error state.",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {},
     "eventDescriptions": {}
@@ -1959,7 +1959,7 @@
       "density": "Spacing density for this component family.",
       "block": "Fill the available inline width.",
       "orientation": "Layout direction and applicable arrow-key navigation direction.",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {},
     "eventDescriptions": {}
@@ -2026,7 +2026,7 @@
       "size": "Field size.",
       "density": "Density.",
       "motion": "List animation; defaults to WlConfig.motion (true).",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {
       "option": "Option scope: { option, index, selected, active }.",
@@ -2138,7 +2138,7 @@
       "shape": "Shape.",
       "preset": "Apply the text or avatar skeleton presentation.",
       "lines": "Number of placeholder lines in the text preset.",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {},
     "eventDescriptions": {}
@@ -2328,7 +2328,7 @@
       "loading": "Indicate pending work supplied by the application.",
       "labelPosition": "Place the visible label before or after the switch.",
       "density": "Spacing density for this component family.",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {},
     "eventDescriptions": {}
@@ -2387,7 +2387,7 @@
       "selectionMode": "Enable single or multiple row selection; the selection model stores row keys.",
       "loading": "Loading state.",
       "emptyMessage": "Empty-state text.\nDefaults to WlConfig.locale.noData (English when unconfigured).",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {
       "default": "Additional content rendered by the table's default outlet.",
@@ -2431,7 +2431,7 @@
       "orientation": "Layout direction and applicable arrow-key navigation direction.",
       "lazy": "Defer a tab panel's first render until it becomes active.",
       "keepAlive": "Keep a previously visited tab panel mounted while it is inactive.",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {
       "panel": "Panel content; scope: { item }."
@@ -2476,7 +2476,7 @@
       "disabled": "Disable user interaction with this component.",
       "removable": "Show the remove button.",
       "removeLabel": "Remove button aria-label; uses locale.remove when omitted or undefined (English: Remove).",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {
       "default": "Tag text.",
@@ -2597,7 +2597,7 @@
       "density": "Spacing density for this component family.",
       "showCount": "Display the text length counter and connect it to the control description.",
       "placeholder": "Placeholder.",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {},
     "eventDescriptions": {}
@@ -2671,7 +2671,7 @@
       "motion": "Message animation; defaults to WlConfig.motion (true).",
       "position": "Screen position of the toast group.",
       "max": "Maximum retained messages in this toast group; older messages are removed.",
-      "pt": "Attributes of internal Gavia UI elements."
+      "pt": "Attributes of internal Legato UI elements."
     },
     "slotDescriptions": {
       "message": "Custom toast message content with a dismiss callback.",

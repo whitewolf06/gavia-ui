@@ -1,14 +1,14 @@
 # Release procedure
 
-Release history is in [GitHub Releases](https://github.com/whitewolf06/gavia-ui/releases)
+Release history is in [GitHub Releases](https://github.com/whitewolf06/legato-ui/releases)
 and the preserved [release evidence ledger](../archive/release-history.md). Historical
 counts, hashes and deployment statements are not current verification.
 
 Stable 1.1.0 was published on 2026-11-14 to npm `latest`.
-The [Release workflow](https://github.com/whitewolf06/gavia-ui/actions/runs/43599244847)
+The [Release workflow](https://github.com/whitewolf06/legato-ui/actions/runs/43599244847)
 completed all checks and published the exact checked archive. Registry version,
 channel and downloaded archive SHA512 were verified after publication.
-The [GitHub Release](https://github.com/whitewolf06/gavia-ui/releases/tag/v1.1.0)
+The [GitHub Release](https://github.com/whitewolf06/legato-ui/releases/tag/v1.1.0)
 includes the versioned Playground and standalone Gavia Sans TTF archive.
 Manual screen-reader results remain unverified.
 
@@ -20,6 +20,23 @@ For future delivery, use the procedure below, the
 [unsent communication drafts](release-announcements.md).
 
 ## Prepare source
+
+For the 1.2.0 rename follow the [Pages cutover](hosting.md#github-rename-and-the-old-playground-address)
+before tagging. New registry releases belong to `legato-ui`. The final
+published version of `gavia-ui` is 1.1.0.
+
+npm requires a package to exist before adding a trusted publisher. For the first
+release, the owner can stage a reviewed archive with a distinct prerelease
+version. Staging a new name creates a public placeholder and reserves the staged
+version. Keep `1.2.0` available for the release workflow. Configure the new
+package's trusted publisher for `whitewolf06/legato-ui` and `publish.yml`, with
+permission to publish directly. This registry setup requires release authorization.
+[npm trust prerequisites](https://docs.npmjs.com/cli/v11/commands/npm-trust/#prerequisites)
+and [staged version behavior](https://docs.npmjs.com/cli/v11/commands/npm-stage/#description).
+
+After confirming the
+name, version and integrity in the registry, update
+[`published-package.json`](../../apps/playground/src/project/published-package.json) so install links and live examples use that exact release.
 
 1. Obtain explicit authorization for release preparation and heavy checks.
 2. Review changesets (`pnpm changeset:status`) and the root Unreleased section.

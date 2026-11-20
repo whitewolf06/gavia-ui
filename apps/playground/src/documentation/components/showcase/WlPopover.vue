@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlCheckbox, WlPopover, type WlPopoverExpose, WlTag } from "gavia-ui";
+import { WlButton, WlCheckbox, WlPopover, type WlPopoverExpose, WlTag } from "legato-ui";
 import { ref } from "vue";
 const panel = ref<WlPopoverExpose | null>(null);
 const motion = ref(true);

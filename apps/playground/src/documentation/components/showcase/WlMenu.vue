@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlMenu, type WlMenuExpose, type WlMenuItem } from "gavia-ui";
+import { WlButton, WlMenu, type WlMenuExpose, type WlMenuItem } from "legato-ui";
 import { ref } from "vue";
 const popup = ref<WlMenuExpose | null>(null);
 const message = ref(t("examples.no_command_selected_yet_0488"));

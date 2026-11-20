@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
 const { t, locale } = usePlaygroundI18n();
-import { WlCard, WlStatCard, WlTable } from "gavia-ui";
+import { WlCard, WlStatCard, WlTable } from "legato-ui";
 import { gaviaProjectInfo } from "../../project/project-info";
 import qualityReport from "../../project/quality-report.generated.json";
 import QualityMeter from "../../project/QualityMeter.vue";

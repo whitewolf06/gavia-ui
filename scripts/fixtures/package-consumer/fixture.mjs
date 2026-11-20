@@ -1,6 +1,6 @@
 import {
   WlButton, WlConfig, WlContextMenu, WlDatePicker, WlField, WlInput, wlLocaleRu, WlMenu, WlSelect
-} from "gavia-ui";
+} from "legato-ui";
 import { createSSRApp, h, ref } from "vue";
 
 // The same render function and initial state run in native Node and the browser.
@@ -28,7 +28,7 @@ export const PackedFixture = {
     const contextItems = menuItems("context");
     const popupItems = menuItems("popup");
     return () => h("main", { id: "packed-fixture", style: { padding: "16px", maxWidth: "720px", margin: "0 auto", display: "grid", gap: "16px" } }, [
-      h("h1", "Packed Gavia UI consumer"),
+      h("h1", "Packed Legato UI consumer"),
       h(WlField, { label: "Имя", hint: "Сервер и браузер используют одинаковое состояние." }, {
         default: (field) => h(WlInput, {
           id: field.id, "aria-describedby": field.ariaDescribedby,

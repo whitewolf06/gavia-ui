@@ -5,9 +5,9 @@ They need no Vue component or plugin. Styling uses shared tokens.
 Import styles explicitly:
 
 ```ts
-import "gavia-ui/styles/base.css";
-import "gavia-ui/styles/primitives.css";
-import "gavia-ui/themes/white.css";
+import "legato-ui/styles/base.css";
+import "legato-ui/styles/primitives.css";
+import "legato-ui/themes/white.css";
 ```
 
 Reset is optional; if needed, import it before base.css.
@@ -160,4 +160,4 @@ The guide’s topic structure draws on Bootstrap documentation:
 [grid](https://getbootstrap.com/docs/5.3/layout/grid/),
 [columns](https://getbootstrap.com/docs/5.3/layout/columns/) and
 [gutters](https://getbootstrap.com/docs/5.3/layout/gutters/).
-The examples use Gavia UI’s own tokens and CSS Grid.
+The examples use Legato UI’s own tokens and CSS Grid.

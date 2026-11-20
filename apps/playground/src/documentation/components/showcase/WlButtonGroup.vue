@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlButtonGroup, WlIconButton } from "gavia-ui";
+import { WlButton, WlButtonGroup, WlIconButton } from "legato-ui";
 import { ref } from "vue";
 const period = ref(t("examples.day_0020"));
 const page = ref(1);

@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlButton, WlRadioGroup } from "gavia-ui";
+import { WlButton, WlRadioGroup } from "legato-ui";
 import { computed, ref } from "vue";
 const selected = ref<string>();
 const options = computed(() => [

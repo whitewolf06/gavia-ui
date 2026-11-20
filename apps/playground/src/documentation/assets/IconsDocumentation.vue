@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
 const { t } = usePlaygroundI18n();
-import { WL_ICON_NAMES, WlButton, WlIcon, type WlIconName, WlInput } from "gavia-ui";
+import { WL_ICON_NAMES, WlButton, WlIcon, type WlIconName, WlInput } from "legato-ui";
 import { computed, ref } from "vue";
 import { consumerSource } from "../../design-system/code";
 import CodePanel from "../../design-system/CodePanel.vue";
@@ -99,7 +99,7 @@ const code = consumerSource(playgroundSource);
         {{ t('documentation.strings.s0062') }} <code>pnpm icons:check</code> {{ t('documentation.strings.s0063') }}
       </p>
       <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0064') }}</p>
-      <a class="docs-assets-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/icons.md">{{ t('documentation.strings.s0065') }}</a>
+      <a class="docs-assets-link" href="https://github.com/whitewolf06/legato-ui/blob/main/docs/icons.md">{{ t('documentation.strings.s0065') }}</a>
     </section>
   </div>
 </template>

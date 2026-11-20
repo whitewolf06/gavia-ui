@@ -71,7 +71,7 @@ describe("precompiled page and language catalogs", () => {
     await pending;
     expect(translate("shell.App.text1")).toBe(shellRussian["shell.App.text1"]);
     expect(document.documentElement.lang).toBe("ru");
-    const current = new URL("https://example.test/gavia-ui/?view=docs&component=WlSelect&theme=gavia-dark#docs-wlselect-props");
+    const current = new URL("https://example.test/legato-ui/?view=docs&component=WlSelect&theme=gavia-dark#docs-wlselect-props");
     const changed = createPlaygroundLocaleUrl(current, "ru");
     expect(changed.searchParams.get("view")).toBe("docs");
     expect(changed.searchParams.get("component")).toBe("WlSelect");

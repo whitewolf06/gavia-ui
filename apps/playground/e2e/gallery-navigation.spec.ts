@@ -124,7 +124,7 @@ test("Docs lazily loads a live example, copies public source and returns through
   const preview = explorer.getByTestId("ds-example-preview");
   await expect(preview.locator(":scope > .wl-stack")).toBeVisible();
   const source = explorer.locator("pre code");
-  await expect(source).toContainText('from "gavia-ui"');
+  await expect(source).toContainText('from "legato-ui"');
   await expect(source).not.toContainText("packages/ui-kit");
   const extra = workspace.locator('[data-docs-component-extra="WlSelect"]');
   await expect(extra.getByTestId("docs-component-extra-preview").locator(":scope > *").first()).toBeVisible();
@@ -138,7 +138,7 @@ test("Docs lazily loads a live example, copies public source and returns through
   await copyCodePanel(explorer);
   await expect(explorer.getByRole("status").last()).toHaveText("Код скопирован.");
   const copied = await page.locator("html").getAttribute("data-copied");
-  expect(copied).toContain('from "gavia-ui"');
+  expect(copied).toContain('from "legato-ui"');
   expect(copied).not.toContain('v-bind="preview"');
   expect(copied).not.toContain("packages/ui-kit");
 

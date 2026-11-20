@@ -8,7 +8,7 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
     description: "Карточка со слотами header, title, subtitle, default и footer.",
     props: [
       { name: "hoverable", type: "boolean", default: false, description: "Подсветка при наведении." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [
       { name: "default", description: "Основное содержимое." },
@@ -55,7 +55,7 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
         default: [],
         description: "WlTabItem[]: { key, label, icon?, count? }."
       },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [{ name: "panel", description: "Содержимое панели; scope: { item }." }],
     emits: [],
@@ -80,7 +80,7 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "ariaLabelledby", type: "string", description: "ID элемента с подписью диалога." },
       { name: "width", type: "string", description: "Ширина (CSS), например \"480px\"." },
       { name: "motion", type: "boolean", description: "Анимация открытия и закрытия; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [
       { name: "default", description: "Тело диалога." },
@@ -114,7 +114,7 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "ariaLabel", type: "string", description: "Доступное имя панели без текстового заголовка." },
       { name: "ariaLabelledby", type: "string", description: "ID элемента с подписью панели." },
       { name: "motion", type: "boolean", description: "Анимация открытия и закрытия; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [
       { name: "default", description: "Содержимое панели." },
@@ -137,7 +137,7 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "ariaLabel", type: "string", description: "Доступное имя поповера." },
       { name: "ariaLabelledby", type: "string", description: "ID элемента с подписью поповера." },
       { name: "motion", type: "boolean", description: "Анимация открытия и закрытия; по умолчанию WlConfig.motion (true)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [{ name: "default", description: "Содержимое поповера." }],
     emits: [
@@ -149,7 +149,7 @@ export const containersManifest = /* @__PURE__ */ defineComponentManifest([
     name: "WlDivider",
     category: "containers",
     description: "Разделитель; без слота — простая линия.",
-    props: [{ name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }],
+    props: [{ name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }],
     slots: [{ name: "default", description: "Текст или другое содержимое по центру линии." }],
     emits: []
   }

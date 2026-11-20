@@ -4,8 +4,12 @@ import { flushPromises, mount, type VueWrapper } from "@vue/test-utils";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import App from "../src/App.vue";
+import HomePage from "../src/HomePage.vue";
 import { playgroundI18n, playgroundLocale, setPlaygroundLocale } from "../src/i18n";
 import { createPlaygroundRouter } from "../src/router";
+import { appliedThemeStorageKey, applyThemeToRoot, clearAppliedTheme } from "../src/theme-builder/application";
+import { createThemeOverrides, createThemePalette } from "../src/theme-builder/palette";
+import ThemeBuilderPage from "../src/ThemeBuilderPage.vue";
 import { playgroundThemePreference } from "../src/themes";
 
 // The real DocsPage's metadata/TOC loads normally. Only its async Assets module
@@ -177,6 +181,88 @@ const initialPages = [
 ];
 
 describe("App-owned page anchor restoration", () => {
+  it("keeps an applied palette through navigation and preserves the Newspaper quick-toggle pair", async () => {
+    const stored = ["legato-ui.theme", appliedThemeStorageKey].map((key) => [key, localStorage.getItem(key)] as const);
+    const previousStyle = document.documentElement.getAttribute("style");
+    try {
+      clearAppliedTheme();
+      const app = await mountedApp("/theme-builder/?theme=gavia&lang=en");
+      await paint();
+      const palette = { ...createThemePalette("newspaper"), background: "#eef5ff" };
+      const draft = { name: "blue-paper", baseTheme: "newspaper" as const, overrides: createThemeOverrides(palette, "newspaper") };
+      app.wrapper.getComponent(ThemeBuilderPage).vm.$emit("apply-theme", draft);
+      await paint();
+      expect(document.documentElement.dataset.wlTheme).toBe("newspaper");
+      expect(document.documentElement.style.getPropertyValue("--wl-palette-bg")).toBe("#eef5ff");
+      await app.router.push("/?theme=newspaper&lang=en");
+      await paint();
+      expect(app.wrapper.get('[data-testid="playground-theme-undo"]').text()).toBe("Undo");
+      app.wrapper.getComponent(HomePage).vm.$emit("toggle-theme");
+      await paint();
+      expect(document.documentElement.dataset.wlTheme).toBe("graphite");
+      expect(document.documentElement.style.getPropertyValue("--wl-palette-bg")).toBe("");
+      app.wrapper.getComponent(HomePage).vm.$emit("toggle-theme");
+      await paint();
+      expect(document.documentElement.dataset.wlTheme).toBe("newspaper");
+      await app.router.push("/theme-builder/?theme=newspaper&lang=en");
+      await paint();
+      app.wrapper.getComponent(ThemeBuilderPage).vm.$emit("apply-theme", draft);
+      await paint();
+      // Explicitly choosing the same base is still a request to leave the palette.
+      app.wrapper.getComponent({ name: "PlaygroundHeader" }).vm.$emit("theme", "newspaper");
+      await paint();
+      expect(app.wrapper.find('[data-testid="playground-theme-draft"]').exists()).toBe(false);
+      expect(localStorage.getItem(appliedThemeStorageKey)).toBeNull();
+      expect(document.documentElement.style.getPropertyValue("--wl-palette-bg")).toBe("");
+    } finally {
+      clearAppliedTheme();
+      applyThemeToRoot("gavia");
+      if (previousStyle === null) document.documentElement.removeAttribute("style");
+      else document.documentElement.setAttribute("style", previousStyle);
+      for (const [key, value] of stored) {
+        if (value === null) localStorage.removeItem(key);
+        else localStorage.setItem(key, value);
+      }
+    }
+  });
+
+  it("keeps the applied base on query-free Back despite a changed saved preference, while an explicit theme wins", async () => {
+    const stored = ["legato-ui.theme", appliedThemeStorageKey].map((key) => [key, localStorage.getItem(key)] as const);
+    try {
+      clearAppliedTheme();
+      const app = await mountedApp("/docs/?theme=gavia");
+      await app.router.push("/docs/");
+      await paint();
+      await app.router.push("/theme-builder/?theme=gavia");
+      await paint();
+      const palette = { ...createThemePalette("newspaper"), background: "#eef5ff" };
+      app.wrapper.getComponent(ThemeBuilderPage).vm.$emit("apply-theme", {
+        name: "blue-paper", baseTheme: "newspaper", overrides: createThemeOverrides(palette, "newspaper")
+      });
+      await paint();
+      // Another tab can save a different built-in preference while this palette is active.
+      localStorage.setItem("legato-ui.theme", "white");
+      await historyMove(app.router, () => app.router.back());
+      await paint();
+      expect(new URL(window.location.href).searchParams.has("theme")).toBe(false);
+      expect(document.documentElement.dataset.wlTheme).toBe("newspaper");
+      expect(document.documentElement.dataset.wlPlaygroundDraft).toBe("blue-paper");
+      expect(app.wrapper.find('[data-testid="playground-theme-undo"]').exists()).toBe(true);
+      await app.router.push("/docs/?theme=white");
+      await paint();
+      expect(document.documentElement.dataset.wlTheme).toBe("white");
+      expect(document.documentElement.dataset.wlPlaygroundDraft).toBeUndefined();
+      expect(document.documentElement.style.getPropertyValue("--wl-palette-bg")).toBe("");
+    } finally {
+      clearAppliedTheme();
+      applyThemeToRoot("gavia");
+      for (const [key, value] of stored) {
+        if (value === null) localStorage.removeItem(key);
+        else localStorage.setItem(key, value);
+      }
+    }
+  });
+
   it.each(initialPages)("preserves initial $name anchor through a late preference replace without lang/theme", async (page) => {
     const app = await mountedApp(page.url, true);
     expect(app.wrapper.find(page.selector).exists()).toBe(true);
@@ -259,11 +345,11 @@ describe("App-owned page anchor restoration", () => {
 
 describe("Initial preferences after history traversal during startup", () => {
   it.each([
-    { name: "Russian system visit", staleLocale: "en", url: "/ru/docs/?theme=system#docs-components", path: "/ru/docs/", language: "ru", preference: "system", theme: "gavia" },
+    { name: "Russian system visit", staleLocale: "en", url: "/ru/docs/?theme=system#docs-components", path: "/ru/docs/", language: "ru", preference: "system", theme: "legato" },
     { name: "Russian explicit dark visit", staleLocale: "en", url: "/ru/docs/?theme=graphite#docs-components", path: "/ru/docs/", language: "ru", preference: "graphite", theme: "graphite" },
     { name: "unprefixed English path", staleLocale: "ru", url: "/docs/?theme=graphite#docs-components", path: "/docs/", language: "en", preference: "graphite", theme: "graphite" },
     { name: "legacy Russian query", staleLocale: "en", url: "/?view=docs&lang=ru&theme=graphite#docs-components", path: "/ru/docs/", language: "ru", preference: "graphite", theme: "graphite" },
-    { name: "query language overriding Russian path", staleLocale: "ru", url: "/ru/docs/?view=docs&lang=en&theme=system#docs-components", path: "/docs/", language: "en", preference: "system", theme: "gavia" }
+    { name: "query language overriding Russian path", staleLocale: "ru", url: "/ru/docs/?view=docs&lang=en&theme=system#docs-components", path: "/docs/", language: "en", preference: "system", theme: "legato" }
   ] as const)("honours the current $name instead of pre-traversal preference refs", async (visit) => {
     // Model modules having resolved preferences for the document being reloaded.
     // Delay mounting, then traverse the real history before App can pin a visit.
@@ -301,10 +387,10 @@ describe("Initial preferences after history traversal during startup", () => {
   });
 
   it("still pins a preference-free initial visit from detected automatic preferences", async () => {
-    const previousSavedLocale = localStorage.getItem("gavia-ui.locale");
-    const previousSavedTheme = localStorage.getItem("gavia-ui.theme");
-    localStorage.removeItem("gavia-ui.locale");
-    localStorage.removeItem("gavia-ui.theme");
+    const previousSavedLocale = localStorage.getItem("legato-ui.locale");
+    const previousSavedTheme = localStorage.getItem("legato-ui.theme");
+    localStorage.removeItem("legato-ui.locale");
+    localStorage.removeItem("legato-ui.theme");
     vi.spyOn(navigator, "languages", "get").mockReturnValue(["ru-RU"]);
     vi.spyOn(navigator, "language", "get").mockReturnValue("ru-RU");
     await setPlaygroundLocale("ru");
@@ -313,18 +399,18 @@ describe("Initial preferences after history traversal during startup", () => {
       const app = await mountedApp("/");
       await vi.waitFor(() => {
         expect(document.documentElement.lang).toBe("ru");
-        expect(document.documentElement.dataset.wlTheme).toBe("gavia");
+        expect(document.documentElement.dataset.wlTheme).toBe("legato");
         expect(window.location.pathname).toBe("/ru/");
         expect(new URL(window.location.href).searchParams.get("theme")).toBe("system");
       });
       expect(history.length).toBe(app.historyLengthBeforeMount);
-      expect(localStorage.getItem("gavia-ui.locale")).toBeNull();
-      expect(localStorage.getItem("gavia-ui.theme")).toBeNull();
+      expect(localStorage.getItem("legato-ui.locale")).toBeNull();
+      expect(localStorage.getItem("legato-ui.theme")).toBeNull();
     } finally {
-      if (previousSavedLocale === null) localStorage.removeItem("gavia-ui.locale");
-      else localStorage.setItem("gavia-ui.locale", previousSavedLocale);
-      if (previousSavedTheme === null) localStorage.removeItem("gavia-ui.theme");
-      else localStorage.setItem("gavia-ui.theme", previousSavedTheme);
+      if (previousSavedLocale === null) localStorage.removeItem("legato-ui.locale");
+      else localStorage.setItem("legato-ui.locale", previousSavedLocale);
+      if (previousSavedTheme === null) localStorage.removeItem("legato-ui.theme");
+      else localStorage.setItem("legato-ui.theme", previousSavedTheme);
     }
   });
 });

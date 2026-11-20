@@ -20,7 +20,7 @@ export function gaviaSeoAssets(): Plugin {
       const components = Object.keys(api).sort();
       const routes = documentationRoutes(components);
       const escape = (value: string): string => value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
-      const base = "https://whitewolf06.github.io/gavia-ui/";
+      const base = "https://whitewolf06.github.io/legato-ui/";
       const entries = routes.map((path) => {
         const relative = path.replace(/^ru\//, "");
         const alternate = (language: string): string => escape(new URL((language === "ru" ? "ru/" : "") + relative, base).href);
@@ -29,11 +29,11 @@ export function gaviaSeoAssets(): Plugin {
       });
       this.emitFile({ type: "asset", fileName: "sitemap.xml", source: '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">' + entries.join("\n") + "</urlset>\n" });
       this.emitFile({ type: "asset", fileName: "route-manifest.json", source: JSON.stringify({ base: deploymentBase, routes }, null, 2) + "\n" });
-      const summary = ["# Gavia UI", "", "> Independent Vue 3 and TypeScript components with explicit CSS and five themes.", "", "Vue ^3.4.0 is the only required peer. Import CSS explicitly; router and business state belong to the consumer.", "", "## Guides",
-        ...documentationGuideSections.map((section) => `- [${section}](${base}docs/${section}/)`), "", "## Components", ...components.map((name) => `- [${name}](${base}docs/components/${name}/)`), "", "## Reference", `- [Full text](${base}llms-full.txt)`, "- [Canonical repository](https://github.com/whitewolf06/gavia-ui)", ""].join("\n");
+      const summary = ["# Legato UI", "", "> Independent Vue 3 and TypeScript components with explicit CSS and seven themes.", "", "Vue ^3.4.0 is the only required peer. Import CSS explicitly; router and business state belong to the consumer.", "", "## Guides",
+        ...documentationGuideSections.map((section) => `- [${section}](${base}docs/${section}/)`), "", "## Components", ...components.map((name) => `- [${name}](${base}docs/components/${name}/)`), "", "## Reference", `- [Full text](${base}llms-full.txt)`, "- [Canonical repository](https://github.com/whitewolf06/legato-ui)", ""].join("\n");
       this.emitFile({ type: "asset", fileName: "llms.txt", source: summary });
       const directory = new URL("../../../docs/guide/", import.meta.url);
-      const guides = readdirSync(directory).filter((name) => name.endsWith(".md")).sort().map((name) => readFileSync(new URL(name, directory), "utf8"));
+      const guides = readdirSync(directory).filter((name) => name.endsWith(".md") && name !== "font-gavia.md").sort().map((name) => readFileSync(new URL(name, directory), "utf8"));
       const reference = components.map((name) => `## ${name}\n\n${base}docs/components/${name}/\n\n` + ["props", "models", "emits", "slots"].map((kind) =>
         `### ${kind}\n\n${Object.entries(api[name]![kind as keyof typeof api[string]]).map(([key, type]) => `- ${key}: ${type}`).join("\n")}`).join("\n\n"));
       this.emitFile({ type: "asset", fileName: "llms-full.txt", source: [summary, ...guides, ...reference].join("\n\n---\n\n") });

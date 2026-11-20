@@ -60,7 +60,7 @@ const props = withDefaults(defineProps<{
    * @default undefined
    */
   emptyMessage?: string;
-  /** Attributes of internal Gavia UI elements. */
+  /** Attributes of internal Legato UI elements. */
   pt?: WlPt<"table">;
 }>(), {
   value: () => [], columns: undefined, stickyHeader: false, loading: false

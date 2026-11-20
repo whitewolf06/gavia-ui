@@ -1,11 +1,11 @@
-# Gavia UI compatibility and checks
+# Legato UI compatibility and checks
 
-**This guide moved.** Canonical guide: [Gavia UI compatibility and checks](maintainers/quality.md).
+**This guide moved.** Canonical guide: [Legato UI compatibility and checks](maintainers/quality.md).
 
 This compatibility page preserves old URLs and fragment links. Use the canonical
 guide for current instructions.
 
-<a id="gavia-ui-compatibility-and-checks"></a>
+<a id="legato-ui-compatibility-and-checks"></a>
 <a id="versions-and-public-contract"></a>
 <a id="checking-new-public-contracts"></a>
 <a id="browsers-and-consumer-environment"></a>

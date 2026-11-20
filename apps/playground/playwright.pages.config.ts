@@ -15,7 +15,7 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   workers: 1,
   use: {
-    baseURL: existingStand ?? `${previewOrigin}/gavia-ui/`,
+    baseURL: existingStand ?? `${previewOrigin}/legato-ui/`,
     trace: "retain-on-failure"
   },
   projects: [
@@ -25,9 +25,9 @@ export default defineConfig({
   webServer: existingStand
     ? undefined
     : {
-        command: "pnpm preview --host 127.0.0.1 --port 4175 --strictPort --base=/gavia-ui/",
+        command: "pnpm preview --host 127.0.0.1 --port 4175 --strictPort --base=/legato-ui/",
         cwd: dirname(fileURLToPath(import.meta.url)),
-        url: `${previewOrigin}/gavia-ui/`,
+        url: `${previewOrigin}/legato-ui/`,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000
       }

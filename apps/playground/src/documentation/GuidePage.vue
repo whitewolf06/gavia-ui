@@ -23,6 +23,6 @@ const RecipeGallery = defineAsyncComponent(() => import("../design-system/Recipe
     </section>
     <RecipeGallery v-if="section === 'recipes'" />
     <a v-if="section === 'accessibility'" class="docs-text-link" href="https://www.w3.org/WAI/ARIA/apg/patterns/">WAI-ARIA Authoring Practices</a>
-    <a class="docs-text-link" :href="`https://github.com/whitewolf06/gavia-ui/tree/main/${section === 'why' ? 'examples' : section === 'theming' ? 'docs/guide/theming.md' : section === 'accessibility' ? 'docs/maintainers/quality.md' : 'docs/architecture.md'}`">{{ playgroundLocale === 'ru' ? 'Исходники и руководство' : 'Source and guide' }}</a>
+    <a class="docs-text-link" :href="`https://github.com/whitewolf06/legato-ui/tree/main/${section === 'why' ? 'examples' : section === 'theming' ? 'docs/guide/theming.md' : section === 'accessibility' ? 'docs/maintainers/quality.md' : 'docs/architecture.md'}`">{{ playgroundLocale === 'ru' ? 'Исходники и руководство' : 'Source and guide' }}</a>
   </div>
 </template>

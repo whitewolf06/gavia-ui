@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlAutocomplete, WlButton } from "gavia-ui";
+import { WlAutocomplete, WlButton } from "legato-ui";
 import { onBeforeUnmount, ref } from "vue";
 const value = ref<string | null>(t("examples.anna_0009"));
 const suggestions = ref([t("examples.anna_0009"), t("examples.andrey_0010"), t("examples.maria_0011")]);

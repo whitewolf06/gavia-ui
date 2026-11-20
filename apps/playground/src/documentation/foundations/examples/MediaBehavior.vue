@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { wlBreakpoints, WlButton, WlInput } from "gavia-ui";
+import { wlBreakpoints, WlButton, WlInput } from "legato-ui";
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 const wide = ref<boolean | null>(null);
 const filtersOpen = ref(false);

@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlButton, WlFileUpload } from "gavia-ui";
+import { WlButton, WlFileUpload } from "legato-ui";
 import { ref } from "vue";
 const files = ref<File[]>([]);
 interface FileState { progress: number; status: "pending" | "uploading" | "success" | "error"; message?: string }

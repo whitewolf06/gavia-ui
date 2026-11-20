@@ -51,7 +51,7 @@ const props = withDefaults(
     showCount?: boolean;
     /** Placeholder. */
     placeholder?: string;
-    /** Attributes of internal Gavia UI elements. */
+    /** Attributes of internal Legato UI elements. */
     pt?: WlPt<"textarea">;
   }>(),
   {

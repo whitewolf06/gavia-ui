@@ -89,7 +89,7 @@ test("the language selector preserves deep routes, themes and anchors through re
     await panel.locator("summary").click();
     const expected = consumerSource(variantSource, {}, language === "en" ? englishExamples : russianExamples);
     await expect(panel.locator("pre code")).toHaveText(expected);
-    expect(expected).toContain('from "gavia-ui"');
+    expect(expected).toContain('from "legato-ui"');
     expect(expected).not.toContain("usePlaygroundI18n");
     expect(expected).not.toContain("examples.");
     await copyCodePanel(panel, language === "en" ? "Copy code" : "Копировать код");

@@ -51,7 +51,7 @@ test("preparation preserves introduction/history and rejects duplicate unrelease
 });
 
 test("portable preview rejects root-relative assets for root and GitHub Pages bases", () => {
-  for (const source of ['<script src="/assets/app.js"></script>', '<script src="/gavia-ui/assets/app.js"></script>', "<link href='/gavia-ui/assets/app.css'>", '<img src = "/logo.svg">']) {
+  for (const source of ['<script src="/assets/app.js"></script>', '<script src="/legato-ui/assets/app.js"></script>', "<link href='/legato-ui/assets/app.css'>", '<img src = "/logo.svg">']) {
     assert.throws(() => assertPortableHtml(source));
   }
   assert.doesNotThrow(() => assertPortableHtml('<script src="./assets/app.js"></script><link href="./assets/app.css"><a href="#font">Font</a>'));
@@ -72,13 +72,13 @@ function versionFixture(callback) {
     return result;
   };
   try {
-    put("package.json", { name: "gavia-ui-workspace", private: true, version: "0.9.1" });
+    put("package.json", { name: "legato-ui-workspace", private: true, version: "0.9.1" });
     put("pnpm-workspace.yaml", 'packages:\n  - "packages/*"\n  - "apps/*"\n');
-    put("packages/ui-kit/package.json", { name: "gavia-ui", version: "0.9.1" });
-    put("apps/playground/package.json", { name: "gavia-ui-playground", private: true, version: "0.1.0" });
+    put("packages/ui-kit/package.json", { name: "legato-ui", version: "0.9.1" });
+    put("apps/playground/package.json", { name: "legato-ui-playground", private: true, version: "0.1.0" });
     const changelog = "# Changelog\n\n## Unreleased\n\n- Consumer-facing note: [guide](docs/quality.md).\n\n## 0.9.1 — 2026-10-07\n\n- Previous release: [migration](docs/migration-0.9.md).\n";
     put("CHANGELOG.md", changelog);
-    put(".changeset/fixture.md", '---\n"gavia-ui": patch\n---\n\nA checked fix with [docs](docs/design-system.md).\n');
+    put(".changeset/fixture.md", '---\n"legato-ui": patch\n---\n\nA checked fix with [docs](docs/design-system.md).\n');
     cpSync(join(root, ".changeset/config.json"), join(fixture, ".changeset/config.json"));
     mkdirSync(join(fixture, "scripts"));
     mkdirSync(join(fixture, "docs"));
@@ -109,7 +109,7 @@ for (const prerelease of [false, true]) {
       assert.equal(existsSync(join(fixture, "packages/ui-kit/CHANGELOG.md")), false);
       assert.equal(packaged, packageChangelog(result));
       assert.match(result, /\(docs\/quality\.md\)/);
-      assert.match(packaged, /\(https:\/\/github\.com\/whitewolf06\/gavia-ui\/blob\/main\/docs\/quality\.md\)/);
+      assert.match(packaged, /\(https:\/\/github\.com\/whitewolf06\/legato-ui\/blob\/main\/docs\/quality\.md\)/);
       assert.match(packaged, /\/docs\/design-system\.md\)/);
       assert.match(packaged, /\/docs\/migration-0\.9\.md\)/);
       assert.match(result, /## Unreleased\n\n## 0\.9\.2/);
@@ -121,7 +121,7 @@ for (const prerelease of [false, true]) {
         assert.match(readFileSync(join(fixture, ".changeset/pre/fixture.md"), "utf8"), /A checked fix/);
         const secondPreview = result.replace("## Unreleased\n\n", "## Unreleased\n\n- Editorial note for the second preview.\n\n");
         put("CHANGELOG.md", secondPreview);
-        put(".changeset/second.md", '---\n"gavia-ui": patch\n---\n\nSecond checked fix.\n');
+        put(".changeset/second.md", '---\n"legato-ui": patch\n---\n\nSecond checked fix.\n');
         run([wrapper]);
         assert.equal(JSON.parse(readFileSync(join(fixture, "package.json"), "utf8")).version, "0.9.2-beta.1");
         assert.equal(existsSync(join(fixture, ".changeset/second.md")), false);
@@ -146,7 +146,7 @@ for (const prerelease of [false, true]) {
 
 test("empty changeset notes fail before consuming files or changing versions", () => {
   versionFixture(({ fixture, put, run }) => {
-    put(".changeset/fixture.md", '---\n"gavia-ui": patch\n---\n');
+    put(".changeset/fixture.md", '---\n"legato-ui": patch\n---\n');
     run([join(fixture, "scripts/version-release.mjs")], 1);
     assert.equal(JSON.parse(readFileSync(join(fixture, "package.json"), "utf8")).version, "0.9.1");
     assert.equal(JSON.parse(readFileSync(join(fixture, "packages/ui-kit/package.json"), "utf8")).version, "0.9.1");
@@ -161,9 +161,9 @@ test("unfinished migration blocks release-notes publication check", () => {
     put("docs/migration-0.9.2.md", "# Migration\n\nCompatible patch. No consumer changes required.\n");
     run([join(fixture, "scripts/release-notes.mjs"), "--check"]);
     const rendered = run([join(fixture, "scripts/release-notes.mjs")]).stdout;
-    assert.match(rendered, /\(https:\/\/github\.com\/whitewolf06\/gavia-ui\/blob\/v0\.9\.2\/docs\/quality\.md\)/);
+    assert.match(rendered, /\(https:\/\/github\.com\/whitewolf06\/legato-ui\/blob\/v0\.9\.2\/docs\/quality\.md\)/);
     assert.doesNotMatch(rendered, /\(docs\//);
-    assert.match(rendered, /### Release playground\n\nExtract gavia-ui-playground-0\.9\.2\.tgz/);
+    assert.match(rendered, /### Release playground\n\nExtract legato-ui-playground-0\.9\.2\.tgz/);
     assert.match(rendered, /current public documentation is on GitHub Pages\./);
     assert.doesNotMatch(rendered, /Витрина этого выпуска|Распакуйте/);
     assert.match(readFileSync(join(fixture, "CHANGELOG.md"), "utf8"), /\(docs\/quality\.md\)/);
@@ -198,11 +198,11 @@ test("preview provenance rejects mismatched versions and distinguishes clean, tr
     assert.equal(result.status, expected, result.stdout + result.stderr);
     return result;
   };
-  const archive = join(fixture, ".tmp/release-previews/gavia-ui-playground-0.9.1.tgz");
+  const archive = join(fixture, ".tmp/release-previews/legato-ui-playground-0.9.1.tgz");
   const metadata = () => JSON.parse(run("tar", ["-xOf", archive, "./release-preview.json"]).stdout);
   try {
-    put("package.json", { name: "gavia-ui-workspace", private: true, version: "0.9.2" });
-    put("packages/ui-kit/package.json", { name: "gavia-ui", version: "0.9.1" });
+    put("package.json", { name: "legato-ui-workspace", private: true, version: "0.9.2" });
+    put("packages/ui-kit/package.json", { name: "legato-ui", version: "0.9.1" });
     put("apps/playground/dist/index.html", '<script src="./assets/app.js"></script>');
     put(".gitignore", "dist/\n.tmp/\n");
     for (const file of ["archive-playground.mjs", "release-channel.mjs"]) {
@@ -214,7 +214,7 @@ test("preview provenance rejects mismatched versions and distinguishes clean, tr
     assert.equal(existsSync(archive), false);
     assert.equal(existsSync(join(fixture, "apps/playground/dist/release-preview.json")), false);
 
-    put("package.json", { name: "gavia-ui-workspace", private: true, version: "0.9.1" });
+    put("package.json", { name: "legato-ui-workspace", private: true, version: "0.9.1" });
     run("git", ["init", "--quiet"]);
     run("git", ["add", "package.json", "packages/ui-kit/package.json", ".gitignore", "scripts"]);
     run("git", ["-c", "user.name=Release fixture", "-c", "user.email=fixture@example.invalid", "commit", "--quiet", "-m", "Create fixture"]);
@@ -228,7 +228,7 @@ test("preview provenance rejects mismatched versions and distinguishes clean, tr
     run(process.execPath, [script]);
     assert.equal(metadata().dirty, true, "nonignored untracked source must be recorded");
     rmSync(join(fixture, "local-candidate.txt"));
-    put("package.json", { name: "gavia-ui-workspace", private: true, version: "0.9.1", description: "Uncommitted candidate" });
+    put("package.json", { name: "legato-ui-workspace", private: true, version: "0.9.1", description: "Uncommitted candidate" });
     run(process.execPath, [script]);
     assert.equal(metadata().dirty, true, "tracked source edits must be recorded");
     assert.equal(metadata().commit, commit, "base commit stays distinct from uncommitted candidate changes");
@@ -257,7 +257,7 @@ test("Markdown notes preserve heading hierarchy and code fences through release 
 
 test("real Changesets preparation normalizes embedded headings before writing changelog", () => {
   versionFixture(({ fixture, put, run }) => {
-    put(".changeset/fixture.md", '---\n"gavia-ui": patch\n---\n\n# Overview\n\n## Migration\n\nImportant migration step.\n\n```md\n## 0.9.2\n```\n\nAfter the snippet.\n');
+    put(".changeset/fixture.md", '---\n"legato-ui": patch\n---\n\n# Overview\n\n## Migration\n\nImportant migration step.\n\n```md\n## 0.9.2\n```\n\nAfter the snippet.\n');
     run([join(fixture, "scripts/version-release.mjs")]);
     const source = readFileSync(join(fixture, "CHANGELOG.md"), "utf8");
     const notes = releaseNotes(source, "0.9.2");
@@ -273,7 +273,7 @@ test("real Changesets preparation normalizes embedded headings before writing ch
 test("unsafe Markdown fails before Changesets consumes notes or changes versions", () => {
   for (const notes of ["Heading\n===\nBody.", "# Parent\n###### Deepest child", "```md\n## Unclosed snippet"]) {
     versionFixture(({ fixture, put, run }) => {
-      put(".changeset/fixture.md", '---\n"gavia-ui": patch\n---\n\n' + notes + "\n");
+      put(".changeset/fixture.md", '---\n"legato-ui": patch\n---\n\n' + notes + "\n");
       const result = run([join(fixture, "scripts/version-release.mjs")], 1);
       assert.match(result.stderr, /fixture\.md/);
       assert.match(result.stderr, /[Nn]o versions changed/);
@@ -287,9 +287,9 @@ test("unsafe Markdown fails before Changesets consumes notes or changes versions
 test("GitHub Release docs use the exact stable or prerelease tag while package docs keep main", () => {
   const source = "See [migration](docs/migration.md).";
   for (const version of ["0.9.2", "0.9.2-beta.1"]) {
-    assert.equal(releaseDocsLinks(source, version), "See [migration](https://github.com/whitewolf06/gavia-ui/blob/v" + version + "/docs/migration.md).");
+    assert.equal(releaseDocsLinks(source, version), "See [migration](https://github.com/whitewolf06/legato-ui/blob/v" + version + "/docs/migration.md).");
   }
-  assert.equal(packageChangelog(source), "See [migration](https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration.md).");
+  assert.equal(packageChangelog(source), "See [migration](https://github.com/whitewolf06/legato-ui/blob/main/docs/migration.md).");
 });
 
 test("beta promotion deduplicates whole fenced blocks without dropping delimiters or code", () => {

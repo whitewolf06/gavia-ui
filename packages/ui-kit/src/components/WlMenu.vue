@@ -42,7 +42,7 @@ const props = withDefaults(defineProps<{
   ariaLabelledby?: string;
   /** Popup menu animation; defaults to WlConfig.motion (true). */
   motion?: boolean;
-  /** Attributes of internal Gavia UI elements. */
+  /** Attributes of internal Legato UI elements. */
   pt?: WlPt<"menu">;
 }>(), { items: () => [], popup: false, placement: "auto", align: "start", motion: undefined });
 const emit = defineEmits<{

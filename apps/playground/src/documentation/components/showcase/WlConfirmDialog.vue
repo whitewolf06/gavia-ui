@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { useWlConfirm, WlButton } from "gavia-ui";
+import { useWlConfirm, WlButton } from "legato-ui";
 import { ref } from "vue";
 // Install WlConfirmationService and mount one WlConfirmDialog in the root.
 const confirm = useWlConfirm();

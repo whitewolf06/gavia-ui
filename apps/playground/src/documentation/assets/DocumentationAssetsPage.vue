@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { WlThemeName } from "gavia-ui";
+import type { WlThemeName } from "legato-ui";
 import { type DocumentationAssetSection } from "./assets";
 import ColorsDocumentation from "./ColorsDocumentation.vue";
 import IconsDocumentation from "./IconsDocumentation.vue";

@@ -1,13 +1,13 @@
 import { nextTick } from "vue";
 import { createPackedSSRApp } from "./packed-fixture.mjs";
-import "gavia-ui/styles/reset.css";
-import "gavia-ui/styles/base.css";
-import "gavia-ui/styles/primitives.css";
-import "gavia-ui/styles/fonts/gavia.css";
-import "gavia-ui/themes/white.css";
-import "gavia-ui/themes/graphite.css";
-import "gavia-ui/themes/newspaper.css";
-import "gavia-ui/themes/gavia.css";
+import "legato-ui/styles/reset.css";
+import "legato-ui/styles/base.css";
+import "legato-ui/styles/primitives.css";
+import "legato-ui/styles/fonts/gavia.css";
+import "legato-ui/themes/white.css";
+import "legato-ui/themes/graphite.css";
+import "legato-ui/themes/newspaper.css";
+import "legato-ui/themes/gavia.css";
 
 // Retain references before hydration to detect replacement of server DOM.
 window.__packedSSRBefore = {

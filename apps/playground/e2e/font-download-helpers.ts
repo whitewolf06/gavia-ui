@@ -30,14 +30,49 @@ function unzip(bytes: Buffer): Map<string, Buffer> {
   return files;
 }
 
-export async function expectGaviaFontDownload(page: Page, link: Locator): Promise<void> {
+function desktopFamilies(ttf: Buffer): Map<number, string> {
+  const families = new Map<number, string>();
+  for (let i = 0; i < ttf.readUInt16BE(4); i++) {
+    const entry = 12 + i * 16;
+    if (ttf.toString("ascii", entry, entry + 4) !== "name") continue;
+    const table = ttf.readUInt32BE(entry + 8);
+    const strings = table + ttf.readUInt16BE(table + 4);
+    for (let j = 0; j < ttf.readUInt16BE(table + 2); j++) {
+      const record = table + 6 + j * 12;
+      if (ttf.readUInt16BE(record + 6) !== 16) continue;
+      const platform = ttf.readUInt16BE(record);
+      const start = strings + ttf.readUInt16BE(record + 10);
+      const value = ttf.subarray(start, start + ttf.readUInt16BE(record + 8));
+      if (platform === 1) families.set(platform, value.toString("latin1"));
+      if (platform === 3) families.set(platform, Buffer.from(value).swap16().toString("utf16le"));
+    }
+  }
+  return families;
+}
+
+export async function expectLegatoFontDownload(page: Page, link: Locator): Promise<void> {
+  const currentUrl = await link.evaluate((element: HTMLAnchorElement) => element.href);
   const pending = page.waitForEvent("download");
   await link.click();
   const download = await pending;
-  expect(download.suggestedFilename()).toBe("Gavia-Sans-0.6.zip");
+  expect(download.suggestedFilename()).toBe("Legato-Sans-0.6.zip");
   const path = await download.path();
   expect(path).not.toBeNull();
-  const files = unzip(readFileSync(path!));
+  const downloaded = readFileSync(path!);
+  expect(downloaded.equals(readFileSync(new URL("../public/downloads/Legato-Sans-0.6.zip", import.meta.url)))).toBe(true);
+  const legato = unzip(downloaded);
+  const archiveRoot = "Legato-Sans-0.6/";
+  const desktop = [...legato.keys()].filter((name) => name.endsWith(".ttf"));
+  expect(desktop).toHaveLength(12);
+  expect(legato.get(archiveRoot + "legato.css")!.toString("utf8")).toContain('font-family: "Legato Sans"');
+  for (const name of desktop) {
+    expect(name).toMatch(/^Legato-Sans-0\.6\/Legato-/);
+    expect(desktopFamilies(legato.get(name)!)).toEqual(new Map([[1, "Legato Sans"], [3, "Legato Sans"]]));
+  }
+
+  const legacy = await page.request.get(new URL("Gavia-Sans-0.6.zip", currentUrl).href);
+  expect(legacy.ok()).toBe(true);
+  const files = unzip(await legacy.body());
   const prefix = "Gavia-Sans-0.6/";
   const manifest = JSON.parse(readFileSync(new URL("manifest.json", fontRoot), "utf8")) as {
     faces: { ttf: { file: string; sha256: string }; woff2: { file: string; sha256: string } }[];

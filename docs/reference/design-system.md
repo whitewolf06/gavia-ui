@@ -1,8 +1,8 @@
-# Gavia UI design system
+# Legato UI design system
 
-Gavia UI includes Vue components, SVG icons, design tokens and five themes.
+Legato UI includes Vue components, SVG icons, design tokens and seven themes.
 This guide describes shared interface rules. The current version appears
-in the playground header. [Docs](https://whitewolf06.github.io/gavia-ui/docs/) covers typography, layout and grid,
+in the playground header. [Docs](https://whitewolf06.github.io/legato-ui/docs/) covers typography, layout and grid,
 responsiveness, content and states, component catalog, icons, colors and API.
 Design-system examples are available at `/system/`. Previous `?view=docs`,
 `?view=system` and `?view=components` links remain compatible.
@@ -32,7 +32,7 @@ pnpm tokens:check  # check references, layers, contrast and generated output
 The generator creates:
 
 - The token block in `styles/base.css`, preserving component styles;
-- `themes/gavia.css`, `themes/gavia-dark.css`, `themes/white.css`,
+- `themes/legato.css`, `themes/legato-dark.css`, `styles/fonts/legato.css`, `themes/gavia.css`, `themes/gavia-dark.css`, `themes/white.css`,
   `themes/graphite.css`, `themes/newspaper.css`;
 - Optional `styles/primitives.css` for typography and layout;
 - `src/design-system/tokens.generated.ts` with types and catalogs;
@@ -64,13 +64,15 @@ role already communicates the intended meaning.
 
 | Theme | `data-wl-theme` / CSS | Purpose |
 | --- | --- | --- |
+| Legato | `legato` / `themes/legato.css` | Playground default light theme, Legato Sans |
+| Legato Dark | `legato-dark` / `themes/legato-dark.css` | Playground default dark theme, Legato Sans |
 | Gavia | `gavia` / `themes/gavia.css` | Light lake palette, Gavia Sans |
 | Gavia Dark | `gavia-dark` / `themes/gavia-dark.css` | Dark Gavia, Gavia Sans |
 | Classic | `white` / `themes/white.css` | Neutral light UI with blue accent; formerly White |
 | Classic Dark | `graphite` / `themes/graphite.css` | Classic dark UI; formerly Graphite |
 | Newspaper | `newspaper` / `themes/newspaper.css` | Paper palette, print-style headings, restrained radii |
 
-The playground defaults to Gavia. Base `styles/base.css` tokens
+The Playground uses Legato for system light mode and Legato Dark for system dark mode. Base `styles/base.css` tokens
 and default `resolveWlToken` / `getWlThemeTokens` values retain Classic
 with identifier `white` so existing apps continue using previous
 values. Classic / Classic Dark change catalog labels only;
@@ -78,12 +80,12 @@ identifiers, CSS paths and previous theme positions are preserved.
 Gavia Dark is available on npm since 0.10.0.
 [Name and catalog migration](../migration.md#migration-themes) · [both Gavia themes](../guide/theming.md).
 
-Themes are imported explicitly. To switch among all five, import five CSS files
-and set `data-wl-theme` on `html`. Both Gavia themes also use
-`styles/fonts/gavia.css`. Each file contains the complete token set,
+Themes are imported explicitly. To switch among all seven, import the seven theme CSS files
+and set `data-wl-theme` on `html`. Import `styles/fonts/legato.css` for Legato Sans
+and its Gavia aliases. Each theme file contains the complete token set,
 so nested `data-wl-theme="white"` inside Classic Dark restores light
 surfaces, dimensions and fonts. A local theme sets its own values;
-place custom overrides after Gavia UI files. Teleported
+place custom overrides after Legato UI files. Teleported
 overlays inherit the `body`/`html` theme rather than a card’s local theme.
 
 All 165 previous public tokens and their resolved values are preserved in the three
@@ -172,10 +174,10 @@ forced onto the new scale. `size` sets control dimensions;
 Import optional primitives as CSS:
 
 ```ts
-import "gavia-ui/styles/reset.css";
-import "gavia-ui/styles/base.css";
-import "gavia-ui/styles/primitives.css";
-import "gavia-ui/themes/white.css";
+import "legato-ui/styles/reset.css";
+import "legato-ui/styles/base.css";
+import "legato-ui/styles/primitives.css";
+import "legato-ui/themes/white.css";
 ```
 
 ```html
@@ -307,8 +309,8 @@ events, message lifetime or focus rules.
 import {
   wlDesignTokens, wlDesignThemes, wlSpacing, wlTypography, wlBreakpoints,
   resolveWlToken, getWlThemeTokens, type WlDesignTokenName, type WlSpace
-} from "gavia-ui";
-import catalog from "gavia-ui/design-tokens.json";
+} from "legato-ui";
+import catalog from "legato-ui/design-tokens.json";
 
 const name: WlDesignTokenName = "--wl-space-lg";
 const space: WlSpace = "lg";
@@ -325,7 +327,7 @@ imported from JS. Unknown JavaScript token/theme names throw errors.
 ## Accessibility and checks
 
 System policy: regular text contrast at least 4.5:1; focus indicator contrast
-on the main background at least 3:1. Approved pairs are checked in all five themes: text,
+on the main background at least 3:1. Approved pairs are checked in all seven themes: text,
 muted text, actions/hover, hints, statuses and focus. Transparent
 colors are excluded from automatic calculation. This checks specific pairs rather than
 certifying whole-interface accessibility. Check other combinations,
@@ -377,7 +379,7 @@ use single App.vue containers; their motion/pt is configured there.
 
 “Copy code” uses the same live-example SFC,
 inserts current settings and replaces internal imports with public
-`gavia-ui`. Transformation lives in `scripts/example-source.mjs`;
+`legato-ui`. Transformation lives in `scripts/example-source.mjs`;
 the isolated `verify:package` consumer uses it too.
 If the browser blocks clipboard writes, a manual-copy field appears.
 Success is shown only after a successful write.
@@ -395,7 +397,7 @@ Success is shown only after a successful write.
 
 Source: `apps/playground/src/design-system/recipes/*.vue`. Copy each recipe
 in full, including local styles. A separate nearby example shows CSS,
-five themes and service setup. Utility classes require an explicit
+seven themes and service setup. Utility classes require an explicit
 `styles/primitives.css` import. Forms and uploads simulate responses locally;
 replace simulations with app requests when adopting them. No preview
 files or data are sent to external services.
@@ -437,7 +439,7 @@ It covers comparison, diff review, intentional updates and separate Linux checks
 5. Retain a working SFC example, applicable state matrix and copyable
    code for every public component. For new recipes, check errors,
    cancellation and retry, and update the recipe catalog and test.
-6. Check all five themes, keyboard, touch, types, archive and consumer; run
+6. Check all seven themes, keyboard, touch, types, archive and consumer; run
    `test:visual` and review baseline changes.
 7. Public-name or behavior changes require migration notes.
 

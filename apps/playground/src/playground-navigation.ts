@@ -1,4 +1,4 @@
-import type { WlThemeName } from "gavia-ui";
+import type { WlThemeName } from "legato-ui";
 import type { InjectionKey, Ref } from "vue";
 import type { PlaygroundRoute } from "./navigation";
 import type { PlaygroundThemePreference } from "./themes";

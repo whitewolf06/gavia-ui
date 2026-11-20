@@ -18,7 +18,7 @@ tokens or route identifiers. The Playground reads the English root changelog
 and applies a Russian prose overlay when RU is selected; release versions,
 dates, links and code remain shared.
 
-Gavia UI 1.0 uses English fallback text. Russian applications explicitly
+The library uses English fallback text. Russian applications explicitly
 configure `wlLocaleRu` through `WlConfig`. The Playground's language selection
 continues to configure either preset as well as site copy; copying an SFC does
 not copy that host configuration. The 0.x Russian default is historical behavior;
@@ -53,7 +53,7 @@ repeated just to display the report.
 
 ## Pages and routes
 
-Hosted Pages uses canonical paths below its configured base (`/gavia-ui/`):
+Hosted Pages uses canonical paths below its configured base (`/legato-ui/`):
 home `/`, docs `/docs/`, design system `/system/`, changelog `/changelog/`,
 theme builder `/theme-builder/` and font `/font/`. Russian routes add `/ru/`.
 Home owns installation/version metadata; docs combines foundations and public
@@ -91,38 +91,35 @@ modes. Vue Router belongs only to the Playground, never the library runtime.
 
 ## Playground theme
 
-The default is light Gavia, with near-white surfaces and a lake-slate primary
-action. The selector offers five themes: Gavia, Gavia Dark, Classic, Classic
-Dark and Newspaper. Its list and labels come from the public `wlDesignThemes`
-catalogue.
+System mode uses Legato in light mode and Legato Dark in dark mode. The selector lists Legato, Legato Dark, Gavia, Gavia Dark, Classic, Classic Dark and Newspaper from the public `wlDesignThemes` catalogue.
 
 The `theme` parameter preserves direct links. For example,
-`/gavia-ui/docs/colors/?theme=white` loads Classic;
+`/legato-ui/docs/colors/?theme=white` loads Classic;
 `theme=graphite` loads Classic Dark, and `theme=gavia-dark` loads Gavia Dark.
 The displayed Classic / Classic Dark names do not rename legacy query or CSS
 identifiers. Selecting a theme updates this parameter while preserving the
 section, hash and other parameters. Back/Forward restores the page's theme.
-Invalid values use Gavia. All CSS files are imported explicitly before Vue
+Invalid links fall back to the saved preference, then to system mode. All CSS files are imported explicitly before Vue
 starts.
 
 The top right of the first screen has a ghost `WlIconButton` with a 32 px sun
 or moon icon and a 44 × 44 px hit area. Its regular state has no background;
-a visible outline marks focus. It switches Gavia ↔ Gavia Dark and Classic ↔
+a visible outline marks focus. It switches Legato ↔ Legato Dark, Gavia ↔ Gavia Dark and Classic ↔
 Classic Dark. From Newspaper it switches to Classic Dark; selecting it again
 returns to Newspaper. The icon indicates the destination light or dark theme.
 
 The library retains Classic as the base values in `styles/base.css` and the
-JavaScript resolver default. To use Gavia in an application, explicitly import
-`themes/gavia.css` and set `data-wl-theme="gavia"` on `html`. For Gavia Dark,
-use `themes/gavia-dark.css` and `data-wl-theme="gavia-dark"`. Both use Gavia
-Sans. See the [theme guide](../guide/theming.md). The Docs installation example uses
-Classic (`white`) and the confirmed npm version. Gavia Dark is included in
-0.10.0; see [catalogue compatibility](../migration.md#migration-themes).
+JavaScript resolver default. To use Legato in an application, import
+`legato-ui/styles/fonts/legato.css` and `legato-ui/themes/legato.css`, then set
+`data-wl-theme="legato"` on `html`. The dark variant uses `legato-dark` for the
+CSS filename and attribute. Gavia and Gavia Dark remain available through their
+existing theme IDs. See the [theme guide](../guide/theming.md).
+The Docs installation example shows the current package with Classic.
+The home installation command and runnable online examples use the confirmed npm release.
 
-Home uses two responsive versions of the same lake panorama with a loon: daytime
-for Gavia, Classic and Newspaper; nighttime for Gavia Dark and Classic Dark.
-The night layer is mounted on the first dark-theme visit and stays cached
-afterward. When the View Transitions API is available,
+Both Legato themes show the printed arch on paper. Gavia, Classic and Newspaper
+use the daytime lake panorama. Gavia Dark and Classic Dark load its night version
+on demand. When the View Transitions API is available,
 theme switching creates one transition for the whole page. Otherwise colour
 tokens apply immediately and the hero image crossfades. The night layer appears
 after its image loads. `prefers-reduced-motion: reduce` disables the page
@@ -130,8 +127,8 @@ transition and crossfade.
 
 Introductory text sits on a clear card using the selected theme's background
 colour. Installation and the 2×2 metric grid follow below, adapting to narrow
-screens. Usage and participation panels have decorative light images of a
-forest and grain heads. Content, links, installation commands and counts use
+screens. Legato’s participation panels have diagonal accents. The landscape
+themes use forest and reed illustrations. Content, links, installation commands and counts use
 the same sources in every theme. Images contain no text and are hidden from
 screen readers.
 
@@ -163,7 +160,7 @@ stay compact while retaining visible focus and a touch hit area.
   supplies the copyable source.
 - Collections, callbacks, complex models and pt are edited in the copyable
   SFC; the panel explains which parameters belong to that scenario. Scalar
-  fields use Gavia UI controls, numbers remain numbers, and code receives the
+  fields use Legato UI controls, numbers remain numbers, and code receives the
   same values as the live example.
 - Props, defaults, events, slots and v-model come from the public manifest.
   Pt sections are listed from the component's actual `useWlPt` calls.
@@ -263,7 +260,7 @@ The runtime updates title, description, Open Graph/Twitter metadata, canonical
 URL and EN/RU/x-default hreflang links for the current route and language.
 The Playground build generates `sitemap.xml`, `route-manifest.json`, `llms.txt`
 and `llms-full.txt`. Hosted English documentation uses `/docs/.../`; Russian
-uses `/ru/docs/.../`, below the configured deployment base such as `/gavia-ui/`.
+uses `/ru/docs/.../`, below the configured deployment base such as `/legato-ui/`.
 Released `?view=...`, `component`, `section` and `lang` links remain compatible
 and normalize to these paths. Theme preferences and bookmarked anchors remain
 part of the navigation contract.
@@ -294,13 +291,13 @@ remain separately authorized acceptance steps.
    clipboard follows the selected EN/RU language.
 3. Add descriptions and component-specific accessibility rules to metadata,
    with matching EN/RU messages.
-4. Check copied code as a gavia-ui SFC consumer.
+4. Check copied code as a legato-ui SFC consumer.
 5. After a separate command authorising pre-release checks, run typecheck,
    the Playground build, affected-section checks, regression and visual baselines.
 
 Targeted Vitest checks cover the manifest, consumer-code compilation, legacy
 routes and active-heading selection. E2E scenarios cover real navigation through
-the public component manifest, files/dates/overlays, 320 px, five themes and scrollspy. See the
+the public component manifest, files/dates/overlays, 320 px, all seven themes and scrollspy. See the
 [DatePicker contract: single date and range](../guide/date-picker.md).
 
 Record Docs changes under Unreleased in the root changelog. Package documentation

@@ -47,7 +47,7 @@ const props = withDefaults(
      * @default "default"
      */
     density?: WlDensity;
-    /** Attributes of internal Gavia UI elements. */
+    /** Attributes of internal Legato UI elements. */
     pt?: WlPt<"switch">;
   }>(),
   {

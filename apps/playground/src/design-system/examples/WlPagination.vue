@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlPagination } from "gavia-ui";
+import { WlPagination } from "legato-ui";
 import { ref } from "vue";
 const page = ref(1);
 </script>

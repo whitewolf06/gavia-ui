@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlIcon, WlSelect } from "gavia-ui";
+import { WlIcon, WlSelect } from "legato-ui";
 import { ref } from "vue";
 const width = ref("420px");
 const widthOptions = ["280px", "420px", "640px"];

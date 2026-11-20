@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "./i18n";
-const props = withDefaults(defineProps<{ component?: string; section?: DocumentationSection; theme?: WlThemeName }>(), { theme: "gavia" });
+const props = withDefaults(defineProps<{
+  component?: string;
+  section?: DocumentationSection;
+  theme?: WlThemeName;
+}>(), { theme: playgroundDefaultTheme });
 const emit = defineEmits<{
   component: [name: string | undefined];
   section: [name: DocumentationSection | undefined];
@@ -10,7 +14,7 @@ const emit = defineEmits<{
 }>();
 const { t } = usePlaygroundI18n();
 import type { AsyncComponentLoader, Component } from "vue";
-import { WlButton, WlIcon, WlIconButton, WlInput, WlSegmented, type WlThemeName } from "gavia-ui";
+import { WlButton, WlIcon, WlIconButton, WlInput, WlSegmented, type WlThemeName } from "legato-ui";
 import { computed, defineAsyncComponent, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { getLocalizedManifest, isComponentNewInRelease } from "./documentation/manifest";
 const wlManifest = getLocalizedManifest();
@@ -35,7 +39,7 @@ import { createPlaygroundNavigationUrl as createPlaygroundUrl, type Documentatio
 import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
 import { getInstallCommand, installationManagers, type PackageManager } from "./project/installation";
 import { gaviaProjectInfo } from "./project/project-info";
-import { playgroundThemePreference, withPlaygroundTheme } from "./themes";
+import { playgroundDefaultTheme, playgroundThemePreference, withPlaygroundTheme } from "./themes";
 import { usePageAnchor } from "./usePageAnchor";
 const installManager = ref<string | null>("pnpm");
 const installationCommand = computed(() => getInstallCommand((installManager.value ?? "pnpm") as PackageManager, true));
@@ -436,9 +440,9 @@ onBeforeUnmount(() => {
             />
             <CodePanel :source="installationSource" :title="t('documentation.strings.s0849')" :expanded="true" />
             <p class="wl-text-small wl-text-muted">
-              {{ t('documentation.strings.s0850') }} <code>gavia-ui/themes/</code>
+              {{ t('documentation.strings.s0850') }} <code>legato-ui/themes/</code>
               {{ t('documentation.strings.s0851') }} <code>data-wl-theme</code>
-              {{ t('documentation.strings.s0852') }} <code>gavia-ui/styles/fonts/gavia.css</code>.
+              {{ t('documentation.strings.s0852') }} <code>legato-ui/styles/fonts/legato.css</code>.
             </p>
           </section>
 
@@ -493,7 +497,7 @@ onBeforeUnmount(() => {
             <div class="wl-inline" data-space="sm">
               <WlButton size="sm" @click="emit('section', 'colors')">{{ t('documentation.strings.s0018') }}</WlButton>
               <WlButton size="sm" variant="ghost" @click="emit('navigate', 'system')">{{ t('documentation.strings.s0867') }}</WlButton>
-              <a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/design-system.md">
+              <a class="docs-text-link" href="https://github.com/whitewolf06/legato-ui/blob/main/docs/design-system.md">
                 {{ t('documentation.strings.s0868') }}
               </a>
             </div>
@@ -509,7 +513,7 @@ onBeforeUnmount(() => {
             </p>
             <div class="wl-inline" data-space="sm">
               <WlButton size="sm" @click="emit('section', 'icons')">{{ t('documentation.strings.s0872') }}</WlButton>
-              <a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/icons.md">
+              <a class="docs-text-link" href="https://github.com/whitewolf06/legato-ui/blob/main/docs/icons.md">
                 {{ t('documentation.strings.s0873') }}
               </a>
             </div>
@@ -520,13 +524,13 @@ onBeforeUnmount(() => {
             <h2 :id="migrationHeading.id" class="wl-text-heading">{{ migrationHeading.title }}</h2>
             <p class="wl-text-body wl-text-muted">{{ t('documentation.strings.s0875') }}</p>
             <ul class="docs-migration-links">
-              <li><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-gavia.md">
+              <li><a class="docs-text-link" href="https://github.com/whitewolf06/legato-ui/blob/main/docs/migration-gavia.md">
                 {{ t('documentation.strings.s0876') }}
               </a></li>
-              <li><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.8.md">
+              <li><a class="docs-text-link" href="https://github.com/whitewolf06/legato-ui/blob/main/docs/migration-0.8.md">
                 {{ t('documentation.strings.s0877') }}
               </a></li>
-              <li><a class="docs-text-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/migration-0.5.md">
+              <li><a class="docs-text-link" href="https://github.com/whitewolf06/legato-ui/blob/main/docs/migration-0.5.md">
                 {{ t('documentation.strings.s0878') }}
               </a></li>
             </ul>

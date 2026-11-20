@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlAutocomplete, WlButton, WlField } from "gavia-ui";
+import { WlAutocomplete, WlButton, WlField } from "legato-ui";
 import { computed, ref } from "vue";
 const people = [{ id: "anna", label: t("examples.anna_0009") }, { id: "boris", label: t("examples.boris_0621") }, { id: "dmitry", label: t("examples.dmitry_0559") }, { id: "elena", label: t("examples.elena_0622") }];
 type Person = (typeof people)[number];

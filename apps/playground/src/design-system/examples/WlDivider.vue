@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: PreviewProps }>();
 const { t } = usePlaygroundI18n();
-import { WlDivider } from "gavia-ui";
+import { WlDivider } from "legato-ui";
 type PreviewProps = Partial<InstanceType<typeof WlDivider>["$props"]>;
 </script>
 

@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlIcon } from "gavia-ui";
+import { WlIcon } from "legato-ui";
 </script>
 
 <template>

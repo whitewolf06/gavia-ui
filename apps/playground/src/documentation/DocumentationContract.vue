@@ -7,7 +7,7 @@ defineProps<{
   anchors?: Partial<Record<"props" | "events" | "slots" | "pt", string>>;
 }>();
 const { t } = usePlaygroundI18n();
-import { type WlComponentManifest, WlIcon } from "gavia-ui";
+import { type WlComponentManifest, WlIcon } from "legato-ui";
 import { type DocumentationPtSection, propDefault, propType } from "./catalog";
 import TypeSignature from "./TypeSignature.vue";
 

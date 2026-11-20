@@ -2,7 +2,7 @@
 
 ## Library locale for 1.0
 
-Gavia UI 1.0 uses English built-in text when `WlConfig` is absent or its locale
+Version 1.0 of `legato-ui` uses English built-in text when `WlConfig` is absent or its locale
 is omitted. This changes the Russian fallback in 0.x; see the
 [1.0 migration](../migration.md#migration-1-0-localization). The optional English
 preset was introduced in 0.12.0. To keep Russian labels, configure the consuming
@@ -10,7 +10,7 @@ application:
 
 ```ts
 import { createApp } from "vue";
-import { WlConfig, wlLocaleRu } from "gavia-ui";
+import { WlConfig, wlLocaleRu } from "legato-ui";
 import App from "./App.vue";
 
 const app = createApp(App);
@@ -48,7 +48,7 @@ public props: an omitted text prop remains `undefined` on the component instance
 ```vue
 <script setup lang="ts">
 import { ref } from "vue";
-import { WlDatePicker } from "gavia-ui";
+import { WlDatePicker } from "legato-ui";
 const date = ref<string | null>(null);
 </script>
 
@@ -62,7 +62,7 @@ const date = ref<string | null>(null);
 Within a component in the same Vue application, use the public configuration API:
 
 ```ts
-import { useWlConfig, wlLocaleEn, wlLocaleRu } from "gavia-ui";
+import { useWlConfig, wlLocaleEn, wlLocaleRu } from "legato-ui";
 const configuration = useWlConfig();
 configuration.setLocale(wlLocaleRu);
 configuration.setLocale(wlLocaleEn);
@@ -83,8 +83,8 @@ canonical path's language, the saved preference and the first supported browser
 language. English is the final fallback. Switching language preserves `view`, `section`,
 `component`, `theme` and the hash. For example:
 
-- [English component guide](https://whitewolf06.github.io/gavia-ui/docs/components/WlButton/)
-- [Russian component guide](https://whitewolf06.github.io/gavia-ui/ru/docs/components/WlButton/)
+- [English component guide](https://whitewolf06.github.io/legato-ui/docs/components/WlButton/)
+- [Russian component guide](https://whitewolf06.github.io/legato-ui/ru/docs/components/WlButton/)
 
 Language catalogs provide copy and search metadata. SFCs, component implementations,
 manifest/API contracts, examples and recipes stay shared. Copied example text follows the selected Playground language. Built-in control

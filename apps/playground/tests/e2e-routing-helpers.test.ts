@@ -3,14 +3,14 @@ import { playgroundBasePath, playgroundRouteParams } from "../e2e/playground-url
 
 describe("browser route expectations", () => {
   it("reads canonical Russian component paths below a deployment prefix", () => {
-    const url = new URL("https://example.test/gavia-ui/ru/docs/components/WlSelect/?theme=graphite#docs-wlselect-props");
+    const url = new URL("https://example.test/legato-ui/ru/docs/components/WlSelect/?theme=graphite#docs-wlselect-props");
     const params = playgroundRouteParams(url);
     expect(params.get("view")).toBe("docs");
     expect(params.get("component")).toBe("WlSelect");
     expect(params.get("section")).toBeNull();
     expect(params.get("lang")).toBe("ru");
     expect(params.get("theme")).toBe("graphite");
-    expect(playgroundBasePath(url)).toBe("/gavia-ui/");
+    expect(playgroundBasePath(url)).toBe("/legato-ui/");
     expect(url.searchParams.has("component")).toBe(false);
   });
 

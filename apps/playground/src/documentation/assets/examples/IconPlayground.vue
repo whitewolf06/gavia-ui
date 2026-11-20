@@ -3,7 +3,7 @@ import { usePlaygroundI18n } from "../../../i18n";
 const name = defineModel<WlIconName>("name", { default: "folder" });
 const size = defineModel<number>("size", { default: 24 });
 const { t } = usePlaygroundI18n();
-import { WL_ICON_NAMES, WlIcon, type WlIconName, WlSelect } from "gavia-ui";
+import { WL_ICON_NAMES, WlIcon, type WlIconName, WlSelect } from "legato-ui";
 const comparisonSizes = [16, 20, 24, 32, 48];
 function chooseName(value: unknown): void {
   if (typeof value === "string" && (WL_ICON_NAMES as readonly string[]).includes(value)) name.value = value as WlIconName;

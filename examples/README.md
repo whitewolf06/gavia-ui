@@ -1,4 +1,4 @@
-# Gavia UI consumers
+# Legato UI consumers
 
 Copy a starter directory outside this workspace, run `pnpm install`, then `pnpm dev`.
 These projects use the public npm package rather than source aliases. Review the

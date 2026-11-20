@@ -39,7 +39,7 @@ export async function loadDocumentationSearch(locale: string): Promise<Documenta
     const source = await load();
     const name = path.split("/").at(-1)!;
     return { id: `guide-file-${name}`, title: source.split(/\r?\n/).find((line) => line.startsWith("# "))?.slice(2) ?? name, description: `docs/guide/${name}`,
-      text: source.replace(/[`#*>|]/g, " "), href: `https://github.com/whitewolf06/gavia-ui/blob/main/docs/guide/${name}` };
+      text: source.replace(/[`#*>|]/g, " "), href: `https://github.com/whitewolf06/legato-ui/blob/main/docs/guide/${name}` };
   })).catch((error: unknown) => {
     markdown = undefined;
     throw error;

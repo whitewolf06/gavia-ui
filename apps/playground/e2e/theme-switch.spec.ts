@@ -42,14 +42,13 @@ async function openHome(page: Page, baseURL: string | undefined, theme = "gavia"
   url.hash = "home-title";
   await page.goto(russianPlaygroundUrl(url.href), { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("home-page")).toBeVisible();
-  const initialLayers = theme === "gavia-dark" || theme === "graphite" ? 2 : 1;
-  await expect(page.locator(".home-hero-layer")).toHaveCount(initialLayers);
+  await expect(page.locator(".home-hero-layer")).toHaveCount(1);
   await expect.poll(() => page.locator(".home-hero-layer").evaluateAll((elements) =>
     elements.length > 0 && elements.every((element) => {
       const image = element as HTMLImageElement;
       return image.complete && image.naturalWidth > 0;
     })
-  ), { message: "Initial artwork is loaded; night artwork is deferred until the first dark theme" }).toBe(true);
+  ), { message: "The illustration for the selected theme is loaded" }).toBe(true);
   return url;
 }
 function heroToggle(page: Page) {

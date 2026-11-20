@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../i18n";
 const props = defineProps<{ entry: WlComponentManifest }>();
 const { t } = usePlaygroundI18n();
-import type { WlComponentManifest } from "gavia-ui";
+import type { WlComponentManifest } from "legato-ui";
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { consumerSource } from "../design-system/code";
 import CodePanel from "../design-system/CodePanel.vue";
@@ -26,14 +26,14 @@ const service = computed(() => props.entry.name === "WlToast" ? "WlToastService"
 const setupSource = computed(() => service.value
   ? [
       'import { createApp } from "vue";',
-      "import { " + service.value + ' } from "gavia-ui";',
+      "import { " + service.value + ' } from "legato-ui";',
       'import App from "./App.vue";',
       "const app = createApp(App);",
       "app.use(" + service.value + ");",
       'app.mount("#app");',
       "",
       t("documentation.strings.s0207") + props.entry.name + ".",
-      "// import { " + props.entry.name + ' } from "gavia-ui";',
+      "// import { " + props.entry.name + ' } from "legato-ui";',
       "// <" + props.entry.name + " />"
     ].join("\n")
   : "");

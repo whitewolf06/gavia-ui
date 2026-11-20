@@ -26,7 +26,7 @@ const props = withDefaults(
      * @default 1
      */
     lines?: number;
-    /** Attributes of internal Gavia UI elements. */
+    /** Attributes of internal Legato UI elements. */
     pt?: WlPt<"skeleton">;
   }>(),
   {

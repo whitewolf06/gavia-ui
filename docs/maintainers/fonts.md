@@ -1,6 +1,6 @@
-# Gavia Sans maintenance
+# Legato Sans and Gavia font maintenance
 
-Gavia Sans ships a continuous `wght` 100–700 axis with separate upright and
+Legato Sans and its Gavia Sans alias share a continuous `wght` 100–700 axis with separate upright and
 italic faces, derived from the six authored presets in each style. The owner
 visually accepted the variable font on 2026-10-22. The
 [acceptance record](../archive/font-variation-acceptance-1.0.md) preserves that
@@ -12,6 +12,12 @@ and derivative copyright notices. UI kit code remains MIT-licensed.
 
 ## Sources and delivery
 
+Legato Sans reuses these accepted WOFF2 URLs for the web. Regenerate its alias
+stylesheet and the standalone `Legato-Sans-0.6.zip` with
+`python scripts/fonts/build_legato.py` using the pinned font tooling. Pass
+`--check` to compare both outputs byte for byte. The ZIP contains renamed
+OpenType families and PostScript names for desktop installation.
+
 The source manifest identifies twelve static faces and hashes for TTF/WOFF2.
 Accepted static assets remain available under the conditional non-variable CSS
 fallback. Variable files, manifests and the canonical stylesheet live in
@@ -19,7 +25,7 @@ fallback. Variable files, manifests and the canonical stylesheet live in
 Preserve the authored outlines, metrics, shaping and public font paths; compact
 delivery must not redraw the font. See [font tooling](../../scripts/fonts/README.md)
 for source paths, Python dependencies and normalization permissions, and the
-[consumer font guide](../guide/font-gavia.md) for installation and standalone use.
+[consumer font guide](../guide/font-legato.md) for installation and standalone use.
 
 The npm allowlist ships WOFF2, font notices and the small face manifest. TTF,
 the QA report and the large variable audit manifest remain in source. The
@@ -28,8 +34,9 @@ formats; npm exclusions must not change that download.
 
 ## Core and complete families
 
-`Gavia Sans` / `Gavia` retain complete international coverage. Optional compact
-faces use `Gavia Sans Core` / `Gavia Core`. Themes prefer
+`Legato Sans`, `Gavia Sans` and `Gavia` provide complete international coverage.
+The matching Core faces supply compact subsets. Legato themes prefer
+`"Legato Sans Core", "Legato Sans", ...` and Gavia themes use
 `"Gavia Sans Core", "Gavia Sans", ...` so a marked grapheme can fall back as a
 whole rather than split across subsets of one family. Both Core styles have an
 80,000-byte file budget; page transfer depends on the actual text and styles.
@@ -57,7 +64,7 @@ rebuild fonts implicitly during a documentation or unrelated code check.
 5. Check canonical/legacy CSS families and paths, static fallback, standalone
    TTF/WOFF2 download, licenses and package font URLs.
 
-Then inspect real text in Gavia/Gavia Dark: EN/RU home, extended alphabets,
+Then inspect real text in both Legato themes and both Gavia themes, including EN/RU home, extended alphabets,
 combining clusters, numerals, italic, six presets and intermediate slider weights.
 Use the loaded face rather than a system fallback. Compare Core/complete shared
 glyphs and verify Firefox's complete-family path. Measure desktop/mobile font

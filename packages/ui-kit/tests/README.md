@@ -24,8 +24,8 @@ in progress; new component suites belong in `components/`.
 Run affected suites from the repository root, for example:
 
 ```sh
-pnpm --filter gavia-ui exec vitest run tests/components/field.test.ts tests/contracts/field-slot-contracts.test.ts
-pnpm --filter gavia-ui typecheck
+pnpm --filter legato-ui exec vitest run tests/components/field.test.ts tests/contracts/field-slot-contracts.test.ts
+pnpm --filter legato-ui typecheck
 ```
 
 Use the Node environment for filesystem and asset checks; use the DOM

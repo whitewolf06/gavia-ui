@@ -1,11 +1,31 @@
 # Changelog
 
-What changed in Gavia UI and what to consider when upgrading.
+What changed in the component library and what to consider when upgrading.
 Versions before the rebrand used the previous package name.
 The history was reconstructed from release Git tags and migration notes.
 Historical generated Changeset paragraphs are preserved in [the maintainer archive](docs/maintainers/changeset-history.md).
 
 ## Unreleased
+
+### Added
+
+- Starting with 1.2.0, install `legato-ui`. The previous package remains available as `gavia-ui@1.1.0`. See the [migration guide](docs/migration.md#migration-1-2) to retain existing imports with an npm alias.
+- Use the Legato UI name in the Playground. Legato and Legato Dark follow the system appearance by default. Legato Sans is available for web and desktop. Existing Gavia themes, font families, imports and download links remain supported.
+- Generate full or delta theme CSS, manual token overrides and scoped contrast reports through the pure `legato-ui/theme` entry.
+- Generate or check theme CSS from versioned JSON with the `legato-theme` Node CLI; download matching v2 configs from Theme Builder.
+
+### Fixed
+
+- Keep shared locale and icon configuration reactive on Vue 3.4 after the first consuming component unmounts.
+- Prevent Dialog and Drawer heading IDs from colliding with Vue 3.5 `useId()`, including applications with a custom `idPrefix`.
+- Describe synthesized model-update events in the manifest and distinguish inherited settings from literal defaults in documentation API tables.
+
+### Documentation
+
+- Expand the customization guide and custom-theme starter with primary action states, links, focus, selection and scoped brand layers.
+- Apply a draft palette across the Playground, restore it after reload and undo it from any page.
+- Update the Legato and Legato Dark homepages with the Duetto arch on paper, wider section spacing, unframed metrics and navigation, and compact project cards with diagonal corner accents. The browser tab shows a white script L on a rounded indigo square.
+- Align the Playground header with page content across all six sections and fix a WebKit resize error when navigating between them.
 
 ## 1.1.0 — 2026-11-14
 
@@ -13,23 +33,23 @@ Compatible additions and bug fixes for 1.0 consumers. Review the [1.1 upgrade gu
 
 ### Added
 
-- Customize Card, Accordion, Alert and Segmented typography and insets with component tokens. Opt into `wl-type-scale` from the primitives stylesheet to follow semantic text roles while retaining the 1.0 appearance by default ([#5](https://github.com/whitewolf06/gavia-ui/issues/5)).
+- Customize Card, Accordion, Alert and Segmented typography and insets with component tokens. Opt into `wl-type-scale` from the primitives stylesheet to follow semantic text roles while retaining the 1.0 appearance by default ([#5](https://github.com/whitewolf06/legato-ui/issues/5)).
 
-- Add WlCalendar `disabledDates` and a typed `dateSelect` activation event, including repeated activation of the selected date; preserve selection models and skip unavailable dates during keyboard navigation ([#6](https://github.com/whitewolf06/gavia-ui/issues/6)).
+- Add WlCalendar `disabledDates` and a typed `dateSelect` activation event, including repeated activation of the selected date; preserve selection models and skip unavailable dates during keyboard navigation ([#6](https://github.com/whitewolf06/legato-ui/issues/6)).
 
-- Configure Field, input-family, Accordion and Slider width limits through component tokens, or opt into `wl-fluid` with the optional primitives stylesheet to fill the containing layout ([#7](https://github.com/whitewolf06/gavia-ui/issues/7)).
+- Configure Field, input-family, Accordion and Slider width limits through component tokens, or opt into `wl-fluid` with the optional primitives stylesheet to fill the containing layout ([#7](https://github.com/whitewolf06/legato-ui/issues/7)).
 
 ### Fixed
 
 - Align WlSlider range thumbs with the track, keep endpoint mark labels inside the control and reserve layout space for marks.
 
-- Preserve local `--wl-type-small-size` overrides for small Segmented items when the semantic component scale is disabled ([#5](https://github.com/whitewolf06/gavia-ui/issues/5)).
+- Preserve local `--wl-type-small-size` overrides for small Segmented items when the semantic component scale is disabled ([#5](https://github.com/whitewolf06/legato-ui/issues/5)).
 
-- Expose WlCalendar `multiple` as a boolean control in the Playground and align its live example with the component's single-selection default ([#6](https://github.com/whitewolf06/gavia-ui/issues/6)).
+- Expose WlCalendar `multiple` as a boolean control in the Playground and align its live example with the component's single-selection default ([#6](https://github.com/whitewolf06/legato-ui/issues/6)).
 
 - Keep Slider range tracks and marks within the same width as their inputs.
 
-- Apply WlCard `padding="none|sm|md|lg"` to its own caption, content and footer once, without adding body padding or affecting nested cards. Cards without the prop keep their existing insets ([#4](https://github.com/whitewolf06/gavia-ui/issues/4)).
+- Apply WlCard `padding="none|sm|md|lg"` to its own caption, content and footer once, without adding body padding or affecting nested cards. Cards without the prop keep their existing insets ([#4](https://github.com/whitewolf06/legato-ui/issues/4)).
 
 ### Known limitations
 
@@ -293,7 +313,7 @@ tokens and defaults are preserved; new components are imported explicitly.
 ## 0.7.0 — 2026-10-05
 
 The first release under the new name on public npm. Setup instructions
-and publication status are in [README](https://github.com/whitewolf06/gavia-ui/blob/main/README.md).
+and publication status are in [README](https://github.com/whitewolf06/legato-ui/blob/main/README.md).
 
 ### Added
 
@@ -304,13 +324,13 @@ and publication status are in [README](https://github.com/whitewolf06/gavia-ui/b
 
 ### Changed
 
-- The new project name is Gavia UI; the mark is a loon shaped like a G with an eye.
-- Documentation and metadata were prepared for `whitewolf06/gavia-ui`.
+- The project adopted the `gavia-ui` name and a loon-shaped G mark.
+- Documentation and metadata were prepared for `whitewolf06/legato-ui`.
 - New package name `gavia-ui` on public npm: installation without a GitHub token after the first release.
 - Updated imports, workspace, CI and the [package-name migration](docs/migration-gavia.md).
 - Removed the previous brand from descriptions, demo data and prototypes.
-- The local preview variable is `GAVIA_E2E_BASE_URL`; catalog error messages
-  use Gavia UI. The migration lists these changes.
+- The local preview variable became `GAVIA_E2E_BASE_URL`. Catalog errors began
+  including the library name. The migration lists these changes.
 - Local browser checks support the full pinned Chromium through `GAVIA_E2E_CHROMIUM_CHANNEL`.
 
 ### Compatibility

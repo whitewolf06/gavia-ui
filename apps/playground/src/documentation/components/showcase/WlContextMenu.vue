@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WlCard, WlContextMenu, type WlMenuItem } from "gavia-ui";
+import { WlCard, WlContextMenu, type WlMenuItem } from "legato-ui";
 import { computed, ref } from "vue";
 import { usePlaygroundI18n } from "../../../i18n";
 

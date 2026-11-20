@@ -37,7 +37,7 @@ const props = withDefaults(
      * @default false
      */
     keepAlive?: boolean;
-    /** Attributes of internal Gavia UI elements. */
+    /** Attributes of internal Legato UI elements. */
     pt?: WlPt<"tabs">;
   }>(),
   {

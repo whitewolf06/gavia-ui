@@ -17,7 +17,7 @@ await build({
     generateBundle(_options, bundle) {
       const chunks = Object.values(bundle).filter((file) => file.type === "chunk");
       const packedModules = chunks.flatMap((chunk) => Object.entries(chunk.modules))
-        .filter(([id]) => id.replaceAll("\\", "/").endsWith("/gavia-ui/dist/index.js"));
+        .filter(([id]) => id.replaceAll("\\", "/").endsWith("/legato-ui/dist/index.js"));
       assert.equal(packedModules.length, 1, "Probe must consume the installed packed entry");
       const [, module] = packedModules[0];
       const unused = ["WlDialog", "WlTable", "WlSelect", "WlDatePicker", "WlCommandPalette", "WlToast", "wlDesignTokens", "wlManifest"];

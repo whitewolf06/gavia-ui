@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { {{name}} } from "gavia-ui";
+import { {{name}} } from "legato-ui";
 import { usePlaygroundI18n } from "../../i18n";
 
 defineProps<{ preview?: Partial<InstanceType<typeof {{name}}>["$props"]> }>();

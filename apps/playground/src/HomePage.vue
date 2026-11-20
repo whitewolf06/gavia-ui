@@ -10,22 +10,23 @@ const emit = defineEmits<{
   "toggle-theme": [];
 }>();
 const { t } = usePlaygroundI18n();
-import type { WlThemeName } from "gavia-ui";
-import { WlButton, WlIcon, WlIconButton, WlSegmented } from "gavia-ui";
-import { WL_ICON_NAMES } from "gavia-ui";
-import { wlManifest } from "gavia-ui";
+import type { WlThemeName } from "legato-ui";
+import { WlButton, WlIcon, WlIconButton, WlSegmented } from "legato-ui";
+import { WL_ICON_NAMES } from "legato-ui";
+import { wlManifest } from "legato-ui";
 import catalogSummary from "virtual:gavia-catalog-summary";
 import { computed, ref, watch } from "vue";
 import gaviaForestUrl from "../../../docs/brand/gavia-forest-card-v1.webp";
 import gaviaHeroUrl from "../../../docs/brand/gavia-lake-hero-v2.webp";
 import gaviaNightHeroUrl from "../../../docs/brand/gavia-lake-night-v2.webp";
 import gaviaReedsUrl from "../../../docs/brand/gavia-reeds-card-v1.webp";
-import gaviaMarkUrl from "../../../docs/brand/gavia-ui-mark-lake.svg";
+import duettoArchUrl from "./assets/brand/duetto/duetto-arch.webp";
 import { responsiveBrandSet } from "./assets/brand/responsive";
 import { consumerSource } from "./design-system/code";
 import CodePanel from "./design-system/CodePanel.vue";
 import ButtonExample from "./design-system/examples/WlButton.vue";
 import buttonExampleSource from "./design-system/examples/WlButton.vue?raw";
+import LegatoWordmark from "./LegatoWordmark.vue";
 import { createPlaygroundNavigationUrl as createPlaygroundUrl, parsePlaygroundRoute, type PlaygroundRoute } from "./navigation";
 import { getInstallCommand, installationManagers, type PackageManager } from "./project/installation";
 import { gaviaProjectInfo as project } from "./project/project-info";
@@ -34,10 +35,12 @@ import { playgroundThemePreference, withPlaygroundTheme } from "./themes";
 import { usePageAnchor } from "./usePageAnchor";
 
 const isDarkTheme = computed(() => catalogSummary.themeColorSchemes[props.theme] === "dark");
+const isLegatoTheme = computed(() => props.theme === "legato" || props.theme === "legato-dark");
+const dayLandscapeReady = ref(false);
 const nightArtReady = ref(false);
 const themeToggleLabel = computed(() => isDarkTheme.value ? t("shell.HomePage.text54") : t("shell.HomePage.text55"));
 function themedHref(href: string): string {
-  const current = typeof window === "undefined" ? "https://whitewolf06.github.io/gavia-ui/" : window.location.href;
+  const current = typeof window === "undefined" ? "https://whitewolf06.github.io/legato-ui/" : window.location.href;
   const requested = new URL(withPlaygroundTheme(href, playgroundThemePreference.value), current);
   const route = parsePlaygroundRoute(requested.search, requested.hash, requested.pathname);
   const target = createPlaygroundUrl(requested, route);
@@ -48,7 +51,7 @@ const pageElement = ref<HTMLElement | null>(null);
 usePageAnchor(pageElement);
 
 const installManager = ref<string | null>("pnpm");
-const installCommand = computed(() => getInstallCommand((installManager.value ?? "pnpm") as PackageManager));
+const installCommand = computed(() => getInstallCommand((installManager.value ?? "pnpm") as PackageManager, false, project.publishedName));
 const copied = ref(false);
 const pending = ref(false);
 const manual = ref(false);
@@ -82,7 +85,7 @@ const metrics = [
   { label: t("shell.HomePage.text65"), value: catalogSummary.themeCount, icon: "grid", caption: t("shell.HomePage.text66"), route: { view: "system" }, anchor: "ds-themes" }
 ] as const;
 function metricHref(route: PlaygroundRoute, anchor?: string): string {
-  const current = new URL(typeof window === "undefined" ? "https://whitewolf06.github.io/gavia-ui/" : window.location.href);
+  const current = new URL(typeof window === "undefined" ? "https://whitewolf06.github.io/legato-ui/" : window.location.href);
   const target = createPlaygroundUrl(current, route);
   if (anchor) target.hash = anchor;
   return themedHref(target.pathname + target.search + target.hash);
@@ -101,38 +104,11 @@ const setupSource = t("shell.HomePage.text67");
   <main
     ref="pageElement"
     class="home-page"
+    :class="{ 'home-page--legato': isLegatoTheme }"
     data-testid="home-page"
     aria-labelledby="home-title"
   >
     <header class="home-hero">
-      <img
-        class="home-hero-layer"
-        :class="{ 'home-hero-art': !isDarkTheme }"
-        :src="gaviaHeroUrl"
-        :srcset="responsiveBrandSet('gavia-lake-hero-v2', gaviaHeroUrl)"
-        sizes="(max-width: 760px) 720px, (max-width: 1350px) 1350px, 100vw"
-        alt=""
-        aria-hidden="true"
-        width="2172"
-        height="724"
-        :fetchpriority="isDarkTheme ? 'auto' : 'high'"
-        decoding="async"
-      />
-      <img
-        v-if="isDarkTheme || nightArtReady"
-        class="home-hero-layer home-hero-layer--night"
-        :class="{ 'home-hero-art': isDarkTheme, 'home-hero-layer--visible': isDarkTheme && nightArtReady }"
-        :src="gaviaNightHeroUrl"
-        :srcset="responsiveBrandSet('gavia-lake-night-v2', gaviaNightHeroUrl)"
-        sizes="(max-width: 760px) 720px, (max-width: 1350px) 1350px, 100vw"
-        alt=""
-        aria-hidden="true"
-        width="2172"
-        height="724"
-        :fetchpriority="isDarkTheme ? 'high' : 'auto'"
-        decoding="async"
-        @load="nightArtReady = true"
-      />
       <div class="home-hero-tools wl-container">
         <WlIconButton
           class="home-theme-toggle"
@@ -183,7 +159,10 @@ const setupSource = t("shell.HomePage.text67");
               v<span data-testid="project-version">{{ project.version }}</span>
             </span>
           </div>
-          <h1 id="home-title" class="home-title">Gavia UI</h1>
+          <h1 id="home-title" class="home-title">
+            <span class="wl-visually-hidden">{{ project.name }}</span>
+            <LegatoWordmark />
+          </h1>
           <p class="home-tagline">{{ t('shell.HomePage.text69') }}</p>
           <p class="home-lead wl-text-body wl-text-muted">{{ t('shell.HomePage.text70') }}</p>
           <nav class="wl-inline" data-space="md" :aria-label="t('shell.HomePage.text71')">
@@ -220,7 +199,37 @@ const setupSource = t("shell.HomePage.text67");
             <a class="home-text-link" :href="project.repositoryUrl">GitHub <WlIcon name="external-link" :size="13" /></a>
           </p>
         </div>
+        <img
+          v-if="isLegatoTheme || !isDarkTheme || dayLandscapeReady"
+          class="home-hero-layer"
+          :class="{ 'home-hero-art': isLegatoTheme || !isDarkTheme, 'home-hero-print': isLegatoTheme }"
+          :src="isLegatoTheme ? duettoArchUrl : gaviaHeroUrl"
+          :srcset="isLegatoTheme ? undefined : responsiveBrandSet('gavia-lake-hero-v2', gaviaHeroUrl)"
+          :sizes="isLegatoTheme ? undefined : '(max-width: 760px) 720px, (max-width: 1350px) 1350px, 100vw'"
+          alt=""
+          aria-hidden="true"
+          :width="isLegatoTheme ? 1109 : 2172"
+          :height="isLegatoTheme ? 413 : 724"
+          :fetchpriority="isLegatoTheme || !isDarkTheme ? 'high' : 'auto'"
+          decoding="async"
+          @load="dayLandscapeReady ||= !isLegatoTheme"
+        />
       </div>
+      <img
+        v-if="!isLegatoTheme && (isDarkTheme || nightArtReady)"
+        class="home-hero-layer home-hero-layer--night"
+        :class="{ 'home-hero-art': isDarkTheme, 'home-hero-layer--visible': isDarkTheme && nightArtReady }"
+        :src="gaviaNightHeroUrl"
+        :srcset="responsiveBrandSet('gavia-lake-night-v2', gaviaNightHeroUrl)"
+        sizes="(max-width: 760px) 720px, (max-width: 1350px) 1350px, 100vw"
+        alt=""
+        aria-hidden="true"
+        width="2172"
+        height="724"
+        :fetchpriority="isDarkTheme ? 'high' : 'auto'"
+        decoding="async"
+        @load="nightArtReady = true"
+      />
     </header>
 
     <div class="home-content wl-container wl-stack" data-space="3xl">
@@ -232,15 +241,11 @@ const setupSource = t("shell.HomePage.text67");
           data-testid="project-npm-status"
         >
           <div class="home-install-brand">
-            <span
-              class="home-mark home-mark-mask"
-              aria-hidden="true"
-              :style="{ maskImage: 'url(' + gaviaMarkUrl + ')', WebkitMaskImage: 'url(' + gaviaMarkUrl + ')' }"
-            ></span>
+            <LegatoWordmark class="home-mark" />
             <div class="wl-stack" data-space="xs">
               <p v-if="project.npmPublished" class="wl-text-small wl-text-muted">
                 {{ t('shell.HomePage.text77') }}
-                <a class="home-text-link" :href="project.packageUrl">{{ project.packageName }}@{{ project.publishedVersion }}</a>
+                <a class="home-text-link" :href="project.packageUrl">{{ project.publishedName }}@{{ project.publishedVersion }}</a>
                 {{ t('shell.HomePage.text78') }}
               </p>
               <p v-else class="wl-text-small wl-text-muted">{{ project.packageName }} {{ t('shell.HomePage.text79') }}</p>
@@ -354,6 +359,7 @@ const setupSource = t("shell.HomePage.text67");
         <div class="home-project-grid">
           <article class="home-project-panel home-project-panel--forest">
             <img
+              v-if="!isLegatoTheme"
               class="home-project-art"
               :class="{ 'home-project-art--dark': isDarkTheme }"
               :src="gaviaForestUrl"
@@ -391,7 +397,7 @@ const setupSource = t("shell.HomePage.text67");
                 </span></a>
                 <a
                   class="home-text-link wl-text-small"
-                  :href="project.documentationBaseUrl + 'docs/migration-gavia.md'"
+                  :href="project.documentationBaseUrl + 'docs/migration.md'"
                   target="_blank"
                   rel="noopener noreferrer"
                   :title="t('shell.HomePage.text104')"
@@ -403,6 +409,7 @@ const setupSource = t("shell.HomePage.text67");
           </article>
           <article class="home-project-panel home-project-panel--reeds">
             <img
+              v-if="!isLegatoTheme"
               class="home-project-art"
               :class="{ 'home-project-art--dark': isDarkTheme }"
               :src="gaviaReedsUrl"
@@ -483,6 +490,8 @@ const setupSource = t("shell.HomePage.text67");
 </template>
 
 <style>
+@import "./home-legato.css";
+
 .home-page {
   overflow-wrap: anywhere;
   font-family: var(--wl-font);
@@ -540,6 +549,7 @@ const setupSource = t("shell.HomePage.text67");
 .home-theme-symbol--light .home-theme-sun { opacity: 0; transform: rotate(-45deg) scale(0.6); }
 .home-theme-symbol--dark .home-theme-moon { opacity: 0; transform: rotate(35deg) scale(0.6); }
 .home-hero-content { display: grid; grid-template-columns: minmax(0, 520px) minmax(0, 1fr); gap: var(--wl-space-2xl); align-items: center; }
+.home-title .legato-wordmark { width: min(100%, 248px); }
 .home-content { padding-top: var(--wl-space-2xl); padding-bottom: var(--wl-space-4xl); }
 .home-intro {
   min-width: 0;
@@ -596,17 +606,7 @@ const setupSource = t("shell.HomePage.text67");
   gap: var(--wl-space-md);
 }
 .home-install-brand { display: flex; align-items: center; gap: var(--wl-space-md); min-width: 0; }
-.home-mark { flex: none; width: 80px; height: 80px; object-fit: contain; }
-.home-mark-mask {
-  display: block;
-  background: var(--wl-action-primary-bg);
-  mask-size: contain;
-  mask-position: center;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
-  -webkit-mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-}
+.home-mark { flex: none; width: 91px; }
 .home-install-command {
   display: block;
   padding: var(--wl-space-md);
@@ -794,7 +794,6 @@ const setupSource = t("shell.HomePage.text67");
   .home-hero { min-height: 0; padding-block: 0 var(--wl-space-2xl); }
   .home-hero-layer { height: 240px; }
   .home-hero-content { grid-template-columns: minmax(0, 1fr); align-items: start; padding-block-start: calc(240px + var(--wl-space-xl)); }
-
 }
 @media (max-width: 900px) { .home-onboarding { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 760px) {
@@ -803,10 +802,9 @@ const setupSource = t("shell.HomePage.text67");
   .home-project-panel { gap: var(--wl-space-md); }
 }
 @media (max-width: 480px) {
-  .home-hero-content, .home-content { padding-inline: var(--wl-space-md); }
   .home-content { gap: var(--wl-space-xl); }
   .home-intro, .home-install-card, .home-setup-panel, .home-button-panel, .home-project-panel { padding: var(--wl-space-lg); }
-  .home-mark { width: 56px; height: 56px; }
+  .home-mark { width: 68px; }
   .home-metrics { gap: var(--wl-space-sm); }
   .home-metric { justify-content: start; padding: 68px var(--wl-space-md) var(--wl-space-md); }
   .home-metric-icon { inset-block-start: var(--wl-space-md); inset-inline-start: var(--wl-space-md); }

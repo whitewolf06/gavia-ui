@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlAvatar, type WlAvatarSize, WlCheckbox, WlIcon } from "gavia-ui";
-import { getWlColorFromString } from "gavia-ui/utils";
+import { WlAvatar, type WlAvatarSize, WlCheckbox, WlIcon } from "legato-ui";
+import { getWlColorFromString } from "legato-ui/utils";
 import { computed, ref } from "vue";
 const namedAvatarPt = computed(() => ({
   root: {

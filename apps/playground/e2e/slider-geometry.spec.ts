@@ -1,5 +1,6 @@
 import type { Locator } from "@playwright/test";
 import { expect, test } from "@playwright/test";
+import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
 
 async function geometry(fixture: Locator): Promise<void> {
   const cases = await fixture.locator("[data-slider-case]").evaluateAll((elements) => elements.map((element) => {
@@ -43,7 +44,7 @@ async function geometry(fixture: Locator): Promise<void> {
   }
 }
 
-for (const theme of ["gavia", "gavia-dark", "white", "graphite", "newspaper"]) {
+for (const { name: theme } of wlDesignThemes) {
   test(`${theme}: slider thumbs, endpoint labels and following content share correct geometry @cross-browser`, async ({ page }) => {
     await page.goto("/e2e.html?review-slider-geometry");
     await page.locator("html").evaluate((element, value) => {

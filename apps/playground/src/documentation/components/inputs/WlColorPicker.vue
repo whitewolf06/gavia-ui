@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlColorPicker } from "gavia-ui";
+import { WlButton, WlColorPicker } from "legato-ui";
 import { ref } from "vue";
 const color = ref("#2563eb");
 const swatches = ["#2563eb", "#2e9e68", "#bf8615", "#d2494f", "#22252b", "#f7f7f8"];

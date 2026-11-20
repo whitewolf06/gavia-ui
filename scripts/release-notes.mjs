@@ -3,7 +3,7 @@ import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const docsRepository = "https://github.com/whitewolf06/gavia-ui/blob/";
+const docsRepository = "https://github.com/whitewolf06/legato-ui/blob/";
 
 /** Package Markdown is read outside the checkout, so local docs links become URLs. */
 export function packageChangelog(source) {
@@ -154,7 +154,7 @@ function main() {
   if (args[0] === "--check") {
     console.log("Reviewed release notes and migration present for " + version);
   } else {
-    console.log(releaseDocsLinks(notes, version) + "\n\n### Release playground\n\nExtract gavia-ui-playground-"
+    console.log(releaseDocsLinks(notes, version) + "\n\n### Release playground\n\nExtract legato-ui-playground-"
       + version + ".tgz and open it through a local HTTP server. This saved preview is for version comparisons; "
       + "current public documentation is on GitHub Pages.");
   }

@@ -26,7 +26,7 @@ test("package docs derive only from canonical root files and the template", (t) 
   const env = fixture(t);
   const documents = packageDocumentation(env.root);
   assert.equal(documents.LICENSE, "MIT canonical license\n");
-  assert.match(documents["CHANGELOG.md"], /https:\/\/github\.com\/whitewolf06\/gavia-ui\/blob\/main\/docs\/quality\.md#checks/);
+  assert.match(documents["CHANGELOG.md"], /https:\/\/github\.com\/whitewolf06\/legato-ui\/blob\/main\/docs\/quality\.md#checks/);
   assert.match(documents["README.md"], /Source 0\.13\.0-beta\.1/);
   assert.equal(existsSync(resolve(env.root, "packages/ui-kit/README.md")), false);
   assert.throws(() => writePackageDocumentation(env.root, { check: true }), /missing or stale/);

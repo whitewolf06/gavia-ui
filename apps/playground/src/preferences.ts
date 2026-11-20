@@ -1,7 +1,8 @@
 /** Storage is optional: private browsing and embedded pages can deny access. */
 export const playgroundPreferenceKeys = {
-  theme: "gavia-ui.theme",
-  locale: "gavia-ui.locale"
+  theme: "legato-ui.theme",
+  lightTheme: "legato-ui.light-theme",
+  locale: "legato-ui.locale"
 } as const;
 
 export function readPlaygroundPreference(key: keyof typeof playgroundPreferenceKeys): string | null {

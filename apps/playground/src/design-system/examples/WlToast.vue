@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { useWlToast, WlButton } from "gavia-ui";
+import { useWlToast, WlButton } from "legato-ui";
 const toast = useWlToast();
 </script>
 

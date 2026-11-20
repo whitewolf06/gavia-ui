@@ -1,4 +1,4 @@
-import { wlManifest } from "gavia-ui";
+import { wlManifest } from "legato-ui";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath, URL as NodeURL } from "node:url";
@@ -28,7 +28,7 @@ describe("every component has copyable documentation and individual accessibilit
     const source = consumerSource(raw);
     const parsed = parse(source, { filename: example.sourceName });
     expect(parsed.errors).toEqual([]);
-    expect(source).toContain('from "gavia-ui"');
+    expect(source).toContain('from "legato-ui"');
     expect(source).not.toMatch(
       /packages\/ui-kit|v-bind="preview"|defineProps<\{ preview|usePlaygroundI18n|\bt\(['"](?:examples|documentation)\./
     );

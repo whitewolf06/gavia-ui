@@ -7,7 +7,7 @@ later checkout. User-facing requirements are in [compatibility](../guide/compati
 
 ## Versions and public contract
 
-All components ship in one Gavia UI version. The manifest records each
+All components ship in one Legato UI version. The manifest records each
 component's introduction version; the root changelog records later changes.
 After 1.0, patches preserve the public contract, minors add compatible features
 and incompatible changes require a major with a migration. Historical 0.x
@@ -91,7 +91,7 @@ All unexecuted protocol cells remain Pending; automated CI and general owner
 acceptance do not fill them.
 
 The target is WCAG 2.2 AA. Axe scans visible DOM, including open lists/dialogs,
-in all five themes. Critical keyboard, names, focus and cleanup behavior also
+in all seven themes. Critical keyboard, names, focus and cleanup behavior also
 run across engines. An automated scan does not prove full WCAG conformance;
 consumer applications need manual keyboard, zoom and assistive-technology checks.
 
@@ -112,7 +112,8 @@ Playground presentation and the full Axe sweep. Configured
 [browser projects](../../apps/playground/playwright.config.ts) and tagged source
 scenarios are the matrix, rather than a second hard-coded case count here.
 
-All five themes remain covered by Windows visuals and Chromium accessibility,
+Windows visual baselines cover Classic, Classic Dark, Newspaper, Gavia and Gavia Dark.
+The Chromium accessibility sweep also covers Legato and Legato Dark,
 including component states and quality/documentation pages. Secondary projects
 do not register the same Axe cases or accumulate runtime skips. Narrow Alert
 readability/dismissal scenarios use 320px and 390px in Gavia.
@@ -132,8 +133,8 @@ assertions and relevant engine coverage; a smaller suite is not a passing run.
 
 Pages preflight measures cold production loading in Chromium at 1440×900 and
 390×844 with a fresh context per route/theme. The mobile context uses pinned
-Pixel 7 emulation. Home, WlButton, WlSelect and WlDialog across five themes give
-40 loads. There is no CPU/network throttling; these are lab observations, not
+Pixel 7 emulation. Home, WlButton, WlSelect and WlDialog across seven themes give
+56 loads. There is no CPU/network throttling; these are lab observations, not
 field percentiles or results for every connection.
 
 Measure after route mount, normal document loading and font readiness. Record

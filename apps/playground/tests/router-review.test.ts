@@ -6,7 +6,7 @@ import { createPlaygroundRouter } from "../src/router";
 
 afterEach(() => {
   window.history.replaceState(null, "", "/");
-  localStorage.removeItem("gavia-ui.locale");
+  localStorage.removeItem("legato-ui.locale");
 });
 
 it("does not install history routing for a portable archive", () => {
@@ -14,22 +14,22 @@ it("does not install history routing for a portable archive", () => {
 });
 
 it("canonicalizes legacy links once and retains pinned English home visits", async () => {
-  window.history.replaceState(null, "", "/gavia-ui/");
-  const router = createPlaygroundRouter("/gavia-ui/")!;
+  window.history.replaceState(null, "", "/legato-ui/");
+  const router = createPlaygroundRouter("/legato-ui/")!;
   try {
     await router.push("/?view=docs&component=WlSelect&lang=ru&theme=white");
     expect(router.currentRoute.value.fullPath).toBe("/ru/docs/components/WlSelect/?theme=white");
     await router.push("/?lang=en");
     expect(router.currentRoute.value.fullPath).toBe("/?lang=en");
-    localStorage.setItem("gavia-ui.locale", "ru");
-    const visit = createPlaygroundNavigationUrl(new URL("https://example.test/gavia-ui/docs/?lang=en"), { view: "home" }, "/gavia-ui/");
+    localStorage.setItem("legato-ui.locale", "ru");
+    const visit = createPlaygroundNavigationUrl(new URL("https://example.test/legato-ui/docs/?lang=en"), { view: "home" }, "/legato-ui/");
     expect(parsePlaygroundLocale(visit.search, visit.pathname)).toBe("en");
   } finally { router.options.history.destroy(); }
 });
 
 it("resolves direct path language before bootstrap and before saved browser preferences", () => {
   const source = /<script>([\s\S]*?)<\/script>/.exec(html)![1]!;
-  for (const [pathname, expected] of [["/gavia-ui/ru/docs/", "ru"], ["/gavia-ui/docs/", "en"]]) {
+  for (const [pathname, expected] of [["/legato-ui/ru/docs/", "ru"], ["/legato-ui/docs/", "en"]]) {
     const root = document.createElement("html");
     new Function("location", "localStorage", "navigator", "document", "matchMedia", source)(
       { pathname, search: "" }, { getItem: () => expected === "ru" ? "en" : "ru" },

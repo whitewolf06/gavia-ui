@@ -1,4 +1,4 @@
-import { wlManifest } from "gavia-ui";
+import { wlManifest } from "legato-ui";
 import { readdirSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 // @vitest-environment node

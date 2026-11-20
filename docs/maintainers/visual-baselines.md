@@ -8,7 +8,8 @@ Playwright `toHaveScreenshot` rather than only taking screenshots. It compares s
 recipes, complex content, button/palette focus, invalid fields and open
 Select/Dialog/Drawer in Classic, Classic Dark and Newspaper on desktop/mobile.
 Separate Gavia and Gavia Dark baselines check real Gavia Sans, home,
-font page and open Select/Dialog. Five themes are covered in total.
+font page and open Select/Dialog. These five themes have saved PNGs. The Pages
+and accessibility suites also exercise Legato and Legato Dark on the running site.
 
 Baselines: `apps/playground/e2e/visual-baselines/`.
 Canonical environment: Windows + Chromium from pinned Playwright 1.58.2;
@@ -28,7 +29,7 @@ Chromium, Firefox, WebKit and mobile Chromium.
 For an intentional visual change:
 
 1. Run `pnpm test:visual` and inspect expected/actual/diff.
-2. Review changed states and all five themes in the playground.
+2. Review changed states across the affected Playground themes.
 3. Update baselines with `pnpm test:visual --update-snapshots`.
 4. Review every changed PNG and rerun without updating.
 

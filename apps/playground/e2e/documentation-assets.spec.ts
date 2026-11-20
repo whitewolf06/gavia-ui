@@ -109,7 +109,7 @@ test("colors resolve shipped themes, preserve alpha, copy exact CSS values and e
     await expect(background).toHaveAttribute("data-resolved-value", resolveWlToken("--wl-bg", theme.name));
     await expect(background.getByTestId("docs-color-resolved")).toHaveText(resolveWlToken("--wl-bg", theme.name));
     await expect(mask.getByTestId("docs-color-resolved")).toHaveText(resolveWlToken("--wl-mask-bg", theme.name));
-    await expect(assets.getByTestId("docs-color-setup").locator("pre code")).toContainText('import "gavia-ui/themes/' + theme.name + '.css";');
+    await expect(assets.getByTestId("docs-color-setup").locator("pre code")).toContainText('import "legato-ui/themes/' + theme.name + '.css";');
   }
   await clipboardCapture(page);
   await background.getByRole("button", { name: "Копировать переменную --wl-bg", exact: true }).click();

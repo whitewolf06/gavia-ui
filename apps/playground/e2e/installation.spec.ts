@@ -1,7 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { russianPlaygroundUrl } from "./playground-url";
+import { publishedName } from "./project-version";
 
-test("home and documentation offer matching pnpm, npm and Bun installation commands", async ({ page }) => {
+test("home installs the published release and documentation uses the current package with each manager", async ({ page }) => {
   await page.addInitScript(() => {
     Object.defineProperty(navigator, "clipboard", {
       configurable: true,
@@ -13,7 +14,7 @@ test("home and documentation offer matching pnpm, npm and Bun installation comma
   const managers = install.getByRole("group", { name: "Менеджер пакетов для установки" });
   for (const [name, prefix] of [["pnpm", "pnpm add"], ["npm", "npm install"], ["Bun", "bun add"]]) {
     await managers.getByRole("button", { name, exact: true }).click();
-    const command = prefix + " gavia-ui";
+    const command = prefix + " " + publishedName;
     await expect(page.getByTestId("home-install")).toHaveText(command);
     await expect(managers.getByRole("button", { name, exact: true })).toHaveAttribute("aria-pressed", "true");
     await install.getByRole("button", { name: "Копировать команду", exact: true }).click();
@@ -25,7 +26,7 @@ test("home and documentation offer matching pnpm, npm and Bun installation comma
   for (const [name, prefix] of [["pnpm", "pnpm add"], ["npm", "npm install"], ["Bun", "bun add"]]) {
     await docsManagers.getByRole("button", { name, exact: true }).click();
     const panel = page.locator("details").filter({ has: page.locator("summary", { hasText: "Установка через" }) });
-    await expect(panel.locator("code")).toHaveText(prefix + " gavia-ui vue");
+    await expect(panel.locator("code")).toHaveText(prefix + " legato-ui vue");
   }
   await expect.poll(() => page.evaluate(() =>
     document.documentElement.scrollWidth - document.documentElement.clientWidth

@@ -1,5 +1,6 @@
-import type { WlManifestCategory, WlPropManifest } from "gavia-ui";
+import type { WlManifestCategory, WlPropManifest } from "legato-ui";
 import type { DocumentationFoundationSection } from "../navigation";
+import { translate } from "../i18n";
 import { documentationMetadataSource, localizeDocumentation } from "./localize";
 
 export const documentationCategories: readonly { key: WlManifestCategory; label: string }[] = localizeDocumentation([
@@ -18,7 +19,9 @@ export function propType(prop: WlPropManifest): string {
 }
 
 export function propDefault(prop: WlPropManifest): string {
-  return prop.default === undefined ? "—" : JSON.stringify(prop.default) ?? "—";
+  if (prop.default !== undefined) return JSON.stringify(prop.default) ?? "—";
+  if (prop.name === "motion") return translate("documentation.strings.apiInheritedMotion");
+  return translate(prop.required ? "documentation.strings.apiRequired" : "documentation.strings.apiNotSet");
 }
 
 export interface DocumentationPtSection {
@@ -36,10 +39,10 @@ export const buttonPtSections: readonly DocumentationPtSection[] = localizeDocum
 
 export const installationSource = [
   'import { createApp } from "vue";',
-  'import "gavia-ui/styles/reset.css";',
-  'import "gavia-ui/styles/base.css";',
-  'import "gavia-ui/styles/primitives.css";',
-  'import "gavia-ui/themes/white.css";',
+  'import "legato-ui/styles/reset.css";',
+  'import "legato-ui/styles/base.css";',
+  'import "legato-ui/styles/primitives.css";',
+  'import "legato-ui/themes/white.css";',
   'import App from "./App.vue";',
   "",
   'document.documentElement.dataset.wlTheme = "white";',

@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<{
   group?: string;
   /** Window animation; defaults to WlConfig.motion (true). */
   motion?: boolean;
-  /** Attributes of internal Gavia UI elements. */
+  /** Attributes of internal Legato UI elements. */
   pt?: WlPt<"confirmdialog">; }>(), {
   motion: undefined
 });

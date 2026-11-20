@@ -1,28 +1,45 @@
 <!DOCTYPE html>
-<html lang="en" data-wl-theme="gavia">
+<html lang="en" data-wl-theme="legato">
   <head>
     <meta charset="UTF-8" />
     <script>
       // Run before styles/first paint. Keep resolution in sync with themes.ts and i18n/locale.ts.
       (() => {
         const query = new URLSearchParams(location.search);
-        const themes = ["system", "gavia", "gavia-dark", "white", "graphite", "newspaper"];
+        const themes = ["system", "legato", "legato-dark", "gavia", "gavia-dark", "white", "graphite", "newspaper"];
         let savedTheme = null;
         let savedLocale = null;
+        let appliedTheme = null;
         try {
-          savedTheme = localStorage.getItem("gavia-ui.theme");
-          savedLocale = localStorage.getItem("gavia-ui.locale");
+          savedTheme = localStorage.getItem("legato-ui.theme");
+          savedLocale = localStorage.getItem("legato-ui.locale");
+          appliedTheme = JSON.parse(localStorage.getItem("legato-ui.applied-theme.v1") || "null");
         } catch { /* Preferences still work without storage. */ }
         const requestedTheme = query.get("theme");
         const preference = themes.includes(requestedTheme) ? requestedTheme
           : themes.includes(savedTheme) ? savedTheme : "system";
-        const theme = preference === "system"
-          ? typeof matchMedia === "function" && matchMedia("(prefers-color-scheme: dark)").matches ? "gavia-dark" : "gavia"
+        let theme = preference === "system"
+          ? typeof matchMedia === "function" && matchMedia("(prefers-color-scheme: dark)").matches ? "legato-dark" : "legato"
           : preference;
         const root = document.documentElement;
+        // Restore only the narrow, generated delta; the editable palette uses a separate schema.
+        const draft = appliedTheme;
+        if (draft && draft.schemaVersion === 1 && typeof draft.name === "string" && /^[a-z][a-z0-9-]{0,31}$/.test(draft.name)
+          && themes.includes(draft.baseTheme) && draft.baseTheme !== "system" && themes.includes(draft.previousTheme)
+          && draft.overrides && typeof draft.overrides === "object" && !Array.isArray(draft.overrides)) {
+          const entries = Object.entries(draft.overrides);
+          if (themes.includes(requestedTheme) && requestedTheme !== draft.baseTheme) {
+            try { localStorage.removeItem("legato-ui.applied-theme.v1"); } catch { /* The direct URL still wins. */ }
+          } else if (entries.length <= 64 && entries.every(([name, value]) => /^--wl-[a-z0-9-]+$/.test(name)
+            && typeof value === "string" && /^(#[\da-f]{6}|var\(--wl-[a-z0-9-]+\))$/i.test(value))) {
+            theme = draft.baseTheme;
+            root.dataset.wlPlaygroundDraft = draft.name;
+            for (const [name, value] of entries) root.style.setProperty(name, value);
+          }
+        }
         if (!root.hasAttribute("data-playground-prerendered")) root.dataset.wlBoot = "loading";
         root.dataset.wlTheme = theme;
-        root.style.colorScheme = theme === "gavia-dark" || theme === "graphite" ? "dark" : "light";
+        root.style.colorScheme = ["legato-dark", "gavia-dark", "graphite"].includes(theme) ? "dark" : "light";
         const supported = (value) => value === "en" || value === "ru";
         const requestedLocale = query.get("lang");
         const pathLocale = /\/ru(?:\/|$)/.test(location.pathname) ? "ru"
@@ -35,6 +52,8 @@
     <style>
       /* Critical startup UI is available before the application CSS and chunks. */
       html[data-wl-boot] { background: var(--wl-bg, #faf9f6); color: var(--wl-text, #0f1a23); }
+      html[data-wl-boot][data-wl-theme="legato"] { background: var(--wl-bg, #fff); color: var(--wl-text, #201e33); }
+      html[data-wl-boot][data-wl-theme="legato-dark"] { background: var(--wl-bg, #14141c); color: var(--wl-text, #ebe9ef); }
       html[data-wl-boot][data-wl-theme="gavia-dark"] { background: var(--wl-bg, #18191b); color: var(--wl-text, #eceee8); }
       html[data-wl-boot][data-wl-theme="graphite"] { background: var(--wl-bg, #17181c); color: var(--wl-text, #e8eaee); }
       html[data-wl-boot][data-wl-theme="white"] { background: var(--wl-bg, #fff); }
@@ -53,10 +72,9 @@
         font: 14px/1.6 system-ui, sans-serif;
       }
       html[data-wl-boot] .pg-static-fallback { display: none; }
-      .pg-startup-brand { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 600; letter-spacing: -.04em; }
-      .pg-startup-brand img { width: 44px; height: 44px; }
-      html[data-wl-theme="gavia-dark"] .pg-startup-brand img,
-      html[data-wl-theme="graphite"] .pg-startup-brand img { filter: brightness(2); }
+      html[data-wl-theme="legato-dark"] .pg-startup-brand,
+      html[data-wl-theme="gavia-dark"] .pg-startup-brand,
+      html[data-wl-theme="graphite"] .pg-startup-brand { filter: brightness(0) invert(.93); }
       .pg-startup-message { margin: 0; opacity: .7; }
       .pg-startup-line { width: 160px; height: 2px; overflow: hidden; border-radius: 2px; background: rgb(128 128 128 / 18%); }
       .pg-startup-line::after { content: ""; display: block; width: 40%; height: 100%; background: currentColor; animation: pg-startup 1.4s ease-in-out infinite; }
@@ -73,35 +91,35 @@
       @media (prefers-reduced-motion: reduce) { .pg-startup-line::after { width: 100%; animation: none; } }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gavia UI — Vue 3 components and design system</title>
-    <meta name="description" content="Vue 3 components, TypeScript, shared design tokens, five themes and interactive documentation. Open-source UI library by Dmitry Gorbach." />
+    <title>Legato UI — components and design system for the web</title>
+    <meta name="description" content="Vue 3 components, TypeScript, shared design tokens, seven themes and interactive documentation. Open-source UI library by Dmitry Gorbach." />
     <meta name="author" content="Dmitry Gorbach" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Gavia UI" />
-    <meta property="og:title" content="Gavia UI — Vue 3 components and design system" />
-    <meta property="og:description" content="Vue 3 components, TypeScript, shared design tokens, five themes and interactive documentation. Open-source UI library by Dmitry Gorbach." />
-    <meta property="og:url" content="https://whitewolf06.github.io/gavia-ui/?lang=en" />
-    <meta property="og:image" content="https://whitewolf06.github.io/gavia-ui/gavia-social.png" />
+    <meta property="og:site_name" content="Legato UI" />
+    <meta property="og:title" content="Legato UI — components and design system for the web" />
+    <meta property="og:description" content="Vue 3 components, TypeScript, shared design tokens, seven themes and interactive documentation. Open-source UI library by Dmitry Gorbach." />
+    <meta property="og:url" content="https://whitewolf06.github.io/legato-ui/?lang=en" />
+    <meta property="og:image" content="https://whitewolf06.github.io/legato-ui/legato-social.png" />
     <meta property="og:image:width" content="1280" />
     <meta property="og:image:height" content="640" />
-    <meta property="og:image:alt" content="Gavia UI" />
+    <meta property="og:image:alt" content="Legato UI" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:locale:alternate" content="ru_RU" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Gavia UI — Vue 3 components and design system" />
-    <meta name="twitter:description" content="Vue 3 components, TypeScript, design tokens, five themes and interactive examples." />
-    <meta name="twitter:image" content="https://whitewolf06.github.io/gavia-ui/gavia-social.png" />
-    <link rel="canonical" href="https://whitewolf06.github.io/gavia-ui/?lang=en" />
-    <link rel="alternate" hreflang="en" href="https://whitewolf06.github.io/gavia-ui/?lang=en" />
-    <link rel="alternate" hreflang="ru" href="https://whitewolf06.github.io/gavia-ui/?lang=ru" />
-    <link rel="alternate" hreflang="x-default" href="https://whitewolf06.github.io/gavia-ui/?lang=en" />
-    <link rel="icon" type="image/svg+xml" href="./src/assets/gavia-favicon.svg" />
-    <script id="gavia-structured-data" type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Gavia UI","description":"An open-source Vue 3 component library and design system.","url":"https://whitewolf06.github.io/gavia-ui/","codeRepository":"https://github.com/whitewolf06/gavia-ui","programmingLanguage":["TypeScript","Vue","CSS"],"license":"https://opensource.org/license/mit","author":{"@type":"Person","name":"Dmitry Gorbach","url":"https://gorbach-dev.ru/"},"inLanguage":"en"}</script>
+    <meta name="twitter:title" content="Legato UI — components and design system for the web" />
+    <meta name="twitter:description" content="Vue 3 components, TypeScript, design tokens, seven themes and interactive examples." />
+    <meta name="twitter:image" content="https://whitewolf06.github.io/legato-ui/legato-social.png" />
+    <link rel="canonical" href="https://whitewolf06.github.io/legato-ui/?lang=en" />
+    <link rel="alternate" hreflang="en" href="https://whitewolf06.github.io/legato-ui/?lang=en" />
+    <link rel="alternate" hreflang="ru" href="https://whitewolf06.github.io/legato-ui/?lang=ru" />
+    <link rel="alternate" hreflang="x-default" href="https://whitewolf06.github.io/legato-ui/?lang=en" />
+    <link rel="icon" type="image/svg+xml" sizes="any" href="./src/assets/brand/duetto/legato-favicon.svg?no-inline" />
+    <script id="gavia-structured-data" type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Legato UI","description":"An open-source Vue 3 component library and design system.","url":"https://whitewolf06.github.io/legato-ui/","codeRepository":"https://github.com/whitewolf06/legato-ui","programmingLanguage":["TypeScript","Vue","CSS"],"license":"https://opensource.org/license/mit","author":{"@type":"Person","name":"Dmitry Gorbach","url":"https://gorbach-dev.ru/"},"inLanguage":"en"}</script>
   </head>
   <body>
     <div id="app">
       <div class="pg-startup">
-        <div class="pg-startup-brand"><img src="./src/assets/gavia-favicon.svg" width="44" height="44" alt="" />Gavia UI</div>
+        <img class="pg-startup-brand" src="./src/assets/brand/duetto/legato-wordmark.svg" width="160" height="54" alt="Legato UI" />
         <p class="pg-startup-message" role="status">
           <span class="pg-startup-en">Loading page…</span><span class="pg-startup-ru" lang="ru">Загружаем страницу…</span>
         </p>
@@ -109,13 +127,13 @@
         <div class="pg-startup-notice" data-playground-boot-error></div>
       </div>
       <main class="pg-static-fallback wl-container wl-stack" data-space="lg">
-        <h1>Gavia UI</h1>
-        <p>A component library for Vue 3. Buttons, inputs, tables and icons with shared design tokens, five themes and interactive examples.</p>
+        <h1>Legato UI</h1>
+        <p>A component library for Vue 3. Buttons, inputs, tables and icons with shared design tokens, seven themes and interactive examples.</p>
         <p>Created by Dmitry Gorbach, a frontend engineer with over 13 years of commercial development experience.</p>
         <nav aria-label="Documentation and project links">
           <a href="?view=docs&amp;lang=en">Documentation</a>
           <a href="?view=docs&amp;lang=ru" lang="ru">Документация на русском</a>
-          <a href="https://github.com/whitewolf06/gavia-ui">GitHub</a>
+          <a href="https://github.com/whitewolf06/legato-ui">GitHub</a>
           <a href="https://gorbach-dev.ru/">Author's website</a>
         </nav>
         <noscript><p>Enable JavaScript to use the interactive examples, or read the documentation on GitHub.</p></noscript>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlEmpty, WlIcon, WlTag } from "gavia-ui";
+import { WlButton, WlEmpty, WlIcon, WlTag } from "legato-ui";
 import { ref } from "vue";
 const created = ref(false);
 const query = ref(t("examples.archive_0430"));

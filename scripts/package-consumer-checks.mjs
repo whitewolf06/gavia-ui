@@ -12,7 +12,7 @@ export function preparePackedRuntimeFixtures(write) {
   for (const [file, destination] of [
     ["fixture.mjs", "src/packed-fixture.mjs"], ["node-smoke.mjs", "node-smoke.mjs"],
     ["hydrate.mjs", "src/hydrate.mjs"], ["button-entry.mjs", "src/button-entry.mjs"],
-    ["bundle-probe.mjs", "bundle-probe.mjs"]
+    ["bundle-probe.mjs", "bundle-probe.mjs"], ["theme-smoke.mjs", "theme-smoke.mjs"]
   ])
     write(destination, readFileSync(join(fixturesDir, file), "utf8"));
   write("button.html", '<!doctype html><html lang="en"><head><meta charset="utf-8"><link rel="icon" href="data:,"><title>Button bundle probe</title></head><body><div id="app"></div><script type="module" src="/src/button-entry.mjs"></script></body></html>\n');
@@ -220,7 +220,7 @@ export async function checkPackedBrowser(consumerDir, artifactLabel = "consumer"
 
 async function exercise(page, expect) {
   const fixture = page.locator("#packed-fixture");
-  await expect(fixture.getByRole("heading", { name: "Packed Gavia UI consumer" })).toBeVisible();
+  await expect(fixture.getByRole("heading", { name: "Packed Legato UI consumer" })).toBeVisible();
   await expect(fixture.getByLabel("Имя", { exact: true })).toHaveValue("Gavia");
   await fixture.getByLabel("Имя", { exact: true }).fill("Новый проект");
   await expect(fixture.getByTestId("name-value")).toHaveText("Новый проект");

@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath, URL as NodeURL } from "node:url";
 import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system/tokens.generated";
 import { playgroundRouteParams, russianPlaygroundUrl } from "./playground-url";
-import { publishedVersion } from "./project-version";
+import { publishedName, publishedVersion } from "./project-version";
 import { chooseShowcaseTheme, expectMainViewCurrent, navigateMainView } from "./select-helpers";
 
 const packageMetadata = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../../../packages/ui-kit/package.json", import.meta.url)), "utf8")) as {
@@ -13,11 +13,11 @@ const packageMetadata = JSON.parse(readFileSync(fileURLToPath(new NodeURL("../..
 };
 const project = {
   ...packageMetadata,
-  documentationBaseUrl: "https://github.com/whitewolf06/gavia-ui/blob/main/",
-  licenseUrl: "https://github.com/whitewolf06/gavia-ui/blob/main/LICENSE",
-  instructionsUrl: "https://github.com/whitewolf06/gavia-ui/blob/main/README.md",
-  packageName: packageMetadata.name,
-  packageUrl: "https://www.npmjs.com/package/gavia-ui",
+  documentationBaseUrl: "https://github.com/whitewolf06/legato-ui/blob/main/",
+  licenseUrl: "https://github.com/whitewolf06/legato-ui/blob/main/LICENSE",
+  instructionsUrl: "https://github.com/whitewolf06/legato-ui/blob/main/README.md",
+  packageName: publishedName,
+  packageUrl: "https://www.npmjs.com/package/" + publishedName,
   npmPublished: true
 };
 import type { ChangelogInline } from "../src/project/changelog";
@@ -56,16 +56,16 @@ test("home shows creator, source version, license and truthful package status wh
   await expect(page).toHaveURL((url) => playgroundRouteParams(url).get("view") === "changelog" && playgroundRouteParams(url).get("lang") === "ru" && !url.hash);
   await navigateMainView(page, "Главная");
   const main = page.getByTestId("home-page");
-  await expect(main.getByRole("heading", { level: 1 })).toHaveText("Gavia UI");
+  await expect(main.getByRole("heading", { level: 1 })).toHaveText("Legato UI");
   await expect(main.getByRole("link", { name: project.author.name, exact: true })).toHaveCount(1);
   await expect(main.getByRole("link", { name: project.author.name, exact: true })).toHaveAttribute("href", project.author.url);
   await expect(main.getByTestId("project-version")).toHaveText(project.version);
   await expect(page.locator(".pg-kit-version")).toHaveText(`v${project.version}`);
   await expect(main.getByRole("link", { name: "MIT", exact: true })).toHaveCount(1);
   await expect(main.getByRole("link", { name: "MIT", exact: true })).toHaveAttribute("href", project.licenseUrl);
-  await expect(main.getByRole("link", { name: "GitHub", exact: true })).toHaveAttribute("href", "https://github.com/whitewolf06/gavia-ui");
+  await expect(main.getByRole("link", { name: "GitHub", exact: true })).toHaveAttribute("href", "https://github.com/whitewolf06/legato-ui");
   await expect(main.getByRole("link", { name: "Подключение и инструкции", exact: true })).toHaveAttribute("href", project.instructionsUrl);
-  await expect(main.getByRole("link", { name: "GitHub Issues", exact: true })).toHaveAttribute("href", "https://github.com/whitewolf06/gavia-ui/issues");
+  await expect(main.getByRole("link", { name: "GitHub Issues", exact: true })).toHaveAttribute("href", "https://github.com/whitewolf06/legato-ui/issues");
   await expect(main.getByRole("link", { name: "руководство для участников", exact: true })).toHaveAttribute("href", project.documentationBaseUrl + "CONTRIBUTING.md");
   const packageStatus = main.getByTestId("project-npm-status");
   await expect(packageStatus).toContainText("доступен в npm");
@@ -143,8 +143,8 @@ test("navigates from the design system, opens release anchors and restores the p
 });
 
 test("keeps Home information and Changelog readable with visible keyboard focus in all shipped themes", async ({ page }) => {
-  for (const theme of wlDesignThemes.map((theme) => theme.label)) {
-    await chooseShowcaseTheme(page, theme);
+  for (const theme of wlDesignThemes) {
+    await chooseShowcaseTheme(page, theme.label);
     const sourceLink = page.getByTestId("changelog-page").getByRole("link", { name: "Открыть исходный changelog", exact: true });
     await page.locator(".pg-top").getByRole("button", { name: /^Поиск/ }).focus();
     await page.keyboard.press("Tab");
@@ -158,6 +158,11 @@ test("keeps Home information and Changelog readable with visible keyboard focus 
     await navigateMainView(page, "Главная");
     const main = page.getByTestId("home-page");
     await expect(main).toBeVisible();
+    const borderless = ["legato", "legato-dark"].includes(theme.name);
+    for (const selector of [".home-metric", ".home-section-card"]) {
+      const card = main.locator(selector).first();
+      await expect.poll(() => card.evaluate((el) => getComputedStyle(el).borderTopWidth === "0px")).toBe(borderless);
+    }
     const author = main.getByRole("link", { name: project.author.name, exact: true });
     // Navigation used a pointer; exercise the keyboard focus indicator again.
     await page.keyboard.press("Tab");

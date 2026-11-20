@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlAlert, WlAvatar, WlBreadcrumbs, WlButton, WlCard, WlDialog, WlField, WlPageHeader, WlTabs, WlTag, WlTextarea } from "gavia-ui";
+import { WlAlert, WlAvatar, WlBreadcrumbs, WlButton, WlCard, WlDialog, WlField, WlPageHeader, WlTabs, WlTag, WlTextarea } from "legato-ui";
 import { ref } from "vue";
 const tab = ref("recipe-detail-overview");
 const editing = ref(false);

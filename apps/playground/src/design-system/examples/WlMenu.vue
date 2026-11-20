@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlMenu, type WlMenuItem } from "gavia-ui";
+import { WlMenu, type WlMenuItem } from "legato-ui";
 import { computed, ref } from "vue";
 const selection = ref(t("examples.choose_an_action_0073"));
 const compact = ref(false);

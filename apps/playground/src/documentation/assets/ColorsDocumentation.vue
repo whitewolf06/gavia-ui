@@ -2,9 +2,10 @@
 import { usePlaygroundI18n } from "../../i18n";
 const props = defineProps<{ theme: WlThemeName }>();
 const { t } = usePlaygroundI18n();
-import { resolveWlToken, WlButton, wlDesignThemes, wlDesignTokens, type WlThemeName } from "gavia-ui";
+import { resolveWlToken, WlButton, wlDesignTokens, type WlThemeName } from "legato-ui";
 import { computed, ref } from "vue";
 import CodePanel from "../../design-system/CodePanel.vue";
+import { getLocalizedDesignThemes } from "../../design-system/localized-tokens";
 import { translateDocumentationText } from "../localize";
 import AssetExample from "./AssetExample.vue";
 import { documentationColorGroups, colorDocumentationHeadings as headings } from "./assets";
@@ -14,6 +15,7 @@ import ColorStates from "./examples/ColorStates.vue";
 import statesSource from "./examples/ColorStates.vue?raw";
 
 const semanticTokens = new Map(wlDesignTokens.filter((token) => token.layer === "semantic" && token.type === "color").map((token) => [token.name, token]));
+const wlDesignThemes = getLocalizedDesignThemes();
 const currentTheme = computed(() => wlDesignThemes.find((theme) => theme.name === props.theme));
 const groups = computed(() => documentationColorGroups.map((group) => ({
   ...group,
@@ -27,11 +29,12 @@ const groups = computed(() => documentationColorGroups.map((group) => ({
 const tokenCount = computed(() => groups.value.reduce((count, group) => count + group.tokens.length, 0));
 const setupCode = computed(() => [
   'import { createApp } from "vue";',
-  'import "gavia-ui/styles/reset.css";',
-  'import "gavia-ui/styles/base.css";',
-  'import "gavia-ui/styles/primitives.css";',
-  ...((props.theme === "gavia" || props.theme === "gavia-dark") ? ['import "gavia-ui/styles/fonts/gavia.css";'] : []),
-  'import "gavia-ui/themes/' + props.theme + '.css";',
+  'import "legato-ui/styles/reset.css";',
+  'import "legato-ui/styles/base.css";',
+  'import "legato-ui/styles/primitives.css";',
+  ...((props.theme === "legato" || props.theme === "legato-dark") ? ['import "legato-ui/styles/fonts/legato.css";'] : []),
+  ...((props.theme === "gavia" || props.theme === "gavia-dark") ? ['import "legato-ui/styles/fonts/gavia.css";'] : []),
+  'import "legato-ui/themes/' + props.theme + '.css";',
   'import App from "./App.vue";',
   "",
   'document.documentElement.dataset.wlTheme = "' + props.theme + '";',
@@ -72,7 +75,7 @@ async function copyToken(token: string, value: string): Promise<void> {
           :data-asset-theme="definition.name"
         >
           <h3 class="wl-text-subheading">{{ definition.label }}</h3>
-          <p class="wl-text-small wl-text-muted">{{ translateDocumentationText(definition.description) }}</p>
+          <p class="wl-text-small wl-text-muted">{{ definition.description }}</p>
           <div class="docs-theme-accent wl-text-label">{{ t('documentation.strings.s0029') }}</div>
           <p class="wl-text-code">bg: {{ resolveWlToken('--wl-bg', definition.name) }}</p>
           <p class="wl-text-code">text: {{ resolveWlToken('--wl-text', definition.name) }}</p>

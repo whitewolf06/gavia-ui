@@ -1,6 +1,6 @@
 # Design tokens
 
-Gavia UI uses CSS custom properties in the `--wl-*` namespace. Foundation tokens
+Legato UI uses CSS custom properties in the `--wl-*` namespace. Foundation tokens
 hold source values; semantic tokens name their role; component tokens apply that
 role to a component. Follow foundation → semantic → component when adding roles.
 
@@ -9,7 +9,14 @@ Themes are separate token files selected with `data-wl-theme`; components do not
 need to be copied or forked. Keep text and surface roles together and check
 contrast, focus and disabled states in the themes your application supplies.
 
-The package exports `gavia-ui/design-tokens.json` for tools. The
+For a complete application palette, follow
+[Themes and customization](theming.md#customize-a-theme) and the
+[custom-theme starter](../../examples/custom-theme/README.md). Apply the complete
+base theme and brand layer to the same element so semantic/component aliases
+resolve using the custom palette. A primary action has separate background,
+hover, active and text roles; changing only `--wl-accent` is not a full rebrand.
+
+The package exports `legato-ui/design-tokens.json` for tools. The
 [design-system reference](../reference/design-system.md) documents typography,
 spacing, surfaces, states and contrast expectations. CSS layers remain
 `wl.reset`, `wl.tokens` and `wl.components`; styles are explicit imports.

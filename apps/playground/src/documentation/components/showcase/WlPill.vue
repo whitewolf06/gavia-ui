@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlIcon, WlPill, type WlTone } from "gavia-ui";
+import { WlIcon, WlPill, type WlTone } from "legato-ui";
 const labels = { neutral: t("examples.draft_0291"), accent: t("examples.release_0605"), info: t("examples.in_progress_0066"), success: t("examples.done_0047"), warning: t("examples.needs_review_0520"), danger: t("examples.error_0147") } satisfies Record<WlTone, string>;
 </script>
 

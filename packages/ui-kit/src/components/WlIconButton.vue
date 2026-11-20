@@ -64,7 +64,7 @@ const props = withDefaults(
     dotLabel?: string;
     /** Required for the icon prop unless native aria-label, aria-labelledby or a named pt.root is supplied. */
     ariaLabel?: string;
-    /** Attributes of internal Gavia UI elements. */
+    /** Attributes of internal Legato UI elements. */
     pt?: WlPt<"iconButton">;
   }>(),
   {
@@ -122,7 +122,7 @@ if (isWlDevelopment() && process.env.NODE_ENV !== "production") {
     if (hasWlAccessibleName(element, [".wl-iconbtn__count", ".wl-iconbtn__description"])) warned = false;
     else if (!warned) {
       warned = true;
-      console.warn("[Gavia UI] WlIconButton needs ariaLabel, a resolved aria-labelledby or text describing its action.");
+      console.warn("[Legato UI] WlIconButton needs ariaLabel, a resolved aria-labelledby or text describing its action.");
     }
   };
   onMounted(() => {

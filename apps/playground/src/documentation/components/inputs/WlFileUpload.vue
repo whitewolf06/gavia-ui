@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, type WlFileReject, WlFileUpload } from "gavia-ui";
+import { WlButton, type WlFileReject, WlFileUpload } from "legato-ui";
 import { ref } from "vue";
 const documents = ref<File[]>([]);
 const image = ref<File[]>([]);

@@ -1,4 +1,13 @@
-# Gavia and Gavia Dark themes
+# Themes and customization
+
+Legato is the default light theme in the Playground. It uses indigo for actions,
+burgundy and saffron accents, and Legato Sans. To opt in, import
+`legato-ui/styles/fonts/legato.css` and `legato-ui/themes/legato.css`, then set
+`data-wl-theme="legato"`. The Playground pairs it with Legato Dark in system mode.
+Import `legato-ui/themes/legato-dark.css` and select `data-wl-theme="legato-dark"`
+for the dark version. Both use the same font stylesheet. To follow the system
+in an application, import both theme files and pass
+`{ themes: { light: "legato", dark: "legato-dark" } }` to `useWlTheme`.
 
 Gavia is a light theme with a lake blue-gray primary action,
 blue-gray selected states and warm decorative shades.
@@ -8,9 +17,204 @@ Classic, Classic Dark and Newspaper are also available.
 Classic / Classic Dark identifiers are `white` / `graphite`.
 [Names and catalog compatibility](../migration.md#migration-themes).
 
+## Customize a theme
+
+Start with a shipped theme, add your brand palette, then use component props,
+slots and `pt` for individual details. The complete
+[custom-theme starter](../../examples/custom-theme/README.md) uses this CSS-only
+path; it does not require a theme generator, build plugin or global configuration.
+
+### 1. Load a base theme and the brand layer
+
+Import the files once in your application entry point. The reset is optional;
+Gavia's font file is needed for Gavia Sans.
+
+```ts
+import 'legato-ui/styles/reset.css';
+import 'legato-ui/styles/base.css';
+import 'legato-ui/styles/fonts/gavia.css';
+import 'legato-ui/themes/gavia.css';
+import './theme.css';
+```
+
+Select both the base and the brand on the **same element**:
+
+```html
+<html lang="en" data-wl-theme="gavia" data-wl-brand="my-brand">
+```
+
+The starter's [`theme.css`](../../examples/custom-theme/src/theme.css) declares
+the palette under `[data-wl-theme="gavia"][data-wl-brand="my-brand"]` in
+`@layer wl.tokens`. Import it after the shipped theme. Components keep their
+public classes, tokens and behavior.
+The starter generates this file from `theme.config.json`; edit the config and
+regenerate, or keep a separate hand-authored brand stylesheet.
+
+### 2. Recolor the complete interaction palette
+
+The starter changes these existing foundation roles. Their semantic and
+component aliases are already declared by the complete Gavia theme.
+
+| Roles in the starter | Purpose |
+| --- | --- |
+| `--wl-palette-accent`, `--wl-palette-accent-hover` | Checked controls, active indicators and focus |
+| `--wl-palette-text-accent` | Readable accent text and links |
+| `--wl-palette-accent-soft`, `--wl-palette-accent-soft-hover` | Soft actions and selected backgrounds |
+| `--wl-palette-accent-border`, `--wl-palette-accent-border-hover` | Borders on soft accent surfaces |
+| `--wl-palette-on-accent` | Marks/text on compact accent fills |
+| `--wl-palette-action-primary-bg`, `--wl-palette-action-primary-hover`, `--wl-palette-action-primary-active`, `--wl-palette-action-primary-text` | Primary button background, hover, press and text |
+
+Primary actions have their own palette roles in Gavia and Gavia Dark. Changing
+only `--wl-accent` leaves those action colors unchanged. Set the full action
+family and check its text contrast in all three states. Keep links, selection
+and focus readable on the surfaces where the application uses them. Status
+colors such as success, warning and danger can retain the base theme's meaning.
+
+This example is a light Gavia palette. A dark brand needs its own values and
+contrast checks; reusing the light values for Gavia Dark is not a dark theme.
+
+### 3. Keep aliases in the correct scope
+
+Every shipped theme declares the complete foundation → semantic → component
+chain. A CSS `var()` reference resolves where its custom property is declared;
+descendants inherit that computed value. Therefore put the base theme and its
+brand on the same element, including for a locally branded section:
+
+```html
+<section data-wl-theme="gavia" data-wl-brand="my-brand">
+  <!-- Branded components -->
+  <section data-wl-theme="gavia">
+    <!-- Ordinary Gavia; the complete base theme restores its aliases -->
+  </section>
+</section>
+```
+
+Putting only `data-wl-brand` on a descendant can leave semantic/component aliases
+resolved against the parent's palette. Do not invent a new `data-wl-theme` value
+for a layer containing only differences: import a complete shipped theme and
+combine both selectors as above. New tokens added to that theme remain available
+without freezing an exported full CSS snapshot.
+
+Overlays teleported to `body` inherit the document theme, not a local section's
+attributes. Apply the brand to `html` when overlays must share it. The
+[theme-builder guide](theme-builder.md) describes its existing CSS export and
+JSON format; the JSON is not loaded by the component library at runtime.
+
+### 4. Customize a component without copying it
+
+Choose the smallest applicable extension point:
+
+| Need | Extension |
+| --- | --- |
+| Supported layout, size or behavior | Documented props, such as `WlCard.padding` |
+| Content, an icon or an item renderer | Named/scoped slots in the component API |
+| An existing visual role | Local semantic/component CSS custom properties |
+| Attributes or a class on an internal section | The documented `pt` section |
+| Application layout or additional elements | Your own class/CSS and markup |
+
+For example, the starter uses Card's title/footer slots and
+`:pt="{ content: { class: 'brand-content' } }"`. Its `.brand-content` class owns
+the grid and gap; component CSS continues to own Card itself. An ordinary
+application stylesheet outside the library layers can override styles without
+`!important` or selector chains.
+
+Optional `WlConfig.pt` shares defaults across one Vue application; an instance's
+`pt` can refine them. Classes and styles merge in the order
+`createWlPt()` defaults → `WlConfig.pt` → instance `pt`. Section callbacks receive
+documented context, not arbitrary component props or private state. Use the API
+table for the component's available sections, slots and tokens.
+
+### 5. Verify the surfaces and states you use
+
+Check primary default/hover/active text, links on page/raised/selected surfaces,
+compact checked marks, soft selected text/borders and keyboard focus. The
+starter [records its measured pairs](../../examples/custom-theme/README.md#color-pair-checks):
+normal text is checked at 4.5:1 and focus/state boundaries at 3:1. Recalculate
+after changing colors, opacity or backgrounds. Inspect disabled/invalid states,
+keyboard use, local-theme resets and teleported overlays separately; a list of
+passing color pairs is not a complete accessibility assessment.
+
+For token lookup and targeted overrides, see [design tokens](tokens.md). To change
+the library's shipped themes, use the separate
+[maintainer token procedure](../maintainers/tokens.md).
+
+## Generate CSS from a versioned config
+
+The 1.2 additions provide a pure entry point, `legato-ui/theme`, and a Node CLI.
+They are optional; existing CSS imports and component APIs stay the same.
+The entry does not import Vue, the DOM or Node modules.
+
+```ts
+import { createWlTheme } from 'legato-ui/theme';
+
+const result = createWlTheme({
+  schemaVersion: 2,
+  name: 'my-brand',
+  baseTheme: 'gavia',
+  palette: { primary: '#245bd1' },
+  overrides: { '--wl-card-padding-inline': '1.25rem' },
+  mode: 'delta'
+});
+// result.css, result.overrides, result.contrast
+```
+
+`palette` accepts any subset of `background`, `surface`, `softSurface`, `text`,
+`mutedText`, `border`, `primary` and `link`. Omitted roles use the base palette;
+colors are opaque `#rgb` or `#rrggbb`. The generator applies the base, palette
+changes and then manual `overrides`, without changing your input object.
+Overrides use existing `--wl-*` token names. Unknown references, cycles and
+declaration/selector injection are rejected. Values cannot contain `!important`;
+the generated reduced-motion rules retain priority over duration overrides.
+References use `var(--wl-token)` without a CSS fallback.
+
+| Mode | CSS selector | Application setup |
+| --- | --- | --- |
+| `full` (default) | `[data-wl-theme="my-brand"]` | Select the new name; the CSS contains a complete base snapshot |
+| `delta` | `[data-wl-theme="gavia"][data-wl-brand="my-brand"]` | Import the complete base theme and keep both attributes on the same element |
+
+Both modes retain a reduced-motion block. Delta follows the local-theme and
+Teleport rules above. Full CSS freezes the token snapshot at generation time;
+regenerate it when updating the library. Keep the config as the source of truth.
+
+The result's `overrides` are the **computed** delta, including derived values.
+They are not a replacement for the config's manual `overrides`. The contrast
+report includes resolved foreground/background colors, ratio, threshold and
+`passes`. Optional `contrastPairs` selects token pairs and thresholds; otherwise
+the existing builder pairs are checked. These pairs must resolve to opaque HEX
+colors. A failed pair is reported without replacing your selected colors; this
+report does not certify all component states or application accessibility.
+
+### Generate and check from the command line
+
+Save the input object as JSON. The Playground's **Download config** button exports
+this same v2 format, so no format conversion is needed:
+
+```sh
+pnpm exec legato-theme --config my-brand.theme.json --output src/theme.css
+pnpm exec legato-theme --config my-brand.theme.json --output src/theme.css --check
+```
+
+The CLI requires Node 22.13+; it does not add a Node runtime requirement to browser
+components. It calls the same public generator. `--check` compares the exact CSS
+and checks the selected contrast pairs without writing files or directories.
+Exit codes are `0` for success, `1` for arguments/configuration/IO errors, `2` for
+stale or missing CSS and `3` for failed contrast. When both checks fail, contrast
+takes priority and both failures are reported.
+
+`parseWlThemeConfig(value)` validates and normalizes JSON input for build scripts.
+New configs use `schemaVersion: 2` and contain only user settings. Older v1 exports
+are still read as name, base theme and all eight palette colors. Their derived
+`colorScheme`, `overrides` and `semanticBindings` are ignored, as before; the CLI
+prints a migration warning. To make a former derived value a manual override,
+move it deliberately into a v2 config rather than changing the version alone.
+
+The [starter](../../examples/custom-theme/README.md) uses one config for its build
+script and CLI checks. For repository changes to shipped themes, continue using
+the maintainer token procedure rather than adding generated CSS by hand.
+
 ## Reactive theme preferences
 
-`useWlTheme` from `gavia-ui/composables` resolves light, dark and system
+`useWlTheme` from `legato-ui/composables` resolves light, dark and system
 preferences after mount. Its `themes` option accepts a static `{ light, dark }`
 pair or a reactive getter returning that pair. To keep an explicitly selected
 theme independent of OS changes, map both entries to the selected name.
@@ -80,7 +284,7 @@ Page background `#faf9f6` has a slight warm undertone.
 ## Gavia Dark
 
 Choose Gavia Dark with `data-wl-theme="gavia-dark"` and the separate CSS file
-`gavia-ui/themes/gavia-dark.css`. It defines dark surfaces and readable
+`legato-ui/themes/gavia-dark.css`. It defines dark surfaces and readable
 text, action and status roles through the same token source. The light palette
 above belongs to `gavia`; dark theme values are available through
 `getWlThemeTokens("gavia-dark")`. Components and their DOM contract are shared.
@@ -119,25 +323,25 @@ Import the separate `@font-face` CSS so the browser loads WOFF2.
 Without it, the browser uses a system font. Code retains monospaced `--wl-mono`.
 
 There are six weights (100, 300, 400, 500, 600, 700), each with upright and
-oblique faces. [Specimens, setup and license](font-gavia.md).
+oblique faces. [Specimens, setup and license](font-legato.md).
 The playground shows the typeface on the “Font” page (`?view=font`).
 
 ## Setup
 
-Light Gavia and the typeface have been included in Gavia UI since 0.9.1:
+The original `gavia-ui` package has included the light Gavia theme and its typeface since 0.9.1.
 
 ```ts
-import 'gavia-ui/styles/reset.css';
-import 'gavia-ui/styles/fonts/gavia.css';
-import 'gavia-ui/styles/base.css';
-import 'gavia-ui/themes/gavia.css';
+import 'legato-ui/styles/reset.css';
+import 'legato-ui/styles/fonts/gavia.css';
+import 'legato-ui/styles/base.css';
+import 'legato-ui/themes/gavia.css';
 ```
 
 ```html
 <html lang="en" data-wl-theme="gavia">
 ```
 
-For Gavia Dark, change the theme import to `gavia-ui/themes/gavia-dark.css` and
+For Gavia Dark, change the theme import to `legato-ui/themes/gavia-dark.css` and
 the attribute to `data-wl-theme="gavia-dark"`. Both use `styles/fonts/gavia.css`.
 
 Both CSS files use `wl.tokens` and apply through their `data-wl-theme`.
@@ -151,7 +355,7 @@ Within the library, `base.css` and default
 Specify Gavia or Gavia Dark explicitly.
 
 ```ts
-import { getWlThemeTokens, resolveWlToken } from 'gavia-ui';
+import { getWlThemeTokens, resolveWlToken } from 'legato-ui';
 
 const page = resolveWlToken('--wl-bg', 'gavia');
 const snapshot = getWlThemeTokens('gavia');
@@ -188,7 +392,7 @@ and [non-text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-con
 | Main text / soft warm accent | 14.81:1 |
 
 Table values are rounded for reading. The validator compares raw ratios
-with thresholds before rounding. Approved pairs are checked in all five
+with thresholds before rounding. Approved pairs are checked in all seven
 themes; separate tests protect Gavia links and text on decorative
 surfaces. Recalculate contrast after changing colors, text opacity or soft
 surfaces.
@@ -218,7 +422,8 @@ It is shared by input, textarea, select and composite fields. Override
 
 ## Editing the theme
 
-For application overrides, use the [token guide](tokens.md). To change shipped
+For application overrides, start with [Customize a theme](#customize-a-theme)
+and the [token guide](tokens.md). To change shipped
 theme values or add token roles to the library, follow the
 [maintainer token procedure](../maintainers/tokens.md).
 

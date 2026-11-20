@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 import { wlManifest } from "../../../packages/ui-kit/src/manifest";
 import { playgroundBasePath, playgroundRouteParams, russianPlaygroundUrl } from "./playground-url";
+import { publishedName } from "./project-version";
 import { chooseDropdownOption, copyCodePanel, navigateMainView, openDocumentationMenu } from "./select-helpers";
 
 const russianDocumentation = JSON.parse(readFileSync(new URL("../src/i18n/messages/documentation.ru.json", import.meta.url), "utf8")) as { strings: Record<string, string> };
@@ -128,8 +129,8 @@ test.afterEach(async ({ page }) => {
 test("home opens WlButton documentation and controls update the live button, consumer code and API", async ({ page, baseURL }, testInfo) => {
   await page.goto(russianPlaygroundUrl(pageUrl(baseURL)), { waitUntil: "domcontentloaded" });
   const home = page.getByTestId("home-page");
-  await expect(home.getByRole("heading", { level: 1 })).toHaveText("Gavia UI");
-  await expect(home.getByTestId("home-install")).toHaveText("pnpm add gavia-ui");
+  await expect(home.getByRole("heading", { level: 1 })).toHaveText("Legato UI");
+  await expect(home.getByTestId("home-install")).toHaveText(`pnpm add ${publishedName}`);
   await expectRoute(page, baseURL, null);
   // Reveal below-fold decoration before checking the complete-page capture.
   for (const image of await home.locator('img[loading="lazy"]').all()) {
@@ -240,7 +241,7 @@ test("home opens WlButton documentation and controls update the live button, con
   const consumerCode = await source.locator("pre code").textContent();
   expect(consumerCode).not.toBeNull();
   expect(consumerCode!.length).toBeGreaterThan(0);
-  expect(consumerCode).toContain('from "gavia-ui"');
+  expect(consumerCode).toContain('from "legato-ui"');
   expect(consumerCode).not.toContain("packages/ui-kit");
   // Capture the exact clipboard boundary, as in the existing recipe tests.
   // This checks copy wiring independently of operating-system permissions.
@@ -394,7 +395,7 @@ function expectFoundationSource(consumerCode: string | null, name: string): void
     "typography-scale", "responsive-grid", "gap-alignment", "page-composition",
     "spacing", "stacking-layers", "content-writing", "content-states"
   ].includes(name)) {
-    expect(consumerCode).toContain('from "gavia-ui"');
+    expect(consumerCode).toContain('from "legato-ui"');
   } else {
     expect(consumerCode).toContain("<template>");
     expect(consumerCode).toContain("wl-");
@@ -406,7 +407,7 @@ async function expectLayoutFoundation(page: Page, foundation: Locator, toc: Loca
   await toc.getByRole("link", { name: "Слои и z-index", exact: true }).click();
   await expect(foundation.locator("#docs-layout-layers")).toBeInViewport();
   expect(new URL(page.url()).hash).toBe("#docs-layout-layers");
-  await expect(foundation.getByRole("region", { name: "Уровни z-index Gavia UI", exact: true }).getByRole("row")).toHaveCount(10);
+  await expect(foundation.getByRole("region", { name: "Уровни z-index Legato UI", exact: true }).getByRole("row")).toHaveCount(10);
   const grid = foundation.locator('[data-docs-example="responsive-grid"]').getByTestId("docs-foundation-preview");
   await grid.getByRole("button", { name: "Выбрать Проектирование", exact: true }).click();
   await expect(grid.getByRole("status")).toHaveText("Выбрано: Проектирование");
@@ -552,7 +553,7 @@ test("home and interactive WlButton documentation remain usable at 320px", async
   await page.setViewportSize({ width: 320, height: 740 });
   await page.goto(russianPlaygroundUrl(pageUrl(baseURL)), { waitUntil: "domcontentloaded" });
   const home = page.getByTestId("home-page");
-  await expect(home.getByRole("heading", { level: 1 })).toHaveText("Gavia UI");
+  await expect(home.getByRole("heading", { level: 1 })).toHaveText("Legato UI");
   await expectNoHorizontalOverflow(page, home);
   await home.getByRole("link", { name: "Документация WlButton", exact: true }).click();
   const docs = page.getByTestId("docs-page");
@@ -787,7 +788,7 @@ test("generic documentation keeps controls beside live code, preserves tab state
   for (const value of ['"size":"lg"', '"density":"compact"', '"invalid":true', '"disabled":true']) {
     await expect(code).toContainText(value);
   }
-  await expect(code).toContainText('from "gavia-ui"');
+  await expect(code).toContainText('from "legato-ui"');
   expect(await code.textContent()).not.toContain("packages/ui-kit");
 
   await tabs.getByRole("tab", { name: "API", exact: true }).click();
@@ -824,7 +825,7 @@ test("generic documentation keeps controls beside live code, preserves tab state
   await expect(code).not.toContainText('"invalid":true');
   const extra = workspace.locator('[data-docs-component-extra="WlInput"]');
   await expect(extra.getByTestId("docs-component-extra-preview").getByRole("textbox", { name: "Название, sm", exact: true })).toHaveValue("План команды");
-  await expect(extra.getByTestId("docs-component-extra-source").locator("pre code")).toContainText('from "gavia-ui"');
+  await expect(extra.getByTestId("docs-component-extra-source").locator("pre code")).toContainText('from "legato-ui"');
 
   await page.setViewportSize({ width: 320, height: 740 });
   await expect.poll(async () => {

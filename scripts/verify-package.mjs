@@ -46,7 +46,7 @@ const registryVueVersion = requestedVue ?? (selectedManager === "bun" ? workspac
 const minimumCompiler = requestedTypescript?.startsWith("5.4.") === true;
 const temporaryBase = join(repoRoot, ".tmp");
 mkdirSync(temporaryBase, { recursive: true });
-const temporaryRoot = mkdtempSync(join(temporaryBase, "gavia-ui-consumer-"));
+const temporaryRoot = mkdtempSync(join(temporaryBase, "legato-ui-consumer-"));
 // Validate the immutable cleanup target before work starts, preserving the original
 // failure if a consumer check later throws. Cleanup never computes another path.
 if (dirname(temporaryRoot) !== temporaryBase) throw new Error("Consumer must stay inside the task temporary directory");
@@ -94,15 +94,18 @@ try {
     archivePath = join(packDir, archives[0]);
   }
   const consumerPackage = {
-    name: "gavia-ui-package-consumer-smoke",
+    name: "legato-ui-package-consumer-smoke",
     private: true,
     type: "module",
     scripts: {
       build: "node tool-build.mjs",
-      typecheck: "node tool-typecheck.mjs"
+      typecheck: "node tool-typecheck.mjs",
+      "theme:typecheck": "node node_modules/typescript/bin/tsc --noEmit -p tsconfig.theme.json",
+      "theme:generate": "legato-theme --config theme.config.json --output generated-theme.css",
+      "theme:check": "gavia-theme --config theme.config.json --output generated-theme.css --check"
     },
     dependencies: {
-      "gavia-ui": `file:${archivePath.replaceAll("\\", "/")}`,
+      "legato-ui": `file:${archivePath.replaceAll("\\", "/")}`,
       vue: registryVueVersion ?? localPackage("vue")
     },
     devDependencies: selectedManager === "bun"
@@ -116,6 +119,14 @@ try {
   };
 
   write("package.json", `${JSON.stringify(consumerPackage, null, 2)}\n`);
+  write("theme.config.json", readFileSync(join(repoRoot, "examples/custom-theme/theme.config.json"), "utf8"));
+  write("tsconfig.theme.json", `${JSON.stringify({
+    compilerOptions: {
+      target: "ES2020", module: "ESNext", moduleResolution: "Bundler", lib: ["ES2020"],
+      types: [], strict: true, skipLibCheck: false, noEmit: true
+    },
+    include: ["src/contracts/types/theme-generation.types.ts"]
+  }, null, 2)}\n`);
   write("tool-build.mjs", 'import { build } from "vite";\nawait build();\n');
   // The pinned vue-tsc runner receives the consumer compiler path explicitly; linked tooling must not select the workspace TypeScript.
   write("tool-typecheck.mjs", 'import { run } from "vue-tsc";\nimport { resolve } from "node:path";\nimport { realpathSync } from "node:fs";\nprocess.argv.push("--noEmit", "-p", "tsconfig.json");\nrun(realpathSync(resolve("node_modules/typescript/lib/tsc.js")));\n');
@@ -152,19 +163,21 @@ try {
   write(
     "src/main.ts",
     `import { createApp } from "vue";
-import { WlConfig, WlToastService, WlConfirmationService, createWlPt, wlLocaleRu, wlManifest, wlDesignTokens, resolveWlToken, getWlThemeTokens, type WlDesignTokenName, type WlSpace } from "gavia-ui";
-import packageManifest from "gavia-ui/manifest.json";
-import designCatalog from "gavia-ui/design-tokens.json";
-import "gavia-ui/styles/reset.css";
-import "gavia-ui/styles/base.css";
-import "gavia-ui/styles/primitives.css";
-import "gavia-ui/styles/fonts/gavia.css";
-import "gavia-ui/themes/white.css";
-import "gavia-ui/themes/graphite.css";
-import "gavia-ui/themes/newspaper.css";
-import "gavia-ui/themes/gavia.css";
-import "gavia-ui/themes/gavia-dark.css";
-import regularFontUrl from "gavia-ui/fonts/gavia/Gavia-Regular.woff2?url";
+import { WlConfig, WlToastService, WlConfirmationService, createWlPt, wlLocaleRu, wlManifest, wlDesignTokens, resolveWlToken, getWlThemeTokens, type WlDesignTokenName, type WlSpace } from "legato-ui";
+import packageManifest from "legato-ui/manifest.json";
+import designCatalog from "legato-ui/design-tokens.json";
+import "legato-ui/styles/reset.css";
+import "legato-ui/styles/base.css";
+import "legato-ui/styles/primitives.css";
+import "legato-ui/themes/white.css";
+import "legato-ui/themes/graphite.css";
+import "legato-ui/themes/newspaper.css";
+import "legato-ui/themes/gavia.css";
+import "legato-ui/themes/gavia-dark.css";
+import "legato-ui/themes/legato.css";
+import "legato-ui/themes/legato-dark.css";
+import "legato-ui/styles/fonts/legato.css";
+import regularFontUrl from "legato-ui/fonts/gavia/Gavia-Regular.woff2?url";
 import App from "./App.vue";
 
 if (!regularFontUrl) throw new Error("Font asset export did not resolve");
@@ -198,17 +211,19 @@ createApp(App).use(WlConfig, { pt: createWlPt(), locale: wlLocaleRu })
     "types/collection-contract.types.ts", "fixtures/collection-contract-consumer.vue",
     "types/input-model-modifiers.types.ts", "fixtures/input-model-modifiers-consumer.vue",
     "types/overlay-locale-contract.types.ts", "fixtures/overlay-model-modifiers-consumer.vue", "types/pt-tooltip-contract.types.ts",
-    "types/native-contract.types.ts", "types/native-contract.tsx", "types/field-slot-contract.types.ts", "fixtures/public-components-consumer.vue"
+    "types/native-contract.types.ts", "types/native-contract.tsx", "types/field-slot-contract.types.ts", "fixtures/public-components-consumer.vue",
+    "types/theme-generation.types.ts"
   ];
   for (const relativePath of apiContractFiles) {
     const source = readFileSync(join(uiKitDir, "tests", relativePath), "utf8")
-      .replace(/from (["'])(?:\.\.\/)+src\1/g, 'from "gavia-ui"');
+      .replace(/from (["'])(?:\.\.\/)+src\/theme\/index\1/g, 'from "legato-ui/theme"')
+      .replace(/from (["'])(?:\.\.\/)+src\1/g, 'from "legato-ui"');
     write(`src/contracts/${relativePath}`, source);
   }
   const exampleImports = copiedExamples.map((path, index) => `import Example${index} from "${path}";`).join("\n");
   write("src/App.vue", `<script setup lang="ts">
 ${exampleImports}
-import { WlToast, WlConfirmDialog } from "gavia-ui";
+import { WlToast, WlConfirmDialog } from "legato-ui";
 import PackedSmoke from "./PackedSmoke.vue";
 const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", ")}];
 </script>
@@ -238,6 +253,12 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     else consumerTool.run(["run", name], consumerDir);
   }
   runConsumerScript("typecheck");
+  runConsumerScript("theme:typecheck");
+  // Each selected package manager resolves and invokes its actual installed bin shim.
+  runConsumerScript("theme:generate");
+  runConsumerScript("theme:check");
+  execFileSync(process.execPath, ["theme-smoke.mjs"], { cwd: consumerDir, stdio: "inherit", timeout: 30_000 });
+  const themeEvidence = JSON.parse(readFileSync(join(consumerDir, "theme-evidence.json"), "utf8"));
   const nativeAndSSR = checkPackedNode(consumerDir);
   runConsumerScript("build");
   const buttonBundle = checkPackedButtonBundle(consumerDir);
@@ -251,6 +272,10 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     "dist/index.d.ts",
     "dist/manifest.json",
     "dist/design-tokens.json",
+    "dist/theme-generator.js",
+    "dist/theme/index.d.ts",
+    "bin/gavia-theme.mjs",
+    "bin/theme-cli.mjs",
     "styles/reset.css",
     "styles/base.css",
     "styles/primitives.css",
@@ -259,6 +284,9 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     "themes/newspaper.css",
     "themes/gavia.css",
     "themes/gavia-dark.css",
+    "themes/legato.css",
+    "themes/legato-dark.css",
+    "styles/fonts/legato.css",
     "styles/fonts/gavia.css",
     "fonts/gavia/manifest.json",
     "fonts/gavia/OFL.txt",
@@ -279,6 +307,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   }
   const installedManifest = JSON.parse(readFileSync(join(installedPackageDir, "package.json"), "utf8"));
   assertPureUtilityEntry(installedPackageDir);
+  const themeRuntimeGraph = assertPureUtilityEntry(installedPackageDir, "dist/theme-generator.js");
   if (installedManifest.name !== packageJson.name || installedManifest.version !== packageJson.version) {
     throw new Error(`Packed package must be ${packageJson.name}@${packageJson.version}, received ${installedManifest.name}@${installedManifest.version}`);
   }
@@ -288,7 +317,9 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   if (installedManifest.license !== "MIT") {
     throw new Error("Published manifest must declare MIT");
   }
-  if (installedManifest.exports?.["./styles/fonts/gavia.css"] !== "./styles/fonts/gavia.css"
+  if (installedManifest.exports?.["./styles/fonts/legato.css"] !== "./styles/fonts/legato.css"
+    || installedManifest.exports?.["./fonts/legato/Legato-*.woff2"] !== "./fonts/gavia/Gavia-*.woff2"
+    || installedManifest.exports?.["./styles/fonts/gavia.css"] !== "./styles/fonts/gavia.css"
     || installedManifest.exports?.["./fonts/gavia/*"] !== "./fonts/gavia/*") {
     throw new Error("Published manifest is missing the public font exports");
   }
@@ -452,15 +483,27 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
   }
   const builtCss = readdirSync(builtAssets).filter((file) => file.endsWith(".css"))
     .map((file) => readFileSync(join(builtAssets, file), "utf8")).join("\n");
-  const builtFontFaces = [...builtCss.matchAll(/@font-face\s*\{([^}]+)\}/g)]
-    .filter(([, block]) => /font-family:["']?Gavia(?: Sans)?(?: Core)?["';]/.test(block));
-  if (builtFontFaces.length !== 24 + variableFaces.length) throw new Error("Consumer CSS did not preserve Gavia faces, subsets and legacy aliases");
-  for (const [, block] of builtFontFaces) {
-    const fontUrl = block.match(/url\(["']?([^"')]+)["']?\)/)?.[1];
-    const emittedPath = fontUrl?.startsWith("/") ? join(consumerDir, "dist", fontUrl.slice(1)) : resolve(builtAssets, fontUrl ?? "");
-    if (!fontUrl || !existsSync(emittedPath)) throw new Error("Consumer font CSS has an unresolved emitted URL: " + fontUrl);
+  // Each entry point can include shared faces in a separate CSS chunk.
+  // Compare the actual face and its font bytes once across all emitted chunks.
+  function faceSignatures(css, resolveFont) {
+    const signatures = new Set();
+    for (const [, block] of css.matchAll(/@font-face\s*\{([^}]+)\}/g)) {
+      const family = block.match(/font-family:\s*["']?((?:Gavia(?: Sans)?|Legato Sans)(?: Core)?)["']?\s*;/)?.[1];
+      if (!family) continue;
+      const url = block.match(/url\(["']?([^"')]+)["']?\)/)?.[1];
+      if (!url) throw new Error("Missing web font URL for " + family);
+      const weight = block.match(/font-weight:\s*([\d ]+)/)?.[1].trim();
+      const style = block.match(/font-style:\s*(normal|italic)/)?.[1];
+      const hash = createHash("sha256").update(readFileSync(resolveFont(url))).digest("hex");
+      signatures.add([family, weight, style, hash].join("/"));
+    }
+    return [...signatures].sort();
   }
-  console.log("Packed font smoke passed: 12 accepted WOFF2 files, OFL notices, 12 canonical CSS faces plus legacy aliases");
+  const legatoStylesheet = readFileSync(join(dirname(fontStylesheetPath), "legato.css"), "utf8");
+  const expectedFaces = faceSignatures(fontStylesheet + "\n" + legatoStylesheet, (url) => resolve(dirname(fontStylesheetPath), url));
+  const builtFaces = faceSignatures(builtCss, (url) => url.startsWith("/") ? join(consumerDir, "dist", url.slice(1)) : resolve(builtAssets, url));
+  if (JSON.stringify(builtFaces) !== JSON.stringify(expectedFaces)) throw new Error("Consumer CSS changed a packaged font face or its WOFF2 file");
+  console.log("Packed font smoke passed: " + builtFaces.length + " Legato and Gavia web faces and aliases");
 
   // Git checkouts may use CRLF on Windows and LF on the publishing runner.
   const packedLicense = readFileSync(join(installedPackageDir, "LICENSE"), "utf8").replaceAll("\r\n", "\n");
@@ -494,6 +537,7 @@ const examples = [${copiedExamples.map((_, index) => `Example${index}`).join(", 
     manager: selectedManager, managerVersion: consumerTool?.version ?? process.env.npm_config_user_agent?.split(" ")[0], vueVersion: installedVue.version,
     archiveSha256: createHash("sha256").update(readFileSync(archivePath)).digest("hex"),
     copiedExamples: copiedExamples.length, apiContractFiles, nativeAndSSR, buttonBundle,
+    theme: { ...themeEvidence, esOnlyTypes: true, managerBinShim: true, runtimeGraph: themeRuntimeGraph },
     browser: browser ?? { skipped: true, command: "pnpm verify:package:browser" }
   }, null, 2) + "\n");
   console.log("Package verification evidence: " + evidencePath);

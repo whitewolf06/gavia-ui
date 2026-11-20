@@ -192,6 +192,9 @@ export function defineComponentManifest(
       if (!emits.some((item) => item.name === event)) emits.push({
         name: event, payload: type, typescriptType: type, description: undefined
       });
+      const modelEvent = emits.find((item) => item.name === event)!;
+      modelEvent.description ??= api.eventDescriptions?.[event]
+        ?? "Emitted when the component requests a model change; the payload is the next value.";
     }
     const firstModel = Object.entries(api?.models ?? {})[0];
     return { ...entry, introducedIn, props, slots, emits,

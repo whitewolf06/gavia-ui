@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlField, WlIcon, WlInput } from "gavia-ui";
+import { WlButton, WlField, WlIcon, WlInput } from "legato-ui";
 import { ref } from "vue";
 const title = ref(t("examples.team_plan_0740"));
 const amount = ref("1200");

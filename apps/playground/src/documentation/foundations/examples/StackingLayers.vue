@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { resolveWlToken } from "gavia-ui";
+import { resolveWlToken } from "legato-ui";
 const layers = [
   { label: "Base", token: "--wl-layer-base" },
   { label: "Sticky", token: "--wl-layer-sticky" },

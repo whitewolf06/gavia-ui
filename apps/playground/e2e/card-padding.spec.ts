@@ -1,7 +1,8 @@
 import { expect, test } from "@playwright/test";
+import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
 import { chooseDropdownOption } from "./select-helpers";
 
-for (const theme of ["gavia", "gavia-dark", "white", "graphite", "newspaper"]) {
+for (const { name: theme } of wlDesignThemes) {
   test(`${theme}: card section padding is applied once and nested cards are isolated @cross-browser`, async ({ page }) => {
     await page.goto(`/?view=system&theme=${theme}&lang=en`);
     await chooseDropdownOption(page, page.getByRole("combobox", { name: "Component", exact: true }), "WlCard");

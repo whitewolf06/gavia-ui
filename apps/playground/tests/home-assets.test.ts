@@ -68,7 +68,7 @@ describe("home-page asset loading", () => {
 
   it("derives compact metrics from canonical tokens without a second token inventory", () => {
     expect(summary.tokenCount).toBe(tokenCatalog.tokens.length);
-    expect(summary.themeCount).toBe(5);
+    expect(summary.themeCount).toBe(7);
     expect(summary.themes.map((theme) => theme.name).sort()).toEqual(tokenCatalog.themes.map((theme) => theme.name).sort());
   });
 
@@ -78,17 +78,32 @@ describe("home-page asset loading", () => {
     expect(manifest.images.every((entry: { width: number }) => [640, 1024, 1600, 1920].includes(entry.width))).toBe(true);
   });
 
-  it("keeps the night illustration out of a light visit and retains loaded art for later theme transitions", async () => {
-    const wrapper = mount(HomePage, { props: { theme: "gavia" }, global: { plugins: [playgroundI18n as unknown as Plugin] } });
+  it("loads the active theme's artwork first and retains visited landscapes for later transitions", async () => {
+    const wrapper = mount(HomePage, { props: { theme: "legato" }, global: { plugins: [playgroundI18n as unknown as Plugin] } });
     expect(wrapper.find(".home-hero-layer--night").exists()).toBe(false);
     const day = wrapper.get(".home-hero-layer");
-    expect(day.attributes("srcset")).toMatch(/640w, .*1024w, .*1600w, .*1920w, .*2172w$/);
-    expect(wrapper.findAll(".home-project-art").map((image) => image.attributes("loading"))).toEqual(["lazy", "lazy"]);
+    expect(day.attributes("src")).toContain("duetto-arch.webp");
+    expect(day.attributes("srcset")).toBeUndefined();
+    expect(wrapper.find(".home-project-art").exists()).toBe(false);
+    await wrapper.setProps({ theme: "legato-dark" });
+    expect(wrapper.get(".home-hero-art").attributes("src")).toContain("duetto-arch.webp");
+    expect(wrapper.find(".home-hero-layer--night").exists()).toBe(false);
     await wrapper.setProps({ theme: "gavia-dark" });
+    expect(wrapper.findAll(".home-hero-layer")).toHaveLength(1);
     await wrapper.get(".home-hero-layer--night").trigger("load");
     expect(wrapper.get(".home-hero-layer--night").classes()).toContain("home-hero-layer--visible");
-    await wrapper.setProps({ theme: "white" });
+    await wrapper.setProps({ theme: "gavia" });
     expect(wrapper.get(".home-hero-layer--night").classes()).not.toContain("home-hero-layer--visible");
+    const landscape = wrapper.get(".home-hero-art");
+    expect(landscape.attributes("srcset")).toMatch(/640w, .*1024w, .*1600w, .*1920w, .*2172w$/);
+    await landscape.trigger("load");
+    const cards = wrapper.findAll(".home-project-art");
+    expect(cards.map((image) => image.attributes("loading"))).toEqual(["lazy", "lazy"]);
+    expect(cards.every((image) => image.attributes("srcset")?.includes("640w"))).toBe(true);
+    await wrapper.setProps({ theme: "gavia-dark" });
+    expect(wrapper.findAll(".home-hero-layer")).toHaveLength(2);
+    await wrapper.setProps({ theme: "legato-dark" });
+    expect(wrapper.find(".home-hero-layer--night").exists()).toBe(false);
     wrapper.unmount();
   });
 });

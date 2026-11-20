@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 const props = defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlCalendar, WlCheckbox } from "gavia-ui";
+import { WlCalendar, WlCheckbox } from "legato-ui";
 import { computed, ref } from "vue";
 const value = ref("2026-10-15");
 const selected = ref(["2026-10-15", "2026-10-17"]);

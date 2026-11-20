@@ -1,6 +1,7 @@
 node_modules/
 dist/
 coverage/
+.eslintcache
 *.tgz
 *.log
 .DS_Store

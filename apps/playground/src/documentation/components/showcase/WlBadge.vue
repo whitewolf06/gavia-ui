@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlBadge, WlButton, type WlTone } from "gavia-ui";
+import { WlBadge, WlButton, type WlTone } from "legato-ui";
 import { ref } from "vue";
 const values = { neutral: "12", accent: "3", info: "1", success: "OK", warning: "5", danger: "9" } satisfies Record<WlTone, string>;
 const unread = ref(3);

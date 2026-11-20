@@ -1,4 +1,4 @@
-# Gavia UI icons
+# Legato UI icons
 
 Each drawing comes from `packages/ui-kit/icons/<name>.svg`. A single
 `pnpm icons:sync` run validates every file and updates `src/icons.generated.ts`:
@@ -56,7 +56,7 @@ name. `size` sets the dimensions; color is inherited through `currentColor`.
    Do not generate one file per agent run.
 3. Put files in `packages/ui-kit/icons`, run `pnpm icons:sync`,
    then `pnpm icons:check` and `pnpm typecheck`.
-4. Open the playground Icons section and review the whole batch in all five themes
+4. Open the playground Icons section and review the whole batch in all seven themes
    at 16, 20 and 24 px. Check contrast, alignment and legibility at mobile width.
 5. If a new component needs a missing name, add its SVG to the same directory and
    repeat steps 3–4. The generator accepts new files without source-code changes.

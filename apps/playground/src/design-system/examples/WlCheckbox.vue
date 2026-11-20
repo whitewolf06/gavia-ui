@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlCheckbox } from "gavia-ui";
+import { WlCheckbox } from "legato-ui";
 import { ref } from "vue";
 const value = ref(true);
 const permissions = ref<number[]>([1]);

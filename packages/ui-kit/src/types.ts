@@ -93,7 +93,7 @@ export interface WlFileReject {
   reason: WlFileRejectReason;
 }
 
-export type WlThemeName = "gavia" | "white" | "graphite" | "newspaper" | "gavia-dark";
+export type { WlThemeName } from "./design-system/types";
 
 export type { WlAccordionItem, WlAccordionSlots, WlCommandPaletteExpose, WlCommandPaletteGroup, WlCommandPaletteItem, WlMenuExpose, WlMenuItem, WlMenuItemBase, WlSidebarExpose, WlSidebarGroup, WlSidebarItem } from "./navigation-types";
 export type { WlDatePickerLocale } from "./locale-types";

@@ -2,8 +2,8 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlTabs } from "gavia-ui";
-import { useWlId } from "gavia-ui/composables";
+import { WlTabs } from "legato-ui";
+import { useWlId } from "legato-ui/composables";
 import { computed, ref } from "vue";
 const active = ref("example-overview");
 const prefix = `example-tabs-${useWlId()}`;

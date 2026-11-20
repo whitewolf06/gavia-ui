@@ -96,8 +96,8 @@ function fixture(callback) {
   const jsonPath = "apps/playground/src/project/quality-report.generated.json";
   const json = () => JSON.parse(readFileSync(join(directory, jsonPath), "utf8"));
   try {
-    put("package.json", { name: "gavia-ui-workspace", private: true, version });
-    put("packages/ui-kit/package.json", { name: "gavia-ui", version });
+    put("package.json", { name: "legato-ui-workspace", private: true, version });
+    put("packages/ui-kit/package.json", { name: "legato-ui", version });
     put("packages/ui-kit/coverage/coverage-summary.json", summary());
     put("packages/ui-kit/coverage/tests.json", run());
     put(".gitignore", "coverage/\n.tmp/\n");

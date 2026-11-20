@@ -5,17 +5,17 @@ const props = withDefaults(defineProps<{
   fontFamily?: string;
   fontStyle?: GaviaFontStyle;
 }>(), {
-  fontFamily: gaviaFontFamily,
+  fontFamily: legatoFontFamily,
   fontStyle: "normal"
 });
 const emit = defineEmits<{ "update:fontStyle": [style: GaviaFontStyle] }>();
 const { t, locale } = usePlaygroundI18n();
-import { WlInput } from "gavia-ui";
-import { WlSegmented } from "gavia-ui";
+import { WlInput } from "legato-ui";
+import { WlSegmented } from "legato-ui";
 import { computed, ref } from "vue";
 import type { GaviaFontStyle } from "./font";
 import type { SpecimenLanguage } from "./samples";
-import { gaviaFontFamily, gaviaWeights } from "./font";
+import { gaviaWeights, legatoFontFamily } from "./font";
 
 const fontStyle = computed(() => props.fontStyle);
 const customHeading = ref("");
@@ -80,7 +80,7 @@ const styleName = computed(() => fontStyle.value === "normal" ? content.value.no
         id="wl-weights-custom-heading"
         v-model="customHeading"
         class="wl-weights-custom-input"
-        placeholder="Gavia Sans · I l 1 O 0 · Ёё Йй Жж Дд Лл · 12 480 ₽"
+        placeholder="Legato Sans · I l 1 O 0 · Ёё Йй Жж Дд Лл · 12 480 ₽"
         autocomplete="off"
         :spellcheck="false"
       />

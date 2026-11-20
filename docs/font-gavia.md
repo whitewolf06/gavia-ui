@@ -1,6 +1,6 @@
-# Gavia Sans typeface
+# Legato Sans typeface
 
-**This guide moved.** Canonical guide: [Gavia Sans typeface](guide/font-gavia.md).
+**This guide moved.** Read the [Legato Sans typeface guide](guide/font-legato.md).
 
 This compatibility page preserves old URLs and fragment links. Use the canonical
 guide for current instructions.

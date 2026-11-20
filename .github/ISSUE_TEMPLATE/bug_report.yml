@@ -1,11 +1,11 @@
 name: Bug report
-description: Report a reproducible problem in Gavia UI
+description: Report a reproducible problem in Legato UI
 title: "[Bug]: "
 body:
   - type: input
     id: gavia
     attributes:
-      label: Gavia UI version
+      label: Legato UI version
       description: The exact installed version from your lockfile.
     validations:
       required: true

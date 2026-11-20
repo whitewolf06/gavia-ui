@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlTag, type WlTagColor } from "gavia-ui";
+import { WlButton, WlTag, type WlTagColor } from "legato-ui";
 import { nextTick, ref } from "vue";
 const labels = { gray: t("examples.default_0604"), blue: t("examples.release_0605"), green: t("examples.done_0047"), amber: t("examples.in_progress_0066"), red: t("examples.overdue_0606") } satisfies Record<WlTagColor, string>;
 const tags = ref([t("examples.design_0079"), t("examples.development_0080"), t("examples.review_0129")]);

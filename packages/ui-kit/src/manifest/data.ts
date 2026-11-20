@@ -24,7 +24,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
       },
       { name: "loading", type: "boolean", default: false, description: "Состояние загрузки." },
       { name: "emptyMessage", type: "string", description: "Empty-state text; falls back to WlConfig.locale.noData (No data in English)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [
       { name: "default", description: "Своё содержимое таблицы, если columns не заданы." },
@@ -46,7 +46,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "siblings", type: "number", default: 1, description: "Сколько страниц показывать вокруг текущей." },
       { name: "compact", type: "boolean", default: false, description: "Компактный вид с полем ввода." },
       { name: "disabled", type: "boolean", default: false, description: "Отключает навигацию." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [],
     emits: [{ name: "update:page", payload: "number", description: "Новый номер страницы, начиная с 1." }]
@@ -59,7 +59,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "value", type: "union", description: "Значение: string | number." },
       { name: "tone", type: "enum", default: "accent", values: WL_TONES, description: "Semantic badge color." },
       { name: "dot", type: "boolean", default: false, description: "Режим точки (value игнорируется)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [],
     emits: []
@@ -73,7 +73,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "tone", type: "enum", values: WL_TONES, description: "Semantic tag color." },
       { name: "removable", type: "boolean", default: false, description: "Показать кнопку удаления." },
       { name: "removeLabel", type: "string", description: "Accessible remove button name; falls back to WlConfig.locale.remove (Remove in English)." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [{ name: "default", description: "Текст тега." }],
     emits: [{ name: "remove", payload: "MouseEvent", description: "Клик по кнопке удаления." }]
@@ -113,7 +113,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "image", type: "string", description: "URL изображения." },
       { name: "size", type: "enum", default: 32, values: WL_AVATAR_SIZES, description: "Размер в px: 24 | 28 | 32 | 36 | 48." },
       { name: "presence", type: "enum", values: WL_AVATAR_PRESENCES, description: "Индикатор присутствия." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [{ name: "default", description: "Своё содержимое вместо label/image." }],
     emits: []
@@ -145,7 +145,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
       { name: "tone", type: "enum", default: "accent", values: WL_TONES, description: "Semantic progress color." },
       { name: "thin", type: "boolean", default: false, description: "Тонкая полоска." },
       { name: "showValue", type: "boolean", default: false, description: "Показывать процент." },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [],
     emits: []
@@ -165,7 +165,7 @@ export const dataManifest = /* @__PURE__ */ defineComponentManifest([
         values: ["rectangle", "circle"],
         description: "Форма."
       },
-      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Gavia UI." }
+      { name: "pt", type: "object", description: "Атрибуты внутренних элементов Legato UI." }
     ],
     slots: [],
     emits: []

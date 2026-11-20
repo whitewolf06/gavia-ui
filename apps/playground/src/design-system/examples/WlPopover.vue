@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlButton, WlDatePicker, WlDialog, WlPopover, type WlPopoverExpose, WlSelect } from "gavia-ui";
+import { WlButton, WlDatePicker, WlDialog, WlPopover, type WlPopoverExpose, WlSelect } from "legato-ui";
 import { ref } from "vue";
 const popover = ref<WlPopoverExpose | null>(null);
 const dialogPopover = ref<WlPopoverExpose | null>(null);

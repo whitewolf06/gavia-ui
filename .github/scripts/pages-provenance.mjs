@@ -7,7 +7,9 @@ import { fileURLToPath } from "node:url";
 /** A successful PR, fork or stale main run must never become a Pages deployment. */
 export function assertPagesProvenance({ event, repository, checkedOutSha, latestMainSha }) {
   const run = event?.workflow_run;
-  if (repository !== "whitewolf06/gavia-ui" || run?.head_repository?.full_name !== repository) throw new Error("Pages requires the canonical repository");
+  if (event?.repository?.id !== 1305645644 || event.repository.owner?.login !== "whitewolf06"
+    || event.repository.full_name !== repository || run?.head_repository?.id !== event.repository.id
+    || run.head_repository.full_name !== repository) throw new Error("Pages requires the canonical repository");
   if (run.name !== "CI" || run.event !== "push" || run.head_branch !== "main" || run.conclusion !== "success") {
     throw new Error("Pages requires a successful CI run from a main push");
   }

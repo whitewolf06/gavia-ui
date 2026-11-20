@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlButton, WlToolbar } from "gavia-ui";
+import { WlButton, WlToolbar } from "legato-ui";
 import { ref } from "vue";
 const bold = ref(false);
 const italic = ref(false);

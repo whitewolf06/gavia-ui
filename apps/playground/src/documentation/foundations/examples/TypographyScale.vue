@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlAccordion, WlAlert, WlCard, WlCheckbox, WlSegmented, wlTypography } from "gavia-ui";
+import { WlAccordion, WlAlert, WlCard, WlCheckbox, WlSegmented, wlTypography } from "legato-ui";
 import { computed, ref } from "vue";
 const semantic = ref(false);
 const choice = ref<"draft" | "published" | null>("draft");

@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "./i18n";
 const props = defineProps<{ theme: WlThemeName }>();
+const emit = defineEmits<{ "apply-theme": [draft: { name: string; baseTheme: WlThemeName; overrides: Record<string, string> }] }>();
 const { t } = usePlaygroundI18n();
-import type { WlThemeName } from "gavia-ui";
-import { WlAlert, WlButton, WlCheckbox, WlIcon, WlInput, WlSelect, WlSwitch, WlTag } from "gavia-ui";
+import type { WlThemeName } from "legato-ui";
+import { WlAlert, WlButton, WlCheckbox, WlIcon, WlInput, WlSelect, WlSwitch, WlTag } from "legato-ui";
 import { computed, onMounted, ref, watch } from "vue";
 import CodePanel from "./design-system/CodePanel.vue";
 import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
 import { createThemeExport, createThemeOverrides, createThemePalette, getThemeContrast, isThemeNameValid, normalizeHex, parseThemeDraft, THEME_DRAFT_SCHEMA_VERSION, type ThemePalette, themePaletteFields } from "./theme-builder/palette";
 import { isPlaygroundTheme, playgroundThemeOptions } from "./themes";
 
-const storageKey = "gavia-ui.theme-builder.v1";
+const storageKey = "legato-ui.theme-builder.v1";
 const baseTheme = ref<WlThemeName>(props.theme);
 const name = ref("my-gavia");
 const palette = ref<ThemePalette>(createThemePalette(baseTheme.value));
@@ -21,6 +22,7 @@ const overrides = computed(() => createThemeOverrides(palette.value, baseTheme.v
 const contrast = computed(() => getThemeContrast(palette.value, baseTheme.value));
 const failedContrast = computed(() => contrast.value.filter((pair) => !pair.passes).length);
 const themeExport = computed(() => createThemeExport(nameInvalid.value ? "my-theme" : name.value, baseTheme.value, palette.value));
+const configDownloadUrl = computed(() => "data:application/json;charset=utf-8," + encodeURIComponent(themeExport.value.json));
 const exportPanel = ref<InstanceType<typeof CodePanel> | null>(null);
 const exportMode = ref<"prompt" | "json" | "css">("prompt");
 const exportOptions = [{ value: "prompt", label: t("shell.ThemeBuilderPage.text302") }, { value: "json", label: "JSON" }, { value: "css", label: "CSS" }] as const;
@@ -163,6 +165,12 @@ const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.
           {{ storageUnavailable ? t('shell.ThemeBuilderPage.text318')
             : savedLocally ? t('shell.ThemeBuilderPage.text319') : t('shell.ThemeBuilderPage.text320') }}
         </p>
+        <WlButton
+          :disabled="nameInvalid || hexInvalid"
+          data-testid="theme-builder-apply"
+          @click="emit('apply-theme', { name, baseTheme, overrides })"
+        >{{ t('shell.themeDraft.apply') }}</WlButton>
+        <p class="wl-text-small wl-text-muted">{{ t('shell.themeDraft.help') }}</p>
       </section>
 
       <div class="tb-preview-column wl-stack" data-space="lg">
@@ -293,11 +301,22 @@ const previewSelectPt = computed(() => ({ overlay: { "data-wl-theme": baseTheme.
           <h2 id="tb-export-title" class="wl-text-heading">{{ t('shell.ThemeBuilderPage.text348') }}</h2>
           <p class="wl-text-body wl-text-muted">{{ t('shell.ThemeBuilderPage.text349') }}</p>
         </div>
-        <WlButton variant="primary" :disabled="nameInvalid || hexInvalid" @click="exportPanel?.copy()">
-          <template #icon><WlIcon name="copy" :size="16" /></template>
-          {{ exportMode === 'prompt' ? t('shell.ThemeBuilderPage.text350')
-            : t('shell.ThemeBuilderPage.text351') + exportMode.toUpperCase() }}
-        </WlButton>
+        <div class="wl-inline" data-space="sm">
+          <WlButton
+            v-if="!nameInvalid && !hexInvalid"
+            :href="configDownloadUrl"
+            :download="name + '.theme.json'"
+            data-testid="theme-builder-download"
+          >
+            <template #icon><WlIcon name="download" :size="16" /></template>
+            {{ t('shell.themeBuilder.downloadConfig') }}
+          </WlButton>
+          <WlButton variant="primary" :disabled="nameInvalid || hexInvalid" @click="exportPanel?.copy()">
+            <template #icon><WlIcon name="copy" :size="16" /></template>
+            {{ exportMode === 'prompt' ? t('shell.ThemeBuilderPage.text350')
+              : t('shell.ThemeBuilderPage.text351') + exportMode.toUpperCase() }}
+          </WlButton>
+        </div>
       </div>
       <div
         class="wl-inline"

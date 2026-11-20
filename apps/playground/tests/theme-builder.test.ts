@@ -1,5 +1,6 @@
-import type { WlThemeName } from "gavia-ui";
-import { resolveWlToken, wlDesignThemes, type WlDesignTokenDefinition, type WlDesignTokenName, wlDesignTokens } from "gavia-ui";
+import type { WlThemeName } from "legato-ui";
+import { resolveWlToken, wlDesignThemes, type WlDesignTokenDefinition, type WlDesignTokenName, wlDesignTokens } from "legato-ui";
+import { createWlTheme, parseWlThemeConfig } from "legato-ui/theme";
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
 import {
@@ -46,8 +47,8 @@ describe("playground theme palette model", () => {
         expect(resolve(token.name, theme.name, overrides), token.name).toBe(resolveWlToken(token.name, theme.name));
       }
       const exported = createThemeExport("my-theme", theme.name, first);
-      expect(exported.spec.overrides).toEqual({});
-      expect(exported.spec.semanticBindings).toEqual({});
+      expect(createWlTheme(exported.spec).overrides).toEqual({});
+      expect(exported.spec).not.toHaveProperty("semanticBindings");
       expect(exported.css).toContain(`color-scheme: ${theme.colorScheme}`);
       for (const token of wlDesignTokens) {
         expect(exported.css).toContain(`${token.name}: ${definitions.get(token.name)!.themes?.[theme.name] ?? token.value};`);
@@ -95,7 +96,7 @@ describe("playground theme palette model", () => {
       expect(resolve(token, "graphite", overrides), token).toBe(palette.link);
     }
     const exported = createThemeExport("custom-graphite", "graphite", palette);
-    expect(exported.spec.overrides["--wl-palette-text-accent"]).toBe(palette.link);
+    expect(createWlTheme(exported.spec).overrides["--wl-palette-text-accent"]).toBe(palette.link);
     expect(exported.css).toContain("--wl-palette-text-accent: #a6c7ff;");
     const link = getThemeContrast(palette, "graphite").find((row) => row.key === "link")!;
     expect(link.foreground).toBe(palette.link);
@@ -115,7 +116,7 @@ describe("playground theme palette model", () => {
     expect(report.find((row) => row.key === "link")!.ratio).toBe(1);
     const exported = createThemeExport("low-contrast", "graphite", palette);
     expect(exported.spec.palette.link).toBe(baseline.background);
-    expect(exported.spec.overrides["--wl-palette-text-accent"]).toBe(baseline.background);
+    expect(createWlTheme(exported.spec).overrides["--wl-palette-text-accent"]).toBe(baseline.background);
     expect(palette.link).toBe(baseline.background);
   });
   it("reports failed contrast without substituting the chosen link", () => {
@@ -136,18 +137,18 @@ describe("playground theme palette model", () => {
     const first = createThemeExport("forest", "gavia", palette);
     expect(createThemeExport("forest", "gavia", palette)).toEqual(first);
     expect(JSON.parse(first.json)).toEqual(first.spec);
-    expect(first.spec).toMatchObject({ schemaVersion: 1, name: "forest", baseTheme: "gavia", colorScheme: "light" });
-    expect(first.spec.overrides["--wl-palette-action-primary-bg"]).toBe("#3d8e72");
-    expect(Object.keys(first.spec.overrides).every((key) => definitions.get(key as WlDesignTokenName)?.layer === "foundation")).toBe(true);
-    expect(Object.keys(first.spec.semanticBindings).every((key) => definitions.get(key as WlDesignTokenName)?.layer === "semantic")).toBe(true);
+    expect(first.spec).toMatchObject({ schemaVersion: 2, name: "forest", baseTheme: "gavia", mode: "full", palette: { primary: "#3d8e72" } });
+    expect(first.spec).not.toHaveProperty("colorScheme");
+    expect(first.spec).not.toHaveProperty("semanticBindings");
+    expect(first.spec).not.toHaveProperty("overrides");
+    expect(createWlTheme(first.spec).css).toBe(first.css);
     expect(first.css).toContain("@layer wl.tokens");
     expect(first.css).toContain('[data-wl-theme="forest"]');
     expect(first.css).toContain("@media (prefers-reduced-motion: reduce)");
     expect(first.css).toContain("--wl-dur-5: 0.01ms;");
     expect(first.prompt).toContain(first.json);
-    expect(first.prompt).toContain("tokens/source.json");
-    expect(first.prompt).toContain("pnpm tokens:sync");
-    expect(first.prompt).toContain("pnpm tokens:check");
+    expect(first.prompt).toContain("createWlTheme");
+    expect(first.prompt).toContain("gavia-theme");
     expect(JSON.stringify(palette)).toBe(before);
     createThemeOverrides(palette, "gavia");
     getThemeContrast(palette, "gavia");
@@ -156,7 +157,7 @@ describe("playground theme palette model", () => {
   it("rejects unknown themes, invalid colors, CSS selector injection and shipped names", () => {
     expect(() => createThemePalette("missing" as WlThemeName)).toThrow();
     expect(() => createThemeOverrides(edited("gavia", { primary: "red" }), "gavia")).toThrow();
-    for (const name of ["", "gavia", "gavia-dark", "white", "graphite", "newspaper", "Theme", 'theme"] {}', "a".repeat(33)]) {
+    for (const name of ["", "legato", "legato-dark", "gavia", "gavia-dark", "white", "graphite", "newspaper", "Theme", 'theme"] {}', "a".repeat(33)]) {
       expect(isThemeNameValid(name)).toBe(false);
       expect(() => createThemeExport(name, "gavia", createThemePalette("gavia"))).toThrow();
     }
@@ -165,7 +166,8 @@ describe("playground theme palette model", () => {
   it("roundtrips only valid versioned drafts, ignoring injected export metadata", () => {
     const palette = edited("gavia", { primary: "#abc" });
     const exported = createThemeExport("forest", "gavia", palette);
-    expect(parseThemeDraft(JSON.parse(exported.json))).toEqual({
+    expect(parseWlThemeConfig(JSON.parse(exported.json))).toEqual(exported.spec);
+    expect(parseThemeDraft({ schemaVersion: 1, name: "forest", baseTheme: "gavia", palette })).toEqual({
       name: "forest", baseTheme: "gavia", palette: { ...palette, primary: "#aabbcc" }
     });
     const valid = { schemaVersion: 1, name: "forest", baseTheme: "gavia", palette: createThemePalette("gavia") };

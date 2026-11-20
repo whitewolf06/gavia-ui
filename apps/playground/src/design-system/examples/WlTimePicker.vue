@@ -2,7 +2,7 @@
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlField, WlTimePicker } from "gavia-ui";
+import { WlField, WlTimePicker } from "legato-ui";
 import { ref } from "vue";
 const value = ref<string | null>("09:30");
 </script>

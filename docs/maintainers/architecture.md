@@ -1,4 +1,4 @@
-# Gavia UI architecture
+# Legato UI architecture
 
 ## Package boundaries
 
@@ -138,8 +138,8 @@ migrations explicit when changing those sections.
 ## Checking a change
 
 Vitest checks contracts and logic. Browser scenarios check focus, positioning,
-native interactions and mobile layout; dedicated accessibility and visual
-checks cover all five themes. Playground `vue-tsc` checks consumer templates.
+native interactions and mobile layout. Accessibility checks cover all seven themes.
+The visual suite compares five themes with saved PNGs. Playground `vue-tsc` checks consumer templates.
 The maintained matrix, budgets and commands are in [quality maintenance](quality.md).
 
 In jsdom tests, get `node:fs` paths through `fileURLToPath` and `URL`

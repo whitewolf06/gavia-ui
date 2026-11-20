@@ -10,7 +10,7 @@
     --wl-type-surface: var(--wl-bg);
     --wl-type-subtle: var(--wl-bg-soft);
     --wl-type-font-sans: var(--wl-font);
-    --wl-type-font-sample: "Gavia Sans", "Segoe UI", Arial, sans-serif;
+    --wl-type-font-sample: "Legato Sans", "Segoe UI", Arial, sans-serif;
     --wl-type-font-mono: var(--wl-mono);
     --wl-type-page-background: var(--wl-type-background);
     --wl-type-button-background: var(--wl-accent);
@@ -228,7 +228,7 @@
   }
 }
 
-/* The hero heading follows the theme; font specimens always show Gavia Sans. */
+/* The hero heading follows the theme; font specimens always show Legato Sans. */
 @layer wl.components {
   .wl-type-letterform, .wl-type-heading, .wl-type-paragraph,
   .wl-type-interface-heading, .wl-type-project-name, .wl-type-stat-value,

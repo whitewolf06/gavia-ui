@@ -10,7 +10,7 @@ configuration is omitted. For Russian, replace the preset import and installatio
 in `src/main.ts` with `wlLocaleRu`:
 
 ```ts
-import { WlConfig, wlLocaleRu } from "gavia-ui";
+import { WlConfig, wlLocaleRu } from "legato-ui";
 // Keep the starter's createApp(App) call and explicit style imports.
 createApp(App).use(WlConfig, { locale: wlLocaleRu }).mount("#app");
 ```

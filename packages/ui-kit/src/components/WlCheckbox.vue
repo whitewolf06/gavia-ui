@@ -45,7 +45,7 @@ const props = withDefaults(
      * @default false
      */
     invalid?: boolean;
-    /** Attributes of internal Gavia UI elements. */
+    /** Attributes of internal Legato UI elements. */
     pt?: WlPt<"checkbox">;
   }>(),
   {

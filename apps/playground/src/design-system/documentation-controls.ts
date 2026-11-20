@@ -1,4 +1,4 @@
-import type { WlComponentManifest, WlPropManifest } from "gavia-ui";
+import type { WlComponentManifest, WlPropManifest } from "legato-ui";
 import { translate as t } from "../i18n";
 
 type DocumentationEditor = "select" | "checkbox" | "text" | "number" | "icon";

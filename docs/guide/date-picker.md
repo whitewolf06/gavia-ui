@@ -12,7 +12,7 @@ The `dd.mm.yyyy` display does not change the model format.
 ```vue
 <script setup lang="ts">
 import { ref } from "vue";
-import { WlDatePicker } from "gavia-ui";
+import { WlDatePicker } from "legato-ui";
 const date = ref<string | null>("2026-10-15");
 </script>
 <template>
@@ -35,7 +35,7 @@ See [localization](localization.md) for preset availability and setup.
 ```vue
 <script setup lang="ts">
 import { ref } from "vue";
-import { WlDatePicker, type WlDateRange } from "gavia-ui";
+import { WlDatePicker, type WlDateRange } from "legato-ui";
 const period = ref<WlDateRange | null>(["2026-10-10", "2026-10-20"]);
 </script>
 <template>

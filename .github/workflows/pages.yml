@@ -13,7 +13,7 @@ jobs:
   pages:
     timeout-minutes: 20
     name: Publish documentation to GitHub Pages
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository && github.repository == 'whitewolf06/gavia-ui'
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository && github.repository_owner == 'whitewolf06' && github.repository_id == '1305645644'
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -21,7 +21,7 @@ jobs:
       pages: write
       id-token: write
     concurrency:
-      group: gavia-ui-pages
+      group: legato-ui-pages
       cancel-in-progress: true
     environment:
       name: github-pages
@@ -40,7 +40,7 @@ jobs:
       - name: Download quality metrics measured in this workflow
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          name: gavia-ui-quality
+          name: legato-ui-quality
           path: .tmp/quality-report
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ github.token }}
@@ -59,7 +59,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: gavia-ui-pages-results
+          name: legato-ui-pages-results
           path: apps/playground/test-results/
           if-no-files-found: ignore
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6

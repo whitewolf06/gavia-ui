@@ -124,7 +124,7 @@ test("generated public types, examples and guides typecheck in an isolated consu
       noUncheckedIndexedAccess: true, skipLibCheck: true, noEmit: true,
       lib: ["ES2020", "DOM", "DOM.Iterable"], types: [],
       jsx: "preserve", jsxImportSource: "vue", resolveJsonModule: true,
-      paths: { vue: [vuePath], "vue/*": [vuePath + "/*"], "gavia-ui": ["./packages/ui-kit/src/index.ts"] }
+      paths: { vue: [vuePath], "vue/*": [vuePath + "/*"], "legato-ui": ["./packages/ui-kit/src/index.ts"] }
     },
     include: ["packages/ui-kit/src/**/*.ts", "packages/ui-kit/src/**/*.vue", "apps/playground/src/design-system/examples/WlScratch.vue", "apps/playground/src/documentation/components/showcase/WlScratch.vue"],
     vueCompilerOptions: { target: 3.4 }

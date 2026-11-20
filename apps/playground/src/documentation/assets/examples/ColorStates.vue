@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlAlert, WlButton, WlSegmented } from "gavia-ui";
+import { WlAlert, WlButton, WlSegmented } from "legato-ui";
 import { computed, ref } from "vue";
 const definitions = {
   info: { label: t("examples.information_1009"), title: t("examples.material_in_progress_1010"), text: t("examples.add_a_description_before_submitting_for_review_1011") },

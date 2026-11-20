@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlButton, WlCheckbox, WlField } from "gavia-ui";
+import { WlButton, WlCheckbox, WlField } from "legato-ui";
 import { computed, ref } from "vue";
 const notifications = ref([{ id: "mail", label: t("examples.email_0656"), enabled: true }, { id: "push", label: t("examples.push_notifications_0210"), enabled: false }]);
 const selectedCount = computed(() => notifications.value.filter((item) => item.enabled).length);

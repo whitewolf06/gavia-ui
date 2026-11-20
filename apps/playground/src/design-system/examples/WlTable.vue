@@ -3,7 +3,7 @@ import { computed, ref } from "vue";
 import { usePlaygroundI18n } from "../../i18n";
 defineProps<{ preview?: Record<string, unknown> }>();
 const { t } = usePlaygroundI18n();
-import { WlPill, WlTable, type WlTableSort, type WlTableSortFn } from "gavia-ui";
+import { WlPill, WlTable, type WlTableSort, type WlTableSortFn } from "legato-ui";
 interface MaterialRow { id: number; name: string; status: string }
 const rows = computed<MaterialRow[]>(() => [
   { id: 1, name: t("examples.team_guide_0016"), status: t("examples.done_0047") },

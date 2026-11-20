@@ -1,14 +1,14 @@
-# Gavia UI documentation
+# Legato UI documentation
 
 Start with [Getting started](guide/getting-started.md) or the
-[1.0 upgrade guide](migration.md#migration-1-0). Gavia UI 1.0.0 was published on
-2026-10-25; its dated evidence is in the [release record](archive/release-history.md#release-100).
-Live guides and copyable examples are in the [Playground](https://whitewolf06.github.io/gavia-ui/docs/).
+[1.2 upgrade guide](migration.md#migration-1-2). The last published Gavia UI version
+is [1.1.0](maintainers/releases.md).
+Live guides and copyable examples are in the [Playground](https://whitewolf06.github.io/legato-ui/docs/).
 
 ## Use the library
 
-- [Themes](guide/theming.md), [theme builder](guide/theme-builder.md) and [tokens](guide/tokens.md)
-- [Localization](guide/localization.md) and [Gavia Sans](guide/font-gavia.md)
+- [Themes and customization](guide/theming.md), [theme builder](guide/theme-builder.md) and [tokens](guide/tokens.md)
+- [Localization](guide/localization.md) and [Legato Sans](guide/font-legato.md)
 - [Pure utilities](guide/utilities.md): stable palette colors and binary file-size formatting
 - [TypeScript contracts](guide/typescript.md), [SSR](guide/ssr.md) and [compatibility](guide/compatibility.md)
 - [Accessibility](guide/accessibility.md) and [DatePicker models](guide/date-picker.md)

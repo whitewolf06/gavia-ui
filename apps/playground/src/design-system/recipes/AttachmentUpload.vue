@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePlaygroundI18n } from "../../i18n";
 const { t } = usePlaygroundI18n();
-import { WlAlert, WlButton, WlFileUpload, WlPageHeader, WlProgress, WlSwitch } from "gavia-ui";
+import { WlAlert, WlButton, WlFileUpload, WlPageHeader, WlProgress, WlSwitch } from "legato-ui";
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 const files = ref<File[]>([]);
 const busy = ref(false);
