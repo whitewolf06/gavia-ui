@@ -25,7 +25,7 @@ Historical generated Changeset paragraphs are preserved in [the maintainer archi
 - Expand the customization guide and custom-theme starter with primary action states, links, focus, selection and scoped brand layers.
 - Apply a draft palette across the Playground, restore it after reload and undo it from any page.
 - Update the Legato and Legato Dark homepages with the Duetto arch on paper, wider section spacing, unframed metrics and navigation, and compact project cards with diagonal corner accents. The browser tab shows a white script L on a rounded indigo square.
-- Align the Playground header with page content across all six sections.
+- Align the Playground header with page content across all six sections and fix a WebKit resize error when navigating between them.
 
 ## 1.1.0 — 2026-11-14
 

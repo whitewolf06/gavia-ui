@@ -225,16 +225,23 @@ onMounted(() => {
   const rootStyle = document.documentElement.style;
   const previous = rootStyle.scrollPaddingTop;
   const previousHeaderOffset = rootStyle.getPropertyValue("--wl-playground-header-offset");
+  let offsetFrame: number | undefined;
   const update = () => {
+    offsetFrame = undefined;
     const offset = String((headerElement.value?.offsetHeight ?? 60) + 16) + "px";
+    if (rootStyle.scrollPaddingTop === offset && rootStyle.getPropertyValue("--wl-playground-header-offset") === offset) return;
     rootStyle.scrollPaddingTop = offset;
     rootStyle.setProperty("--wl-playground-header-offset", offset);
   };
-  const observer = new ResizeObserver(update);
+  const observer = new ResizeObserver(() => {
+    // Updating root scroll padding during resize delivery can trigger another layout in WebKit.
+    if (offsetFrame === undefined) offsetFrame = window.requestAnimationFrame(update);
+  });
   if (headerElement.value) observer.observe(headerElement.value);
   update();
   restoreScrollPadding = () => {
     observer.disconnect();
+    if (offsetFrame !== undefined) window.cancelAnimationFrame(offsetFrame);
     rootStyle.scrollPaddingTop = previous;
     if (previousHeaderOffset) rootStyle.setProperty("--wl-playground-header-offset", previousHeaderOffset);
     else rootStyle.removeProperty("--wl-playground-header-offset");
