@@ -22,7 +22,7 @@ const added = ref(0);
       <template #breadcrumbs>
         <WlBreadcrumbs
           :items="[
-            { label: 'Gavia UI', href: '?' },
+            { label: 'Legato UI', href: '?' },
             { label: t('examples.documentation_0340'), href: '?view=docs' },
             { label: t('examples.materials_0015') }
           ]"

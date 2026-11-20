@@ -1,10 +1,20 @@
-# Gavia UI brand sources
+# Legato UI brand sources
+
+The Playground uses the [Legato wordmark](../../apps/playground/src/assets/brand/duetto/legato-wordmark.svg),
+the [script L favicon](../../apps/playground/src/assets/brand/duetto/legato-favicon.svg) and
+the [Duetto arch](../../apps/playground/src/assets/brand/duetto/duetto-arch.webp).
+Link previews use the [Legato social image](../../apps/playground/public/legato-social.png).
+The [arch master](../../archives/brand/duetto-arch.webp) and
+[paper master](../../archives/brand/laid-paper.webp) preserve the original artwork.
+The Playground serves compressed copies at the original dimensions.
+
+## Historical Gavia artwork
 
 The Gavia UI mark is [gavia-ui-mark-lake.svg](gavia-ui-mark-lake.svg): a loon
 forming a G, a round transparent eye and primary color #294451.
 Its silhouette matches [gavia-ui-mark-v2.png](../../archives/brand/gavia-ui-mark-v2.png).
-The playground header takes the mark color from the theme; the favicon uses
-Gavia’s primary color. The wordmark is [gavia-ui-logo-v2-eye.png](../../archives/brand/gavia-ui-logo-v2-eye.png).
+The former Playground header took its mark color from the theme, and its favicon used
+Gavia’s primary color. Its wordmark is [gavia-ui-logo-v2-eye.png](../../archives/brand/gavia-ui-logo-v2-eye.png).
 
 Original artwork was made with built-in imagegen, with a transparent background
 and cutouts in the mark. Prompts, authored PNGs and historical variants are
@@ -17,7 +27,9 @@ original hashes and source recovery. Original artwork has not been re-encoded.
 When changing the mark, preserve the G silhouette, bill and transparent eye.
 Check legibility at 26 px beside the name and version in every theme.
 
-## Social preview
+<a id="social-preview"></a>
+
+## Historical Gavia social preview
 
 [gavia-social.svg](gavia-social.svg) is the self-contained 1280 x 640 source for
 the [public PNG](../../apps/playground/public/gavia-social.png). It combines the
@@ -28,8 +40,8 @@ browser metadata and external social-card rendering remain unverified.
 
 The former square blue mark is preserved as
 [gavia-social-original.png](../../archives/brand/gavia-social-original.png).
-The existing public `gavia-social.png` URL is retained. An owner may upload the
-new card in GitHub settings when publication is separately authorized.
+Previously shared `gavia-social.png` links use this archived design. New link
+previews use the Legato image listed above.
 
 ## README component preview
 
@@ -82,20 +94,20 @@ The moon’s position is not adjusted to fit the interface.
 [PNG source](../../archives/brand/gavia-lake-night-v2.png) and
 [exact prompts](../../archives/brand/gavia-lake-night-v2-prompt.txt).
 Built-in imagegen, no CLI; 2172 × 724. WebP quality 86, with no crop or color
-changes during export. Daytime art is used in all light themes
-(Gavia, Classic and Newspaper); nighttime art in both dark themes.
-The shared hero layout is preserved.
+changes during export. Gavia, Classic and Newspaper use the daytime scene.
+Gavia Dark and Classic Dark use the nighttime scene. Both Legato themes use
+the Duetto arch.
 
-The browser selects responsive 640/1024/1600 or original 2172-wide candidates.
-The daytime layer loads with a light-theme home view; the night layer enters
-the DOM on the first dark-theme visit and stays cached for later transitions.
+The browser selects a 640, 1024, 1600, 1920 or 2172 px landscape.
+Each landscape loads on the first visit to a theme that uses it. Loaded
+landscapes stay available for later light/dark transitions.
 URL metadata does not preload all variants. Where View Transitions API is supported, changing the theme uses
 one temporary whole-page transition. Other browsers apply color tokens immediately
 while the hero keeps its image crossfade. `prefers-reduced-motion: reduce`
 disables both transitions.
 A ghost `WlIconButton` in the hero’s upper-right corner has a colored 32 px sun
-or moon icon and a 44 × 44 px hit area. It switches Gavia ↔ Gavia Dark and
-Classic ↔ Classic Dark; Newspaper switches to Classic Dark and returns on the
+or moon icon and a 44 × 44 px hit area. It switches Legato ↔ Legato Dark,
+Gavia ↔ Gavia Dark and Classic ↔ Classic Dark. Newspaper switches to Classic Dark and returns on the
 next click. The idle icon has no background box; keyboard focus adds an outline.
 
 The previous [v1 night variant](../../archives/brand/gavia-lake-night-v1.webp) is kept for history.

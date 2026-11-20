@@ -1,8 +1,9 @@
 import type { WlThemeName } from "legato-ui";
+import catalogSummary from "virtual:gavia-catalog-summary";
 import { shallowRef } from "vue";
 import { isPlaygroundTheme, isPlaygroundThemePreference, type PlaygroundThemePreference } from "../themes";
 
-export const appliedThemeStorageKey = "gavia-ui.applied-theme.v1";
+export const appliedThemeStorageKey = "legato-ui.applied-theme.v1";
 export interface AppliedTheme {
   name: string;
   baseTheme: WlThemeName;
@@ -51,7 +52,7 @@ export function applyThemeToRoot(theme: WlThemeName, root: HTMLElement = documen
   const draft = appliedTheme.value;
   const base = draft?.baseTheme ?? theme;
   root.dataset.wlTheme = base;
-  root.style.colorScheme = base === "gavia-dark" || base === "graphite" ? "dark" : "light";
+  root.style.colorScheme = catalogSummary.themeColorSchemes[base];
   if (draft) {
     root.dataset.wlPlaygroundDraft = draft.name;
     for (const [name, value] of Object.entries(draft.overrides)) {

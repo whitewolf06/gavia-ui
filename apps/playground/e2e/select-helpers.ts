@@ -73,9 +73,9 @@ export async function navigateMainView(page: Page, label: string): Promise<void>
   await page.evaluate(() => document.fonts.ready);
   const mobileTrigger = page.locator(".pg-menu-trigger");
   if (await mobileTrigger.isVisible()) {
-    const menu = page.getByRole("dialog", { name: "Разделы Gavia UI", exact: true });
+    const menu = page.getByRole("dialog", { name: "Разделы Legato UI", exact: true });
     await openNavigationOverlay(mobileTrigger, menu);
-    await menu.getByRole("navigation", { name: "Разделы Gavia UI", exact: true })
+    await menu.getByRole("navigation", { name: "Разделы Legato UI", exact: true })
       .getByRole("button", { name: label, exact: true }).click();
     await expect(mobileTrigger).toHaveAttribute("aria-expanded", "false");
     await expect(menu).toHaveCount(0);
@@ -117,9 +117,9 @@ export async function expectMainViewCurrent(page: Page, label: string): Promise<
   // The desktop nav can appear after a lazy route finishes mounting. Only use
   // the drawer branch when its actual trigger is visible at this viewport.
   if (await mobileTrigger.isVisible()) {
-    const drawer = page.getByRole("dialog", { name: "Разделы Gavia UI", exact: true });
+    const drawer = page.getByRole("dialog", { name: "Разделы Legato UI", exact: true });
     await openNavigationOverlay(mobileTrigger, drawer);
-    await expect(drawer.getByRole("navigation", { name: "Разделы Gavia UI", exact: true })
+    await expect(drawer.getByRole("navigation", { name: "Разделы Legato UI", exact: true })
       .getByRole("button", { name: label, exact: true })).toHaveAttribute("aria-current", "page");
     await page.keyboard.press("Escape");
     await expect(drawer).toHaveCount(0);

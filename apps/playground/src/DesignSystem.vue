@@ -9,6 +9,7 @@ import {
 } from "legato-ui";
 import { computed, defineAsyncComponent, nextTick, ref, watch } from "vue";
 import { getLocalizedContrastReport, getLocalizedDesignThemes, getLocalizedDesignTokens, getLocalizedTypography } from "./design-system/localized-tokens";
+import { playgroundThemeOptions } from "./themes";
 const wlDesignTokens = getLocalizedDesignTokens();
 const wlDesignThemes = getLocalizedDesignThemes();
 const wlTypography = getLocalizedTypography();
@@ -44,10 +45,7 @@ const sections = [
   ["tokens", t("shell.DesignSystem.text144")], ["components", t("shell.DesignSystem.text145")], ["patterns", t("shell.DesignSystem.text146")],
   ["recipes", t("shell.DesignSystem.text147")], ["stress", t("shell.DesignSystem.text148")], ["accessibility", t("shell.DesignSystem.text149")]
 ] as const;
-const themePreviewGroups = [
-  { id: "gavia", themes: wlDesignThemes.filter((item) => item.name === "gavia" || item.name === "gavia-dark") },
-  { id: "classic", themes: wlDesignThemes.filter((item) => item.name !== "gavia" && item.name !== "gavia-dark") }
-];
+const themePreviews = playgroundThemeOptions.map(({ value }) => wlDesignThemes.find((item) => item.name === value)!);
 const semanticColors = ["bg", "bg-soft", "text", "text-muted", "accent", "success", "warn", "danger"] as const;
 const query = ref("");
 const layer = ref("semantic");
@@ -153,36 +151,27 @@ const tokenCode = t("shell.DesignSystem.text167");
               <p class="wl-text-body wl-text-muted">{{ t('shell.DesignSystem.text184') }}</p>
             </article>
           </div>
-          <div id="ds-themes" class="wl-stack ds-theme-groups" data-space="2xl">
-            <div
-              v-for="group in themePreviewGroups"
-              :key="group.id"
-              class="wl-grid ds-theme-grid"
-              :class="{ 'ds-theme-grid--gavia': group.id === 'gavia' }"
-              :data-theme-group="group.id"
-              data-space="lg"
+          <div id="ds-themes" class="wl-grid ds-theme-grid" data-space="lg">
+            <article
+              v-for="item in themePreviews"
+              :key="item.name"
+              :data-wl-theme="item.name"
+              class="wl-surface wl-stack ds-theme-preview"
+              data-space="md"
             >
-              <article
-                v-for="item in group.themes"
-                :key="item.name"
-                :data-wl-theme="item.name"
-                class="wl-surface wl-stack ds-theme-preview"
-                data-space="md"
-              >
-                <h3 class="wl-text-heading">{{ item.label }}</h3>
-                <p class="wl-text-small wl-text-muted">{{ item.description }}</p>
-                <div class="ds-palette">
-                  <span
-                    v-for="color in semanticColors"
-                    :key="color"
-                    class="ds-color"
-                    :title="`--wl-${color}: ${resolved(`--wl-${color}`, item.name)}`"
-                    :style="{ background: `var(--wl-${color})` }"
-                  ></span>
-                </div>
-                <WlButton variant="primary" size="sm">{{ t('shell.DesignSystem.text185') }}</WlButton>
-              </article>
-            </div>
+              <h3 class="wl-text-heading">{{ item.label }}</h3>
+              <p class="wl-text-small wl-text-muted">{{ item.description }}</p>
+              <div class="ds-palette">
+                <span
+                  v-for="color in semanticColors"
+                  :key="color"
+                  class="ds-color"
+                  :title="`--wl-${color}: ${resolved(`--wl-${color}`, item.name)}`"
+                  :style="{ background: `var(--wl-${color})` }"
+                ></span>
+              </div>
+              <WlButton variant="primary" size="sm">{{ t('shell.DesignSystem.text185') }}</WlButton>
+            </article>
           </div>
           <div class="wl-grid" data-space="lg">
             <article class="wl-surface ds-elevation" :style="{ boxShadow: 'var(--wl-elevation-surface)' }">
@@ -649,10 +638,9 @@ const tokenCode = t("shell.DesignSystem.text167");
 .ds-nav a:hover { color: var(--wl-text); background: var(--wl-bg-soft); }
 .ds-nav a:focus-visible, .ds-table-scroll:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 2px; }
 .ds-content { min-width: 0; }
-.ds-section, .ds-theme-groups { scroll-margin-top: 90px; }
+.ds-section, .ds-theme-grid { scroll-margin-top: 90px; }
 .ds-section > div:first-child > p:last-child { max-width: 72ch; }
 .ds-theme-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.ds-theme-grid--gavia { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .ds-theme-preview { padding: var(--wl-space-lg); }
 .ds-palette { display: flex; flex-wrap: wrap; gap: 4px; }
 .ds-color { width: 21px; height: 21px; border: 1px solid var(--wl-border); border-radius: 50%; }
@@ -721,9 +709,9 @@ const tokenCode = t("shell.DesignSystem.text167");
   }
 }
 @media (max-width: 640px) {
-  .ds-theme-grid, .ds-theme-grid--gavia, .ds-token-filters { grid-template-columns: minmax(0, 1fr); }
+  .ds-theme-grid, .ds-token-filters { grid-template-columns: minmax(0, 1fr); }
   .ds-type-row { grid-template-columns: minmax(0, 1fr); gap: var(--wl-space-sm); }
-  .ds-section, .ds-theme-groups { scroll-margin-top: 145px; }
+  .ds-section, .ds-theme-grid { scroll-margin-top: 145px; }
 }
 @media (max-width: 760px) { .ds-main { padding-top: var(--wl-space-xl); } }
 </style>

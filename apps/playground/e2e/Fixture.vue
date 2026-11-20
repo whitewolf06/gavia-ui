@@ -61,7 +61,7 @@ function ask(): void {
   <ControlWidthFixture v-if="reviewControlWidth" />
   <SliderGeometryFixture v-if="reviewSliderGeometry" />
   <main class="fixture">
-    <h1>Gavia UI regression</h1>
+    <h1>Legato UI regression</h1>
     <section v-if="reviewTimePicker" class="fixture-card" data-testid="native-time-explorer">
       <WlCheckbox v-model="nativeTimeDisabled">disabled</WlCheckbox>
       <WlCheckbox v-model="nativeTimeInvalid">invalid</WlCheckbox>

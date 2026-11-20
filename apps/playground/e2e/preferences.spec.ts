@@ -55,27 +55,27 @@ for (const detection of [
     await page.emulateMedia({ colorScheme: "dark" });
     await page.goto("/");
     await expect(page.getByTestId("home-page")).toBeVisible();
-    await expectPreferences(page, detection.expected, "system", "gavia-dark");
+    await expectPreferences(page, detection.expected, "system", "legato-dark");
     await expect(page.getByTestId("pg-theme-selector")).toContainText(detection.expected === "ru" ? "Системная" : "System");
     await expect.poll(() => page.evaluate(() => ({
-      theme: localStorage.getItem("gavia-ui.theme"), locale: localStorage.getItem("gavia-ui.locale")
+      theme: localStorage.getItem("legato-ui.theme"), locale: localStorage.getItem("legato-ui.locale")
     }))).toEqual({ theme: null, locale: null });
     await page.emulateMedia({ colorScheme: "light" });
-    await expectPreferences(page, detection.expected, "system", "gavia");
+    await expectPreferences(page, detection.expected, "system", "legato");
     await page.emulateMedia({ colorScheme: "dark" });
-    await expectPreferences(page, detection.expected, "system", "gavia-dark");
+    await expectPreferences(page, detection.expected, "system", "legato-dark");
   });
 }
 
 test("manual theme and language persist, explicit links override them, and System restores OS tracking", { tag: "@cross-browser" }, async ({ page }) => {
   await page.goto("/");
   await expect(page.getByTestId("home-page")).toBeVisible();
-  await expectPreferences(page, "ru", "system", "gavia");
+  await expectPreferences(page, "ru", "system", "legato");
   await chooseTheme(page, graphiteLabel);
   await chooseShowcaseLanguage(page, "en");
   await expectPreferences(page, "en", "graphite", "graphite");
   await expect.poll(() => page.evaluate(() => ({
-    theme: localStorage.getItem("gavia-ui.theme"), locale: localStorage.getItem("gavia-ui.locale")
+    theme: localStorage.getItem("legato-ui.theme"), locale: localStorage.getItem("legato-ui.locale")
   }))).toEqual({ theme: "graphite", locale: "en" });
   await page.goto("/");
   await expect(page.getByTestId("home-page")).toBeVisible();
@@ -90,17 +90,17 @@ test("manual theme and language persist, explicit links override them, and Syste
   await expect(page.getByTestId("home-page")).toBeVisible();
   await expectPreferences(page, "en", "graphite", "graphite");
   await chooseTheme(page, "System");
-  await expectPreferences(page, "en", "system", "gavia");
+  await expectPreferences(page, "en", "system", "legato");
   await page.emulateMedia({ colorScheme: "dark" });
-  await expectPreferences(page, "en", "system", "gavia-dark");
+  await expectPreferences(page, "en", "system", "legato-dark");
   await page.goto("/");
   await expect(page.getByTestId("home-page")).toBeVisible();
-  await expectPreferences(page, "en", "system", "gavia-dark");
+  await expectPreferences(page, "en", "system", "legato-dark");
 });
 
 test("Back and Forward restore each visit's language and theme mode after manual choices and reload", async ({ page }) => {
   await page.goto("/");
-  await expectPreferences(page, "ru", "system", "gavia");
+  await expectPreferences(page, "ru", "system", "legato");
   // A route visit owns its theme: changing it replaces that visit's URL.
   // Preserve the original automatic-mode visit through actual navigation first.
   await page.getByTestId("home-page").locator(".home-metrics").getByRole("link").first().click();
@@ -113,10 +113,10 @@ test("Back and Forward restore each visit's language and theme mode after manual
   await page.goBack();
   await expectPreferences(page, "ru", "graphite", "graphite");
   await page.goBack();
-  await expectPreferences(page, "ru", "system", "gavia");
+  await expectPreferences(page, "ru", "system", "legato");
   await expect(page.getByTestId("home-page")).toBeVisible();
   await page.emulateMedia({ colorScheme: "dark" });
-  await expectPreferences(page, "ru", "system", "gavia-dark");
+  await expectPreferences(page, "ru", "system", "legato-dark");
   await page.goForward();
   await expectPreferences(page, "ru", "graphite", "graphite");
   await page.goForward();
@@ -146,7 +146,7 @@ test("all four home metric links open their section and preserve preferences and
     await link.focus();
     await expect(link).toBeFocused();
     await link.press("Enter");
-    await expectPreferences(page, "ru", "system", "gavia-dark");
+    await expectPreferences(page, "ru", "system", "legato-dark");
     await expect.poll(() => new URL(page.url()).hash).toBe(href.hash);
     await expect(page.locator(destination.target)).toBeVisible();
     await expect(page.locator(destination.target)).toBeInViewport();
@@ -211,7 +211,7 @@ test("blocked local storage still permits automatic detection and manual prefere
   });
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/");
-  await expectPreferences(page, "ru", "system", "gavia-dark");
+  await expectPreferences(page, "ru", "system", "legato-dark");
   await chooseTheme(page, graphiteLabel);
   await chooseShowcaseLanguage(page, "en");
   await expectPreferences(page, "en", "graphite", "graphite");
@@ -241,5 +241,5 @@ test("applied palette follows navigation and reload, and Undo or a built-in sele
   await builder.getByTestId("theme-builder-apply").click();
   await chooseTheme(page, "Gavia");
   await expect(page.getByTestId("playground-theme-draft")).toHaveCount(0);
-  await expect.poll(() => page.evaluate(() => localStorage.getItem("gavia-ui.applied-theme.v1"))).toBeNull();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem("legato-ui.applied-theme.v1"))).toBeNull();
 });

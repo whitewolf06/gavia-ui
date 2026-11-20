@@ -17,7 +17,7 @@ import PlaygroundPageHeader from "../PlaygroundPageHeader.vue";
 import FontDownloadLink from "../project/FontDownloadLink.vue";
 import { playgroundThemePreference, withPlaygroundTheme } from "../themes";
 import { usePageAnchor } from "../usePageAnchor";
-import { gaviaFontFamily, gaviaRelease, gaviaWeights } from "./font";
+import { gaviaRelease, gaviaWeights, legatoFontFamily } from "./font";
 import "./type-study.css";
 import "./weights.css";
 import { samples } from "./samples";
@@ -29,7 +29,7 @@ usePageAnchor(pageElement);
 const language = ref<SpecimenLanguage>(locale.value === "ru" ? "ru" : "en");
 const saved = ref(false);
 const fontStyle = ref<GaviaFontStyle>("normal");
-const fontFamily = gaviaFontFamily;
+const fontFamily = legatoFontFamily;
 const proofWeight = ref(400);
 const proofSize = ref(32);
 const proofText = ref("");
@@ -124,14 +124,14 @@ function chooseStyle(value: string | null): void {
 function chooseWeight(value: unknown): void {
   if (typeof value === "number" && gaviaWeights.some((weight) => weight.value === value)) proofWeight.value = value;
 }
-const standaloneCode = '<link rel="stylesheet" href="./gavia.css">\n<style>body { font-family: "Gavia Sans Core", "Gavia Sans", sans-serif; text-rendering: geometricPrecision; }</style>';
+const standaloneCode = '<link rel="stylesheet" href="./legato.css">\n<style>body { font-family: "Legato Sans Core", "Legato Sans", sans-serif; text-rendering: geometricPrecision; }</style>';
 const paragraphs = computed(() => samples[language.value].body.split("\n\n"));
 const proofSample = computed(() => proofText.value.trim() ? proofText.value : content.value.proofExample);
 const exampleBalance = computed(() => language.value === "ru" ? "12 480 ₽" : "€128.40");
 const playgroundUrl = computed(() => withPlaygroundTheme("?view=docs", playgroundThemePreference.value));
 const numeralRows = computed(() => language.value === "ru" ? ["11 111,00", "88 888,00", "10 240,50"] : ["11,111.00", "88,888.00", "10,240.50"]);
-const fontImportCode = 'import "legato-ui/styles/fonts/gavia.css";';
-const fontFamilyCode = ".app {\n  font-family: \"Gavia Sans Core\", \"Gavia Sans\", \"Segoe UI\", sans-serif;\n  text-rendering: geometricPrecision;\n}";
+const fontImportCode = 'import "legato-ui/styles/fonts/legato.css";';
+const fontFamilyCode = ".app {\n  font-family: \"Legato Sans Core\", \"Legato Sans\", \"Segoe UI\", sans-serif;\n  text-rendering: geometricPrecision;\n}";
 
 function saveProject(): void {
   saved.value = true;
@@ -151,9 +151,9 @@ function saveProject(): void {
   >
     <main class="wl-type-shell wl-container">
       <PlaygroundPageHeader
-        title="Gavia Sans"
+        title="Legato Sans"
         :description="t('shell.type_study.GaviaTypeStudy.text565')"
-        :breadcrumbs="[{ label: 'Gavia Sans' }]"
+        :breadcrumbs="[{ label: 'Legato Sans' }]"
       />
       <section
         id="type-settings"
@@ -186,7 +186,7 @@ function saveProject(): void {
 
       <section id="type-top" class="wl-type-hero" aria-labelledby="wl-type-hero-title">
         <div class="wl-type-hero-main">
-          <p class="wl-type-section-label wl-type-detail">Gavia Sans {{ gaviaRelease }} · 01 / {{ content.typeLabel }}</p>
+          <p class="wl-type-section-label wl-type-detail">Legato Sans {{ gaviaRelease }} · 01 / {{ content.typeLabel }}</p>
           <h2 id="wl-type-hero-title" class="wl-type-display">{{ content.headline }}</h2>
           <p class="wl-type-direction">{{ content.direction }}</p>
           <FontDownloadLink class="wl-type-hero-download">{{ content.download }}</FontDownloadLink>
@@ -433,7 +433,7 @@ function saveProject(): void {
       </section>
 
       <footer class="wl-type-footer">
-        <p class="wl-type-footer-note">Gavia Sans {{ gaviaRelease }} · {{ content.edition }} · {{ content.alphabets }}</p>
+        <p class="wl-type-footer-note">Legato Sans {{ gaviaRelease }} · {{ content.edition }} · {{ content.alphabets }}</p>
         <div class="wl-type-footer-links">
           <a class="wl-type-link" :href="playgroundUrl" @click.prevent="emit('navigate', 'docs')">
             {{ content.back }} <span aria-hidden="true">↗</span>

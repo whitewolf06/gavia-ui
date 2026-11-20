@@ -45,7 +45,7 @@ beforeEach(() => {
   startup.pageGate = new Promise<unknown>((resolve) => {
     startup.releasePage = () => resolve({});
   });
-  window.localStorage.setItem("gavia-ui.locale", "en");
+  window.localStorage.setItem("legato-ui.locale", "en");
   window.history.replaceState(null, "", "/?view=system&theme=gavia&lang=ru");
   document.documentElement.lang = "en";
   document.body.innerHTML = '<div id="app">Static fallback</div>';
@@ -71,6 +71,6 @@ it("starts catalog preparation while page and bootstrap module imports are still
   expect(startup.catalogRequests).toEqual([{ view: "system", locale: "ru" }]);
   expect(document.getElementById("app")?.textContent).toBe("Static fallback");
   expect(document.documentElement.lang).toBe("en");
-  expect(window.localStorage.getItem("gavia-ui.locale")).toBe("en");
+  expect(window.localStorage.getItem("legato-ui.locale")).toBe("en");
   expect(window.location.href).toBe(initialUrl);
 });

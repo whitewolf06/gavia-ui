@@ -4,26 +4,26 @@ import { createPlaygroundUrl, isDocumentationAssetSection, isDocumentationFounda
 
 describe("playground query navigation", () => {
   it("opens the font page under Pages while preserving theme and clearing Docs selectors", () => {
-    const current = new URL("https://example.test/gavia-ui/?theme=newspaper&view=docs&component=WlButton&section=layout#old");
+    const current = new URL("https://example.test/legato-ui/?theme=newspaper&view=docs&component=WlButton&section=layout#old");
     const target = createPlaygroundUrl(current, { view: "font" });
-    expect(target.href).toBe("https://example.test/gavia-ui/?theme=newspaper&view=font");
+    expect(target.href).toBe("https://example.test/legato-ui/?theme=newspaper&view=font");
     expect(parsePlaygroundRoute(target.search, "#wl-type-weights")).toEqual({ view: "font" });
     expect(parsePlaygroundRoute("?view=font&component=WlButton&section=layout")).toEqual({ view: "font" });
     expect(current.hash).toBe("#old");
   });
   it("opens the theme builder under Pages and clears Docs-specific selectors", () => {
-    const current = new URL("https://example.test/gavia-ui/?theme=graphite&view=docs&component=WlButton&section=layout#old");
+    const current = new URL("https://example.test/legato-ui/?theme=graphite&view=docs&component=WlButton&section=layout#old");
     const target = createPlaygroundUrl(current, { view: "theme-builder" });
-    expect(target.href).toBe("https://example.test/gavia-ui/?theme=graphite&view=theme-builder");
+    expect(target.href).toBe("https://example.test/legato-ui/?theme=graphite&view=theme-builder");
     expect(parsePlaygroundRoute(target.search)).toEqual({ view: "theme-builder" });
     expect(current.hash).toBe("#old");
   });
   it("uses the canonical changelog URL while keeping old project deep links", () => {
     expect(parsePlaygroundRoute("?view=changelog")).toEqual({ view: "project" });
     expect(parsePlaygroundRoute("?view=project")).toEqual({ view: "project" });
-    const current = new URL("https://example.test/gavia-ui/?theme=graphite&view=docs&section=layout#grid");
+    const current = new URL("https://example.test/legato-ui/?theme=graphite&view=docs&section=layout#grid");
     const history = createPlaygroundUrl(current, { view: "project" });
-    expect(history.href).toBe("https://example.test/gavia-ui/?theme=graphite&view=changelog");
+    expect(history.href).toBe("https://example.test/legato-ui/?theme=graphite&view=changelog");
     expect(parsePlaygroundRoute(history.search)).toEqual({ view: "project" });
     expect(current.hash).toBe("#grid");
   });
@@ -40,9 +40,9 @@ describe("playground query navigation", () => {
     expect(parsePlaygroundRoute("?view=docs&component=")).toEqual({ view: "docs" });
   });
   it("keeps the Pages subpath and unrelated query parameters across view changes", () => {
-    const current = new URL("https://example.test/gavia-ui/?theme=graphite&view=project#project-changelog");
+    const current = new URL("https://example.test/legato-ui/?theme=graphite&view=project#project-changelog");
     const docs = createPlaygroundUrl(current, { view: "docs", component: "WlButton" });
-    expect(docs.pathname).toBe("/gavia-ui/");
+    expect(docs.pathname).toBe("/legato-ui/");
     expect(docs.searchParams.get("theme")).toBe("graphite");
     expect(docs.hash).toBe("");
     expect(parsePlaygroundRoute(docs.search)).toEqual({ view: "docs", component: "WlButton" });
@@ -71,8 +71,8 @@ describe("playground query navigation", () => {
       expect(isDocumentationSection(section)).toBe(true);
       expect(isDocumentationAssetSection(section)).toBe(true);
       expect(isDocumentationFoundationSection(section)).toBe(false);
-      const url = createPlaygroundUrl(new URL("https://example.test/gavia-ui/?theme=graphite&view=docs&component=WlIcon#old"), { view: "docs", section });
-      expect(url.pathname).toBe("/gavia-ui/");
+      const url = createPlaygroundUrl(new URL("https://example.test/legato-ui/?theme=graphite&view=docs&component=WlIcon#old"), { view: "docs", section });
+      expect(url.pathname).toBe("/legato-ui/");
       expect(url.searchParams.get("theme")).toBe("graphite");
       expect(url.searchParams.get("component")).toBeNull();
       expect(url.hash).toBe("");
@@ -85,17 +85,17 @@ describe("playground query navigation", () => {
     expect(isDocumentationSection("unknown")).toBe(false);
   });
   it("opens responsiveness under the Pages subpath and clears a former component", () => {
-    const current = new URL("https://example.test/gavia-ui/?theme=graphite&view=docs&component=WlSidebar#old");
+    const current = new URL("https://example.test/legato-ui/?theme=graphite&view=docs&component=WlSidebar#old");
     const target = createPlaygroundUrl(current, { view: "docs", section: "responsive" });
-    expect(target.href).toBe("https://example.test/gavia-ui/?theme=graphite&view=docs&section=responsive");
+    expect(target.href).toBe("https://example.test/legato-ui/?theme=graphite&view=docs&section=responsive");
     expect(parsePlaygroundRoute(target.search)).toEqual({ view: "docs", section: "responsive" });
     expect(current.hash).toBe("#old");
     expect(current.searchParams.get("component")).toBe("WlSidebar");
   });
   it("clears stale docs selectors while preserving theme, Pages base and input URL", () => {
-    const current = new URL("https://example.test/gavia-ui/?theme=newspaper&view=docs&component=WlButton#old");
+    const current = new URL("https://example.test/legato-ui/?theme=newspaper&view=docs&component=WlButton#old");
     const foundations = createPlaygroundUrl(current, { view: "docs", section: "layout" });
-    expect(foundations.pathname).toBe("/gavia-ui/");
+    expect(foundations.pathname).toBe("/legato-ui/");
     expect(foundations.searchParams.get("theme")).toBe("newspaper");
     expect(foundations.searchParams.get("component")).toBeNull();
     expect(foundations.hash).toBe("");
@@ -124,9 +124,9 @@ describe("playground query navigation", () => {
     expect(parsePlaygroundRoute("?view=components&component=WlSelect", "#component-WlTimePicker")).toEqual({ view: "docs", component: "WlSelect" });
     expect(parsePlaygroundRoute("?view=components&section=icons", "#component-WlTimePicker")).toEqual({ view: "docs", section: "icons" });
     expect(parsePlaygroundRoute("?view=system", "#component-WlTimePicker")).toEqual({ view: "system" });
-    const current = new URL("https://example.test/gavia-ui/?view=components&theme=graphite#component-WlTimePicker");
+    const current = new URL("https://example.test/legato-ui/?view=components&theme=graphite#component-WlTimePicker");
     const canonical = createPlaygroundUrl(current, parsePlaygroundRoute(current.search, current.hash));
-    expect(canonical.href).toBe("https://example.test/gavia-ui/?view=docs&theme=graphite&component=WlTimePicker");
+    expect(canonical.href).toBe("https://example.test/legato-ui/?view=docs&theme=graphite&component=WlTimePicker");
     expect(current.hash).toBe("#component-WlTimePicker");
     expect(createPlaygroundUrl(current, { view: "components", component: "WlSelect" }).searchParams.get("view")).toBe("docs");
   });
@@ -136,9 +136,9 @@ describe("playground query navigation", () => {
     expect(isDocumentationFoundationSection("quality")).toBe(false);
     expect(isDocumentationAssetSection("quality")).toBe(false);
     expect(isDocumentationQualitySection("layout")).toBe(false);
-    const current = new URL("https://example.test/gavia-ui/?view=docs&theme=newspaper&component=WlInput#old");
+    const current = new URL("https://example.test/legato-ui/?view=docs&theme=newspaper&component=WlInput#old");
     const quality = createPlaygroundUrl(current, { view: "docs", section: "quality" });
-    expect(quality.href).toBe("https://example.test/gavia-ui/?view=docs&theme=newspaper&section=quality");
+    expect(quality.href).toBe("https://example.test/legato-ui/?view=docs&theme=newspaper&section=quality");
     expect(parsePlaygroundRoute(quality.search)).toEqual({ view: "docs", section: "quality" });
     expect(parsePlaygroundRoute(quality.search + "&component=WlInput")).toEqual({ view: "docs", section: "quality" });
     expect(createPlaygroundUrl(quality, { view: "docs" }).searchParams.has("section")).toBe(false);

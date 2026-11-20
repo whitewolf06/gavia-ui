@@ -99,7 +99,7 @@ const code = consumerSource(playgroundSource);
         {{ t('documentation.strings.s0062') }} <code>pnpm icons:check</code> {{ t('documentation.strings.s0063') }}
       </p>
       <p class="wl-text-small wl-text-muted">{{ t('documentation.strings.s0064') }}</p>
-      <a class="docs-assets-link" href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/icons.md">{{ t('documentation.strings.s0065') }}</a>
+      <a class="docs-assets-link" href="https://github.com/whitewolf06/legato-ui/blob/main/docs/icons.md">{{ t('documentation.strings.s0065') }}</a>
     </section>
   </div>
 </template>

@@ -11,9 +11,9 @@ const short = ref(false);
     <WlCheckbox v-model="short">{{ t("examples.short_path_0339") }}</WlCheckbox>
     <WlBreadcrumbs
       :items="short
-        ? [{ label: 'Gavia UI', href: '?', icon: 'home' }, { label: t('examples.materials_0015') }]
+        ? [{ label: 'Legato UI', href: '?', icon: 'home' }, { label: t('examples.materials_0015') }]
         : [
-          { label: 'Gavia UI', href: '?', icon: 'home' },
+          { label: 'Legato UI', href: '?', icon: 'home' },
           { label: t('examples.documentation_0340'), href: '?view=docs' },
           { label: t('examples.materials_0015') }
         ]"

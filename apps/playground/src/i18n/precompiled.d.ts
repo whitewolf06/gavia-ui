@@ -11,7 +11,7 @@ declare module "virtual:gavia-catalog-summary" {
   const summary: {
     tokenCount: number;
     themeCount: number;
-    themeColorSchemes: Record<string, "light" | "dark">;
+    themeColorSchemes: Record<WlThemeName, "light" | "dark">;
     themes: { name: WlThemeName; label: string; colorScheme: "light" | "dark" }[];
   };
   export default summary;

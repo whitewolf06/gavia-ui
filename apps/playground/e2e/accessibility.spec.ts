@@ -1,9 +1,10 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Locator, type Page, test, type TestInfo } from "@playwright/test";
+import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
 import { russianPlaygroundUrl } from "./playground-url";
 import { chooseDropdownOption } from "./select-helpers";
 
-const themes = ["gavia", "white", "graphite", "newspaper", "gavia-dark"] as const;
+const themes = wlDesignThemes.map(({ name }) => name);
 // axe executes in Chromium once; behavior remains covered by all browser projects.
 const wcagTags = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 

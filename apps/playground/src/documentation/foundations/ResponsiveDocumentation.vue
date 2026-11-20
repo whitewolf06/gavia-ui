@@ -47,7 +47,7 @@ const localCss = [
       <h2 id="docs-responsive-rules" class="docs-foundation-anchor wl-text-heading">{{ metadata.rulesHeading.title }}</h2>
       <ul class="docs-foundation-rules"><li v-for="rule in metadata.rules" :key="rule">{{ rule }}</li></ul>
       <p class="wl-text-small wl-text-muted">
-        {{ t('documentation.strings.s1282') }} <code>gavia-ui/styles/primitives.css</code> {{ t('documentation.strings.s0724') }}
+        {{ t('documentation.strings.s1282') }} <code>legato-ui/styles/primitives.css</code> {{ t('documentation.strings.s0724') }}
       </p>
     </section>
     <section class="wl-stack" data-space="md" aria-labelledby="docs-responsive-breakpoints">
@@ -190,7 +190,7 @@ const localCss = [
       </div>
       <a
         class="docs-text-link wl-text-small"
-        href="https://github.com/whitewolf06/gavia-ui/blob/main/docs/responsiveness.md"
+        href="https://github.com/whitewolf06/legato-ui/blob/main/docs/responsiveness.md"
       >{{ t('documentation.strings.s0767') }}</a>
     </footer>
   </article>

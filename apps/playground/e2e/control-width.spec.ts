@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
+import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
 
-for (const theme of ["gavia", "gavia-dark", "white", "graphite", "newspaper"]) {
+for (const { name: theme } of wlDesignThemes) {
   test(`${theme}: full-width controls retain default caps and stretch together with wl-fluid @cross-browser`, async ({ page }) => {
     await page.goto("/e2e.html?review-control-width");
     await page.locator("html").evaluate((element, value) => {

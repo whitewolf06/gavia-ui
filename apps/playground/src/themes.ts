@@ -5,10 +5,9 @@ import { ref } from "vue";
 import { playgroundLocale } from "./i18n/locale";
 import { prefersPlaygroundDarkTheme, readPlaygroundPreference } from "./preferences";
 
-/** Automatic mode uses the branded light/dark pair; all five themes remain available. */
-const playgroundDefaultTheme: WlThemeName = "gavia";
+export const playgroundDefaultTheme = "legato";
 export type PlaygroundThemePreference = WlThemeName | "system";
-const themeOrder: readonly WlThemeName[] = ["gavia", "gavia-dark", "white", "graphite", "newspaper"];
+const themeOrder: readonly WlThemeName[] = ["legato", "legato-dark", "gavia", "gavia-dark", "white", "graphite", "newspaper"];
 export const playgroundThemeOptions = [...catalogSummary.themes]
   .sort((a, b) => themeOrder.indexOf(a.name) - themeOrder.indexOf(b.name))
   .map(({ name, label }) => ({ value: name, label }));
@@ -30,7 +29,7 @@ export function parsePlaygroundThemePreference(search: string): PlaygroundThemeP
 
 export function playgroundThemePair(preference: PlaygroundThemePreference): WlThemePair<WlThemeName> {
   return preference === "system"
-    ? { light: playgroundDefaultTheme, dark: "gavia-dark" }
+    ? { light: playgroundDefaultTheme, dark: "legato-dark" }
     : { light: preference, dark: preference };
 }
 
@@ -66,13 +65,30 @@ export function withPlaygroundTheme(href: string, theme: PlaygroundThemePreferen
   return path + "?" + query.toString() + fragment;
 }
 
-/** Pair the quick light/dark switch without changing the saved theme catalog. */
-export function getPlaygroundThemeToggleTarget(theme: WlThemeName, classicLightTheme: "white" | "newspaper" = "white"): WlThemeName {
+export type PlaygroundLightTheme = Exclude<WlThemeName, "graphite" | "gavia-dark" | "legato-dark">;
+
+export function initialPlaygroundLightTheme(preference: PlaygroundThemePreference): PlaygroundLightTheme {
+  if (preference === "system") return playgroundDefaultTheme;
+  if (preference === "graphite" && readPlaygroundPreference("lightTheme") === "newspaper") return "newspaper";
+  return rememberPlaygroundLightTheme(preference, playgroundDefaultTheme);
+}
+
+/** Newspaper and Classic share the same dark companion. */
+export function getPlaygroundThemeToggleTarget(theme: WlThemeName, lastLight: PlaygroundLightTheme = playgroundDefaultTheme): WlThemeName {
   switch (theme) {
+    case "legato": return "legato-dark";
     case "gavia": return "gavia-dark";
-    case "gavia-dark": return "gavia";
-    case "graphite": return classicLightTheme;
+    case "legato-dark":
+    case "gavia-dark":
+    case "graphite": return rememberPlaygroundLightTheme(theme, lastLight);
     case "white":
     case "newspaper": return "graphite";
   }
+}
+
+export function rememberPlaygroundLightTheme(theme: WlThemeName, lastLight: PlaygroundLightTheme): PlaygroundLightTheme {
+  if (theme === "legato-dark") return "legato";
+  if (theme === "gavia-dark") return "gavia";
+  if (theme === "graphite") return lastLight === "newspaper" ? "newspaper" : "white";
+  return theme;
 }

@@ -9,7 +9,6 @@ import { WlButton } from "legato-ui";
 import { useWlTheme } from "legato-ui/composables";
 import { computed, defineAsyncComponent, inject, nextTick, onBeforeUnmount, onMounted, provide, ref, shallowRef, watch } from "vue";
 import { routerKey } from "vue-router";
-import gaviaMarkUrl from "../../../docs/brand/gavia-ui-mark-lake.svg";
 import { createPlaygroundNavigationUrl as createPlaygroundUrl, type DocumentationSection, isDocumentationSection, parsePlaygroundRoute, type PlaygroundRoute, type PlaygroundView } from "./navigation";
 import { playgroundPageLoaders, preloadPlaygroundPage } from "./page-loaders";
 import { playgroundNavigationKey } from "./playground-navigation";
@@ -19,7 +18,7 @@ import FontDownloadLink from "./project/FontDownloadLink.vue";
 import { gaviaProjectInfo as project } from "./project/project-info";
 import { appliedTheme, applyThemeToRoot, clearAppliedTheme, setAppliedTheme, type ThemeApplication } from "./theme-builder/application";
 import { createPlaygroundThemeTransition } from "./theme-transition";
-import { createPlaygroundThemeUrl, getPlaygroundThemeToggleTarget, isPlaygroundTheme, isPlaygroundThemePreference, parsePlaygroundThemePreference, playgroundThemeOptions, playgroundThemePair, playgroundThemePreference, type PlaygroundThemePreference, resolvePlaygroundTheme } from "./themes";
+import { createPlaygroundThemeUrl, getPlaygroundThemeToggleTarget, initialPlaygroundLightTheme, isPlaygroundTheme, isPlaygroundThemePreference, parsePlaygroundThemePreference, playgroundDefaultTheme, playgroundThemeOptions, playgroundThemePair, playgroundThemePreference, type PlaygroundThemePreference, rememberPlaygroundLightTheme, resolvePlaygroundTheme } from "./themes";
 import { createPageAnchorRestorer, pageAnchorRestorerKey } from "./usePageAnchor";
 const WlCommandPalette = defineAsyncComponent(() => import("legato-ui").then((module) => module.WlCommandPalette));
 const WlToast = defineAsyncComponent(() => import("legato-ui").then((module) => module.WlToast));
@@ -114,10 +113,10 @@ async function readView(): Promise<void> {
     : parsePlaygroundThemePreference(window.location.search);
   if (appliedTheme.value && themePreference.value !== appliedTheme.value.baseTheme) clearAppliedTheme();
   const locationTheme = currentResolvedTheme();
-  classicLightTheme = rememberClassicLightTheme(locationTheme, theme.value, classicLightTheme);
+  lastLightTheme = themePreference.value === "system" ? playgroundDefaultTheme : rememberPlaygroundLightTheme(locationTheme, lastLightTheme);
   requestedTheme = locationTheme;
   requestedThemePreference = themePreference.value;
-  requestedClassicLightTheme = classicLightTheme;
+  requestedLightTheme = lastLightTheme;
   theme.value = locationTheme;
   // Back/Forward can change an asynchronous page before restoring its anchor.
   if (!["home", "docs", "font", "system", "project"].includes(activeRoute.value.view)) return;
@@ -178,7 +177,7 @@ function openQualityLink(event: MouseEvent): void {
   void openDocsSection("quality");
 }
 function qualityRouteHref(): string {
-  const current = new URL(typeof window === "undefined" ? "https://whitewolf06.github.io/gavia-ui/" : window.location.href);
+  const current = new URL(typeof window === "undefined" ? "https://whitewolf06.github.io/legato-ui/" : window.location.href);
   const target = createPlaygroundThemeUrl(createPlaygroundUrl(current, { view: "docs", section: "quality" }), themePreference.value);
   return target.pathname + target.search + target.hash;
 }
@@ -414,28 +413,23 @@ const themeController = useWlTheme({
 const theme = ref<WlThemeName>(resolvePlaygroundTheme(themePreference.value));
 provide(playgroundNavigationKey, { navigate, theme, themePreference });
 const themeOptions = computed(() => [{ value: "system", label: t("shell.theme.system") }, ...playgroundThemeOptions]);
-let classicLightTheme: "white" | "newspaper" = "white";
+let lastLightTheme = initialPlaygroundLightTheme(themePreference.value);
 let requestedTheme = theme.value;
 let requestedThemePreference = themePreference.value;
-let requestedClassicLightTheme: "white" | "newspaper" = classicLightTheme;
+let requestedLightTheme = lastLightTheme;
 
-function rememberClassicLightTheme(value: WlThemeName, previous: WlThemeName, remembered: "white" | "newspaper"): "white" | "newspaper" {
-  if (value === "newspaper") return "newspaper";
-  if (value === previous) return remembered;
-  return value === "graphite" && previous === "newspaper" ? remembered : "white";
-}
 function cancelPendingThemeChange(): void {
   themeTransition.cancel();
   requestedTheme = theme.value;
   requestedThemePreference = themePreference.value;
-  requestedClassicLightTheme = classicLightTheme;
+  requestedLightTheme = lastLightTheme;
 }
 function toggleThemeVariant(): void {
-  chooseTheme(getPlaygroundThemeToggleTarget(requestedTheme, requestedClassicLightTheme));
+  chooseTheme(getPlaygroundThemeToggleTarget(requestedTheme, requestedLightTheme));
 }
 function currentResolvedTheme(): WlThemeName {
   const value = themeController.theme.value;
-  return isPlaygroundTheme(value) ? value : "gavia";
+  return isPlaygroundTheme(value) ? value : playgroundDefaultTheme;
 }
 function syncSystemTheme(): void {
   if (themePreference.value !== "system" || requestedThemePreference !== "system") return;
@@ -448,6 +442,10 @@ function updateThemeUrl(value: PlaygroundThemePreference): void {
   const url = createPlaygroundThemeUrl(new URL(window.location.href), value);
   if (url.href !== window.location.href) void writeLocation(url, true);
 }
+function saveThemeSelection(value: PlaygroundThemePreference): void {
+  if (value === "graphite") savePlaygroundPreference("lightTheme", lastLightTheme);
+  savePlaygroundPreference("theme", value);
+}
 function chooseTheme(value: unknown): void {
   if (!isPlaygroundThemePreference(value)) return;
   const resolvedTheme = resolvePlaygroundTheme(value, themeController.resolved.value === "dark");
@@ -455,23 +453,23 @@ function chooseTheme(value: unknown): void {
     // Do not write a pending theme into the URL before its guarded DOM update.
     if (theme.value === resolvedTheme && themePreference.value === value) {
       updateThemeUrl(value);
-      savePlaygroundPreference("theme", value);
+      saveThemeSelection(value);
     }
     return;
   }
-  requestedClassicLightTheme = rememberClassicLightTheme(resolvedTheme, requestedTheme, requestedClassicLightTheme);
+  requestedLightTheme = value === "system" ? playgroundDefaultTheme : rememberPlaygroundLightTheme(resolvedTheme, requestedLightTheme);
   requestedTheme = resolvedTheme;
   requestedThemePreference = value;
-  const nextClassicLightTheme = requestedClassicLightTheme;
+  const nextLightTheme = requestedLightTheme;
   themeTransition.run(async () => {
     clearAppliedTheme();
-    classicLightTheme = nextClassicLightTheme;
+    lastLightTheme = nextLightTheme;
     themePreference.value = value;
     // Re-read the OS preference if it changed while the snapshot was captured.
     theme.value = currentResolvedTheme();
     requestedTheme = theme.value;
     updateThemeUrl(value);
-    savePlaygroundPreference("theme", value);
+    saveThemeSelection(value);
     // Native capture must see Vue's updated hero layers, icon and header selector.
     await nextTick();
   });
@@ -479,15 +477,15 @@ function chooseTheme(value: unknown): void {
 function applyDraftTheme(draft: ThemeApplication): void {
   const previous = themePreference.value;
   themeTransition.run(async () => {
-    classicLightTheme = rememberClassicLightTheme(draft.baseTheme, theme.value, classicLightTheme);
-    requestedClassicLightTheme = classicLightTheme;
+    lastLightTheme = rememberPlaygroundLightTheme(draft.baseTheme, lastLightTheme);
+    requestedLightTheme = lastLightTheme;
     setAppliedTheme(draft, previous);
     themePreference.value = draft.baseTheme;
     theme.value = draft.baseTheme;
     requestedTheme = draft.baseTheme;
     requestedThemePreference = draft.baseTheme;
     updateThemeUrl(draft.baseTheme);
-    savePlaygroundPreference("theme", draft.baseTheme);
+    saveThemeSelection(draft.baseTheme);
     await nextTick();
   });
 }
@@ -510,7 +508,6 @@ watch([theme, appliedTheme], ([value]) => {
       :applied-theme-name="appliedTheme?.name"
       :theme-options="themeOptions"
       :version="project.version"
-      :logo="gaviaMarkUrl"
       @navigate="showView"
       @locale="chooseLocale"
       @theme="chooseTheme"
@@ -598,7 +595,7 @@ watch([theme, appliedTheme], ([value]) => {
   />
   <ProjectInfo v-else-if="activeView === 'project'" :key="locale" />
   <footer class="pg-footer">
-    <span>Gavia UI · v{{ project.version }} · <a :href="project.licenseUrl">MIT</a></span>
+    <span>Legato UI · v{{ project.version }} · <a :href="project.licenseUrl">MIT</a></span>
     <span>{{ t('shell.App.text51') }} <a :href="project.author.url">{{ t('shell.author.name') }}</a></span>
     <a :href="project.repositoryUrl">GitHub</a>
     <a :href="qualityRouteHref()" @click="openQualityLink">{{ t('shell.App.text52') }}</a>
@@ -609,6 +606,20 @@ watch([theme, appliedTheme], ([value]) => {
 </template>
 
 <style>
+:where([data-wl-theme="legato"], [data-wl-theme="legato-dark"]) #app {
+  --wl-playground-gutter: clamp(20px, 3.6vw, 48px);
+
+  :is(
+    .pg-header-inner, .pg-theme-draft, .home-hero-tools, .home-hero-content, .home-content,
+    .docs-page, .ds-main, .wl-type-shell, .project-main, .tb-page
+  ) {
+    padding-inline: var(--wl-playground-gutter);
+  }
+  .home-page--legato ~ .pg-footer {
+    justify-content: flex-start;
+    padding-inline: calc(max(0px, (100% - var(--wl-layout-page-max)) / 2) + var(--wl-playground-gutter));
+  }
+}
 .pg-top { border-bottom: 1px solid var(--wl-border); position: sticky; top: 0; background: var(--wl-bg); z-index: var(--wl-layer-sticky); }
 .pg-theme-draft { padding-block: var(--wl-space-sm); }
 .pg-page-loading {

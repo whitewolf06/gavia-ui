@@ -5,8 +5,10 @@ const sources = new WeakMap<object, object>();
 
 /** Translate a prose string from a shared package catalogue at presentation time. */
 export function translateDocumentationText(text: string): string {
-  const key = playgroundTranslationKey("documentation", text);
-  return key ? translate(key) : text;
+  // Published manifests may still describe the library under its previous name.
+  const label = text.replace(/Gavia UI/g, "Legato UI");
+  const key = playgroundTranslationKey("documentation", label);
+  return key ? translate(key) : label;
 }
 
 /** Keep module metadata lazy so labels and descriptions follow the current locale. */

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
 
 const sizes = [
   [".wl-card__title", 14, 22], [".wl-card__subtitle", 12.5, 14], [".wl-card__content", 13.5, 18],
@@ -6,7 +7,7 @@ const sizes = [
   ['.wl-segmented[data-size="md"] .wl-segmented__item', 13, 18]
 ] as const;
 
-for (const theme of ["gavia", "gavia-dark", "white", "graphite", "newspaper"]) {
+for (const { name: theme } of wlDesignThemes) {
   test(`${theme}: semantic component typography is opt-in and enlarged text fits @cross-browser`, async ({ page }) => {
     await page.goto(`/?view=docs&section=typography&theme=${theme}&lang=en`, { waitUntil: "domcontentloaded" });
     const example = page.getByTestId("semantic-component-example");

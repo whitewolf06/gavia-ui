@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { detectPlaygroundLocale, parsePlaygroundLocale } from "../src/i18n/locale";
 import { playgroundPreferenceKeys, readPlaygroundPreference, savePlaygroundPreference } from "../src/preferences";
 import { appliedTheme, appliedThemeStorageKey, applyThemeToRoot, clearAppliedTheme, parseAppliedTheme, readAppliedTheme, setAppliedTheme } from "../src/theme-builder/application";
-import { createPlaygroundThemeUrl, parsePlaygroundTheme, parsePlaygroundThemePreference, withPlaygroundTheme } from "../src/themes";
+import { createPlaygroundThemeUrl, initialPlaygroundLightTheme, parsePlaygroundTheme, parsePlaygroundThemePreference, withPlaygroundTheme } from "../src/themes";
 
 const saved = new Map<string, string | null>();
 beforeEach(() => {
@@ -99,6 +99,15 @@ describe("applied Playground palette", () => {
     expect(document.documentElement.style.colorScheme).toBe("light");
   });
 
+  it("uses Legato on first light paint and honours an existing Gavia preference", () => {
+    runBoot();
+    expect(document.documentElement.dataset.wlTheme).toBe("legato");
+    savePlaygroundPreference("theme", "gavia");
+    runBoot();
+    expect(document.documentElement.dataset.wlTheme).toBe("gavia");
+    expect(parsePlaygroundTheme("")).toBe("gavia");
+  });
+
   it("honours direct built-in links in the actual pre-paint resolver", () => {
     localStorage.setItem(appliedThemeStorageKey, JSON.stringify(snapshot));
     window.history.replaceState(null, "", "/docs/?theme=newspaper");
@@ -150,29 +159,39 @@ afterEach(() => {
 describe("playground visitor preferences", () => {
   it("starts in system mode and uses the current OS colour scheme", () => {
     expect(parsePlaygroundThemePreference("")).toBe("system");
-    expect(parsePlaygroundTheme("")).toBe("gavia-dark");
+    expect(parsePlaygroundTheme("")).toBe("legato-dark");
     vi.stubGlobal("matchMedia", () => ({ matches: false }));
-    expect(parsePlaygroundTheme("")).toBe("gavia");
+    expect(parsePlaygroundTheme("")).toBe("legato");
   });
 
   it("prioritises a valid theme link, then a saved choice, then the system", () => {
     savePlaygroundPreference("theme", "newspaper");
     expect(parsePlaygroundTheme("")).toBe("newspaper");
     expect(parsePlaygroundTheme("?theme=white")).toBe("white");
-    expect(parsePlaygroundTheme("?theme=system")).toBe("gavia-dark");
+    expect(parsePlaygroundTheme("?theme=system")).toBe("legato-dark");
     expect(parsePlaygroundTheme("?theme=unknown")).toBe("newspaper");
     savePlaygroundPreference("theme", "unknown");
-    expect(parsePlaygroundTheme("?theme=unknown")).toBe("gavia-dark");
+    expect(parsePlaygroundTheme("?theme=unknown")).toBe("legato-dark");
+  });
+
+  it("restores the selected light companion after reloading in dark mode", () => {
+    expect(initialPlaygroundLightTheme("gavia-dark")).toBe("gavia");
+    savePlaygroundPreference("lightTheme", "legato");
+    expect(initialPlaygroundLightTheme("gavia-dark")).toBe("gavia");
+    expect(initialPlaygroundLightTheme("legato-dark")).toBe("legato");
+    savePlaygroundPreference("lightTheme", "newspaper");
+    expect(initialPlaygroundLightTheme("graphite")).toBe("newspaper");
+    expect(initialPlaygroundLightTheme("system")).toBe("legato");
   });
 
   it("remembers system mode rather than freezing the resolved light/dark theme", () => {
     savePlaygroundPreference("theme", "system");
-    expect(parsePlaygroundTheme("")).toBe("gavia-dark");
+    expect(parsePlaygroundTheme("")).toBe("legato-dark");
     vi.stubGlobal("matchMedia", () => ({ matches: false }));
-    expect(parsePlaygroundTheme("")).toBe("gavia");
-    const current = new URL("https://example.test/gavia-ui/?view=system&lang=ru#ds-themes");
+    expect(parsePlaygroundTheme("")).toBe("legato");
+    const current = new URL("https://example.test/legato-ui/?view=system&lang=ru#ds-themes");
     const target = createPlaygroundThemeUrl(current, "system");
-    expect(target.pathname).toBe("/gavia-ui/");
+    expect(target.pathname).toBe("/legato-ui/");
     expect(target.searchParams.get("theme")).toBe("system");
     expect(target.hash).toBe("#ds-themes");
     expect(withPlaygroundTheme("?view=system#ds-tokens", "system")).toContain("theme=system");
@@ -204,7 +223,7 @@ describe("playground visitor preferences", () => {
     });
     expect(readPlaygroundPreference("theme")).toBeNull();
     expect(() => savePlaygroundPreference("theme", "white")).not.toThrow();
-    expect(parsePlaygroundTheme("")).toBe("gavia-dark");
+    expect(parsePlaygroundTheme("")).toBe("legato-dark");
     expect(parsePlaygroundLocale("")).toBe("ru");
     expect(parsePlaygroundTheme("?theme=white")).toBe("white");
     expect(parsePlaygroundLocale("?lang=en")).toBe("en");

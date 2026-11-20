@@ -22,7 +22,7 @@ const { t } = usePlaygroundI18n();
 </template>
 
 <style scoped>
-/* These classes belong to the application; Gavia does not define wl-col-* helpers. */
+/* The application defines its own column proportions. */
 .proportion-example { grid-template-columns: repeat(12, minmax(0, 1fr)); }
 .proportion-example-wide, .proportion-example-aside, .proportion-example-half { grid-column: span 12; min-width: 0; }
 @media (min-width: 900px) {

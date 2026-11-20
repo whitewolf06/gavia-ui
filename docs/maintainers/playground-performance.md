@@ -60,12 +60,13 @@ replacement so user text containing `$` remains unchanged.
 
 ## Responsive brand artwork
 
-Authored PNG sources live in the tracked [brand archive](../../archives/brand/README.md);
-final WebP originals remain in `docs/brand`. Their bytes are unchanged. Twelve derivatives
-in `src/assets/brand` cover 640/1024/1600 widths. `srcset` also retains the
-original 2172-wide image for larger pixel densities. Cards retain lazy loading;
-the night hero enters the DOM on the first dark-theme visit and stays cached
-for later transitions. Eager URL metadata does not fetch all image bytes.
+The [brand archive](../../archives/brand/README.md) holds the Legato print masters
+and the original Gavia artwork. The Legato hero uses a 1109 × 413 WebP print
+and a repeating paper texture. For the landscape themes, `srcset` offers
+640, 1024, 1600 and 1920 px derivatives plus the original 2172 px WebP from
+`docs/brand`. On the first visit only the selected landscape loads. After a
+light/dark switch both loaded landscapes are available for the crossfade.
+The illustrated project cards use lazy loading.
 
 Generate with an explicit path to **sharp 0.35.5**, available in a workspace or
 the bundled document/image runtime; no global installation is needed:
@@ -78,9 +79,8 @@ node apps/playground/scripts/brand-images.mjs --check
 The generator reads archived PNGs and keeps source SHA256, output dimensions/bytes/SHA256 and encoder
 versions in its manifest. It prepares every image in memory before writing
 owned derivatives. `--check` uses Node only and detects source drift or altered
-derivative bytes. The generated inventory totals 309,304 bytes across every
-size of every image; a browser selects individual candidates, so that total is
-not the home page's transfer size. The first 640-wide day/night images are
+derivative bytes. The 16 landscape and card derivatives total 525,258 bytes.
+A browser selects one candidate per image. The first 640-wide day/night images are
 17,886 / 16,406 bytes; original WebPs are 112,136 / 110,972 bytes. These are file
 sizes, not measured loading or visual improvements.
 
@@ -92,7 +92,7 @@ the preparation state. Later 1.0 CI/publication evidence is in the
 needed merely to edit these instructions.
 
 Inspect Windows expected/actual/diff before accepting screenshot changes.
-Production locale/preferences/navigation, five-theme desktop/mobile rendering,
+Production locale/preferences/navigation, seven-theme desktop/mobile rendering,
 chunk sizes and cold-loading budgets need evidence for the exact revision under
 review. The old 80 KB gzip / 400 KB transfer proposals are not the measured
 release budgets; use the current [coverage/size](quality.md#coverage-and-size)

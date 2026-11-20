@@ -10,6 +10,7 @@ import { WlSelect } from "legato-ui";
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import type { PlaygroundRoute, PlaygroundView } from "./navigation";
 import { type PlaygroundLocale, usePlaygroundI18n } from "./i18n";
+import LegatoWordmark from "./LegatoWordmark.vue";
 import { isPlaygroundThemePreference, type PlaygroundThemePreference, withPlaygroundTheme } from "./themes";
 
 const props = defineProps<{
@@ -20,7 +21,6 @@ const props = defineProps<{
   appliedThemeName?: string;
   themeOptions: Array<{ label: string; value: string }>;
   version: string;
-  logo: string;
 }>();
 const emit = defineEmits<{
   navigate: [view: PlaygroundView];
@@ -109,10 +109,12 @@ function measureNavigation(): void {
   const focusedButton = [...desktopNavigation.value.querySelectorAll<HTMLElement>("button")]
     .findIndex((button) => button.contains(focusedElement));
   const focusedOverflow = focusedButton === visibleCount.value;
-  const removedFocusedButton = focusedButton >= 0 && (focusedOverflow
-    ? nextCount === count
+  const activeIndex = sections.value.findIndex((section) => section.view === props.activeView);
+  const activeMovesOutOfMenu = activeIndex >= visibleCount.value && activeIndex < nextCount;
+  const moveFocus = focusedButton >= 0 && (focusedOverflow
+    ? nextCount === count || activeMovesOutOfMenu
     : focusedButton >= nextCount);
-  const restoreFocus = overflowOpen.value || removedFocusedButton;
+  const restoreFocus = overflowOpen.value || moveFocus;
   closeOverflow();
   visibleCount.value = nextCount;
   if (restoreFocus) void nextTick(restoreMenuFocus);
@@ -214,12 +216,7 @@ onBeforeUnmount(() => {
       :aria-label="t('shell.PlaygroundHeader.text127')"
       @click.prevent="navigate('home')"
     >
-      <span
-        class="pg-logo pg-logo-mask"
-        aria-hidden="true"
-        :style="{ maskImage: 'url(' + logo + ')', WebkitMaskImage: 'url(' + logo + ')' }"
-      ></span>
-      <b class="pg-title">Gavia UI</b>
+      <LegatoWordmark class="pg-logo" />
       <span class="pg-kit-version" :aria-label="t('shell.PlaygroundHeader.text128') + version">v{{ version }}</span>
     </a>
     <nav ref="desktopNavigation" class="pg-views" :aria-label="t('shell.PlaygroundHeader.text129')">
@@ -356,13 +353,12 @@ onBeforeUnmount(() => {
         <template #icon><WlIcon :name="section.icon" :size="18" /></template>{{ section.label }}
       </WlButton>
     </nav>
-    <template #footer><span class="pg-menu-meta">Gavia UI · v{{ version }}</span></template>
+    <template #footer><span class="pg-menu-meta">Legato UI · v{{ version }}</span></template>
   </WlDrawer>
 </template>
 
 <style scoped>
 .pg-header-inner {
-  max-width: 1440px;
   min-height: 64px;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
@@ -381,16 +377,7 @@ onBeforeUnmount(() => {
   white-space: nowrap;
 }
 .pg-brand:focus-visible { outline: 2px solid var(--wl-focus-color); outline-offset: 4px; }
-.pg-logo { width: 36px; height: 36px; display: block; flex: none; }
-.pg-logo-mask { background-color: var(--wl-action-primary-bg); mask-size: contain; mask-repeat: no-repeat; mask-position: center; }
-.pg-title {
-  display: block;
-  font-family: var(--wl-font-heading);
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-}
+.pg-logo { width: 104px; flex: none; }
 .pg-kit-version {
   display: block;
   flex: none;
@@ -422,9 +409,9 @@ onBeforeUnmount(() => {
 .pg-measure-clip { position: fixed; top: 0; left: 0; width: 0; height: 0; overflow: hidden; visibility: hidden; pointer-events: none; }
 .pg-nav-measure { width: max-content; }
 @media (max-width: 760px) {
-  .pg-header-inner { grid-template-columns: minmax(0, 1fr) auto 44px; gap: 4px; padding: var(--wl-space-sm); }
+  .pg-header-inner { grid-template-columns: minmax(0, 1fr) auto 44px; gap: 4px; padding-block: var(--wl-space-sm); }
   .pg-brand { gap: 6px; min-width: 0; }
-  .pg-logo { width: 32px; height: 32px; }
+  .pg-logo { width: 88px; }
   .pg-kit-version, .pg-views, .pg-search-text { display: none; }
   .pg-actions { gap: 4px; }
   .pg-utility-controls { grid-template-columns: repeat(2, 44px); gap: 4px; }
@@ -437,11 +424,7 @@ onBeforeUnmount(() => {
   :deep(.pg-theme .wl-select__label), :deep(.pg-theme .wl-select__dropdown) { display: none; }
   .pg-theme-mobile-icon { display: block; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; }
 }
-@media (max-width: 400px) {
-  .pg-logo { width: 28px; height: 28px; }
-  .pg-title { font-size: 18px; }
-}
 @media (max-width: 360px) {
-  .pg-title { display: none; }
+  .pg-logo { width: 28px; aspect-ratio: 1; mask-image: url("./assets/brand/duetto/legato-icon.svg?no-inline"); }
 }
 </style>

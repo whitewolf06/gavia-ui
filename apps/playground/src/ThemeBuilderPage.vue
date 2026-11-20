@@ -11,7 +11,7 @@ import PlaygroundPageHeader from "./PlaygroundPageHeader.vue";
 import { createThemeExport, createThemeOverrides, createThemePalette, getThemeContrast, isThemeNameValid, normalizeHex, parseThemeDraft, THEME_DRAFT_SCHEMA_VERSION, type ThemePalette, themePaletteFields } from "./theme-builder/palette";
 import { isPlaygroundTheme, playgroundThemeOptions } from "./themes";
 
-const storageKey = "gavia-ui.theme-builder.v1";
+const storageKey = "legato-ui.theme-builder.v1";
 const baseTheme = ref<WlThemeName>(props.theme);
 const name = ref("my-gavia");
 const palette = ref<ThemePalette>(createThemePalette(baseTheme.value));

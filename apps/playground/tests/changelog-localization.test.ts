@@ -5,7 +5,7 @@ import { ensurePlaygroundMessages, setPlaygroundLocale } from "../src/i18n";
 import { parseChangelog } from "../src/project/changelog";
 import { localizeChangelogMarkdown } from "../src/project/changelog-localization";
 
-const docsBase = "https://github.com/whitewolf06/gavia-ui/blob/main/";
+const docsBase = "https://github.com/whitewolf06/legato-ui/blob/main/";
 const text = (content: ChangelogInline[]): string => content.map((part) => part.kind === "link" ? part.label : part.value).join("");
 const prose = (document: ChangelogDocument): string[] => [
   ...document.introduction,

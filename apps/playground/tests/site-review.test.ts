@@ -34,7 +34,10 @@ it("builds an editable public consumer from the exact copied SFC", () => {
   expect(manifest.dependencies).toEqual({ "legato-ui": "0.99.0", vue: "^3.4.0" });
   expect(fields["project[files][src/main.ts]"]).toContain('import "legato-ui/styles/base.css"');
   expect(fields["project[files][src/main.ts]"]).toContain('import "legato-ui/styles/primitives.css"');
-  expect(fields["project[files][src/main.ts]"]).toContain('import "legato-ui/styles/fonts/gavia.css"');
+  expect(fields["project[files][src/main.ts]"]).toContain('import "legato-ui/styles/fonts/legato.css"');
+  const legacy = stackBlitzFields(source, "1.1.0", "gavia-ui");
+  expect(JSON.parse(legacy["project[files][package.json]"]!).dependencies["legato-ui"]).toBe("npm:gavia-ui@1.1.0");
+  expect(legacy["project[files][src/main.ts]"]).toContain('import "legato-ui/themes/gavia.css"');
 });
 
 it("emits canonical multilingual sitemap, prerender input and complete machine-readable API prose", () => {

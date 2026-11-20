@@ -182,7 +182,7 @@ const initialPages = [
 
 describe("App-owned page anchor restoration", () => {
   it("keeps an applied palette through navigation and preserves the Newspaper quick-toggle pair", async () => {
-    const stored = ["gavia-ui.theme", appliedThemeStorageKey].map((key) => [key, localStorage.getItem(key)] as const);
+    const stored = ["legato-ui.theme", appliedThemeStorageKey].map((key) => [key, localStorage.getItem(key)] as const);
     const previousStyle = document.documentElement.getAttribute("style");
     try {
       clearAppliedTheme();
@@ -227,7 +227,7 @@ describe("App-owned page anchor restoration", () => {
   });
 
   it("keeps the applied base on query-free Back despite a changed saved preference, while an explicit theme wins", async () => {
-    const stored = ["gavia-ui.theme", appliedThemeStorageKey].map((key) => [key, localStorage.getItem(key)] as const);
+    const stored = ["legato-ui.theme", appliedThemeStorageKey].map((key) => [key, localStorage.getItem(key)] as const);
     try {
       clearAppliedTheme();
       const app = await mountedApp("/docs/?theme=gavia");
@@ -241,7 +241,7 @@ describe("App-owned page anchor restoration", () => {
       });
       await paint();
       // Another tab can save a different built-in preference while this palette is active.
-      localStorage.setItem("gavia-ui.theme", "white");
+      localStorage.setItem("legato-ui.theme", "white");
       await historyMove(app.router, () => app.router.back());
       await paint();
       expect(new URL(window.location.href).searchParams.has("theme")).toBe(false);
@@ -345,11 +345,11 @@ describe("App-owned page anchor restoration", () => {
 
 describe("Initial preferences after history traversal during startup", () => {
   it.each([
-    { name: "Russian system visit", staleLocale: "en", url: "/ru/docs/?theme=system#docs-components", path: "/ru/docs/", language: "ru", preference: "system", theme: "gavia" },
+    { name: "Russian system visit", staleLocale: "en", url: "/ru/docs/?theme=system#docs-components", path: "/ru/docs/", language: "ru", preference: "system", theme: "legato" },
     { name: "Russian explicit dark visit", staleLocale: "en", url: "/ru/docs/?theme=graphite#docs-components", path: "/ru/docs/", language: "ru", preference: "graphite", theme: "graphite" },
     { name: "unprefixed English path", staleLocale: "ru", url: "/docs/?theme=graphite#docs-components", path: "/docs/", language: "en", preference: "graphite", theme: "graphite" },
     { name: "legacy Russian query", staleLocale: "en", url: "/?view=docs&lang=ru&theme=graphite#docs-components", path: "/ru/docs/", language: "ru", preference: "graphite", theme: "graphite" },
-    { name: "query language overriding Russian path", staleLocale: "ru", url: "/ru/docs/?view=docs&lang=en&theme=system#docs-components", path: "/docs/", language: "en", preference: "system", theme: "gavia" }
+    { name: "query language overriding Russian path", staleLocale: "ru", url: "/ru/docs/?view=docs&lang=en&theme=system#docs-components", path: "/docs/", language: "en", preference: "system", theme: "legato" }
   ] as const)("honours the current $name instead of pre-traversal preference refs", async (visit) => {
     // Model modules having resolved preferences for the document being reloaded.
     // Delay mounting, then traverse the real history before App can pin a visit.
@@ -387,10 +387,10 @@ describe("Initial preferences after history traversal during startup", () => {
   });
 
   it("still pins a preference-free initial visit from detected automatic preferences", async () => {
-    const previousSavedLocale = localStorage.getItem("gavia-ui.locale");
-    const previousSavedTheme = localStorage.getItem("gavia-ui.theme");
-    localStorage.removeItem("gavia-ui.locale");
-    localStorage.removeItem("gavia-ui.theme");
+    const previousSavedLocale = localStorage.getItem("legato-ui.locale");
+    const previousSavedTheme = localStorage.getItem("legato-ui.theme");
+    localStorage.removeItem("legato-ui.locale");
+    localStorage.removeItem("legato-ui.theme");
     vi.spyOn(navigator, "languages", "get").mockReturnValue(["ru-RU"]);
     vi.spyOn(navigator, "language", "get").mockReturnValue("ru-RU");
     await setPlaygroundLocale("ru");
@@ -399,18 +399,18 @@ describe("Initial preferences after history traversal during startup", () => {
       const app = await mountedApp("/");
       await vi.waitFor(() => {
         expect(document.documentElement.lang).toBe("ru");
-        expect(document.documentElement.dataset.wlTheme).toBe("gavia");
+        expect(document.documentElement.dataset.wlTheme).toBe("legato");
         expect(window.location.pathname).toBe("/ru/");
         expect(new URL(window.location.href).searchParams.get("theme")).toBe("system");
       });
       expect(history.length).toBe(app.historyLengthBeforeMount);
-      expect(localStorage.getItem("gavia-ui.locale")).toBeNull();
-      expect(localStorage.getItem("gavia-ui.theme")).toBeNull();
+      expect(localStorage.getItem("legato-ui.locale")).toBeNull();
+      expect(localStorage.getItem("legato-ui.theme")).toBeNull();
     } finally {
-      if (previousSavedLocale === null) localStorage.removeItem("gavia-ui.locale");
-      else localStorage.setItem("gavia-ui.locale", previousSavedLocale);
-      if (previousSavedTheme === null) localStorage.removeItem("gavia-ui.theme");
-      else localStorage.setItem("gavia-ui.theme", previousSavedTheme);
+      if (previousSavedLocale === null) localStorage.removeItem("legato-ui.locale");
+      else localStorage.setItem("legato-ui.locale", previousSavedLocale);
+      if (previousSavedTheme === null) localStorage.removeItem("legato-ui.theme");
+      else localStorage.setItem("legato-ui.theme", previousSavedTheme);
     }
   });
 });

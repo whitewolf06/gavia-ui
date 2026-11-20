@@ -7,6 +7,6 @@ const { t } = usePlaygroundI18n();
 <template>
   <div class="wl-stack" data-space="md">
     <WlLink href="?view=docs" disabled>{{ t('documentation.strings.review_link_internal') }}</WlLink>
-    <WlLink href="https://github.com/whitewolf06/gavia-ui" external>{{ t('documentation.strings.review_link_external') }}</WlLink>
+    <WlLink href="https://github.com/whitewolf06/legato-ui" external>{{ t('documentation.strings.review_link_external') }}</WlLink>
   </div>
 </template>

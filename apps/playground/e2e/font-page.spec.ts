@@ -1,11 +1,12 @@
 import { expect, test } from "@playwright/test";
-import { expectGaviaFontDownload } from "./font-download-helpers";
+import { resolveWlToken, wlDesignThemes } from "../../../packages/ui-kit/src/design-system";
+import { expectLegatoFontDownload } from "./font-download-helpers";
 import { playgroundBasePath, playgroundRouteParams, russianPlaygroundUrl } from "./playground-url";
 import { chooseDropdownOption, chooseShowcaseTheme, navigateMainView } from "./select-helpers";
 
 const weights = [100, 300, 400, 500, 600, 700] as const;
 
-test("font page keeps theme-aware navigation, real Gavia Sans faces and editable samples", async ({ page, baseURL }) => {
+test("font page keeps theme-aware navigation, real Legato Sans faces and editable samples", async ({ page, baseURL }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("response", (response) => {
@@ -16,14 +17,14 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
   await page.goto(russianPlaygroundUrl(url.href));
   const fontPage = page.getByTestId("font-page");
   await expect(fontPage).toBeVisible();
-  await expect(fontPage.getByRole("heading", { level: 1, name: "Gavia Sans", exact: true })).toBeVisible();
+  await expect(fontPage.getByRole("heading", { level: 1, name: "Legato Sans", exact: true })).toBeVisible();
   await expect(fontPage.locator("h1")).toHaveCount(1);
   await expect(fontPage.locator("#wl-type-hero-title")).toHaveJSProperty("tagName", "H2");
   await expect(page.locator(".pg-top")).toHaveCount(1);
   await expect(page.locator("html")).toHaveAttribute("data-wl-theme", "gavia");
   await expect(fontPage.locator(".wl-weights-row")).toHaveCount(6);
-  await expect(fontPage.locator(".wl-type-footer-note")).toContainText("Gavia Sans 0.6");
-  await expect(fontPage.getByText('import "legato-ui/styles/fonts/gavia.css";', { exact: true })).toHaveCount(1);
+  await expect(fontPage.locator(".wl-type-footer-note")).toContainText("Legato Sans 0.6");
+  await expect(fontPage.getByText('import "legato-ui/styles/fonts/legato.css";', { exact: true })).toHaveCount(1);
   await expect(fontPage.locator(".pg-site-header")).toHaveCount(0);
   for (const weight of weights) {
     await expect(fontPage.locator(`.wl-weights-row[data-weight="${weight}"]`)).toBeVisible();
@@ -31,7 +32,7 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
   const faces = await page.evaluate(async (fontWeights) => {
     const loaded = [];
     for (const weight of fontWeights) for (const style of ["normal", "italic"]) {
-      const fonts = await document.fonts.load(`${style} ${weight} 16px 'Gavia Sans'`, "Гавиа Gavia 0123456789");
+      const fonts = await document.fonts.load(`${style} ${weight} 16px 'Legato Sans'`, "Гавиа Gavia 0123456789");
       loaded.push({ weight, style, fonts: fonts.map((font) => ({
         family: font.family, weight: font.weight, style: font.style, status: font.status, unicodeRange: font.unicodeRange
       })) });
@@ -44,7 +45,7 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
     expect(face.fonts, `${face.weight} ${face.style} loads the complete face`).toHaveLength(1);
     expect(new Set(face.fonts.map((font) => font.unicodeRange)).size).toBe(1);
     for (const font of face.fonts) {
-      expect(font).toMatchObject({ family: "Gavia Sans", weight: "100 700", style: face.style, status: "loaded" });
+      expect(font).toMatchObject({ family: "Legato Sans", weight: "100 700", style: face.style, status: "loaded" });
     }
   }
 
@@ -91,15 +92,16 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
   await expect(proof).toHaveText("Гагара / Loon 0123456789");
   await expect(fontPage.locator('.wl-weights-row[data-font-style="italic"]')).toHaveCount(6);
 
-  for (const theme of ["Classic", "Classic Dark", "Newspaper", "Gavia Dark", "Gavia"]) {
-    await chooseShowcaseTheme(page, theme);
+  for (const theme of wlDesignThemes) {
+    await chooseShowcaseTheme(page, theme.label);
     expect(playgroundRouteParams(new URL(page.url())).get("view")).toBe("font");
     const headingFamily = await fontPage.locator(".wl-page-header__title").evaluate((element) => getComputedStyle(element).fontFamily);
     await expect(fontPage.locator(".wl-type-display")).toHaveCSS("font-family", headingFamily);
-    await expect(fontPage.locator(".wl-type-display")).toHaveCSS("text-rendering", theme.startsWith("Gavia") ? "geometricprecision" : "optimizelegibility");
-    await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Gavia Sans(?: Core)?"?,/);
-    await expect(fontPage.locator(".wl-weights-digits").first()).toHaveCSS("font-family", /^"?Gavia Sans"?,/);
-    await expect(page.locator("body")).toHaveCSS("text-rendering", theme.startsWith("Gavia") ? "geometricprecision" : "optimizelegibility");
+    const textRendering = resolveWlToken("--wl-type-text-rendering", theme.name).toLowerCase();
+    await expect(fontPage.locator(".wl-type-display")).toHaveCSS("text-rendering", textRendering);
+    await expect(fontPage.locator(".wl-type-number-sample").first()).toHaveCSS("font-family", /^"?Legato Sans(?: Core)?"?,/);
+    await expect(fontPage.locator(".wl-weights-digits").first()).toHaveCSS("font-family", /^"?Legato Sans"?,/);
+    await expect(page.locator("body")).toHaveCSS("text-rendering", textRendering);
     for (const sample of [".wl-type-number-sample", ".wl-weights-digits"]) {
       await expect(fontPage.locator(sample).first()).toHaveCSS("text-rendering", "geometricprecision");
     }
@@ -108,6 +110,7 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
     )).toBeLessThanOrEqual(1);
   }
 
+  await chooseShowcaseTheme(page, "Gavia");
   await navigateMainView(page, "Документация");
   await expect(page.getByTestId("docs-page")).toBeVisible();
   await navigateMainView(page, "Шрифт");
@@ -124,7 +127,7 @@ test("font page keeps theme-aware navigation, real Gavia Sans faces and editable
   await page.locator(".pg-top").getByRole("button", { name: "Поиск", exact: true }).click();
   const palette = page.getByRole("dialog", { name: "Командная палитра", exact: true });
   await palette.getByRole("combobox", { name: "Командная палитра", exact: true }).fill("шрифт");
-  await expect(palette.getByText("Шрифт Gavia Sans", { exact: true })).toBeVisible();
+  await expect(palette.getByText("Шрифт Legato Sans", { exact: true })).toBeVisible();
   await page.keyboard.press("Escape");
   expect(errors).toEqual([]);
 });
@@ -170,9 +173,9 @@ test("tabular and proportional numbers use different spacing without changing th
   });
   expect(samples).toHaveLength(2);
   for (const sample of samples) {
-    expect(sample.family).toBe("Gavia Sans");
+    expect(sample.family).toBe("Legato Sans");
     expect(sample.weight).toBe("400");
-    expect(sample.faces).toEqual([{ family: "Gavia Sans", weight: "100 700", status: "loaded" }]);
+    expect(sample.faces).toEqual([{ family: "Legato Sans", weight: "100 700", status: "loaded" }]);
     expect(sample.widths).toHaveLength(2);
   }
   expect(samples[0]!.numeric).toBe("tabular-nums");
@@ -207,7 +210,7 @@ test("tabular and proportional numbers use different spacing without changing th
   for (const row of matrix) {
     const label = `${row.weight} ${row.fontStyle} ${row.size}px`;
     expect(row.faces, `${label} uses its complete variable face`).toEqual(Array.from({ length: 1 }, () => ({
-      family: "Gavia Sans", weight: "100 700", style: row.fontStyle, status: "loaded"
+      family: "Legato Sans", weight: "100 700", style: row.fontStyle, status: "loaded"
     })));
     expect(row.numeric).toBe("tabular-nums");
     expect(row.rendering).toBe("geometricprecision");
@@ -255,7 +258,7 @@ test("font download contains the approved family, standalone CSS and OFL license
   await expect(font.locator("[data-wl=textarea]")).toHaveCount(1);
   await expect(font.locator("[data-wl=input]")).toHaveCount(1);
   await expect(font.locator("kbd")).toHaveCount(0);
-  await expectGaviaFontDownload(page, font.getByRole("link", { name: "Скачать Gavia Sans 0.6", exact: true }).first());
-  const footer = page.locator(".pg-footer").getByRole("link", { name: "Скачать шрифт Gavia Sans", exact: true });
-  await expect(footer).toHaveAttribute("href", url.pathname + "downloads/Gavia-Sans-0.6.zip");
+  await expectLegatoFontDownload(page, font.getByRole("link", { name: "Скачать Legato Sans 0.6", exact: true }).first());
+  const footer = page.locator(".pg-footer").getByRole("link", { name: "Скачать шрифт Legato Sans", exact: true });
+  await expect(footer).toHaveAttribute("href", url.pathname + "downloads/Legato-Sans-0.6.zip");
 });
