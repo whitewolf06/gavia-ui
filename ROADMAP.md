@@ -1,7 +1,7 @@
 # Legato UI roadmap
 
-The latest published release is [Gavia UI 1.1.0](docs/maintainers/releases.md).
-Work for Legato UI 1.2.0 is tracked in the [changelog](CHANGELOG.md#unreleased).
+The latest published release is [Legato UI 1.2.0](docs/maintainers/releases.md).
+For the package rename and upgrade steps, see the [1.2.0 migration guide](docs/migration-1.2.0.md).
 
 ## Release history
 

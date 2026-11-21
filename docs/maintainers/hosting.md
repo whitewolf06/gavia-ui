@@ -9,16 +9,16 @@ contributor links. Changelog reads history from the root CHANGELOG.md.
 Vue Router belongs to the Playground; the library keeps Vue as its only required peer.
 Hosted documentation has canonical English/Russian paths and a separate prerender step.
 
-The target for the renamed showcase is
-[Legato UI](https://whitewolf06.github.io/legato-ui/).
+The [Legato UI Playground](https://whitewolf06.github.io/legato-ui/) is live.
+Existing [Gavia UI links](https://whitewolf06.github.io/gavia-ui/) redirect to the corresponding Legato pages.
 The canonical repository uses **Source: GitHub Actions**. Confirm the public URL
 and production assets on desktop and mobile after each deployment; local builds
 and browser results do not establish publication.
 The last Gavia release is [gavia-ui@1.1.0](https://www.npmjs.com/package/gavia-ui/v/1.1.0).
 Legato releases start at 1.2.0 under the npm name `legato-ui`.
 The first release, 0.7.0, was published on 2026-10-05 (Moscow).
-The home installation command reads the [published package record](../../apps/playground/src/project/published-package.json).
-After the 1.2.0 publication is confirmed, that command becomes `pnpm add legato-ui`.
+The home page uses `pnpm add legato-ui` for installation. The package name and version
+come from the [published package record](../../apps/playground/src/project/published-package.json).
 [Publication and validation history](releases.md).
 
 ## Publication setup

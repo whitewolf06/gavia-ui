@@ -4,6 +4,13 @@ Release history is in [GitHub Releases](https://github.com/whitewolf06/legato-ui
 and the preserved [release evidence ledger](../archive/release-history.md). Historical
 counts, hashes and deployment statements are not current verification.
 
+The first stable release under the Legato name was published to npm `latest`
+on 2026-11-21 as [legato-ui@1.2.0](https://www.npmjs.com/package/legato-ui/v/1.2.0).
+The downloaded tarball matched the SHA512 recorded by the
+[release job](https://github.com/whitewolf06/legato-ui/actions/runs/44837719782/job/136651362624).
+npm provides its GitHub Actions provenance. The [GitHub Release](https://github.com/whitewolf06/legato-ui/releases/tag/v1.2.0)
+includes the portable Playground, its SHA256 checksum and both font archives.
+
 Stable 1.1.0 was published on 2026-11-14 to npm `latest`.
 The [Release workflow](https://github.com/whitewolf06/legato-ui/actions/runs/43599244847)
 completed all checks and published the exact checked archive. Registry version,
